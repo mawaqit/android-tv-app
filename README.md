@@ -1,5 +1,5 @@
 # Mawaqit For Android Boxes (Mosque Admins)
-![Mawaqit](https://raw.githubusercontent.com/mawaqit-foundation/mawaqit-mobile-app-v2/f69e4563cb42a188ea9b0a84419a01bdc53976a8/assets/icons/mawaqit_logo_dark_with_text_horizontal.svg?token=AIBKJDWWKOENEXOLMZEQ7EDBP4OWQ "Mawaqit logo")
+![Mawaqit](mawaqit_logo_light_with_text_horizontal_Background.png "Mawaqit logo")
 
 Version 1.0.0 of the Mawaqit For Android Boxes (For Mosque Admins).
 
