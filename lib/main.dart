@@ -38,14 +38,12 @@ Future<void> main() async {
     if (set != null) {
       settings = Settings.fromJson(set);
     }
-  } on Exception catch (exception) {} catch (Excepetion) {}
+  } on Exception catch (exception) {
+  } catch (Excepetion) {}
 
   return runApp(ChangeNotifierProvider<ThemeNotifier>(
     create: (_) => new ThemeNotifier(),
-    child: Provider.value(
-        value: adState,
-        builder: (context, child) =>
-            MyApp(appLanguage: appLanguage, settings: settings)),
+    child: Provider.value(value: adState, builder: (context, child) => MyApp(appLanguage: appLanguage, settings: settings)),
   ));
 }
 
@@ -60,9 +58,9 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<AppLanguage>(
       create: (_) => appLanguage,
       child: Consumer<AppLanguage>(builder: (context, model, child) {
+        // ignore: missing_required_param
         return StreamProvider<ConnectivityStatus>(
-            create: (context) =>
-            ConnectivityService().connectionStatusController.stream,
+            create: (context) => ConnectivityService().connectionStatusController.stream,
             child: Consumer<ThemeNotifier>(
                 builder: (context, theme, _) => MaterialApp(
                     theme: theme.getTheme(),
