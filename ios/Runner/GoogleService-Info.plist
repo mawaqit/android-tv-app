@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>400659587054-a0ifoa4buoj0ugo1tcd56fe3h38jv6ao.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.400659587054-a0ifoa4buoj0ugo1tcd56fe3h38jv6ao</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>400659587054-4h3qtrlujbln4kf1s9g9ej2819ds8lrn.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCskIER1g5pqAkeWprtEgGeMV6KZ-SUaGU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>400659587054</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.flyweb</string>
+	<key>PROJECT_ID</key>
+	<string>flyweb-2020</string>
+	<key>STORAGE_BUCKET</key>
+	<string>flyweb-2020.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:400659587054:ios:a38680cbfb6b1971a6f8ff</string>
+	<key>DATABASE_URL</key>
+	<string>https://flyweb-2020.firebaseio.com</string>
+</dict>
+</plist>

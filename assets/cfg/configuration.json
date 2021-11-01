@@ -1,0 +1,8 @@
+{
+  "api_base_url": "https://alpha.mawaqit.net/android/",
+  "firstColor": "#4e2b81",
+  "secondColor": "#7b50dc",
+  "appIdOneSignal": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "defaultLanguage": "en",
+  "deeplink": "app.com.mawaqitforadmins.scheme"
+}
