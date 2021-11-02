@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:400659587054:android:a987afd697667593a6f8ff",
         "android_client_info": {
-          "package_name": "com.flyweb"
+          "package_name": "com.mawaqit.admin"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "400659587054-4h3qtrlujbln4kf1s9g9ej2819ds8lrn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.flyweb",
+            "package_name": "com.mawaqit.admin",
             "certificate_hash": "b616626eafe2140913cd3528834a0ade308008ad"
           }
         },
@@ -43,7 +43,7 @@
               "client_id": "400659587054-a0ifoa4buoj0ugo1tcd56fe3h38jv6ao.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.flyweb"
+                "bundle_id": "com.mawaqit.admin"
               }
             }
           ]
