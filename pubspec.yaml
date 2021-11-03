@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0
+version: 1.0.3
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -40,9 +40,9 @@ dependencies:
   shared_preferences: ^2.0.5
 
   # UI
-  cupertino_icons: ^1.0.2
-  flutter_spinkit: 5.0.0
-  page_transition: ^2.0.2
+  cupertino_icons: ^1.0.3
+  flutter_spinkit: ^5.1.0
+  page_transition: ^2.0.4
   #modal_progress_hud: ^0.1.3
   flutter_inappwebview: ^5.3.2
 
@@ -50,31 +50,31 @@ dependencies:
   google_mobile_ads: 0.12.1+1
 
   # CONNECTIVITY
-  http: ^0.12.1
-  share: 2.0.1
+  http: ^0.13.4
+  share: ^2.0.4
   launch_review: ^3.0.1
-  url_launcher: ^6.0.4
-  store_redirect: ^1.0.2
-  connectivity: ^3.0.3
+  url_launcher: ^6.0.12
+  store_redirect: ^2.0.0
+  connectivity: ^3.0.6
   uni_links: ^0.5.1
 
   # TOOLS
-  google_fonts: ^1.1.2
+  google_fonts: ^2.1.0
   package_info: ^2.0.2
   android_intent: ^2.0.2
-  global_configuration: ^1.6.0
+  global_configuration: ^2.0.0-nullsafety.1
   #flutter_downloader: 1.6.1
   flutter_barcode_scanner: ^2.0.0
-  flutter_speed_dial: ^3.0.5
+  flutter_speed_dial: ^4.6.6
 
   # STATE MANAGEMENT
-  provider: 5.0.0
-  path_provider: ^2.0.2
+  provider: ^6.0.1
+  path_provider: ^2.0.6
 
   # MAP
   location: 2.5.2
   geolocator: ^5.3.2+2
-  webview_flutter: ^2.0.8
+  webview_flutter: ^2.1.2
 
 dev_dependencies:
   flutter_test:

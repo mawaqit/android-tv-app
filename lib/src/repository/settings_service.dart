@@ -8,8 +8,8 @@ ValueNotifier<Settings> setting = new ValueNotifier(new Settings());
 
 class SettingsService {
   Future<Settings> getSettings() async {
-    var res = await get(
-     '${GlobalConfiguration().getValue('api_base_url')}/api/settings/settings.php');
+    var res = await get(Uri.parse(
+     '${GlobalConfiguration().getValue('api_base_url')}/api/settings/settings.php'));
     if (res.statusCode == 200) {
       final json = jsonDecode(res.body);
       Settings settings = Settings.fromJson(json["data"]);

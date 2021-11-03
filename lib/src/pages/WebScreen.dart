@@ -510,7 +510,7 @@ class _WebScreen extends State<WebScreen> {
       var _flutterGeolocationError = [];
 
       function _flutterGeolocationAlertFix() {
-      
+
         navigator.geolocation = {};
         navigator.geolocation.clearWatch = function(watchId) {
           _flutterGeolocation.postMessage(JSON.stringify({ action: 'clearWatch', flutterGeolocationIndex: watchId, option: {}}));
@@ -536,47 +536,47 @@ class _WebScreen extends State<WebScreen> {
     _webViewController.evaluateJavascript(source: javascript);
 
     _webViewController.evaluateJavascript(source: """
-    
+
       function _flutterGeolocationAlertFix() {
-      
+
         navigator.geolocation = {};
         navigator.geolocation.clearWatch = function(watchId) {
-  
+
   window.flutter_inappwebview.callHandler('_flutterGeolocation',      JSON.stringify({ action: 'clearWatch', flutterGeolocationIndex: watchId, option: {}})      ).then(function(result) {
       //alert(result);
-    }); 
-    
+    });
+
         };
-        
-        
+
+
         navigator.geolocation.getCurrentPosition = function(geolocationSuccess,geolocationError = null, geolocationOptionen = null) {
-  
+
      _flutterGeolocationIndex++;
           _flutterGeolocationSuccess[_flutterGeolocationIndex] = geolocationSuccess;
           _flutterGeolocationError[_flutterGeolocationIndex] = geolocationError;
-         
-       
-  
+
+
+
   window.flutter_inappwebview.callHandler('_flutterGeolocation',       JSON.stringify({ action: 'getCurrentPosition', flutterGeolocationIndex: _flutterGeolocationIndex, option: geolocationOptionen})      ).then(function(result) {
-     });       
-    
-    
+     });
+
+
      };
         navigator.geolocation.watchPosition = function(geolocationSuccess,geolocationError = null, geolocationOptionen = {}) {
-        
+
          _flutterGeolocationIndex++;
           _flutterGeolocationSuccess[_flutterGeolocationIndex] = geolocationSuccess;
           _flutterGeolocationError[_flutterGeolocationIndex] = geolocationError;
-          
+
   window.flutter_inappwebview.callHandler('_flutterGeolocation',      JSON.stringify({ action: 'watchPosition', flutterGeolocationIndex: _flutterGeolocationIndex, option: geolocationOptionen})      ).then(function(result) {
-     });    
-        
+     });
+
           return _flutterGeolocationIndex;
-          
+
         };
         return true;
-      
-  
+
+
     }
           setTimeout(function(){ _flutterGeolocationAlertFix(); }, 100);
 
@@ -627,25 +627,25 @@ class _WebScreen extends State<WebScreen> {
           _flutterGeolocationSuccess[''' +
           flutterGeolocationIndex.toString() +
           ''']({
-            coords: { 
+            coords: {
               accuracy: ''' +
           positionResponse.position.accuracy.toString() +
-          ''', 
+          ''',
               altitude: ''' +
           positionResponse.position.altitude.toString() +
-          ''', 
-              altitudeAccuracy: null, 
-              heading: null, 
+          ''',
+              altitudeAccuracy: null,
+              heading: null,
               latitude: ''' +
           positionResponse.position.latitude.toString() +
-          ''', 
+          ''',
               longitude: ''' +
           positionResponse.position.longitude.toString() +
-          ''', 
+          ''',
               speed: ''' +
           positionResponse.position.speed.toString() +
-          ''' 
-            }, 
+          '''
+            },
             timestamp: ''' +
           positionResponse.position.timestamp.millisecondsSinceEpoch
               .toString() +

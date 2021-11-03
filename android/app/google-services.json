@@ -38,14 +38,6 @@
             {
               "client_id": "1080314251337-2snn0ks4ejt1olove0cklskep38ib0ro.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "1080314251337-8lbb7gu1ktmr80eku3ev8jrig5ppnesd.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.kanout.mawaqit",
-                "app_store_id": "1460522683"
-              }
             }
           ]
         }

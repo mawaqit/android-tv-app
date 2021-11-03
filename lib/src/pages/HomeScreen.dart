@@ -1196,7 +1196,7 @@ class _HomeScreen extends State<HomeScreen>
         key0.currentState.isLoading = true;
       });
 
-      final response = await http.head(qrCode);
+      final response = await http.head(Uri.parse(qrCode));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -1661,29 +1661,29 @@ class _WebViewScreen extends State<WebViewScreen>
       function _flutterGeolocationAlertFix() {
         navigator.geolocation = {};
         navigator.geolocation.clearWatch = function(watchId) {
-  
+
   window.flutter_inappwebview.callHandler('_flutterGeolocation',      JSON.stringify({ action: 'clearWatch', flutterGeolocationIndex: watchId, option: {}})      ).then(function(result) {
       //alert(result);
-    }); 
+    });
         };
         navigator.geolocation.getCurrentPosition = function(geolocationSuccess,geolocationError = null, geolocationOptionen = null) {
-  
+
      _flutterGeolocationIndex++;
           _flutterGeolocationSuccess[_flutterGeolocationIndex] = geolocationSuccess;
           _flutterGeolocationError[_flutterGeolocationIndex] = geolocationError;
-       
+
   window.flutter_inappwebview.callHandler('_flutterGeolocation',       JSON.stringify({ action: 'getCurrentPosition', flutterGeolocationIndex: _flutterGeolocationIndex, option: geolocationOptionen})      ).then(function(result) {
-     });       
-    
+     });
+
      };
         navigator.geolocation.watchPosition = function(geolocationSuccess,geolocationError = null, geolocationOptionen = {}) {
-        
+
          _flutterGeolocationIndex++;
           _flutterGeolocationSuccess[_flutterGeolocationIndex] = geolocationSuccess;
           _flutterGeolocationError[_flutterGeolocationIndex] = geolocationError;
-          
+
   window.flutter_inappwebview.callHandler('_flutterGeolocation',      JSON.stringify({ action: 'watchPosition', flutterGeolocationIndex: _flutterGeolocationIndex, option: geolocationOptionen})      ).then(function(result) {
-     });    
+     });
           return _flutterGeolocationIndex;
         };
         return true;
@@ -1736,25 +1736,25 @@ class _WebViewScreen extends State<WebViewScreen>
           _flutterGeolocationSuccess[''' +
           flutterGeolocationIndex.toString() +
           ''']({
-            coords: { 
+            coords: {
               accuracy: ''' +
           positionResponse.position.accuracy.toString() +
-          ''', 
+          ''',
               altitude: ''' +
           positionResponse.position.altitude.toString() +
-          ''', 
-              altitudeAccuracy: null, 
-              heading: null, 
+          ''',
+              altitudeAccuracy: null,
+              heading: null,
               latitude: ''' +
           positionResponse.position.latitude.toString() +
-          ''', 
+          ''',
               longitude: ''' +
           positionResponse.position.longitude.toString() +
-          ''', 
+          ''',
               speed: ''' +
           positionResponse.position.speed.toString() +
-          ''' 
-            }, 
+          '''
+            },
             timestamp: ''' +
           positionResponse.position.timestamp.millisecondsSinceEpoch
               .toString() +
