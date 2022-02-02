@@ -1,8 +1,7 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart' hide Page;
-import 'package:flutter/rendering.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flyweb/src/elements/Loader.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/models/page.dart';
@@ -10,7 +9,6 @@ import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class PageScreen extends StatefulWidget {
   final Page page;

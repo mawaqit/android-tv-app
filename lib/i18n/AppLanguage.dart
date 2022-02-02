@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flyweb/src/data/config.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppLanguage extends ChangeNotifier {
   Locale _appLocale = Locale('en', '');
 
+  String get currentLanguageName {
+    final currentLang = Config.language.firstWhere(
+      (element) => element['value'] == _appLocale.languageCode,
+    );
+
+    return currentLang['subtitle'];
+  }
+
   Locale get appLocal => _appLocale ?? Locale('en', '');
 
   fetchLocale() async {
     var prefs = await SharedPreferences.getInstance();
     if (prefs.getString('language_code') == null) {
-      _appLocale = Locale('${GlobalConfiguration().getValue('defaultLanguage')}', '');
+      _appLocale =
+          Locale('${GlobalConfiguration().getValue('defaultLanguage')}', '');
       return Null;
     }
     _appLocale = Locale(prefs.getString('language_code'));
@@ -54,7 +64,7 @@ class AppLanguage extends ChangeNotifier {
       _appLocale = Locale("tr", "");
       await prefs.setString('language_code', 'tr');
       await prefs.setString('countryCode', 'TR');
-    }else if (type == Locale("ru", "")) {
+    } else if (type == Locale("ru", "")) {
       _appLocale = Locale("ru", "");
       await prefs.setString('language_code', 'ru');
       await prefs.setString('countryCode', 'RU');

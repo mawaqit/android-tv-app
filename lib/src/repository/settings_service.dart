@@ -1,17 +1,24 @@
 import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flyweb/src/models/settings.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart';
-import 'package:flyweb/src/models/settings.dart';
 
 ValueNotifier<Settings> setting = new ValueNotifier(new Settings());
 
 class SettingsService {
   Future<Settings> getSettings() async {
-    var res = await get(Uri.parse(
-     '${GlobalConfiguration().getValue('api_base_url')}/api/settings/settings.php'));
+    // var localSettings =
+    var res = await get(
+      Uri.parse(
+        '${GlobalConfiguration().getValue('api_base_url')}/api/settings/settings.php',
+      ),
+    );
     if (res.statusCode == 200) {
       final json = jsonDecode(res.body);
+
+      json['data']['boarding'] = '1';
       Settings settings = Settings.fromJson(json["data"]);
       return settings;
     } else {

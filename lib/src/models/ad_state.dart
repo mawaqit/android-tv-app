@@ -14,20 +14,32 @@ class AdState {
   AdListener get adListener => _adListener;
 
   AdListener _adListener = AdListener(
-      onAdLoaded: (ad) => print('AdMod_ loaded: ${ad.adUnitId}'),
-      onAdClosed: (ad) => print('AdMod_ closed: ${ad.adUnitId}'),
-      onAdFailedToLoad: (ad, error) =>
-          print('AdMod_ failed to load: ${ad.adUnitId}, $error.'),
-      onAdOpened: (ad) => print('AdMod_ opened: ${ad.adUnitId}.'),
-      onAppEvent: (ad, name, data) =>
-          print('AdMod_ App event : ${ad.adUnitId}, $name, $data.'),
-      onApplicationExit: (ad) => print('AdMod_ App Exit: ${ad.adUnitId}'),
-      onNativeAdClicked: (nativeAd) =>
-          print('AdMod_ Native ad clicked: ${nativeAd.adUnitId}.'),
-      onNativeAdImpression: (nativeAd) =>
-          print("AdMod_ Native ad impression: ${nativeAd.adUnitId}"),
-      onRewardedAdUserEarnedReward: (ad, reward) => print(
-          'AdMod_ User rewarded: ${ad.adUnitId}, ${reward.amount} ${reward.type}.')
+    onAdLoaded: (ad) => print(
+      'AdMod_ loaded: ${ad.adUnitId}',
+    ),
+    onAdClosed: (ad) => print(
+      'AdMod_ closed: ${ad.adUnitId}',
+    ),
+    onAdFailedToLoad: (ad, error) => print(
+      'AdMod_ failed to load: ${ad.adUnitId}, $error.',
+    ),
+    onAdOpened: (ad) => print(
+      'AdMod_ opened: ${ad.adUnitId}.',
+    ),
+    onAppEvent: (ad, name, data) => print(
+      'AdMod_ App event : ${ad.adUnitId}, $name, $data.',
+    ),
+    onApplicationExit: (ad) => print(
+      'AdMod_ App Exit: ${ad.adUnitId}',
+    ),
+    onNativeAdClicked: (nativeAd) => print(
+      'AdMod_ Native ad clicked: ${nativeAd.adUnitId}.',
+    ),
+    onNativeAdImpression: (nativeAd) => print(
+      "AdMod_ Native ad impression: ${nativeAd.adUnitId}",
+    ),
+    onRewardedAdUserEarnedReward: (ad, reward) => print(
+      'AdMod_ User rewarded: ${ad.adUnitId}, ${reward.amount} ${reward.type}.',
+    ),
   );
-
 }

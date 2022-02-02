@@ -1,20 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 import 'dart:math' as math;
-import 'dart:typed_data';
-import 'dart:ui';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:flyweb/src/models/floating.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:android_intent/android_intent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Page;
-import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/elements/DrawerListTitle.dart';
 import 'package:flyweb/src/elements/Loader.dart';
@@ -23,6 +18,7 @@ import 'package:flyweb/src/enum/connectivity_status.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/OneSignalHelper.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
+import 'package:flyweb/src/models/floating.dart';
 import 'package:flyweb/src/models/menu.dart';
 import 'package:flyweb/src/models/navigationIcon.dart';
 import 'package:flyweb/src/models/page.dart';
@@ -32,26 +28,23 @@ import 'package:flyweb/src/pages/PageScreen.dart';
 import 'package:flyweb/src/pages/WebScreen.dart';
 import 'package:flyweb/src/position/PositionOptions.dart';
 import 'package:flyweb/src/position/PositionResponse.dart';
+import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:flyweb/src/themes/UIImages.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:http/http.dart' as http;
 import 'package:launch_review/launch_review.dart';
 import 'package:location/location.dart' hide LocationAccuracy;
 import 'package:package_info/package_info.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-
 import 'AboutScreen.dart';
-
-import 'package:flyweb/src/services/theme_manager.dart';
 
 GlobalKey<_WebViewScreen> key0 = GlobalKey();
 GlobalKey<_WebViewScreen> key1 = GlobalKey();
@@ -132,11 +125,12 @@ class _HomeScreen extends State<HomeScreen>
     _handleIncomingLinks();
 
     tabController = new TabController(
-        initialIndex: 0,
-        length: widget.settings.tabNavigationEnable == "1"
-            ? widget.settings.tab.length
-            : 1,
-        vsync: this);
+      initialIndex: 0,
+      length: widget.settings.tabNavigationEnable == "1"
+          ? widget.settings.tab.length
+          : 1,
+      vsync: this,
+    );
     tabController.addListener(_handleTabSelection);
 
     if (widget.settings.adBanner == "1") {
@@ -283,10 +277,15 @@ class _HomeScreen extends State<HomeScreen>
             goToWeb = false;
           });
           final result = await Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: WebScreen(_oneSignalHelper.url, widget.settings)));
+            context,
+            PageTransition(
+              type: PageTransitionType.rightToLeft,
+              child: WebScreen(
+                _oneSignalHelper.url,
+                widget.settings,
+              ),
+            ),
+          );
 
           setState(() {
             goToWeb = true;
@@ -306,12 +305,13 @@ class _HomeScreen extends State<HomeScreen>
 
     final List<Widget> _children = [];
 
-    print("widget.settings.floating.length");
-    print(widget.settings.floating.length);
+    // print("widget.settings.floating.length");
+    // print(widget.settings.floating.length);
 
     return WillPopScope(
       onWillPop: () async {
         getCurrentKey().currentState.goBack();
+        return false;
       },
       child: Container(
           decoration: BoxDecoration(color: HexColor("#f5f4f4")),
@@ -373,8 +373,7 @@ class _HomeScreen extends State<HomeScreen>
                                     goToWeb = false;
                                   });
                                   Navigator.pop(context);
-
-                                  final result = await Navigator.push(
+                                  await Navigator.push(
                                       context,
                                       PageTransition(
                                           type: PageTransitionType.rightToLeft,

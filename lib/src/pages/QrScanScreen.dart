@@ -1,18 +1,11 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flyweb/i18n/i18n.dart';
-import 'package:flyweb/src/elements/CardTitleDescription.dart';
-import 'package:flyweb/src/elements/SocialItem.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/models/social.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class QrScanScreen extends StatefulWidget {
   @override
@@ -158,4 +151,3 @@ Widget _renderAppBar(context, Settings settings) {
         ),
       ));
 }
-

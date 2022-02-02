@@ -12,8 +12,8 @@ import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/pages/SplashScreen.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:provider/provider.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +25,7 @@ Future<void> main() async {
   Settings settings = new Settings();
 
   await GlobalConfiguration().loadFromAsset("configuration");
+
   AppLanguage appLanguage = AppLanguage();
   await appLanguage.fetchLocale();
 
@@ -38,12 +39,17 @@ Future<void> main() async {
     if (set != null) {
       settings = Settings.fromJson(set);
     }
-  } on Exception catch (exception) {
   } catch (Excepetion) {}
 
   return runApp(ChangeNotifierProvider<ThemeNotifier>(
     create: (_) => new ThemeNotifier(),
-    child: Provider.value(value: adState, builder: (context, child) => MyApp(appLanguage: appLanguage, settings: settings)),
+    child: Provider.value(
+      value: adState,
+      builder: (context, child) => MyApp(
+        appLanguage: appLanguage,
+        settings: settings,
+      ),
+    ),
   ));
 }
 
@@ -60,19 +66,23 @@ class MyApp extends StatelessWidget {
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         // ignore: missing_required_param
         return StreamProvider<ConnectivityStatus>(
-            create: (context) => ConnectivityService().connectionStatusController.stream,
-            child: Consumer<ThemeNotifier>(
-                builder: (context, theme, _) => MaterialApp(
-                    theme: theme.getTheme(),
-                    locale: model.appLocal,
-                    localizationsDelegates: [
-                      I18n.delegate,
-                      GlobalMaterialLocalizations.delegate,
-                      GlobalWidgetsLocalizations.delegate,
-                    ],
-                    supportedLocales: I18n.delegate.supportedLocales,
-                    debugShowCheckedModeBanner: false,
-                    home: SplashScreen(settings: this.settings))));
+          create: (context) =>
+              ConnectivityService().connectionStatusController.stream,
+          child: Consumer<ThemeNotifier>(
+            builder: (context, theme, _) => MaterialApp(
+              theme: theme.getTheme(),
+              locale: model.appLocal,
+              localizationsDelegates: [
+                I18n.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: I18n.delegate.supportedLocales,
+              debugShowCheckedModeBanner: false,
+              home: SplashScreen(settings: this.settings),
+            ),
+          ),
+        );
       }),
     );
   }

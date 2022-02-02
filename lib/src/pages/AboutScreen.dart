@@ -1,9 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flyweb/i18n/i18n.dart';
-import 'package:flyweb/src/elements/CardTitleDescription.dart';
 import 'package:flyweb/src/elements/SocialItem.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flyweb/i18n/i18n.dart';
-import 'package:flyweb/src/elements/CardTitleDescription.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/settings.dart';
@@ -42,11 +41,7 @@ class _AboutScreen extends State<AboutScreen> {
       appBar: _renderAppBar(context, settings),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              
-            ]
-          ),
+          child: Column(children: <Widget>[]),
         ),
       ),
     );
@@ -55,13 +50,11 @@ class _AboutScreen extends State<AboutScreen> {
 
 Widget _renderAppBar(context, Settings settings) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
-  return  AppBar(
-      title:Text(
+  return AppBar(
+      title: Text(
         I18n.current.about,
         style: TextStyle(
-            color: Colors.white,
-            fontSize: 22.0,
-            fontWeight: FontWeight.bold),
+            color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
       ),
       flexibleSpace: Container(
         decoration: BoxDecoration(

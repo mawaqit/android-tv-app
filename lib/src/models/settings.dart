@@ -68,68 +68,69 @@ class Settings {
   List<Social> socials = [];
   List<Slider> sliders = [];
 
-  Settings.fromSettings(Map<String, dynamic> json) {
-    url = "http://google.fr";
-  }
+  // Settings.fromSettings(Map<String, dynamic> json) {
+  //   url = "http://google.fr";
+  // }
 
-  Settings(
-      {this.id,
-      this.title = "",
-      this.subTitle,
-      this.url,
-      this.admobId,
-      this.admobIdIos,
-      this.admobKeyAdBanner,
-      this.admobKeyAdInterstitial,
-      this.admobKeyAdBannerIos,
-      this.admobKeyAdInterstitialIos,
-      this.admobDealy,
-      this.navigatinBarStyle,
-      this.leftButton,
-      this.rightButton,
-      this.loader,
-      this.loaderColor,
-      this.firstColor,
-      this.secondColor,
-      this.backgroundColor,
-      this.logo,
-      this.logoUrl,
-      this.logoHeader,
-      this.logoHeaderUrl,
-      this.typeHeader,
-      this.javascript,
-      this.downloadWebview,
-      this.permissionDialog,
-      this.splachScreen,
-      this.swipeRefresh,
-      this.websiteZoom,
-      this.desktopMode,
-      this.fullScreen,
-      this.androidId,
-      this.iosId,
-      this.aboutUs,
-      this.share,
-      this.adBanner,
-      this.adBannerIos,
-      this.adInterstitial,
-      this.adInterstitialIos,
-      this.versionAndroid,
-      this.versionIos,
-      this.pullRefresh,
-      this.boarding,
-      this.tabNavigationEnable,
-      this.colorTab,
-      this.menus,
-      this.floating,
-      this.pages,
-      this.socials,
-      this.sliders,
-      this.leftNavigationIcon,
-      this.rightNavigationIcon,
-      this.rightNavigationIconList,
-      this.splash,
-      this.userAgent,
-      this.tab});
+  Settings({
+    this.id,
+    this.title = "",
+    this.subTitle,
+    this.url,
+    this.admobId,
+    this.admobIdIos,
+    this.admobKeyAdBanner,
+    this.admobKeyAdInterstitial,
+    this.admobKeyAdBannerIos,
+    this.admobKeyAdInterstitialIos,
+    this.admobDealy,
+    this.navigatinBarStyle,
+    this.leftButton,
+    this.rightButton,
+    this.loader,
+    this.loaderColor,
+    this.firstColor,
+    this.secondColor,
+    this.backgroundColor,
+    this.logo,
+    this.logoUrl,
+    this.logoHeader,
+    this.logoHeaderUrl,
+    this.typeHeader,
+    this.javascript,
+    this.downloadWebview,
+    this.permissionDialog,
+    this.splachScreen,
+    this.swipeRefresh,
+    this.websiteZoom,
+    this.desktopMode,
+    this.fullScreen,
+    this.androidId,
+    this.iosId,
+    this.aboutUs,
+    this.share,
+    this.adBanner,
+    this.adBannerIos,
+    this.adInterstitial,
+    this.adInterstitialIos,
+    this.versionAndroid,
+    this.versionIos,
+    this.pullRefresh,
+    this.boarding,
+    this.tabNavigationEnable,
+    this.colorTab,
+    this.menus,
+    this.floating,
+    this.pages,
+    this.socials,
+    this.sliders,
+    this.leftNavigationIcon,
+    this.rightNavigationIcon,
+    this.rightNavigationIconList,
+    this.splash,
+    this.userAgent,
+    this.tab,
+  });
 
   Settings.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -300,9 +301,9 @@ class Settings {
     data['tab_navigation_enable'] = this.tabNavigationEnable;
     data['colorTab'] = this.colorTab;
 
-
     if (this.rightNavigationIconList != null) {
-      data['rightNavigationIconList'] = this.rightNavigationIconList.map((v) => v.toJson()).toList();
+      data['rightNavigationIconList'] =
+          this.rightNavigationIconList.map((v) => v.toJson()).toList();
     }
 
     if (this.menus != null) {

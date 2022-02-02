@@ -75,7 +75,6 @@ class I18n implements WidgetsLocalizations {
 
   String get lightMode => "Light mode";
 
-
   String social(String type) {
     return type;
   }
