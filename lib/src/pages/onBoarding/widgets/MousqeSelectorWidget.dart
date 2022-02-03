@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
+import 'package:flyweb/src/services/mosque_manager.dart';
 import 'package:flyweb/src/widgets/WhiteButton.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class OnBoardingMosqueSelector extends StatefulWidget {
-  final void Function(String url) onDone;
+  final void Function() onDone;
 
   OnBoardingMosqueSelector({
     Key key,
@@ -29,23 +29,20 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
   Future<void> _onDone(String mosqueId) async {
     setState(() => loading = true);
 
-    sharedPref.save('boarding', 'true');
-    sharedPref.save('mosqueId', mosqueId);
+    final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
 
-    var url =
-        'https://mawaqit.net/${AppLanguage().appLocal.languageCode}/id/$mosqueId?view=desktop';
+    mosqueManager.setMosqueId(mosqueId).then((value) {
+      setState(() => loading = false);
 
-    var value = await http.get(Uri.parse(url));
-
-    if (value.statusCode != 200) {
+      sharedPref.save('boarding', 'true');
+      widget.onDone();
+    }).catchError((e) {
       setState(() {
         loading = false;
 
         error = 'invalid Mosque id';
       });
-    } else {
-      widget.onDone(url);
-    }
+    });
   }
 
   @override
@@ -55,7 +52,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            I18n.current.descLang,
+            "Select Mosque Id",
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: 24,

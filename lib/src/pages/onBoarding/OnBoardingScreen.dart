@@ -3,9 +3,9 @@ import 'package:flyweb/src/helpers/AppConfig.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/pages/HomeScreen.dart';
-import 'package:flyweb/src/pages/onboarding/widgets/LanuageSelectorWidget.dart';
-import 'package:flyweb/src/pages/onboarding/widgets/MousqeSelectorWidget.dart';
-import 'package:flyweb/src/pages/onboarding/widgets/TextScreenWidget.dart';
+import 'package:flyweb/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
+import 'package:flyweb/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
+import 'package:flyweb/src/pages/onBoarding/widgets/TextScreenWidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // class OnBoardingScreen extends StatefulWidget {
@@ -184,12 +184,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   var state = _ScreenState.Text;
   final sharedPref = SharedPref();
 
-  _onDone(String url) async {
+  _onDone() async {
     sharedPref.save('boarding', 'true');
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => HomeScreen(url, widget.settings),
+        builder: (context) => HomeScreen(widget.settings),
       ),
     );
   }

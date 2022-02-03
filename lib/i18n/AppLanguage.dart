@@ -14,7 +14,9 @@ class AppLanguage extends ChangeNotifier {
     return currentLang['subtitle'];
   }
 
-  Locale get appLocal => _appLocale ?? Locale('en', '');
+  Locale get appLocal {
+    return _appLocale ?? Locale('en', '');
+  }
 
   fetchLocale() async {
     var prefs = await SharedPreferences.getInstance();

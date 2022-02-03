@@ -10,6 +10,7 @@ import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/ad_state.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/pages/SplashScreen.dart';
+import 'package:flyweb/src/services/mosque_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -26,8 +27,8 @@ Future<void> main() async {
 
   await GlobalConfiguration().loadFromAsset("configuration");
 
-  AppLanguage appLanguage = AppLanguage();
-  await appLanguage.fetchLocale();
+  // AppLanguage appLanguage = AppLanguage();
+  // await appLanguage.fetchLocale();
 
   /*  For Enable WebRTC (Remove this comment)
   await Permission.camera.request();
@@ -46,7 +47,7 @@ Future<void> main() async {
     child: Provider.value(
       value: adState,
       builder: (context, child) => MyApp(
-        appLanguage: appLanguage,
+        // appLanguage: appLanguage,
         settings: settings,
       ),
     ),
@@ -54,15 +55,22 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final AppLanguage appLanguage;
+  // final AppLanguage appLanguage;
   final Settings settings;
 
-  MyApp({this.appLanguage, this.settings});
+  MyApp({this.settings});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AppLanguage>(
-      create: (_) => appLanguage,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AppLanguage()..fetchLocale(),
+        ),
+        ChangeNotifierProvider(create: (context) => MosqueManager()..init()),
+      ],
+      //   providers:
+      // create: (_) => appLanguage,
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         // ignore: missing_required_param
         return StreamProvider<ConnectivityStatus>(

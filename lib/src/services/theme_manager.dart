@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import './storage_manager.dart';
 
 class ThemeNotifier with ChangeNotifier {
@@ -14,17 +15,18 @@ class ThemeNotifier with ChangeNotifier {
   );
 
   final lightTheme = ThemeData(
-   /* primarySwatch: Colors.grey,
-    primaryColor: Colors.white,
-    brightness: Brightness.light,
-    backgroundColor: const Color(0xFFE5E5E5),
-    accentColor: Colors.black,
-    accentIconTheme: IconThemeData(color: Colors.white),
-    dividerColor: Colors.white54,
-    canvasColor:Colors.white,*/
-  );
+      // primarySwatch: Colors.grey,
+      // primaryColor: Colors.white,
+      // brightness: Brightness.light,
+      // backgroundColor: const Color(0xFFE5E5E5),
+      // accentColor: Colors.black,
+      // accentIconTheme: IconThemeData(color: Colors.white),
+      // dividerColor: Colors.white54,
+      // canvasColor: Colors.white,
+      );
 
   ThemeData _themeData;
+
   ThemeData getTheme() => _themeData;
   bool isLightTheme;
 

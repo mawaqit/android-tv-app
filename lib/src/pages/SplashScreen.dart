@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/src/data/config.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
@@ -151,12 +150,9 @@ class _SplashScreen extends State<SplashScreen> {
         ),
       );
     } else {
-      var url =
-          'https://mawaqit.net/${AppLanguage().appLocal.languageCode}/id/$mosqueId?view=desktop';
-
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (BuildContext context) => HomeScreen(url, settings),
+          builder: (BuildContext context) => HomeScreen(settings),
         ),
       );
     }

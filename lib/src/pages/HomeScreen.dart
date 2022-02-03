@@ -10,6 +10,7 @@ import 'package:flutter/material.dart' hide Page;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/elements/DrawerListTitle.dart';
 import 'package:flyweb/src/elements/Loader.dart';
@@ -24,10 +25,12 @@ import 'package:flyweb/src/models/navigationIcon.dart';
 import 'package:flyweb/src/models/page.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/pages/LanguageScreen.dart';
+import 'package:flyweb/src/pages/MosqueSearchScreen.dart';
 import 'package:flyweb/src/pages/PageScreen.dart';
 import 'package:flyweb/src/pages/WebScreen.dart';
 import 'package:flyweb/src/position/PositionOptions.dart';
 import 'package:flyweb/src/position/PositionResponse.dart';
+import 'package:flyweb/src/services/mosque_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:flyweb/src/themes/UIImages.dart';
 import 'package:geolocator/geolocator.dart';
@@ -69,10 +72,9 @@ List<StreamController<int>> listStream = [
 ];
 
 class HomeScreen extends StatefulWidget {
-  final String url;
   final Settings settings;
 
-  const HomeScreen(this.url, this.settings);
+  const HomeScreen(this.settings);
 
   @override
   State<StatefulWidget> createState() {
@@ -206,7 +208,7 @@ class _HomeScreen extends State<HomeScreen>
             final result = await Navigator.push(
                 context,
                 PageTransition(
-                    type: PageTransitionType.rightToLeft,
+                    type: pageTransitionAnimation(context),
                     child: WebScreen(link, widget.settings)));
 
             setState(() {
@@ -214,8 +216,11 @@ class _HomeScreen extends State<HomeScreen>
             });
           }
         } else {
-          key0.currentState._webViewController
-              ?.loadUrl(urlRequest: URLRequest(url: Uri.parse(link)));
+          key0.currentState._webViewController?.loadUrl(
+            urlRequest: URLRequest(
+              url: Uri.parse(link),
+            ),
+          );
         }
       }, onError: (Object err) {
         if (!mounted) return;
@@ -228,9 +233,7 @@ class _HomeScreen extends State<HomeScreen>
   }
 
   _handleTabSelection() {
-    setState(() {
-      _currentIndex = tabController.index;
-    });
+    setState(() => _currentIndex = tabController.index);
   }
 
   @override
@@ -259,8 +262,14 @@ class _HomeScreen extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData mediaQueryData = MediaQuery.of(context);
-    var bottomPadding = mediaQueryData.padding.bottom;
+    final appLanguage = context.watch<AppLanguage>();
+    final mosqueManager = context.watch<MosqueManager>();
+
+    var url =
+        'https://mawaqit.net/${appLanguage.appLocal.languageCode}/id/${mosqueManager.mosqueId}?view=desktop';
+
+    print(url);
+    var bottomPadding = MediaQuery.of(context).padding.bottom;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
 
     var themeProvider = Provider.of<ThemeNotifier>(context);
@@ -279,7 +288,7 @@ class _HomeScreen extends State<HomeScreen>
           final result = await Navigator.push(
             context,
             PageTransition(
-              type: PageTransitionType.rightToLeft,
+              type: pageTransitionAnimation(context),
               child: WebScreen(
                 _oneSignalHelper.url,
                 widget.settings,
@@ -293,7 +302,12 @@ class _HomeScreen extends State<HomeScreen>
         }
       } else {
         key0.currentState._webViewController?.loadUrl(
-            urlRequest: URLRequest(url: Uri.parse(_oneSignalHelper.url)));
+          urlRequest: URLRequest(
+            url: Uri.parse(
+              _oneSignalHelper.url,
+            ),
+          ),
+        );
       }
     }
 
@@ -305,13 +319,9 @@ class _HomeScreen extends State<HomeScreen>
 
     final List<Widget> _children = [];
 
-    // print("widget.settings.floating.length");
-    // print(widget.settings.floating.length);
-
     return WillPopScope(
       onWillPop: () async {
-        getCurrentKey().currentState.goBack();
-        return false;
+        return getCurrentKey().currentState.goBack();
       },
       child: Container(
           decoration: BoxDecoration(color: HexColor("#f5f4f4")),
@@ -327,14 +337,17 @@ class _HomeScreen extends State<HomeScreen>
                       children: <Widget>[
                         DrawerHeader(
                             decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: <Color>[
-                              themeProvider.isLightTheme
-                                  ? HexColor(settings.firstColor)
-                                  : themeProvider.darkTheme.primaryColor,
-                              themeProvider.isLightTheme
-                                  ? HexColor(settings.secondColor)
-                                  : themeProvider.darkTheme.primaryColor,
-                            ])),
+                              gradient: LinearGradient(
+                                colors: <Color>[
+                                  themeProvider.isLightTheme
+                                      ? HexColor(settings.firstColor)
+                                      : themeProvider.darkTheme.primaryColor,
+                                  themeProvider.isLightTheme
+                                      ? HexColor(settings.secondColor)
+                                      : themeProvider.darkTheme.primaryColor,
+                                ],
+                              ),
+                            ),
                             child: Container(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -369,25 +382,27 @@ class _HomeScreen extends State<HomeScreen>
                             onTap: () async {
                               if (widget.settings.tabNavigationEnable == "1") {
                                 if (goToWeb) {
-                                  setState(() {
-                                    goToWeb = false;
-                                  });
+                                  setState(() => goToWeb = false);
                                   Navigator.pop(context);
                                   await Navigator.push(
-                                      context,
-                                      PageTransition(
-                                          type: PageTransitionType.rightToLeft,
-                                          child: WebScreen(widget.settings.url,
-                                              widget.settings)));
+                                    context,
+                                    PageTransition(
+                                      type: pageTransitionAnimation(context),
+                                      child: WebScreen(
+                                        widget.settings.url,
+                                        widget.settings,
+                                      ),
+                                    ),
+                                  );
 
-                                  setState(() {
-                                    goToWeb = true;
-                                  });
+                                  setState(() => goToWeb = true);
                                 }
                               } else {
                                 key0.currentState._webViewController?.loadUrl(
-                                    urlRequest: URLRequest(
-                                        url: Uri.parse(settings.url)));
+                                  urlRequest: URLRequest(
+                                    url: Uri.parse(settings.url),
+                                  ),
+                                );
 
                                 Navigator.pop(context);
                               }
@@ -418,26 +433,47 @@ class _HomeScreen extends State<HomeScreen>
                               }
                             }),
                         DrawerListTitle(
-                            icon: Icons.translate,
-                            text: I18n.current.languages,
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.rightToLeft,
-                                      child: LanguageScreen()));
-                            }),
+                          icon: Icons.translate,
+                          text: I18n.current.languages,
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: pageTransitionAnimation(context),
+                                child: LanguageScreen(),
+                              ),
+                            );
+                          },
+                        ),
                         DrawerListTitle(
-                            icon: Icons.info,
-                            text: I18n.current.about,
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.rightToLeft,
-                                      child: AboutScreen()));
-                            }),
+                          icon: Icons.museum_outlined,
+                          text: 'Change Mosque',
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: pageTransitionAnimation(context),
+                                child: MosqueSearchScreen(settings: settings),
+                              ),
+                            );
+                          },
+                        ),
+                        DrawerListTitle(
+                          icon: Icons.info,
+                          text: I18n.current.about,
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: pageTransitionAnimation(context),
+                                child: AboutScreen(),
+                              ),
+                            );
+                          },
+                        ),
                         DrawerListTitle(
                             icon: Icons.share,
                             text: I18n.current.share,
@@ -481,27 +517,22 @@ class _HomeScreen extends State<HomeScreen>
                         ? TabBarView(
                             controller: tabController,
                             physics: NeverScrollableScrollPhysics(),
-                            children: List.generate(widget.settings.tab.length,
-                                (index) {
-                              return WebViewScreen(
+                            children: List.generate(
+                              widget.settings.tab.length,
+                              (index) => WebViewScreen(
                                   key: listKey[index],
                                   path: widget.settings.tab[index].url,
                                   pos: index,
                                   settings: widget.settings,
-                                  stream: listStream[index].stream);
-                            }),
+                                  stream: listStream[index].stream),
+                            ),
                           )
-                        : TabBarView(
-                            controller: tabController,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: List.generate(1, (index) {
-                              return WebViewScreen(
-                                  key: listKey[0],
-                                  path: widget.url,
-                                  pos: index,
-                                  settings: widget.settings,
-                                  stream: listStream[0].stream);
-                            }),
+                        : WebViewScreen(
+                            key: listKey[0],
+                            path: url,
+                            pos: 0,
+                            settings: widget.settings,
+                            stream: listStream[0].stream,
                           ),
                   ),
                   if (widget.settings.adBanner == "1" && _isBannerAdReady)
@@ -738,7 +769,13 @@ class _HomeScreen extends State<HomeScreen>
     return positionResponse;
   }
 
-  Widget _renderMenuDrawer(List<Menu> menus, context) {
+  pageTransitionAnimation(BuildContext context) {
+    return Directionality.of(context) == TextDirection.ltr
+        ? PageTransitionType.leftToRight
+        : PageTransitionType.rightToLeft;
+  }
+
+  Widget _renderMenuDrawer(List<Menu> menus, BuildContext context) {
     return new Column(
       children: menus
           .map(
@@ -752,10 +789,15 @@ class _HomeScreen extends State<HomeScreen>
                         goToWeb = false;
                       });
                       final result = await Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: WebScreen(menu.url, widget.settings)));
+                        context,
+                        PageTransition(
+                          type: pageTransitionAnimation(context),
+                          child: WebScreen(
+                            menu.url,
+                            widget.settings,
+                          ),
+                        ),
+                      );
 
                       setState(() {
                         goToWeb = true;
@@ -793,18 +835,21 @@ class _HomeScreen extends State<HomeScreen>
                       goToWeb = false;
                     });
                     final result = await Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: WebScreen(floating.url, widget.settings)));
+                      context,
+                      PageTransition(
+                        type: pageTransitionAnimation(context),
+                        child: WebScreen(floating.url, widget.settings),
+                      ),
+                    );
 
-                    setState(() {
-                      goToWeb = true;
-                    });
+                    setState(() => goToWeb = true);
                   }
                 } else {
                   key0.currentState._webViewController?.loadUrl(
-                      urlRequest: URLRequest(url: Uri.parse(floating.url)));
+                    urlRequest: URLRequest(
+                      url: Uri.parse(floating.url),
+                    ),
+                  );
 
                   //Navigator.pop(context);
                 }
@@ -825,7 +870,7 @@ class _HomeScreen extends State<HomeScreen>
                   Navigator.push(
                       context,
                       PageTransition(
-                          type: PageTransitionType.rightToLeft,
+                          type: pageTransitionAnimation(context),
                           child: PageScreen(page, widget.settings)));
                 }),
           )
@@ -1120,7 +1165,7 @@ class _HomeScreen extends State<HomeScreen>
           final result = await Navigator.push(
               context,
               PageTransition(
-                  type: PageTransitionType.rightToLeft,
+                  type: pageTransitionAnimation(context),
                   child: WebScreen(navigationIcon.url, widget.settings)));
           setState(() {
             goToWeb = false;
@@ -1144,7 +1189,7 @@ class _HomeScreen extends State<HomeScreen>
               final result = await Navigator.push(
                   context,
                   PageTransition(
-                      type: PageTransitionType.rightToLeft,
+                      type: pageTransitionAnimation(context),
                       child: WebScreen(settings.url, widget.settings)));
               setState(() {
                 goToWeb = true;
@@ -1209,7 +1254,7 @@ class _HomeScreen extends State<HomeScreen>
             final result = await Navigator.push(
                 context,
                 PageTransition(
-                    type: PageTransitionType.rightToLeft,
+                    type: pageTransitionAnimation(context),
                     child: WebScreen(qrCode, widget.settings)));
 
             setState(() {
@@ -1286,15 +1331,15 @@ class WebViewScreen extends StatefulWidget {
   final InAppWebViewController webViewController;
   final Stream<int> stream;
 
-  WebViewScreen(
-      {Key key,
-      this.path,
-      this.webKey,
-      this.pos,
-      this.settings,
-      this.webViewController,
-      this.stream})
-      : super(key: key);
+  WebViewScreen({
+    Key key,
+    this.path,
+    this.webKey,
+    this.pos,
+    this.settings,
+    this.webViewController,
+    this.stream,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -1362,6 +1407,18 @@ class _WebViewScreen extends State<WebViewScreen>
   }
 
   @override
+  void didUpdateWidget(covariant WebViewScreen oldWidget) {
+    if (oldWidget.path != widget.path) {
+      _webViewController.loadUrl(
+        urlRequest: URLRequest(
+          url: Uri.parse(widget.path),
+        ),
+      );
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     /*if (_webViewController != null) {
       if (state == AppLifecycleState.paused) {
@@ -1402,13 +1459,14 @@ class _WebViewScreen extends State<WebViewScreen>
               gestureRecognizers: _gSet,
               initialOptions: InAppWebViewGroupOptions(
                   crossPlatform: InAppWebViewOptions(
-                      supportZoom: false,
-                      useShouldOverrideUrlLoading: true,
-                      useOnDownloadStart: true,
-                      mediaPlaybackRequiresUserGesture: false,
-                      userAgent: Platform.isAndroid
-                          ? widget.settings.userAgent.valueAndroid
-                          : widget.settings.userAgent.valueIOS),
+                    supportZoom: false,
+                    useShouldOverrideUrlLoading: true,
+                    useOnDownloadStart: true,
+                    mediaPlaybackRequiresUserGesture: false,
+                    userAgent: Platform.isAndroid
+                        ? widget.settings.userAgent.valueAndroid
+                        : widget.settings.userAgent.valueIOS,
+                  ),
                   android: AndroidInAppWebViewOptions(
                     useHybridComposition: true,
                   ),

@@ -410,15 +410,18 @@ class _HomeScreen extends State<HomeScreen>
                               }
                             }),
                         DrawerListTitle(
-                            icon: Icons.translate,
-                            text: I18n.current.languages,
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.rightToLeft,
-                                      child: LanguageScreen()));
-                            }),
+                          icon: Icons.translate,
+                          text: I18n.current.languages,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: LanguageScreen(),
+                              ),
+                            );
+                          },
+                        ),
                         DrawerListTitle(
                             icon: Icons.info,
                             text: I18n.current.about,
