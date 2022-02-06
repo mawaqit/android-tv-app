@@ -57,7 +57,7 @@ class _AboutScreen extends State<AboutScreen> {
     // TODO: implement build
 
     return Scaffold(
-      appBar: _renderAppBar(context, settings),
+      appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -85,7 +85,7 @@ class _AboutScreen extends State<AboutScreen> {
                 child: Padding(
                     padding: EdgeInsets.all(13),
                     child: Image.network(
-                      settings.logoHeaderUrl,
+                      settings.logoHeaderUrl!,
                     )),
               ),
             ),
@@ -93,7 +93,7 @@ class _AboutScreen extends State<AboutScreen> {
               padding: EdgeInsets.only(left: 0, top: 10, right: 0, bottom: 10),
               child: Center(
                   child: Text(
-                settings.title,
+                settings.title!,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               )),
@@ -108,7 +108,7 @@ class _AboutScreen extends State<AboutScreen> {
                   EdgeInsets.only(left: 20, top: 40, right: 20, bottom: 10),
               child: Center(
                   child: Text(
-                settings.aboutUs,
+                settings.aboutUs!,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
               )),
@@ -121,7 +121,7 @@ class _AboutScreen extends State<AboutScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
                 )),
-            _renderSocialList(settings.socials, context),
+            _renderSocialList(settings.socials!, context),
             SizedBox(height: 30),
           ],
         ),
@@ -134,7 +134,7 @@ Widget _renderAppBar(context, Settings settings) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
       title: Text(
-        I18n.current.about,
+        I18n.current!.about,
         style: TextStyle(
             color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
       ),
@@ -144,10 +144,10 @@ Widget _renderAppBar(context, Settings settings) {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: <Color>[
-              themeProvider.isLightTheme
+              themeProvider.isLightTheme!
                   ? HexColor(settings.firstColor)
                   : themeProvider.darkTheme.primaryColor,
-              themeProvider.isLightTheme
+              themeProvider.isLightTheme!
                   ? HexColor(settings.secondColor)
                   : themeProvider.darkTheme.primaryColor,
             ],
@@ -164,14 +164,14 @@ Widget _renderSocialList(List<Social> socials, context) {
         .map(
           (Social social) => SocialItem(
               icon_url: social.iconUrl,
-              text: I18n.current.social(social.title),
+              text: I18n.current!.social(social.title),
               onTap: () async {
                 if (await canLaunch(
-                    social.linkUrl.replaceAll("id_app", social.idApp))) {
+                    social.linkUrl!.replaceAll("id_app", social.idApp!))) {
                   await launch(
-                      social.linkUrl.replaceAll("id_app", social.idApp));
+                      social.linkUrl!.replaceAll("id_app", social.idApp!));
                 } else {
-                  launch(social.url.replaceAll("id_app", social.idApp));
+                  launch(social.url!.replaceAll("id_app", social.idApp!));
                 }
               }),
         )

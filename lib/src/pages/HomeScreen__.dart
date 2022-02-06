@@ -82,21 +82,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen>
-    with TickerProviderStateMixin, SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   SharedPref sharedPref = SharedPref();
   Settings settings = new Settings();
 
-  BannerAd _bannerAd;
+  BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
-  InterstitialAd _interstitialAd;
+  InterstitialAd? _interstitialAd;
   bool _isInterstitialAdReady = false;
 
   static GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String url = "";
 
-  Uri _initialUri;
-  Uri _latestUri;
-  StreamSubscription _sub;
+  Uri? _initialUri;
+  Uri? _latestUri;
+  StreamSubscription? _sub;
   bool goToWeb = true;
 
   List<StreamSubscription<Position>> webViewGPSPositionStreams = [];
@@ -115,7 +115,7 @@ class _HomeScreen extends State<HomeScreen>
     buildNumber: 'Unknown',
   );
 
-  TabController tabController;
+  TabController? tabController;
   int _currentIndex = 0;
 
   @override
@@ -126,23 +126,24 @@ class _HomeScreen extends State<HomeScreen>
     _handleIncomingLinks();
 
     tabController = new TabController(
-        initialIndex: 0,
-        length: widget.settings.tabNavigationEnable == "1"
-            ? widget.settings.tab.length
-            : 1,
-        vsync: this);
-    tabController.addListener(_handleTabSelection);
+      initialIndex: 0,
+      length: widget.settings.tabNavigationEnable == "1"
+          ? widget.settings.tab!.length
+          : 1,
+      vsync: this,
+    );
+    tabController!.addListener(_handleTabSelection);
 
     if (widget.settings.adBanner == "1") {
       String adBannerId = Platform.isAndroid
-          ? widget.settings.admobKeyAdBanner
-          : widget.settings.admobKeyAdBannerIos;
+          ? widget.settings.admobKeyAdBanner!
+          : widget.settings.admobKeyAdBannerIos!;
       // TODO: Initialize _bannerAd
       _bannerAd = BannerAd(
         adUnitId: adBannerId,
         request: AdRequest(),
         size: AdSize.banner,
-        listener: AdListener(
+        listener: BannerAdListener(
           onAdLoaded: (_) {
             setState(() {
               _isBannerAdReady = true;
@@ -156,40 +157,57 @@ class _HomeScreen extends State<HomeScreen>
         ),
       );
 
-      _bannerAd.load();
+      _bannerAd!.load();
     }
 
     if (widget.settings.adInterstitial == "1") {
-      String adInterstitialId = Platform.isAndroid
+      String? adInterstitialId = Platform.isAndroid
           ? widget.settings.admobKeyAdInterstitial
           : widget.settings.admobKeyAdInterstitialIos;
-      _interstitialAd = InterstitialAd(
-        adUnitId: adInterstitialId,
-        request: AdRequest(),
-        listener: AdListener(
-          onAdLoaded: (_) {
-            _isInterstitialAdReady = true;
-          },
-          onAdFailedToLoad: (ad, err) {
-            print('Failed to load an interstitial ad: ${err.message}');
-            _isInterstitialAdReady = false;
-            ad.dispose();
-          },
-        ),
-      );
+      // _interstitialAd = InterstitialAd(
+      //   adUnitId: adInterstitialId,
+      //   request: AdRequest(),
+      //   listener: AdListener(
+      //     onAdLoaded: (_) {
+      //       _isInterstitialAdReady = true;
+      //     },
+      //     onAdFailedToLoad: (ad, err) {
+      //       print('Failed to load an interstitial ad: ${err.message}');
+      //       _isInterstitialAdReady = false;
+      //       ad.dispose();
+      //     },
+      //   ),
+      // );
 
       Timer.periodic(
-          new Duration(seconds: int.parse(widget.settings.admobDealy)),
-          (timer) {
-        _interstitialAd?.load();
-        _interstitialAd?.show();
+          new Duration(
+            seconds: int.parse(
+              widget.settings.admobDealy!,
+            ),
+          ), (timer) {
+        InterstitialAd.load(
+          adUnitId: adInterstitialId!,
+          request: AdRequest(),
+          adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              _isInterstitialAdReady = true;
+              _interstitialAd = ad;
+              ad.show();
+            },
+            onAdFailedToLoad: (err) {
+              print('Failed to load an interstitial ad: ${err.message}');
+              _isInterstitialAdReady = false;
+              // ad.dispose();
+            },
+          ),
+        );
       });
     }
   }
 
   void _handleIncomingLinks() {
     if (!kIsWeb) {
-      _sub = uriLinkStream.listen((Uri uri) async {
+      _sub = uriLinkStream.listen((Uri? uri) async {
         if (!mounted) return;
         print('got uri: $uri');
         setState(() {
@@ -214,7 +232,7 @@ class _HomeScreen extends State<HomeScreen>
             });
           }
         } else {
-          key0.currentState._webViewController
+          key0.currentState!._webViewController
               ?.loadUrl(urlRequest: URLRequest(url: Uri.parse(link)));
         }
       }, onError: (Object err) {
@@ -229,7 +247,7 @@ class _HomeScreen extends State<HomeScreen>
 
   _handleTabSelection() {
     setState(() {
-      _currentIndex = tabController.index;
+      _currentIndex = tabController!.index;
     });
   }
 
@@ -287,8 +305,8 @@ class _HomeScreen extends State<HomeScreen>
           });
         }
       } else {
-        key0.currentState._webViewController?.loadUrl(
-            urlRequest: URLRequest(url: Uri.parse(_oneSignalHelper.url)));
+        key0.currentState!._webViewController?.loadUrl(
+            urlRequest: URLRequest(url: Uri.parse(_oneSignalHelper.url!)));
       }
     }
 
@@ -302,16 +320,16 @@ class _HomeScreen extends State<HomeScreen>
 
     return WillPopScope(
       onWillPop: () async {
-        getCurrentKey().currentState.goBack();
-      },
+        getCurrentKey().currentState!.goBack();
+      } as Future<bool> Function()?,
       child: Container(
           decoration: BoxDecoration(color: HexColor("#f5f4f4")),
           padding: EdgeInsets.only(bottom: bottomPadding),
           child: Scaffold(
             key: _scaffoldKey,
-            appBar: _renderAppBar(context, settings),
-            drawer: (widget.settings.leftNavigationIcon.value == "icon_menu" ||
-                    widget.settings.rightNavigationIcon.value == "icon_menu")
+            appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
+            drawer: (widget.settings.leftNavigationIcon!.value == "icon_menu" ||
+                    widget.settings.rightNavigationIcon!.value == "icon_menu")
                 ? Drawer(
                     child: ListView(
                       padding: const EdgeInsets.all(0.0),
@@ -319,10 +337,10 @@ class _HomeScreen extends State<HomeScreen>
                         DrawerHeader(
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(colors: <Color>[
-                              themeProvider.isLightTheme
+                              themeProvider.isLightTheme!
                                   ? HexColor(settings.firstColor)
                                   : themeProvider.darkTheme.primaryColor,
-                              themeProvider.isLightTheme
+                              themeProvider.isLightTheme!
                                   ? HexColor(settings.secondColor)
                                   : themeProvider.darkTheme.primaryColor,
                             ])),
@@ -334,19 +352,19 @@ class _HomeScreen extends State<HomeScreen>
                                     width: 70.0,
                                     height: 70.0,
                                     child: Image.network(
-                                      settings.logoHeaderUrl,
+                                      settings.logoHeaderUrl!,
                                     ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(top: 5),
-                                    child: Text(settings.title,
+                                    child: Text(settings.title!,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 16)),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(top: 5),
-                                    child: Text(settings.subTitle,
+                                    child: Text(settings.subTitle!,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 14)),
@@ -356,7 +374,7 @@ class _HomeScreen extends State<HomeScreen>
                             )),
                         DrawerListTitle(
                             icon: Icons.home,
-                            text: I18n.current.home,
+                            text: I18n.current!.home,
                             onTap: () async {
                               if (widget.settings.tabNavigationEnable == "1") {
                                 if (goToWeb) {
@@ -377,20 +395,20 @@ class _HomeScreen extends State<HomeScreen>
                                   });
                                 }
                               } else {
-                                key0.currentState._webViewController?.loadUrl(
+                                key0.currentState!._webViewController?.loadUrl(
                                     urlRequest: URLRequest(
-                                        url: Uri.parse(settings.url)));
+                                        url: Uri.parse(settings.url!)));
 
                                 Navigator.pop(context);
                               }
                             }),
-                        _renderMenuDrawer(settings.menus, context),
+                        _renderMenuDrawer(settings.menus!, context),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                           child: Divider(height: 1, color: Colors.grey[400]),
                         ),
-                        _renderPageDrawer(settings.pages, context),
-                        settings.pages.length != 0
+                        _renderPageDrawer(settings.pages!, context),
+                        settings.pages!.length != 0
                             ? Padding(
                                 padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                                 child:
@@ -399,11 +417,11 @@ class _HomeScreen extends State<HomeScreen>
                             : Container(height: 0),
                         DrawerListTitle(
                             icon: Icons.brightness_medium,
-                            text: themeProvider.isLightTheme
-                                ? I18n.current.darkMode
-                                : I18n.current.lightMode,
+                            text: themeProvider.isLightTheme!
+                                ? I18n.current!.darkMode
+                                : I18n.current!.lightMode,
                             onTap: () {
-                              if (themeProvider.isLightTheme) {
+                              if (themeProvider.isLightTheme!) {
                                 themeProvider.setDarkMode();
                               } else {
                                 themeProvider.setLightMode();
@@ -411,7 +429,7 @@ class _HomeScreen extends State<HomeScreen>
                             }),
                         DrawerListTitle(
                           icon: Icons.translate,
-                          text: I18n.current.languages,
+                          text: I18n.current!.languages,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -424,7 +442,7 @@ class _HomeScreen extends State<HomeScreen>
                         ),
                         DrawerListTitle(
                             icon: Icons.info,
-                            text: I18n.current.about,
+                            text: I18n.current!.about,
                             onTap: () {
                               Navigator.pop(context);
                               Navigator.push(
@@ -435,13 +453,14 @@ class _HomeScreen extends State<HomeScreen>
                             }),
                         DrawerListTitle(
                             icon: Icons.share,
-                            text: I18n.current.share,
+                            text: I18n.current!.share,
                             onTap: () {
-                              shareApp(context, settings.title, settings.share);
+                              shareApp(
+                                  context, settings.title, settings.share!);
                             }),
                         DrawerListTitle(
                             icon: Icons.star,
-                            text: I18n.current.rate,
+                            text: I18n.current!.rate,
                             onTap: () => LaunchReview.launch(
                                 androidAppId: settings.androidId,
                                 iOSAppId: settings.iosId)),
@@ -457,7 +476,7 @@ class _HomeScreen extends State<HomeScreen>
                                 ),
                                 DrawerListTitle(
                                     icon: Icons.system_update,
-                                    text: I18n.current.update,
+                                    text: I18n.current!.update,
                                     onTap: () => LaunchReview.launch(
                                         androidAppId: settings.androidId,
                                         iOSAppId: settings.iosId))
@@ -476,11 +495,11 @@ class _HomeScreen extends State<HomeScreen>
                         ? TabBarView(
                             controller: tabController,
                             physics: NeverScrollableScrollPhysics(),
-                            children: List.generate(widget.settings.tab.length,
+                            children: List.generate(widget.settings.tab!.length,
                                 (index) {
                               return WebViewScreen(
                                   key: listKey[index],
-                                  path: widget.settings.tab[index].url,
+                                  path: widget.settings.tab![index].url,
                                   pos: index,
                                   settings: widget.settings,
                                   stream: listStream[index].stream);
@@ -502,7 +521,7 @@ class _HomeScreen extends State<HomeScreen>
                   if (widget.settings.adBanner == "1" && _isBannerAdReady)
                     Container(
                       height: 50,
-                      child: AdWidget(ad: _bannerAd),
+                      child: AdWidget(ad: _bannerAd!),
                     )
                 ]),
               ],
@@ -579,7 +598,7 @@ class _HomeScreen extends State<HomeScreen>
         },
         indicator: UnderlineTabIndicator(
           borderSide: BorderSide(
-              color: themeProvider.isLightTheme
+              color: themeProvider.isLightTheme!
                   ? tabColor
                   : themeProvider.darkTheme.primaryColor,
               width: 2.5),
@@ -588,29 +607,29 @@ class _HomeScreen extends State<HomeScreen>
         controller: tabController,
         labelColor: tabColor,
         unselectedLabelColor: Colors.black26,
-        tabs: List.generate(widget.settings.tab.length, (index) {
+        tabs: List.generate(widget.settings.tab!.length, (index) {
           return new Tab(
             child: new Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  new Image.network(settings.tab[index].icon_url,
+                  new Image.network(settings.tab![index].icon_url!,
                       width: 25,
                       height: 25,
                       color: _currentIndex == index
-                          ? themeProvider.isLightTheme
+                          ? themeProvider.isLightTheme!
                               ? tabColor
                               : themeProvider.darkTheme.primaryColor
                           : unselectedColor),
                   new SizedBox(height: 5),
                   new Flexible(
-                      child: new Text(settings.tab[index].title,
+                      child: new Text(settings.tab![index].title!,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize:
-                                  widget.settings.tab.length == 5 ? 8 : 10,
+                                  widget.settings.tab!.length == 5 ? 8 : 10,
                               color: _currentIndex == index
-                                  ? themeProvider.isLightTheme
+                                  ? themeProvider.isLightTheme!
                                       ? tabColor
                                       : themeProvider.darkTheme.primaryColor
                                   : unselectedColor))),
@@ -647,7 +666,7 @@ class _HomeScreen extends State<HomeScreen>
                           )),
                       SizedBox(height: 40),
                       Text(
-                        I18n.current.whoops,
+                        I18n.current!.whoops,
                         style: TextStyle(
                             color: Colors.black45,
                             fontSize: 40.0,
@@ -655,14 +674,14 @@ class _HomeScreen extends State<HomeScreen>
                       ),
                       SizedBox(height: 20),
                       Text(
-                        I18n.current.noInternet,
+                        I18n.current!.noInternet,
                         style: TextStyle(color: Colors.black87, fontSize: 15.0),
                       ),
                       SizedBox(height: 5),
                       SizedBox(height: 60),
                       RaisedGradientButton(
                           child: Text(
-                            I18n.current.tryAgain,
+                            I18n.current!.tryAgain,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18.0,
@@ -697,7 +716,7 @@ class _HomeScreen extends State<HomeScreen>
   }
    */
 
-  int parseInt(dynamic value) {
+  int? parseInt(dynamic value) {
     if (value == null) return null;
     if (value is int) return value;
 
@@ -708,25 +727,23 @@ class _HomeScreen extends State<HomeScreen>
       PositionOptions positionOptions) async {
     PositionResponse positionResponse = PositionResponse();
 
-    int timeout = 30000;
-    if (positionOptions.timeout > 0) timeout = positionOptions.timeout;
+    int? timeout = 30000;
+    if (positionOptions.timeout! > 0) timeout = positionOptions.timeout;
 
     try {
-      Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-      GeolocationStatus geolocationStatus =
-          await geolocator.checkGeolocationPermissionStatus();
+      // Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+      LocationPermission geolocationStatus =
+          await Geolocator.requestPermission();
 
-      if (geolocationStatus == GeolocationStatus.denied ||
-          geolocationStatus == GeolocationStatus.granted ||
-          geolocationStatus == GeolocationStatus.restricted ||
-          geolocationStatus == GeolocationStatus.unknown) {
+      if (geolocationStatus == LocationPermission.whileInUse ||
+          geolocationStatus == LocationPermission.always) {
         positionResponse.position = await Future.any([
-          geolocator.getCurrentPosition(
+          Geolocator.getCurrentPosition(
               desiredAccuracy: (positionOptions.enableHighAccuracy
                   ? LocationAccuracy.best
                   : LocationAccuracy.medium)),
-          Future.delayed(Duration(milliseconds: timeout), () {
-            if (positionOptions.timeout > 0) positionResponse.timedOut = true;
+          Future.delayed(Duration(milliseconds: timeout!), () {
+            if (positionOptions.timeout! > 0) positionResponse.timedOut = true;
             return;
           })
         ]);
@@ -759,7 +776,7 @@ class _HomeScreen extends State<HomeScreen>
       children: menus
           .map(
             (Menu menu) => DrawerListTitle(
-                icon_url: menu.iconUrl,
+                iconUrl: menu.iconUrl,
                 text: menu.title,
                 onTap: () async {
                   if (widget.settings.tabNavigationEnable == "1") {
@@ -778,8 +795,8 @@ class _HomeScreen extends State<HomeScreen>
                       });
                     }
                   } else {
-                    key0.currentState._webViewController?.loadUrl(
-                        urlRequest: URLRequest(url: Uri.parse(menu.url)));
+                    key0.currentState!._webViewController?.loadUrl(
+                        urlRequest: URLRequest(url: Uri.parse(menu.url!)));
 
                     Navigator.pop(context);
                   }
@@ -794,7 +811,7 @@ class _HomeScreen extends State<HomeScreen>
       children: pages
           .map(
             (Page page) => DrawerListTitle(
-                icon_url: page.iconUrl,
+                iconUrl: page.iconUrl,
                 text: page.title,
                 onTap: () {
                   Navigator.pop(context);
@@ -819,7 +836,7 @@ class _HomeScreen extends State<HomeScreen>
                 children: <Widget>[
                   _renderMenuIcon(
                       context,
-                      settings.leftNavigationIcon,
+                      settings.leftNavigationIcon!,
                       settings.rightNavigationIcon,
                       settings.navigatinBarStyle,
                       settings,
@@ -827,7 +844,7 @@ class _HomeScreen extends State<HomeScreen>
                   _renderTitle(settings.navigatinBarStyle, settings),
                   _renderMenuIcon(
                       context,
-                      settings.rightNavigationIcon,
+                      settings.rightNavigationIcon!,
                       settings.leftNavigationIcon,
                       settings.navigatinBarStyle,
                       settings,
@@ -840,10 +857,10 @@ class _HomeScreen extends State<HomeScreen>
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: <Color>[
-                    themeProvider.isLightTheme
+                    themeProvider.isLightTheme!
                         ? HexColor(settings.firstColor)
                         : themeProvider.darkTheme.primaryColor,
-                    themeProvider.isLightTheme
+                    themeProvider.isLightTheme!
                         ? HexColor(settings.secondColor)
                         : themeProvider.darkTheme.primaryColor,
                   ],
@@ -857,7 +874,7 @@ class _HomeScreen extends State<HomeScreen>
             ));
   }
 
-  Widget _renderTitle(String type, Settings settings) {
+  Widget _renderTitle(String? type, Settings settings) {
     var direction = MainAxisAlignment.start;
 
     switch (type) {
@@ -882,7 +899,7 @@ class _HomeScreen extends State<HomeScreen>
             child: Container(
               child: settings.typeHeader == "text"
                   ? Text(
-                      settings.title,
+                      settings.title!,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: Colors.white,
@@ -890,7 +907,7 @@ class _HomeScreen extends State<HomeScreen>
                           fontWeight: FontWeight.bold),
                     )
                   : settings.typeHeader == "image"
-                      ? Image.network(settings.logoHeaderUrl, height: 40)
+                      ? Image.network(settings.logoHeaderUrl!, height: 40)
                       : Container(),
             ),
           )
@@ -902,11 +919,11 @@ class _HomeScreen extends State<HomeScreen>
   Widget _renderMenuIcon(
       BuildContext context,
       NavigationIcon navigationIcon,
-      NavigationIcon navigationOtherIcon,
-      String navigatinBarStyle,
+      NavigationIcon? navigationOtherIcon,
+      String? navigatinBarStyle,
       Settings settings,
       String direction) {
-    Uint8List bytes = Base64Decoder().convert(navigationIcon.iconUrlBase64);
+    Uint8List bytes = Base64Decoder().convert(navigationIcon.iconUrlBase64!);
     return navigationIcon.value != "icon_empty"
         ? Container(
             padding: direction == "right"
@@ -919,10 +936,10 @@ class _HomeScreen extends State<HomeScreen>
                       icon: Transform(
                           alignment: Alignment.center,
                           transform: Matrix4.rotationY(math.pi *
-                              (I18n.current.textDirection == TextDirection.ltr
+                              (I18n.current!.textDirection == TextDirection.ltr
                                   ? 2
                                   : 1)),
-                          child: new Image.network(navigationIcon.iconUrl,
+                          child: new Image.network(navigationIcon.iconUrl!,
                               height: 25, width: 25, color: Colors.white)
                           /*Image.asset(
                               UIImages.imageDir +
@@ -939,7 +956,7 @@ class _HomeScreen extends State<HomeScreen>
                     ),
                     Container(
                       width: (navigatinBarStyle == "center" &&
-                              navigationOtherIcon.value == "icon_back_forward")
+                              navigationOtherIcon!.value == "icon_back_forward")
                           ? 50
                           : 0,
                     )
@@ -952,7 +969,8 @@ class _HomeScreen extends State<HomeScreen>
                         icon: Transform(
                             alignment: Alignment.center,
                             transform: Matrix4.rotationY(math.pi *
-                                (I18n.current.textDirection == TextDirection.ltr
+                                (I18n.current!.textDirection ==
+                                        TextDirection.ltr
                                     ? 2
                                     : 1)),
                             child: Image.asset(
@@ -964,29 +982,29 @@ class _HomeScreen extends State<HomeScreen>
                           switch (_currentIndex) {
                             case 0:
                               {
-                                key0.currentState._webViewController?.goBack();
+                                key0.currentState!._webViewController?.goBack();
                               }
                               break;
 
                             case 1:
                               {
-                                key1.currentState._webViewController?.goBack();
+                                key1.currentState!._webViewController?.goBack();
                               }
                               break;
 
                             case 2:
                               {
-                                key2.currentState._webViewController?.goBack();
+                                key2.currentState!._webViewController?.goBack();
                               }
                               break;
                             case 3:
                               {
-                                key3.currentState._webViewController?.goBack();
+                                key3.currentState!._webViewController?.goBack();
                               }
                               break;
                             case 4:
                               {
-                                key4.currentState._webViewController?.goBack();
+                                key4.currentState!._webViewController?.goBack();
                               }
                               break;
                             default:
@@ -1002,7 +1020,8 @@ class _HomeScreen extends State<HomeScreen>
                         icon: Transform(
                             alignment: Alignment.center,
                             transform: Matrix4.rotationY(math.pi *
-                                (I18n.current.textDirection == TextDirection.ltr
+                                (I18n.current!.textDirection ==
+                                        TextDirection.ltr
                                     ? 2
                                     : 1)),
                             child: Image.asset(
@@ -1012,7 +1031,7 @@ class _HomeScreen extends State<HomeScreen>
                                 color: Colors.white)),
                         onPressed: () {
                           getCurrentKey()
-                              .currentState
+                              .currentState!
                               ._webViewController
                               ?.goForward();
                         },
@@ -1027,9 +1046,12 @@ class _HomeScreen extends State<HomeScreen>
 
   Future<bool> _onBackPressed(context) async {
     try {
-      if (getCurrentKey().currentState._webViewController != null) {
-        if (await getCurrentKey().currentState._webViewController.canGoBack()) {
-          getCurrentKey().currentState._webViewController.goBack();
+      if (getCurrentKey().currentState!._webViewController != null) {
+        if (await getCurrentKey()
+            .currentState!
+            ._webViewController!
+            .canGoBack()) {
+          getCurrentKey().currentState!._webViewController!.goBack();
           return false;
         } else {
           _showDialog(context);
@@ -1038,23 +1060,25 @@ class _HomeScreen extends State<HomeScreen>
     } catch (e) {
       _showDialog(context);
     }
+
+    return true;
   }
 
   _showDialog(context) {
     return showDialog(
       context: context,
       builder: (context) => new AlertDialog(
-        title: new Text(I18n.current.closeApp),
-        content: new Text(I18n.current.sureCloseApp),
+        title: new Text(I18n.current!.closeApp),
+        content: new Text(I18n.current!.sureCloseApp),
         actions: <Widget>[
           new FlatButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: new Text(I18n.current.cancel),
+            child: new Text(I18n.current!.cancel),
           ),
           SizedBox(height: 16),
           new FlatButton(
             onPressed: () => exit(0),
-            child: new Text(I18n.current.ok),
+            child: new Text(I18n.current!.ok),
           ),
         ],
       ),
@@ -1081,13 +1105,13 @@ class _HomeScreen extends State<HomeScreen>
           });
         }
       } else {
-        key0.currentState._webViewController?.loadUrl(
-            urlRequest: URLRequest(url: Uri.parse(navigationIcon.url)));
+        key0.currentState!._webViewController?.loadUrl(
+            urlRequest: URLRequest(url: Uri.parse(navigationIcon.url!)));
       }
     } else {
       switch (navigationIcon.value) {
         case "icon_menu":
-          _HomeScreen._scaffoldKey.currentState.openDrawer();
+          _HomeScreen._scaffoldKey.currentState!.openDrawer();
           break;
         case "icon_home":
           if (widget.settings.tabNavigationEnable == "1") {
@@ -1105,21 +1129,21 @@ class _HomeScreen extends State<HomeScreen>
               });
             }
           } else {
-            key0.currentState._webViewController
-                ?.loadUrl(urlRequest: URLRequest(url: Uri.parse(settings.url)));
+            key0.currentState!._webViewController?.loadUrl(
+                urlRequest: URLRequest(url: Uri.parse(settings.url!)));
           }
           break;
         case "icon_reload":
-          getCurrentKey().currentState._webViewController?.reload();
+          getCurrentKey().currentState!._webViewController?.reload();
           break;
         case "icon_share":
-          shareApp(context, settings.title, settings.share);
+          shareApp(context, settings.title, settings.share!);
           break;
         case "icon_back":
-          getCurrentKey().currentState._webViewController?.goBack();
+          getCurrentKey().currentState!._webViewController?.goBack();
           break;
         case "icon_forward":
-          getCurrentKey().currentState._webViewController?.goForward();
+          getCurrentKey().currentState!._webViewController?.goForward();
           break;
         case "icon_exit":
           _showDialog(context);
@@ -1146,12 +1170,12 @@ class _HomeScreen extends State<HomeScreen>
       if (!mounted) return;
 
       setState(() {
-        key0.currentState.isLoading = true;
+        key0.currentState!.isLoading = true;
       });
       final response = await http.head(Uri.parse(qrCode));
       if (response.statusCode == 200) {
         setState(() {
-          key0.currentState.isLoading = false;
+          key0.currentState!.isLoading = false;
         });
         if (widget.settings.tabNavigationEnable == "1") {
           if (goToWeb) {
@@ -1169,24 +1193,24 @@ class _HomeScreen extends State<HomeScreen>
             });
           }
         } else {
-          key0.currentState._webViewController
+          key0.currentState!._webViewController
               ?.loadUrl(urlRequest: URLRequest(url: Uri.parse(qrCode)));
         }
       } else {
         setState(() {
-          key0.currentState.isLoading = false;
+          key0.currentState!.isLoading = false;
         });
       }
     } on PlatformException {
       setState(() {
-        key0.currentState.isLoading = false;
+        key0.currentState!.isLoading = false;
       });
       print('Failed to get platform version.');
     }
   }
 
-  shareApp(BuildContext context, String text, String share) {
-    final RenderBox box = context.findRenderObject();
+  shareApp(BuildContext context, String? text, String share) {
+    final RenderBox box = context.findRenderObject() as RenderBox;
     Share.share(share,
         subject: text,
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
@@ -1231,15 +1255,15 @@ class _HomeScreen extends State<HomeScreen>
 }
 
 class WebViewScreen extends StatefulWidget {
-  final GlobalKey webKey;
-  final String path;
-  final int pos;
-  final Settings settings;
-  final InAppWebViewController webViewController;
-  final Stream<int> stream;
+  final GlobalKey? webKey;
+  final String? path;
+  final int? pos;
+  final Settings? settings;
+  final InAppWebViewController? webViewController;
+  final Stream<int>? stream;
 
   WebViewScreen(
-      {Key key,
+      {Key? key,
       this.path,
       this.webKey,
       this.pos,
@@ -1259,13 +1283,13 @@ class _WebViewScreen extends State<WebViewScreen>
   @override
   bool get wantKeepAlive => true;
 
-  InAppWebViewController _webViewController;
+  InAppWebViewController? _webViewController;
   String url = "";
-  PullToRefreshController pullToRefreshController;
+  PullToRefreshController? pullToRefreshController;
   static GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<StreamSubscription<Position>> webViewGPSPositionStreams = [];
-  bool isLoading;
+  late bool isLoading;
 
   final Set<Factory<OneSequenceGestureRecognizer>> _gSet = [
     Factory<VerticalDragGestureRecognizer>(
@@ -1276,7 +1300,7 @@ class _WebViewScreen extends State<WebViewScreen>
 
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     super.initState();
     isLoading = true;
 
@@ -1332,7 +1356,7 @@ class _WebViewScreen extends State<WebViewScreen>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     webViewGPSPositionStreams.forEach(
         (StreamSubscription<Position> _flutterGeolocationStream) =>
             _flutterGeolocationStream.cancel());
@@ -1350,7 +1374,7 @@ class _WebViewScreen extends State<WebViewScreen>
           Expanded(
             child: InAppWebView(
               // contextMenu: contextMenu,
-              initialUrlRequest: URLRequest(url: Uri.parse(widget.path)),
+              initialUrlRequest: URLRequest(url: Uri.parse(widget.path!)),
               gestureRecognizers: _gSet,
               initialOptions: InAppWebViewGroupOptions(
                   crossPlatform: InAppWebViewOptions(
@@ -1359,15 +1383,15 @@ class _WebViewScreen extends State<WebViewScreen>
                       useOnDownloadStart: true,
                       mediaPlaybackRequiresUserGesture: false,
                       userAgent: Platform.isAndroid
-                          ? widget.settings.userAgent.valueAndroid
-                          : widget.settings.userAgent.valueIOS),
+                          ? widget.settings!.userAgent!.valueAndroid!
+                          : widget.settings!.userAgent!.valueIOS!),
                   android: AndroidInAppWebViewOptions(
                     useHybridComposition: true,
                   ),
                   ios: IOSInAppWebViewOptions(
                     allowsInlineMediaPlayback: true,
                   )),
-              pullToRefreshController: widget.settings.pullRefresh == "1"
+              pullToRefreshController: widget.settings!.pullRefresh == "1"
                   ? pullToRefreshController
                   : null,
               onWebViewCreated: (InAppWebViewController controller) {
@@ -1389,7 +1413,8 @@ class _WebViewScreen extends State<WebViewScreen>
                       switch (action) {
                         case "clearWatch":
                           _geolocationClearWatch(parseInt(
-                              geolocationData['flutterGeolocationIndex'] ?? 0));
+                              geolocationData['flutterGeolocationIndex'] ??
+                                  0)!);
                           break;
 
                         case "getCurrentPosition":
@@ -1405,7 +1430,7 @@ class _WebViewScreen extends State<WebViewScreen>
                           _geolocationWatchPosition(
                               parseInt(
                                   geolocationData['flutterGeolocationIndex'] ??
-                                      0),
+                                      0)!,
                               PositionOptions()
                                   .from(geolocationData['option'] ?? null));
                           break;
@@ -1421,7 +1446,7 @@ class _WebViewScreen extends State<WebViewScreen>
                     action: PermissionRequestResponseAction.GRANT);
               },
               shouldOverrideUrlLoading: (controller, navigationAction) async {
-                var uri = navigationAction.request.url;
+                var uri = navigationAction.request.url!;
                 print("uri.scheme");
                 print(uri.scheme);
                 if (Platform.isAndroid && ["intent"].contains(uri.scheme)) {
@@ -1467,7 +1492,7 @@ class _WebViewScreen extends State<WebViewScreen>
                 });
               },
               onLoadStop: (controller, url) async {
-                pullToRefreshController.endRefreshing();
+                pullToRefreshController!.endRefreshing();
                 Future.delayed(const Duration(milliseconds: 500), () {
                   _geolocationAlertFix();
                 });
@@ -1487,11 +1512,11 @@ class _WebViewScreen extends State<WebViewScreen>
                 }
               },
               onLoadError: (controller, url, code, message) {
-                pullToRefreshController.endRefreshing();
+                pullToRefreshController!.endRefreshing();
               },
               onProgressChanged: (controller, progress) {
                 if (progress == 100) {
-                  pullToRefreshController.endRefreshing();
+                  pullToRefreshController!.endRefreshing();
                 }
               },
               onUpdateVisitedHistory: (controller, url, androidIsReload) {
@@ -1505,23 +1530,23 @@ class _WebViewScreen extends State<WebViewScreen>
             ),
           )
         ]),
-        (isLoading && widget.settings.loader != "empty")
+        (isLoading && widget.settings!.loader != "empty")
             ? Positioned(
                 top: 0,
                 bottom: 0,
                 right: 0,
                 left: 0,
                 child: Loader(
-                    type: widget.settings.loader,
-                    color: themeProvider.isLightTheme
-                        ? HexColor(widget.settings.loaderColor)
+                    type: widget.settings!.loader,
+                    color: themeProvider.isLightTheme!
+                        ? HexColor(widget.settings!.loaderColor)
                         : themeProvider.darkTheme.primaryColor))
             : Container()
       ],
     );
   }
 
-  int parseInt(dynamic value) {
+  int? parseInt(dynamic value) {
     if (value == null) return null;
     if (value is int) return value;
 
@@ -1532,25 +1557,22 @@ class _WebViewScreen extends State<WebViewScreen>
       PositionOptions positionOptions) async {
     PositionResponse positionResponse = PositionResponse();
 
-    int timeout = 30000;
-    if (positionOptions.timeout > 0) timeout = positionOptions.timeout;
+    int? timeout = 30000;
+    if (positionOptions.timeout! > 0) timeout = positionOptions.timeout;
 
     try {
-      Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-      GeolocationStatus geolocationStatus =
-          await geolocator.checkGeolocationPermissionStatus();
+      LocationPermission geolocationStatus =
+          await Geolocator.requestPermission();
 
-      if (geolocationStatus == GeolocationStatus.denied ||
-          geolocationStatus == GeolocationStatus.granted ||
-          geolocationStatus == GeolocationStatus.restricted ||
-          geolocationStatus == GeolocationStatus.unknown) {
+      if (geolocationStatus == LocationPermission.always ||
+          geolocationStatus == LocationPermission.whileInUse) {
         positionResponse.position = await Future.any([
-          geolocator.getCurrentPosition(
+          Geolocator.getCurrentPosition(
               desiredAccuracy: (positionOptions.enableHighAccuracy
                   ? LocationAccuracy.best
                   : LocationAccuracy.medium)),
-          Future.delayed(Duration(milliseconds: timeout), () {
-            if (positionOptions.timeout > 0) positionResponse.timedOut = true;
+          Future.delayed(Duration(milliseconds: timeout!), () {
+            if (positionOptions.timeout! > 0) positionResponse.timedOut = true;
             return;
           })
         ]);
@@ -1606,9 +1628,9 @@ class _WebViewScreen extends State<WebViewScreen>
       setTimeout(function(){ _flutterGeolocationAlertFix(); }, 100);
     ''';
 
-    _webViewController.evaluateJavascript(source: javascript);
+    _webViewController!.evaluateJavascript(source: javascript);
 
-    _webViewController.evaluateJavascript(source: """
+    _webViewController!.evaluateJavascript(source: """
       function _flutterGeolocationAlertFix() {
         navigator.geolocation = {};
         navigator.geolocation.clearWatch = function(watchId) {
@@ -1645,7 +1667,7 @@ class _WebViewScreen extends State<WebViewScreen>
 
   void _geolocationClearWatch(int flutterGeolocationIndex) {
     // Stop gps position stream
-    webViewGPSPositionStreams[flutterGeolocationIndex]?.cancel();
+    webViewGPSPositionStreams[flutterGeolocationIndex].cancel();
 
     // remove watcher from list
     webViewGPSPositionStreams.remove(flutterGeolocationIndex);
@@ -1664,11 +1686,11 @@ class _WebViewScreen extends State<WebViewScreen>
       _flutterGeolocationResponse();
     ''';
 
-    _webViewController.evaluateJavascript(source: javascript);
+    _webViewController!.evaluateJavascript(source: javascript);
   }
 
   void _geolocationGetCurrentPosition(
-      int flutterGeolocationIndex, PositionOptions positionOptions) async {
+      int? flutterGeolocationIndex, PositionOptions positionOptions) async {
     PositionResponse positionResponse =
         await getCurrentPosition(positionOptions);
 
@@ -1677,7 +1699,7 @@ class _WebViewScreen extends State<WebViewScreen>
   }
 
   void _geolocationResponse(
-      int flutterGeolocationIndex,
+      int? flutterGeolocationIndex,
       PositionOptions positionOptions,
       PositionResponse positionResponse,
       bool watcher) {
@@ -1689,25 +1711,25 @@ class _WebViewScreen extends State<WebViewScreen>
           ''']({
             coords: {
               accuracy: ''' +
-          positionResponse.position.accuracy.toString() +
+          positionResponse.position!.accuracy.toString() +
           ''',
               altitude: ''' +
-          positionResponse.position.altitude.toString() +
+          positionResponse.position!.altitude.toString() +
           ''',
               altitudeAccuracy: null,
               heading: null,
               latitude: ''' +
-          positionResponse.position.latitude.toString() +
+          positionResponse.position!.latitude.toString() +
           ''',
               longitude: ''' +
-          positionResponse.position.longitude.toString() +
+          positionResponse.position!.longitude.toString() +
           ''',
               speed: ''' +
-          positionResponse.position.speed.toString() +
+          positionResponse.position!.speed.toString() +
           '''
             },
             timestamp: ''' +
-          positionResponse.position.timestamp.millisecondsSinceEpoch
+          positionResponse.position!.timestamp!.millisecondsSinceEpoch
               .toString() +
           '''
           });''' +
@@ -1727,7 +1749,7 @@ class _WebViewScreen extends State<WebViewScreen>
         _flutterGeolocationResponse();
       ''';
 
-      _webViewController.evaluateJavascript(source: javascript);
+      _webViewController!.evaluateJavascript(source: javascript);
     } else {
       // TODO: Return correct error code
       String javascript = '''
@@ -1759,23 +1781,23 @@ class _WebViewScreen extends State<WebViewScreen>
         _flutterGeolocationResponse();
       ''';
 
-      _webViewController.evaluateJavascript(source: javascript);
+      _webViewController!.evaluateJavascript(source: javascript);
     }
   }
 
   void _geolocationWatchPosition(
       int flutterGeolocationIndex, PositionOptions positionOptions) {
     // init new strem
-    var geolocator = Geolocator();
-    var locationOptions = LocationOptions(
+
+    var locationOptions = LocationSettings(
         accuracy: (positionOptions.enableHighAccuracy
             ? LocationAccuracy.best
             : LocationAccuracy.medium),
         distanceFilter: 10);
 
-    webViewGPSPositionStreams[flutterGeolocationIndex] = geolocator
-        .getPositionStream(locationOptions)
-        .listen((Position position) {
+    webViewGPSPositionStreams[flutterGeolocationIndex] =
+        Geolocator.getPositionStream(locationSettings: locationOptions)
+            .listen((Position position) {
       // Send data to each warcher
       PositionResponse positionResponse = PositionResponse()
         ..position = position;
@@ -1786,8 +1808,8 @@ class _WebViewScreen extends State<WebViewScreen>
 
   Future<bool> goBack() async {
     if (_webViewController != null) {
-      if (await _webViewController.canGoBack()) {
-        _webViewController.goBack();
+      if (await _webViewController!.canGoBack()) {
+        _webViewController!.goBack();
         return false;
       } else {
         return showDialog(
@@ -1808,7 +1830,7 @@ class _WebViewScreen extends State<WebViewScreen>
                   ),
                 ],
               ),
-            ) ??
+            ) as FutureOr<bool>? ??
             false;
       }
     }

@@ -24,8 +24,8 @@ class PageScreen extends StatefulWidget {
 }
 
 class _PageScreen extends State<PageScreen> {
-  InAppWebViewController _webViewController;
-  bool isLoading;
+  InAppWebViewController? _webViewController;
+  late bool isLoading;
 
   @override
   void initState() {
@@ -40,11 +40,11 @@ class _PageScreen extends State<PageScreen> {
     var themeProvider = Provider.of<ThemeNotifier>(context);
 
     return Scaffold(
-        appBar: _renderAppBar(context, widget.settings, widget.page),
+        appBar: _renderAppBar(context, widget.settings, widget.page) as PreferredSizeWidget?,
         body: Stack(fit: StackFit.expand, children: [
           InAppWebView(
             // contextMenu: contextMenu,
-            initialUrlRequest: URLRequest(url: Uri.parse(widget.page.url)),
+            initialUrlRequest: URLRequest(url: Uri.parse(widget.page.url!)),
             initialOptions: InAppWebViewGroupOptions(
                 crossPlatform: InAppWebViewOptions(
                     supportZoom: false,
@@ -52,8 +52,8 @@ class _PageScreen extends State<PageScreen> {
                     useOnDownloadStart: true,
                     mediaPlaybackRequiresUserGesture: false,
                     userAgent: Platform.isAndroid
-                        ? widget.settings.userAgent.valueAndroid
-                        : widget.settings.userAgent.valueIOS),
+                        ? widget.settings.userAgent!.valueAndroid!
+                        : widget.settings.userAgent!.valueIOS!),
                 android: AndroidInAppWebViewOptions(
                   useHybridComposition: true,
                 ),
@@ -110,7 +110,7 @@ class _PageScreen extends State<PageScreen> {
                   left: 0,
                   child: Loader(
                       type: widget.settings.loader,
-                      color: themeProvider.isLightTheme
+                      color: themeProvider.isLightTheme!
                           ? HexColor(widget.settings.loaderColor)
                           : themeProvider.darkTheme.primaryColor))
               : Container()
@@ -122,7 +122,7 @@ Widget _renderAppBar(context, Settings settings, Page page) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
       title: Text(
-        page.title,
+        page.title!,
         style: TextStyle(
             color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
       ),
@@ -132,10 +132,10 @@ Widget _renderAppBar(context, Settings settings, Page page) {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: <Color>[
-              themeProvider.isLightTheme
+              themeProvider.isLightTheme!
                   ? HexColor(settings.firstColor)
                   : themeProvider.darkTheme.primaryColor,
-              themeProvider.isLightTheme
+              themeProvider.isLightTheme!
                   ? HexColor(settings.secondColor)
                   : themeProvider.darkTheme.primaryColor,
             ],

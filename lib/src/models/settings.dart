@@ -10,63 +10,63 @@ import 'menu.dart';
 import 'page.dart';
 
 class Settings {
-  String id = "";
-  String title = "";
-  String subTitle = "";
-  String url = "";
-  String admobId = "";
-  String admobIdIos = "";
-  String admobKeyAdBanner = "";
-  String admobKeyAdInterstitial = "";
-  String admobKeyAdBannerIos = "";
-  String admobKeyAdInterstitialIos = "";
-  String admobDealy = "";
-  String navigatinBarStyle = "";
-  String leftButton = "";
-  String rightButton = "";
-  String loader = "";
-  String loaderColor = "";
-  String firstColor = "";
-  String secondColor = "";
-  String backgroundColor = "";
-  String logo = "";
-  String logoUrl = "";
-  String javascript = "";
-  String downloadWebview = "";
-  String permissionDialog = "";
-  String splachScreen = "";
-  String swipeRefresh = "";
-  String websiteZoom = "";
-  String desktopMode = "";
-  String fullScreen = "";
-  String logoHeader = "";
-  String logoHeaderUrl = "";
-  String typeHeader = "text";
-  String androidId = "";
-  String iosId = "";
-  String aboutUs = "";
-  String share = "";
-  String adBanner = "";
-  String adBannerIos = "";
-  String adInterstitial = "";
-  String adInterstitialIos = "";
-  String versionAndroid = "";
-  String versionIos = "";
-  String pullRefresh = "";
-  String boarding = "";
-  String tabNavigationEnable = "";
-  String colorTab = "";
-  NavigationIcon leftNavigationIcon;
-  NavigationIcon rightNavigationIcon;
-  List<NavigationIcon> rightNavigationIconList = [];
-  Splash splash;
-  UserAgent userAgent;
-  List<Tab> tab = [];
-  List<Menu> menus = [];
-  List<Floating> floating = [];
-  List<Page> pages = [];
-  List<Social> socials = [];
-  List<Slider> sliders = [];
+  String? id = "";
+  String? title = "";
+  String? subTitle = "";
+  String? url = "";
+  String? admobId = "";
+  String? admobIdIos = "";
+  String? admobKeyAdBanner = "";
+  String? admobKeyAdInterstitial = "";
+  String? admobKeyAdBannerIos = "";
+  String? admobKeyAdInterstitialIos = "";
+  String? admobDealy = "";
+  String? navigatinBarStyle = "";
+  String? leftButton = "";
+  String? rightButton = "";
+  String? loader = "";
+  String? loaderColor = "";
+  String? firstColor = "";
+  String? secondColor = "";
+  String? backgroundColor = "";
+  String? logo = "";
+  String? logoUrl = "";
+  String? javascript = "";
+  String? downloadWebview = "";
+  String? permissionDialog = "";
+  String? splachScreen = "";
+  String? swipeRefresh = "";
+  String? websiteZoom = "";
+  String? desktopMode = "";
+  String? fullScreen = "";
+  String? logoHeader = "";
+  String? logoHeaderUrl = "";
+  String? typeHeader = "text";
+  String? androidId = "";
+  String? iosId = "";
+  String? aboutUs = "";
+  String? share = "";
+  String? adBanner = "";
+  String? adBannerIos = "";
+  String? adInterstitial = "";
+  String? adInterstitialIos = "";
+  String? versionAndroid = "";
+  String? versionIos = "";
+  String? pullRefresh = "";
+  String? boarding = "";
+  String? tabNavigationEnable = "";
+  String? colorTab = "";
+  NavigationIcon? leftNavigationIcon;
+  NavigationIcon? rightNavigationIcon;
+  List<NavigationIcon>? rightNavigationIconList = [];
+  Splash? splash;
+  UserAgent? userAgent;
+  List<Tab>? tab = [];
+  List<Menu>? menus = [];
+  List<Floating>? floating = [];
+  List<Page>? pages = [];
+  List<Social>? socials = [];
+  List<Slider>? sliders = [];
 
   // Settings.fromSettings(Map<String, dynamic> json) {
   //   url = "http://google.fr";
@@ -184,37 +184,37 @@ class Settings {
     colorTab = json['colorTab'];
 
     if (json['menus'] != null) {
-      menus = new List<Menu>();
+      menus = <Menu>[];
       json['menus'].forEach((v) {
-        menus.add(new Menu.fromJson(v));
+        menus!.add(new Menu.fromJson(v));
       });
     }
 
     if (json['floating'] != null) {
-      floating = new List<Floating>();
+      floating = <Floating>[];
       json['floating'].forEach((v) {
-        floating.add(new Floating.fromJson(v));
+        floating!.add(new Floating.fromJson(v));
       });
     }
 
     if (json['pages'] != null) {
-      pages = new List<Page>();
+      pages = <Page>[];
       json['pages'].forEach((v) {
-        pages.add(new Page.fromJson(v));
+        pages!.add(new Page.fromJson(v));
       });
     }
 
     if (json['socials'] != null) {
-      socials = new List<Social>();
+      socials = <Social>[];
       json['socials'].forEach((v) {
-        socials.add(new Social.fromJson(v));
+        socials!.add(new Social.fromJson(v));
       });
     }
 
     if (json['sliders'] != null) {
-      sliders = new List<Slider>();
+      sliders = <Slider>[];
       json['sliders'].forEach((v) {
-        sliders.add(new Slider.fromJson(v));
+        sliders!.add(new Slider.fromJson(v));
       });
     }
 
@@ -229,9 +229,9 @@ class Settings {
     }
 
     if (json['rightNavigationIconList'] != null) {
-      rightNavigationIconList = new List<NavigationIcon>();
+      rightNavigationIconList = <NavigationIcon>[];
       json['rightNavigationIconList'].forEach((v) {
-        rightNavigationIconList.add(new NavigationIcon.fromJson(v));
+        rightNavigationIconList!.add(new NavigationIcon.fromJson(v));
       });
     }
 
@@ -244,9 +244,9 @@ class Settings {
     }
 
     if (json['tab'] != null) {
-      tab = new List<Tab>();
+      tab = <Tab>[];
       json['tab'].forEach((v) {
-        tab.add(new Tab.fromJson(v));
+        tab!.add(new Tab.fromJson(v));
       });
     }
   }
@@ -303,47 +303,47 @@ class Settings {
 
     if (this.rightNavigationIconList != null) {
       data['rightNavigationIconList'] =
-          this.rightNavigationIconList.map((v) => v.toJson()).toList();
+          this.rightNavigationIconList!.map((v) => v.toJson()).toList();
     }
 
     if (this.menus != null) {
-      data['menus'] = this.menus.map((v) => v.toJson()).toList();
+      data['menus'] = this.menus!.map((v) => v.toJson()).toList();
     }
 
     if (this.floating != null) {
-      data['floating'] = this.floating.map((v) => v.toJson()).toList();
+      data['floating'] = this.floating!.map((v) => v.toJson()).toList();
     }
 
     if (this.pages != null) {
-      data['pages'] = this.pages.map((v) => v.toJson()).toList();
+      data['pages'] = this.pages!.map((v) => v.toJson()).toList();
     }
 
     if (this.socials != null) {
-      data['socials'] = this.socials.map((v) => v.toJson()).toList();
+      data['socials'] = this.socials!.map((v) => v.toJson()).toList();
     }
 
     if (this.sliders != null) {
-      data['sliders'] = this.sliders.map((v) => v.toJson()).toList();
+      data['sliders'] = this.sliders!.map((v) => v.toJson()).toList();
     }
 
     if (this.rightNavigationIcon != null) {
-      data['rightNavigationIcon'] = this.rightNavigationIcon.toJson();
+      data['rightNavigationIcon'] = this.rightNavigationIcon!.toJson();
     }
 
     if (this.leftNavigationIcon != null) {
-      data['leftNavigationIcon'] = this.leftNavigationIcon.toJson();
+      data['leftNavigationIcon'] = this.leftNavigationIcon!.toJson();
     }
 
     if (this.splash != null) {
-      data['splash'] = this.splash.toJson();
+      data['splash'] = this.splash!.toJson();
     }
 
     if (this.userAgent != null) {
-      data['userAgent'] = this.userAgent.toJson();
+      data['userAgent'] = this.userAgent!.toJson();
     }
 
     if (this.tab != null) {
-      data['tab'] = this.tab.map((v) => v.toJson()).toList();
+      data['tab'] = this.tab!.map((v) => v.toJson()).toList();
     }
 
     return data;

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
-import 'package:flyweb/src/enum/connectivity_status.dart';
 import 'package:flyweb/src/helpers/ConnectivityService.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/ad_state.dart';
@@ -46,19 +45,16 @@ Future<void> main() async {
     create: (_) => new ThemeNotifier(),
     child: Provider.value(
       value: adState,
-      builder: (context, child) => MyApp(
-        // appLanguage: appLanguage,
-        settings: settings,
-      ),
+      builder: (context, child) => MyApp(settings: settings),
     ),
   ));
 }
 
 class MyApp extends StatelessWidget {
   // final AppLanguage appLanguage;
-  final Settings settings;
+  final Settings? settings;
 
-  MyApp({this.settings});
+  const MyApp({this.settings});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +69,8 @@ class MyApp extends StatelessWidget {
       // create: (_) => appLanguage,
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         // ignore: missing_required_param
-        return StreamProvider<ConnectivityStatus>(
+        return StreamProvider(
+          initialData: null,
           create: (context) =>
               ConnectivityService().connectionStatusController.stream,
           child: Consumer<ThemeNotifier>(

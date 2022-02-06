@@ -6,17 +6,17 @@ import 'package:flyweb/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
 
 class MosqueSearchScreen extends StatelessWidget {
   const MosqueSearchScreen({
-    Key key,
+    Key? key,
     this.settings,
   }) : super(key: key);
 
-  final Settings settings;
+  final Settings? settings;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: HexColor(settings.secondColor),
+        backgroundColor: HexColor(settings!.secondColor),
         title: Text('Mosque'),
       ),
       body: Container(

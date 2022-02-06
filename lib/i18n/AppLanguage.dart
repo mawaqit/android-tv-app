@@ -14,9 +14,7 @@ class AppLanguage extends ChangeNotifier {
     return currentLang['subtitle'];
   }
 
-  Locale get appLocal {
-    return _appLocale ?? Locale('en', '');
-  }
+  Locale get appLocal => _appLocale;
 
   fetchLocale() async {
     var prefs = await SharedPreferences.getInstance();
@@ -25,7 +23,7 @@ class AppLanguage extends ChangeNotifier {
           Locale('${GlobalConfiguration().getValue('defaultLanguage')}', '');
       return Null;
     }
-    _appLocale = Locale(prefs.getString('language_code'));
+    _appLocale = Locale(prefs.getString('language_code')!);
     return Null;
   }
 

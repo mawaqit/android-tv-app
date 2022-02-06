@@ -7,9 +7,9 @@ class WhiteButton extends StatefulWidget {
   final VoidCallback onPressed;
 
   const WhiteButton({
-    Key key,
-    @required this.onPressed,
-    @required this.child,
+    Key? key,
+    required this.onPressed,
+    required this.child,
   }) : super(key: key);
 
   @override

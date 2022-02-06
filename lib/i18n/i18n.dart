@@ -6,12 +6,13 @@ import 'package:flutter/material.dart';
 class I18n implements WidgetsLocalizations {
   const I18n();
 
-  static I18n current;
+  static I18n? current;
 
   static const GeneratedLocalizationsDelegate delegate =
       GeneratedLocalizationsDelegate();
 
-  static I18n of(BuildContext context) => Localizations.of<I18n>(context, I18n);
+  static I18n? of(BuildContext context) =>
+      Localizations.of<I18n>(context, I18n);
 
   @override
   TextDirection get textDirection => TextDirection.ltr;
@@ -75,7 +76,7 @@ class I18n implements WidgetsLocalizations {
 
   String get lightMode => "Light mode";
 
-  String social(String type) {
+  String? social(String? type) {
     return type;
   }
 }
@@ -460,7 +461,7 @@ class $ar extends I18n {
   String get lightMode => "الوضع الفاتح";
 
   @override
-  String social(String type) {
+  String? social(String? type) {
     switch (type) {
       case "Facebook":
         return "فيسبوك";
@@ -966,7 +967,7 @@ class $en extends I18n {
   const $en();
 }
 
-class GeneratedLocalizationsDelegate extends LocalizationsDelegate<I18n> {
+class GeneratedLocalizationsDelegate extends LocalizationsDelegate<I18n?> {
   const GeneratedLocalizationsDelegate();
 
   List<Locale> get supportedLocales {
@@ -985,8 +986,8 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<I18n> {
   }
 
   LocaleListResolutionCallback listResolution(
-      {Locale fallback, bool withCountry = true}) {
-    return (List<Locale> locales, Iterable<Locale> supported) {
+      {Locale? fallback, bool withCountry = true}) {
+    return (List<Locale>? locales, Iterable<Locale> supported) {
       if (locales == null || locales.isEmpty) {
         return fallback ?? supported.first;
       } else {
@@ -996,53 +997,51 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<I18n> {
   }
 
   LocaleResolutionCallback resolution(
-      {Locale fallback, bool withCountry = true}) {
-    return (Locale locale, Iterable<Locale> supported) {
+      {Locale? fallback, bool withCountry = true}) {
+    return (Locale? locale, Iterable<Locale> supported) {
       return _resolve(locale, fallback, supported, withCountry);
     };
   }
 
   @override
-  Future<I18n> load(Locale locale) {
+  Future<I18n?> load(Locale locale) {
     final String lang = getLang(locale);
-    if (lang != null) {
-      switch (lang) {
-        case "en":
-          I18n.current = const $en();
-          return SynchronousFuture<I18n>(I18n.current);
-        case "es":
-          I18n.current = const $es();
-          return SynchronousFuture<I18n>(I18n.current);
-        case "fr":
-          I18n.current = const $fr();
-          return SynchronousFuture<I18n>(I18n.current);
-        case "pt":
-          I18n.current = const $pt();
-          return SynchronousFuture<I18n>(I18n.current);
-        case "ar":
-          I18n.current = const $ar();
-          return SynchronousFuture<I18n>(I18n.current);
-        case "hi":
-          I18n.current = const $hi();
-          return SynchronousFuture<I18n>(I18n.current);
-        case "de":
-          I18n.current = const $de();
-          return SynchronousFuture<I18n>(I18n.current);
-        case "it":
-          I18n.current = const $it();
-          return SynchronousFuture<I18n>(I18n.current);
-        case "tr":
-          I18n.current = const $tr();
-          return SynchronousFuture<I18n>(I18n.current);
-        case "ru":
-          I18n.current = const $ru();
-          return SynchronousFuture<I18n>(I18n.current);
-        default:
-        // NO-OP.
-      }
+    switch (lang) {
+      case "en":
+        I18n.current = const $en();
+        return SynchronousFuture<I18n?>(I18n.current);
+      case "es":
+        I18n.current = const $es();
+        return SynchronousFuture<I18n?>(I18n.current);
+      case "fr":
+        I18n.current = const $fr();
+        return SynchronousFuture<I18n?>(I18n.current);
+      case "pt":
+        I18n.current = const $pt();
+        return SynchronousFuture<I18n?>(I18n.current);
+      case "ar":
+        I18n.current = const $ar();
+        return SynchronousFuture<I18n?>(I18n.current);
+      case "hi":
+        I18n.current = const $hi();
+        return SynchronousFuture<I18n?>(I18n.current);
+      case "de":
+        I18n.current = const $de();
+        return SynchronousFuture<I18n?>(I18n.current);
+      case "it":
+        I18n.current = const $it();
+        return SynchronousFuture<I18n?>(I18n.current);
+      case "tr":
+        I18n.current = const $tr();
+        return SynchronousFuture<I18n?>(I18n.current);
+      case "ru":
+        I18n.current = const $ru();
+        return SynchronousFuture<I18n?>(I18n.current);
+      default:
+      // NO-OP.
     }
     I18n.current = const I18n();
-    return SynchronousFuture<I18n>(I18n.current);
+    return SynchronousFuture<I18n?>(I18n.current);
   }
 
   @override
@@ -1054,7 +1053,7 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<I18n> {
   ///
   /// Internal method to resolve a locale from a list of locales.
   ///
-  Locale _resolve(Locale locale, Locale fallback, Iterable<Locale> supported,
+  Locale _resolve(Locale? locale, Locale? fallback, Iterable<Locale> supported,
       bool withCountry) {
     if (locale == null || !_isSupported(locale, withCountry)) {
       return fallback ?? supported.first;
@@ -1075,32 +1074,28 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<I18n> {
   /// Returns true if the specified locale is supported, false otherwise.
   ///
   bool _isSupported(Locale locale, bool withCountry) {
-    if (locale != null) {
-      for (Locale supportedLocale in supportedLocales) {
-        // Language must always match both locales.
-        if (supportedLocale.languageCode != locale.languageCode) {
-          continue;
-        }
+    for (Locale supportedLocale in supportedLocales) {
+      // Language must always match both locales.
+      if (supportedLocale.languageCode != locale.languageCode) {
+        continue;
+      }
 
-        // If country code matches, return this locale.
-        if (supportedLocale.countryCode == locale.countryCode) {
-          return true;
-        }
+      // If country code matches, return this locale.
+      if (supportedLocale.countryCode == locale.countryCode) {
+        return true;
+      }
 
-        // If no country requirement is requested, check if this locale has no country.
-        if (true != withCountry &&
-            (supportedLocale.countryCode == null ||
-                supportedLocale.countryCode.isEmpty)) {
-          return true;
-        }
+      // If no country requirement is requested, check if this locale has no country.
+      if (true != withCountry &&
+          (supportedLocale.countryCode == null ||
+              supportedLocale.countryCode!.isEmpty)) {
+        return true;
       }
     }
     return false;
   }
 }
 
-String getLang(Locale l) => l == null
-    ? null
-    : l.countryCode != null && l.countryCode.isEmpty
-        ? l.languageCode
-        : l.toString();
+String getLang(Locale l) => l.countryCode != null && l.countryCode!.isEmpty
+    ? l.languageCode
+    : l.toString();

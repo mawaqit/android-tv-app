@@ -1,13 +1,13 @@
 class Splash {
-  String id = "";
-  String firstColor = "";
-  String secondColor = "";
-  String logo_splash = "";
-  String img_splash = "";
-  String enable_logo = "";
-  String enable_img = "";
-  String logo_splash_base64 = "";
-  String img_splash_base64 = "";
+  String? id = "";
+  String? firstColor = "";
+  String? secondColor = "";
+  String? logo_splash = "";
+  String? img_splash = "";
+  String? enable_logo = "";
+  String? enable_img = "";
+  String? logo_splash_base64 = "";
+  String? img_splash_base64 = "";
 
   Splash(
       {this.id,

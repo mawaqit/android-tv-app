@@ -11,7 +11,7 @@ import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class LanguageScreen extends StatefulWidget {
-  const LanguageScreen({Key key}) : super(key: key);
+  const LanguageScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => new _LanguageScreen();
@@ -35,7 +35,7 @@ class _LanguageScreen extends State<LanguageScreen> {
 
   Future loadSharedPrefs() async {
     try {
-      Settings _settings = Settings.fromJson(await sharedPref.read("settings"));
+      Settings _settings = Settings.fromJson(await (sharedPref.read("settings") as FutureOr<Map<String, dynamic>>));
       setState(() {
         settings = _settings;
       });
@@ -53,7 +53,7 @@ class _LanguageScreen extends State<LanguageScreen> {
     var appLanguage = Provider.of<AppLanguage>(context);
 
     return Scaffold(
-      appBar: _renderAppBar(context, settings),
+      appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
       body: SafeArea(
         child: Column(
           children: [
@@ -69,14 +69,14 @@ class _LanguageScreen extends State<LanguageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    I18n.current.appLang,
+                    I18n.current!.appLang,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    I18n.current.descLang,
+                    I18n.current!.descLang,
                     style: TextStyle(
                       color: Colors.black38,
                       fontSize: 13,
@@ -135,7 +135,7 @@ class _LanguageScreen extends State<LanguageScreen> {
 
     return AppBar(
         title: Text(
-          I18n.current.languages,
+          I18n.current!.languages,
           style: TextStyle(
               color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
         ),
@@ -145,10 +145,10 @@ class _LanguageScreen extends State<LanguageScreen> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
-                themeProvider.isLightTheme
+                themeProvider.isLightTheme!
                     ? HexColor(settings.firstColor)
                     : themeProvider.darkTheme.primaryColor,
-                themeProvider.isLightTheme
+                themeProvider.isLightTheme!
                     ? HexColor(settings.secondColor)
                     : themeProvider.darkTheme.primaryColor,
               ],

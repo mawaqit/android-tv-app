@@ -1,9 +1,9 @@
 class Tab {
-  String id = "";
-  String title = "";
-  String url = "";
-  String icon_url = "";
-  String icon_base64 = "";
+  String? id = "";
+  String? title = "";
+  String? url = "";
+  String? icon_url = "";
+  String? icon_base64 = "";
 
   Tab(
       {this.id,

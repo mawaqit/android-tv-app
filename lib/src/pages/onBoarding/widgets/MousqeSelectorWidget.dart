@@ -10,8 +10,8 @@ class OnBoardingMosqueSelector extends StatefulWidget {
   final void Function() onDone;
 
   OnBoardingMosqueSelector({
-    Key key,
-    @required this.onDone,
+    Key? key,
+    required this.onDone,
   }) : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
   final controller = TextEditingController();
 
   bool loading = false;
-  String error;
+  String? error;
 
   Future<void> _onDone(String mosqueId) async {
     setState(() => loading = true);
@@ -93,7 +93,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
                     ? CircularProgressIndicator()
                     : WhiteButton(
                         onPressed: () => _onDone(controller.text),
-                        child: Text(I18n.current.ok),
+                        child: Text(I18n.current!.ok),
                       ),
               ],
             ),

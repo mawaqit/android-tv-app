@@ -18,13 +18,13 @@ class SlideItem extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: NetworkImage(sliderList[index].imageUrl))),
+                  image: NetworkImage(sliderList[index].imageUrl!))),
         ),
         SizedBox(
           height: 20.0,
         ),
         Text(
-          sliderList[index].title,
+          sliderList[index].title!,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.w700,
@@ -38,7 +38,7 @@ class SlideItem extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
-              sliderList[index].description,
+              sliderList[index].description!,
               style: TextStyle(
                 letterSpacing: 1.5,
                 fontSize: 12,

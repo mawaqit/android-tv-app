@@ -38,7 +38,7 @@ class _AboutScreen extends State<AboutScreen> {
     // TODO: implement build
 
     return Scaffold(
-      appBar: _renderAppBar(context, settings),
+      appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(children: <Widget>[]),
@@ -52,7 +52,7 @@ Widget _renderAppBar(context, Settings settings) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
       title: Text(
-        I18n.current.about,
+        I18n.current!.about,
         style: TextStyle(
             color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
       ),
@@ -62,10 +62,10 @@ Widget _renderAppBar(context, Settings settings) {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: <Color>[
-              themeProvider.isLightTheme
+              themeProvider.isLightTheme!
                   ? HexColor(settings.firstColor)
                   : themeProvider.darkTheme.primaryColor,
-              themeProvider.isLightTheme
+              themeProvider.isLightTheme!
                   ? HexColor(settings.secondColor)
                   : themeProvider.darkTheme.primaryColor,
             ],

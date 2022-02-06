@@ -1,14 +1,14 @@
 class Floating {
-  String id = "";
-  String title = "";
-  String type = "";
-  String icon = "";
-  String url = "";
-  String status = "";
-  String backgroundColor = "";
-  String iconColor = "";
-  String date = "";
-  String iconUrl = "";
+  String? id = "";
+  String? title = "";
+  String? type = "";
+  String? icon = "";
+  String? url = "";
+  String? status = "";
+  String? backgroundColor = "";
+  String? iconColor = "";
+  String? date = "";
+  String? iconUrl = "";
 
   Floating({
     this.id,

@@ -3,13 +3,13 @@ import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class SocialItem extends StatefulWidget {
-  String icon_url;
+  String? icon_url;
   IconData icon;
-  String text;
-  Function onTap;
+  String? text;
+  Function? onTap;
 
   SocialItem(
-      {Key key,
+      {Key? key,
       this.icon_url = "",
       this.icon = Icons.edit,
       this.text = "",
@@ -30,7 +30,7 @@ class _SocialItem extends State<SocialItem> {
     return GestureDetector(
       child:
           _renderIcon(widget.icon_url, widget.icon, themeProvider.isLightTheme),
-      onTap: widget.onTap,
+      onTap: widget.onTap as void Function()?,
     );
   }
 

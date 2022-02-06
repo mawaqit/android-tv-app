@@ -7,8 +7,8 @@ class OnBoardingTextWidget extends StatelessWidget {
   final void Function() onDone;
 
   const OnBoardingTextWidget({
-    Key key,
-    @required this.onDone,
+    Key? key,
+    required this.onDone,
   }) : super(key: key);
 
   @override
@@ -27,7 +27,7 @@ class OnBoardingTextWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 20),
               child: WhiteButton(
-                child: Text(I18n.current.ok),
+                child: Text(I18n.current!.ok),
                 onPressed: onDone,
               ),
             ),

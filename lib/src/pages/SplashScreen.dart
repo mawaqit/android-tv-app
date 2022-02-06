@@ -13,7 +13,7 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class SplashScreen extends StatefulWidget {
-  final Settings settings;
+  final Settings? settings;
 
   SplashScreen({this.settings});
 
@@ -29,7 +29,7 @@ class _SplashScreen extends State<SplashScreen> {
   // String url = "";
   // String onesignalUrl = "";
   Settings settings = new Settings();
-  Settings settingsSplach = new Settings();
+  Settings? settingsSplach = new Settings();
   bool applicationProblem = false;
 
   // bool goBoarding = false;
@@ -105,8 +105,8 @@ class _SplashScreen extends State<SplashScreen> {
   }
 
   ///
-  Future<String> loadMosqueId() async {
-    String id = await sharedPref.read("mosqueId").catchError((e) => null);
+  Future<String?> loadMosqueId() async {
+    String? id = await sharedPref.read("mosqueId").catchError((e) => null);
 
     return id;
   }
@@ -143,7 +143,7 @@ class _SplashScreen extends State<SplashScreen> {
     var goBoarding = await loadBoarding();
     var mosqueId = await loadMosqueId();
 
-    if (mosqueId == null || goBoarding && widget.settings.boarding == "1") {
+    if (mosqueId == null || goBoarding && widget.settings!.boarding == "1") {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) => OnBoardingScreen(settings),
@@ -163,23 +163,23 @@ class _SplashScreen extends State<SplashScreen> {
     // double height = MediaQuery.of(context).size.height;
 
     Color firstColor = (settingsSplach != null &&
-            settingsSplach.splash != null &&
-            settingsSplach.splash.enable_img == "1")
+            settingsSplach!.splash != null &&
+            settingsSplach!.splash!.enable_img == "1")
         ? HexColor("#FFFFFF")
-        : (settingsSplach.splash != null &&
-                settingsSplach.splash.firstColor != null &&
-                settingsSplach.splash.firstColor != "")
-            ? HexColor(settingsSplach.splash.firstColor)
+        : (settingsSplach!.splash != null &&
+                settingsSplach!.splash!.firstColor != null &&
+                settingsSplach!.splash!.firstColor != "")
+            ? HexColor(settingsSplach!.splash!.firstColor)
             : HexColor('${GlobalConfiguration().getValue('firstColor')}');
 
     Color secondColor = (settingsSplach != null &&
-            settingsSplach.splash != null &&
-            settingsSplach.splash.enable_img == "1")
+            settingsSplach!.splash != null &&
+            settingsSplach!.splash!.enable_img == "1")
         ? HexColor("#FFFFFF")
-        : (settingsSplach.splash != null &&
-                settingsSplach.splash.secondColor != null &&
-                settingsSplach.splash.secondColor != "")
-            ? HexColor(settingsSplach.splash.secondColor)
+        : (settingsSplach!.splash != null &&
+                settingsSplach!.splash!.secondColor != null &&
+                settingsSplach!.splash!.secondColor != "")
+            ? HexColor(settingsSplach!.splash!.secondColor)
             : HexColor('${GlobalConfiguration().getValue('secondColor')}');
 
     return Scaffold(
@@ -199,9 +199,9 @@ class _SplashScreen extends State<SplashScreen> {
               ),
             ),
           ),
-          (settingsSplach.splash != null &&
-                  settingsSplach.splash.enable_img != null &&
-                  settingsSplach.splash.enable_img == "1")
+          (settingsSplach!.splash != null &&
+                  settingsSplach!.splash!.enable_img != null &&
+                  settingsSplach!.splash!.enable_img == "1")
               ? /*Image.memory(
                   Base64Decoder()
                       .convert(settingsSplach.splash.img_splash_base64),
@@ -215,14 +215,14 @@ class _SplashScreen extends State<SplashScreen> {
                   fit: BoxFit.cover,
                 )
               : Container(),
-          (settingsSplach.splash != null &&
-                  settingsSplach.splash.enable_logo != null)
-              ? settingsSplach.splash.enable_logo == "1"
+          (settingsSplach!.splash != null &&
+                  settingsSplach!.splash!.enable_logo != null)
+              ? settingsSplach!.splash!.enable_logo == "1"
                   ? Align(
                       alignment: Alignment.center,
                       child: Image.memory(
-                        Base64Decoder()
-                            .convert(settingsSplach.splash.logo_splash_base64),
+                        Base64Decoder().convert(
+                            settingsSplach!.splash!.logo_splash_base64!),
                         height: 150,
                         width: 150,
                       ),

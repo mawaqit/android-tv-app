@@ -1,7 +1,7 @@
 class PositionOptions {
   bool enableHighAccuracy = false;
-  int timeout = 0;
-  int maximumAge = 0;
+  int? timeout = 0;
+  int? maximumAge = 0;
 
   PositionOptions from(dynamic data) {
     if (isNull(data)) return PositionOptions();
@@ -30,7 +30,7 @@ class PositionOptions {
     return false;
   }
 
-  int parseInt(dynamic value) {
+  int? parseInt(dynamic value) {
     if (value == null) return null;
     if (value is int) return value;
 
