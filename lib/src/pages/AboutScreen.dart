@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/elements/SocialItem.dart';
@@ -21,11 +23,6 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreen extends State<AboutScreen> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final settingsManager = Provider.of<SettingsManager>(context);
 
@@ -35,7 +32,14 @@ class _AboutScreen extends State<AboutScreen> {
         decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: AssetImage('assets/img/background.png'),
+            alignment: Alignment.topCenter,
+            image: settingsManager.settings.splash?.img_splash_base64 == null
+                ? AssetImage('assets/img/background.png')
+                : MemoryImage(
+                    base64Decode(
+                      settingsManager.settings.splash!.img_splash_base64!,
+                    ),
+                  ) as ImageProvider,
           ),
         ),
         child: Column(
@@ -45,10 +49,10 @@ class _AboutScreen extends State<AboutScreen> {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    FractionallySizedBox(
-                      widthFactor: .25,
+                    Center(
                       child: Image.asset(
                         'assets/img/mawaqit_logo_light_with_text_horizontal_Background.png',
+                        width: 200,
                       ),
                     ),
                     const SizedBox(height: 7),

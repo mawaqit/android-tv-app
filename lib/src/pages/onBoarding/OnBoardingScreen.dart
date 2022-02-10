@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flyweb/src/helpers/AppConfig.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
@@ -200,18 +202,25 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       body: DecoratedBox(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/img/background.png'),
             fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
+            image: widget.settings.splash?.img_splash_base64 == null
+                ? AssetImage('assets/img/background.png')
+                : MemoryImage(
+                    base64Decode(
+                      widget.settings.splash!.img_splash_base64!,
+                    ),
+                  ) as ImageProvider,
           ),
         ),
         child: Center(
           child: ListView(
             shrinkWrap: true,
             children: [
-              FractionallySizedBox(
-                widthFactor: .25,
+              Center(
                 child: Image.asset(
                   'assets/img/mawaqit_logo_light_with_text_horizontal_Background.png',
+                  width: 200,
                 ),
               ),
               const SizedBox(height: 7),
