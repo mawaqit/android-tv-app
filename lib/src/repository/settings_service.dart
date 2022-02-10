@@ -18,7 +18,6 @@ class SettingsService {
     if (res.statusCode == 200) {
       final json = jsonDecode(res.body);
 
-      json['data']['boarding'] = '1';
       Settings settings = Settings.fromJson(json["data"]);
       return settings;
     } else {

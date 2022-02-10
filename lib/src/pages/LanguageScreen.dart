@@ -1,12 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/data/config.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
-import 'package:flyweb/src/models/settings.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -19,27 +17,16 @@ class LanguageScreen extends StatefulWidget {
 
 class _LanguageScreen extends State<LanguageScreen> {
   SharedPref sharedPref = SharedPref();
-  Settings settings = Settings();
   List languages = Config.language;
 
   @override
   void initState() {
-    loadSharedPrefs();
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future loadSharedPrefs() async {
-    try {
-      Settings _settings = Settings.fromJson(await (sharedPref.read("settings") as FutureOr<Map<String, dynamic>>));
-      setState(() {
-        settings = _settings;
-      });
-    } catch (Excepetion) {}
   }
 
   _changeLanguage(Map language) async {
@@ -53,7 +40,7 @@ class _LanguageScreen extends State<LanguageScreen> {
     var appLanguage = Provider.of<AppLanguage>(context);
 
     return Scaffold(
-      appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
+      appBar: _renderAppBar(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -130,8 +117,10 @@ class _LanguageScreen extends State<LanguageScreen> {
     );
   }
 
-  Widget _renderAppBar(context, Settings settings) {
+  AppBar _renderAppBar(context) {
     var themeProvider = Provider.of<ThemeNotifier>(context);
+    final settingsManager = Provider.of<SettingsManager>(context);
+    final settings = settingsManager.settings;
 
     return AppBar(
         title: Text(

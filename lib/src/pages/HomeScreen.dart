@@ -31,6 +31,7 @@ import 'package:flyweb/src/pages/WebScreen.dart';
 import 'package:flyweb/src/position/PositionOptions.dart';
 import 'package:flyweb/src/position/PositionResponse.dart';
 import 'package:flyweb/src/services/mosque_manager.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:flyweb/src/themes/UIImages.dart';
 import 'package:geolocator/geolocator.dart';
@@ -85,7 +86,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreen extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   SharedPref sharedPref = SharedPref();
-  Settings settings = new Settings();
 
   BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
@@ -109,12 +109,12 @@ class _HomeScreen extends State<HomeScreen>
     Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
   ].toSet();
 
-  PackageInfo _packageInfo = PackageInfo(
-    appName: 'Unknown',
-    packageName: 'Unknown',
-    version: 'Unknown',
-    buildNumber: 'Unknown',
-  );
+  // PackageInfo _packageInfo = PackageInfo(
+  //   appName: 'Unknown',
+  //   packageName: 'Unknown',
+  //   version: 'Unknown',
+  //   buildNumber: 'Unknown',
+  // );
 
   TabController? tabController;
   int _currentIndex = 0;
@@ -122,7 +122,7 @@ class _HomeScreen extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    _initPackageInfo();
+    // _initPackageInfo();
 
     _handleIncomingLinks();
 
@@ -210,8 +210,9 @@ class _HomeScreen extends State<HomeScreen>
             final result = await Navigator.push(
                 context,
                 PageTransition(
-                    type: pageTransitionAnimation(context),
-                    child: WebScreen(link, widget.settings)));
+                  type: pageTransitionAnimation(context),
+                  child: WebScreen(link),
+                ));
 
             setState(() {
               goToWeb = true;
@@ -250,12 +251,12 @@ class _HomeScreen extends State<HomeScreen>
     super.dispose();
   }
 
-  Future<void> _initPackageInfo() async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
-  }
+  // Future<void> _initPackageInfo() async {
+  //   final PackageInfo info = await PackageInfo.fromPlatform();
+  //   setState(() {
+  //     _packageInfo = info;
+  //   });
+  // }
 
   Future<InitializationStatus> _initGoogleMobileAds() {
     // TODO: Initialize Google Mobile Ads SDK
@@ -266,6 +267,8 @@ class _HomeScreen extends State<HomeScreen>
   Widget build(BuildContext context) {
     final appLanguage = context.watch<AppLanguage>();
     final mosqueManager = context.watch<MosqueManager>();
+    final settingsManager = context.read<SettingsManager>();
+    final settings = settingsManager.settings;
 
     var url =
         'https://mawaqit.net/${appLanguage.appLocal.languageCode}/id/${mosqueManager.mosqueId}?view=desktop';
@@ -277,12 +280,12 @@ class _HomeScreen extends State<HomeScreen>
     var themeProvider = Provider.of<ThemeNotifier>(context);
 
     if (connectionStatus == ConnectivityStatus.Offline)
-      return _offline(bottomPadding);
+      return _offline(bottomPadding, settings);
 
     final _oneSignalHelper = OneSignalHelper();
     Future<void> _listenerOneSignal() async {
       print(_oneSignalHelper.url);
-      if (widget.settings.tabNavigationEnable == "1") {
+      if (settings.tabNavigationEnable == "1") {
         if (goToWeb) {
           setState(() {
             goToWeb = false;
@@ -291,10 +294,7 @@ class _HomeScreen extends State<HomeScreen>
             context,
             PageTransition(
               type: pageTransitionAnimation(context),
-              child: WebScreen(
-                _oneSignalHelper.url,
-                widget.settings,
-              ),
+              child: WebScreen(_oneSignalHelper.url),
             ),
           );
 
@@ -315,11 +315,7 @@ class _HomeScreen extends State<HomeScreen>
 
     _oneSignalHelper.addListener(_listenerOneSignal);
 
-    this.setState(() {
-      settings = widget.settings;
-    });
-
-    final List<Widget> _children = [];
+    // final List<Widget> _children = [];
 
     return WillPopScope(
       onWillPop: () async {
@@ -390,10 +386,7 @@ class _HomeScreen extends State<HomeScreen>
                                     context,
                                     PageTransition(
                                       type: pageTransitionAnimation(context),
-                                      child: WebScreen(
-                                        widget.settings.url,
-                                        widget.settings,
-                                      ),
+                                      child: WebScreen(widget.settings.url),
                                     ),
                                   );
 
@@ -457,7 +450,7 @@ class _HomeScreen extends State<HomeScreen>
                               context,
                               PageTransition(
                                 type: pageTransitionAnimation(context),
-                                child: MosqueSearchScreen(settings: settings),
+                                child: MosqueSearchScreen(),
                               ),
                             );
                           },
@@ -484,29 +477,41 @@ class _HomeScreen extends State<HomeScreen>
                                   context, settings.title, settings.share!);
                             }),
                         DrawerListTitle(
-                            icon: Icons.star,
-                            text: I18n.current!.rate,
-                            onTap: () => LaunchReview.launch(
-                                androidAppId: settings.androidId,
-                                iOSAppId: settings.iosId)),
-                        (_packageInfo.version !=
-                                (Platform.isAndroid
-                                    ? settings.versionAndroid
-                                    : settings.versionIos))
-                            ? new Column(children: [
+                          icon: Icons.star,
+                          text: I18n.current!.rate,
+                          onTap: () => LaunchReview.launch(
+                            androidAppId: settings.androidId,
+                            iOSAppId: settings.iosId,
+                          ),
+                        ),
+                        FutureBuilder<PackageInfo>(
+                          future: PackageInfo.fromPlatform(),
+                          builder: (context, snapshot) {
+                            if (snapshot.data == null ||
+                                snapshot.data!.version ==
+                                    (Platform.isAndroid
+                                        ? settings.versionAndroid
+                                        : settings.versionIos))
+                              return SizedBox();
+                            return new Column(
+                              children: [
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                                   child: Divider(
                                       height: 1, color: Colors.grey[400]),
                                 ),
                                 DrawerListTitle(
-                                    icon: Icons.system_update,
-                                    text: I18n.current!.update,
-                                    onTap: () => LaunchReview.launch(
-                                        androidAppId: settings.androidId,
-                                        iOSAppId: settings.iosId))
-                              ])
-                            : Container()
+                                  icon: Icons.system_update,
+                                  text: I18n.current!.update,
+                                  onTap: () => LaunchReview.launch(
+                                    androidAppId: settings.androidId,
+                                    iOSAppId: settings.iosId,
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ),
                       ],
                     ),
                   )
@@ -563,7 +568,7 @@ class _HomeScreen extends State<HomeScreen>
                           ],
                         ),
                         height: 60.0,
-                        child: _buildTabItem(context)),
+                        child: _buildTabItem(context, settings)),
                   )
                 : Container(height: 0),
             // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -593,59 +598,68 @@ class _HomeScreen extends State<HomeScreen>
     );
   }
 
-  Widget _buildTabItem(context) {
+  Widget _buildTabItem(context, Settings settings) {
     var themeProvider = Provider.of<ThemeNotifier>(context);
     Color tabColor = HexColor(widget.settings.colorTab);
     Color unselectedColor = Colors.black26;
     return new TabBar(
-        onTap: (index) {
-          for (int i = 0; i < listStream.length; i++) {
-            listStream[i].add(index);
-          }
-        },
-        indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(
-              color: themeProvider.isLightTheme!
-                  ? tabColor
-                  : themeProvider.darkTheme.primaryColor,
-              width: 2.5),
-          //insets: EdgeInsets.symmetric(horizontal:16.0)
+      onTap: (index) {
+        for (int i = 0; i < listStream.length; i++) {
+          listStream[i].add(index);
+        }
+      },
+      indicator: UnderlineTabIndicator(
+        borderSide: BorderSide(
+          color: themeProvider.isLightTheme!
+              ? tabColor
+              : themeProvider.darkTheme.primaryColor,
+          width: 2.5,
         ),
-        controller: tabController,
-        labelColor: tabColor,
-        unselectedLabelColor: Colors.black26,
-        tabs: List.generate(widget.settings.tab!.length, (index) {
+        //insets: EdgeInsets.symmetric(horizontal:16.0)
+      ),
+      controller: tabController,
+      labelColor: tabColor,
+      unselectedLabelColor: Colors.black26,
+      tabs: List.generate(
+        widget.settings.tab!.length,
+        (index) {
           return new Tab(
             child: new Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  new Image.network(settings.tab![index].icon_url!,
-                      width: 25,
-                      height: 25,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                new Image.network(settings.tab![index].icon_url!,
+                    width: 25,
+                    height: 25,
+                    color: _currentIndex == index
+                        ? themeProvider.isLightTheme!
+                            ? tabColor
+                            : themeProvider.darkTheme.primaryColor
+                        : unselectedColor),
+                new SizedBox(height: 5),
+                new Flexible(
+                  child: new Text(
+                    settings.tab![index].title!,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: widget.settings.tab!.length == 5 ? 8 : 10,
                       color: _currentIndex == index
                           ? themeProvider.isLightTheme!
                               ? tabColor
                               : themeProvider.darkTheme.primaryColor
-                          : unselectedColor),
-                  new SizedBox(height: 5),
-                  new Flexible(
-                      child: new Text(settings.tab![index].title!,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize:
-                                  widget.settings.tab!.length == 5 ? 8 : 10,
-                              color: _currentIndex == index
-                                  ? themeProvider.isLightTheme!
-                                      ? tabColor
-                                      : themeProvider.darkTheme.primaryColor
-                                  : unselectedColor))),
-                ]),
+                          : unselectedColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
-        }));
+        },
+      ),
+    );
   }
 
-  Widget _offline(bottomPadding) {
+  Widget _offline(bottomPadding, Settings settings) {
     return WillPopScope(
       onWillPop: () async {
         return _onBackPressed(context);
@@ -803,10 +817,7 @@ class _HomeScreen extends State<HomeScreen>
                         context,
                         PageTransition(
                           type: pageTransitionAnimation(context),
-                          child: WebScreen(
-                            menu.url,
-                            widget.settings,
-                          ),
+                          child: WebScreen(menu.url),
                         ),
                       );
 
@@ -849,7 +860,7 @@ class _HomeScreen extends State<HomeScreen>
                       context,
                       PageTransition(
                         type: pageTransitionAnimation(context),
-                        child: WebScreen(floating.url, widget.settings),
+                        child: WebScreen(floating.url),
                       ),
                     );
 
@@ -883,7 +894,7 @@ class _HomeScreen extends State<HomeScreen>
                     context,
                     PageTransition(
                         type: pageTransitionAnimation(context),
-                        child: PageScreen(page, widget.settings)));
+                        child: PageScreen(page)));
               }))
           .toList(),
     );
@@ -1184,7 +1195,7 @@ class _HomeScreen extends State<HomeScreen>
               context,
               PageTransition(
                   type: pageTransitionAnimation(context),
-                  child: WebScreen(navigationIcon.url, widget.settings)));
+                  child: WebScreen(navigationIcon.url)));
           setState(() {
             goToWeb = false;
           });
@@ -1208,7 +1219,7 @@ class _HomeScreen extends State<HomeScreen>
                   context,
                   PageTransition(
                       type: pageTransitionAnimation(context),
-                      child: WebScreen(settings.url, widget.settings)));
+                      child: WebScreen(settings.url)));
               setState(() {
                 goToWeb = true;
               });
@@ -1273,7 +1284,7 @@ class _HomeScreen extends State<HomeScreen>
                 context,
                 PageTransition(
                     type: pageTransitionAnimation(context),
-                    child: WebScreen(qrCode, widget.settings)));
+                    child: WebScreen(qrCode)));
 
             setState(() {
               goToWeb = true;

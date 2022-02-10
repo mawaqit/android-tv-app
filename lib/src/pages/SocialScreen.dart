@@ -3,42 +3,30 @@ import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/settings.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class AboutScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new _AboutScreen();
-  }
+  State<StatefulWidget> createState() => new _AboutScreen();
 }
 
 class _AboutScreen extends State<AboutScreen> {
   SharedPref sharedPref = SharedPref();
-  Settings settings = Settings();
 
   @override
   void initState() {
     super.initState();
-    loadSharedPrefs();
-  }
-
-  Future loadSharedPrefs() async {
-    try {
-      Settings _settings = Settings.fromJson(await sharedPref.read("settings"));
-      setState(() {
-        settings = _settings;
-      });
-    } catch (Excepetion) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final settingsManager = Provider.of<SettingsManager>(context);
+    final settings = settingsManager.settings;
 
     return Scaffold(
-      appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
+      appBar: _renderAppBar(context, settings),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(children: <Widget>[]),
@@ -48,7 +36,7 @@ class _AboutScreen extends State<AboutScreen> {
   }
 }
 
-Widget _renderAppBar(context, Settings settings) {
+AppBar _renderAppBar(context, Settings settings) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
       title: Text(

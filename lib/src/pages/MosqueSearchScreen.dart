@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flyweb/src/helpers/AppConfig.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
-import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
+import 'package:provider/provider.dart';
 
 class MosqueSearchScreen extends StatelessWidget {
-  const MosqueSearchScreen({
-    Key? key,
-    this.settings,
-  }) : super(key: key);
-
-  final Settings? settings;
+  const MosqueSearchScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final settingsManager = Provider.of<SettingsManager>(context);
+    final settings = settingsManager.settings;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: HexColor(settings!.secondColor),
+        backgroundColor: HexColor(settings.secondColor),
         title: Text('Mosque'),
       ),
       body: Container(

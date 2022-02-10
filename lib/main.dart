@@ -10,6 +10,7 @@ import 'package:flyweb/src/models/ad_state.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/pages/SplashScreen.dart';
 import 'package:flyweb/src/services/mosque_manager.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
           create: (context) => AppLanguage()..fetchLocale(),
         ),
         ChangeNotifierProvider(create: (context) => MosqueManager()..init()),
+        ChangeNotifierProvider(create: (context) => SettingsManager()..init()),
       ],
       //   providers:
       // create: (_) => appLanguage,
@@ -84,7 +86,7 @@ class MyApp extends StatelessWidget {
               ],
               supportedLocales: I18n.delegate.supportedLocales,
               debugShowCheckedModeBanner: false,
-              home: SplashScreen(settings: this.settings),
+              home: SplashScreen(localSettings: this.settings),
             ),
           ),
         );

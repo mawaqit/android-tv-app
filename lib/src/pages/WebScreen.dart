@@ -18,6 +18,7 @@ import 'package:flyweb/src/models/ad_state.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/position/PositionOptions.dart';
 import 'package:flyweb/src/position/PositionResponse.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:flyweb/src/themes/UIImages.dart';
 import 'package:geolocator/geolocator.dart';
@@ -31,9 +32,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class WebScreen extends StatefulWidget {
   final String? url;
-  final Settings settings;
 
-  const WebScreen(this.url, this.settings);
+  const WebScreen(this.url);
 
   @override
   State<StatefulWidget> createState() {
@@ -104,31 +104,31 @@ class _WebScreen extends State<WebScreen> {
     _handleIncomingLinks();
 
     //AdMob
-    if (widget.settings.adBanner == "1") {
-      String adBannerId = Platform.isAndroid
-          ? widget.settings.admobKeyAdBanner!
-          : widget.settings.admobKeyAdBannerIos!;
-      // TODO: Initialize _bannerAd
-      _bannerAd = BannerAd(
-        adUnitId: adBannerId,
-        request: AdRequest(),
-        size: AdSize.banner,
-        listener: BannerAdListener(
-          onAdLoaded: (_) {
-            setState(() {
-              _isBannerAdReady = true;
-            });
-          },
-          onAdFailedToLoad: (ad, err) {
-            print('Failed to load a banner ad: ${err.message}');
-            _isBannerAdReady = false;
-            ad.dispose();
-          },
-        ),
-      );
-
-      _bannerAd!.load();
-    }
+    // if (widget.settings.adBanner == "1") {
+    //   String adBannerId = Platform.isAndroid
+    //       ? widget.settings.admobKeyAdBanner!
+    //       : widget.settings.admobKeyAdBannerIos!;
+    //   // TODO: Initialize _bannerAd
+    //   _bannerAd = BannerAd(
+    //     adUnitId: adBannerId,
+    //     request: AdRequest(),
+    //     size: AdSize.banner,
+    //     listener: BannerAdListener(
+    //       onAdLoaded: (_) {
+    //         setState(() {
+    //           _isBannerAdReady = true;
+    //         });
+    //       },
+    //       onAdFailedToLoad: (ad, err) {
+    //         print('Failed to load a banner ad: ${err.message}');
+    //         _isBannerAdReady = false;
+    //         ad.dispose();
+    //       },
+    //     ),
+    //   );
+    //
+    //   _bannerAd!.load();
+    // }
   }
 
   void _handleIncomingLinks() {
@@ -168,12 +168,14 @@ class _WebScreen extends State<WebScreen> {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     var bottomPadding = mediaQueryData.padding.bottom;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    final settingsManager = Provider.of<SettingsManager>(context);
+    final settings = settingsManager.settings;
 
     var themeProvider = Provider.of<ThemeNotifier>(context);
     //var onesignalProvider = Provider.of<OneSignalHelper>(context);
     //OneSignalHelper oneSignalHelper = new OneSignalHelper();
     if (connectionStatus == ConnectivityStatus.Offline)
-      return _offline(bottomPadding);
+      return _offline(bottomPadding, settings);
 
     final _oneSignalHelper = OneSignalHelper();
     void _listenerOneSignal() {
@@ -192,8 +194,7 @@ class _WebScreen extends State<WebScreen> {
           padding: EdgeInsets.only(bottom: bottomPadding),
           child: Scaffold(
               key: _scaffoldKey,
-              appBar: _renderAppBar(context, widget.settings)
-                  as PreferredSizeWidget?,
+              appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
               body: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -212,18 +213,17 @@ class _WebScreen extends State<WebScreen> {
                               useOnDownloadStart: true,
                               mediaPlaybackRequiresUserGesture: false,
                               userAgent: Platform.isAndroid
-                                  ? widget.settings.userAgent!.valueAndroid!
-                                  : widget.settings.userAgent!.valueIOS!),
+                                  ? settings.userAgent!.valueAndroid!
+                                  : settings.userAgent!.valueIOS!),
                           android: AndroidInAppWebViewOptions(
                             useHybridComposition: true,
                           ),
                           ios: IOSInAppWebViewOptions(
                             allowsInlineMediaPlayback: true,
                           )),
-                      pullToRefreshController:
-                          widget.settings.pullRefresh == "1"
-                              ? pullToRefreshController
-                              : null,
+                      pullToRefreshController: settings.pullRefresh == "1"
+                          ? pullToRefreshController
+                          : null,
                       onWebViewCreated: (InAppWebViewController controller) {
                         controller.addJavaScriptHandler(
                             handlerName: '_flutterGeolocation',
@@ -358,22 +358,22 @@ class _WebScreen extends State<WebScreen> {
                         print(consoleMessage);
                       },
                     )),
-                    if (widget.settings.adBanner == "1" && _isBannerAdReady)
+                    if (settings.adBanner == "1" && _isBannerAdReady)
                       Container(
                         height: 50,
                         child: AdWidget(ad: _bannerAd!),
                       )
                   ]),
-                  (isLoading && widget.settings.loader != "empty")
+                  (isLoading && settings.loader != "empty")
                       ? Positioned(
                           top: 0,
                           bottom: 0,
                           right: 0,
                           left: 0,
                           child: Loader(
-                              type: widget.settings.loader,
+                              type: settings.loader,
                               color: themeProvider.isLightTheme!
-                                  ? HexColor(widget.settings.loaderColor)
+                                  ? HexColor(settings.loaderColor)
                                   : themeProvider.darkTheme.primaryColor))
                       : Container()
                 ],
@@ -381,7 +381,7 @@ class _WebScreen extends State<WebScreen> {
     );
   }
 
-  Widget _offline(bottomPadding) {
+  Widget _offline(bottomPadding, Settings settings) {
     return WillPopScope(
       onWillPop: () async {
         return _onBackPressed(context);
@@ -433,8 +433,8 @@ class _WebScreen extends State<WebScreen> {
                           width: 250,
                           gradient: LinearGradient(
                             colors: <Color>[
-                              HexColor(widget.settings.secondColor),
-                              HexColor(widget.settings.firstColor)
+                              HexColor(settings.secondColor),
+                              HexColor(settings.firstColor)
                             ],
                           ),
                           onPressed: () {}),

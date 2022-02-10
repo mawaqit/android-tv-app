@@ -6,15 +6,15 @@ import 'package:flyweb/src/elements/Loader.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/models/page.dart';
 import 'package:flyweb/src/models/settings.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PageScreen extends StatefulWidget {
   final Page page;
-  final Settings settings;
 
-  const PageScreen(this.page, this.settings);
+  const PageScreen(this.page);
 
   @override
   State<StatefulWidget> createState() {
@@ -38,9 +38,11 @@ class _PageScreen extends State<PageScreen> {
     // TODO: implement build
 
     var themeProvider = Provider.of<ThemeNotifier>(context);
+    final settingsManager = Provider.of<SettingsManager>(context);
+    final settings = settingsManager.settings;
 
     return Scaffold(
-        appBar: _renderAppBar(context, widget.settings, widget.page) as PreferredSizeWidget?,
+        appBar: _renderAppBar(context, settings, widget.page),
         body: Stack(fit: StackFit.expand, children: [
           InAppWebView(
             // contextMenu: contextMenu,
@@ -52,8 +54,8 @@ class _PageScreen extends State<PageScreen> {
                     useOnDownloadStart: true,
                     mediaPlaybackRequiresUserGesture: false,
                     userAgent: Platform.isAndroid
-                        ? widget.settings.userAgent!.valueAndroid!
-                        : widget.settings.userAgent!.valueIOS!),
+                        ? settings.userAgent!.valueAndroid!
+                        : settings.userAgent!.valueIOS!),
                 android: AndroidInAppWebViewOptions(
                   useHybridComposition: true,
                 ),
@@ -102,23 +104,23 @@ class _PageScreen extends State<PageScreen> {
               print(consoleMessage);
             },
           ),
-          (isLoading && widget.settings.loader != "empty")
+          (isLoading && settings.loader != "empty")
               ? Positioned(
                   top: 0,
                   bottom: 0,
                   right: 0,
                   left: 0,
                   child: Loader(
-                      type: widget.settings.loader,
+                      type: settings.loader,
                       color: themeProvider.isLightTheme!
-                          ? HexColor(widget.settings.loaderColor)
+                          ? HexColor(settings.loaderColor)
                           : themeProvider.darkTheme.primaryColor))
               : Container()
         ]));
   }
 }
 
-Widget _renderAppBar(context, Settings settings, Page page) {
+AppBar _renderAppBar(context, Settings settings, Page page) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
       title: Text(

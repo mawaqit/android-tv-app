@@ -3,6 +3,7 @@ import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/settings.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,8 @@ class QrScanScreen extends StatefulWidget {
 
 class _QrScanScreen extends State<QrScanScreen> {
   SharedPref sharedPref = SharedPref();
-  Settings settings = Settings();
+
+  // Settings settings = Settings();
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -29,7 +31,6 @@ class _QrScanScreen extends State<QrScanScreen> {
   @override
   void initState() {
     super.initState();
-    loadSharedPrefs();
     _initPackageInfo();
   }
 
@@ -40,18 +41,10 @@ class _QrScanScreen extends State<QrScanScreen> {
     });
   }
 
-  Future loadSharedPrefs() async {
-    try {
-      Settings _settings = Settings.fromJson(await sharedPref.read("settings"));
-      setState(() {
-        settings = _settings;
-      });
-    } catch (Excepetion) {}
-  }
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final settingsManager = Provider.of<SettingsManager>(context);
+    final settings = settingsManager.settings;
 
     return Scaffold(
       appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
