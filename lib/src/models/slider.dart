@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
 class Slider {
-  String image;
-  String imageUrl;
-  String title;
-  String description;
+  String? image;
+  String? imageUrl;
+  String? title;
+  String? description;
 
   Slider({this.image, this.imageUrl, this.title, this.description});
 

@@ -1,26 +1,27 @@
 class Floating {
-  String id="";
-  String title="";
-  String type="";
-  String icon="";
-  String url="";
-  String status="";
-  String backgroundColor="";
-  String iconColor="";
-  String date="";
-  String iconUrl="";
+  String? id = "";
+  String? title = "";
+  String? type = "";
+  String? icon = "";
+  String? url = "";
+  String? status = "";
+  String? backgroundColor = "";
+  String? iconColor = "";
+  String? date = "";
+  String? iconUrl = "";
 
-  Floating(
-      {this.id,
-        this.title,
-        this.type,
-        this.icon,
-        this.url,
-        this.status,
-        this.backgroundColor,
-        this.iconColor,
-        this.date,
-        this.iconUrl});
+  Floating({
+    this.id,
+    this.title,
+    this.type,
+    this.icon,
+    this.url,
+    this.status,
+    this.backgroundColor,
+    this.iconColor,
+    this.date,
+    this.iconUrl,
+  });
 
   Floating.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -1,18 +1,12 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flyweb/i18n/i18n.dart';
-import 'package:flyweb/src/elements/CardTitleDescription.dart';
-import 'package:flyweb/src/elements/SocialItem.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/models/social.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class QrScanScreen extends StatefulWidget {
   @override
@@ -24,7 +18,8 @@ class QrScanScreen extends StatefulWidget {
 
 class _QrScanScreen extends State<QrScanScreen> {
   SharedPref sharedPref = SharedPref();
-  Settings settings = Settings();
+
+  // Settings settings = Settings();
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -36,7 +31,6 @@ class _QrScanScreen extends State<QrScanScreen> {
   @override
   void initState() {
     super.initState();
-    loadSharedPrefs();
     _initPackageInfo();
   }
 
@@ -47,21 +41,13 @@ class _QrScanScreen extends State<QrScanScreen> {
     });
   }
 
-  Future loadSharedPrefs() async {
-    try {
-      Settings _settings = Settings.fromJson(await sharedPref.read("settings"));
-      setState(() {
-        settings = _settings;
-      });
-    } catch (Excepetion) {}
-  }
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final settingsManager = Provider.of<SettingsManager>(context);
+    final settings = settingsManager.settings;
 
     return Scaffold(
-      appBar: _renderAppBar(context, settings),
+      appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -89,7 +75,7 @@ class _QrScanScreen extends State<QrScanScreen> {
                 child: Padding(
                     padding: EdgeInsets.all(13),
                     child: Image.network(
-                      settings.logoHeaderUrl,
+                      settings.logoHeaderUrl!,
                     )),
               ),
             ),
@@ -97,7 +83,7 @@ class _QrScanScreen extends State<QrScanScreen> {
               padding: EdgeInsets.only(left: 0, top: 10, right: 0, bottom: 10),
               child: Center(
                   child: Text(
-                settings.title,
+                settings.title!,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               )),
@@ -112,7 +98,7 @@ class _QrScanScreen extends State<QrScanScreen> {
                   EdgeInsets.only(left: 20, top: 40, right: 20, bottom: 10),
               child: Center(
                   child: Text(
-                settings.aboutUs,
+                settings.aboutUs!,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
               )),
@@ -137,7 +123,7 @@ Widget _renderAppBar(context, Settings settings) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
       title: Text(
-        I18n.current.about,
+        I18n.current!.about,
         style: TextStyle(
             color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
       ),
@@ -147,10 +133,10 @@ Widget _renderAppBar(context, Settings settings) {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: <Color>[
-              themeProvider.isLightTheme
+              themeProvider.isLightTheme!
                   ? HexColor(settings.firstColor)
                   : themeProvider.darkTheme.primaryColor,
-              themeProvider.isLightTheme
+              themeProvider.isLightTheme!
                   ? HexColor(settings.secondColor)
                   : themeProvider.darkTheme.primaryColor,
             ],
@@ -158,4 +144,3 @@ Widget _renderAppBar(context, Settings settings) {
         ),
       ));
 }
-

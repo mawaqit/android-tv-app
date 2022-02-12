@@ -1,8 +1,8 @@
 class UserAgent {
-  String id = "";
-  String title = "";
-  String valueAndroid = "";
-  String valueIOS = "";
+  String? id = "";
+  String? title = "";
+  String? valueAndroid = "";
+  String? valueIOS = "";
 
   UserAgent({this.id, this.title, this.valueAndroid, this.valueIOS});
 

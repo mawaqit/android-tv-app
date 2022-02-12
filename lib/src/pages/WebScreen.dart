@@ -7,6 +7,7 @@ import 'package:android_intent/android_intent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/elements/Loader.dart';
 import 'package:flyweb/src/elements/RaisedGradientButton.dart';
@@ -17,6 +18,8 @@ import 'package:flyweb/src/models/ad_state.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/position/PositionOptions.dart';
 import 'package:flyweb/src/position/PositionResponse.dart';
+import 'package:flyweb/src/services/settings_manager.dart';
+import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:flyweb/src/themes/UIImages.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -26,14 +29,11 @@ import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flyweb/src/services/theme_manager.dart';
 
 class WebScreen extends StatefulWidget {
-  final String url;
-  final Settings settings;
+  final String? url;
 
-  const WebScreen(this.url, this.settings);
+  const WebScreen(this.url);
 
   @override
   State<StatefulWidget> createState() {
@@ -42,21 +42,21 @@ class WebScreen extends StatefulWidget {
 }
 
 class _WebScreen extends State<WebScreen> {
-  BannerAd _bannerAd;
+  BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
 
   static GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  InAppWebViewController _webViewController;
+  InAppWebViewController? _webViewController;
   String url = "";
   final GlobalKey webViewKey = GlobalKey();
-  PullToRefreshController pullToRefreshController;
+  PullToRefreshController? pullToRefreshController;
 
   List<StreamSubscription<Position>> webViewGPSPositionStreams = [];
-  bool isLoading;
+  late bool isLoading;
 
-  Uri _initialUri;
-  Uri _latestUri;
-  StreamSubscription _sub;
+  Uri? _initialUri;
+  Uri? _latestUri;
+  StreamSubscription? _sub;
 
   final Set<Factory<OneSequenceGestureRecognizer>> _gSet = [
     Factory<VerticalDragGestureRecognizer>(
@@ -104,36 +104,36 @@ class _WebScreen extends State<WebScreen> {
     _handleIncomingLinks();
 
     //AdMob
-    if (widget.settings.adBanner == "1") {
-      String adBannerId = Platform.isAndroid
-          ? widget.settings.admobKeyAdBanner
-          : widget.settings.admobKeyAdBannerIos;
-      // TODO: Initialize _bannerAd
-      _bannerAd = BannerAd(
-        adUnitId: adBannerId,
-        request: AdRequest(),
-        size: AdSize.banner,
-        listener: AdListener(
-          onAdLoaded: (_) {
-            setState(() {
-              _isBannerAdReady = true;
-            });
-          },
-          onAdFailedToLoad: (ad, err) {
-            print('Failed to load a banner ad: ${err.message}');
-            _isBannerAdReady = false;
-            ad.dispose();
-          },
-        ),
-      );
-
-      _bannerAd.load();
-    }
+    // if (widget.settings.adBanner == "1") {
+    //   String adBannerId = Platform.isAndroid
+    //       ? widget.settings.admobKeyAdBanner!
+    //       : widget.settings.admobKeyAdBannerIos!;
+    //   // TODO: Initialize _bannerAd
+    //   _bannerAd = BannerAd(
+    //     adUnitId: adBannerId,
+    //     request: AdRequest(),
+    //     size: AdSize.banner,
+    //     listener: BannerAdListener(
+    //       onAdLoaded: (_) {
+    //         setState(() {
+    //           _isBannerAdReady = true;
+    //         });
+    //       },
+    //       onAdFailedToLoad: (ad, err) {
+    //         print('Failed to load a banner ad: ${err.message}');
+    //         _isBannerAdReady = false;
+    //         ad.dispose();
+    //       },
+    //     ),
+    //   );
+    //
+    //   _bannerAd!.load();
+    // }
   }
 
   void _handleIncomingLinks() {
     if (!kIsWeb) {
-      _sub = uriLinkStream.listen((Uri uri) {
+      _sub = uriLinkStream.listen((Uri? uri) {
         if (!mounted) return;
         print('got uri: $uri');
         setState(() {
@@ -168,17 +168,19 @@ class _WebScreen extends State<WebScreen> {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     var bottomPadding = mediaQueryData.padding.bottom;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    final settingsManager = Provider.of<SettingsManager>(context);
+    final settings = settingsManager.settings;
 
     var themeProvider = Provider.of<ThemeNotifier>(context);
     //var onesignalProvider = Provider.of<OneSignalHelper>(context);
     //OneSignalHelper oneSignalHelper = new OneSignalHelper();
     if (connectionStatus == ConnectivityStatus.Offline)
-      return _offline(bottomPadding);
+      return _offline(bottomPadding, settings);
 
     final _oneSignalHelper = OneSignalHelper();
     void _listenerOneSignal() {
       _webViewController?.loadUrl(
-          urlRequest: URLRequest(url: Uri.parse(_oneSignalHelper.url)));
+          urlRequest: URLRequest(url: Uri.parse(_oneSignalHelper.url!)));
     }
 
     _oneSignalHelper.addListener(_listenerOneSignal);
@@ -192,7 +194,7 @@ class _WebScreen extends State<WebScreen> {
           padding: EdgeInsets.only(bottom: bottomPadding),
           child: Scaffold(
               key: _scaffoldKey,
-              appBar: _renderAppBar(context, widget.settings),
+              appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
               body: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -201,7 +203,8 @@ class _WebScreen extends State<WebScreen> {
                         child: InAppWebView(
                       key: webViewKey,
                       // contextMenu: contextMenu,
-                      initialUrlRequest: URLRequest(url: Uri.parse(widget.url)),
+                      initialUrlRequest:
+                          URLRequest(url: Uri.parse(widget.url!)),
                       gestureRecognizers: _gSet,
                       initialOptions: InAppWebViewGroupOptions(
                           crossPlatform: InAppWebViewOptions(
@@ -210,18 +213,17 @@ class _WebScreen extends State<WebScreen> {
                               useOnDownloadStart: true,
                               mediaPlaybackRequiresUserGesture: false,
                               userAgent: Platform.isAndroid
-                                  ? widget.settings.userAgent.valueAndroid
-                                  : widget.settings.userAgent.valueIOS),
+                                  ? settings.userAgent!.valueAndroid!
+                                  : settings.userAgent!.valueIOS!),
                           android: AndroidInAppWebViewOptions(
                             useHybridComposition: true,
                           ),
                           ios: IOSInAppWebViewOptions(
                             allowsInlineMediaPlayback: true,
                           )),
-                      pullToRefreshController:
-                          widget.settings.pullRefresh == "1"
-                              ? pullToRefreshController
-                              : null,
+                      pullToRefreshController: settings.pullRefresh == "1"
+                          ? pullToRefreshController
+                          : null,
                       onWebViewCreated: (InAppWebViewController controller) {
                         controller.addJavaScriptHandler(
                             handlerName: '_flutterGeolocation',
@@ -244,7 +246,7 @@ class _WebScreen extends State<WebScreen> {
                                   _geolocationClearWatch(parseInt(
                                       geolocationData[
                                               'flutterGeolocationIndex'] ??
-                                          0));
+                                          0)!);
                                   break;
 
                                 case "getCurrentPosition":
@@ -260,7 +262,7 @@ class _WebScreen extends State<WebScreen> {
                                   _geolocationWatchPosition(
                                       parseInt(geolocationData[
                                               'flutterGeolocationIndex'] ??
-                                          0),
+                                          0)!,
                                       PositionOptions().from(
                                           geolocationData['option'] ?? null));
                                   break;
@@ -280,7 +282,7 @@ class _WebScreen extends State<WebScreen> {
                           (controller, navigationAction) async {
                         var uri = navigationAction.request.url;
                         if (Platform.isAndroid &&
-                            ["intent"].contains(uri.scheme)) {
+                            ["intent"].contains(uri!.scheme)) {
                           if (uri.toString().indexOf("maps") != -1) {
                             var link = uri.toString().substring(
                                 uri.toString().indexOf('?link=') + 6);
@@ -304,7 +306,7 @@ class _WebScreen extends State<WebScreen> {
                           "javascript",
                           "file",
                           "about"
-                        ].contains(uri.scheme)) {
+                        ].contains(uri!.scheme)) {
                           if (await canLaunch(uri.toString())) {
                             // Launch the App
                             await launch(
@@ -323,7 +325,7 @@ class _WebScreen extends State<WebScreen> {
                         });
                       },
                       onLoadStop: (controller, url) async {
-                        pullToRefreshController.endRefreshing();
+                        pullToRefreshController!.endRefreshing();
                         Future.delayed(const Duration(milliseconds: 500), () {
                           _geolocationAlertFix();
                         });
@@ -339,11 +341,11 @@ class _WebScreen extends State<WebScreen> {
                         );
                       },
                       onLoadError: (controller, url, code, message) {
-                        pullToRefreshController.endRefreshing();
+                        pullToRefreshController!.endRefreshing();
                       },
                       onProgressChanged: (controller, progress) {
                         if (progress == 100) {
-                          pullToRefreshController.endRefreshing();
+                          pullToRefreshController!.endRefreshing();
                         }
                       },
                       onUpdateVisitedHistory:
@@ -356,22 +358,22 @@ class _WebScreen extends State<WebScreen> {
                         print(consoleMessage);
                       },
                     )),
-                    if (widget.settings.adBanner == "1" && _isBannerAdReady)
+                    if (settings.adBanner == "1" && _isBannerAdReady)
                       Container(
                         height: 50,
-                        child: AdWidget(ad: _bannerAd),
+                        child: AdWidget(ad: _bannerAd!),
                       )
                   ]),
-                  (isLoading && widget.settings.loader != "empty")
+                  (isLoading && settings.loader != "empty")
                       ? Positioned(
                           top: 0,
                           bottom: 0,
                           right: 0,
                           left: 0,
                           child: Loader(
-                              type: widget.settings.loader,
-                              color: themeProvider.isLightTheme
-                                  ? HexColor(widget.settings.loaderColor)
+                              type: settings.loader,
+                              color: themeProvider.isLightTheme!
+                                  ? HexColor(settings.loaderColor)
                                   : themeProvider.darkTheme.primaryColor))
                       : Container()
                 ],
@@ -379,7 +381,7 @@ class _WebScreen extends State<WebScreen> {
     );
   }
 
-  Widget _offline(bottomPadding) {
+  Widget _offline(bottomPadding, Settings settings) {
     return WillPopScope(
       onWillPop: () async {
         return _onBackPressed(context);
@@ -407,7 +409,7 @@ class _WebScreen extends State<WebScreen> {
                           )),
                       SizedBox(height: 40),
                       Text(
-                        I18n.current.whoops,
+                        I18n.current!.whoops,
                         style: TextStyle(
                             color: Colors.black45,
                             fontSize: 40.0,
@@ -415,14 +417,14 @@ class _WebScreen extends State<WebScreen> {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        I18n.current.noInternet,
+                        I18n.current!.noInternet,
                         style: TextStyle(color: Colors.black87, fontSize: 15.0),
                       ),
                       SizedBox(height: 5),
                       SizedBox(height: 60),
                       RaisedGradientButton(
                           child: Text(
-                            I18n.current.tryAgain,
+                            I18n.current!.tryAgain,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18.0,
@@ -431,8 +433,8 @@ class _WebScreen extends State<WebScreen> {
                           width: 250,
                           gradient: LinearGradient(
                             colors: <Color>[
-                              HexColor(widget.settings.secondColor),
-                              HexColor(widget.settings.firstColor)
+                              HexColor(settings.secondColor),
+                              HexColor(settings.firstColor)
                             ],
                           ),
                           onPressed: () {}),
@@ -446,7 +448,7 @@ class _WebScreen extends State<WebScreen> {
     );
   }
 
-  int parseInt(dynamic value) {
+  int? parseInt(dynamic value) {
     if (value == null) return null;
     if (value is int) return value;
 
@@ -457,25 +459,22 @@ class _WebScreen extends State<WebScreen> {
       PositionOptions positionOptions) async {
     PositionResponse positionResponse = PositionResponse();
 
-    int timeout = 30000;
-    if (positionOptions.timeout > 0) timeout = positionOptions.timeout;
+    int? timeout = 30000;
+    if (positionOptions.timeout! > 0) timeout = positionOptions.timeout;
 
     try {
-      Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-      GeolocationStatus geolocationStatus =
-          await geolocator.checkGeolocationPermissionStatus();
+      LocationPermission geolocationStatus =
+          await Geolocator.requestPermission();
 
-      if (geolocationStatus == GeolocationStatus.denied ||
-          geolocationStatus == GeolocationStatus.granted ||
-          geolocationStatus == GeolocationStatus.restricted ||
-          geolocationStatus == GeolocationStatus.unknown) {
+      if (geolocationStatus == LocationPermission.always ||
+          geolocationStatus == LocationPermission.whileInUse) {
         positionResponse.position = await Future.any([
-          geolocator.getCurrentPosition(
+          Geolocator.getCurrentPosition(
               desiredAccuracy: (positionOptions.enableHighAccuracy
                   ? LocationAccuracy.best
                   : LocationAccuracy.medium)),
-          Future.delayed(Duration(milliseconds: timeout), () {
-            if (positionOptions.timeout > 0) positionResponse.timedOut = true;
+          Future.delayed(Duration(milliseconds: timeout!), () {
+            if (positionOptions.timeout! > 0) positionResponse.timedOut = true;
             return;
           })
         ]);
@@ -533,9 +532,9 @@ class _WebScreen extends State<WebScreen> {
       setTimeout(function(){ _flutterGeolocationAlertFix(); }, 100);
     ''';
 
-    _webViewController.evaluateJavascript(source: javascript);
+    _webViewController!.evaluateJavascript(source: javascript);
 
-    _webViewController.evaluateJavascript(source: """
+    _webViewController!.evaluateJavascript(source: """
 
       function _flutterGeolocationAlertFix() {
 
@@ -585,7 +584,7 @@ class _WebScreen extends State<WebScreen> {
 
   void _geolocationClearWatch(int flutterGeolocationIndex) {
     // Stop gps position stream
-    webViewGPSPositionStreams[flutterGeolocationIndex]?.cancel();
+    webViewGPSPositionStreams[flutterGeolocationIndex].cancel();
 
     // remove watcher from list
     webViewGPSPositionStreams.remove(flutterGeolocationIndex);
@@ -604,11 +603,11 @@ class _WebScreen extends State<WebScreen> {
       _flutterGeolocationResponse();
     ''';
 
-    _webViewController.evaluateJavascript(source: javascript);
+    _webViewController!.evaluateJavascript(source: javascript);
   }
 
   void _geolocationGetCurrentPosition(
-      int flutterGeolocationIndex, PositionOptions positionOptions) async {
+      int? flutterGeolocationIndex, PositionOptions positionOptions) async {
     PositionResponse positionResponse =
         await getCurrentPosition(positionOptions);
 
@@ -617,7 +616,7 @@ class _WebScreen extends State<WebScreen> {
   }
 
   void _geolocationResponse(
-      int flutterGeolocationIndex,
+      int? flutterGeolocationIndex,
       PositionOptions positionOptions,
       PositionResponse positionResponse,
       bool watcher) {
@@ -629,25 +628,25 @@ class _WebScreen extends State<WebScreen> {
           ''']({
             coords: {
               accuracy: ''' +
-          positionResponse.position.accuracy.toString() +
+          positionResponse.position!.accuracy.toString() +
           ''',
               altitude: ''' +
-          positionResponse.position.altitude.toString() +
+          positionResponse.position!.altitude.toString() +
           ''',
               altitudeAccuracy: null,
               heading: null,
               latitude: ''' +
-          positionResponse.position.latitude.toString() +
+          positionResponse.position!.latitude.toString() +
           ''',
               longitude: ''' +
-          positionResponse.position.longitude.toString() +
+          positionResponse.position!.longitude.toString() +
           ''',
               speed: ''' +
-          positionResponse.position.speed.toString() +
+          positionResponse.position!.speed.toString() +
           '''
             },
             timestamp: ''' +
-          positionResponse.position.timestamp.millisecondsSinceEpoch
+          positionResponse.position!.timestamp!.millisecondsSinceEpoch
               .toString() +
           '''
           });''' +
@@ -667,7 +666,7 @@ class _WebScreen extends State<WebScreen> {
         _flutterGeolocationResponse();
       ''';
 
-      _webViewController.evaluateJavascript(source: javascript);
+      _webViewController!.evaluateJavascript(source: javascript);
     } else {
       // TODO: Return correct error code
       String javascript = '''
@@ -699,23 +698,22 @@ class _WebScreen extends State<WebScreen> {
         _flutterGeolocationResponse();
       ''';
 
-      _webViewController.evaluateJavascript(source: javascript);
+      _webViewController!.evaluateJavascript(source: javascript);
     }
   }
 
   void _geolocationWatchPosition(
       int flutterGeolocationIndex, PositionOptions positionOptions) {
     // init new strem
-    var geolocator = Geolocator();
-    var locationOptions = LocationOptions(
+    var locationOptions = LocationSettings(
         accuracy: (positionOptions.enableHighAccuracy
             ? LocationAccuracy.best
             : LocationAccuracy.medium),
         distanceFilter: 10);
 
-    webViewGPSPositionStreams[flutterGeolocationIndex] = geolocator
-        .getPositionStream(locationOptions)
-        .listen((Position position) {
+    webViewGPSPositionStreams[flutterGeolocationIndex] =
+        Geolocator.getPositionStream(locationSettings: locationOptions)
+            .listen((Position position) {
       // Send data to each warcher
       PositionResponse positionResponse = PositionResponse()
         ..position = position;
@@ -736,7 +734,7 @@ class _WebScreen extends State<WebScreen> {
                 icon: Transform(
                     alignment: Alignment.center,
                     transform: Matrix4.rotationY(math.pi *
-                        (I18n.current.textDirection == TextDirection.ltr
+                        (I18n.current!.textDirection == TextDirection.ltr
                             ? 2
                             : 1)),
                     child: Icon(
@@ -754,10 +752,10 @@ class _WebScreen extends State<WebScreen> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
-                themeProvider.isLightTheme
+                themeProvider.isLightTheme!
                     ? HexColor(settings.firstColor)
                     : themeProvider.darkTheme.primaryColor,
-                themeProvider.isLightTheme
+                themeProvider.isLightTheme!
                     ? HexColor(settings.secondColor)
                     : themeProvider.darkTheme.primaryColor,
               ],
@@ -769,8 +767,8 @@ class _WebScreen extends State<WebScreen> {
   Future<bool> _onBackPressed(context) async {
     try {
       if (_webViewController != null) {
-        if (await _webViewController.canGoBack()) {
-          _webViewController.goBack();
+        if (await _webViewController!.canGoBack()) {
+          _webViewController!.goBack();
           return false;
         } else {
           Navigator.pop(context);
@@ -779,5 +777,6 @@ class _WebScreen extends State<WebScreen> {
     } catch (e) {
       Navigator.pop(context);
     }
+    return true;
   }
 }
