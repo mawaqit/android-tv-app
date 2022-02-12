@@ -2,7 +2,7 @@
 import 'dart:ui';
 
 class HexColor extends Color {
-  static int _getColorFromHex(String hexColor) {
+  static int _getColorFromHex(String? hexColor) {
 
     if(hexColor != null){
       hexColor = hexColor.toUpperCase().replaceAll("#", "");
@@ -16,7 +16,7 @@ class HexColor extends Color {
 
   }
 
-  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+  HexColor(final String? hexColor) : super(_getColorFromHex(hexColor));
 }
 
 

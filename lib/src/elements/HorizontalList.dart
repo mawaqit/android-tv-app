@@ -13,13 +13,13 @@ class HorizontalList extends StatefulWidget {
   String type;
   IconData icon;
   List list;
-  Function onTap;
-  Function onTapColor;
-  Function onTapLoader;
-  Settings settings;
+  Function? onTap;
+  Function? onTapColor;
+  Function? onTapLoader;
+  Settings? settings;
 
   HorizontalList(
-      {Key key,
+      {Key? key,
       this.title = "",
       this.description = "",
       this.selected = "",
@@ -89,14 +89,14 @@ class _HorizontalList extends State<HorizontalList> {
 
 Widget _buildHorizontalList(
     List list,
-    Function onTap,
-    Function onTapColor,
-    Function onTapLoader,
+    Function? onTap,
+    Function? onTapColor,
+    Function? onTapLoader,
     String selected,
     String selectedFirstColor,
     String selectedSecondColor,
     String type,
-    Settings settings) {
+    Settings? settings) {
   if (type == "option") {
     return SizedBox(
       height: 100.0,
@@ -104,7 +104,7 @@ Widget _buildHorizontalList(
         scrollDirection: Axis.horizontal,
         children: list.map((obj) {
           return _buildItem(obj['image'], obj['value'], obj['url'], onTap,
-              selected, settings);
+              selected, settings!);
         }).toList(),
       ),
     );
@@ -133,23 +133,23 @@ Widget _buildHorizontalList(
       child: new ListView(
         scrollDirection: Axis.horizontal,
         children: list.map((obj) {
-          return _buildItemLoader(obj, onTapLoader, settings);
+          return _buildItemLoader(obj, onTapLoader, settings!);
         }).toList(),
       ),
     );
   }
 }
 
-Widget _buildItem(AssetImage image_, String text, String url, Function onTap,
+Widget _buildItem(AssetImage image_, String? text, String? url, Function? onTap,
     String selected, Settings settings) {
   double edgeSize = 0.0;
 
   return Container(
       padding: EdgeInsets.all(edgeSize),
       margin: EdgeInsets.fromLTRB(
-          I18n.current.textDirection == TextDirection.rtl ? 0 : 15,
+          I18n.current!.textDirection == TextDirection.rtl ? 0 : 15,
           12,
-          I18n.current.textDirection == TextDirection.rtl ? 15 : 0,
+          I18n.current!.textDirection == TextDirection.rtl ? 15 : 0,
           12),
       child: SizedBox(
         width: 230,
@@ -172,7 +172,7 @@ Widget _buildItem(AssetImage image_, String text, String url, Function onTap,
                 ]),
             child: RaisedButton(
                 onPressed: () {
-                  onTap(text, url);
+                  onTap!(text, url);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
@@ -235,13 +235,13 @@ Widget _buildItem(AssetImage image_, String text, String url, Function onTap,
 
 Widget _buildItemGradient(
     String title,
-    AssetImage image_,
-    String firstColor,
-    String secondColor,
-    Function onTapColor,
+    AssetImage? image_,
+    String? firstColor,
+    String? secondColor,
+    Function? onTapColor,
     String selectedFirstColor,
     String selectedSecondColor,
-    Settings settings) {
+    Settings? settings) {
   double edgeSize = 0.0;
 
   return Container(
@@ -268,7 +268,7 @@ Widget _buildItemGradient(
                 ]),
             child: RaisedButton(
                 onPressed: () {
-                  onTapColor(firstColor, secondColor);
+                  onTapColor!(firstColor, secondColor);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
@@ -337,7 +337,7 @@ Widget _buildItemGradient(
       ));
 }
 
-Widget _buildItemLoader(dynamic obj, Function onTapLoader, Settings settings) {
+Widget _buildItemLoader(dynamic obj, Function? onTapLoader, Settings settings) {
   double edgeSize = 0.0;
 
   return Container(
@@ -364,7 +364,7 @@ Widget _buildItemLoader(dynamic obj, Function onTapLoader, Settings settings) {
                 ]),
             child: RaisedButton(
                 onPressed: () {
-                  onTapLoader(obj["value"]);
+                  onTapLoader!(obj["value"]);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),

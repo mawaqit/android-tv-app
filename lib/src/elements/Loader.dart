@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Loader extends StatefulWidget {
-  String type;
+  String? type;
   Color color;
 
-  Loader({Key key, this.type = "", this.color = Colors.white})
+  Loader({Key? key, this.type = "", this.color = Colors.white})
       : super(key: key);
 
   @override
@@ -17,7 +17,7 @@ class Loader extends StatefulWidget {
 class _Loader extends State<Loader> {
   @override
   Widget build(BuildContext context) {
-    String type = widget.type;
+    String? type = widget.type;
     Color color = widget.color;
     double size = 60.0;
 

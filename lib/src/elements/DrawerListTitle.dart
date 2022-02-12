@@ -4,18 +4,21 @@ import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class DrawerListTitle extends StatefulWidget {
-  String icon_url;
+  String? iconUrl;
   IconData icon;
-  String text;
-  Function onTap;
+  String? text;
+  Function? onTap;
 
-  DrawerListTitle(
-      {Key key,
-      this.icon_url = "",
-      this.icon = Icons.edit,
-      this.text = "",
-      this.onTap})
-      : super(key: key);
+  bool forceThemeColor;
+
+  DrawerListTitle({
+    Key? key,
+    this.iconUrl,
+    this.forceThemeColor = false,
+    this.icon = Icons.edit,
+    this.text = "",
+    this.onTap,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -30,31 +33,32 @@ class _DrawerListTitle extends State<DrawerListTitle> {
     var themeProvider = Provider.of<ThemeNotifier>(context);
     return ListTile(
       title: Text(
-        widget.text,
+        widget.text!,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 15.0),
       ),
-      leading:
-          _renderIcon(widget.icon_url, widget.icon, themeProvider.isLightTheme),
+      leading: _renderIcon(
+        widget.iconUrl,
+        widget.icon,
+        themeProvider.getTheme()?.iconTheme.color,
+      ),
       trailing: Icon(
-        I18n.current.textDirection == TextDirection.ltr
+        I18n.current!.textDirection == TextDirection.ltr
             ? Icons.keyboard_arrow_right
             : Icons.keyboard_arrow_left,
       ),
-      onTap: widget.onTap,
+      onTap: widget.onTap as void Function()?,
     );
   }
 
-  Widget _renderIcon(icon_url, icon, isLightTheme) {
-    return icon_url != ""
+  Widget _renderIcon(String? iconUrl, IconData icon, Color? color) {
+    return iconUrl != null && iconUrl != ""
         ? Image.network(
-            icon_url,
+            iconUrl,
             width: 20,
             height: 20,
-            //color: isLightTheme ? Colors.grey : Colors.white,
+            color: widget.forceThemeColor ? color : null,
           )
-        : Icon(
-            icon,
-          );
+        : Icon(icon);
   }
 }

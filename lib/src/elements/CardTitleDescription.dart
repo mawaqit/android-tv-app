@@ -6,7 +6,7 @@ class CardTitleDescription extends StatefulWidget {
   String description;
   TextAlign textAlign;
 
-  CardTitleDescription({Key key, this.title = "", this.description = "" , this.fontSize= 14 , this.textAlign = TextAlign.left})
+  CardTitleDescription({Key? key, this.title = "", this.description = "" , this.fontSize= 14 , this.textAlign = TextAlign.left})
       : super(key: key);
 
   @override

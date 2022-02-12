@@ -1,12 +1,12 @@
 class Page {
-  String id = "";
-  String title = "";
-  String type = "";
-  String icon = "";
-  String url = "";
-  String status = "";
-  String date = "";
-  String iconUrl = "";
+  String? id = "";
+  String? title = "";
+  String? type = "";
+  String? icon = "";
+  String? url = "";
+  String? status = "";
+  String? date = "";
+  String? iconUrl = "";
 
   Page(
       {this.id,

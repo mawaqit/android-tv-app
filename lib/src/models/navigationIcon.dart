@@ -1,16 +1,16 @@
 class NavigationIcon {
-  String id;
-  String icon;
-  String title;
-  String value;
-  String type;
-  String url;
-  String status;
-  String fixed;
-  String createdAt;
-  String updatedAt;
-  String iconUrl;
-  String iconUrlBase64;
+  String? id;
+  String? icon;
+  String? title;
+  String? value;
+  String? type;
+  String? url;
+  String? status;
+  String? fixed;
+  String? createdAt;
+  String? updatedAt;
+  String? iconUrl;
+  String? iconUrlBase64;
 
   NavigationIcon(
       {this.id,

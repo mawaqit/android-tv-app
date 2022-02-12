@@ -1,13 +1,13 @@
 class Social {
-  String id="";
-  String title="";
-  String linkUrl="";
-  String idApp="";
-  String icon="";
-  String url="";
-  String status="";
-  String date="";
-  String iconUrl="";
+  String? id="";
+  String? title="";
+  String? linkUrl="";
+  String? idApp="";
+  String? icon="";
+  String? url="";
+  String? status="";
+  String? date="";
+  String? iconUrl="";
 
   Social(
       {this.id,

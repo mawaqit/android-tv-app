@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AppConfig {
-  BuildContext _context;
-  double _height;
-  double _width;
-  double _heightPadding;
-  double _widthPadding;
+  late BuildContext _context;
+  late double _height;
+  late double _width;
+  late double _heightPadding;
+  late double _widthPadding;
 
   AppConfig(_context) {
     this._context = _context;
@@ -35,10 +35,10 @@ class AppConfig {
   }
 }
 
-class Colors {
-  Color mainColor(double opacity) {
+class AppColors {
+  Color mainColor([double opacity = 1]) {
     try {
-      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF")))
+      return Color(int.parse("#490094".replaceAll("#", "0xFF")))
           .withOpacity(opacity);
     } catch (e) {
       return Color(0xFFCCCCCC).withOpacity(opacity);
@@ -47,7 +47,7 @@ class Colors {
 
   Color secondColor(double opacity) {
     try {
-      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF")))
+      return Color(int.parse("#490094".replaceAll("#", "0xFF")))
           .withOpacity(opacity);
     } catch (e) {
       return Color(0xFFCCCCCC).withOpacity(opacity);
