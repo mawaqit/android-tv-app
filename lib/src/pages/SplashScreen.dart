@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flyweb/src/data/config.dart';
+import 'package:flyweb/src/helpers/AppRouter.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/settings.dart';
@@ -145,17 +146,9 @@ class _SplashScreen extends State<SplashScreen> {
     var mosqueId = await loadMosqueId();
 
     if (mosqueId == null || goBoarding && settings.boarding == "1") {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (BuildContext context) => OnBoardingScreen(settings),
-        ),
-      );
+      AppRouter.pushReplacement(OnBoardingScreen(settings));
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (BuildContext context) => HomeScreen(settings),
-        ),
-      );
+      AppRouter.pushReplacement(HomeScreen(settings));
     }
   }
 
@@ -256,7 +249,7 @@ class _SplashScreen extends State<SplashScreen> {
                           "We're sorry, our system is not available",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18, color: Colors.white),
-                        )
+                        ),
                       ],
                     ),
                   ),

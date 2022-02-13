@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
+import 'package:flyweb/src/helpers/AppRouter.dart';
 import 'package:flyweb/src/pages/LanguageScreen.dart';
 import 'package:flyweb/src/widgets/WhiteButton.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,12 +44,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                     child: InkWell(
                       focusColor: Colors.deepPurple.withOpacity(.5),
                       borderRadius: BorderRadius.circular(20),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LanguageScreen(),
-                        ),
-                      ),
+                      onTap: () => AppRouter.push(LanguageScreen()),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 6,

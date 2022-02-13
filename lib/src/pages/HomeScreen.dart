@@ -16,6 +16,7 @@ import 'package:flyweb/src/elements/DrawerListTitle.dart';
 import 'package:flyweb/src/elements/Loader.dart';
 import 'package:flyweb/src/elements/RaisedGradientButton.dart';
 import 'package:flyweb/src/enum/connectivity_status.dart';
+import 'package:flyweb/src/helpers/AppRouter.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/OneSignalHelper.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
@@ -207,12 +208,7 @@ class _HomeScreen extends State<HomeScreen>
             setState(() {
               goToWeb = false;
             });
-            final result = await Navigator.push(
-                context,
-                PageTransition(
-                  type: pageTransitionAnimation(context),
-                  child: WebScreen(link),
-                ));
+            AppRouter.push(WebScreen(link));
 
             setState(() {
               goToWeb = true;
@@ -290,13 +286,8 @@ class _HomeScreen extends State<HomeScreen>
           setState(() {
             goToWeb = false;
           });
-          final result = await Navigator.push(
-            context,
-            PageTransition(
-              type: pageTransitionAnimation(context),
-              child: WebScreen(_oneSignalHelper.url),
-            ),
-          );
+
+          AppRouter.push(WebScreen(_oneSignalHelper.url));
 
           setState(() {
             goToWeb = true;
@@ -381,14 +372,9 @@ class _HomeScreen extends State<HomeScreen>
                               if (widget.settings.tabNavigationEnable == "1") {
                                 if (goToWeb) {
                                   setState(() => goToWeb = false);
-                                  Navigator.pop(context);
-                                  await Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      type: pageTransitionAnimation(context),
-                                      child: WebScreen(widget.settings.url),
-                                    ),
-                                  );
+                                  AppRouter.popAndPush(
+                                      WebScreen(widget.settings.url),
+                                      name: 'HomeScreen');
 
                                   setState(() => goToWeb = true);
                                 }
@@ -430,44 +416,18 @@ class _HomeScreen extends State<HomeScreen>
                         DrawerListTitle(
                           icon: Icons.translate,
                           text: I18n.current!.languages,
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: pageTransitionAnimation(context),
-                                child: LanguageScreen(),
-                              ),
-                            );
-                          },
+                          onTap: () => AppRouter.popAndPush(LanguageScreen()),
                         ),
                         DrawerListTitle(
                           icon: Icons.museum_outlined,
                           text: 'Change Mosque',
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: pageTransitionAnimation(context),
-                                child: MosqueSearchScreen(),
-                              ),
-                            );
-                          },
+                          onTap: () =>
+                              AppRouter.popAndPush(MosqueSearchScreen()),
                         ),
                         DrawerListTitle(
                           icon: Icons.info,
                           text: I18n.current!.about,
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: pageTransitionAnimation(context),
-                                child: AboutScreen(),
-                              ),
-                            );
-                          },
+                          onTap: () => AppRouter.popAndPush(AboutScreen()),
                         ),
                         DrawerListTitle(
                             icon: Icons.share,
@@ -813,13 +773,7 @@ class _HomeScreen extends State<HomeScreen>
                       setState(() {
                         goToWeb = false;
                       });
-                      final result = await Navigator.push(
-                        context,
-                        PageTransition(
-                          type: pageTransitionAnimation(context),
-                          child: WebScreen(menu.url),
-                        ),
-                      );
+                      AppRouter.push(WebScreen(menu.url), name: menu.title);
 
                       setState(() {
                         goToWeb = true;
@@ -856,13 +810,9 @@ class _HomeScreen extends State<HomeScreen>
                     setState(() {
                       goToWeb = false;
                     });
-                    final result = await Navigator.push(
-                      context,
-                      PageTransition(
-                        type: pageTransitionAnimation(context),
-                        child: WebScreen(floating.url),
-                      ),
-                    );
+
+                    AppRouter.push(WebScreen(floating.url),
+                        name: floating.title);
 
                     setState(() => goToWeb = true);
                   }
@@ -884,18 +834,15 @@ class _HomeScreen extends State<HomeScreen>
     print(pages.map((e) => e.icon));
     return new Column(
       children: pages
-          .map((Page page) => DrawerListTitle(
+          .map(
+            (Page page) => DrawerListTitle(
               forceThemeColor: true,
               iconUrl: page.iconUrl,
               text: page.title,
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: pageTransitionAnimation(context),
-                        child: PageScreen(page)));
-              }))
+              onTap: () =>
+                  AppRouter.popAndPush(PageScreen(page), name: page.title),
+            ),
+          )
           .toList(),
     );
   }
@@ -1191,11 +1138,11 @@ class _HomeScreen extends State<HomeScreen>
           setState(() {
             goToWeb = false;
           });
-          final result = await Navigator.push(
-              context,
-              PageTransition(
-                  type: pageTransitionAnimation(context),
-                  child: WebScreen(navigationIcon.url)));
+          AppRouter.push(
+            WebScreen(navigationIcon.url),
+            name: navigationIcon.title,
+          );
+
           setState(() {
             goToWeb = false;
           });
@@ -1215,11 +1162,8 @@ class _HomeScreen extends State<HomeScreen>
               setState(() {
                 goToWeb = false;
               });
-              final result = await Navigator.push(
-                  context,
-                  PageTransition(
-                      type: pageTransitionAnimation(context),
-                      child: WebScreen(settings.url)));
+              AppRouter.push(WebScreen(settings.url));
+
               setState(() {
                 goToWeb = true;
               });
@@ -1280,11 +1224,7 @@ class _HomeScreen extends State<HomeScreen>
             setState(() {
               goToWeb = false;
             });
-            final result = await Navigator.push(
-                context,
-                PageTransition(
-                    type: pageTransitionAnimation(context),
-                    child: WebScreen(qrCode)));
+            AppRouter.push(WebScreen(qrCode), name: 'qrCode');
 
             setState(() {
               goToWeb = true;
