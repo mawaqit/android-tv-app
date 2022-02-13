@@ -47,7 +47,7 @@ dependencies:
   flutter_inappwebview: ^5.3.2
 
   # ADS
-  google_mobile_ads: ^1.0.1
+#  google_mobile_ads: ^1.0.1
 
   # CONNECTIVITY
   http: ^0.13.4

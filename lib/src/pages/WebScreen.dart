@@ -14,7 +14,6 @@ import 'package:flyweb/src/elements/RaisedGradientButton.dart';
 import 'package:flyweb/src/enum/connectivity_status.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/OneSignalHelper.dart';
-import 'package:flyweb/src/models/ad_state.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/position/PositionOptions.dart';
 import 'package:flyweb/src/position/PositionResponse.dart';
@@ -23,7 +22,6 @@ import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:flyweb/src/themes/UIImages.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:location/location.dart' hide LocationAccuracy;
 import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
@@ -42,9 +40,6 @@ class WebScreen extends StatefulWidget {
 }
 
 class _WebScreen extends State<WebScreen> {
-  BannerAd? _bannerAd;
-  bool _isBannerAdReady = false;
-
   static GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   InAppWebViewController? _webViewController;
   String url = "";
@@ -64,23 +59,6 @@ class _WebScreen extends State<WebScreen> {
     Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
     Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
   ].toSet();
-
-  @override
-  void didChangeDependecies() {
-    super.didChangeDependencies();
-    print("AdMod_ DidHomeScreen");
-    final adState = Provider.of<AdState>(context);
-    adState.initialization.then((state) {
-      setState(() {
-        _bannerAd = BannerAd(
-          adUnitId: adState.bannerAdUnitId,
-          size: AdSize.banner,
-          request: AdRequest(),
-          listener: adState.adListener,
-        )..load();
-      });
-    });
-  }
 
   @override
   void initState() {
@@ -155,8 +133,6 @@ class _WebScreen extends State<WebScreen> {
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
-
     webViewGPSPositionStreams.forEach(
         (StreamSubscription<Position> _flutterGeolocationStream) =>
             _flutterGeolocationStream.cancel());
@@ -358,11 +334,6 @@ class _WebScreen extends State<WebScreen> {
                         print(consoleMessage);
                       },
                     )),
-                    if (settings.adBanner == "1" && _isBannerAdReady)
-                      Container(
-                        height: 50,
-                        child: AdWidget(ad: _bannerAd!),
-                      )
                   ]),
                   (isLoading && settings.loader != "empty")
                       ? Positioned(
