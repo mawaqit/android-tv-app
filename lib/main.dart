@@ -53,8 +53,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MosqueManager()..init()),
         ChangeNotifierProvider(create: (context) => SettingsManager()..init()),
       ],
-      //   providers:
-      // create: (_) => appLanguage,
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         // ignore: missing_required_param
         return StreamProvider(
