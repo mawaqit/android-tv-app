@@ -14,6 +14,7 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     // FIREBASE PACKAGES
     classpath 'com.google.gms:google-services:4.3.2'
+    classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
     classpath 'com.android.tools:r8:2.1.75'
   }
 }
