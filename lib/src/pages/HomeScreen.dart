@@ -7,7 +7,6 @@ import 'package:android_intent/android_intent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Page;
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
@@ -37,7 +36,6 @@ import 'package:flyweb/src/themes/UIImages.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:http/http.dart' as http;
 import 'package:launch_review/launch_review.dart';
 import 'package:location/location.dart' hide LocationAccuracy;
 import 'package:package_info/package_info.dart';
@@ -1244,66 +1242,11 @@ class _HomeScreen extends State<HomeScreen>
         case "icon_exit":
           _showDialog(context);
           break;
-        case "icon_qrcode":
-          scanQRCode();
-          break;
+
         default:
           () {};
           break;
       }
-    }
-  }
-
-  Future<void> scanQRCode() async {
-    try {
-      final qrCode = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666',
-        'Cancel',
-        true,
-        ScanMode.QR,
-      );
-
-      if (!mounted) return;
-      print("qrCode" + qrCode);
-      setState(() {
-        key0.currentState!.isLoading = true;
-      });
-
-      final response = await http.head(Uri.parse(qrCode));
-
-      if (response.statusCode == 200) {
-        setState(() {
-          key0.currentState!.isLoading = false;
-        });
-        if (widget.settings.tabNavigationEnable == "1") {
-          if (goToWeb) {
-            setState(() {
-              goToWeb = false;
-            });
-            final result = await Navigator.push(
-                context,
-                PageTransition(
-                    type: pageTransitionAnimation(context),
-                    child: WebScreen(qrCode)));
-
-            setState(() {
-              goToWeb = true;
-            });
-          }
-        } else {
-          key0.currentState!._webViewController
-              ?.loadUrl(urlRequest: URLRequest(url: Uri.parse(qrCode)));
-        }
-      } else {
-        setState(() {
-          key0.currentState!.isLoading = false;
-        });
-      }
-    } finally {
-      setState(() {
-        key0.currentState!.isLoading = false;
-      });
-      print('Failed to get platform version.');
     }
   }
 
