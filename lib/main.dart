@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
@@ -76,17 +77,22 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               ConnectivityService().connectionStatusController.stream,
           child: Consumer<ThemeNotifier>(
-            builder: (context, theme, _) => MaterialApp(
-              theme: theme.getTheme(),
-              locale: model.appLocal,
-              localizationsDelegates: [
-                I18n.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              supportedLocales: I18n.delegate.supportedLocales,
-              debugShowCheckedModeBanner: false,
-              home: SplashScreen(localSettings: this.settings),
+            builder: (context, theme, _) => Shortcuts(
+              shortcuts: {
+                SingleActivator(LogicalKeyboardKey.select): ActivateIntent()
+              },
+              child: MaterialApp(
+                theme: theme.getTheme(),
+                locale: model.appLocal,
+                localizationsDelegates: [
+                  I18n.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                ],
+                supportedLocales: I18n.delegate.supportedLocales,
+                debugShowCheckedModeBanner: false,
+                home: SplashScreen(localSettings: this.settings),
+              ),
             ),
           ),
         );
