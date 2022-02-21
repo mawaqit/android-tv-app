@@ -35,13 +35,13 @@ import 'package:flyweb/src/services/mosque_manager.dart';
 import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:flyweb/src/themes/UIImages.dart';
+import 'package:flyweb/src/widgets/InfoWidget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:launch_review/launch_review.dart';
 import 'package:location/location.dart' hide LocationAccuracy;
-import 'package:package_info/package_info.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -502,33 +502,19 @@ class _HomeScreen extends State<HomeScreen>
                               iOSAppId: settings.iosId,
                             ),
                           ),
-                          FutureBuilder<PackageInfo>(
-                            future: PackageInfo.fromPlatform(),
-                            builder: (context, snapshot) {
-                              if (snapshot.data == null ||
-                                  snapshot.data!.version ==
-                                      (Platform.isAndroid
-                                          ? settings.versionAndroid
-                                          : settings.versionIos))
-                                return SizedBox();
-                              return new Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                    child: Divider(
-                                        height: 1, color: Colors.grey[400]),
-                                  ),
-                                  DrawerListTitle(
-                                    icon: Icons.system_update,
-                                    text: I18n.current!.update,
-                                    onTap: () => LaunchReview.launch(
-                                      androidAppId: settings.androidId,
-                                      iOSAppId: settings.iosId,
-                                    ),
-                                  )
-                                ],
-                              );
-                            },
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                            child: Divider(
+                              height: 1,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                          ListTile(
+                            leading: Icon(Icons.system_update),
+                            isThreeLine: true,
+                            dense: true,
+                            title: Text(I18n.current!.update),
+                            subtitle: VersionWidget(),
                           ),
                         ],
                       ),

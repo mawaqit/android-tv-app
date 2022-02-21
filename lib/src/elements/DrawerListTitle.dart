@@ -7,7 +7,7 @@ class DrawerListTitle extends StatefulWidget {
   String? iconUrl;
   IconData icon;
   String? text;
-  Function? onTap;
+  void Function()? onTap;
 
   bool forceThemeColor;
 
@@ -42,12 +42,14 @@ class _DrawerListTitle extends State<DrawerListTitle> {
         widget.icon,
         themeProvider.getTheme()?.iconTheme.color,
       ),
-      trailing: Icon(
-        I18n.current!.textDirection == TextDirection.ltr
-            ? Icons.keyboard_arrow_right
-            : Icons.keyboard_arrow_left,
-      ),
-      onTap: widget.onTap as void Function()?,
+      trailing: widget.onTap == null
+          ? null
+          : Icon(
+              I18n.current!.textDirection == TextDirection.ltr
+                  ? Icons.keyboard_arrow_right
+                  : Icons.keyboard_arrow_left,
+            ),
+      onTap: widget.onTap,
     );
   }
 
