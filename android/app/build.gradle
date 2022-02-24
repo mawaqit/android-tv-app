@@ -29,12 +29,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '7'
+    flutterVersionCode = '10'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0.3 Upgraded all packages except #PUSH NOTIFICATION, #FIREBASE #MAP'
+    flutterVersionName = '1.0.6 Onboarding V2 + Android Manifest Update + Upgraded all packages except #PUSH NOTIFICATION, #FIREBASE #MAP'
 }
 
 apply plugin: 'com.android.application'
