@@ -7,6 +7,7 @@ import 'package:android_intent/android_intent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Page;
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -319,282 +320,301 @@ class _HomeScreen extends State<HomeScreen>
 
     return WillPopScope(
       onWillPop: () async {
+        if (_scaffoldKey.currentState?.isDrawerOpen == true) {
+          Navigator.pop(context);
+
+          return false;
+        }
         return getCurrentKey().currentState!.goBack();
       },
-      child: Container(
-          decoration: BoxDecoration(color: HexColor("#f5f4f4")),
-          padding: EdgeInsets.only(bottom: bottomPadding),
-          child: Scaffold(
-            key: _scaffoldKey,
-            appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
-            drawer: (widget.settings.leftNavigationIcon!.value == "icon_menu" ||
-                    widget.settings.rightNavigationIcon!.value == "icon_menu")
-                ? Drawer(
-                    child: ListView(
-                      padding: const EdgeInsets.all(0.0),
-                      children: <Widget>[
-                        DrawerHeader(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: <Color>[
-                                  themeProvider.isLightTheme!
-                                      ? HexColor(settings.firstColor)
-                                      : themeProvider.darkTheme.primaryColor,
-                                  themeProvider.isLightTheme!
-                                      ? HexColor(settings.secondColor)
-                                      : themeProvider.darkTheme.primaryColor,
-                                ],
+      child: CallbackShortcuts(
+        bindings: {
+          SingleActivator(LogicalKeyboardKey.arrowLeft): () =>
+              _scaffoldKey.currentState?.openDrawer(),
+          SingleActivator(LogicalKeyboardKey.arrowRight): () =>
+              _scaffoldKey.currentState?.openDrawer(),
+        },
+        child: Container(
+            decoration: BoxDecoration(color: HexColor("#f5f4f4")),
+            padding: EdgeInsets.only(bottom: bottomPadding),
+            child: Scaffold(
+              key: _scaffoldKey,
+              appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
+              drawer: (widget.settings.leftNavigationIcon!.value ==
+                          "icon_menu" ||
+                      widget.settings.rightNavigationIcon!.value == "icon_menu")
+                  ? Drawer(
+                      child: ListView(
+                        padding: const EdgeInsets.all(0.0),
+                        children: <Widget>[
+                          DrawerHeader(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: <Color>[
+                                    themeProvider.isLightTheme!
+                                        ? HexColor(settings.firstColor)
+                                        : themeProvider.darkTheme.primaryColor,
+                                    themeProvider.isLightTheme!
+                                        ? HexColor(settings.secondColor)
+                                        : themeProvider.darkTheme.primaryColor,
+                                  ],
+                                ),
                               ),
-                            ),
-                            child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    width: 70.0,
-                                    height: 70.0,
-                                    child: Image.network(
-                                      settings.logoHeaderUrl!,
+                              child: Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      width: 70.0,
+                                      height: 70.0,
+                                      child: Image.network(
+                                        settings.logoHeaderUrl!,
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5),
-                                    child: Text(settings.title!,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16)),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5),
-                                    child: Text(settings.subTitle!,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 14)),
-                                  )
-                                ],
-                              ),
-                            )),
-                        DrawerListTitle(
-                            icon: Icons.home,
-                            text: I18n.current!.home,
-                            onTap: () async {
-                              if (widget.settings.tabNavigationEnable == "1") {
-                                if (goToWeb) {
-                                  setState(() => goToWeb = false);
-                                  Navigator.pop(context);
-                                  await Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      type: pageTransitionAnimation(context),
-                                      child: WebScreen(widget.settings.url),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 5),
+                                      child: Text(settings.title!,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16)),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 5),
+                                      child: Text(settings.subTitle!,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14)),
+                                    )
+                                  ],
+                                ),
+                              )),
+                          DrawerListTitle(
+                              icon: Icons.home,
+                              text: I18n.current!.home,
+                              onTap: () async {
+                                if (widget.settings.tabNavigationEnable ==
+                                    "1") {
+                                  if (goToWeb) {
+                                    setState(() => goToWeb = false);
+                                    Navigator.pop(context);
+                                    await Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        type: pageTransitionAnimation(context),
+                                        child: WebScreen(widget.settings.url),
+                                      ),
+                                    );
+
+                                    setState(() => goToWeb = true);
+                                  }
+                                } else {
+                                  key0.currentState!._webViewController
+                                      ?.loadUrl(
+                                    urlRequest: URLRequest(
+                                      url: Uri.parse(url),
                                     ),
                                   );
 
-                                  setState(() => goToWeb = true);
+                                  Navigator.pop(context);
                                 }
-                              } else {
-                                key0.currentState!._webViewController?.loadUrl(
-                                  urlRequest: URLRequest(
-                                    url: Uri.parse(url),
-                                  ),
-                                );
-
-                                Navigator.pop(context);
-                              }
-                            }),
-                        _renderMenuDrawer(settings.menus!, context),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                          child: Divider(height: 1, color: Colors.grey[400]),
-                        ),
-                        _renderPageDrawer(settings.pages!, context),
-                        settings.pages!.length != 0
-                            ? Padding(
-                                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                child:
-                                    Divider(height: 1, color: Colors.grey[400]),
-                              )
-                            : Container(height: 0),
-                        DrawerListTitle(
-                            icon: Icons.brightness_medium,
-                            text: themeProvider.isLightTheme!
-                                ? I18n.current!.darkMode
-                                : I18n.current!.lightMode,
-                            onTap: () {
-                              if (themeProvider.isLightTheme!) {
-                                themeProvider.setDarkMode();
-                              } else {
-                                themeProvider.setLightMode();
-                              }
-                            }),
-                        DrawerListTitle(
-                          icon: Icons.translate,
-                          text: I18n.current!.languages,
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: pageTransitionAnimation(context),
-                                child: LanguageScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        DrawerListTitle(
-                          icon: Icons.museum_outlined,
-                          text: 'Change Mosque',
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: pageTransitionAnimation(context),
-                                child: MosqueSearchScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        DrawerListTitle(
-                          icon: Icons.info,
-                          text: I18n.current!.about,
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: pageTransitionAnimation(context),
-                                child: AboutScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        DrawerListTitle(
-                            icon: Icons.share,
-                            text: I18n.current!.share,
-                            onTap: () {
-                              shareApp(
-                                  context, settings.title, settings.share!);
-                            }),
-                        DrawerListTitle(
-                          icon: Icons.star,
-                          text: I18n.current!.rate,
-                          onTap: () => LaunchReview.launch(
-                            androidAppId: settings.androidId,
-                            iOSAppId: settings.iosId,
+                              }),
+                          _renderMenuDrawer(settings.menus!, context),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                            child: Divider(height: 1, color: Colors.grey[400]),
                           ),
-                        ),
-                        FutureBuilder<PackageInfo>(
-                          future: PackageInfo.fromPlatform(),
-                          builder: (context, snapshot) {
-                            if (snapshot.data == null ||
-                                snapshot.data!.version ==
-                                    (Platform.isAndroid
-                                        ? settings.versionAndroid
-                                        : settings.versionIos))
-                              return SizedBox();
-                            return new Column(
-                              children: [
-                                Padding(
+                          _renderPageDrawer(settings.pages!, context),
+                          settings.pages!.length != 0
+                              ? Padding(
                                   padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                                   child: Divider(
                                       height: 1, color: Colors.grey[400]),
-                                ),
-                                DrawerListTitle(
-                                  icon: Icons.system_update,
-                                  text: I18n.current!.update,
-                                  onTap: () => LaunchReview.launch(
-                                    androidAppId: settings.androidId,
-                                    iOSAppId: settings.iosId,
-                                  ),
                                 )
-                              ],
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  )
-                : null,
-            body: Stack(
-              fit: StackFit.expand,
-              children: [
-                Column(children: [
-                  Expanded(
-                    child: widget.settings.tabNavigationEnable == "1"
-                        ? TabBarView(
-                            controller: tabController,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: List.generate(
-                              widget.settings.tab!.length,
-                              (index) => WebViewScreen(
-                                  key: listKey[index],
-                                  path: widget.settings.tab![index].url,
-                                  pos: index,
-                                  settings: widget.settings,
-                                  stream: listStream[index].stream),
-                            ),
-                          )
-                        : WebViewScreen(
-                            key: listKey[0],
-                            path: url,
-                            pos: 0,
-                            settings: widget.settings,
-                            stream: listStream[0].stream,
+                              : Container(height: 0),
+                          DrawerListTitle(
+                              icon: Icons.brightness_medium,
+                              text: themeProvider.isLightTheme!
+                                  ? I18n.current!.darkMode
+                                  : I18n.current!.lightMode,
+                              onTap: () {
+                                if (themeProvider.isLightTheme!) {
+                                  themeProvider.setDarkMode();
+                                } else {
+                                  themeProvider.setLightMode();
+                                }
+                              }),
+                          DrawerListTitle(
+                            icon: Icons.translate,
+                            text: I18n.current!.languages,
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  type: pageTransitionAnimation(context),
+                                  child: LanguageScreen(),
+                                ),
+                              );
+                            },
                           ),
-                  ),
-                  if (widget.settings.adBanner == "1" && _isBannerAdReady)
-                    Container(
-                      height: 50,
-                      child: AdWidget(ad: _bannerAd!),
-                    )
-                ]),
-              ],
-            ),
-            bottomNavigationBar: widget.settings.tabNavigationEnable == "1"
-                ? new Material(
-                    color: Colors.white,
-                    child: new Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
+                          DrawerListTitle(
+                            icon: Icons.museum_outlined,
+                            text: 'Change Mosque',
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  type: pageTransitionAnimation(context),
+                                  child: MosqueSearchScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          DrawerListTitle(
+                            icon: Icons.info,
+                            text: I18n.current!.about,
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  type: pageTransitionAnimation(context),
+                                  child: AboutScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          DrawerListTitle(
+                              icon: Icons.share,
+                              text: I18n.current!.share,
+                              onTap: () {
+                                shareApp(
+                                    context, settings.title, settings.share!);
+                              }),
+                          DrawerListTitle(
+                            icon: Icons.star,
+                            text: I18n.current!.rate,
+                            onTap: () => LaunchReview.launch(
+                              androidAppId: settings.androidId,
+                              iOSAppId: settings.iosId,
                             ),
-                          ],
-                        ),
-                        height: 60.0,
-                        child: _buildTabItem(context, settings)),
-                  )
-                : Container(height: 0),
-            // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            floatingActionButton: widget.settings.floating!.length != 0
-                ? SpeedDial(
-                    icon: Icons.add,
-                    backgroundColor: HexColor(widget.settings.firstColor),
-                    foregroundColor: Colors.white,
-                    children:
-                        _renderFloating(widget.settings.floating!, context),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.only(bottom: 40),
-                    child: FloatingActionButton(
-                      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                      child: Icon(Icons.menu),
+                          ),
+                          FutureBuilder<PackageInfo>(
+                            future: PackageInfo.fromPlatform(),
+                            builder: (context, snapshot) {
+                              if (snapshot.data == null ||
+                                  snapshot.data!.version ==
+                                      (Platform.isAndroid
+                                          ? settings.versionAndroid
+                                          : settings.versionIos))
+                                return SizedBox();
+                              return new Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                    child: Divider(
+                                        height: 1, color: Colors.grey[400]),
+                                  ),
+                                  DrawerListTitle(
+                                    icon: Icons.system_update,
+                                    text: I18n.current!.update,
+                                    onTap: () => LaunchReview.launch(
+                                      androidAppId: settings.androidId,
+                                      iOSAppId: settings.iosId,
+                                    ),
+                                  )
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  : null,
+              body: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Column(children: [
+                    Expanded(
+                      child: widget.settings.tabNavigationEnable == "1"
+                          ? TabBarView(
+                              controller: tabController,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: List.generate(
+                                widget.settings.tab!.length,
+                                (index) => WebViewScreen(
+                                    key: listKey[index],
+                                    path: widget.settings.tab![index].url,
+                                    pos: index,
+                                    settings: widget.settings,
+                                    stream: listStream[index].stream),
+                              ),
+                            )
+                          : WebViewScreen(
+                              key: listKey[0],
+                              path: url,
+                              pos: 0,
+                              settings: widget.settings,
+                              stream: listStream[0].stream,
+                            ),
                     ),
-                  ),
-            /*bottomNavigationBar: Container(
-                height: settings.adBanner == "1"
-                    ? Platform.isAndroid
-                        ? 50
-                        : 80
-                    : 0),
-                    */
-          )),
+                    if (widget.settings.adBanner == "1" && _isBannerAdReady)
+                      Container(
+                        height: 50,
+                        child: AdWidget(ad: _bannerAd!),
+                      )
+                  ]),
+                ],
+              ),
+              bottomNavigationBar: widget.settings.tabNavigationEnable == "1"
+                  ? new Material(
+                      color: Colors.white,
+                      child: new Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          height: 60.0,
+                          child: _buildTabItem(context, settings)),
+                    )
+                  : Container(height: 0),
+              // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+              floatingActionButton: widget.settings.floating!.length != 0
+                  ? SpeedDial(
+                      icon: Icons.add,
+                      backgroundColor: HexColor(widget.settings.firstColor),
+                      foregroundColor: Colors.white,
+                      children:
+                          _renderFloating(widget.settings.floating!, context),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(bottom: 40),
+                      child: FloatingActionButton(
+                        onPressed: () =>
+                            _scaffoldKey.currentState?.openDrawer(),
+                        child: Icon(Icons.menu),
+                      ),
+                    ),
+              /*bottomNavigationBar: Container(
+                  height: settings.adBanner == "1"
+                      ? Platform.isAndroid
+                          ? 50
+                          : 80
+                      : 0),
+                      */
+            )),
+      ),
     );
   }
 
@@ -1480,167 +1500,160 @@ class _WebViewScreen extends State<WebViewScreen>
     return Stack(
       fit: StackFit.expand,
       children: [
-        Column(children: [
-          Expanded(
-            child: InAppWebView(
-              // contextMenu: contextMenu,
-              initialUrlRequest: URLRequest(url: Uri.parse(widget.path!)),
-              gestureRecognizers: _gSet,
-              initialOptions: InAppWebViewGroupOptions(
-                  crossPlatform: InAppWebViewOptions(
-                    supportZoom: false,
-                    useShouldOverrideUrlLoading: true,
-                    useOnDownloadStart: true,
-                    mediaPlaybackRequiresUserGesture: false,
-                    userAgent: Platform.isAndroid
-                        ? widget.settings!.userAgent!.valueAndroid!
-                        : widget.settings!.userAgent!.valueIOS!,
-                  ),
-                  android: AndroidInAppWebViewOptions(
-                    useHybridComposition: true,
-                  ),
-                  ios: IOSInAppWebViewOptions(
-                    allowsInlineMediaPlayback: true,
-                  )),
-              pullToRefreshController: widget.settings!.pullRefresh == "1"
-                  ? pullToRefreshController
-                  : null,
-              onWebViewCreated: (InAppWebViewController controller) {
-                controller.addJavaScriptHandler(
-                    handlerName: '_flutterGeolocation',
-                    callback: (args) {
-                      dynamic geolocationData;
-                      // try to decode json
-                      try {
-                        geolocationData = json.decode(args[0]);
-                        //geolocationData = json.decode(args[0].message);
-                      } catch (e) {
-                        // empty or what ever
-                        return;
-                      }
-                      // Get action from JSON
-                      final String action = geolocationData['action'] ?? "";
-
-                      switch (action) {
-                        case "clearWatch":
-                          _geolocationClearWatch(parseInt(
-                              geolocationData['flutterGeolocationIndex'] ??
-                                  0)!);
-                          break;
-
-                        case "getCurrentPosition":
-                          _geolocationGetCurrentPosition(
-                              parseInt(
-                                  geolocationData['flutterGeolocationIndex'] ??
-                                      0),
-                              PositionOptions()
-                                  .from(geolocationData['option'] ?? null));
-                          break;
-
-                        case "watchPosition":
-                          _geolocationWatchPosition(
-                              parseInt(
-                                  geolocationData['flutterGeolocationIndex'] ??
-                                      0)!,
-                              PositionOptions()
-                                  .from(geolocationData['option'] ?? null));
-                          break;
-                        default:
-                      }
-                    });
-                _webViewController = controller;
-              },
-              androidOnPermissionRequest: (InAppWebViewController controller,
-                  String origin, List<String> resources) async {
-                return PermissionRequestResponse(
-                    resources: resources,
-                    action: PermissionRequestResponseAction.GRANT);
-              },
-              shouldOverrideUrlLoading: (controller, navigationAction) async {
-                var uri = navigationAction.request.url!;
-                print("uri.scheme");
-                print(uri.scheme);
-                if (Platform.isAndroid && ["intent"].contains(uri.scheme)) {
-                  if (uri.toString().indexOf("maps") != -1) {
-                    var link = uri
-                        .toString()
-                        .substring(uri.toString().indexOf('?link=') + 6);
-                    print(link);
-                    AndroidIntent intent =
-                        AndroidIntent(action: 'action_view', data: link);
-                    await intent.launch();
-                  } else {
-                    String id = uri.toString().substring(
-                        uri.toString().indexOf('id%3D') + 5,
-                        uri.toString().indexOf('#Intent'));
-                    await StoreRedirect.redirect(androidAppId: id);
+        InAppWebView(
+          // contextMenu: contextMenu,
+          initialUrlRequest: URLRequest(url: Uri.parse(widget.path!)),
+          gestureRecognizers: _gSet,
+          initialOptions: InAppWebViewGroupOptions(
+              crossPlatform: InAppWebViewOptions(
+                supportZoom: false,
+                useShouldOverrideUrlLoading: true,
+                useOnDownloadStart: true,
+                mediaPlaybackRequiresUserGesture: false,
+                userAgent: Platform.isAndroid
+                    ? widget.settings!.userAgent!.valueAndroid!
+                    : widget.settings!.userAgent!.valueIOS!,
+              ),
+              android: AndroidInAppWebViewOptions(
+                useHybridComposition: true,
+              ),
+              ios: IOSInAppWebViewOptions(
+                allowsInlineMediaPlayback: true,
+              )),
+          pullToRefreshController: widget.settings!.pullRefresh == "1"
+              ? pullToRefreshController
+              : null,
+          onWebViewCreated: (InAppWebViewController controller) {
+            controller.addJavaScriptHandler(
+                handlerName: '_flutterGeolocation',
+                callback: (args) {
+                  dynamic geolocationData;
+                  // try to decode json
+                  try {
+                    geolocationData = json.decode(args[0]);
+                    //geolocationData = json.decode(args[0].message);
+                  } catch (e) {
+                    // empty or what ever
+                    return;
                   }
-                  return NavigationActionPolicy.CANCEL;
-                } else if (![
-                  "http",
-                  "https",
-                  "chrome",
-                  "data",
-                  "javascript",
-                  "file",
-                  "about"
-                ].contains(uri.scheme)) {
-                  if (await canLaunch(uri.toString())) {
-                    // Launch the App
-                    await launch(
-                      uri.toString(),
-                    );
-                    // and cancel the request
-                    return NavigationActionPolicy.CANCEL;
-                  }
-                }
-                return NavigationActionPolicy.ALLOW;
-              },
-              onLoadStart: (controller, url) {
-                setState(() {
-                  this.url = url.toString();
-                  isLoading = true;
-                });
-              },
-              onLoadStop: (controller, url) async {
-                pullToRefreshController!.endRefreshing();
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  _geolocationAlertFix();
-                });
+                  // Get action from JSON
+                  final String action = geolocationData['action'] ?? "";
 
-                this.setState(() {
-                  this.url = url.toString();
-                  isLoading = false;
+                  switch (action) {
+                    case "clearWatch":
+                      _geolocationClearWatch(parseInt(
+                          geolocationData['flutterGeolocationIndex'] ?? 0)!);
+                      break;
+
+                    case "getCurrentPosition":
+                      _geolocationGetCurrentPosition(
+                          parseInt(
+                              geolocationData['flutterGeolocationIndex'] ?? 0),
+                          PositionOptions()
+                              .from(geolocationData['option'] ?? null));
+                      break;
+
+                    case "watchPosition":
+                      _geolocationWatchPosition(
+                          parseInt(
+                              geolocationData['flutterGeolocationIndex'] ?? 0)!,
+                          PositionOptions()
+                              .from(geolocationData['option'] ?? null));
+                      break;
+                    default:
+                  }
                 });
-              },
-              onDownloadStart: (controller, url) async {
-                if (await canLaunch(url.toString())) {
-                  // Launch the App
-                  await launch(
-                    url.toString(),
-                  );
-                  // and cancel the request
-                }
-              },
-              onLoadError: (controller, url, code, message) {
-                pullToRefreshController!.endRefreshing();
-              },
-              onProgressChanged: (controller, progress) {
-                if (progress == 100) {
-                  pullToRefreshController!.endRefreshing();
-                }
-              },
-              onUpdateVisitedHistory: (controller, url, androidIsReload) {
-                setState(() {
-                  this.url = url.toString();
-                });
-              },
-              onConsoleMessage: (controller, consoleMessage) {
-                print(consoleMessage);
-              },
-            ),
-          )
-        ]),
+            _webViewController = controller;
+          },
+          androidOnPermissionRequest: (InAppWebViewController controller,
+              String origin, List<String> resources) async {
+            return PermissionRequestResponse(
+                resources: resources,
+                action: PermissionRequestResponseAction.GRANT);
+          },
+          shouldOverrideUrlLoading: (controller, navigationAction) async {
+            var uri = navigationAction.request.url!;
+            print("uri.scheme");
+            print(uri.scheme);
+            if (Platform.isAndroid && ["intent"].contains(uri.scheme)) {
+              if (uri.toString().indexOf("maps") != -1) {
+                var link = uri
+                    .toString()
+                    .substring(uri.toString().indexOf('?link=') + 6);
+                print(link);
+                AndroidIntent intent =
+                    AndroidIntent(action: 'action_view', data: link);
+                await intent.launch();
+              } else {
+                String id = uri.toString().substring(
+                    uri.toString().indexOf('id%3D') + 5,
+                    uri.toString().indexOf('#Intent'));
+                await StoreRedirect.redirect(androidAppId: id);
+              }
+              return NavigationActionPolicy.CANCEL;
+            } else if (![
+              "http",
+              "https",
+              "chrome",
+              "data",
+              "javascript",
+              "file",
+              "about"
+            ].contains(uri.scheme)) {
+              if (await canLaunch(uri.toString())) {
+                // Launch the App
+                await launch(
+                  uri.toString(),
+                );
+                // and cancel the request
+                return NavigationActionPolicy.CANCEL;
+              }
+            }
+            return NavigationActionPolicy.ALLOW;
+          },
+          onLoadStart: (controller, url) {
+            setState(() {
+              this.url = url.toString();
+              isLoading = true;
+            });
+          },
+          onLoadStop: (controller, url) async {
+            pullToRefreshController!.endRefreshing();
+            Future.delayed(const Duration(milliseconds: 500), () {
+              _geolocationAlertFix();
+            });
+
+            this.setState(() {
+              this.url = url.toString();
+              isLoading = false;
+            });
+          },
+          onDownloadStart: (controller, url) async {
+            if (await canLaunch(url.toString())) {
+              // Launch the App
+              await launch(
+                url.toString(),
+              );
+              // and cancel the request
+            }
+          },
+          onLoadError: (controller, url, code, message) {
+            pullToRefreshController!.endRefreshing();
+          },
+          onProgressChanged: (controller, progress) {
+            if (progress == 100) {
+              pullToRefreshController!.endRefreshing();
+            }
+          },
+          onUpdateVisitedHistory: (controller, url, androidIsReload) {
+            setState(() {
+              this.url = url.toString();
+            });
+          },
+          onConsoleMessage: (controller, consoleMessage) {
+            print(consoleMessage);
+          },
+        ),
         (isLoading && widget.settings!.loader != "empty")
             ? Positioned(
                 top: 0,
@@ -1946,6 +1959,6 @@ class _WebViewScreen extends State<WebViewScreen>
             false;
       }
     }
-    return false;
+    return true;
   }
 }
