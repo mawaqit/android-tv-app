@@ -17,6 +17,7 @@ import 'package:flyweb/src/elements/DrawerListTitle.dart';
 import 'package:flyweb/src/elements/Loader.dart';
 import 'package:flyweb/src/elements/RaisedGradientButton.dart';
 import 'package:flyweb/src/enum/connectivity_status.dart';
+import 'package:flyweb/src/helpers/AppRouter.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/OneSignalHelper.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
@@ -208,12 +209,7 @@ class _HomeScreen extends State<HomeScreen>
             setState(() {
               goToWeb = false;
             });
-            final result = await Navigator.push(
-                context,
-                PageTransition(
-                  type: pageTransitionAnimation(context),
-                  child: WebScreen(link),
-                ));
+            AppRouter.push(WebScreen(link));
 
             setState(() {
               goToWeb = true;
@@ -291,13 +287,8 @@ class _HomeScreen extends State<HomeScreen>
           setState(() {
             goToWeb = false;
           });
-          final result = await Navigator.push(
-            context,
-            PageTransition(
-              type: pageTransitionAnimation(context),
-              child: WebScreen(_oneSignalHelper.url),
-            ),
-          );
+
+          AppRouter.push(WebScreen(_oneSignalHelper.url));
 
           setState(() {
             goToWeb = true;
@@ -371,59 +362,101 @@ class _HomeScreen extends State<HomeScreen>
                                         settings.logoHeaderUrl!,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 5),
-                                      child: Text(settings.title!,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16)),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 5),
-                                      child: Text(settings.subTitle!,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14)),
-                                    )
-                                  ],
-                                ),
-                              )),
-                          DrawerListTitle(
-                              icon: Icons.home,
-                              text: I18n.current!.home,
-                              onTap: () async {
-                                if (widget.settings.tabNavigationEnable ==
-                                    "1") {
-                                  if (goToWeb) {
-                                    setState(() => goToWeb = false);
-                                    Navigator.pop(context);
-                                    await Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        type: pageTransitionAnimation(context),
-                                        child: WebScreen(widget.settings.url),
-                                      ),
-                                    );
-
-                                    setState(() => goToWeb = true);
-                                  }
-                                } else {
-                                  key0.currentState!._webViewController
-                                      ?.loadUrl(
-                                    urlRequest: URLRequest(
-                                      url: Uri.parse(url),
-                                    ),
-                                  );
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5),
+                                    child: Text(settings.title!,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16)),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5),
+                                    child: Text(settings.subTitle!,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 14)),
+                                  )
+                                ],
+                              ),
+                            )),
+                        DrawerListTitle(
+                            icon: Icons.home,
+                            text: I18n.current!.home,
+                            onTap: () async {
+                              if (widget.settings.tabNavigationEnable == "1") {
+                                if (goToWeb) {
+                                  setState(() => goToWeb = false);
+                                  AppRouter.popAndPush(
+                                      WebScreen(widget.settings.url),
+                                      name: 'HomeScreen');
 
                                   Navigator.pop(context);
                                 }
-                              }),
-                          _renderMenuDrawer(settings.menus!, context),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            child: Divider(height: 1, color: Colors.grey[400]),
+                              } else {
+                                key0.currentState!._webViewController?.loadUrl(
+                                  urlRequest: URLRequest(
+                                    url: Uri.parse(url),
+                                  ),
+                                );
+
+                                Navigator.pop(context);
+                              }
+                            }),
+                        _renderMenuDrawer(settings.menus!, context),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                          child: Divider(height: 1, color: Colors.grey[400]),
+                        ),
+                        _renderPageDrawer(settings.pages!, context),
+                        settings.pages!.length != 0
+                            ? Padding(
+                                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                child:
+                                    Divider(height: 1, color: Colors.grey[400]),
+                              )
+                            : Container(height: 0),
+                        DrawerListTitle(
+                            icon: Icons.brightness_medium,
+                            text: themeProvider.isLightTheme!
+                                ? I18n.current!.darkMode
+                                : I18n.current!.lightMode,
+                            onTap: () {
+                              if (themeProvider.isLightTheme!) {
+                                themeProvider.setDarkMode();
+                              } else {
+                                themeProvider.setLightMode();
+                              }
+                            }),
+                        DrawerListTitle(
+                          icon: Icons.translate,
+                          text: I18n.current!.languages,
+                          onTap: () => AppRouter.popAndPush(LanguageScreen()),
+                        ),
+                        DrawerListTitle(
+                          icon: Icons.museum_outlined,
+                          text: 'Change Mosque',
+                          onTap: () =>
+                              AppRouter.popAndPush(MosqueSearchScreen()),
+                        ),
+                        DrawerListTitle(
+                          icon: Icons.info,
+                          text: I18n.current!.about,
+                          onTap: () => AppRouter.popAndPush(AboutScreen()),
+                        ),
+                        DrawerListTitle(
+                            icon: Icons.share,
+                            text: I18n.current!.share,
+                            onTap: () {
+                              shareApp(
+                                  context, settings.title, settings.share!);
+                            }),
+                        DrawerListTitle(
+                          icon: Icons.star,
+                          text: I18n.current!.rate,
+                          onTap: () => LaunchReview.launch(
+                            androidAppId: settings.androidId,
+                            iOSAppId: settings.iosId,
                           ),
                           _renderPageDrawer(settings.pages!, context),
                           settings.pages!.length != 0
@@ -833,13 +866,7 @@ class _HomeScreen extends State<HomeScreen>
                       setState(() {
                         goToWeb = false;
                       });
-                      final result = await Navigator.push(
-                        context,
-                        PageTransition(
-                          type: pageTransitionAnimation(context),
-                          child: WebScreen(menu.url),
-                        ),
-                      );
+                      AppRouter.push(WebScreen(menu.url), name: menu.title);
 
                       setState(() {
                         goToWeb = true;
@@ -876,13 +903,9 @@ class _HomeScreen extends State<HomeScreen>
                     setState(() {
                       goToWeb = false;
                     });
-                    final result = await Navigator.push(
-                      context,
-                      PageTransition(
-                        type: pageTransitionAnimation(context),
-                        child: WebScreen(floating.url),
-                      ),
-                    );
+
+                    AppRouter.push(WebScreen(floating.url),
+                        name: floating.title);
 
                     setState(() => goToWeb = true);
                   }
@@ -904,18 +927,15 @@ class _HomeScreen extends State<HomeScreen>
     print(pages.map((e) => e.icon));
     return new Column(
       children: pages
-          .map((Page page) => DrawerListTitle(
+          .map(
+            (Page page) => DrawerListTitle(
               forceThemeColor: true,
               iconUrl: page.iconUrl,
               text: page.title,
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: pageTransitionAnimation(context),
-                        child: PageScreen(page)));
-              }))
+              onTap: () =>
+                  AppRouter.popAndPush(PageScreen(page), name: page.title),
+            ),
+          )
           .toList(),
     );
   }
@@ -1211,11 +1231,11 @@ class _HomeScreen extends State<HomeScreen>
           setState(() {
             goToWeb = false;
           });
-          final result = await Navigator.push(
-              context,
-              PageTransition(
-                  type: pageTransitionAnimation(context),
-                  child: WebScreen(navigationIcon.url)));
+          AppRouter.push(
+            WebScreen(navigationIcon.url),
+            name: navigationIcon.title,
+          );
+
           setState(() {
             goToWeb = false;
           });
@@ -1235,11 +1255,8 @@ class _HomeScreen extends State<HomeScreen>
               setState(() {
                 goToWeb = false;
               });
-              final result = await Navigator.push(
-                  context,
-                  PageTransition(
-                      type: pageTransitionAnimation(context),
-                      child: WebScreen(settings.url)));
+              AppRouter.push(WebScreen(settings.url));
+
               setState(() {
                 goToWeb = true;
               });
@@ -1300,11 +1317,7 @@ class _HomeScreen extends State<HomeScreen>
             setState(() {
               goToWeb = false;
             });
-            final result = await Navigator.push(
-                context,
-                PageTransition(
-                    type: pageTransitionAnimation(context),
-                    child: WebScreen(qrCode)));
+            AppRouter.push(WebScreen(qrCode), name: 'qrCode');
 
             setState(() {
               goToWeb = true;

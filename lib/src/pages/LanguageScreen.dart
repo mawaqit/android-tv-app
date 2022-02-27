@@ -4,6 +4,7 @@ import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/data/config.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
+import 'package:flyweb/src/services/mosque_manager.dart';
 import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
@@ -31,8 +32,9 @@ class _LanguageScreen extends State<LanguageScreen> {
 
   _changeLanguage(Map language) async {
     var appLanguage = Provider.of<AppLanguage>(context, listen: false);
+    var mosqueId = Provider.of<MosqueManager>(context, listen: false).mosqueId;
 
-    appLanguage.changeLanguage(Locale(language['value'], ""));
+    appLanguage.changeLanguage(Locale(language['value'], ""), mosqueId);
   }
 
   @override

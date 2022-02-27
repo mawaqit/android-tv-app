@@ -33,6 +33,8 @@ dependencies:
   # FIREBASE PACKAGES
   firebase_core: ^1.12.0
   firebase_messaging: ^11.2.6
+  firebase_analytics: ^9.1.0
+  firebase_crashlytics: ^2.5.1
 
   # PUSH NOTIFICATION
   onesignal_flutter: ^3.2.8
