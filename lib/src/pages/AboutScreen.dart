@@ -9,8 +9,8 @@ import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/models/social.dart';
 import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
+import 'package:flyweb/src/widgets/InfoWidget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -69,13 +69,9 @@ class _AboutScreen extends State<AboutScreen> {
                         ),
                       ),
                     ),
-                    FutureBuilder<PackageInfo>(
-                      future: PackageInfo.fromPlatform(),
-                      builder: (context, snapshot) => Text(
-                        "V " + (snapshot.data?.version ?? ''),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.roboto(fontSize: 18),
-                      ),
+                    VersionWidget(
+                      style: GoogleFonts.roboto(fontSize: 18),
+                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
                     FractionallySizedBox(

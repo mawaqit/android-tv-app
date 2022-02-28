@@ -11,7 +11,9 @@ import 'package:flyweb/src/pages/HomeScreen.dart';
 import 'package:flyweb/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:flyweb/src/repository/settings_service.dart';
 import 'package:flyweb/src/services/settings_manager.dart';
+import 'package:flyweb/src/widgets/InfoWidget.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -28,14 +30,7 @@ class _SplashScreen extends State<SplashScreen> {
   final SettingsService settingsService = SettingsService();
   SharedPref sharedPref = SharedPref();
 
-  // String url = "";
-  // String onesignalUrl = "";
-  // Settings settings = new Settings();
-
   bool applicationProblem = false;
-
-  // bool goBoarding = false;
-  // StreamSubscription _linkSubscription;
 
   _SplashScreen();
 
@@ -45,11 +40,6 @@ class _SplashScreen extends State<SplashScreen> {
     initOneSignal();
     // getSettings();
     // loadBoarding();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   Future<void> initOneSignal() async {
@@ -113,38 +103,11 @@ class _SplashScreen extends State<SplashScreen> {
     return id;
   }
 
-  Future<bool> _mockCheckForSession() async {
-    await Future.delayed(Duration(milliseconds: 3000), () {});
-    return true;
-  }
-
-  // _getSettings() async {
-  //   try {
-  //     Settings _serverSettings = await settingsService.getSettings();
-  //     sharedPref.save("settings", _serverSettings);
-  //     this.setState(() {
-  //       if (settings == null) settingsSplach = _serverSettings;
-  //       settings = _serverSettings;
-  //       applicationProblem = false;
-  //     });
-  //     _mockCheckForSession().then((status) => Future.delayed(
-  //           const Duration(milliseconds: 150),
-  //           _navigateToHome,
-  //         ));
-  //   } on Exception catch (exception) {
-  //     this.setState(() {
-  //       applicationProblem = true;
-  //     });
-  //   } catch (e) {
-  //     applicationProblem = true;
-  //   }
-  // }
-
   /// navigates to first screen
   void _navigateToHome(Settings settings) async {
     var goBoarding = await loadBoarding();
     var mosqueId = await loadMosqueId();
-
+    return;
     if (mosqueId == null || goBoarding && settings.boarding == "1") {
       AppRouter.pushReplacement(OnBoardingScreen(settings));
     } else {
@@ -201,15 +164,7 @@ class _SplashScreen extends State<SplashScreen> {
           (settingsSplach.splash != null &&
                   settingsSplach.splash!.enable_img != null &&
                   settingsSplach.splash!.enable_img == "1")
-              ? /*Image.memory(
-                  Base64Decoder()
-                      .convert(settingsSplach.splash.img_splash_base64),
-                  fit: BoxFit.cover,
-                  height: height,
-                  width: width,
-                  alignment: Alignment.center,
-                )*/
-              Image.asset(
+              ? Image.asset(
                   'assets/img/background.png',
                   fit: BoxFit.cover,
                 )
@@ -221,13 +176,26 @@ class _SplashScreen extends State<SplashScreen> {
                       alignment: Alignment.center,
                       child: Image.memory(
                         Base64Decoder().convert(
-                            settingsSplach.splash!.logo_splash_base64!),
+                          settingsSplach.splash!.logo_splash_base64!,
+                        ),
                         height: 150,
                         width: 150,
                       ),
                     )
                   : Container()
-              : Align(alignment: Alignment.center, child: Config.logo),
+              : Center(child: Config.logo),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: VersionWidget(
+                style: GoogleFonts.roboto(
+                  fontSize: 18,
+                  color: Colors.black38,
+                ),
+              ),
+            ),
+          ),
           (applicationProblem == true)
               ? Positioned(
                   bottom: 160,
@@ -254,7 +222,7 @@ class _SplashScreen extends State<SplashScreen> {
                     ),
                   ),
                 )
-              : Container()
+              : Container(),
         ],
       ),
     );
