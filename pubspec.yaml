@@ -67,7 +67,7 @@ dependencies:
   android_intent: ^2.0.2
   global_configuration: ^2.0.0-nullsafety.1
   #flutter_downloader: 1.6.1
-  flutter_barcode_scanner: ^2.0.0
+#  flutter_barcode_scanner: ^2.0.0
   flutter_speed_dial: ^5.0.0+1
 
   # STATE MANAGEMENT
