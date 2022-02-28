@@ -12,22 +12,17 @@ import 'package:flyweb/src/helpers/AnalyticsWrapper.dart';
 import 'package:flyweb/src/helpers/AppRouter.dart';
 import 'package:flyweb/src/helpers/ConnectivityService.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
-import 'package:flyweb/src/models/ad_state.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/pages/SplashScreen.dart';
 import 'package:flyweb/src/services/mosque_manager.dart';
 import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //Ads
-  final initFuture = MobileAds.instance.initialize();
 
-  final adState = AdState(initFuture);
   SharedPref sharedPref = SharedPref();
   Settings settings = new Settings();
 
@@ -54,13 +49,12 @@ Future<void> main() async {
     }
   } catch (err) {}
 
-  return runApp(ChangeNotifierProvider<ThemeNotifier>(
-    create: (_) => new ThemeNotifier(),
-    child: Provider.value(
-      value: adState,
-      builder: (context, child) => MyApp(settings: settings),
+  return runApp(
+    ChangeNotifierProvider<ThemeNotifier>(
+      create: (_) => new ThemeNotifier(),
+      child: MyApp(settings: settings),
     ),
-  ));
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -79,8 +73,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MosqueManager()..init()),
         ChangeNotifierProvider(create: (context) => SettingsManager()..init()),
       ],
-      //   providers:
-      // create: (_) => appLanguage,
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         // ignore: missing_required_param
         return StreamProvider(

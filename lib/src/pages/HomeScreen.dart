@@ -38,7 +38,7 @@ import 'package:flyweb/src/themes/UIImages.dart';
 import 'package:flyweb/src/widgets/InfoWidget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:http/http.dart' as http;
 import 'package:launch_review/launch_review.dart';
 import 'package:location/location.dart' hide LocationAccuracy;
 import 'package:page_transition/page_transition.dart';
@@ -87,11 +87,6 @@ class _HomeScreen extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   SharedPref sharedPref = SharedPref();
 
-  BannerAd? _bannerAd;
-  bool _isBannerAdReady = false;
-  InterstitialAd? _interstitialAd;
-  bool _isInterstitialAdReady = false;
-
   static GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String url = "";
 
@@ -134,61 +129,6 @@ class _HomeScreen extends State<HomeScreen>
       vsync: this,
     );
     tabController!.addListener(_handleTabSelection);
-
-    if (widget.settings.adBanner == "1") {
-      String adBannerId = Platform.isAndroid
-          ? widget.settings.admobKeyAdBanner!
-          : widget.settings.admobKeyAdBannerIos!;
-      // TODO: Initialize _bannerAd
-      _bannerAd = BannerAd(
-        adUnitId: adBannerId,
-        request: AdRequest(),
-        size: AdSize.banner,
-        listener: BannerAdListener(
-          onAdLoaded: (_) {
-            setState(() {
-              _isBannerAdReady = true;
-            });
-          },
-          onAdFailedToLoad: (ad, err) {
-            print('Failed to load a banner ad: ${err.message}');
-            _isBannerAdReady = false;
-            ad.dispose();
-          },
-        ),
-      );
-
-      _bannerAd!.load();
-    }
-
-    if (widget.settings.adInterstitial == "1") {
-      String? adInterstitialId = Platform.isAndroid
-          ? widget.settings.admobKeyAdInterstitial
-          : widget.settings.admobKeyAdInterstitialIos;
-
-      Timer.periodic(
-          new Duration(seconds: int.parse(widget.settings.admobDealy!)),
-          (timer) {
-        InterstitialAd.load(
-          adUnitId: adInterstitialId!,
-          request: AdRequest(),
-          adLoadCallback: InterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              _isInterstitialAdReady = true;
-              _interstitialAd = ad;
-              ad.show();
-            },
-            onAdFailedToLoad: (err) {
-              print('Failed to load an interstitial ad: ${err.message}');
-              _isInterstitialAdReady = false;
-              // ad.dispose();
-            },
-          ),
-        );
-        // _interstitialAd?.load();
-        // _interstitialAd?.show();
-      });
-    }
   }
 
   void _handleIncomingLinks() {
@@ -236,9 +176,6 @@ class _HomeScreen extends State<HomeScreen>
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
-    _interstitialAd?.dispose();
-
     webViewGPSPositionStreams.forEach(
         (StreamSubscription<Position> _flutterGeolocationStream) =>
             _flutterGeolocationStream.cancel());
@@ -252,11 +189,6 @@ class _HomeScreen extends State<HomeScreen>
   //     _packageInfo = info;
   //   });
   // }
-
-  Future<InitializationStatus> _initGoogleMobileAds() {
-    // TODO: Initialize Google Mobile Ads SDK
-    return MobileAds.instance.initialize();
-  }
 
   @override
   Widget build(BuildContext context) {
