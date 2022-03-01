@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flyweb/i18n/i18n.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/services/mosque_manager.dart';
 import 'package:flyweb/src/widgets/WhiteButton.dart';
@@ -16,8 +16,7 @@ class OnBoardingMosqueSelector extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<OnBoardingMosqueSelector> createState() =>
-      _OnBoardingMosqueSelectorState();
+  State<OnBoardingMosqueSelector> createState() => _OnBoardingMosqueSelectorState();
 }
 
 class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
@@ -84,8 +83,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'Missing mosque ID';
 
-                        if (int.tryParse(v) == null)
-                          return '$v isn\'t a valid mosque id';
+                        if (int.tryParse(v) == null) return '$v isn\'t a valid mosque id';
 
                         return null;
                       },
@@ -114,7 +112,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
                     ? CircularProgressIndicator()
                     : WhiteButton(
                         onPressed: () => _onDone(controller.text),
-                        child: Text(I18n.current!.ok),
+                        child: Text(S.of(context).ok),
                       ),
               ],
             ),
