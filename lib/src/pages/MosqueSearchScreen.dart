@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/src/helpers/AppConfig.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
@@ -16,7 +17,7 @@ class MosqueSearchScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: HexColor(settings.secondColor),
-        title: Text('Mosque'),
+        title: Text(S.current.mosque),
       ),
       body: Container(
         alignment: Alignment.center,

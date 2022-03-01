@@ -230,16 +230,6 @@ class S {
     );
   }
 
-  /// `FlyWeb give you the power of better UI  customization experience, It's easy to choose your own theme style and aply to your project. Bassed on your UI recruitment choose Toolbar style, left-rigth button action, app Theme, loader style.After that go back home to see the changes.`
-  String get descriptionCustomize {
-    return Intl.message(
-      'FlyWeb give you the power of better UI  customization experience, It\'s easy to choose your own theme style and aply to your project. Bassed on your UI recruitment choose Toolbar style, left-rigth button action, app Theme, loader style.After that go back home to see the changes.',
-      name: 'descriptionCustomize',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Navigation bar style`
   String get navigationBarStyle {
     return Intl.message(
@@ -415,6 +405,26 @@ class S {
     return Intl.message(
       'Snap chat',
       name: 'snapchat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Mosque`
+  String get changeMosque {
+    return Intl.message(
+      'Change Mosque',
+      name: 'changeMosque',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mosque`
+  String get mosque {
+    return Intl.message(
+      'Mosque',
+      name: 'mosque',
       desc: '',
       args: [],
     );

@@ -321,13 +321,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                             child: Divider(height: 1, color: Colors.grey[400]),
                           ),
-                          _renderPageDrawer(settings.pages!, context),
-                          settings.pages!.length != 0
-                              ? Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                  child: Divider(height: 1, color: Colors.grey[400]),
-                                )
-                              : Container(height: 0),
                           DrawerListTitle(
                               icon: Icons.brightness_medium,
                               text: themeProvider.isLightTheme! ? S.current.darkMode : S.current.lightMode,
@@ -345,9 +338,20 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                           ),
                           DrawerListTitle(
                             icon: Icons.museum_outlined,
-                            text: 'Change Mosque',
+                            text: S.current.changeMosque,
                             onTap: () => AppRouter.popAndPush(MosqueSearchScreen()),
                           ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                            child: Divider(height: 1, color: Colors.grey[400]),
+                          ),
+                          _renderPageDrawer(settings.pages!, context),
+                          settings.pages!.length != 0
+                              ? Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                  child: Divider(height: 1, color: Colors.grey[400]),
+                                )
+                              : Container(height: 0),
                           DrawerListTitle(
                             icon: Icons.info,
                             text: S.current.about,
@@ -367,85 +371,9 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                               iOSAppId: settings.iosId,
                             ),
                           ),
-                          _renderPageDrawer(settings.pages!, context),
-                          settings.pages!.length != 0
-                              ? Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                  child: Divider(height: 1, color: Colors.grey[400]),
-                                )
-                              : Container(height: 0),
-                          DrawerListTitle(
-                              icon: Icons.brightness_medium,
-                              text: themeProvider.isLightTheme! ? S.current.darkMode : S.current.lightMode,
-                              onTap: () {
-                                if (themeProvider.isLightTheme!) {
-                                  themeProvider.setDarkMode();
-                                } else {
-                                  themeProvider.setLightMode();
-                                }
-                              }),
-                          DrawerListTitle(
-                            icon: Icons.translate,
-                            text: S.current.languages,
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: pageTransitionAnimation(context),
-                                  child: LanguageScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          DrawerListTitle(
-                            icon: Icons.museum_outlined,
-                            text: 'Change Mosque',
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: pageTransitionAnimation(context),
-                                  child: MosqueSearchScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          DrawerListTitle(
-                            icon: Icons.info,
-                            text: S.current.about,
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: pageTransitionAnimation(context),
-                                  child: AboutScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          DrawerListTitle(
-                              icon: Icons.share,
-                              text: S.current.share,
-                              onTap: () {
-                                shareApp(context, settings.title, settings.share!);
-                              }),
-                          DrawerListTitle(
-                            icon: Icons.star,
-                            text: S.current.rate,
-                            onTap: () => LaunchReview.launch(
-                              androidAppId: settings.androidId,
-                              iOSAppId: settings.iosId,
-                            ),
-                          ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            child: Divider(
-                              height: 1,
-                              color: Colors.grey[400],
-                            ),
+                            child: Divider(height: 1, color: Colors.grey[400]),
                           ),
                           ListTile(
                             leading: Icon(Icons.system_update),
@@ -1633,17 +1561,17 @@ class _WebViewScreen extends State<WebViewScreen>
         return showDialog(
               context: context,
               builder: (context) => new AlertDialog(
-                title: new Text('Close APP'),
-                content: new Text('Are you sure want to quit this application ?'),
+                title: new Text(S.current.closeApp),
+                content: new Text(S.current.sureCloseApp),
                 actions: <Widget>[
                   new TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text("CANCEL"),
+                    child: new Text(S.current.cancel),
                   ),
                   SizedBox(height: 16),
                   new TextButton(
                     onPressed: () => exit(0),
-                    child: new Text("OK"),
+                    child: new Text(S.current.ok),
                   ),
                 ],
               ),

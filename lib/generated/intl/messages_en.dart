@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to HomePage"),
         "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
+        "changeMosque": MessageLookupByLibrary.simpleMessage("Change Mosque"),
         "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),
         "closeApp": MessageLookupByLibrary.simpleMessage("Close APP"),
         "colorGradient": MessageLookupByLibrary.simpleMessage("Color Gradient"),
@@ -36,8 +37,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Select your preferred languages"),
-        "descriptionCustomize": MessageLookupByLibrary.simpleMessage(
-            "FlyWeb give you the power of better UI  customization experience, It\'s easy to choose your own theme style and aply to your project. Bassed on your UI recruitment choose Toolbar style, left-rigth button action, app Theme, loader style.After that go back home to see the changes."),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
@@ -49,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Loading Animation"),
         "messenger": MessageLookupByLibrary.simpleMessage("messenger"),
+        "mosque": MessageLookupByLibrary.simpleMessage("Mosque"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bar style"),
         "noInternet":

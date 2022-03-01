@@ -36,8 +36,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Select your preferred languages"),
-        "descriptionCustomize": MessageLookupByLibrary.simpleMessage(
-            "FlyWeb give you the power of better UI  customization experience, It\'s easy to choose your own theme style and aply to your project. Bassed on your UI recruitment choose Toolbar style, left-rigth button action, app Theme, loader style.After that go back home to see the changes."),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),

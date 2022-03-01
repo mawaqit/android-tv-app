@@ -35,8 +35,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تخصيص طريقتك الخاصة"),
         "darkMode": MessageLookupByLibrary.simpleMessage("الوضع الداكن"),
         "descLang": MessageLookupByLibrary.simpleMessage("إختر لغتك المفضلة"),
-        "descriptionCustomize": MessageLookupByLibrary.simpleMessage(
-            "يمنحك FlyWeb قوة تجربة تخصيص أفضل على واجهة المستخدم، من السهل اختيار نمط السمة الخاص بك و بشكل مناسب لمشروعك. تم التجنيد على واجهة المستخدم الخاصة بك اختر نمط شريط الأدوات، إجراء الزر الأيسر، سمة التطبيق، نمط التحميل. بعد ذلك العودة إلى المنزل لمشاهدة التغييرات."),
         "facebook": MessageLookupByLibrary.simpleMessage("فيسبوك"),
         "headerType": MessageLookupByLibrary.simpleMessage("نوع الرأس"),
         "home": MessageLookupByLibrary.simpleMessage("الصفحة الرئيسية"),
