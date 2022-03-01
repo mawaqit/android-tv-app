@@ -80,33 +80,6 @@ class _WebScreen extends State<WebScreen> {
     );
 
     _handleIncomingLinks();
-
-    //AdMob
-    // if (widget.settings.adBanner == "1") {
-    //   String adBannerId = Platform.isAndroid
-    //       ? widget.settings.admobKeyAdBanner!
-    //       : widget.settings.admobKeyAdBannerIos!;
-    //   // TODO: Initialize _bannerAd
-    //   _bannerAd = BannerAd(
-    //     adUnitId: adBannerId,
-    //     request: AdRequest(),
-    //     size: AdSize.banner,
-    //     listener: BannerAdListener(
-    //       onAdLoaded: (_) {
-    //         setState(() {
-    //           _isBannerAdReady = true;
-    //         });
-    //       },
-    //       onAdFailedToLoad: (ad, err) {
-    //         print('Failed to load a banner ad: ${err.message}');
-    //         _isBannerAdReady = false;
-    //         ad.dispose();
-    //       },
-    //     ),
-    //   );
-    //
-    //   _bannerAd!.load();
-    // }
   }
 
   void _handleIncomingLinks() {

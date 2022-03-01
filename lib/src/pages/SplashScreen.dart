@@ -49,31 +49,23 @@ class _SplashScreen extends State<SplashScreen> {
 
     OneSignal.shared.setRequiresUserPrivacyConsent(true);
 
-    var settings = {
-      OSiOSSettings.autoPrompt: false,
-      OSiOSSettings.promptBeforeOpeningPushUrl: true
-    };
+    var settings = {OSiOSSettings.autoPrompt: false, OSiOSSettings.promptBeforeOpeningPushUrl: true};
 
     OneSignal.shared.setNotificationWillShowInForegroundHandler((data) {
       this.setState(() {});
     });
 
-    OneSignal.shared.setNotificationOpenedHandler(
-        (OSNotificationOpenedResult result) => this.setState(() {}));
+    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) => this.setState(() {}));
 
-    OneSignal.shared
-        .setInAppMessageClickedHandler((OSInAppMessageAction action) {
+    OneSignal.shared.setInAppMessageClickedHandler((OSInAppMessageAction action) {
       this.setState(() {});
     });
 
-    OneSignal.shared
-        .setSubscriptionObserver((OSSubscriptionStateChanges changes) {});
+    OneSignal.shared.setSubscriptionObserver((OSSubscriptionStateChanges changes) {});
 
-    OneSignal.shared
-        .setPermissionObserver((OSPermissionStateChanges changes) {});
+    OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {});
 
-    OneSignal.shared.setEmailSubscriptionObserver(
-        (OSEmailSubscriptionStateChanges changes) {});
+    OneSignal.shared.setEmailSubscriptionObserver((OSEmailSubscriptionStateChanges changes) {});
 
     // todo add [infocusdisplaytype] [iosSetting]
     // NOTE: Replace with your own app ID from https://www.onesignal.com
@@ -107,7 +99,7 @@ class _SplashScreen extends State<SplashScreen> {
   void _navigateToHome(Settings settings) async {
     var goBoarding = await loadBoarding();
     var mosqueId = await loadMosqueId();
-    return;
+
     if (mosqueId == null || goBoarding && settings.boarding == "1") {
       AppRouter.pushReplacement(OnBoardingScreen(settings));
     } else {
@@ -124,25 +116,23 @@ class _SplashScreen extends State<SplashScreen> {
     }
     var settingsSplach = widget.localSettings;
 
-    Color firstColor = (settingsSplach != null &&
-            settingsSplach.splash != null &&
-            settingsSplach.splash!.enable_img == "1")
-        ? HexColor("#FFFFFF")
-        : (settingsSplach!.splash != null &&
-                settingsSplach.splash!.firstColor != null &&
-                settingsSplach.splash!.firstColor != "")
-            ? HexColor(settingsSplach.splash!.firstColor)
-            : HexColor('${GlobalConfiguration().getValue('firstColor')}');
+    Color firstColor =
+        (settingsSplach != null && settingsSplach.splash != null && settingsSplach.splash!.enable_img == "1")
+            ? HexColor("#FFFFFF")
+            : (settingsSplach!.splash != null &&
+                    settingsSplach.splash!.firstColor != null &&
+                    settingsSplach.splash!.firstColor != "")
+                ? HexColor(settingsSplach.splash!.firstColor)
+                : HexColor('${GlobalConfiguration().getValue('firstColor')}');
 
-    Color secondColor = (settingsSplach != null &&
-            settingsSplach.splash != null &&
-            settingsSplach.splash!.enable_img == "1")
-        ? HexColor("#FFFFFF")
-        : (settingsSplach.splash != null &&
-                settingsSplach.splash!.secondColor != null &&
-                settingsSplach.splash!.secondColor != "")
-            ? HexColor(settingsSplach.splash!.secondColor)
-            : HexColor('${GlobalConfiguration().getValue('secondColor')}');
+    Color secondColor =
+        (settingsSplach != null && settingsSplach.splash != null && settingsSplach.splash!.enable_img == "1")
+            ? HexColor("#FFFFFF")
+            : (settingsSplach.splash != null &&
+                    settingsSplach.splash!.secondColor != null &&
+                    settingsSplach.splash!.secondColor != "")
+                ? HexColor(settingsSplach.splash!.secondColor)
+                : HexColor('${GlobalConfiguration().getValue('secondColor')}');
 
     return Scaffold(
       body: Stack(
@@ -169,8 +159,7 @@ class _SplashScreen extends State<SplashScreen> {
                   fit: BoxFit.cover,
                 )
               : Container(),
-          (settingsSplach.splash != null &&
-                  settingsSplach.splash!.enable_logo != null)
+          (settingsSplach.splash != null && settingsSplach.splash!.enable_logo != null)
               ? settingsSplach.splash!.enable_logo == "1"
                   ? Align(
                       alignment: Alignment.center,
@@ -208,10 +197,7 @@ class _SplashScreen extends State<SplashScreen> {
                         Text(
                           "System down for maintenance",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.white),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
                         ),
                         Text(
                           "We're sorry, our system is not available",
