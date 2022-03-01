@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/widgets/WhiteButton.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +28,7 @@ class OnBoardingTextWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 20),
               child: WhiteButton(
-                child: Text(I18n.current!.ok),
+                child: Text(S.of(context).ok),
                 onPressed: onDone,
               ),
             ),

@@ -10,8 +10,8 @@ import 'package:flutter/material.dart' hide Page;
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
-import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/elements/DrawerListTitle.dart';
 import 'package:flyweb/src/elements/Loader.dart';
 import 'package:flyweb/src/elements/RaisedGradientButton.dart';
@@ -176,13 +176,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     super.dispose();
   }
 
-  // Future<void> _initPackageInfo() async {
-  //   final PackageInfo info = await PackageInfo.fromPlatform();
-  //   setState(() {
-  //     _packageInfo = info;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     final appLanguage = context.watch<AppLanguage>();
@@ -297,7 +290,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                               )),
                           DrawerListTitle(
                               icon: Icons.home,
-                              text: I18n.current!.home,
+                              text: S.of(context).home,
                               onTap: () async {
                                 if (widget.settings.tabNavigationEnable == "1") {
                                   if (goToWeb) {
@@ -321,51 +314,29 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                             child: Divider(height: 1, color: Colors.grey[400]),
                           ),
-                          _renderPageDrawer(settings.pages!, context),
-                          settings.pages!.length != 0
-                              ? Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                  child: Divider(height: 1, color: Colors.grey[400]),
-                                )
-                              : Container(height: 0),
-                          DrawerListTitle(
-                              icon: Icons.brightness_medium,
-                              text: themeProvider.isLightTheme! ? I18n.current!.darkMode : I18n.current!.lightMode,
-                              onTap: () {
-                                if (themeProvider.isLightTheme!) {
-                                  themeProvider.setDarkMode();
-                                } else {
-                                  themeProvider.setLightMode();
-                                }
-                              }),
                           DrawerListTitle(
                             icon: Icons.translate,
-                            text: I18n.current!.languages,
+                            text: S.of(context).languages,
                             onTap: () => AppRouter.popAndPush(LanguageScreen()),
                           ),
                           DrawerListTitle(
                             icon: Icons.museum_outlined,
-                            text: 'Change Mosque',
+                            text: S.of(context).changeMosque,
                             onTap: () => AppRouter.popAndPush(MosqueSearchScreen()),
                           ),
                           DrawerListTitle(
-                            icon: Icons.info,
-                            text: I18n.current!.about,
-                            onTap: () => AppRouter.popAndPush(AboutScreen()),
-                          ),
-                          DrawerListTitle(
-                              icon: Icons.share,
-                              text: I18n.current!.share,
+                              icon: Icons.brightness_medium,
+                              text: themeProvider.isLightTheme! ? S.of(context).darkMode : S.of(context).lightMode,
                               onTap: () {
-                                shareApp(context, settings.title, settings.share!);
+                                if (themeProvider.isLightTheme!) {
+                                  themeProvider.setDarkMode();
+                                } else {
+                                  themeProvider.setLightMode();
+                                }
                               }),
-                          DrawerListTitle(
-                            icon: Icons.star,
-                            text: I18n.current!.rate,
-                            onTap: () => LaunchReview.launch(
-                              androidAppId: settings.androidId,
-                              iOSAppId: settings.iosId,
-                            ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                            child: Divider(height: 1, color: Colors.grey[400]),
                           ),
                           _renderPageDrawer(settings.pages!, context),
                           settings.pages!.length != 0
@@ -375,66 +346,19 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                                 )
                               : Container(height: 0),
                           DrawerListTitle(
-                              icon: Icons.brightness_medium,
-                              text: themeProvider.isLightTheme! ? I18n.current!.darkMode : I18n.current!.lightMode,
-                              onTap: () {
-                                if (themeProvider.isLightTheme!) {
-                                  themeProvider.setDarkMode();
-                                } else {
-                                  themeProvider.setLightMode();
-                                }
-                              }),
-                          DrawerListTitle(
-                            icon: Icons.translate,
-                            text: I18n.current!.languages,
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: pageTransitionAnimation(context),
-                                  child: LanguageScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          DrawerListTitle(
-                            icon: Icons.museum_outlined,
-                            text: 'Change Mosque',
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: pageTransitionAnimation(context),
-                                  child: MosqueSearchScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          DrawerListTitle(
                             icon: Icons.info,
-                            text: I18n.current!.about,
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: pageTransitionAnimation(context),
-                                  child: AboutScreen(),
-                                ),
-                              );
-                            },
+                            text: S.of(context).about,
+                            onTap: () => AppRouter.popAndPush(AboutScreen()),
                           ),
                           DrawerListTitle(
                               icon: Icons.share,
-                              text: I18n.current!.share,
+                              text: S.of(context).share,
                               onTap: () {
                                 shareApp(context, settings.title, settings.share!);
                               }),
                           DrawerListTitle(
                             icon: Icons.star,
-                            text: I18n.current!.rate,
+                            text: S.of(context).rate,
                             onTap: () => LaunchReview.launch(
                               androidAppId: settings.androidId,
                               iOSAppId: settings.iosId,
@@ -442,16 +366,13 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            child: Divider(
-                              height: 1,
-                              color: Colors.grey[400],
-                            ),
+                            child: Divider(height: 1, color: Colors.grey[400]),
                           ),
                           ListTile(
                             leading: Icon(Icons.system_update),
                             isThreeLine: true,
                             dense: true,
-                            title: Text(I18n.current!.update),
+                            title: Text(S.of(context).update),
                             subtitle: VersionWidget(),
                           ),
                         ],
@@ -486,6 +407,14 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                             ),
                     ),
                   ]),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      width: 100,
+                      height: 60,
+                      child: InkWell(onTap: () => _scaffoldKey.currentState?.openDrawer()),
+                    ),
+                  ),
                 ],
               ),
               bottomNavigationBar: widget.settings.tabNavigationEnable == "1"
@@ -515,20 +444,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                       foregroundColor: Colors.white,
                       children: _renderFloating(widget.settings.floating!, context),
                     )
-                  : Padding(
-                      padding: const EdgeInsets.only(bottom: 40),
-                      child: FloatingActionButton(
-                        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                        child: Icon(Icons.menu),
-                      ),
-                    ),
-              /*bottomNavigationBar: Container(
-                  height: settings.adBanner == "1"
-                      ? Platform.isAndroid
-                          ? 50
-                          : 80
-                      : 0),
-                      */
+                  : SizedBox(),
             )),
       ),
     );
@@ -619,19 +535,19 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                       )),
                   SizedBox(height: 40),
                   Text(
-                    I18n.current!.whoops,
+                    S.of(context).whoops,
                     style: TextStyle(color: Colors.black45, fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20),
                   Text(
-                    I18n.current!.noInternet,
+                    S.of(context).noInternet,
                     style: TextStyle(color: Colors.black87, fontSize: 15.0),
                   ),
                   SizedBox(height: 5),
                   SizedBox(height: 60),
                   RaisedGradientButton(
                       child: Text(
-                        I18n.current!.tryAgain,
+                        S.of(context).tryAgain,
                         style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       width: 250,
@@ -881,7 +797,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                       icon: Transform(
                           alignment: Alignment.center,
                           transform:
-                              Matrix4.rotationY(math.pi * (I18n.current!.textDirection == TextDirection.ltr ? 2 : 1)),
+                              Matrix4.rotationY(math.pi * (Directionality.of(context) == TextDirection.ltr ? 2 : 1)),
                           child: new Image.network(navigationIcon.iconUrl!, height: 25, width: 25, color: Colors.white)
                           /*Image.asset(
                               UIImages.imageDir +
@@ -909,7 +825,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                         icon: Transform(
                             alignment: Alignment.center,
                             transform:
-                                Matrix4.rotationY(math.pi * (I18n.current!.textDirection == TextDirection.ltr ? 2 : 1)),
+                                Matrix4.rotationY(math.pi * (Directionality.of(context) == TextDirection.ltr ? 2 : 1)),
                             child: Image.asset(UIImages.imageDir + "/icon_back.png",
                                 height: 25, width: 25, color: Colors.white)),
                         onPressed: () {
@@ -954,7 +870,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                         icon: Transform(
                             alignment: Alignment.center,
                             transform:
-                                Matrix4.rotationY(math.pi * (I18n.current!.textDirection == TextDirection.ltr ? 2 : 1)),
+                                Matrix4.rotationY(math.pi * (Directionality.of(context) == TextDirection.ltr ? 2 : 1)),
                             child: Image.asset(UIImages.imageDir + "/icon_forward.png",
                                 height: 25, width: 25, color: Colors.white)),
                         onPressed: () {
@@ -977,7 +893,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
               _renderMenuIcon(context, navigationIcon, navigationOtherIcon, navigatinBarStyle, settings, direction),
         )
         .toList();
-    ;
   }
 
   Future<bool> _onBackPressed(context) async {
@@ -1001,17 +916,17 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     return showDialog(
       context: context,
       builder: (context) => new AlertDialog(
-        title: new Text(I18n.current!.closeApp),
-        content: new Text(I18n.current!.sureCloseApp),
+        title: new Text(S.of(context).closeApp),
+        content: new Text(S.of(context).sureCloseApp),
         actions: <Widget>[
-          new FlatButton(
+          new TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: new Text(I18n.current!.cancel),
+            child: new Text(S.of(context).cancel),
           ),
           SizedBox(height: 16),
-          new FlatButton(
+          new TextButton(
             onPressed: () => exit(0),
-            child: new Text(I18n.current!.ok),
+            child: new Text(S.of(context).ok),
           ),
         ],
       ),
@@ -1634,17 +1549,17 @@ class _WebViewScreen extends State<WebViewScreen>
         return showDialog(
               context: context,
               builder: (context) => new AlertDialog(
-                title: new Text('Close APP'),
-                content: new Text('Are you sure want to quit this application ?'),
+                title: new Text(S.of(context).closeApp),
+                content: new Text(S.of(context).sureCloseApp),
                 actions: <Widget>[
-                  new FlatButton(
+                  new TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text("CANCEL"),
+                    child: new Text(S.of(context).cancel),
                   ),
                   SizedBox(height: 16),
-                  new FlatButton(
+                  new TextButton(
                     onPressed: () => exit(0),
-                    child: new Text("OK"),
+                    child: new Text(S.of(context).ok),
                   ),
                 ],
               ),

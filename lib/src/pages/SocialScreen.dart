@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
@@ -40,7 +41,7 @@ AppBar _renderAppBar(context, Settings settings) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
       title: Text(
-        I18n.current!.about,
+        S.of(context).about,
         style: TextStyle(
             color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
       ),
