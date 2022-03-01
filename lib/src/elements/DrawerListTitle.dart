@@ -45,7 +45,7 @@ class _DrawerListTitle extends State<DrawerListTitle> {
       trailing: widget.onTap == null
           ? null
           : Icon(
-              I18n.current!.textDirection == TextDirection.ltr
+              Directionality.of(context) == TextDirection.ltr
                   ? Icons.keyboard_arrow_right
                   : Icons.keyboard_arrow_left,
             ),

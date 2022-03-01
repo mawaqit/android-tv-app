@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flyweb/i18n/i18n.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/src/elements/SocialItem.dart';
 import 'package:flyweb/src/helpers/AppConfig.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
@@ -11,6 +11,7 @@ import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:flyweb/src/widgets/InfoWidget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -182,9 +183,8 @@ AppBar _renderAppBar(context, Settings settings) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
     title: Text(
-      I18n.current!.about,
-      style: TextStyle(
-          color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
+      S.current.about,
+      style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
     ),
     flexibleSpace: Container(
       decoration: BoxDecoration(
@@ -192,12 +192,8 @@ AppBar _renderAppBar(context, Settings settings) {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: <Color>[
-            themeProvider.isLightTheme!
-                ? HexColor(settings.firstColor)
-                : themeProvider.darkTheme.primaryColor,
-            themeProvider.isLightTheme!
-                ? HexColor(settings.secondColor)
-                : themeProvider.darkTheme.primaryColor,
+            themeProvider.isLightTheme! ? HexColor(settings.firstColor) : themeProvider.darkTheme.primaryColor,
+            themeProvider.isLightTheme! ? HexColor(settings.secondColor) : themeProvider.darkTheme.primaryColor,
           ],
         ),
       ),
@@ -212,12 +208,10 @@ Widget _renderSocialList(List<Social> socials, context) {
     children: socials
         .map((Social social) => SocialItem(
               iconUrl: social.iconUrl,
-              text: I18n.current!.social(social.title),
+              text: Intl.message(social.title?.toLowerCase() ?? ''),
               onTap: () async {
-                if (await canLaunch(
-                    social.linkUrl!.replaceAll("id_app", social.idApp!))) {
-                  await launch(
-                      social.linkUrl!.replaceAll("id_app", social.idApp!));
+                if (await canLaunch(social.linkUrl!.replaceAll("id_app", social.idApp!))) {
+                  await launch(social.linkUrl!.replaceAll("id_app", social.idApp!));
                 } else {
                   launch(social.url!.replaceAll("id_app", social.idApp!));
                 }

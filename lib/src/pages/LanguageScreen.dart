@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flyweb/generated/l10n.dart';
+import 'package:flyweb/generated/l10n.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/data/config.dart';
@@ -58,14 +61,14 @@ class _LanguageScreen extends State<LanguageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    I18n.current!.appLang,
+                    S.current.appLang,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    I18n.current!.descLang,
+                    S.current.descLang,
                     style: TextStyle(
                       color: Colors.black38,
                       fontSize: 13,
@@ -126,7 +129,7 @@ class _LanguageScreen extends State<LanguageScreen> {
 
     return AppBar(
         title: Text(
-          I18n.current!.languages,
+          S.current.languages,
           style: TextStyle(
               color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
         ),
