@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a en locale. All the
+// This is a library that provides messages for a ur locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -18,56 +18,56 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'en';
+  String get localeName => 'ur';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
-        "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
+        "appLang": MessageLookupByLibrary.simpleMessage("ਐਪ ਭਾਸ਼ਾਏ"),
         "backToHomePage":
-            MessageLookupByLibrary.simpleMessage("Back to Homepage"),
-        "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
-        "changeMosque": MessageLookupByLibrary.simpleMessage("Change Mosque"),
+            MessageLookupByLibrary.simpleMessage("ہوم پیج پر جائیں"),
+        "cancel": MessageLookupByLibrary.simpleMessage("منسوخ کریں"),
+        "changeMosque": MessageLookupByLibrary.simpleMessage("تغيير المسجد"),
         "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),
-        "closeApp": MessageLookupByLibrary.simpleMessage("Close app"),
+        "closeApp": MessageLookupByLibrary.simpleMessage("ایپ بند کریں"),
         "colorGradient": MessageLookupByLibrary.simpleMessage("Color Gradient"),
         "colorSolid": MessageLookupByLibrary.simpleMessage("Color Solid"),
         "customizeYourOwnWay":
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
-        "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
+        "darkMode": MessageLookupByLibrary.simpleMessage("ڈارک موڈ"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Select your preferred language."),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
-        "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "home": MessageLookupByLibrary.simpleMessage("ہوم"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "languages": MessageLookupByLibrary.simpleMessage("Languages"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Light mode"),
-        "loadingAnimation":
-            MessageLookupByLibrary.simpleMessage("Loading animation"),
-        "messenger": MessageLookupByLibrary.simpleMessage("messenger"),
-        "mosque": MessageLookupByLibrary.simpleMessage("Mosque"),
+        "loadingAnimation": MessageLookupByLibrary.simpleMessage(
+            "گولدائرہ اینیمیشن لوڈ کر رہا ہے"),
+        "messenger": MessageLookupByLibrary.simpleMessage("مسنجر"),
+        "mosque": MessageLookupByLibrary.simpleMessage("المسجد"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "noInternet":
-            MessageLookupByLibrary.simpleMessage("No internet connection"),
-        "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
-        "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
+            MessageLookupByLibrary.simpleMessage("کوئی انٹرنیٹ کنکشن"),
+        "notification": MessageLookupByLibrary.simpleMessage("اطلاعات"),
+        "ok": MessageLookupByLibrary.simpleMessage("ٹھیک ہے"),
+        "rate": MessageLookupByLibrary.simpleMessage("ہمیں شرح"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "share": MessageLookupByLibrary.simpleMessage("Share"),
-        "skype": MessageLookupByLibrary.simpleMessage("Skype"),
+        "share": MessageLookupByLibrary.simpleMessage("بانٹیں"),
+        "skype": MessageLookupByLibrary.simpleMessage("سکائپ"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to quit the application?"),
-        "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
-        "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
+            "کیا آپ واقعی یہ درخواست حذف کرنا چاہتے ہیں?"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("دوبارہ کوشش کریں"),
+        "twitter": MessageLookupByLibrary.simpleMessage("ٹویٹر"),
         "update": MessageLookupByLibrary.simpleMessage("Update Application"),
-        "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
+        "whatsApp": MessageLookupByLibrary.simpleMessage("واتس آب"),
         "whoops": MessageLookupByLibrary.simpleMessage("Whoops!"),
-        "youtube": MessageLookupByLibrary.simpleMessage("Youtube")
+        "youtube": MessageLookupByLibrary.simpleMessage("یوٹیوب")
       };
 }

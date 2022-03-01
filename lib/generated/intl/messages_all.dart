@@ -16,30 +16,46 @@ import 'package:intl/message_lookup_by_library.dart';
 import 'package:intl/src/intl_helpers.dart';
 
 import 'messages_ar.dart' as messages_ar;
+import 'messages_bn.dart' as messages_bn;
 import 'messages_de.dart' as messages_de;
 import 'messages_en.dart' as messages_en;
 import 'messages_es.dart' as messages_es;
 import 'messages_fr.dart' as messages_fr;
+import 'messages_hr.dart' as messages_hr;
+import 'messages_it.dart' as messages_it;
+import 'messages_ml.dart' as messages_ml;
 import 'messages_nl.dart' as messages_nl;
 import 'messages_pt.dart' as messages_pt;
+import 'messages_sq.dart' as messages_sq;
+import 'messages_ta.dart' as messages_ta;
 import 'messages_tr.dart' as messages_tr;
+import 'messages_ur.dart' as messages_ur;
 
 typedef Future<dynamic> LibraryLoader();
 Map<String, LibraryLoader> _deferredLibraries = {
   'ar': () => new Future.value(null),
+  'bn': () => new Future.value(null),
   'de': () => new Future.value(null),
   'en': () => new Future.value(null),
   'es': () => new Future.value(null),
   'fr': () => new Future.value(null),
+  'hr': () => new Future.value(null),
+  'it': () => new Future.value(null),
+  'ml': () => new Future.value(null),
   'nl': () => new Future.value(null),
   'pt': () => new Future.value(null),
+  'sq': () => new Future.value(null),
+  'ta': () => new Future.value(null),
   'tr': () => new Future.value(null),
+  'ur': () => new Future.value(null),
 };
 
 MessageLookupByLibrary? _findExact(String localeName) {
   switch (localeName) {
     case 'ar':
       return messages_ar.messages;
+    case 'bn':
+      return messages_bn.messages;
     case 'de':
       return messages_de.messages;
     case 'en':
@@ -48,12 +64,24 @@ MessageLookupByLibrary? _findExact(String localeName) {
       return messages_es.messages;
     case 'fr':
       return messages_fr.messages;
+    case 'hr':
+      return messages_hr.messages;
+    case 'it':
+      return messages_it.messages;
+    case 'ml':
+      return messages_ml.messages;
     case 'nl':
       return messages_nl.messages;
     case 'pt':
       return messages_pt.messages;
+    case 'sq':
+      return messages_sq.messages;
+    case 'ta':
+      return messages_ta.messages;
     case 'tr':
       return messages_tr.messages;
+    case 'ur':
+      return messages_ur.messages;
     default:
       return null;
   }

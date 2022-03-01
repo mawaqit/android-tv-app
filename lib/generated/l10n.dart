@@ -130,10 +130,10 @@ class S {
     );
   }
 
-  /// `Select your preferred languages.`
+  /// `Select your preferred language.`
   String get descLang {
     return Intl.message(
-      'Select your preferred languages.',
+      'Select your preferred language.',
       name: 'descLang',
       desc: '',
       args: [],
@@ -170,10 +170,10 @@ class S {
     );
   }
 
-  /// `Close App`
+  /// `Close app`
   String get closeApp {
     return Intl.message(
-      'Close App',
+      'Close app',
       name: 'closeApp',
       desc: '',
       args: [],
@@ -250,20 +250,20 @@ class S {
     );
   }
 
-  /// `Radio Button Options`
+  /// `Radio Button Options (left)`
   String get leftButtonOption {
     return Intl.message(
-      'Radio Button Options',
+      'Radio Button Options (left)',
       name: 'leftButtonOption',
       desc: '',
       args: [],
     );
   }
 
-  /// `Radio Button Options`
+  /// `Radio Button Options (right)`
   String get rightButtonOption {
     return Intl.message(
-      'Radio Button Options',
+      'Radio Button Options (right)',
       name: 'rightButtonOption',
       desc: '',
       args: [],
@@ -290,10 +290,10 @@ class S {
     );
   }
 
-  /// `Charging animation`
+  /// `Loading animation`
   String get loadingAnimation {
     return Intl.message(
-      'Charging animation',
+      'Loading animation',
       name: 'loadingAnimation',
       desc: '',
       args: [],
@@ -400,10 +400,10 @@ class S {
     );
   }
 
-  /// `Snap chat`
+  /// `Snapchat`
   String get snapchat {
     return Intl.message(
-      'Snap chat',
+      'Snapchat',
       name: 'snapchat',
       desc: '',
       args: [],
@@ -438,12 +438,19 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'ar'),
+      Locale.fromSubtags(languageCode: 'bn'),
       Locale.fromSubtags(languageCode: 'de'),
       Locale.fromSubtags(languageCode: 'es'),
       Locale.fromSubtags(languageCode: 'fr'),
+      Locale.fromSubtags(languageCode: 'hr'),
+      Locale.fromSubtags(languageCode: 'it'),
+      Locale.fromSubtags(languageCode: 'ml'),
       Locale.fromSubtags(languageCode: 'nl'),
       Locale.fromSubtags(languageCode: 'pt'),
+      Locale.fromSubtags(languageCode: 'sq'),
+      Locale.fromSubtags(languageCode: 'ta'),
       Locale.fromSubtags(languageCode: 'tr'),
+      Locale.fromSubtags(languageCode: 'ur'),
     ];
   }
 

@@ -25,8 +25,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "about": MessageLookupByLibrary.simpleMessage("À propos"),
         "appLang":
             MessageLookupByLibrary.simpleMessage("Langue de l\'application"),
-        "backToHomePage":
-            MessageLookupByLibrary.simpleMessage("Retour à la page d\'accueil"),
+        "backToHomePage": MessageLookupByLibrary.simpleMessage(
+            "Revenir à la page d\'accueil"),
         "cancel": MessageLookupByLibrary.simpleMessage("ANNULER"),
         "changeMosque":
             MessageLookupByLibrary.simpleMessage("Changer la Mosquée"),
@@ -37,36 +37,36 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Dégradé de couleur"),
         "colorSolid": MessageLookupByLibrary.simpleMessage("Couleur Solide"),
         "customizeYourOwnWay": MessageLookupByLibrary.simpleMessage(
-            "Personnalisez votre façon de procéder"),
+            "Personnalisez votre propre option"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Mode sombre"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Sélectionnez vos langues préférées"),
+            "Sélectionnez votre langue préférée."),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Type d\'en-tête"),
         "home": MessageLookupByLibrary.simpleMessage("Accueil"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "languages": MessageLookupByLibrary.simpleMessage("Langues"),
-        "leftButtonOption":
-            MessageLookupByLibrary.simpleMessage("Option du bouton gauche"),
+        "leftButtonOption": MessageLookupByLibrary.simpleMessage(
+            "Options du bouton radio (à gauche)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Mode de lumière"),
         "loadingAnimation":
-            MessageLookupByLibrary.simpleMessage("Chargement de l\'animation"),
+            MessageLookupByLibrary.simpleMessage("Animation lors du lancement"),
         "messenger": MessageLookupByLibrary.simpleMessage("messager"),
         "mosque": MessageLookupByLibrary.simpleMessage("Mosquée"),
         "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
-            "Style de la barre de navigation"),
+            "Style des barres de navigation"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Aucune connexion internet"),
-        "notification": MessageLookupByLibrary.simpleMessage("Notification"),
+        "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
         "rate": MessageLookupByLibrary.simpleMessage("Laissez une évaluation"),
-        "rightButtonOption":
-            MessageLookupByLibrary.simpleMessage("Option du bouton droit"),
+        "rightButtonOption": MessageLookupByLibrary.simpleMessage(
+            "Options du bouton radio (à droite)"),
         "share": MessageLookupByLibrary.simpleMessage("Partager"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
-        "snapchat": MessageLookupByLibrary.simpleMessage("Aligner le chat"),
+        "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "Êtes-vous sûr de vouloir quitter cette application ?"),
+            "Voulez-vous vraiment quitter l\'application ?"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Réessayez"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update": MessageLookupByLibrary.simpleMessage(

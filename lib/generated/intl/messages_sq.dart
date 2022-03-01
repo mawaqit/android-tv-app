@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a tr locale. All the
+// This is a library that provides messages for a sq locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -18,56 +18,56 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'tr';
+  String get localeName => 'sq';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "about": MessageLookupByLibrary.simpleMessage("Hakkında"),
-        "appLang": MessageLookupByLibrary.simpleMessage("Uygulama Dili"),
+        "about": MessageLookupByLibrary.simpleMessage("Rreth"),
+        "appLang": MessageLookupByLibrary.simpleMessage("Gjuha e Aplikacionit"),
         "backToHomePage":
-            MessageLookupByLibrary.simpleMessage("Ana sayfaya dön"),
-        "cancel": MessageLookupByLibrary.simpleMessage("İPTAL"),
+            MessageLookupByLibrary.simpleMessage("Back to Homepage"),
+        "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
         "changeMosque": MessageLookupByLibrary.simpleMessage("Change Mosque"),
-        "changeTheme": MessageLookupByLibrary.simpleMessage("Temayı Değiştir"),
-        "closeApp": MessageLookupByLibrary.simpleMessage("Uygulamayı kapat"),
-        "colorGradient": MessageLookupByLibrary.simpleMessage("Renk gradyanı"),
+        "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),
+        "closeApp": MessageLookupByLibrary.simpleMessage("Mbyll aplikacionin"),
+        "colorGradient":
+            MessageLookupByLibrary.simpleMessage("Gradient Shumëngjyrësh"),
         "colorSolid": MessageLookupByLibrary.simpleMessage("Color Solid"),
         "customizeYourOwnWay":
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
-        "darkMode": MessageLookupByLibrary.simpleMessage("Karanlık modu"),
+        "darkMode": MessageLookupByLibrary.simpleMessage("Modeliteti i errët"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Tercih ettiğiniz dilleri seçin."),
+            "Përzgjidhni gjuhën tuaj të parapëlqyer."),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
-        "headerType": MessageLookupByLibrary.simpleMessage("Başlık Türü"),
-        "home": MessageLookupByLibrary.simpleMessage("Ana sayfa"),
+        "headerType": MessageLookupByLibrary.simpleMessage("Lloji i Headerit"),
+        "home": MessageLookupByLibrary.simpleMessage("Shtëpia"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
-        "languages": MessageLookupByLibrary.simpleMessage("Diller"),
+        "languages": MessageLookupByLibrary.simpleMessage("Gjuha"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
-        "lightMode": MessageLookupByLibrary.simpleMessage("Aydınlık mod"),
-        "loadingAnimation":
-            MessageLookupByLibrary.simpleMessage("Şarj animasyonu"),
+        "lightMode": MessageLookupByLibrary.simpleMessage("Mënyra e çelët"),
+        "loadingAnimation": MessageLookupByLibrary.simpleMessage(
+            "Duke ngarkuar animimin e qerthullit"),
         "messenger": MessageLookupByLibrary.simpleMessage("Messenger"),
         "mosque": MessageLookupByLibrary.simpleMessage("Mosque"),
-        "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
-            "Gezinme çubuğu görüntüleme stili"),
-        "noInternet":
-            MessageLookupByLibrary.simpleMessage("İnternet bağlantısı yok"),
-        "notification": MessageLookupByLibrary.simpleMessage("Bildirimler"),
-        "ok": MessageLookupByLibrary.simpleMessage("Tamam"),
-        "rate": MessageLookupByLibrary.simpleMessage("Bizi Değerlendirin"),
+        "navigationBarStyle":
+            MessageLookupByLibrary.simpleMessage("Navigation bars style"),
+        "noInternet": MessageLookupByLibrary.simpleMessage("Nuk ka internet"),
+        "notification": MessageLookupByLibrary.simpleMessage("Njoftim"),
+        "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "rate": MessageLookupByLibrary.simpleMessage("Na vlerso"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "share": MessageLookupByLibrary.simpleMessage("Paylaş"),
+        "share": MessageLookupByLibrary.simpleMessage("Pjesë"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "Uygulamadan çıkmak istediğinizden emin misiniz?"),
-        "tryAgain": MessageLookupByLibrary.simpleMessage("Tekrar Dene"),
+            "Jeni i sigurt që dëshironi të dilni nga?"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("Try again"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
-        "update": MessageLookupByLibrary.simpleMessage("Uygulamayı güncelle"),
+        "update": MessageLookupByLibrary.simpleMessage("Update Application"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
-        "whoops": MessageLookupByLibrary.simpleMessage("Tüh!"),
-        "youtube": MessageLookupByLibrary.simpleMessage("YouTube")
+        "whoops": MessageLookupByLibrary.simpleMessage("Oops!"),
+        "youtube": MessageLookupByLibrary.simpleMessage("Youtube")
       };
 }

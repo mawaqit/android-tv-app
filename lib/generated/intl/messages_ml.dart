@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a en locale. All the
+// This is a library that provides messages for a ml locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -18,56 +18,56 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'en';
+  String get localeName => 'ml';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "about": MessageLookupByLibrary.simpleMessage("About"),
-        "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
+        "about": MessageLookupByLibrary.simpleMessage("ഞങ്ങളെക്കുറിച്ചു"),
+        "appLang": MessageLookupByLibrary.simpleMessage("ആപ്ലിക്കേഷൻ ഭാഷ"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to Homepage"),
         "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
         "changeMosque": MessageLookupByLibrary.simpleMessage("Change Mosque"),
         "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),
-        "closeApp": MessageLookupByLibrary.simpleMessage("Close app"),
+        "closeApp": MessageLookupByLibrary.simpleMessage("ആപ്പ് അടയ്‌ക്കുക"),
         "colorGradient": MessageLookupByLibrary.simpleMessage("Color Gradient"),
         "colorSolid": MessageLookupByLibrary.simpleMessage("Color Solid"),
         "customizeYourOwnWay":
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
-        "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
+        "darkMode": MessageLookupByLibrary.simpleMessage("ഡാർക്ക്‌ മോഡ്"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Select your preferred language."),
-        "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "facebook": MessageLookupByLibrary.simpleMessage("ഫേസ്‌ബുക്ക്"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
-        "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
+        "instagram": MessageLookupByLibrary.simpleMessage("ഇൻസ്റ്റാഗ്രാം"),
         "languages": MessageLookupByLibrary.simpleMessage("Languages"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
-        "lightMode": MessageLookupByLibrary.simpleMessage("Light mode"),
-        "loadingAnimation":
-            MessageLookupByLibrary.simpleMessage("Loading animation"),
-        "messenger": MessageLookupByLibrary.simpleMessage("messenger"),
+        "lightMode": MessageLookupByLibrary.simpleMessage("ലൈറ്റ് മോഡ്"),
+        "loadingAnimation": MessageLookupByLibrary.simpleMessage(
+            "വൃത്ത ആനിമേഷന്‍ ലോഡ് ചെയ്യുന്നു"),
+        "messenger": MessageLookupByLibrary.simpleMessage("മെസ്സഞ്ചർ"),
         "mosque": MessageLookupByLibrary.simpleMessage("Mosque"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "noInternet":
-            MessageLookupByLibrary.simpleMessage("No internet connection"),
-        "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
-        "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
+            MessageLookupByLibrary.simpleMessage("ഇന്റർനെറ്റ് കണക്ഷൻ ഇല്ല"),
+        "notification": MessageLookupByLibrary.simpleMessage("അറിയിപ്പുകൾ"),
+        "ok": MessageLookupByLibrary.simpleMessage("ശരി"),
+        "rate": MessageLookupByLibrary.simpleMessage("ഞങ്ങളെ റേറ്റുചെയ്യുക"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "share": MessageLookupByLibrary.simpleMessage("Share"),
+        "share": MessageLookupByLibrary.simpleMessage("പങ്കുവയ്ക്കുക"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to quit the application?"),
-        "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("വീണ്ടും ശ്രമിക്കൂ"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update": MessageLookupByLibrary.simpleMessage("Update Application"),
-        "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
+        "whatsApp": MessageLookupByLibrary.simpleMessage("വാട്ട്സ്ആപ്പ്"),
         "whoops": MessageLookupByLibrary.simpleMessage("Whoops!"),
-        "youtube": MessageLookupByLibrary.simpleMessage("Youtube")
+        "youtube": MessageLookupByLibrary.simpleMessage("YouTube")
       };
 }

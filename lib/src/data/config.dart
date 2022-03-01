@@ -9,15 +9,20 @@ class Config {
       Image.asset("$imageDir/logo.png", height: 150, width: 150);
 
   static List language = [
-    {"value": "en", "name": "English", "subtitle": "English"},
+    {"value": "sq", "name": "Albanian", "subtitle": "Albanian"},
     {"value": "ar", "name": "Arabic", "subtitle": "العربية"},
-    {"value": "es", "name": "Spanish", "subtitle": "Español"},
+    {"value": "bn", "name": "Bengali", "subtitle": "Bengali"},
+    {"value": "hr", "name": "Croatian", "subtitle": "Croatian"},
+    {"value": "nl", "name": "Dutch", "subtitle": "Dutch"},
+    {"value": "en", "name": "English", "subtitle": "English"},
     {"value": "fr", "name": "French", "subtitle": "Français"},
-    {"value": "pt", "name": "Portuguese", "subtitle": "Português"},
-    {"value": "hi", "name": "Hindi", "subtitle": "हिन्दी"},
     {"value": "de", "name": "German", "subtitle": "Deutsche"},
     {"value": "it", "name": "Italian", "subtitle": "Italiano"},
+    {"value": "ml", "name": "Malayalam", "subtitle": "Malayalam"},
+    {"value": "pt", "name": "Portuguese", "subtitle": "Português"},
+    {"value": "es", "name": "Spanish", "subtitle": "Español"},
+    {"value": "ta", "name": "Tamil", "subtitle": "Tamil"},
     {"value": "tr", "name": "Turkish", "subtitle": "Turc"},
-    {"value": "ru", "name": "Russian", "subtitle": "русский язык"}
+    {"value": "ur", "name": "Urdu", "subtitle": "Urdu"}
   ];
 }
