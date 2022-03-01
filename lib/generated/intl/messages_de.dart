@@ -36,34 +36,34 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Eigenen Weg anpassen"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Dunkler Modus"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Wählen Sie Ihre bevorzugten Sprachen"),
+            "Wählen Sie Ihre bevorzugten Sprachen."),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header-Typ"),
         "home": MessageLookupByLibrary.simpleMessage("Zuhause"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "languages": MessageLookupByLibrary.simpleMessage("Sprachen"),
-        "leftButtonOption":
-            MessageLookupByLibrary.simpleMessage("Option linke Taste"),
+        "leftButtonOption": MessageLookupByLibrary.simpleMessage(
+            "Optionen der Optionsleiste (links)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Lichtmodus"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Lade Animation"),
         "messenger": MessageLookupByLibrary.simpleMessage("bote"),
         "mosque": MessageLookupByLibrary.simpleMessage("Moschee"),
         "navigationBarStyle":
-            MessageLookupByLibrary.simpleMessage("Stil der Navigationsleiste"),
+            MessageLookupByLibrary.simpleMessage("Navigationsleisten Stil"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Keine Internetverbindung"),
         "notification":
-            MessageLookupByLibrary.simpleMessage("Benachrichtigung"),
+            MessageLookupByLibrary.simpleMessage("Benachrichtigungen"),
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
         "rate": MessageLookupByLibrary.simpleMessage("Bewerte uns"),
-        "rightButtonOption":
-            MessageLookupByLibrary.simpleMessage("Option rechter Taste"),
+        "rightButtonOption": MessageLookupByLibrary.simpleMessage(
+            "Optionen der Optionsschaltfläche (rechts)"),
         "share": MessageLookupByLibrary.simpleMessage("Teilen"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "Möchten Sie diese Anwendung wirklich beenden?"),
+            "Sind Sie sicher, dass Sie den Antrag aufgeben möchten?"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Erneut versuchen"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update":

@@ -33,9 +33,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "colorGradient": MessageLookupByLibrary.simpleMessage("تدرج اللون"),
         "colorSolid": MessageLookupByLibrary.simpleMessage("لون ثابت"),
         "customizeYourOwnWay":
-            MessageLookupByLibrary.simpleMessage("تخصيص طريقتك الخاصة"),
+            MessageLookupByLibrary.simpleMessage("تخصيص الخيار الخاص بك"),
         "darkMode": MessageLookupByLibrary.simpleMessage("الوضع الداكن"),
-        "descLang": MessageLookupByLibrary.simpleMessage("إختر لغتك المفضلة"),
+        "descLang": MessageLookupByLibrary.simpleMessage("إختر لغتك المفضلة."),
         "facebook": MessageLookupByLibrary.simpleMessage("فيسبوك"),
         "headerType": MessageLookupByLibrary.simpleMessage("نوع الرأس"),
         "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
@@ -45,11 +45,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيسر"),
         "lightMode": MessageLookupByLibrary.simpleMessage("المظهر الفاتح"),
         "loadingAnimation":
-            MessageLookupByLibrary.simpleMessage("مؤثر الحركة أثناء الشحن"),
+            MessageLookupByLibrary.simpleMessage("دائرة التحميل المتحركة"),
         "messenger": MessageLookupByLibrary.simpleMessage("مسنجر"),
         "mosque": MessageLookupByLibrary.simpleMessage("المسجد"),
         "navigationBarStyle":
-            MessageLookupByLibrary.simpleMessage("إعدادات شريط التنقل"),
+            MessageLookupByLibrary.simpleMessage("نمط شريط التنقل"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("لا يوجد اتصال بالإنترنت"),
         "notification": MessageLookupByLibrary.simpleMessage("الإشعارات"),
@@ -59,9 +59,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيمن"),
         "share": MessageLookupByLibrary.simpleMessage("مشاركة"),
         "skype": MessageLookupByLibrary.simpleMessage("سكايب"),
-        "snapchat": MessageLookupByLibrary.simpleMessage("سناب شات"),
+        "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "هل أنت متأكد من أنك تريد حذف هذ التطبيق؟"),
+            "هل أنت متأكد من أنك تريد الخروج من التطبيق؟"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("حاول مرة اخرى"),
         "twitter": MessageLookupByLibrary.simpleMessage("تويتر"),
         "update": MessageLookupByLibrary.simpleMessage("تحديث التطبيق"),
