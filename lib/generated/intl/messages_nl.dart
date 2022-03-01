@@ -29,40 +29,40 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Annuleren"),
         "changeMosque": MessageLookupByLibrary.simpleMessage("Wijzigen Moskee"),
         "changeTheme": MessageLookupByLibrary.simpleMessage("Thema wijzigen"),
-        "closeApp": MessageLookupByLibrary.simpleMessage("APP sluiten"),
+        "closeApp": MessageLookupByLibrary.simpleMessage("App sluiten"),
         "colorGradient": MessageLookupByLibrary.simpleMessage("Kleur verloop"),
         "colorSolid": MessageLookupByLibrary.simpleMessage("Kleur Solide"),
         "customizeYourOwnWay":
             MessageLookupByLibrary.simpleMessage("Pas je eigen manier aan"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Donkere modus"),
-        "descLang":
-            MessageLookupByLibrary.simpleMessage("Selecteer de gewenste talen"),
+        "descLang": MessageLookupByLibrary.simpleMessage(
+            "Kies één of meer voorkeurstalen."),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
-        "home": MessageLookupByLibrary.simpleMessage("Startpagina"),
+        "home": MessageLookupByLibrary.simpleMessage("Home"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "languages": MessageLookupByLibrary.simpleMessage("Leren"),
         "leftButtonOption":
-            MessageLookupByLibrary.simpleMessage("Linker knop optie"),
+            MessageLookupByLibrary.simpleMessage("Radio Knop opties (links)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Lichte modus"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Animatie laden"),
         "messenger": MessageLookupByLibrary.simpleMessage("berichtgever"),
         "mosque": MessageLookupByLibrary.simpleMessage("Moskee"),
         "navigationBarStyle":
-            MessageLookupByLibrary.simpleMessage("Stijl navigatiebalk"),
+            MessageLookupByLibrary.simpleMessage("Stijl navigatiebalken"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Geen internetverbinding"),
-        "notification": MessageLookupByLibrary.simpleMessage("Notificatie"),
+        "notification": MessageLookupByLibrary.simpleMessage("Meldingen"),
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
         "rate": MessageLookupByLibrary.simpleMessage("Beoordeel ons"),
         "rightButtonOption":
-            MessageLookupByLibrary.simpleMessage("Rechter knop optie"),
+            MessageLookupByLibrary.simpleMessage("Radio Knop opties (links)"),
         "share": MessageLookupByLibrary.simpleMessage("Delen"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
-        "snapchat": MessageLookupByLibrary.simpleMessage("Snap chat"),
+        "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "Weet u zeker dat u deze toepassing wilt afsluiten?"),
+            "Weet u zeker dat u de toepassing wilt afsluiten?"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Probeer opnieuw"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update": MessageLookupByLibrary.simpleMessage("Toepassing bijwerken"),
