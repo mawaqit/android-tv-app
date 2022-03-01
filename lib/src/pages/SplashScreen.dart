@@ -107,7 +107,7 @@ class _SplashScreen extends State<SplashScreen> {
   void _navigateToHome(Settings settings) async {
     var goBoarding = await loadBoarding();
     var mosqueId = await loadMosqueId();
-    return;
+
     if (mosqueId == null || goBoarding && settings.boarding == "1") {
       AppRouter.pushReplacement(OnBoardingScreen(settings));
     } else {

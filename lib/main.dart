@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/helpers/AnalyticsWrapper.dart';
@@ -90,11 +91,11 @@ class MyApp extends StatelessWidget {
                 navigatorKey: AppRouter.navigationKey,
                  navigatorObservers: [AnalyticsWrapper.observer()],
                 localizationsDelegates: [
-                  I18n.delegate,
+                  S.delegate,
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
                 ],
-                supportedLocales: I18n.delegate.supportedLocales,
+                supportedLocales: S.delegate.supportedLocales,
                 debugShowCheckedModeBanner: false,
                 home: SplashScreen(localSettings: this.settings),
               ),

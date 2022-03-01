@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flyweb/generated/l10n.dart';
+import 'package:flyweb/generated/l10n.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/helpers/AppRouter.dart';
@@ -24,7 +27,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            I18n.current!.descLang,
+            S.current.descLang,
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: 24,
@@ -51,7 +54,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                           horizontal: 15,
                         ),
                         child: Text(
-                          "${I18n.current!.appLang} (${appLanguage.currentLanguageName})",
+                          "${S.current.appLang} (${appLanguage.currentLanguageName})",
                           style: TextStyle(color: Colors.black38),
                         ),
                       ),
@@ -61,7 +64,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                 const SizedBox(width: 10),
                 WhiteButton(
                   onPressed: onDone,
-                  child: Text(I18n.current!.ok),
+                  child: Text(S.current.ok),
                 ),
               ],
             ),
