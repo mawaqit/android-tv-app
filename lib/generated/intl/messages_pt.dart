@@ -22,50 +22,54 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "about": MessageLookupByLibrary.simpleMessage("About"),
-        "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
+        "about": MessageLookupByLibrary.simpleMessage("SOBRE"),
+        "appLang": MessageLookupByLibrary.simpleMessage("Idioma do aplicativo"),
         "backToHomePage":
-            MessageLookupByLibrary.simpleMessage("Back to HomePage"),
+            MessageLookupByLibrary.simpleMessage("Voltar à página inicial"),
         "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
-        "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),
-        "closeApp": MessageLookupByLibrary.simpleMessage("Close APP"),
-        "colorGradient": MessageLookupByLibrary.simpleMessage("Color Gradient"),
-        "colorSolid": MessageLookupByLibrary.simpleMessage("Color Solid"),
+        "changeMosque":
+            MessageLookupByLibrary.simpleMessage("Alterar Mesquita"),
+        "changeTheme": MessageLookupByLibrary.simpleMessage("Alterar tema"),
+        "closeApp": MessageLookupByLibrary.simpleMessage("Fechar aplicativo"),
+        "colorGradient":
+            MessageLookupByLibrary.simpleMessage("Gradiente de Cor"),
+        "colorSolid": MessageLookupByLibrary.simpleMessage("Cor sólida"),
         "customizeYourOwnWay":
-            MessageLookupByLibrary.simpleMessage("Customize your own way"),
-        "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
+            MessageLookupByLibrary.simpleMessage("Personalizar o seu caminho"),
+        "darkMode": MessageLookupByLibrary.simpleMessage("Modo noturno"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Select your preferred languages"),
-        "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
-        "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
-        "home": MessageLookupByLibrary.simpleMessage("Home"),
+            "Selecione seus idiomas preferidos"),
+        "facebook": MessageLookupByLibrary.simpleMessage("Siga-nos"),
+        "headerType": MessageLookupByLibrary.simpleMessage("Tipo de cabeçalho"),
+        "home": MessageLookupByLibrary.simpleMessage("Residencial"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
-        "languages": MessageLookupByLibrary.simpleMessage("Languages"),
+        "languages": MessageLookupByLibrary.simpleMessage("Idiomas"),
         "leftButtonOption":
-            MessageLookupByLibrary.simpleMessage("Left Button Option"),
-        "lightMode": MessageLookupByLibrary.simpleMessage("Light mode"),
+            MessageLookupByLibrary.simpleMessage("Opção de Botão Esquerdo"),
+        "lightMode": MessageLookupByLibrary.simpleMessage("Modo claro"),
         "loadingAnimation":
-            MessageLookupByLibrary.simpleMessage("Loading Animation"),
-        "messenger": MessageLookupByLibrary.simpleMessage("messenger"),
-        "navigationBarStyle":
-            MessageLookupByLibrary.simpleMessage("Navigation bar style"),
+            MessageLookupByLibrary.simpleMessage("Carregando Animação"),
+        "messenger": MessageLookupByLibrary.simpleMessage("Mensageiro"),
+        "mosque": MessageLookupByLibrary.simpleMessage("Mesquita"),
+        "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
+            "Estilo da barra de navegação"),
         "noInternet":
-            MessageLookupByLibrary.simpleMessage("No internet connection"),
-        "notification": MessageLookupByLibrary.simpleMessage("Notification"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
-        "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
+            MessageLookupByLibrary.simpleMessage("Sem conexão à internet"),
+        "notification": MessageLookupByLibrary.simpleMessage("notificação"),
+        "ok": MessageLookupByLibrary.simpleMessage("Certo"),
+        "rate": MessageLookupByLibrary.simpleMessage("Avalie-nos"),
         "rightButtonOption":
-            MessageLookupByLibrary.simpleMessage("Right Button Option"),
-        "share": MessageLookupByLibrary.simpleMessage("Share"),
+            MessageLookupByLibrary.simpleMessage("Opção de Botão Direito"),
+        "share": MessageLookupByLibrary.simpleMessage("Compartilhar"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
-        "snapchat": MessageLookupByLibrary.simpleMessage("Snap chat"),
+        "snapchat": MessageLookupByLibrary.simpleMessage("Capturar chat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "Are you sure want to quit this application ?"),
-        "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+            "Tem certeza que deseja sair deste aplicativo?"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("Tente novamente"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
-        "update": MessageLookupByLibrary.simpleMessage("Update Application"),
+        "update": MessageLookupByLibrary.simpleMessage("Atualizar aplicativo"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
-        "whoops": MessageLookupByLibrary.simpleMessage("Whoops!"),
+        "whoops": MessageLookupByLibrary.simpleMessage("Ops!"),
         "youtube": MessageLookupByLibrary.simpleMessage("Youtube")
       };
 }

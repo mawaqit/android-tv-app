@@ -316,19 +316,19 @@ class _WebScreen extends State<WebScreen> {
                       )),
                   SizedBox(height: 40),
                   Text(
-                    S.current.whoops,
+                    S.of(context).whoops,
                     style: TextStyle(color: Colors.black45, fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20),
                   Text(
-                    S.current.noInternet,
+                    S.of(context).noInternet,
                     style: TextStyle(color: Colors.black87, fontSize: 15.0),
                   ),
                   SizedBox(height: 5),
                   SizedBox(height: 60),
                   RaisedGradientButton(
                       child: Text(
-                        S.current.tryAgain,
+                        S.of(context).tryAgain,
                         style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       width: 250,

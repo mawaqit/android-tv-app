@@ -27,7 +27,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            S.current.descLang,
+            S.of(context).descLang,
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: 24,
@@ -54,7 +54,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                           horizontal: 15,
                         ),
                         child: Text(
-                          "${S.current.appLang} (${appLanguage.currentLanguageName})",
+                          "${S.of(context).appLang} (${appLanguage.currentLanguageName})",
                           style: TextStyle(color: Colors.black38),
                         ),
                       ),
@@ -64,7 +64,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                 const SizedBox(width: 10),
                 WhiteButton(
                   onPressed: onDone,
-                  child: Text(S.current.ok),
+                  child: Text(S.of(context).ok),
                 ),
               ],
             ),

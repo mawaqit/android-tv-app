@@ -28,7 +28,7 @@ class OnBoardingTextWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 20),
               child: WhiteButton(
-                child: Text(S.current.ok),
+                child: Text(S.of(context).ok),
                 onPressed: onDone,
               ),
             ),

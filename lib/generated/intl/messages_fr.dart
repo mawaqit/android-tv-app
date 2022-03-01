@@ -22,50 +22,57 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "about": MessageLookupByLibrary.simpleMessage("About"),
-        "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
+        "about": MessageLookupByLibrary.simpleMessage("À propos"),
+        "appLang":
+            MessageLookupByLibrary.simpleMessage("Langue de l\'application"),
         "backToHomePage":
-            MessageLookupByLibrary.simpleMessage("Back to HomePage"),
-        "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
-        "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),
-        "closeApp": MessageLookupByLibrary.simpleMessage("Close APP"),
-        "colorGradient": MessageLookupByLibrary.simpleMessage("Color Gradient"),
-        "colorSolid": MessageLookupByLibrary.simpleMessage("Color Solid"),
-        "customizeYourOwnWay":
-            MessageLookupByLibrary.simpleMessage("Customize your own way"),
-        "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
+            MessageLookupByLibrary.simpleMessage("Retour à la page d\'accueil"),
+        "cancel": MessageLookupByLibrary.simpleMessage("ANNULER"),
+        "changeMosque":
+            MessageLookupByLibrary.simpleMessage("Changer la Mosquée"),
+        "changeTheme": MessageLookupByLibrary.simpleMessage("Changer de thème"),
+        "closeApp":
+            MessageLookupByLibrary.simpleMessage("Fermer l\'application"),
+        "colorGradient":
+            MessageLookupByLibrary.simpleMessage("Dégradé de couleur"),
+        "colorSolid": MessageLookupByLibrary.simpleMessage("Couleur Solide"),
+        "customizeYourOwnWay": MessageLookupByLibrary.simpleMessage(
+            "Personnalisez votre façon de procéder"),
+        "darkMode": MessageLookupByLibrary.simpleMessage("Mode sombre"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Select your preferred languages"),
+            "Sélectionnez vos langues préférées"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
-        "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
-        "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "headerType": MessageLookupByLibrary.simpleMessage("Type d\'en-tête"),
+        "home": MessageLookupByLibrary.simpleMessage("Accueil"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
-        "languages": MessageLookupByLibrary.simpleMessage("Languages"),
+        "languages": MessageLookupByLibrary.simpleMessage("Langues"),
         "leftButtonOption":
-            MessageLookupByLibrary.simpleMessage("Left Button Option"),
-        "lightMode": MessageLookupByLibrary.simpleMessage("Light mode"),
+            MessageLookupByLibrary.simpleMessage("Option du bouton gauche"),
+        "lightMode": MessageLookupByLibrary.simpleMessage("Mode de lumière"),
         "loadingAnimation":
-            MessageLookupByLibrary.simpleMessage("Loading Animation"),
-        "messenger": MessageLookupByLibrary.simpleMessage("messenger"),
-        "navigationBarStyle":
-            MessageLookupByLibrary.simpleMessage("Navigation bar style"),
+            MessageLookupByLibrary.simpleMessage("Chargement de l\'animation"),
+        "messenger": MessageLookupByLibrary.simpleMessage("messager"),
+        "mosque": MessageLookupByLibrary.simpleMessage("Mosquée"),
+        "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
+            "Style de la barre de navigation"),
         "noInternet":
-            MessageLookupByLibrary.simpleMessage("No internet connection"),
+            MessageLookupByLibrary.simpleMessage("Aucune connexion internet"),
         "notification": MessageLookupByLibrary.simpleMessage("Notification"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
-        "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
+        "ok": MessageLookupByLibrary.simpleMessage("Ok"),
+        "rate": MessageLookupByLibrary.simpleMessage("Laissez une évaluation"),
         "rightButtonOption":
-            MessageLookupByLibrary.simpleMessage("Right Button Option"),
-        "share": MessageLookupByLibrary.simpleMessage("Share"),
+            MessageLookupByLibrary.simpleMessage("Option du bouton droit"),
+        "share": MessageLookupByLibrary.simpleMessage("Partager"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
-        "snapchat": MessageLookupByLibrary.simpleMessage("Snap chat"),
+        "snapchat": MessageLookupByLibrary.simpleMessage("Aligner le chat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "Are you sure want to quit this application ?"),
-        "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+            "Êtes-vous sûr de vouloir quitter cette application ?"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("Réessayez"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
-        "update": MessageLookupByLibrary.simpleMessage("Update Application"),
+        "update": MessageLookupByLibrary.simpleMessage(
+            "Mettre à jour l\'application"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
-        "whoops": MessageLookupByLibrary.simpleMessage("Whoops!"),
+        "whoops": MessageLookupByLibrary.simpleMessage("Oups !"),
         "youtube": MessageLookupByLibrary.simpleMessage("Youtube")
       };
 }

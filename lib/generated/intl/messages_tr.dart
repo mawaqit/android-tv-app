@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to HomePage"),
         "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
+        "changeMosque": MessageLookupByLibrary.simpleMessage("Change Mosque"),
         "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),
         "closeApp": MessageLookupByLibrary.simpleMessage("Close APP"),
         "colorGradient": MessageLookupByLibrary.simpleMessage("Color Gradient"),
@@ -47,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Loading Animation"),
         "messenger": MessageLookupByLibrary.simpleMessage("messenger"),
+        "mosque": MessageLookupByLibrary.simpleMessage("Mosque"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bar style"),
         "noInternet":

@@ -22,11 +22,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "about": MessageLookupByLibrary.simpleMessage("حول"),
+        "about": MessageLookupByLibrary.simpleMessage("عن التطبيق"),
         "appLang": MessageLookupByLibrary.simpleMessage("لغة التطبيق"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("الرجوع إلى الصفحة الرئيسية"),
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
+        "changeMosque": MessageLookupByLibrary.simpleMessage("تغيير المسجد"),
         "changeTheme": MessageLookupByLibrary.simpleMessage("تغيير المظهر"),
         "closeApp": MessageLookupByLibrary.simpleMessage("إغلاق التطبيق"),
         "colorGradient": MessageLookupByLibrary.simpleMessage("تدرج اللون"),
@@ -37,7 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "descLang": MessageLookupByLibrary.simpleMessage("إختر لغتك المفضلة"),
         "facebook": MessageLookupByLibrary.simpleMessage("فيسبوك"),
         "headerType": MessageLookupByLibrary.simpleMessage("نوع الرأس"),
-        "home": MessageLookupByLibrary.simpleMessage("الصفحة الرئيسية"),
+        "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
         "instagram": MessageLookupByLibrary.simpleMessage("انستغرام"),
         "languages": MessageLookupByLibrary.simpleMessage("اللغات"),
         "leftButtonOption":
@@ -46,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("مؤثر الحركة أثناء الشحن"),
         "messenger": MessageLookupByLibrary.simpleMessage("مسنجر"),
+        "mosque": MessageLookupByLibrary.simpleMessage("المسجد"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("إعدادات شريط التنقل"),
         "noInternet":

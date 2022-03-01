@@ -58,14 +58,14 @@ class _LanguageScreen extends State<LanguageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    S.current.appLang,
+                    S.of(context).appLang,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    S.current.descLang,
+                    S.of(context).descLang,
                     style: TextStyle(
                       color: Colors.black38,
                       fontSize: 13,
@@ -122,7 +122,7 @@ class _LanguageScreen extends State<LanguageScreen> {
 
     return AppBar(
         title: Text(
-          S.current.languages,
+          S.of(context).languages,
           style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
         ),
         flexibleSpace: Container(

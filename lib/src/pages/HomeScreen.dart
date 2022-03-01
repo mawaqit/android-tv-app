@@ -176,13 +176,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     super.dispose();
   }
 
-  // Future<void> _initPackageInfo() async {
-  //   final PackageInfo info = await PackageInfo.fromPlatform();
-  //   setState(() {
-  //     _packageInfo = info;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     final appLanguage = context.watch<AppLanguage>();
@@ -297,7 +290,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                               )),
                           DrawerListTitle(
                               icon: Icons.home,
-                              text: S.current.home,
+                              text: S.of(context).home,
                               onTap: () async {
                                 if (widget.settings.tabNavigationEnable == "1") {
                                   if (goToWeb) {
@@ -323,17 +316,17 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                           ),
                           DrawerListTitle(
                             icon: Icons.translate,
-                            text: S.current.languages,
+                            text: S.of(context).languages,
                             onTap: () => AppRouter.popAndPush(LanguageScreen()),
                           ),
                           DrawerListTitle(
                             icon: Icons.museum_outlined,
-                            text: S.current.changeMosque,
+                            text: S.of(context).changeMosque,
                             onTap: () => AppRouter.popAndPush(MosqueSearchScreen()),
                           ),
                           DrawerListTitle(
                               icon: Icons.brightness_medium,
-                              text: themeProvider.isLightTheme! ? S.current.darkMode : S.current.lightMode,
+                              text: themeProvider.isLightTheme! ? S.of(context).darkMode : S.of(context).lightMode,
                               onTap: () {
                                 if (themeProvider.isLightTheme!) {
                                   themeProvider.setDarkMode();
@@ -354,18 +347,18 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                               : Container(height: 0),
                           DrawerListTitle(
                             icon: Icons.info,
-                            text: S.current.about,
+                            text: S.of(context).about,
                             onTap: () => AppRouter.popAndPush(AboutScreen()),
                           ),
                           DrawerListTitle(
                               icon: Icons.share,
-                              text: S.current.share,
+                              text: S.of(context).share,
                               onTap: () {
                                 shareApp(context, settings.title, settings.share!);
                               }),
                           DrawerListTitle(
                             icon: Icons.star,
-                            text: S.current.rate,
+                            text: S.of(context).rate,
                             onTap: () => LaunchReview.launch(
                               androidAppId: settings.androidId,
                               iOSAppId: settings.iosId,
@@ -379,7 +372,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                             leading: Icon(Icons.system_update),
                             isThreeLine: true,
                             dense: true,
-                            title: Text(S.current.update),
+                            title: Text(S.of(context).update),
                             subtitle: VersionWidget(),
                           ),
                         ],
@@ -414,6 +407,14 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                             ),
                     ),
                   ]),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      width: 100,
+                      height: 60,
+                      child: InkWell(onTap: () => _scaffoldKey.currentState?.openDrawer()),
+                    ),
+                  ),
                 ],
               ),
               bottomNavigationBar: widget.settings.tabNavigationEnable == "1"
@@ -443,20 +444,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                       foregroundColor: Colors.white,
                       children: _renderFloating(widget.settings.floating!, context),
                     )
-                  : Padding(
-                      padding: const EdgeInsets.only(bottom: 40),
-                      child: FloatingActionButton(
-                        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                        child: Icon(Icons.menu),
-                      ),
-                    ),
-              /*bottomNavigationBar: Container(
-                  height: settings.adBanner == "1"
-                      ? Platform.isAndroid
-                          ? 50
-                          : 80
-                      : 0),
-                      */
+                  : SizedBox(),
             )),
       ),
     );
@@ -547,19 +535,19 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                       )),
                   SizedBox(height: 40),
                   Text(
-                    S.current.whoops,
+                    S.of(context).whoops,
                     style: TextStyle(color: Colors.black45, fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20),
                   Text(
-                    S.current.noInternet,
+                    S.of(context).noInternet,
                     style: TextStyle(color: Colors.black87, fontSize: 15.0),
                   ),
                   SizedBox(height: 5),
                   SizedBox(height: 60),
                   RaisedGradientButton(
                       child: Text(
-                        S.current.tryAgain,
+                        S.of(context).tryAgain,
                         style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       width: 250,
@@ -928,17 +916,17 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     return showDialog(
       context: context,
       builder: (context) => new AlertDialog(
-        title: new Text(S.current.closeApp),
-        content: new Text(S.current.sureCloseApp),
+        title: new Text(S.of(context).closeApp),
+        content: new Text(S.of(context).sureCloseApp),
         actions: <Widget>[
           new TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: new Text(S.current.cancel),
+            child: new Text(S.of(context).cancel),
           ),
           SizedBox(height: 16),
           new TextButton(
             onPressed: () => exit(0),
-            child: new Text(S.current.ok),
+            child: new Text(S.of(context).ok),
           ),
         ],
       ),
@@ -1561,17 +1549,17 @@ class _WebViewScreen extends State<WebViewScreen>
         return showDialog(
               context: context,
               builder: (context) => new AlertDialog(
-                title: new Text(S.current.closeApp),
-                content: new Text(S.current.sureCloseApp),
+                title: new Text(S.of(context).closeApp),
+                content: new Text(S.of(context).sureCloseApp),
                 actions: <Widget>[
                   new TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text(S.current.cancel),
+                    child: new Text(S.of(context).cancel),
                   ),
                   SizedBox(height: 16),
                   new TextButton(
                     onPressed: () => exit(0),
-                    child: new Text(S.current.ok),
+                    child: new Text(S.of(context).ok),
                   ),
                 ],
               ),

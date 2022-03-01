@@ -22,50 +22,52 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "about": MessageLookupByLibrary.simpleMessage("About"),
-        "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
+        "about": MessageLookupByLibrary.simpleMessage("Informatie"),
+        "appLang": MessageLookupByLibrary.simpleMessage("App taal"),
         "backToHomePage":
-            MessageLookupByLibrary.simpleMessage("Back to HomePage"),
-        "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
-        "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),
-        "closeApp": MessageLookupByLibrary.simpleMessage("Close APP"),
-        "colorGradient": MessageLookupByLibrary.simpleMessage("Color Gradient"),
-        "colorSolid": MessageLookupByLibrary.simpleMessage("Color Solid"),
+            MessageLookupByLibrary.simpleMessage("Terug naar Startpagina"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Annuleren"),
+        "changeMosque": MessageLookupByLibrary.simpleMessage("Wijzigen Moskee"),
+        "changeTheme": MessageLookupByLibrary.simpleMessage("Thema wijzigen"),
+        "closeApp": MessageLookupByLibrary.simpleMessage("APP sluiten"),
+        "colorGradient": MessageLookupByLibrary.simpleMessage("Kleur verloop"),
+        "colorSolid": MessageLookupByLibrary.simpleMessage("Kleur Solide"),
         "customizeYourOwnWay":
-            MessageLookupByLibrary.simpleMessage("Customize your own way"),
-        "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
-        "descLang": MessageLookupByLibrary.simpleMessage(
-            "Select your preferred languages"),
+            MessageLookupByLibrary.simpleMessage("Pas je eigen manier aan"),
+        "darkMode": MessageLookupByLibrary.simpleMessage("Donkere modus"),
+        "descLang":
+            MessageLookupByLibrary.simpleMessage("Selecteer de gewenste talen"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
-        "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "home": MessageLookupByLibrary.simpleMessage("Startpagina"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
-        "languages": MessageLookupByLibrary.simpleMessage("Languages"),
+        "languages": MessageLookupByLibrary.simpleMessage("Leren"),
         "leftButtonOption":
-            MessageLookupByLibrary.simpleMessage("Left Button Option"),
-        "lightMode": MessageLookupByLibrary.simpleMessage("Light mode"),
+            MessageLookupByLibrary.simpleMessage("Linker knop optie"),
+        "lightMode": MessageLookupByLibrary.simpleMessage("Lichte modus"),
         "loadingAnimation":
-            MessageLookupByLibrary.simpleMessage("Loading Animation"),
-        "messenger": MessageLookupByLibrary.simpleMessage("messenger"),
+            MessageLookupByLibrary.simpleMessage("Animatie laden"),
+        "messenger": MessageLookupByLibrary.simpleMessage("berichtgever"),
+        "mosque": MessageLookupByLibrary.simpleMessage("Moskee"),
         "navigationBarStyle":
-            MessageLookupByLibrary.simpleMessage("Navigation bar style"),
+            MessageLookupByLibrary.simpleMessage("Stijl navigatiebalk"),
         "noInternet":
-            MessageLookupByLibrary.simpleMessage("No internet connection"),
-        "notification": MessageLookupByLibrary.simpleMessage("Notification"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
-        "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
+            MessageLookupByLibrary.simpleMessage("Geen internetverbinding"),
+        "notification": MessageLookupByLibrary.simpleMessage("Notificatie"),
+        "ok": MessageLookupByLibrary.simpleMessage("Ok"),
+        "rate": MessageLookupByLibrary.simpleMessage("Beoordeel ons"),
         "rightButtonOption":
-            MessageLookupByLibrary.simpleMessage("Right Button Option"),
-        "share": MessageLookupByLibrary.simpleMessage("Share"),
+            MessageLookupByLibrary.simpleMessage("Rechter knop optie"),
+        "share": MessageLookupByLibrary.simpleMessage("Delen"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snap chat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "Are you sure want to quit this application ?"),
-        "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+            "Weet u zeker dat u deze toepassing wilt afsluiten?"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("Probeer opnieuw"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
-        "update": MessageLookupByLibrary.simpleMessage("Update Application"),
+        "update": MessageLookupByLibrary.simpleMessage("Toepassing bijwerken"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
-        "whoops": MessageLookupByLibrary.simpleMessage("Whoops!"),
-        "youtube": MessageLookupByLibrary.simpleMessage("Youtube")
+        "whoops": MessageLookupByLibrary.simpleMessage("Oeps!"),
+        "youtube": MessageLookupByLibrary.simpleMessage("YouTube")
       };
 }

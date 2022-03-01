@@ -112,7 +112,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
                     ? CircularProgressIndicator()
                     : WhiteButton(
                         onPressed: () => _onDone(controller.text),
-                        child: Text(S.current.ok),
+                        child: Text(S.of(context).ok),
                       ),
               ],
             ),

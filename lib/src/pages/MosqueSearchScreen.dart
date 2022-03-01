@@ -17,7 +17,7 @@ class MosqueSearchScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: HexColor(settings.secondColor),
-        title: Text(S.current.mosque),
+        title: Text(S.of(context).mosque),
       ),
       body: Container(
         alignment: Alignment.center,

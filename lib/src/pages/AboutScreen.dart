@@ -183,7 +183,7 @@ AppBar _renderAppBar(context, Settings settings) {
   var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
     title: Text(
-      S.current.about,
+      S.of(context).about,
       style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
     ),
     flexibleSpace: Container(

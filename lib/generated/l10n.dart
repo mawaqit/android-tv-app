@@ -100,10 +100,10 @@ class S {
     );
   }
 
-  /// `Notification`
+  /// `Notifications`
   String get notification {
     return Intl.message(
-      'Notification',
+      'Notifications',
       name: 'notification',
       desc: '',
       args: [],
@@ -130,10 +130,10 @@ class S {
     );
   }
 
-  /// `Select your preferred languages`
+  /// `Select your preferred languages.`
   String get descLang {
     return Intl.message(
-      'Select your preferred languages',
+      'Select your preferred languages.',
       name: 'descLang',
       desc: '',
       args: [],
@@ -170,20 +170,20 @@ class S {
     );
   }
 
-  /// `Close APP`
+  /// `Close App`
   String get closeApp {
     return Intl.message(
-      'Close APP',
+      'Close App',
       name: 'closeApp',
       desc: '',
       args: [],
     );
   }
 
-  /// `Are you sure want to quit this application ?`
+  /// `Are you sure you want to quit the application?`
   String get sureCloseApp {
     return Intl.message(
-      'Are you sure want to quit this application ?',
+      'Are you sure you want to quit the application?',
       name: 'sureCloseApp',
       desc: '',
       args: [],
@@ -220,20 +220,20 @@ class S {
     );
   }
 
-  /// `Customize your own way`
+  /// `Customize your own option`
   String get customizeYourOwnWay {
     return Intl.message(
-      'Customize your own way',
+      'Customize your own option',
       name: 'customizeYourOwnWay',
       desc: '',
       args: [],
     );
   }
 
-  /// `Navigation bar style`
+  /// `Navigation bars style`
   String get navigationBarStyle {
     return Intl.message(
-      'Navigation bar style',
+      'Navigation bars style',
       name: 'navigationBarStyle',
       desc: '',
       args: [],
@@ -250,20 +250,20 @@ class S {
     );
   }
 
-  /// `Left Button Option`
+  /// `Radio Button Options`
   String get leftButtonOption {
     return Intl.message(
-      'Left Button Option',
+      'Radio Button Options',
       name: 'leftButtonOption',
       desc: '',
       args: [],
     );
   }
 
-  /// `Right Button Option`
+  /// `Radio Button Options`
   String get rightButtonOption {
     return Intl.message(
-      'Right Button Option',
+      'Radio Button Options',
       name: 'rightButtonOption',
       desc: '',
       args: [],
@@ -290,20 +290,20 @@ class S {
     );
   }
 
-  /// `Loading Animation`
+  /// `Charging animation`
   String get loadingAnimation {
     return Intl.message(
-      'Loading Animation',
+      'Charging animation',
       name: 'loadingAnimation',
       desc: '',
       args: [],
     );
   }
 
-  /// `Back to HomePage`
+  /// `Back to Homepage`
   String get backToHomePage {
     return Intl.message(
-      'Back to HomePage',
+      'Back to Homepage',
       name: 'backToHomePage',
       desc: '',
       args: [],

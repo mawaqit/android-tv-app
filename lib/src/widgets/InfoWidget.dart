@@ -13,7 +13,7 @@ class VersionWidget extends StatelessWidget {
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) => Text(
-        "v" + (snapshot.data?.version ?? ''),
+        "v${snapshot.data?.version} (${snapshot.data?.buildNumber})",
         style: style,
         textAlign: textAlign,
       ),
