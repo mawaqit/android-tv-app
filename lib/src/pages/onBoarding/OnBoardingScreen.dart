@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flyweb/src/helpers/AppConfig.dart';
+import 'package:flyweb/src/helpers/AppRouter.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/pages/HomeScreen.dart';
@@ -189,11 +190,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   _onDone() async {
     sharedPref.save('boarding', 'true');
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => HomeScreen(widget.settings),
-      ),
-    );
+    AppRouter.pushReplacement(HomeScreen(widget.settings));
   }
 
   @override

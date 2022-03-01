@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flyweb/src/data/config.dart';
+import 'package:flyweb/src/helpers/AppRouter.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
 import 'package:flyweb/src/models/settings.dart';
@@ -10,7 +11,9 @@ import 'package:flyweb/src/pages/HomeScreen.dart';
 import 'package:flyweb/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:flyweb/src/repository/settings_service.dart';
 import 'package:flyweb/src/services/settings_manager.dart';
+import 'package:flyweb/src/widgets/InfoWidget.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -27,14 +30,7 @@ class _SplashScreen extends State<SplashScreen> {
   final SettingsService settingsService = SettingsService();
   SharedPref sharedPref = SharedPref();
 
-  // String url = "";
-  // String onesignalUrl = "";
-  // Settings settings = new Settings();
-
   bool applicationProblem = false;
-
-  // bool goBoarding = false;
-  // StreamSubscription _linkSubscription;
 
   _SplashScreen();
 
@@ -46,11 +42,6 @@ class _SplashScreen extends State<SplashScreen> {
     // loadBoarding();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Future<void> initOneSignal() async {
     if (!mounted) return;
 
@@ -58,31 +49,23 @@ class _SplashScreen extends State<SplashScreen> {
 
     OneSignal.shared.setRequiresUserPrivacyConsent(true);
 
-    var settings = {
-      OSiOSSettings.autoPrompt: false,
-      OSiOSSettings.promptBeforeOpeningPushUrl: true
-    };
+    var settings = {OSiOSSettings.autoPrompt: false, OSiOSSettings.promptBeforeOpeningPushUrl: true};
 
     OneSignal.shared.setNotificationWillShowInForegroundHandler((data) {
       this.setState(() {});
     });
 
-    OneSignal.shared.setNotificationOpenedHandler(
-        (OSNotificationOpenedResult result) => this.setState(() {}));
+    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) => this.setState(() {}));
 
-    OneSignal.shared
-        .setInAppMessageClickedHandler((OSInAppMessageAction action) {
+    OneSignal.shared.setInAppMessageClickedHandler((OSInAppMessageAction action) {
       this.setState(() {});
     });
 
-    OneSignal.shared
-        .setSubscriptionObserver((OSSubscriptionStateChanges changes) {});
+    OneSignal.shared.setSubscriptionObserver((OSSubscriptionStateChanges changes) {});
 
-    OneSignal.shared
-        .setPermissionObserver((OSPermissionStateChanges changes) {});
+    OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {});
 
-    OneSignal.shared.setEmailSubscriptionObserver(
-        (OSEmailSubscriptionStateChanges changes) {});
+    OneSignal.shared.setEmailSubscriptionObserver((OSEmailSubscriptionStateChanges changes) {});
 
     // todo add [infocusdisplaytype] [iosSetting]
     // NOTE: Replace with your own app ID from https://www.onesignal.com
@@ -112,50 +95,15 @@ class _SplashScreen extends State<SplashScreen> {
     return id;
   }
 
-  Future<bool> _mockCheckForSession() async {
-    await Future.delayed(Duration(milliseconds: 3000), () {});
-    return true;
-  }
-
-  // _getSettings() async {
-  //   try {
-  //     Settings _serverSettings = await settingsService.getSettings();
-  //     sharedPref.save("settings", _serverSettings);
-  //     this.setState(() {
-  //       if (settings == null) settingsSplach = _serverSettings;
-  //       settings = _serverSettings;
-  //       applicationProblem = false;
-  //     });
-  //     _mockCheckForSession().then((status) => Future.delayed(
-  //           const Duration(milliseconds: 150),
-  //           _navigateToHome,
-  //         ));
-  //   } on Exception catch (exception) {
-  //     this.setState(() {
-  //       applicationProblem = true;
-  //     });
-  //   } catch (e) {
-  //     applicationProblem = true;
-  //   }
-  // }
-
   /// navigates to first screen
   void _navigateToHome(Settings settings) async {
     var goBoarding = await loadBoarding();
     var mosqueId = await loadMosqueId();
 
     if (mosqueId == null || goBoarding && settings.boarding == "1") {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (BuildContext context) => OnBoardingScreen(settings),
-        ),
-      );
+      AppRouter.pushReplacement(OnBoardingScreen(settings));
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (BuildContext context) => HomeScreen(settings),
-        ),
-      );
+      AppRouter.pushReplacement(HomeScreen(settings));
     }
   }
 
@@ -168,25 +116,23 @@ class _SplashScreen extends State<SplashScreen> {
     }
     var settingsSplach = widget.localSettings;
 
-    Color firstColor = (settingsSplach != null &&
-            settingsSplach.splash != null &&
-            settingsSplach.splash!.enable_img == "1")
-        ? HexColor("#FFFFFF")
-        : (settingsSplach!.splash != null &&
-                settingsSplach.splash!.firstColor != null &&
-                settingsSplach.splash!.firstColor != "")
-            ? HexColor(settingsSplach.splash!.firstColor)
-            : HexColor('${GlobalConfiguration().getValue('firstColor')}');
+    Color firstColor =
+        (settingsSplach != null && settingsSplach.splash != null && settingsSplach.splash!.enable_img == "1")
+            ? HexColor("#FFFFFF")
+            : (settingsSplach!.splash != null &&
+                    settingsSplach.splash!.firstColor != null &&
+                    settingsSplach.splash!.firstColor != "")
+                ? HexColor(settingsSplach.splash!.firstColor)
+                : HexColor('${GlobalConfiguration().getValue('firstColor')}');
 
-    Color secondColor = (settingsSplach != null &&
-            settingsSplach.splash != null &&
-            settingsSplach.splash!.enable_img == "1")
-        ? HexColor("#FFFFFF")
-        : (settingsSplach.splash != null &&
-                settingsSplach.splash!.secondColor != null &&
-                settingsSplach.splash!.secondColor != "")
-            ? HexColor(settingsSplach.splash!.secondColor)
-            : HexColor('${GlobalConfiguration().getValue('secondColor')}');
+    Color secondColor =
+        (settingsSplach != null && settingsSplach.splash != null && settingsSplach.splash!.enable_img == "1")
+            ? HexColor("#FFFFFF")
+            : (settingsSplach.splash != null &&
+                    settingsSplach.splash!.secondColor != null &&
+                    settingsSplach.splash!.secondColor != "")
+                ? HexColor(settingsSplach.splash!.secondColor)
+                : HexColor('${GlobalConfiguration().getValue('secondColor')}');
 
     return Scaffold(
       body: Stack(
@@ -208,33 +154,37 @@ class _SplashScreen extends State<SplashScreen> {
           (settingsSplach.splash != null &&
                   settingsSplach.splash!.enable_img != null &&
                   settingsSplach.splash!.enable_img == "1")
-              ? /*Image.memory(
-                  Base64Decoder()
-                      .convert(settingsSplach.splash.img_splash_base64),
-                  fit: BoxFit.cover,
-                  height: height,
-                  width: width,
-                  alignment: Alignment.center,
-                )*/
-              Image.asset(
+              ? Image.asset(
                   'assets/img/background.png',
                   fit: BoxFit.cover,
                 )
               : Container(),
-          (settingsSplach.splash != null &&
-                  settingsSplach.splash!.enable_logo != null)
+          (settingsSplach.splash != null && settingsSplach.splash!.enable_logo != null)
               ? settingsSplach.splash!.enable_logo == "1"
                   ? Align(
                       alignment: Alignment.center,
                       child: Image.memory(
                         Base64Decoder().convert(
-                            settingsSplach.splash!.logo_splash_base64!),
+                          settingsSplach.splash!.logo_splash_base64!,
+                        ),
                         height: 150,
                         width: 150,
                       ),
                     )
                   : Container()
-              : Align(alignment: Alignment.center, child: Config.logo),
+              : Center(child: Config.logo),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: VersionWidget(
+                style: GoogleFonts.roboto(
+                  fontSize: 18,
+                  color: Colors.black38,
+                ),
+              ),
+            ),
+          ),
           (applicationProblem == true)
               ? Positioned(
                   bottom: 160,
@@ -247,21 +197,18 @@ class _SplashScreen extends State<SplashScreen> {
                         Text(
                           "System down for maintenance",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.white),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
                         ),
                         Text(
                           "We're sorry, our system is not available",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18, color: Colors.white),
-                        )
+                        ),
                       ],
                     ),
                   ),
                 )
-              : Container()
+              : Container(),
         ],
       ),
     );

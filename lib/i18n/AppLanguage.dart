@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flyweb/src/data/config.dart';
+import 'package:flyweb/src/helpers/AnalyticsWrapper.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppLanguage extends ChangeNotifier {
   Locale _appLocale = Locale('en', '');
 
-  String get currentLanguageName {
-    final currentLang = Config.language.firstWhere(
-      (element) => element['value'] == _appLocale.languageCode,
-    );
+  String languageName(String languageCode) => Config.language
+      .firstWhere((element) => element['value'] == languageCode)['subtitle'];
 
-    return currentLang['subtitle'];
-  }
+  String get currentLanguageName => languageName(_appLocale.languageCode);
 
   Locale get appLocal => _appLocale;
 
@@ -27,11 +25,18 @@ class AppLanguage extends ChangeNotifier {
     return Null;
   }
 
-  void changeLanguage(Locale type) async {
+  void changeLanguage(Locale type, String? mosqueId) async {
     var prefs = await SharedPreferences.getInstance();
     if (_appLocale == type) {
       return;
     }
+
+    AnalyticsWrapper.changeLanguage(
+      oldLanguage: languageName(_appLocale.languageCode),
+      language: languageName(type.languageCode),
+      mosqueId: mosqueId,
+    );
+
     if (type == Locale("es", "")) {
       _appLocale = Locale("es", "");
       await prefs.setString('language_code', 'es');

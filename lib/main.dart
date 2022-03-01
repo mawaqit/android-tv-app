@@ -1,55 +1,60 @@
-import 'dart:async';
+import 'dart:isolate';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
 import 'package:flyweb/i18n/i18n.dart';
+import 'package:flyweb/src/helpers/AnalyticsWrapper.dart';
+import 'package:flyweb/src/helpers/AppRouter.dart';
 import 'package:flyweb/src/helpers/ConnectivityService.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
-import 'package:flyweb/src/models/ad_state.dart';
 import 'package:flyweb/src/models/settings.dart';
 import 'package:flyweb/src/pages/SplashScreen.dart';
 import 'package:flyweb/src/services/mosque_manager.dart';
 import 'package:flyweb/src/services/settings_manager.dart';
 import 'package:flyweb/src/services/theme_manager.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //Ads
-  final initFuture = MobileAds.instance.initialize();
 
-  final adState = AdState(initFuture);
   SharedPref sharedPref = SharedPref();
   Settings settings = new Settings();
 
   await GlobalConfiguration().loadFromAsset("configuration");
 
-  // AppLanguage appLanguage = AppLanguage();
-  // await appLanguage.fetchLocale();
+  await Firebase.initializeApp();
 
-  /*  For Enable WebRTC (Remove this comment)
-  await Permission.camera.request();
-  await Permission.mæicrophone.request();
-  */
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
+    final List<dynamic> errorAndStacktrace = pair;
+    await FirebaseCrashlytics.instance.recordError(
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
+    );
+  }).sendPort);
+  if (kDebugMode) {
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  }
 
   try {
     var set = await sharedPref.read("settings");
     if (set != null) {
       settings = Settings.fromJson(set);
     }
-  } catch (Excepetion) {}
+  } catch (err) {}
 
-  return runApp(ChangeNotifierProvider<ThemeNotifier>(
-    create: (_) => new ThemeNotifier(),
-    child: Provider.value(
-      value: adState,
-      builder: (context, child) => MyApp(settings: settings),
+  return runApp(
+    ChangeNotifierProvider<ThemeNotifier>(
+      create: (_) => new ThemeNotifier(),
+      child: MyApp(settings: settings),
     ),
-  ));
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -68,8 +73,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MosqueManager()..init()),
         ChangeNotifierProvider(create: (context) => SettingsManager()..init()),
       ],
-      //   providers:
-      // create: (_) => appLanguage,
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         // ignore: missing_required_param
         return StreamProvider(
@@ -84,6 +87,8 @@ class MyApp extends StatelessWidget {
               child: MaterialApp(
                 theme: theme.getTheme(),
                 locale: model.appLocal,
+                navigatorKey: AppRouter.navigationKey,
+                 navigatorObservers: [AnalyticsWrapper.observer()],
                 localizationsDelegates: [
                   I18n.delegate,
                   GlobalMaterialLocalizations.delegate,
