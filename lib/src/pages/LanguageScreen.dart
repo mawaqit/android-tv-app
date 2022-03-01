@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flyweb/generated/l10n.dart';
 import 'package:flyweb/i18n/AppLanguage.dart';
-import 'package:flyweb/i18n/i18n.dart';
 import 'package:flyweb/src/data/config.dart';
 import 'package:flyweb/src/helpers/HexColor.dart';
 import 'package:flyweb/src/helpers/SharedPref.dart';
@@ -34,7 +34,7 @@ class _LanguageScreen extends State<LanguageScreen> {
     var appLanguage = Provider.of<AppLanguage>(context, listen: false);
     var mosqueId = Provider.of<MosqueManager>(context, listen: false).mosqueId;
 
-    appLanguage.changeLanguage(Locale(language['value'], ""), mosqueId);
+    appLanguage.changeLanguage(Locale(language['value']), mosqueId);
   }
 
   @override
@@ -58,14 +58,14 @@ class _LanguageScreen extends State<LanguageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    I18n.current!.appLang,
+                    S.of(context).appLang,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    I18n.current!.descLang,
+                    S.of(context).descLang,
                     style: TextStyle(
                       color: Colors.black38,
                       fontSize: 13,
@@ -80,14 +80,12 @@ class _LanguageScreen extends State<LanguageScreen> {
                   itemCount: languages.length,
                   // Add one more item for progress indicator
                   padding: EdgeInsets.symmetric(vertical: 8.0),
-                  itemBuilder: (BuildContext context, int index) =>
-                      new ListTile(
+                  itemBuilder: (BuildContext context, int index) => new ListTile(
                     onTap: () => _changeLanguage(languages[index]),
                     leading: CircleAvatar(
                       radius: 20,
                       backgroundColor: Colors.black26,
-                      child: Locale(languages[index]['value'], "") ==
-                              appLanguage.appLocal
+                      child: Locale(languages[index]['value'], "") == appLanguage.appLocal
                           ? Container(
                               padding: EdgeInsets.all(10.0),
                               child: Image.asset(
@@ -100,9 +98,7 @@ class _LanguageScreen extends State<LanguageScreen> {
                               ),
                             )
                           : Container(),
-                      backgroundImage: ExactAssetImage('assets/img/flag/' +
-                          languages[index]['value'] +
-                          '.png'),
+                      backgroundImage: ExactAssetImage('assets/img/flag/' + languages[index]['value'] + '.png'),
                     ),
                     title: Text(
                       languages[index]['name'],
@@ -126,9 +122,8 @@ class _LanguageScreen extends State<LanguageScreen> {
 
     return AppBar(
         title: Text(
-          I18n.current!.languages,
-          style: TextStyle(
-              color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
+          S.of(context).languages,
+          style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -136,12 +131,8 @@ class _LanguageScreen extends State<LanguageScreen> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
-                themeProvider.isLightTheme!
-                    ? HexColor(settings.firstColor)
-                    : themeProvider.darkTheme.primaryColor,
-                themeProvider.isLightTheme!
-                    ? HexColor(settings.secondColor)
-                    : themeProvider.darkTheme.primaryColor,
+                themeProvider.isLightTheme! ? HexColor(settings.firstColor) : themeProvider.darkTheme.primaryColor,
+                themeProvider.isLightTheme! ? HexColor(settings.secondColor) : themeProvider.darkTheme.primaryColor,
               ],
             ),
           ),
