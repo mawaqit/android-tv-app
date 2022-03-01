@@ -322,16 +322,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                             child: Divider(height: 1, color: Colors.grey[400]),
                           ),
                           DrawerListTitle(
-                              icon: Icons.brightness_medium,
-                              text: themeProvider.isLightTheme! ? S.current.darkMode : S.current.lightMode,
-                              onTap: () {
-                                if (themeProvider.isLightTheme!) {
-                                  themeProvider.setDarkMode();
-                                } else {
-                                  themeProvider.setLightMode();
-                                }
-                              }),
-                          DrawerListTitle(
                             icon: Icons.translate,
                             text: S.current.languages,
                             onTap: () => AppRouter.popAndPush(LanguageScreen()),
@@ -341,6 +331,16 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                             text: S.current.changeMosque,
                             onTap: () => AppRouter.popAndPush(MosqueSearchScreen()),
                           ),
+                          DrawerListTitle(
+                              icon: Icons.brightness_medium,
+                              text: themeProvider.isLightTheme! ? S.current.darkMode : S.current.lightMode,
+                              onTap: () {
+                                if (themeProvider.isLightTheme!) {
+                                  themeProvider.setDarkMode();
+                                } else {
+                                  themeProvider.setLightMode();
+                                }
+                              }),
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                             child: Divider(height: 1, color: Colors.grey[400]),

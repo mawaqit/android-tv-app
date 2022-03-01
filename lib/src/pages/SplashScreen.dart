@@ -180,7 +180,7 @@ class _SplashScreen extends State<SplashScreen> {
               child: VersionWidget(
                 style: GoogleFonts.roboto(
                   fontSize: 18,
-                  color: Colors.black38,
+                  color: Colors.white54,
                 ),
               ),
             ),
