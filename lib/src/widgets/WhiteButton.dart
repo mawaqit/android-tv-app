@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flyweb/src/helpers/AppConfig.dart';
+import 'package:mawaqit/src/helpers/AppConfig.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WhiteButton extends StatefulWidget {
-  final Widget child;
+  final String text;
   final VoidCallback onPressed;
 
   const WhiteButton({
     Key? key,
     required this.onPressed,
-    required this.child,
+    required this.text,
   }) : super(key: key);
 
   @override
@@ -33,7 +33,7 @@ class _WhiteButtonState extends State<WhiteButton> {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 30),
             child: Text(
-              "OK",
+              widget.text,
               style: GoogleFonts.roboto(
                 color: AppColors().mainColor(),
                 fontWeight: FontWeight.w900,

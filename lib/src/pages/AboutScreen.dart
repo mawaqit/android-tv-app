@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/src/elements/SocialItem.dart';
-import 'package:flyweb/src/helpers/AppConfig.dart';
-import 'package:flyweb/src/helpers/HexColor.dart';
-import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/models/social.dart';
-import 'package:flyweb/src/services/settings_manager.dart';
-import 'package:flyweb/src/services/theme_manager.dart';
-import 'package:flyweb/src/widgets/InfoWidget.dart';
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/elements/SocialItem.dart';
+import 'package:mawaqit/src/helpers/AppConfig.dart';
+import 'package:mawaqit/src/helpers/HexColor.dart';
+import 'package:mawaqit/src/models/settings.dart';
+import 'package:mawaqit/src/models/social.dart';
+import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

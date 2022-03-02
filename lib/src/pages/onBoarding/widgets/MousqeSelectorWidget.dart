@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/src/helpers/SharedPref.dart';
-import 'package:flyweb/src/services/mosque_manager.dart';
-import 'package:flyweb/src/widgets/WhiteButton.dart';
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/widgets/WhiteButton.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +45,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
     }).catchError((e) {
       setState(() {
         loading = false;
-        error = 'invalid Mosque id';
+        error = S.of(context).mosqueIdIsNotValid(mosqueId);
       });
     });
   }
@@ -57,7 +57,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "Select Mosque Id",
+            S.of(context).selectMosqueId,
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: 24,
@@ -81,9 +81,10 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
                         FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                       ],
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Missing mosque ID';
+                        if (v == null || v.isEmpty) return S.of(context).missingMosqueId;
 
-                        if (int.tryParse(v) == null) return '$v isn\'t a valid mosque id';
+                        if (int.tryParse(v) == null) return S.of(context).mosqueIdIsNotValid(v);
+
 
                         return null;
                       },
@@ -93,8 +94,8 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
                         isDense: true,
                         alignLabelWithHint: false,
                         errorText: error,
-                        hintText: 'Mosque Id ',
-                        prefixText: 'Enter Mosque Id : ',
+                        hintText: S.of(context).mosqueId,
+                        prefixText: S.of(context).enterMosqueId,
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 5,
@@ -112,7 +113,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
                     ? CircularProgressIndicator()
                     : WhiteButton(
                         onPressed: () => _onDone(controller.text),
-                        child: Text(S.of(context).ok),
+                        text: S.of(context).ok,
                       ),
               ],
             ),

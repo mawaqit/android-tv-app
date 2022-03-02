@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flyweb/i18n/i18n.dart';
-import 'package:flyweb/src/services/theme_manager.dart';
+import 'package:mawaqit/i18n/i18n.dart';
+import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class DrawerListTitle extends StatefulWidget {

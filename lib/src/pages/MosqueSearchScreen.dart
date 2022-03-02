@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/src/helpers/AppConfig.dart';
-import 'package:flyweb/src/helpers/HexColor.dart';
-import 'package:flyweb/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
-import 'package:flyweb/src/services/settings_manager.dart';
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/AppConfig.dart';
+import 'package:mawaqit/src/helpers/HexColor.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
+import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:provider/provider.dart';
 
 class MosqueSearchScreen extends StatelessWidget {

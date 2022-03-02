@@ -1,4 +1,4 @@
-name: flyweb
+name: mawaqit
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -31,13 +31,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 
   # FIREBASE PACKAGES
-  firebase_core: ^1.12.0
-  firebase_messaging: ^11.2.6
-  firebase_analytics: ^9.1.0
-  firebase_crashlytics: ^2.5.1
-
-  # PUSH NOTIFICATION
-  onesignal_flutter: ^3.2.8
+  firebase_core: ^1.13.1
+  firebase_messaging: ^11.2.8
+  firebase_analytics: ^9.1.2
+  firebase_crashlytics: ^2.5.3
 
   # STORAGE
   shared_preferences: ^2.0.13
@@ -53,7 +50,7 @@ dependencies:
   http: ^0.13.4
   share: ^2.0.4
   launch_review: ^3.0.1
-  url_launcher: ^6.0.18
+  url_launcher: ^6.0.20
   store_redirect: ^2.0.1
   connectivity: ^3.0.6
   uni_links: ^0.5.1
@@ -64,17 +61,17 @@ dependencies:
   android_intent: ^2.0.2
   global_configuration: ^2.0.0-nullsafety.1
   #flutter_downloader: 1.6.1
-#  flutter_barcode_scanner: ^2.0.0
+  #  flutter_barcode_scanner: ^2.0.0
   flutter_speed_dial: ^5.0.0+1
 
   # STATE MANAGEMENT
   provider: ^6.0.2
-  path_provider: ^2.0.8
+  path_provider: ^2.0.9
 
   # MAP
   location: ^4.3.0
-  geolocator: ^8.1.1
-  webview_flutter: ^3.0.0
+  geolocator: ^8.2.0
+#  webview_flutter: ^3.0.0
 
 dev_dependencies:
   flutter_test:
