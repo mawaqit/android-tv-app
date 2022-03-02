@@ -43,5 +43,7 @@ class SettingsService {
     var set = await _sharedPref.read("settings");
 
     if (set != null) return Settings.fromJson(set);
+
+    return null;
   }
 }

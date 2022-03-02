@@ -9,7 +9,7 @@ class MosqueManager extends ChangeNotifier {
   String? mosqueId;
 
   Future<void> init() async {
-    mosqueId = await sharedPref.read("mosqueId").catchError((e) => null);
+    mosqueId = await sharedPref.read("mosqueId");
 
     notifyListeners();
   }

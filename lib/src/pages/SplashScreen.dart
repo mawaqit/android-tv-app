@@ -84,13 +84,13 @@ class _SplashScreen extends State<SplashScreen> {
   }
 
   Future<bool> loadBoarding() async {
-    var res = await sharedPref.read("boarding").catchError((e) => null);
+    var res = await sharedPref.read("boarding");
     return res == null;
   }
 
   ///
   Future<String?> loadMosqueId() async {
-    String? id = await sharedPref.read("mosqueId").catchError((e) => null);
+    String? id = await sharedPref.read("mosqueId");
 
     return id;
   }
@@ -115,6 +115,8 @@ class _SplashScreen extends State<SplashScreen> {
       _navigateToHome(settingsManager.settings);
     }
     var settingsSplach = widget.localSettings;
+
+
 
     Color firstColor =
         (settingsSplach != null && settingsSplach.splash != null && settingsSplach.splash!.enable_img == "1")
