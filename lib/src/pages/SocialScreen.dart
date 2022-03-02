@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/i18n/i18n.dart';
-import 'package:flyweb/src/helpers/HexColor.dart';
-import 'package:flyweb/src/helpers/SharedPref.dart';
-import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/services/settings_manager.dart';
-import 'package:flyweb/src/services/theme_manager.dart';
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/HexColor.dart';
+import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/models/settings.dart';
+import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class AboutScreen extends StatefulWidget {

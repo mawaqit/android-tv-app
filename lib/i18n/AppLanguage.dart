@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/src/data/config.dart';
-import 'package:flyweb/src/helpers/AnalyticsWrapper.dart';
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/data/config.dart';
+import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

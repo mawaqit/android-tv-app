@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flyweb/src/models/slider.dart';
+import 'package:mawaqit/src/models/slider.dart';
 
 class SlideItem extends StatelessWidget {
   final int index;

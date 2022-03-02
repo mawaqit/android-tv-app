@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flyweb/src/enum/connectivity_status.dart';
+import 'package:mawaqit/src/enum/connectivity_status.dart';
 
 class ConnectivityService {
   StreamController<ConnectivityStatus> connectionStatusController =

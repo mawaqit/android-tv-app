@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flyweb/src/themes/UIImages.dart';
+import 'package:mawaqit/src/themes/UIImages.dart';
 
 class Options {
   static List navigatinBarStyle = [

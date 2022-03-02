@@ -1,10 +1,10 @@
-import 'package:flyweb/src/models/floating.dart';
-import 'package:flyweb/src/models/navigationIcon.dart';
-import 'package:flyweb/src/models/slider.dart';
-import 'package:flyweb/src/models/social.dart';
-import 'package:flyweb/src/models/splash.dart';
-import 'package:flyweb/src/models/tab.dart';
-import 'package:flyweb/src/models/userAgent.dart';
+import 'package:mawaqit/src/models/floating.dart';
+import 'package:mawaqit/src/models/navigationIcon.dart';
+import 'package:mawaqit/src/models/slider.dart';
+import 'package:mawaqit/src/models/social.dart';
+import 'package:mawaqit/src/models/splash.dart';
+import 'package:mawaqit/src/models/tab.dart';
+import 'package:mawaqit/src/models/userAgent.dart';
 
 import 'menu.dart';
 import 'page.dart';
