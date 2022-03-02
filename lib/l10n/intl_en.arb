@@ -37,10 +37,10 @@
     "snapchat": "Snapchat",
     "changeMosque": "Change Mosque",
     "mosque": "Mosque",
-    "enterMosqueId" : "Enter Mosque Id : ",
-    "mosqueId" : "Mosque Id ",
-    "missingMosqueId" : "Missing mosque ID",
-    "mosqueIdIsNotValid" : "{mosqueId} isn't a valid mosque id",
-    "selectMosqueId" : "Select Mosque Id",
-    "mawaqitDesc" : "Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."
+    "enterMosqueId": "Enter Mosque Id : ",
+    "mosqueId": "Mosque Id ",
+    "missingMosqueId": "Missing mosque ID",
+    "mosqueIdIsNotValid": "{mosqueId} isn't a valid mosque id",
+    "selectMosqueId": "Select Mosque Id",
+    "mawaqitDesc": "Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."
 }
