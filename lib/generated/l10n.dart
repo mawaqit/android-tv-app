@@ -429,6 +429,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Enter Mosque Id : `
+  String get enterMosqueId {
+    return Intl.message(
+      'Enter Mosque Id : ',
+      name: 'enterMosqueId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mosque Id `
+  String get mosqueId {
+    return Intl.message(
+      'Mosque Id ',
+      name: 'mosqueId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Missing mosque ID`
+  String get missingMosqueId {
+    return Intl.message(
+      'Missing mosque ID',
+      name: 'missingMosqueId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{mosqueId} isn't a valid mosque id`
+  String mosqueIdIsNotValid(Object mosqueId) {
+    return Intl.message(
+      '$mosqueId isn\'t a valid mosque id',
+      name: 'mosqueIdIsNotValid',
+      desc: '',
+      args: [mosqueId],
+    );
+  }
+
+  /// `Select Mosque Id`
+  String get selectMosqueId {
+    return Intl.message(
+      'Select Mosque Id',
+      name: 'selectMosqueId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h.`
+  String get mawaqitDesc {
+    return Intl.message(
+      'Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h.',
+      name: 'mawaqitDesc',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

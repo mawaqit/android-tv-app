@@ -2,19 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flyweb/src/data/config.dart';
-import 'package:flyweb/src/helpers/AppRouter.dart';
-import 'package:flyweb/src/helpers/HexColor.dart';
-import 'package:flyweb/src/helpers/SharedPref.dart';
-import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/pages/HomeScreen.dart';
-import 'package:flyweb/src/pages/onBoarding/OnBoardingScreen.dart';
-import 'package:flyweb/src/repository/settings_service.dart';
-import 'package:flyweb/src/services/settings_manager.dart';
-import 'package:flyweb/src/widgets/InfoWidget.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:mawaqit/src/data/config.dart';
+import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/HexColor.dart';
+import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/models/settings.dart';
+import 'package:mawaqit/src/pages/HomeScreen.dart';
+import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
+import 'package:mawaqit/src/repository/settings_service.dart';
+import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -32,65 +31,14 @@ class _SplashScreen extends State<SplashScreen> {
 
   bool applicationProblem = false;
 
-  _SplashScreen();
-
-  @override
-  void initState() {
-    super.initState();
-    initOneSignal();
-    // getSettings();
-    // loadBoarding();
-  }
-
-  Future<void> initOneSignal() async {
-    if (!mounted) return;
-
-    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-
-    OneSignal.shared.setRequiresUserPrivacyConsent(true);
-
-    var settings = {OSiOSSettings.autoPrompt: false, OSiOSSettings.promptBeforeOpeningPushUrl: true};
-
-    OneSignal.shared.setNotificationWillShowInForegroundHandler((data) {
-      this.setState(() {});
-    });
-
-    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) => this.setState(() {}));
-
-    OneSignal.shared.setInAppMessageClickedHandler((OSInAppMessageAction action) {
-      this.setState(() {});
-    });
-
-    OneSignal.shared.setSubscriptionObserver((OSSubscriptionStateChanges changes) {});
-
-    OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {});
-
-    OneSignal.shared.setEmailSubscriptionObserver((OSEmailSubscriptionStateChanges changes) {});
-
-    // todo add [infocusdisplaytype] [iosSetting]
-    // NOTE: Replace with your own app ID from https://www.onesignal.com
-    await OneSignal.shared.setAppId(
-      '${GlobalConfiguration().getValue('appIdOneSignal')}',
-
-      // iOSSettings: settings,
-    );
-
-    // OneSignal.shared
-    //     .setInFocusDisplayType(OSNotificationDisplayType.notification);
-
-    bool requiresConsent = await OneSignal.shared.requiresUserPrivacyConsent();
-
-    OneSignal.shared.consentGranted(true);
-  }
-
   Future<bool> loadBoarding() async {
-    var res = await sharedPref.read("boarding").catchError((e) => null);
+    var res = await sharedPref.read("boarding");
     return res == null;
   }
 
   ///
   Future<String?> loadMosqueId() async {
-    String? id = await sharedPref.read("mosqueId").catchError((e) => null);
+    String? id = await sharedPref.read("mosqueId");
 
     return id;
   }
@@ -116,23 +64,17 @@ class _SplashScreen extends State<SplashScreen> {
     }
     var settingsSplach = widget.localSettings;
 
-    Color firstColor =
-        (settingsSplach != null && settingsSplach.splash != null && settingsSplach.splash!.enable_img == "1")
-            ? HexColor("#FFFFFF")
-            : (settingsSplach!.splash != null &&
-                    settingsSplach.splash!.firstColor != null &&
-                    settingsSplach.splash!.firstColor != "")
-                ? HexColor(settingsSplach.splash!.firstColor)
-                : HexColor('${GlobalConfiguration().getValue('firstColor')}');
+    Color firstColor = settingsSplach?.splash?.enable_img == "1"
+        ? HexColor("#FFFFFF")
+        : (settingsSplach?.splash!.firstColor != null && settingsSplach?.splash!.firstColor != "")
+            ? HexColor(settingsSplach!.splash!.firstColor)
+            : HexColor('${GlobalConfiguration().getValue('firstColor')}');
 
-    Color secondColor =
-        (settingsSplach != null && settingsSplach.splash != null && settingsSplach.splash!.enable_img == "1")
-            ? HexColor("#FFFFFF")
-            : (settingsSplach.splash != null &&
-                    settingsSplach.splash!.secondColor != null &&
-                    settingsSplach.splash!.secondColor != "")
-                ? HexColor(settingsSplach.splash!.secondColor)
-                : HexColor('${GlobalConfiguration().getValue('secondColor')}');
+    Color secondColor = settingsSplach?.splash?.enable_img == "1"
+        ? HexColor("#FFFFFF")
+        : (settingsSplach?.splash?.secondColor != null && settingsSplach?.splash!.secondColor != "")
+            ? HexColor(settingsSplach!.splash!.secondColor)
+            : HexColor('${GlobalConfiguration().getValue('secondColor')}');
 
     return Scaffold(
       body: Stack(
@@ -151,21 +93,19 @@ class _SplashScreen extends State<SplashScreen> {
               ),
             ),
           ),
-          (settingsSplach.splash != null &&
-                  settingsSplach.splash!.enable_img != null &&
-                  settingsSplach.splash!.enable_img == "1")
+          (settingsSplach?.splash?.enable_img == "1")
               ? Image.asset(
                   'assets/img/background.png',
                   fit: BoxFit.cover,
                 )
               : Container(),
-          (settingsSplach.splash != null && settingsSplach.splash!.enable_logo != null)
-              ? settingsSplach.splash!.enable_logo == "1"
+          (settingsSplach?.splash?.enable_logo != null)
+              ? settingsSplach?.splash?.enable_logo == "1"
                   ? Align(
                       alignment: Alignment.center,
                       child: Image.memory(
                         Base64Decoder().convert(
-                          settingsSplach.splash!.logo_splash_base64!,
+                          settingsSplach!.splash!.logo_splash_base64!,
                         ),
                         height: 150,
                         width: 150,

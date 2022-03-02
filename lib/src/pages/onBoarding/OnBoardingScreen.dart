@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flyweb/src/helpers/AppConfig.dart';
-import 'package:flyweb/src/helpers/AppRouter.dart';
-import 'package:flyweb/src/helpers/SharedPref.dart';
-import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/pages/HomeScreen.dart';
-import 'package:flyweb/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
-import 'package:flyweb/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
-import 'package:flyweb/src/pages/onBoarding/widgets/TextScreenWidget.dart';
+import 'package:mawaqit/src/helpers/AppConfig.dart';
+import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/models/settings.dart';
+import 'package:mawaqit/src/pages/HomeScreen.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/TextScreenWidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // class OnBoardingScreen extends StatefulWidget {

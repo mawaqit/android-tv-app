@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flyweb/src/helpers/SharedPref.dart';
-import 'package:flyweb/src/models/settings.dart';
+import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/models/settings.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart';
 
@@ -43,5 +43,7 @@ class SettingsService {
     var set = await _sharedPref.read("settings");
 
     if (set != null) return Settings.fromJson(set);
+
+    return null;
   }
 }
