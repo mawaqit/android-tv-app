@@ -10,36 +10,35 @@ import 'package:flutter/material.dart' hide Page;
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/i18n/AppLanguage.dart';
-import 'package:flyweb/src/elements/DrawerListTitle.dart';
-import 'package:flyweb/src/elements/Loader.dart';
-import 'package:flyweb/src/elements/RaisedGradientButton.dart';
-import 'package:flyweb/src/enum/connectivity_status.dart';
-import 'package:flyweb/src/helpers/AppRouter.dart';
-import 'package:flyweb/src/helpers/HexColor.dart';
-import 'package:flyweb/src/helpers/OneSignalHelper.dart';
-import 'package:flyweb/src/helpers/SharedPref.dart';
-import 'package:flyweb/src/models/floating.dart';
-import 'package:flyweb/src/models/menu.dart';
-import 'package:flyweb/src/models/navigationIcon.dart';
-import 'package:flyweb/src/models/page.dart';
-import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/pages/LanguageScreen.dart';
-import 'package:flyweb/src/pages/MosqueSearchScreen.dart';
-import 'package:flyweb/src/pages/PageScreen.dart';
-import 'package:flyweb/src/pages/WebScreen.dart';
-import 'package:flyweb/src/position/PositionOptions.dart';
-import 'package:flyweb/src/position/PositionResponse.dart';
-import 'package:flyweb/src/services/mosque_manager.dart';
-import 'package:flyweb/src/services/settings_manager.dart';
-import 'package:flyweb/src/services/theme_manager.dart';
-import 'package:flyweb/src/themes/UIImages.dart';
-import 'package:flyweb/src/widgets/InfoWidget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:location/location.dart' hide LocationAccuracy;
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/AppLanguage.dart';
+import 'package:mawaqit/src/elements/DrawerListTitle.dart';
+import 'package:mawaqit/src/elements/Loader.dart';
+import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
+import 'package:mawaqit/src/enum/connectivity_status.dart';
+import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/HexColor.dart';
+import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/models/floating.dart';
+import 'package:mawaqit/src/models/menu.dart';
+import 'package:mawaqit/src/models/navigationIcon.dart';
+import 'package:mawaqit/src/models/page.dart';
+import 'package:mawaqit/src/models/settings.dart';
+import 'package:mawaqit/src/pages/LanguageScreen.dart';
+import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
+import 'package:mawaqit/src/pages/PageScreen.dart';
+import 'package:mawaqit/src/pages/WebScreen.dart';
+import 'package:mawaqit/src/position/PositionOptions.dart';
+import 'package:mawaqit/src/position/PositionResponse.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/themes/UIImages.dart';
+import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -192,36 +191,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     var themeProvider = Provider.of<ThemeNotifier>(context);
 
     if (connectionStatus == ConnectivityStatus.Offline) return _offline(bottomPadding, settings);
-
-    final _oneSignalHelper = OneSignalHelper();
-    Future<void> _listenerOneSignal() async {
-      print(_oneSignalHelper.url);
-      if (settings.tabNavigationEnable == "1") {
-        if (goToWeb) {
-          setState(() {
-            goToWeb = false;
-          });
-
-          AppRouter.push(WebScreen(_oneSignalHelper.url));
-
-          setState(() {
-            goToWeb = true;
-          });
-        }
-      } else {
-        key0.currentState!._webViewController?.loadUrl(
-          urlRequest: URLRequest(
-            url: Uri.parse(
-              _oneSignalHelper.url!,
-            ),
-          ),
-        );
-      }
-    }
-
-    _oneSignalHelper.addListener(_listenerOneSignal);
-
-    // final List<Widget> _children = [];
 
     return WillPopScope(
       onWillPop: () async {

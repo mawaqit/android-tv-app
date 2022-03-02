@@ -8,21 +8,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/src/elements/Loader.dart';
-import 'package:flyweb/src/elements/RaisedGradientButton.dart';
-import 'package:flyweb/src/enum/connectivity_status.dart';
-import 'package:flyweb/src/helpers/HexColor.dart';
-import 'package:flyweb/src/helpers/OneSignalHelper.dart';
-import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/position/PositionOptions.dart';
-import 'package:flyweb/src/position/PositionResponse.dart';
-import 'package:flyweb/src/services/settings_manager.dart';
-import 'package:flyweb/src/services/theme_manager.dart';
-import 'package:flyweb/src/themes/UIImages.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:location/location.dart' hide LocationAccuracy;
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/elements/Loader.dart';
+import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
+import 'package:mawaqit/src/enum/connectivity_status.dart';
+import 'package:mawaqit/src/helpers/HexColor.dart';
+import 'package:mawaqit/src/models/settings.dart';
+import 'package:mawaqit/src/position/PositionOptions.dart';
+import 'package:mawaqit/src/position/PositionResponse.dart';
+import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/themes/UIImages.dart';
 import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:uni_links/uni_links.dart';
@@ -116,16 +115,7 @@ class _WebScreen extends State<WebScreen> {
     final settings = settingsManager.settings;
 
     var themeProvider = Provider.of<ThemeNotifier>(context);
-    //var onesignalProvider = Provider.of<OneSignalHelper>(context);
-    //OneSignalHelper oneSignalHelper = new OneSignalHelper();
     if (connectionStatus == ConnectivityStatus.Offline) return _offline(bottomPadding, settings);
-
-    final _oneSignalHelper = OneSignalHelper();
-    void _listenerOneSignal() {
-      _webViewController?.loadUrl(urlRequest: URLRequest(url: Uri.parse(_oneSignalHelper.url!)));
-    }
-
-    _oneSignalHelper.addListener(_listenerOneSignal);
 
     return WillPopScope(
       onWillPop: () async {

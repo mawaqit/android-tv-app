@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flyweb/src/helpers/HexColor.dart';
+import 'package:mawaqit/src/helpers/HexColor.dart';
 
 class SlideDots extends StatelessWidget {
   bool isActive;

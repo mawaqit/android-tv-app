@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flyweb/src/helpers/AnalyticsWrapper.dart';
-import 'package:flyweb/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
+import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:http/http.dart' as http;
 
 class MosqueManager extends ChangeNotifier {

@@ -7,17 +7,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/i18n/AppLanguage.dart';
-import 'package:flyweb/src/helpers/AnalyticsWrapper.dart';
-import 'package:flyweb/src/helpers/AppRouter.dart';
-import 'package:flyweb/src/helpers/ConnectivityService.dart';
-import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/pages/SplashScreen.dart';
-import 'package:flyweb/src/repository/settings_service.dart';
-import 'package:flyweb/src/services/mosque_manager.dart';
-import 'package:flyweb/src/services/settings_manager.dart';
-import 'package:flyweb/src/services/theme_manager.dart';
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/AppLanguage.dart';
+import 'package:mawaqit/src/enum/connectivity_status.dart';
+import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
+import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/ConnectivityService.dart';
+import 'package:mawaqit/src/models/settings.dart';
+import 'package:mawaqit/src/pages/SplashScreen.dart';
+import 'package:mawaqit/src/repository/settings_service.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:provider/provider.dart';
 
@@ -46,6 +47,14 @@ Future<void> main() async {
 
     final settings = await SettingsService().getLocalSettings();
 
+    // hide status bar
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
+      if (systemOverlaysAreVisible) return;
+      await Future.delayed(Duration(seconds: 3));
+      SystemChrome.restoreSystemUIOverlays();
+    });
+
     return runApp(
       ChangeNotifierProvider<ThemeNotifier>(
         create: (_) => new ThemeNotifier(),
@@ -72,7 +81,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         // ignore: missing_required_param
         return StreamProvider(
-          initialData: null,
+          initialData: ConnectivityStatus.Offline,
           create: (context) => ConnectivityService().connectionStatusController.stream,
           child: Consumer<ThemeNotifier>(
             builder: (context, theme, _) => Shortcuts(

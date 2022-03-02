@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flyweb/src/helpers/HexColor.dart';
-import 'package:flyweb/src/models/settings.dart';
-import 'package:flyweb/src/themes/UIImages.dart';
+import 'package:mawaqit/src/helpers/HexColor.dart';
+import 'package:mawaqit/src/models/settings.dart';
+import 'package:mawaqit/src/themes/UIImages.dart';
 
 class HorizontalList extends StatefulWidget {
   String title;

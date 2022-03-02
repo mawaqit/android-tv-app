@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/generated/l10n.dart';
-import 'package:flyweb/i18n/AppLanguage.dart';
-import 'package:flyweb/i18n/i18n.dart';
-import 'package:flyweb/src/helpers/AppRouter.dart';
-import 'package:flyweb/src/pages/LanguageScreen.dart';
-import 'package:flyweb/src/widgets/WhiteButton.dart';
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/AppLanguage.dart';
+import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/pages/LanguageScreen.dart';
+import 'package:mawaqit/src/widgets/WhiteButton.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -64,7 +61,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                 const SizedBox(width: 10),
                 WhiteButton(
                   onPressed: onDone,
-                  child: Text(S.of(context).ok),
+                  text: S.of(context).ok,
                 ),
               ],
             ),
