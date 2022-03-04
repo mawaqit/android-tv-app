@@ -11,11 +11,11 @@ MAWAQIT is a nonprofit organization, and a proud member of the Open source commu
 
 Transparency has always been among our core values. We value transparency, and we value our user's right to privacy by not gathering, sharing or even asking for our user's private information.
 
-
+___
 ### OPEN SOURCE INITIATIVE
 MAWAQIT is a proud member of the Open Source Initiative (OSI). We create, promote, encourage the use of open source software.
-  
-## Copyright
+___
+## COPYRIGHT
 <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/mawaqit/android-tv">MAWAQIT Smart Display</a> © 2022 by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://mawaqit.net">MAWAQIT</a> is licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Attribution-NonCommercial-ShareAlike 4.0 International</a>
 
 <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"></p>
@@ -47,3 +47,8 @@ https://creativecommons.org/licenses/by-nc-sa/4.0
 
 View Legal Code:
 https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+___
+## DONATE
+This project is freely available under simple legal terms because of MAWAQIT, a non-profit that survives on donations. If you love this content, and ❤️ love that it's free for everyone, please consider a donation to support our work.
+👉 https://donate.mawaqit.net/ 
