@@ -3,11 +3,11 @@ Smart Mosque Display for Android compatible TVs, BOXes, and Tablets.
 
 <a href="https://wiki.mawaqit.net/">![Mawaqit](assets/img/logo/logo-mawaqit-2022-horizontal.png "Mawaqit logo")</a> <a href="https://opensource.org/"><img src="https://user-images.githubusercontent.com/33727630/152268395-25a1f2e8-92a7-4690-9f85-857fd9936d93.png" height="170" /></a>
 
-Mosque Admins and users at home are free to use this our Smart Mosque Display to get the accurate prayer times and useful Mosque informations.
+Mosque Admins and users at home are free to use this our Smart Mosque Display to get the accurate prayer times and useful Mosque information.
 
 It can be used in replacement of the RaspberryPi version. But please note that this first version is ONLINE only, and needs a Wifi/4G/5G/Ethernet to function properly.
 
-MAWAQIT is a nonprofit organization, and a proud member of the Open source community. We provide the Muslim community with geat and beautiful tools, 100% free and without any Ads (or user tracking). Find more about us <a href="https://wiki.mawaqit.net/">on our WIKI page</a> and on our <a href="https://mawaqit.net/">Official Website</a>. 
+MAWAQIT is a nonprofit organization, and a proud member of the Open source community. We provide the Muslim community with great and beautiful tools, 100% free and without any Ads (or user tracking). Find more about us <a href="https://wiki.mawaqit.net/">on our WIKI page</a> and on our <a href="https://mawaqit.net/">Official Website</a>. 
 
 Transparency has always been among our core values. We value transparency, and we value our user's right to privacy by not gathering, sharing or even asking for our user's private information.
 
