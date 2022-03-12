@@ -10,10 +10,7 @@ class CardTitleDescription extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new _CardTitleDescription();
-  }
+  State<StatefulWidget> createState() => new _CardTitleDescription();
 }
 
 class _CardTitleDescription extends State<CardTitleDescription> {
