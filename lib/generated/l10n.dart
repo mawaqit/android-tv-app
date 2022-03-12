@@ -480,6 +480,16 @@ class S {
     );
   }
 
+  /// `Welcome to Mawaqit`
+  String get mawaqitWelcome {
+    return Intl.message(
+      'Welcome to Mawaqit',
+      name: 'mawaqitWelcome',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h.`
   String get mawaqitDesc {
     return Intl.message(

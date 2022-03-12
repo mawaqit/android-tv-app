@@ -1,177 +1,16 @@
-import 'dart:convert';
-
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:mawaqit/src/helpers/AppConfig.dart';
+import 'package:introduction_screen/introduction_screen.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/TextScreenWidget.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-// class OnBoardingScreen extends StatefulWidget {
-//   final String url;
-//   final Settings settings;
-//
-//   const OnBoardingScreen(this.url, this.settings);
-//
-//   @override
-//   State<StatefulWidget> createState() => _OnBoardingScreenState();
-// }
-//
-// class _OnBoardingScreenState extends State<OnBoardingScreen> {
-//   int _currentPage = 0;
-//   final PageController _pageController = PageController(initialPage: 0);
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     Timer.periodic(Duration(seconds: 5), (Timer timer) {
-//       if (_currentPage < widget.settings.sliders.length) {
-//         _pageController.nextPage(
-//           duration: Duration(milliseconds: 700),
-//           curve: Curves.ease,
-//         );
-//       }
-//     });
-//   }
-//
-//   @override
-//   void dispose() {
-//     _pageController.dispose();
-//     super.dispose();
-//   }
-//
-//   _onPageChanged(int index) {
-//     setState(() => _currentPage = index);
-//   }
-//
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       body: topSliderLayout(),
-//     );
-//   }
-//
-//   Widget topSliderLayout() => Container(
-//         child: Stack(
-//           alignment: AlignmentDirectional.bottomCenter,
-//           children: <Widget>[
-//             PageView.builder(
-//               scrollDirection: Axis.horizontal,
-//               controller: _pageController,
-//               onPageChanged: _onPageChanged,
-//               itemCount: widget.settings.sliders.length,
-//               itemBuilder: (ctx, i) => SlideItem(i, widget.settings.sliders),
-//             ),
-//             Padding(
-//                 padding: EdgeInsets.all(10.0),
-//                 child: Stack(
-//                   alignment: AlignmentDirectional.topStart,
-//                   children: <Widget>[
-//                     _currentPage == widget.settings.sliders.length - 1
-//                         ? Align(
-//                             alignment: Alignment.bottomRight,
-//                             child: ElevatedButton(
-//                               child: Text(
-//                                 _currentPage <
-//                                         widget.settings.sliders.length - 1
-//                                     ? "NEXT"
-//                                     : "GET START",
-//                                 style: TextStyle(
-//                                   fontWeight: FontWeight.w600,
-//                                   fontSize: 14.0,
-//                                 ),
-//                               ),
-//                               style: ButtonStyle(
-//                                 backgroundColor:
-//                                     MaterialStateProperty.all<Color>(
-//                                         HexColor(widget.settings.firstColor)),
-//                                 shadowColor: MaterialStateProperty.all<Color>(
-//                                   Colors.white,
-//                                 ),
-//                               ),
-//                               onPressed: () {
-//                                 if (_currentPage <
-//                                     widget.settings.sliders.length - 1)
-//                                   _pageController.nextPage(
-//                                     duration: Duration(milliseconds: 500),
-//                                     curve: Curves.ease,
-//                                   );
-//                                 else {
-//                                   Navigator.of(context).pushReplacement(
-//                                     MaterialPageRoute(
-//                                       builder: (BuildContext context) =>
-//                                           HomeScreen(
-//                                         widget.url,
-//                                         widget.settings,
-//                                       ),
-//                                     ),
-//                                   );
-//                                 }
-//                               },
-//                             ))
-//                         : Container(),
-//                     Align(
-//                       alignment: Alignment.bottomLeft,
-//                       child: Padding(
-//                         padding: EdgeInsets.only(left: 15.0, bottom: 15.0),
-//                         child: RichText(
-//                           text: TextSpan(
-//                             style:
-//                                 TextStyle(color: Colors.grey, fontSize: 20.0),
-//                             children: <TextSpan>[
-//                               TextSpan(
-//                                 text: 'Skip',
-//                                 style: TextStyle(
-//                                   color: HexColor(widget.settings.firstColor),
-//                                   fontWeight: FontWeight.w600,
-//                                   fontSize: 14.0,
-//                                 ),
-//                                 recognizer: TapGestureRecognizer()
-//                                   ..onTap = () {
-//                                     Navigator.of(context).pushReplacement(
-//                                       MaterialPageRoute(
-//                                         builder: (BuildContext context) =>
-//                                             HomeScreen(
-//                                           widget.url,
-//                                           widget.settings,
-//                                         ),
-//                                       ),
-//                                     );
-//                                   },
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                     Container(
-//                       alignment: AlignmentDirectional.bottomCenter,
-//                       margin: EdgeInsets.only(bottom: 20.0),
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: <Widget>[
-//                           for (int i = 0;
-//                               i < widget.settings.sliders.length;
-//                               i++)
-//                             if (i == _currentPage)
-//                               SlideDots(true, widget.settings.firstColor)
-//                             else
-//                               SlideDots(false, widget.settings.firstColor)
-//                         ],
-//                       ),
-//                     ),
-//                   ],
-//                 ))
-//           ],
-//         ),
-//       );
-// }
-
-enum _ScreenState { Text, Mosque, Language }
+import 'package:mawaqit/src/widgets/InfoWidget.dart';
+import 'package:mawaqit/src/widgets/mawaqit_circle_button_widget.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   // final String url;
@@ -184,117 +23,114 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
-  var state = _ScreenState.Text;
-  final sharedPref = SharedPref();
+  final _nextButtonFocusNode = FocusNode();
+  final _introductionKey = GlobalKey<IntroductionScreenState>();
 
-  _onDone() async {
-    sharedPref.save('boarding', 'true');
+  int currentScreen = 0;
 
-    AppRouter.pushReplacement(HomeScreen(widget.settings));
+  String get currentImage {
+    switch (currentScreen) {
+      case 0:
+        return 'language';
+      case 1:
+        return 'welcome';
+      case 2:
+        return 'search';
+      default:
+        return '';
+    }
+  }
+
+  Widget get currentScreenWidget {
+    if (currentScreen == 0) {
+      return OnBoardingLanguageSelector(
+        onSelect: () => setState(() => currentScreen++),
+      );
+    }
+
+    if (currentScreen == 1) return OnBoardingMawaqitAboutWidget();
+
+    if (currentScreen == 2) return OnBoardingMosqueSelector(onDone: () => AppRouter.push(HomeScreen(widget.settings)));
+
+    return SizedBox();
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: DecoratedBox(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-            image: widget.settings.splash?.img_splash_base64 == null
-                ? AssetImage('assets/img/background.png')
-                : MemoryImage(
-                    base64Decode(
-                      widget.settings.splash!.img_splash_base64!,
-                    ),
-                  ) as ImageProvider,
-          ),
-        ),
-        child: Center(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Center(
-                child: Image.asset(
-                  'assets/img/mawaqit_logo_light_with_text_horizontal_Background.png',
-                  width: 200,
-                ),
-              ),
-              const SizedBox(height: 7),
-              Text(
-                "WELCOME TO",
-                style: GoogleFonts.montserrat(
-                  color: AppColors().mainColor(.7),
-                  fontWeight: FontWeight.w300,
-                  height: 1.2,
-                  fontSize: 18,
-                  fontStyle: FontStyle.normal,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Center(
-                child: Text(
-                  "MAWAQIT",
-                  style: GoogleFonts.montserrat(
-                    color: AppColors().mainColor(),
-                    letterSpacing: 4,
-                    fontWeight: FontWeight.w700,
-                    height: 1.2,
-                    fontSize: 30,
-                    fontStyle: FontStyle.normal,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              FractionallySizedBox(
-                widthFactor: .75,
-                child: Material(
-                  // color: Color(0x8042039D),
-                  color: AppColors().mainColor(.3),
-                  borderRadius: BorderRadius.circular(20),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 40,
-                    ),
-                    child: Builder(builder: (context) {
-                      switch (state) {
-                        case _ScreenState.Text:
-                          return OnBoardingTextWidget(
-                            onDone: () =>
-                                setState(() => state = _ScreenState.Language),
-                          );
-                        case _ScreenState.Language:
-                          return WillPopScope(
-                            onWillPop: () async {
-                              setState(() => state = _ScreenState.Text);
-                              return false;
-                            },
-                            child: OnBoardingLanguageSelector(
-                              onDone: () =>
-                                  setState(() => state = _ScreenState.Mosque),
-                            ),
-                          );
-                        case _ScreenState.Mosque:
-                          return WillPopScope(
-                            onWillPop: () async {
-                              setState(() => state = _ScreenState.Language);
-                              return false;
-                            },
-                            child: OnBoardingMosqueSelector(onDone: _onDone),
-                          );
+    return WillPopScope(
+      onWillPop: () async {
+        if (currentScreen == 0) return true;
 
-                        default:
-                          throw Exception('Unknown state ');
-                      }
-                    }),
-                  ),
-                ),
+        setState(() => currentScreen--);
+        return false;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: _buildImage(currentImage),
+              ),
+              Expanded(
+                flex: 6,
+                child: currentScreenWidget,
               ),
             ],
           ),
+          bottomNavigationBar: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            height: 80,
+            child: Row(
+              children: [
+                VersionWidget(
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
+                  ),
+                ),
+                Spacer(flex: 2),
+                DotsIndicator(
+                  dotsCount: 3,
+                  position: currentScreen.toDouble(),
+                  onTap: (d) => setState(() => currentScreen = d.toInt()),
+                  decorator: DotsDecorator(
+                    size: const Size.square(9.0),
+                    activeSize: const Size(21.0, 9.0),
+                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                    spacing: EdgeInsets.all(3),
+                  ),
+                ),
+                Spacer(),
+                if (currentScreen != 2)
+                  MawaqitCircleButton(
+                    icon: Localizations.localeOf(context).languageCode == 'ar'
+                        ? MawaqitIcons.icon_arrow_left
+                        : MawaqitIcons.icon_arrow_right,
+                    focusNode: _nextButtonFocusNode,
+                    color: Theme.of(context).primaryColor,
+                    size: 21,
+                    onPressed: () => setState(() => currentScreen++),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildImage(String assetName) {
+    return Align(
+      child: Lottie.asset(
+        'assets/animations/lottie/$assetName.json',
+        fit: BoxFit.contain,
+      ),
+      alignment: Alignment.center,
     );
   }
 }

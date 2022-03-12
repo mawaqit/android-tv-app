@@ -34,10 +34,7 @@ class HorizontalList extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new _HorizontalList();
-  }
+  State<StatefulWidget> createState() => new _HorizontalList();
 }
 
 class _HorizontalList extends State<HorizontalList> {

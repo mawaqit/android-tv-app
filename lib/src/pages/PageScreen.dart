@@ -7,7 +7,6 @@ import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/models/page.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,10 +16,7 @@ class PageScreen extends StatefulWidget {
   const PageScreen(this.page);
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new _PageScreen();
-  }
+  State<StatefulWidget> createState() => new _PageScreen();
 }
 
 class _PageScreen extends State<PageScreen> {
@@ -35,9 +31,6 @@ class _PageScreen extends State<PageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
-    var themeProvider = Provider.of<ThemeNotifier>(context);
     final settingsManager = Provider.of<SettingsManager>(context);
     final settings = settingsManager.settings;
 
@@ -53,9 +46,7 @@ class _PageScreen extends State<PageScreen> {
                     useShouldOverrideUrlLoading: true,
                     useOnDownloadStart: true,
                     mediaPlaybackRequiresUserGesture: false,
-                    userAgent: Platform.isAndroid
-                        ? settings.userAgent!.valueAndroid!
-                        : settings.userAgent!.valueIOS!),
+                    userAgent: Platform.isAndroid ? settings.userAgent!.valueAndroid! : settings.userAgent!.valueIOS!),
                 android: AndroidInAppWebViewOptions(
                   useHybridComposition: true,
                 ),
@@ -65,11 +56,9 @@ class _PageScreen extends State<PageScreen> {
             onWebViewCreated: (InAppWebViewController controller) {
               _webViewController = controller;
             },
-            androidOnPermissionRequest: (InAppWebViewController controller,
-                String origin, List<String> resources) async {
-              return PermissionRequestResponse(
-                  resources: resources,
-                  action: PermissionRequestResponseAction.GRANT);
+            androidOnPermissionRequest:
+                (InAppWebViewController controller, String origin, List<String> resources) async {
+              return PermissionRequestResponse(resources: resources, action: PermissionRequestResponseAction.GRANT);
             },
             onLoadStart: (controller, url) {
               setState(() {
@@ -112,21 +101,19 @@ class _PageScreen extends State<PageScreen> {
                   left: 0,
                   child: Loader(
                       type: settings.loader,
-                      color: themeProvider.isLightTheme!
+                      color: Theme.of(context).brightness == Brightness.light
                           ? HexColor(settings.loaderColor)
-                          : themeProvider.darkTheme.primaryColor))
+                          : Theme.of(context).primaryColor))
               : Container()
         ]));
   }
 }
 
 AppBar _renderAppBar(context, Settings settings, Page page) {
-  var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
       title: Text(
         page.title!,
-        style: TextStyle(
-            color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
       ),
       flexibleSpace: Container(
         decoration: BoxDecoration(
@@ -134,12 +121,12 @@ AppBar _renderAppBar(context, Settings settings, Page page) {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: <Color>[
-              themeProvider.isLightTheme!
+              Theme.of(context).brightness == Brightness.light
                   ? HexColor(settings.firstColor)
-                  : themeProvider.darkTheme.primaryColor,
-              themeProvider.isLightTheme!
+                  : Theme.of(context).primaryColor,
+              Theme.of(context).brightness == Brightness.light
                   ? HexColor(settings.secondColor)
-                  : themeProvider.darkTheme.primaryColor,
+                  : Theme.of(context).primaryColor,
             ],
           ),
         ),

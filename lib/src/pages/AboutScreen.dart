@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/elements/SocialItem.dart';
 import 'package:mawaqit/src/helpers/AppConfig.dart';
@@ -8,10 +10,7 @@ import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/models/social.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -180,7 +179,6 @@ class _AboutScreen extends State<AboutScreen> {
 }
 
 AppBar _renderAppBar(context, Settings settings) {
-  var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
     title: Text(
       S.of(context).about,
@@ -192,8 +190,12 @@ AppBar _renderAppBar(context, Settings settings) {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: <Color>[
-            themeProvider.isLightTheme! ? HexColor(settings.firstColor) : themeProvider.darkTheme.primaryColor,
-            themeProvider.isLightTheme! ? HexColor(settings.secondColor) : themeProvider.darkTheme.primaryColor,
+            Theme.of(context).brightness == Brightness.light
+                ? HexColor(settings.firstColor)
+                : Theme.of(context).primaryColor,
+            Theme.of(context).brightness == Brightness.light
+                ? HexColor(settings.secondColor)
+                : Theme.of(context).primaryColor,
           ],
         ),
       ),
