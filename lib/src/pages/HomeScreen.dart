@@ -94,19 +94,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
 
   List<StreamSubscription<Position>> webViewGPSPositionStreams = [];
 
-  final Set<Factory<OneSequenceGestureRecognizer>> _gSet = [
-    Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer()),
-    Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
-    Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
-  ].toSet();
-
-  // PackageInfo _packageInfo = PackageInfo(
-  //   appName: 'Unknown',
-  //   packageName: 'Unknown',
-  //   version: 'Unknown',
-  //   buildNumber: 'Unknown',
-  // );
-
   TabController? tabController;
   int _currentIndex = 0;
 
@@ -222,12 +209,12 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: <Color>[
-                                    themeProvider.isLightTheme!
+                                    Theme.of(context).brightness == Brightness.light
                                         ? HexColor(settings.firstColor)
-                                        : themeProvider.darkTheme.primaryColor,
-                                    themeProvider.isLightTheme!
+                                        : Theme.of(context).primaryColor,
+                                    Theme.of(context).brightness == Brightness.light
                                         ? HexColor(settings.secondColor)
-                                        : themeProvider.darkTheme.primaryColor,
+                                        : Theme.of(context).primaryColor,
                                   ],
                                 ),
                               ),
@@ -295,9 +282,11 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                           ),
                           DrawerListTitle(
                               icon: Icons.brightness_medium,
-                              text: themeProvider.isLightTheme! ? S.of(context).darkMode : S.of(context).lightMode,
+                              text: Theme.of(context).brightness == Brightness.light
+                                  ? S.of(context).darkMode
+                                  : S.of(context).lightMode,
                               onTap: () {
-                                if (themeProvider.isLightTheme!) {
+                                if (Theme.of(context).brightness == Brightness.light) {
                                   themeProvider.setDarkMode();
                                 } else {
                                   themeProvider.setLightMode();
@@ -420,7 +409,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
   }
 
   Widget _buildTabItem(context, Settings settings) {
-    var themeProvider = Provider.of<ThemeNotifier>(context);
     Color tabColor = HexColor(widget.settings.colorTab);
     Color unselectedColor = Colors.black26;
     return new TabBar(
@@ -431,7 +419,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
       },
       indicator: UnderlineTabIndicator(
         borderSide: BorderSide(
-          color: themeProvider.isLightTheme! ? tabColor : themeProvider.darkTheme.primaryColor,
+          color: Theme.of(context).brightness == Brightness.light ? tabColor : Theme.of(context).primaryColor,
           width: 2.5,
         ),
         //insets: EdgeInsets.symmetric(horizontal:16.0)
@@ -451,9 +439,9 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                     width: 25,
                     height: 25,
                     color: _currentIndex == index
-                        ? themeProvider.isLightTheme!
+                        ? Theme.of(context).brightness == Brightness.light
                             ? tabColor
-                            : themeProvider.darkTheme.primaryColor
+                            : Theme.of(context).primaryColor
                         : unselectedColor),
                 new SizedBox(height: 5),
                 new Flexible(
@@ -463,9 +451,9 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                     style: TextStyle(
                       fontSize: widget.settings.tab!.length == 5 ? 8 : 10,
                       color: _currentIndex == index
-                          ? themeProvider.isLightTheme!
+                          ? Theme.of(context).brightness == Brightness.light
                               ? tabColor
-                              : themeProvider.darkTheme.primaryColor
+                              : Theme.of(context).primaryColor
                           : unselectedColor,
                     ),
                   ),
@@ -676,7 +664,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
   }
 
   Widget _renderAppBar(context, Settings settings) {
-    var themeProvider = Provider.of<ThemeNotifier>(context);
     return (settings.navigatinBarStyle != "empty")
         ? AppBar(
             title: Row(
@@ -702,8 +689,12 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: <Color>[
-                    themeProvider.isLightTheme! ? HexColor(settings.firstColor) : themeProvider.darkTheme.primaryColor,
-                    themeProvider.isLightTheme! ? HexColor(settings.secondColor) : themeProvider.darkTheme.primaryColor,
+                    Theme.of(context).brightness == Brightness.light
+                        ? HexColor(settings.firstColor)
+                        : Theme.of(context).primaryColor,
+                    Theme.of(context).brightness == Brightness.light
+                        ? HexColor(settings.secondColor)
+                        : Theme.of(context).primaryColor,
                   ],
                 ),
               ),
@@ -961,7 +952,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
           break;
 
         default:
-          () {};
           break;
       }
     }
@@ -978,34 +968,31 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
         {
           return key0;
         }
-        break;
 
       case 1:
         {
           return key1;
         }
-        break;
 
       case 2:
         {
           return key2;
         }
-        break;
+
       case 3:
         {
           return key3;
         }
-        break;
+
       case 4:
         {
           return key4;
         }
-        break;
+
       default:
         {
           return key0;
         }
-        break;
     }
   }
 }
@@ -1042,7 +1029,6 @@ class _WebViewScreen extends State<WebViewScreen>
   InAppWebViewController? _webViewController;
   String url = "";
   PullToRefreshController? pullToRefreshController;
-  static GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<StreamSubscription<Position>> webViewGPSPositionStreams = [];
   late bool isLoading;
@@ -1130,8 +1116,6 @@ class _WebViewScreen extends State<WebViewScreen>
 
   @override
   Widget build(BuildContext context) {
-    var themeProvider = Provider.of<ThemeNotifier>(context);
-
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -1273,9 +1257,9 @@ class _WebViewScreen extends State<WebViewScreen>
                 left: 0,
                 child: Loader(
                     type: widget.settings!.loader,
-                    color: themeProvider.isLightTheme!
+                    color: Theme.of(context).brightness == Brightness.light
                         ? HexColor(widget.settings!.loaderColor)
-                        : themeProvider.darkTheme.primaryColor))
+                        : Theme.of(context).primaryColor))
             : Container()
       ],
     );

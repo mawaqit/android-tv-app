@@ -8,7 +8,7 @@ class Config {
   static Image logo =
       Image.asset("$imageDir/logo.png", height: 150, width: 150);
 
-  static List language = [
+  static List<Map<String, String>> language = [
     {"value": "sq", "name": "Albanian", "subtitle": "Albanian"},
     {"value": "ar", "name": "Arabic", "subtitle": "العربية"},
     {"value": "bn", "name": "Bengali", "subtitle": "Bengali"},

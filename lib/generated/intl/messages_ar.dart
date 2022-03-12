@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
+  static String m0(mosqueId) => "${mosqueId} isn\'t a valid mosque id";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("عن التطبيق"),
@@ -36,6 +38,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تخصيص الخيار الخاص بك"),
         "darkMode": MessageLookupByLibrary.simpleMessage("الوضع الداكن"),
         "descLang": MessageLookupByLibrary.simpleMessage("إختر لغتك المفضلة."),
+        "enterMosqueId":
+            MessageLookupByLibrary.simpleMessage("Enter Mosque Id : "),
         "facebook": MessageLookupByLibrary.simpleMessage("فيسبوك"),
         "headerType": MessageLookupByLibrary.simpleMessage("نوع الرأس"),
         "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
@@ -46,8 +50,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "lightMode": MessageLookupByLibrary.simpleMessage("المظهر الفاتح"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("دائرة التحميل المتحركة"),
+        "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
+            "Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."),
         "messenger": MessageLookupByLibrary.simpleMessage("مسنجر"),
+        "missingMosqueId":
+            MessageLookupByLibrary.simpleMessage("Missing mosque ID"),
         "mosque": MessageLookupByLibrary.simpleMessage("المسجد"),
+        "mosqueId": MessageLookupByLibrary.simpleMessage("Mosque Id "),
+        "mosqueIdIsNotValid": m0,
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("نمط شريط التنقل"),
         "noInternet":
@@ -57,6 +67,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("قم بتقييمنا"),
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيمن"),
+        "selectMosqueId":
+            MessageLookupByLibrary.simpleMessage("Select Mosque Id"),
         "share": MessageLookupByLibrary.simpleMessage("مشاركة"),
         "skype": MessageLookupByLibrary.simpleMessage("سكايب"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),

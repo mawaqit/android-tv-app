@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'tr';
 
+  static String m0(mosqueId) => "${mosqueId} isn\'t a valid mosque id";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("Hakkında"),
@@ -37,6 +39,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("Karanlık modu"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Tercih ettiğiniz dilleri seçin."),
+        "enterMosqueId":
+            MessageLookupByLibrary.simpleMessage("Enter Mosque Id : "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Başlık Türü"),
         "home": MessageLookupByLibrary.simpleMessage("Ana sayfa"),
@@ -47,8 +51,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "lightMode": MessageLookupByLibrary.simpleMessage("Aydınlık mod"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Şarj animasyonu"),
+        "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
+            "Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."),
         "messenger": MessageLookupByLibrary.simpleMessage("Messenger"),
+        "missingMosqueId":
+            MessageLookupByLibrary.simpleMessage("Missing mosque ID"),
         "mosque": MessageLookupByLibrary.simpleMessage("Mosque"),
+        "mosqueId": MessageLookupByLibrary.simpleMessage("Mosque Id "),
+        "mosqueIdIsNotValid": m0,
         "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
             "Gezinme çubuğu görüntüleme stili"),
         "noInternet":
@@ -58,6 +68,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Bizi Değerlendirin"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "selectMosqueId":
+            MessageLookupByLibrary.simpleMessage("Select Mosque Id"),
         "share": MessageLookupByLibrary.simpleMessage("Paylaş"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),

@@ -6,7 +6,6 @@ import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class LanguageScreen extends StatefulWidget {
@@ -78,7 +77,6 @@ class _LanguageScreen extends State<LanguageScreen> {
               child: Container(
                 child: ListView.builder(
                   itemCount: languages.length,
-                  // Add one more item for progress indicator
                   padding: EdgeInsets.symmetric(vertical: 8.0),
                   itemBuilder: (BuildContext context, int index) => new ListTile(
                     onTap: () => _changeLanguage(languages[index]),
@@ -116,7 +114,6 @@ class _LanguageScreen extends State<LanguageScreen> {
   }
 
   AppBar _renderAppBar(context) {
-    var themeProvider = Provider.of<ThemeNotifier>(context);
     final settingsManager = Provider.of<SettingsManager>(context);
     final settings = settingsManager.settings;
 
@@ -131,8 +128,12 @@ class _LanguageScreen extends State<LanguageScreen> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
-                themeProvider.isLightTheme! ? HexColor(settings.firstColor) : themeProvider.darkTheme.primaryColor,
-                themeProvider.isLightTheme! ? HexColor(settings.secondColor) : themeProvider.darkTheme.primaryColor,
+                Theme.of(context).brightness == Brightness.light
+                    ? HexColor(settings.firstColor)
+                    : Theme.of(context).primaryColor,
+                Theme.of(context).brightness == Brightness.light
+                    ? HexColor(settings.secondColor)
+                    : Theme.of(context).primaryColor,
               ],
             ),
           ),

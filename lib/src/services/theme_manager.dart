@@ -3,39 +3,43 @@ import 'package:flutter/material.dart';
 import './storage_manager.dart';
 
 class ThemeNotifier with ChangeNotifier {
-  final darkTheme = ThemeData(
-    primarySwatch: Colors.grey,
-    primaryColor: Colors.black,
-    brightness: Brightness.dark,
-    backgroundColor: const Color(0xFF212121),
-    accentColor: Colors.white,
-    accentIconTheme: IconThemeData(color: Colors.black),
-    focusColor: Colors.grey,
-    dividerColor: Colors.black12,
-    canvasColor: Colors.black,
-  );
+  /// used getter to support hot restart in development
+  ThemeData get darkTheme => ThemeData(
+        primarySwatch: Colors.grey,
+        primaryColor: Colors.black,
+        brightness: Brightness.dark,
+        backgroundColor: const Color(0xFF212121),
+        accentColor: Colors.white,
+        accentIconTheme: IconThemeData(color: Colors.black),
+        focusColor: Colors.grey,
+        dividerColor: Colors.black12,
+        canvasColor: Colors.black,
+      );
 
-  var lightTheme = ThemeData(
-    colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple),
-    focusColor: Colors.deepPurpleAccent.withOpacity(.5),
-  );
-
-  ThemeData? _themeData;
-
-  ThemeData? getTheme() => _themeData;
+  /// used getter to support hot restart in development
+  ThemeData get lightTheme => ThemeData(
+        primarySwatch: Colors.deepPurple,
+        selectedRowColor: Colors.deepPurple[100],
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple, backgroundColor: Colors.white),
+        focusColor: Colors.deepPurpleAccent.withOpacity(.5),
+      );
 
   bool? isLightTheme;
 
+  ///when isLightTheme == null will use the default system theme
+  ThemeMode? get mode => isLightTheme == null
+      ? null
+      : isLightTheme!
+          ? ThemeMode.light
+          : ThemeMode.dark;
+
   ThemeNotifier() {
-    StorageManager.readData('themeMode').then((value) {
-      print('value read from storage: ' + value.toString());
-      var themeMode = value ?? 'light';
+    StorageManager.readData('themeMode').then((themeMode) {
+      print('value read from storage: ' + themeMode.toString());
       if (themeMode == 'light') {
-        _themeData = lightTheme;
         isLightTheme = true;
-      } else {
+      } else if (themeMode == 'dark') {
         print('setting dark theme');
-        _themeData = darkTheme;
         isLightTheme = false;
       }
       notifyListeners();
@@ -43,14 +47,12 @@ class ThemeNotifier with ChangeNotifier {
   }
 
   void setDarkMode() async {
-    _themeData = darkTheme;
     isLightTheme = false;
     StorageManager.saveData('themeMode', 'dark');
     notifyListeners();
   }
 
   void setLightMode() async {
-    _themeData = lightTheme;
     isLightTheme = true;
     StorageManager.saveData('themeMode', 'light');
     notifyListeners();
