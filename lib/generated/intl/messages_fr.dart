@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'fr';
 
+  static String m0(mosqueId) => "${mosqueId} isn\'t a valid mosque id";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("À propos"),
@@ -41,6 +43,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("Mode sombre"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Sélectionnez votre langue préférée."),
+        "enterMosqueId":
+            MessageLookupByLibrary.simpleMessage("Enter Mosque Id : "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Type d\'en-tête"),
         "home": MessageLookupByLibrary.simpleMessage("Accueil"),
@@ -51,8 +55,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "lightMode": MessageLookupByLibrary.simpleMessage("Mode de lumière"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Animation lors du lancement"),
+        "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
+            "Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."),
         "messenger": MessageLookupByLibrary.simpleMessage("messager"),
+        "missingMosqueId":
+            MessageLookupByLibrary.simpleMessage("Missing mosque ID"),
         "mosque": MessageLookupByLibrary.simpleMessage("Mosquée"),
+        "mosqueId": MessageLookupByLibrary.simpleMessage("Mosque Id "),
+        "mosqueIdIsNotValid": m0,
         "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
             "Style des barres de navigation"),
         "noInternet":
@@ -62,6 +72,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Laissez une évaluation"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Options du bouton radio (à droite)"),
+        "selectMosqueId":
+            MessageLookupByLibrary.simpleMessage("Select Mosque Id"),
         "share": MessageLookupByLibrary.simpleMessage("Partager"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),

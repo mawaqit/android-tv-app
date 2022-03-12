@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ur';
 
+  static String m0(mosqueId) => "${mosqueId} isn\'t a valid mosque id";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
@@ -37,6 +39,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("ڈارک موڈ"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Select your preferred language."),
+        "enterMosqueId":
+            MessageLookupByLibrary.simpleMessage("Enter Mosque Id : "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("ہوم"),
@@ -47,8 +51,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "lightMode": MessageLookupByLibrary.simpleMessage("Light mode"),
         "loadingAnimation": MessageLookupByLibrary.simpleMessage(
             "گولدائرہ اینیمیشن لوڈ کر رہا ہے"),
+        "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
+            "Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."),
         "messenger": MessageLookupByLibrary.simpleMessage("مسنجر"),
+        "missingMosqueId":
+            MessageLookupByLibrary.simpleMessage("Missing mosque ID"),
         "mosque": MessageLookupByLibrary.simpleMessage("المسجد"),
+        "mosqueId": MessageLookupByLibrary.simpleMessage("Mosque Id "),
+        "mosqueIdIsNotValid": m0,
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "noInternet":
@@ -58,6 +68,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("ہمیں شرح"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "selectMosqueId":
+            MessageLookupByLibrary.simpleMessage("Select Mosque Id"),
         "share": MessageLookupByLibrary.simpleMessage("بانٹیں"),
         "skype": MessageLookupByLibrary.simpleMessage("سکائپ"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),

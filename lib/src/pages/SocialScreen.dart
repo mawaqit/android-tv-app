@@ -4,7 +4,6 @@ import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class AboutScreen extends StatefulWidget {
@@ -37,12 +36,10 @@ class _AboutScreen extends State<AboutScreen> {
 }
 
 AppBar _renderAppBar(context, Settings settings) {
-  var themeProvider = Provider.of<ThemeNotifier>(context);
   return AppBar(
       title: Text(
         S.of(context).about,
-        style: TextStyle(
-            color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
       ),
       flexibleSpace: Container(
         decoration: BoxDecoration(
@@ -50,12 +47,12 @@ AppBar _renderAppBar(context, Settings settings) {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: <Color>[
-              themeProvider.isLightTheme!
+              Theme.of(context).brightness == Brightness.light
                   ? HexColor(settings.firstColor)
-                  : themeProvider.darkTheme.primaryColor,
-              themeProvider.isLightTheme!
+                  : Theme.of(context).primaryColor,
+              Theme.of(context).brightness == Brightness.light
                   ? HexColor(settings.secondColor)
-                  : themeProvider.darkTheme.primaryColor,
+                  : Theme.of(context).primaryColor,
             ],
           ),
         ),

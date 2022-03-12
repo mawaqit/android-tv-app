@@ -20,7 +20,6 @@ import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/position/PositionOptions.dart';
 import 'package:mawaqit/src/position/PositionResponse.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/themes/UIImages.dart';
 import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
@@ -114,7 +113,6 @@ class _WebScreen extends State<WebScreen> {
     final settingsManager = Provider.of<SettingsManager>(context);
     final settings = settingsManager.settings;
 
-    var themeProvider = Provider.of<ThemeNotifier>(context);
     if (connectionStatus == ConnectivityStatus.Offline) return _offline(bottomPadding, settings);
 
     return WillPopScope(
@@ -271,9 +269,9 @@ class _WebScreen extends State<WebScreen> {
                           left: 0,
                           child: Loader(
                               type: settings.loader,
-                              color: themeProvider.isLightTheme!
+                              color: Theme.of(context).brightness == Brightness.light
                                   ? HexColor(settings.loaderColor)
-                                  : themeProvider.darkTheme.primaryColor))
+                                  : Theme.of(context).primaryColor))
                       : Container()
                 ],
               ))),
@@ -577,7 +575,6 @@ class _WebScreen extends State<WebScreen> {
   }
 
   Widget _renderAppBar(context, Settings settings) {
-    var themeProvider = Provider.of<ThemeNotifier>(context);
     return AppBar(
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -603,8 +600,12 @@ class _WebScreen extends State<WebScreen> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
-                themeProvider.isLightTheme! ? HexColor(settings.firstColor) : themeProvider.darkTheme.primaryColor,
-                themeProvider.isLightTheme! ? HexColor(settings.secondColor) : themeProvider.darkTheme.primaryColor,
+                Theme.of(context).brightness == Brightness.light
+                    ? HexColor(settings.firstColor)
+                    : Theme.of(context).primaryColor,
+                Theme.of(context).brightness == Brightness.light
+                    ? HexColor(settings.secondColor)
+                    : Theme.of(context).primaryColor,
               ],
             ),
           ),
