@@ -5,15 +5,17 @@ import './storage_manager.dart';
 class ThemeNotifier with ChangeNotifier {
   /// used getter to support hot restart in development
   ThemeData get darkTheme => ThemeData(
-        primarySwatch: Colors.grey,
-        primaryColor: Colors.black,
         brightness: Brightness.dark,
-        backgroundColor: const Color(0xFF212121),
-        accentColor: Colors.white,
-        accentIconTheme: IconThemeData(color: Colors.black),
-        focusColor: Colors.grey,
-        dividerColor: Colors.black12,
-        canvasColor: Colors.black,
+        primaryColor: Colors.deepPurple[400],
+        primaryColorDark: Colors.deepPurple[800],
+        selectedRowColor: Colors.deepPurple[800],
+        focusColor: Colors.deepPurpleAccent.withOpacity(.3),
+        canvasColor: Color(0xff121212),
+        colorScheme: ColorScheme.fromSwatch(
+          brightness: Brightness.dark,
+          primarySwatch: Colors.deepPurple,
+          // backgroundColor: Color(0xff121212),
+        ),
       );
 
   /// used getter to support hot restart in development

@@ -18,10 +18,7 @@ class DrawerListTitle extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new _DrawerListTitle();
-  }
+  State<StatefulWidget> createState() => new _DrawerListTitle();
 }
 
 class _DrawerListTitle extends State<DrawerListTitle> {

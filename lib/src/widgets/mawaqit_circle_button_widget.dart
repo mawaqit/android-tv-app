@@ -8,12 +8,14 @@ class MawaqitCircleButton extends StatelessWidget {
   final double size;
   final Color color;
   final String? tooltip;
+  final FocusNode? focusNode;
   final void Function()? onPressed;
 
   const MawaqitCircleButton({
     Key? key,
     this.iconSize = 20,
     required this.icon,
+    this.focusNode,
     this.size = 24,
     this.onPressed,
     this.color = const Color(0xFF4E2B81),
@@ -37,12 +39,13 @@ class MawaqitCircleButton extends StatelessWidget {
           ),
         ),
         child: FloatingActionButton(
+          focusNode: focusNode,
           tooltip: tooltip,
           heroTag: Random.secure().nextInt(2000000),
           highlightElevation: 0,
           mini: true,
           elevation: 0,
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           child: Icon(
             icon,
             textDirection: TextDirection.ltr,

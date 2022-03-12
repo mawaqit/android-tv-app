@@ -22,7 +22,7 @@ class AppLanguage extends ChangeNotifier {
       return null;
     }
     _appLocale = Locale(prefs.getString('language_code')!);
-    return null;
+    notifyListeners();
   }
 
   void changeLanguage(Locale type, String? mosqueId) async {

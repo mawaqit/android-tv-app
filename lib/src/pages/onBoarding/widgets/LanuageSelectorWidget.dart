@@ -4,11 +4,12 @@ import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 
 class OnBoardingLanguageSelector extends StatelessWidget {
-  const OnBoardingLanguageSelector({Key? key}) : super(key: key);
+  const OnBoardingLanguageSelector({Key? key, required this.onSelect}) : super(key: key);
+
+  final void Function() onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,16 @@ class OnBoardingLanguageSelector extends StatelessWidget {
 
     return Column(
       children: [
+        SizedBox(height: 10),
+        Text(
+          S.of(context).appLang,
+          style: TextStyle(
+            fontSize: 25.0,
+            fontWeight: FontWeight.w700,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+        SizedBox(height: 8),
         Text(
           S.of(context).descLang,
           textAlign: TextAlign.center,
@@ -29,6 +40,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
             color: Theme.of(context).primaryColor,
           ),
         ),
+        SizedBox(height: 20),
         Expanded(
           child: Container(
             padding: EdgeInsets.only(top: 5),
@@ -44,10 +56,10 @@ class OnBoardingLanguageSelector extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 var locale = locales[index];
                 return Material(
-                  color: Theme.of(context).dialogBackgroundColor,
                   child: InkWell(
                     onTap: () {
                       appLanguage.changeLanguage(locale, mosqueManager.mosqueId);
+                      onSelect();
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -73,10 +85,12 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          trailing: Icon(
-                            MawaqitIcons.icon_checked,
-                            color: Theme.of(context).primaryColor,
-                          ),
+                          trailing: isSelected(locale.languageCode)
+                              ? Icon(
+                                  MawaqitIcons.icon_checked,
+                                  color: Theme.of(context).primaryColor,
+                                )
+                              : null,
                           selected: true,
                           tileColor: Colors.red,
                         ),
@@ -87,13 +101,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
               },
             ),
           ),
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: VersionWidget(),
-          ),
-        ),
+        )
       ],
     );
   }

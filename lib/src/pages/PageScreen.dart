@@ -16,10 +16,7 @@ class PageScreen extends StatefulWidget {
   const PageScreen(this.page);
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new _PageScreen();
-  }
+  State<StatefulWidget> createState() => new _PageScreen();
 }
 
 class _PageScreen extends State<PageScreen> {

@@ -1,142 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:mawaqit/generated/l10n.dart';
-import 'package:mawaqit/i18n/AppLanguage.dart';
-import 'package:mawaqit/src/data/config.dart';
-import 'package:mawaqit/src/helpers/HexColor.dart';
-import 'package:mawaqit/src/helpers/SharedPref.dart';
-import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
+import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
 
-class LanguageScreen extends StatefulWidget {
+class LanguageScreen extends StatelessWidget {
   const LanguageScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => new _LanguageScreen();
-}
-
-class _LanguageScreen extends State<LanguageScreen> {
-  SharedPref sharedPref = SharedPref();
-  List languages = Config.language;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  _changeLanguage(Map language) async {
-    var appLanguage = Provider.of<AppLanguage>(context, listen: false);
-    var mosqueId = Provider.of<MosqueManager>(context, listen: false).mosqueId;
-
-    appLanguage.changeLanguage(Locale(language['value']), mosqueId);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    var appLanguage = Provider.of<AppLanguage>(context);
-
     return Scaffold(
-      appBar: _renderAppBar(context),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Row(children: [
-              Container(
-                padding: EdgeInsets.all(20),
-                child: Icon(
-                  Icons.translate,
-                  size: 30,
-                ),
+      body: Row(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Align(
+              child: Lottie.asset(
+                'assets/animations/lottie/language.json',
+                fit: BoxFit.contain,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    S.of(context).appLang,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    S.of(context).descLang,
-                    style: TextStyle(
-                      color: Colors.black38,
-                      fontSize: 13,
-                    ),
-                  )
-                ],
-              )
-            ]),
-            Expanded(
-              child: Container(
-                child: ListView.builder(
-                  itemCount: languages.length,
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  itemBuilder: (BuildContext context, int index) => new ListTile(
-                    onTap: () => _changeLanguage(languages[index]),
-                    leading: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.black26,
-                      child: Locale(languages[index]['value'], "") == appLanguage.appLocal
-                          ? Container(
-                              padding: EdgeInsets.all(10.0),
-                              child: Image.asset(
-                                'assets/img/checked.png',
-                                color: Colors.white,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Color.fromRGBO(35, 208, 101, 0.5),
-                              ),
-                            )
-                          : Container(),
-                      backgroundImage: ExactAssetImage('assets/img/flag/' + languages[index]['value'] + '.png'),
-                    ),
-                    title: Text(
-                      languages[index]['name'],
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(languages[index]['subtitle']),
-                  ),
-                ),
-              ),
+              alignment: Alignment.center,
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            flex: 6,
+            child: OnBoardingLanguageSelector(onSelect: AppRouter.pop),
+          ),
+        ],
       ),
     );
   }
-
-  AppBar _renderAppBar(context) {
-    final settingsManager = Provider.of<SettingsManager>(context);
-    final settings = settingsManager.settings;
-
-    return AppBar(
-        title: Text(
-          S.of(context).languages,
-          style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: <Color>[
-                Theme.of(context).brightness == Brightness.light
-                    ? HexColor(settings.firstColor)
-                    : Theme.of(context).primaryColor,
-                Theme.of(context).brightness == Brightness.light
-                    ? HexColor(settings.secondColor)
-                    : Theme.of(context).primaryColor,
-              ],
-            ),
-          ),
-        ));
-  }
+// AppBar _renderAppBar(context) {
+//   final settingsManager = Provider.of<SettingsManager>(context);
+//   final settings = settingsManager.settings;
+//
+//   return AppBar(
+//       title: Text(
+//         S.of(context).languages,
+//         style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
+//       ),
+//       flexibleSpace: Container(
+//         decoration: BoxDecoration(
+//           gradient: LinearGradient(
+//             begin: Alignment.centerLeft,
+//             end: Alignment.centerRight,
+//             colors: <Color>[
+//               Theme.of(context).brightness == Brightness.light
+//                   ? HexColor(settings.firstColor)
+//                   : Theme.of(context).primaryColor,
+//               Theme.of(context).brightness == Brightness.light
+//                   ? HexColor(settings.secondColor)
+//                   : Theme.of(context).primaryColor,
+//             ],
+//           ),
+//         ),
+//       ));
+// }
 }

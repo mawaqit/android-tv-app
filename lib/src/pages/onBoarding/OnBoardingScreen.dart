@@ -1,16 +1,16 @@
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
-import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/mawaqit_circle_button_widget.dart';
-import 'package:provider/provider.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   // final String url;
@@ -23,95 +23,103 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
-  @override
-  Widget build(BuildContext context) {
-    Settings getSettings() {
-      final settingsManager = Provider.of<SettingsManager>(context);
-      return settingsManager.settingsLoaded ? settingsManager.settings : widget.settings;
+  final _nextButtonFocusNode = FocusNode();
+  final _introductionKey = GlobalKey<IntroductionScreenState>();
+
+  int currentScreen = 0;
+
+  String get currentImage {
+    switch (currentScreen) {
+      case 0:
+        return 'language';
+      case 1:
+        return 'welcome';
+      case 2:
+        return 'search';
+      default:
+        return '';
+    }
+  }
+
+  Widget get currentScreenWidget {
+    if (currentScreen == 0) {
+      return OnBoardingLanguageSelector(
+        onSelect: () => setState(() => currentScreen++),
+      );
     }
 
-    const bodyStyle = TextStyle(fontSize: 15.0);
-    PageDecoration pageDecoration = PageDecoration(
-      imageFlex: 3,
-      bodyFlex: 7,
-      titleTextStyle: TextStyle(
-        fontSize: 25.0,
-        fontWeight: FontWeight.w700,
-        color: Theme.of(context).primaryColor,
-      ),
-      bodyTextStyle: bodyStyle,
-      contentMargin: EdgeInsets.all(1.0),
-      titlePadding: EdgeInsets.only(
-        bottom: 10,
-      ),
-      pageColor: Theme.of(context).dialogBackgroundColor,
-      imagePadding: EdgeInsets.zero,
-    );
+    if (currentScreen == 1) return OnBoardingMawaqitAboutWidget();
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: IntroductionScreen(
-        globalBackgroundColor: Theme.of(context).dialogBackgroundColor,
-        showDoneButton: false,
-        showSkipButton: false,
-        showBackButton: false,
-        nextFlex: 0,
-        next: MawaqitCircleButton(
-          icon: Localizations.localeOf(context).languageCode == 'ar'
-              ? MawaqitIcons.icon_arrow_left
-              : MawaqitIcons.icon_arrow_right,
-          color: Theme.of(context).primaryColor,
-          size: 21,
-        ),
-        pages: [
-          PageViewModel(
-            title: S.of(context).appLang,
-            image: _buildImage('language'),
-            decoration: pageDecoration,
-            useScrollView: false,
-            bodyWidget: Expanded(
-              child: FractionallySizedBox(
-                widthFactor: .6,
-                child: OnBoardingLanguageSelector(),
+    if (currentScreen == 2) return OnBoardingMosqueSelector(onDone: () => AppRouter.push(HomeScreen(widget.settings)));
+
+    return SizedBox();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (currentScreen == 0) return true;
+
+        setState(() => currentScreen--);
+        return false;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: _buildImage(currentImage),
               ),
-            ),
+              Expanded(
+                flex: 6,
+                child: currentScreenWidget,
+              ),
+            ],
           ),
-          PageViewModel(
-            title: S.of(context).mawaqitWelcome,
-            image: _buildImage('welcome'),
-            decoration: pageDecoration,
-            useScrollView: false,
-            bodyWidget: Expanded(
-              child: FractionallySizedBox(
-                widthFactor: .6,
-                child: Align(
-                  alignment: Alignment(0, -.8),
-                  child: Text(
-                    S.of(context).mawaqitDesc,
-                    style: TextStyle(
-                      fontSize: 19,
-                      color: Theme.of(context).primaryColorDark,
-                    ),
+          bottomNavigationBar: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            height: 80,
+            child: Row(
+              children: [
+                VersionWidget(
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
                   ),
                 ),
-              ),
+                Spacer(flex: 2),
+                DotsIndicator(
+                  dotsCount: 3,
+                  position: currentScreen.toDouble(),
+                  onTap: (d) => setState(() => currentScreen = d.toInt()),
+                  decorator: DotsDecorator(
+                    size: const Size.square(9.0),
+                    activeSize: const Size(21.0, 9.0),
+                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                    spacing: EdgeInsets.all(3),
+                  ),
+                ),
+                Spacer(),
+                if (currentScreen != 2)
+                  MawaqitCircleButton(
+                    icon: Localizations.localeOf(context).languageCode == 'ar'
+                        ? MawaqitIcons.icon_arrow_left
+                        : MawaqitIcons.icon_arrow_right,
+                    focusNode: _nextButtonFocusNode,
+                    color: Theme.of(context).primaryColor,
+                    size: 21,
+                    onPressed: () => setState(() => currentScreen++),
+                  ),
+              ],
             ),
           ),
-          PageViewModel(
-            title: S.of(context).selectMosqueId,
-            image: _buildImage('search'),
-            decoration: pageDecoration,
-            useScrollView: false,
-            bodyWidget: Expanded(
-              child: FractionallySizedBox(
-                widthFactor: .6,
-                child: OnBoardingMosqueSelector(onDone: () {
-                  AppRouter.push(HomeScreen(widget.settings));
-                }),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
