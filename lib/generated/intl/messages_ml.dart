@@ -53,6 +53,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "വൃത്ത ആനിമേഷന്‍ ലോഡ് ചെയ്യുന്നു"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."),
+        "mawaqitWelcome":
+            MessageLookupByLibrary.simpleMessage("Welcome to Mawaqit"),
         "messenger": MessageLookupByLibrary.simpleMessage("മെസ്സഞ്ചർ"),
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Missing mosque ID"),
