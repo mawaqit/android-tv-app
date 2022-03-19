@@ -50,7 +50,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
     if (currentScreen == 1) return OnBoardingMawaqitAboutWidget();
 
-    if (currentScreen == 2) return OnBoardingMosqueSelector(onDone: () => AppRouter.push(HomeScreen(widget.settings)));
+    if (currentScreen == 2)
+      return OnBoardingMosqueSelector(
+        onDone: () => AppRouter.push(HomeScreen(widget.settings)),
+      );
 
     return SizedBox();
   }
@@ -90,7 +93,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               children: [
                 VersionWidget(
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.color
+                        ?.withOpacity(.5),
                   ),
                 ),
                 Spacer(flex: 2),
@@ -101,7 +108,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   decorator: DotsDecorator(
                     size: const Size.square(9.0),
                     activeSize: const Size(21.0, 9.0),
-                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                    activeShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
                     spacing: EdgeInsets.all(3),
                   ),
                 ),

@@ -1,224 +1,33 @@
 import 'dart:convert';
 
+import 'package:lottie/lottie.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:mawaqit/generated/l10n.dart';
-import 'package:mawaqit/src/elements/SocialItem.dart';
-import 'package:mawaqit/src/helpers/AppConfig.dart';
-import 'package:mawaqit/src/helpers/HexColor.dart';
-import 'package:mawaqit/src/models/settings.dart';
-import 'package:mawaqit/src/models/social.dart';
-import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:mawaqit/src/widgets/InfoWidget.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class AboutScreen extends StatefulWidget {
+class AboutScreen extends StatelessWidget {
   const AboutScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => new _AboutScreen();
-}
-
-class _AboutScreen extends State<AboutScreen> {
-  @override
   Widget build(BuildContext context) {
-    final settingsManager = Provider.of<SettingsManager>(context);
-
     return Scaffold(
-      appBar: _renderAppBar(context, settingsManager.settings),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-            image: settingsManager.settings.splash?.img_splash_base64 == null
-                ? AssetImage('assets/img/background.png')
-                : MemoryImage(
-                    base64Decode(
-                      settingsManager.settings.splash!.img_splash_base64!,
-                    ),
-                  ) as ImageProvider,
-          ),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/img/mawaqit_logo_light_with_text_horizontal_Background.png',
-                        width: 200,
-                      ),
-                    ),
-                    const SizedBox(height: 7),
-                    Center(
-                      child: Text(
-                        settingsManager.settings.title?.toUpperCase() ?? '',
-                        style: GoogleFonts.montserrat(
-                          color: AppColors().mainColor(),
-                          letterSpacing: 4,
-                          fontWeight: FontWeight.w700,
-                          height: 1.2,
-                          fontSize: 30,
-                          fontStyle: FontStyle.normal,
-                        ),
-                      ),
-                    ),
-                    VersionWidget(
-                      style: GoogleFonts.roboto(fontSize: 18),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 12),
-                    FractionallySizedBox(
-                      widthFactor: .75,
-                      child: Material(
-                        color: AppColors().mainColor(.3),
-                        borderRadius: BorderRadius.circular(20),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 40,
-                          ),
-                          child: Text(
-                            settingsManager.settings.aboutUs ?? '',
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white54,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w300,
-                              height: 48 / 33,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+      body: Row(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Align(
+              child: Lottie.asset(
+                'assets/animations/lottie/welcome.json',
+                fit: BoxFit.contain,
               ),
+              alignment: Alignment.center,
             ),
-            _renderSocialList(settingsManager.settings.socials!, context),
-            const SizedBox(height: 30),
-          ],
-        ),
+          ),
+          Expanded(
+            flex: 6,
+            child: OnBoardingMawaqitAboutWidget(),
+          ),
+        ],
       ),
-      // Column(
-      //   children: <Widget>[
-      //     Padding(
-      //       padding: EdgeInsets.only(left: 0, top: 80, right: 0, bottom: 10),
-      //       child: Container(
-      //         width: 100.0,
-      //         height: 100.0,
-      //         decoration: BoxDecoration(
-      //           //color: Colors.white,
-      //           borderRadius: BorderRadius.only(
-      //               topLeft: Radius.circular(100),
-      //               topRight: Radius.circular(100),
-      //               bottomLeft: Radius.circular(100),
-      //               bottomRight: Radius.circular(100)),
-      //           boxShadow: [
-      //             BoxShadow(
-      //               color: Colors.grey.withOpacity(0.5),
-      //               spreadRadius: 5,
-      //               blurRadius: 3,
-      //               offset: Offset(0, 3), // changes position of shadow
-      //             ),
-      //           ],
-      //         ),
-      //         child: Padding(
-      //             padding: EdgeInsets.all(13),
-      //             child: Image.network(
-      //               widget.settings.logoHeaderUrl!,
-      //             )),
-      //       ),
-      //     ),
-      //     Padding(
-      //       padding: EdgeInsets.only(left: 0, top: 10, right: 0, bottom: 10),
-      //       child: Center(
-      //           child: Text(
-      //         widget.settings.title!,
-      //         textAlign: TextAlign.center,
-      //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      //       )),
-      //     ),
-      //     FutureBuilder<PackageInfo>(
-      //       future: PackageInfo.fromPlatform(),
-      //       builder: (context, snapshot) => Text(
-      //         "v " + (snapshot.data?.version ?? ''),
-      //         textAlign: TextAlign.center,
-      //         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
-      //       ),
-      //     ),
-      //     Padding(
-      //       padding: EdgeInsets.only(left: 20, top: 40, right: 20, bottom: 10),
-      //       child: Center(
-      //           child: Text(
-      //         widget.settings.aboutUs!,
-      //         textAlign: TextAlign.center,
-      //         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
-      //       )),
-      //     ),
-      //     Spacer(flex: 1),
-      //     Padding(
-      //       padding: EdgeInsets.only(bottom: 20),
-      //       child: Text(
-      //         "Follow Us",
-      //         textAlign: TextAlign.center,
-      //         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
-      //       ),
-      //     ),
-      //     _renderSocialList(widget.settings.socials!, context),
-      //     SizedBox(height: 30),
-      //   ],
-      // ),
     );
   }
-}
-
-AppBar _renderAppBar(context, Settings settings) {
-  return AppBar(
-    title: Text(
-      S.of(context).about,
-      style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
-    ),
-    flexibleSpace: Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: <Color>[
-            Theme.of(context).brightness == Brightness.light
-                ? HexColor(settings.firstColor)
-                : Theme.of(context).primaryColor,
-            Theme.of(context).brightness == Brightness.light
-                ? HexColor(settings.secondColor)
-                : Theme.of(context).primaryColor,
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _renderSocialList(List<Social> socials, context) {
-  return new Wrap(
-    spacing: 18.0,
-    runSpacing: 20,
-    children: socials
-        .map((Social social) => SocialItem(
-              iconUrl: social.iconUrl,
-              text: Intl.message(social.title?.toLowerCase() ?? ''),
-              onTap: () async {
-                if (await canLaunch(social.linkUrl!.replaceAll("id_app", social.idApp!))) {
-                  await launch(social.linkUrl!.replaceAll("id_app", social.idApp!));
-                } else {
-                  launch(social.url!.replaceAll("id_app", social.idApp!));
-                }
-              },
-            ))
-        .toList(),
-  );
 }

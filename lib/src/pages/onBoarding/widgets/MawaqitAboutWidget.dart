@@ -6,6 +6,7 @@ class OnBoardingMawaqitAboutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
 
     return Align(
       alignment: Alignment(0, -.3),
@@ -17,7 +18,9 @@ class OnBoardingMawaqitAboutWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 25.0,
               fontWeight: FontWeight.w700,
-              color: Theme.of(context).primaryColor,
+              color: themeData.brightness == Brightness.dark
+                  ? Colors.white70
+                  : themeData.primaryColor,
             ),
           ),
           SizedBox(height: 10),
@@ -25,7 +28,9 @@ class OnBoardingMawaqitAboutWidget extends StatelessWidget {
             S.of(context).mawaqitDesc,
             style: TextStyle(
               fontSize: 19,
-              color: Theme.of(context).primaryColorDark,
+              color: themeData.brightness == Brightness.dark
+                  ? Colors.white60
+                  : themeData.primaryColor,
             ),
           ),
         ],
