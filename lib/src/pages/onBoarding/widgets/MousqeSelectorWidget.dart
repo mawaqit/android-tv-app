@@ -20,6 +20,7 @@ class OnBoardingMosqueSelector extends StatefulWidget {
 
 class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
   final sharedPref = SharedPref();
+  final inputController = TextEditingController();
 
   bool loading = false;
   String? error;
@@ -64,7 +65,7 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
             style: TextStyle(
               fontSize: 25.0,
               fontWeight: FontWeight.w700,
-              color: theme.primaryColor,
+              color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
             ),
           ),
           SizedBox(height: 10),
@@ -73,11 +74,12 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
             child: Container(
               width: MediaQuery.of(context).size.width * 0.9,
               child: TextFormField(
+                controller: inputController,
                 style: GoogleFonts.inter(
-                  color: theme.primaryColor,
+                  color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
                 ),
                 onFieldSubmitted: _setMosqueId,
-                cursorColor: theme.primaryColor,
+                cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
                 keyboardType: TextInputType.number,
                 autofocus: true,
                 textInputAction: TextInputAction.search,
@@ -91,13 +93,12 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
                   hintText: S.of(context).selectMosqueId,
                   hintStyle: TextStyle(
                     fontWeight: FontWeight.normal,
-                    color: theme.primaryColor.withOpacity(0.4),
+                    color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
                   ),
                   suffixIcon: IconButton(
                     tooltip: "Search by GPS",
                     icon: loading ? CircularProgressIndicator() : Icon(Icons.search),
-                    color: theme.primaryColor,
-                    onPressed: () {},
+                    onPressed: () => _setMosqueId(inputController.text),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
