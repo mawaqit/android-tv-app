@@ -13,9 +13,10 @@ class OnBoardingLanguageSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var locales = S.delegate.supportedLocales;
-    var appLanguage = Provider.of<AppLanguage>(context);
-    var mosqueManager = Provider.of<MosqueManager>(context);
+    final locales = S.delegate.supportedLocales;
+    final appLanguage = Provider.of<AppLanguage>(context);
+    final mosqueManager = Provider.of<MosqueManager>(context);
+    final themeData = Theme.of(context);
 
     /// if the [langCode] is current used language
     bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
@@ -28,7 +29,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
           style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.w700,
-            color: Theme.of(context).primaryColor,
+            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ),
         SizedBox(height: 8),
@@ -37,7 +38,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
           textAlign: TextAlign.center,
           style: GoogleFonts.inter(
             fontSize: 15,
-            color: Theme.of(context).primaryColor,
+            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ),
         SizedBox(height: 20),
@@ -45,8 +46,6 @@ class OnBoardingLanguageSelector extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.only(top: 5),
             child: ListView.separated(
-              // shrinkWrap: true,
-              // primary: false,
               padding: EdgeInsets.only(
                 top: 5,
                 bottom: 5,
@@ -68,7 +67,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                       ),
                       child: Ink(
                         decoration: BoxDecoration(
-                          color: isSelected(locale.languageCode) ? Theme.of(context).selectedRowColor : null,
+                          color: isSelected(locale.languageCode) ? themeData.selectedRowColor : null,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ListTile(
@@ -81,18 +80,16 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                             appLanguage.languageName(locale.languageCode),
                             style: TextStyle(
                               fontSize: 14,
-                              color: Theme.of(context).primaryColor,
+                              color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           trailing: isSelected(locale.languageCode)
                               ? Icon(
                                   MawaqitIcons.icon_checked,
-                                  color: Theme.of(context).primaryColor,
+                                  color: themeData.primaryColor,
                                 )
                               : null,
-                          selected: true,
-                          tileColor: Colors.red,
                         ),
                       ),
                     ),
