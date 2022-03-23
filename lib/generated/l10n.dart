@@ -499,6 +499,56 @@ class S {
       args: [],
     );
   }
+
+  /// `Privacy policy`
+  String get PrivacyPolicy {
+    return Intl.message(
+      'Privacy policy',
+      name: 'PrivacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of Service`
+  String get TermsOfService {
+    return Intl.message(
+      'Terms of Service',
+      name: 'TermsOfService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Installation Guide`
+  String get InstallationGuide {
+    return Intl.message(
+      'Installation Guide',
+      name: 'InstallationGuide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mawaqit`
+  String get drawerTitle {
+    return Intl.message(
+      'Mawaqit',
+      name: 'drawerTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connecting Muslims to Mosques`
+  String get drawerDesc {
+    return Intl.message(
+      'Connecting Muslims to Mosques',
+      name: 'drawerDesc',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
