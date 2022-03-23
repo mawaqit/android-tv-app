@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -14,6 +15,7 @@ import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/ConnectivityService.dart';
+import 'package:mawaqit/src/helpers/HttpOverrides.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
@@ -45,6 +47,8 @@ Future<void> main() async {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     }
 
+    HttpOverrides.global = MyHttpOverrides();
+
     // hide status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
@@ -75,10 +79,13 @@ class MyApp extends StatelessWidget {
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) => ConnectivityService().connectionStatusController.stream,
+            create: (context) =>
+                ConnectivityService().connectionStatusController.stream,
             child: Consumer<ThemeNotifier>(
               builder: (context, theme, _) => Shortcuts(
-                shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
+                shortcuts: {
+                  SingleActivator(LogicalKeyboardKey.select): ActivateIntent()
+                },
                 child: MaterialApp(
                   themeMode: theme.mode,
                   theme: theme.lightTheme,

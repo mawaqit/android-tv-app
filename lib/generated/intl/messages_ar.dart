@@ -24,6 +24,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "InstallationGuide":
+            MessageLookupByLibrary.simpleMessage("تعليمات التثبيت"),
+        "PrivacyPolicy": MessageLookupByLibrary.simpleMessage("سياسه الخصوصيه"),
+        "TermsOfService":
+            MessageLookupByLibrary.simpleMessage("سياسه الاستخدام"),
         "about": MessageLookupByLibrary.simpleMessage("عن التطبيق"),
         "appLang": MessageLookupByLibrary.simpleMessage("لغة التطبيق"),
         "backToHomePage":
@@ -52,8 +57,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("دائرة التحميل المتحركة"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."),
-        "mawaqitWelcome":
-            MessageLookupByLibrary.simpleMessage("Welcome to Mawaqit"),
         "messenger": MessageLookupByLibrary.simpleMessage("مسنجر"),
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Missing mosque ID"),

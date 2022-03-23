@@ -12,6 +12,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:launch_review/launch_review.dart';
 import 'package:location/location.dart' hide LocationAccuracy;
 import 'package:mawaqit/generated/l10n.dart';
@@ -23,6 +24,7 @@ import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/models/floating.dart';
 import 'package:mawaqit/src/models/menu.dart';
 import 'package:mawaqit/src/models/navigationIcon.dart';
@@ -243,7 +245,9 @@ class _HomeScreen extends State<HomeScreen>
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(top: 5),
-                                      child: Text(settings.title!,
+                                      child: Text(
+                                          // settings.title!,
+                                          S.of(context).drawerTitle,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               color: Colors.white,
@@ -251,7 +255,9 @@ class _HomeScreen extends State<HomeScreen>
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(top: 5),
-                                      child: Text(settings.subTitle!,
+                                      child: Text(
+                                          // settings.subTitle!,
+                                          S.of(context).drawerDesc,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               color: Colors.white,
@@ -697,14 +703,16 @@ class _HomeScreen extends State<HomeScreen>
   }
 
   Widget _renderPageDrawer(List<Page> pages, context) {
-    print(pages.map((e) => e.icon));
     return new Column(
       children: pages
           .map(
             (Page page) => DrawerListTitle(
               forceThemeColor: true,
               iconUrl: page.iconUrl,
-              text: page.title,
+              text: Intl.message(
+                page.title ?? '',
+                name: page.title?.toCamelCase,
+              ),
               onTap: () =>
                   AppRouter.popAndPush(PageScreen(page), name: page.title),
             ),
