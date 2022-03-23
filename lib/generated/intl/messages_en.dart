@@ -24,6 +24,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "InstallationGuide":
+            MessageLookupByLibrary.simpleMessage("Installation Guide"),
+        "PrivacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
+        "TermsOfService":
+            MessageLookupByLibrary.simpleMessage("Terms of Service"),
         "about": MessageLookupByLibrary.simpleMessage("About"),
         "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
         "backToHomePage":
@@ -39,6 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Select your preferred language."),
+        "drawerDesc": MessageLookupByLibrary.simpleMessage(
+            "Connecting Muslims to Mosques"),
+        "drawerTitle": MessageLookupByLibrary.simpleMessage("Mawaqit"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Enter Mosque Id : "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
