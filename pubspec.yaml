@@ -71,7 +71,6 @@ dependencies:
   # MAP
   location: ^4.3.0
   geolocator: ^8.2.0
-#  webview_flutter: ^3.0.0
 
   rive_splash_screen: ^0.1.0
   lottie: ^1.2.2
