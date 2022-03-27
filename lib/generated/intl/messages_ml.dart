@@ -24,6 +24,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "InstallationGuide":
+            MessageLookupByLibrary.simpleMessage("Installation Guide"),
+        "PrivacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
+        "TermsOfService":
+            MessageLookupByLibrary.simpleMessage("Terms of Service"),
         "about": MessageLookupByLibrary.simpleMessage("ഞങ്ങളെക്കുറിച്ചു"),
         "appLang": MessageLookupByLibrary.simpleMessage("ആപ്ലിക്കേഷൻ ഭാഷ"),
         "backToHomePage":
@@ -39,6 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("ഡാർക്ക്‌ മോഡ്"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Select your preferred language."),
+        "drawerDesc": MessageLookupByLibrary.simpleMessage(
+            "Connecting Muslims to Mosques"),
+        "drawerTitle": MessageLookupByLibrary.simpleMessage("Mawaqit"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Enter Mosque Id : "),
         "facebook": MessageLookupByLibrary.simpleMessage("ഫേസ്‌ബുക്ക്"),
@@ -53,6 +61,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "വൃത്ത ആനിമേഷന്‍ ലോഡ് ചെയ്യുന്നു"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "Mawaqit offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."),
+        "mawaqitWelcome":
+            MessageLookupByLibrary.simpleMessage("Welcome to Mawaqit"),
         "messenger": MessageLookupByLibrary.simpleMessage("മെസ്സഞ്ചർ"),
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Missing mosque ID"),
