@@ -23,6 +23,7 @@ class PageScreen extends StatefulWidget {
 
 class _PageScreen extends State<PageScreen> {
   InAppWebViewController? _webViewController;
+
   bool isLoading = true;
 
   @override
@@ -30,22 +31,25 @@ class _PageScreen extends State<PageScreen> {
     final settingsManager = Provider.of<SettingsManager>(context);
     final settings = settingsManager.settings;
 
-    return CallbackShortcuts(
-      bindings: {
-        SingleActivator(LogicalKeyboardKey.arrowDown): () =>
-            _webViewController?.scrollBy(x: 0, y: 100),
-        SingleActivator(LogicalKeyboardKey.arrowUp): () =>
-            _webViewController?.scrollBy(x: 0, y: -100),
-        // SingleActivator(LogicalKeyboardKey.arrowDown): () {
-        //   _webViewController?.requestFocusNodeHref();
-        // }
-      },
-      child: Scaffold(
-        appBar: _renderAppBar(context, settings, widget.page),
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            InAppWebView(
+    return Scaffold(
+      appBar: _renderAppBar(context, settings, widget.page),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Focus(
+            autofocus: true,
+            onKeyEvent: (node, event) {
+              if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                _webViewController?.scrollBy(x: 0, y: 100);
+                return KeyEventResult.handled;
+              } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                _webViewController?.scrollBy(x: 0, y: -100);
+                return KeyEventResult.handled;
+              }
+
+              return KeyEventResult.ignored;
+            },
+            child: InAppWebView(
               initialUrlRequest: URLRequest(url: Uri.parse(widget.page.url!)),
               initialOptions: InAppWebViewGroupOptions(
                 crossPlatform: InAppWebViewOptions(
@@ -73,11 +77,13 @@ class _PageScreen extends State<PageScreen> {
               ),
               onLoadStart: (controller, url) {
                 setState(() {
-                  //this.url = url.toString();
                   isLoading = true;
                 });
               },
               onLoadStop: (controller, url) async {
+                await _webViewController!.injectJavascriptFileFromAsset(
+                  assetFilePath: 'assets/scripts/clean.js',
+                );
                 this.setState(() {
                   isLoading = false;
                 });
@@ -98,22 +104,25 @@ class _PageScreen extends State<PageScreen> {
                 // print(consoleMessage);
               },
             ),
-            (isLoading && settings.loader != "empty")
-                ? Positioned(
-                    top: 0,
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
+          ),
+          (isLoading && settings.loader != "empty")
+              ? Positioned(
+                  top: 0,
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  child: Container(
+                    color: Theme.of(context).cardColor,
                     child: Loader(
                       type: settings.loader,
                       color: Theme.of(context).brightness == Brightness.light
                           ? HexColor(settings.loaderColor)
                           : Theme.of(context).primaryColor,
                     ),
-                  )
-                : Container()
-          ],
-        ),
+                  ),
+                )
+              : Container()
+        ],
       ),
     );
   }
@@ -143,3 +152,14 @@ AppBar _renderAppBar(context, Settings settings, Page page) {
         ),
       ));
 }
+
+const extractContent = '''
+const header = document.querySelector(".header");
+  header?.parentElement.removeChild(header);
+
+  const footer = document.querySelector(".footer");
+  footer?.parentElement.removeChild(footer);
+
+  const breadcrumb = document.querySelector(".breadcrumb");
+  breadcrumb?.parentElement.removeChild(breadcrumb);
+''';
