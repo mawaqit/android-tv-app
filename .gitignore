@@ -86,3 +86,5 @@ ios/Flutter/Flutter.podspec
 .vscode/
 
 emulator.sh
+/android/mawaqit.jks
+/android/key.properties
