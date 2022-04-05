@@ -22,7 +22,7 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '10'
+    flutterVersionCode = '105'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
@@ -37,6 +37,11 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+  keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
 android {
     compileSdkVersion 31
@@ -47,7 +52,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.mawaqit.admin"
+        applicationId "com.kanout.mawaqit"
         minSdkVersion 19
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
@@ -58,17 +63,17 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(storeFile_)
-            storePassword storePassword_
-            keyAlias keyAlias_
-            keyPassword keyPassword_
+          keyAlias keystoreProperties['keyAlias']
+          keyPassword keystoreProperties['keyPassword']
+          storeFile file(keystoreProperties['storeFile'])
+          storePassword keystoreProperties['storePassword']
         }
-        debug {
-            storeFile file(storeFile_)
-            storePassword storePassword_
-            keyAlias keyAlias_
-            keyPassword keyPassword_
-        }
+//        debug {
+//            storeFile file(storeFile_)
+//            storePassword storePassword_
+//            keyAlias keyAlias_
+//            keyPassword keyPassword_
+//        }
     }
 
     buildTypes {
