@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.mawaqit.admin">
+  package="com.kanout.mawaqit">
 
   <!-- Restrict app for tablets and TVs only -->
   <supports-screens

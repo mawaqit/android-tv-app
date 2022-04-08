@@ -22,12 +22,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '105'
+    flutterVersionCode = '116'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0.6 Onboarding V2 + Android Manifest Update + Upgraded all packages except #PUSH NOTIFICATION, #FIREBASE #MAP'
+    flutterVersionName = '1.0.12'
 }
 
 apply plugin: 'com.android.application'
@@ -44,7 +44,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -54,7 +54,7 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.kanout.mawaqit"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         // FIREBASE PACKAGES
@@ -97,7 +97,7 @@ dependencies {
   implementation platform('com.google.firebase:firebase-bom:29.1.0')
   implementation 'com.google.firebase:firebase-analytics-ktx'
 
-  compile 'com.android.support:appcompat-v7:23.1.1'
-  compile 'com.android.support:leanback-v17:23.1.1'
+  implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+  implementation 'androidx.leanback:leanback:1.0.0'
 }
 
