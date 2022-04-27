@@ -32,6 +32,7 @@ import 'package:mawaqit/src/models/page.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
+import 'package:mawaqit/src/pages/OfflineScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
 import 'package:mawaqit/src/position/PositionOptions.dart';
@@ -83,8 +84,7 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
-class _HomeScreen extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
+class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin {
   SharedPref sharedPref = SharedPref();
 
   static GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -109,9 +109,7 @@ class _HomeScreen extends State<HomeScreen>
 
     tabController = new TabController(
       initialIndex: 0,
-      length: widget.settings.tabNavigationEnable == "1"
-          ? widget.settings.tab!.length
-          : 1,
+      length: widget.settings.tabNavigationEnable == "1" ? widget.settings.tab!.length : 1,
       vsync: this,
     );
     tabController!.addListener(_handleTabSelection);
@@ -125,8 +123,7 @@ class _HomeScreen extends State<HomeScreen>
         setState(() {
           _latestUri = uri;
         });
-        var link = uri.toString().replaceAll(
-            '${GlobalConfiguration().getValue('deeplink')}://url/', '');
+        var link = uri.toString().replaceAll('${GlobalConfiguration().getValue('deeplink')}://url/', '');
 
         if (widget.settings.tabNavigationEnable == "1") {
           if (goToWeb) {
@@ -162,9 +159,8 @@ class _HomeScreen extends State<HomeScreen>
 
   @override
   void dispose() {
-    webViewGPSPositionStreams.forEach(
-        (StreamSubscription<Position> _flutterGeolocationStream) =>
-            _flutterGeolocationStream.cancel());
+    webViewGPSPositionStreams
+        .forEach((StreamSubscription<Position> _flutterGeolocationStream) => _flutterGeolocationStream.cancel());
 
     super.dispose();
   }
@@ -176,8 +172,7 @@ class _HomeScreen extends State<HomeScreen>
     final settingsManager = context.read<SettingsManager>();
     final settings = settingsManager.settings;
 
-    var url =
-        'https://mawaqit.net/${appLanguage.appLocal.languageCode}/id/${mosqueManager.mosqueId}?view=desktop';
+    var url = 'https://mawaqit.net/${appLanguage.appLocal.languageCode}/id/${mosqueManager.mosqueId}?view=desktop';
 
     print(url);
     var bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -186,7 +181,10 @@ class _HomeScreen extends State<HomeScreen>
     var themeProvider = Provider.of<ThemeNotifier>(context);
 
     if (connectionStatus == ConnectivityStatus.Offline)
-      return _offline(bottomPadding, settings);
+      return WillPopScope(
+        onWillPop: _onBackPressed,
+        child: OfflineScreen(),
+      );
 
     return WillPopScope(
       onWillPop: () async {
@@ -199,10 +197,8 @@ class _HomeScreen extends State<HomeScreen>
       },
       child: CallbackShortcuts(
         bindings: {
-          SingleActivator(LogicalKeyboardKey.arrowLeft): () =>
-              _scaffoldKey.currentState?.openDrawer(),
-          SingleActivator(LogicalKeyboardKey.arrowRight): () =>
-              _scaffoldKey.currentState?.openDrawer(),
+          SingleActivator(LogicalKeyboardKey.arrowLeft): () => _scaffoldKey.currentState?.openDrawer(),
+          SingleActivator(LogicalKeyboardKey.arrowRight): () => _scaffoldKey.currentState?.openDrawer(),
         },
         child: Container(
             decoration: BoxDecoration(color: HexColor("#f5f4f4")),
@@ -210,8 +206,7 @@ class _HomeScreen extends State<HomeScreen>
             child: Scaffold(
               key: _scaffoldKey,
               appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
-              drawer: (widget.settings.leftNavigationIcon!.value ==
-                          "icon_menu" ||
+              drawer: (widget.settings.leftNavigationIcon!.value == "icon_menu" ||
                       widget.settings.rightNavigationIcon!.value == "icon_menu")
                   ? Drawer(
                       child: ListView(
@@ -221,12 +216,10 @@ class _HomeScreen extends State<HomeScreen>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: <Color>[
-                                    Theme.of(context).brightness ==
-                                            Brightness.light
+                                    Theme.of(context).brightness == Brightness.light
                                         ? HexColor(settings.firstColor)
                                         : Theme.of(context).primaryColor,
-                                    Theme.of(context).brightness ==
-                                            Brightness.light
+                                    Theme.of(context).brightness == Brightness.light
                                         ? HexColor(settings.secondColor)
                                         : Theme.of(context).primaryColor,
                                   ],
@@ -249,9 +242,7 @@ class _HomeScreen extends State<HomeScreen>
                                           // settings.title!,
                                           S.of(context).drawerTitle,
                                           overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16)),
+                                          style: TextStyle(color: Colors.white, fontSize: 16)),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(top: 5),
@@ -259,9 +250,7 @@ class _HomeScreen extends State<HomeScreen>
                                           // settings.subTitle!,
                                           S.of(context).drawerDesc,
                                           overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14)),
+                                          style: TextStyle(color: Colors.white, fontSize: 14)),
                                     )
                                   ],
                                 ),
@@ -270,19 +259,15 @@ class _HomeScreen extends State<HomeScreen>
                               icon: Icons.home,
                               text: S.of(context).home,
                               onTap: () async {
-                                if (widget.settings.tabNavigationEnable ==
-                                    "1") {
+                                if (widget.settings.tabNavigationEnable == "1") {
                                   if (goToWeb) {
                                     setState(() => goToWeb = false);
-                                    AppRouter.popAndPush(
-                                        WebScreen(widget.settings.url),
-                                        name: 'HomeScreen');
+                                    AppRouter.popAndPush(WebScreen(widget.settings.url), name: 'HomeScreen');
 
                                     Navigator.pop(context);
                                   }
                                 } else {
-                                  key0.currentState!._webViewController
-                                      ?.loadUrl(
+                                  key0.currentState!._webViewController?.loadUrl(
                                     urlRequest: URLRequest(
                                       url: Uri.parse(url),
                                     ),
@@ -304,18 +289,15 @@ class _HomeScreen extends State<HomeScreen>
                           DrawerListTitle(
                             icon: Icons.museum_outlined,
                             text: S.of(context).changeMosque,
-                            onTap: () =>
-                                AppRouter.popAndPush(MosqueSearchScreen()),
+                            onTap: () => AppRouter.popAndPush(MosqueSearchScreen()),
                           ),
                           DrawerListTitle(
                               icon: Icons.brightness_medium,
-                              text: Theme.of(context).brightness ==
-                                      Brightness.light
+                              text: Theme.of(context).brightness == Brightness.light
                                   ? S.of(context).darkMode
                                   : S.of(context).lightMode,
                               onTap: () {
-                                if (Theme.of(context).brightness ==
-                                    Brightness.light) {
+                                if (Theme.of(context).brightness == Brightness.light) {
                                   themeProvider.setDarkMode();
                                 } else {
                                   themeProvider.setLightMode();
@@ -329,8 +311,7 @@ class _HomeScreen extends State<HomeScreen>
                           settings.pages!.length != 0
                               ? Padding(
                                   padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                  child: Divider(
-                                      height: 1, color: Colors.grey[400]),
+                                  child: Divider(height: 1, color: Colors.grey[400]),
                                 )
                               : Container(height: 0),
                           DrawerListTitle(
@@ -342,8 +323,7 @@ class _HomeScreen extends State<HomeScreen>
                               icon: Icons.share,
                               text: S.of(context).share,
                               onTap: () {
-                                shareApp(
-                                    context, settings.title, settings.share!);
+                                shareApp(context, settings.title, settings.share!);
                               }),
                           DrawerListTitle(
                             icon: Icons.star,
@@ -401,8 +381,7 @@ class _HomeScreen extends State<HomeScreen>
                     child: Container(
                       width: 100,
                       height: 60,
-                      child: InkWell(
-                          onTap: () => _scaffoldKey.currentState?.openDrawer()),
+                      child: InkWell(onTap: () => _scaffoldKey.currentState?.openDrawer()),
                     ),
                   ),
                 ],
@@ -418,8 +397,7 @@ class _HomeScreen extends State<HomeScreen>
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 2,
                                 blurRadius: 5,
-                                offset:
-                                    Offset(0, 3), // changes position of shadow
+                                offset: Offset(0, 3), // changes position of shadow
                               ),
                             ],
                           ),
@@ -433,8 +411,7 @@ class _HomeScreen extends State<HomeScreen>
                       icon: Icons.add,
                       backgroundColor: HexColor(widget.settings.firstColor),
                       foregroundColor: Colors.white,
-                      children:
-                          _renderFloating(widget.settings.floating!, context),
+                      children: _renderFloating(widget.settings.floating!, context),
                     )
                   : SizedBox(),
             )),
@@ -453,9 +430,7 @@ class _HomeScreen extends State<HomeScreen>
       },
       indicator: UnderlineTabIndicator(
         borderSide: BorderSide(
-          color: Theme.of(context).brightness == Brightness.light
-              ? tabColor
-              : Theme.of(context).primaryColor,
+          color: Theme.of(context).brightness == Brightness.light ? tabColor : Theme.of(context).primaryColor,
           width: 2.5,
         ),
         //insets: EdgeInsets.symmetric(horizontal:16.0)
@@ -502,73 +477,6 @@ class _HomeScreen extends State<HomeScreen>
     );
   }
 
-  Widget _offline(bottomPadding, Settings settings) {
-    return WillPopScope(
-      onWillPop: () async {
-        return _onBackPressed(context);
-      },
-      child: Container(
-          decoration: BoxDecoration(color: HexColor("#f5f4f4")),
-          padding: EdgeInsets.only(bottom: bottomPadding),
-          child: Scaffold(
-            key: _scaffoldKey,
-            body: Column(
-              children: <Widget>[
-                Container(
-                  height: 130,
-                ),
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          width: 100.0,
-                          height: 100.0,
-                          child: Image.asset(
-                            UIImages.imageDir + "/wifi.png",
-                            color: Colors.black26,
-                            fit: BoxFit.contain,
-                          )),
-                      SizedBox(height: 40),
-                      Text(
-                        S.of(context).whoops,
-                        style: TextStyle(
-                            color: Colors.black45,
-                            fontSize: 40.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        S.of(context).noInternet,
-                        style: TextStyle(color: Colors.black87, fontSize: 15.0),
-                      ),
-                      SizedBox(height: 5),
-                      SizedBox(height: 60),
-                      RaisedGradientButton(
-                          child: Text(
-                            S.of(context).tryAgain,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          width: 250,
-                          gradient: LinearGradient(
-                            colors: <Color>[
-                              HexColor(settings.secondColor),
-                              HexColor(settings.firstColor)
-                            ],
-                          ),
-                          onPressed: () {}),
-                    ]),
-                Container(
-                  height: 100,
-                ),
-              ],
-            ),
-          )),
-    );
-  }
-
   int? parseInt(dynamic value) {
     if (value == null) return null;
     if (value is int) return value;
@@ -576,8 +484,7 @@ class _HomeScreen extends State<HomeScreen>
     return int.tryParse(value) ?? null;
   }
 
-  Future<PositionResponse> getCurrentPosition(
-      PositionOptions positionOptions) async {
+  Future<PositionResponse> getCurrentPosition(PositionOptions positionOptions) async {
     PositionResponse positionResponse = PositionResponse();
 
     int? timeout = 30000;
@@ -585,17 +492,13 @@ class _HomeScreen extends State<HomeScreen>
 
     try {
       // Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-      LocationPermission geolocationStatus =
-          await GeolocatorPlatform.instance.requestPermission();
+      LocationPermission geolocationStatus = await GeolocatorPlatform.instance.requestPermission();
 
-      if (geolocationStatus == LocationPermission.always ||
-          geolocationStatus == LocationPermission.whileInUse) {
+      if (geolocationStatus == LocationPermission.always || geolocationStatus == LocationPermission.whileInUse) {
         positionResponse.position = await Future.any([
           GeolocatorPlatform.instance.getCurrentPosition(
             locationSettings: LocationSettings(
-                accuracy: (positionOptions.enableHighAccuracy
-                    ? LocationAccuracy.best
-                    : LocationAccuracy.medium)),
+                accuracy: (positionOptions.enableHighAccuracy ? LocationAccuracy.best : LocationAccuracy.medium)),
           ),
           Future.delayed(Duration(milliseconds: timeout!), () {
             if (positionOptions.timeout! > 0) positionResponse.timedOut = true;
@@ -652,8 +555,7 @@ class _HomeScreen extends State<HomeScreen>
                       });
                     }
                   } else {
-                    key0.currentState!._webViewController?.loadUrl(
-                        urlRequest: URLRequest(url: Uri.parse(menu.url!)));
+                    key0.currentState!._webViewController?.loadUrl(urlRequest: URLRequest(url: Uri.parse(menu.url!)));
 
                     Navigator.pop(context);
                   }
@@ -669,8 +571,7 @@ class _HomeScreen extends State<HomeScreen>
           (Floating floating) => SpeedDialChild(
               child: Container(
                 padding: EdgeInsets.all(13.0),
-                child: Image.network(floating.iconUrl!,
-                    width: 15, height: 15, color: HexColor(floating.iconColor)),
+                child: Image.network(floating.iconUrl!, width: 15, height: 15, color: HexColor(floating.iconColor)),
               ),
               label: floating.title,
               backgroundColor: HexColor(floating.backgroundColor),
@@ -683,8 +584,7 @@ class _HomeScreen extends State<HomeScreen>
                       goToWeb = false;
                     });
 
-                    AppRouter.push(WebScreen(floating.url),
-                        name: floating.title);
+                    AppRouter.push(WebScreen(floating.url), name: floating.title);
 
                     setState(() => goToWeb = true);
                   }
@@ -713,8 +613,7 @@ class _HomeScreen extends State<HomeScreen>
                 page.title ?? '',
                 name: page.title?.toCamelCase,
               ),
-              onTap: () =>
-                  AppRouter.popAndPush(PageScreen(page), name: page.title),
+              onTap: () => AppRouter.popAndPush(PageScreen(page), name: page.title),
             ),
           )
           .toList(),
@@ -728,15 +627,9 @@ class _HomeScreen extends State<HomeScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  _renderMenuIcon(
-                      context,
-                      widget.settings.leftNavigationIcon!,
-                      widget.settings.rightNavigationIcon,
-                      widget.settings.navigatinBarStyle,
-                      widget.settings,
-                      "left"),
-                  _renderTitle(
-                      widget.settings.navigatinBarStyle, widget.settings),
+                  _renderMenuIcon(context, widget.settings.leftNavigationIcon!, widget.settings.rightNavigationIcon,
+                      widget.settings.navigatinBarStyle, widget.settings, "left"),
+                  _renderTitle(widget.settings.navigatinBarStyle, widget.settings),
                   Row(
                       children: _renderMenuIconList(
                           context,
@@ -797,10 +690,7 @@ class _HomeScreen extends State<HomeScreen>
                   ? Text(
                       settings.title!,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
                     )
                   : settings.typeHeader == "image"
                       ? Image.network(settings.logoHeaderUrl!, height: 40)
@@ -812,30 +702,20 @@ class _HomeScreen extends State<HomeScreen>
     );
   }
 
-  Widget _renderMenuIcon(
-      BuildContext context,
-      NavigationIcon navigationIcon,
-      NavigationIcon? navigationOtherIcon,
-      String? navigatinBarStyle,
-      Settings settings,
-      String direction) {
+  Widget _renderMenuIcon(BuildContext context, NavigationIcon navigationIcon, NavigationIcon? navigationOtherIcon,
+      String? navigatinBarStyle, Settings settings, String direction) {
     return navigationIcon.value != "icon_empty"
         ? Container(
-            padding: direction == "right"
-                ? new EdgeInsets.only(left: 0)
-                : new EdgeInsets.only(right: 0),
+            padding: direction == "right" ? new EdgeInsets.only(left: 0) : new EdgeInsets.only(right: 0),
             child: navigationIcon.value != "icon_back_forward"
                 ? Row(children: <Widget>[
                     IconButton(
                       padding: const EdgeInsets.all(0.0),
                       icon: Transform(
                           alignment: Alignment.center,
-                          transform: Matrix4.rotationY(math.pi *
-                              (Directionality.of(context) == TextDirection.ltr
-                                  ? 2
-                                  : 1)),
-                          child: new Image.network(navigationIcon.iconUrl!,
-                              height: 25, width: 25, color: Colors.white)
+                          transform:
+                              Matrix4.rotationY(math.pi * (Directionality.of(context) == TextDirection.ltr ? 2 : 1)),
+                          child: new Image.network(navigationIcon.iconUrl!, height: 25, width: 25, color: Colors.white)
                           /*Image.asset(
                               UIImages.imageDir +
                                   "/" +
@@ -850,10 +730,8 @@ class _HomeScreen extends State<HomeScreen>
                       },
                     ),
                     Container(
-                      width: (navigatinBarStyle == "center" &&
-                              navigationOtherIcon!.value == "icon_back_forward")
-                          ? 50
-                          : 0,
+                      width:
+                          (navigatinBarStyle == "center" && navigationOtherIcon!.value == "icon_back_forward") ? 50 : 0,
                     )
                   ])
                 : Row(
@@ -863,15 +741,10 @@ class _HomeScreen extends State<HomeScreen>
                         padding: const EdgeInsets.all(0.0),
                         icon: Transform(
                             alignment: Alignment.center,
-                            transform: Matrix4.rotationY(math.pi *
-                                (Directionality.of(context) == TextDirection.ltr
-                                    ? 2
-                                    : 1)),
-                            child: Image.asset(
-                                UIImages.imageDir + "/icon_back.png",
-                                height: 25,
-                                width: 25,
-                                color: Colors.white)),
+                            transform:
+                                Matrix4.rotationY(math.pi * (Directionality.of(context) == TextDirection.ltr ? 2 : 1)),
+                            child: Image.asset(UIImages.imageDir + "/icon_back.png",
+                                height: 25, width: 25, color: Colors.white)),
                         onPressed: () {
                           switch (_currentIndex) {
                             case 0:
@@ -913,20 +786,12 @@ class _HomeScreen extends State<HomeScreen>
                         padding: const EdgeInsets.all(0.0),
                         icon: Transform(
                             alignment: Alignment.center,
-                            transform: Matrix4.rotationY(math.pi *
-                                (Directionality.of(context) == TextDirection.ltr
-                                    ? 2
-                                    : 1)),
-                            child: Image.asset(
-                                UIImages.imageDir + "/icon_forward.png",
-                                height: 25,
-                                width: 25,
-                                color: Colors.white)),
+                            transform:
+                                Matrix4.rotationY(math.pi * (Directionality.of(context) == TextDirection.ltr ? 2 : 1)),
+                            child: Image.asset(UIImages.imageDir + "/icon_forward.png",
+                                height: 25, width: 25, color: Colors.white)),
                         onPressed: () {
-                          getCurrentKey()
-                              .currentState!
-                              ._webViewController
-                              ?.goForward();
+                          getCurrentKey().currentState!._webViewController?.goForward();
                         },
                       ),
                     ],
@@ -937,47 +802,34 @@ class _HomeScreen extends State<HomeScreen>
           );
   }
 
-  List<Widget> _renderMenuIconList(
-      BuildContext context,
-      List<NavigationIcon> navigationIcon,
-      NavigationIcon? navigationOtherIcon,
-      String? navigatinBarStyle,
-      Settings settings,
-      String direction) {
+  List<Widget> _renderMenuIconList(BuildContext context, List<NavigationIcon> navigationIcon,
+      NavigationIcon? navigationOtherIcon, String? navigatinBarStyle, Settings settings, String direction) {
     return navigationIcon
         .map(
-          (NavigationIcon navigationIcon) => _renderMenuIcon(
-              context,
-              navigationIcon,
-              navigationOtherIcon,
-              navigatinBarStyle,
-              settings,
-              direction),
+          (NavigationIcon navigationIcon) =>
+              _renderMenuIcon(context, navigationIcon, navigationOtherIcon, navigatinBarStyle, settings, direction),
         )
         .toList();
   }
 
-  Future<bool> _onBackPressed(context) async {
+  Future<bool> _onBackPressed() async {
     try {
       if (getCurrentKey().currentState!._webViewController != null) {
-        if (await getCurrentKey()
-            .currentState!
-            ._webViewController!
-            .canGoBack()) {
+        if (await getCurrentKey().currentState!._webViewController!.canGoBack()) {
           getCurrentKey().currentState!._webViewController!.goBack();
           return false;
         } else {
-          _showDialog(context);
+          _showDialog();
         }
       }
     } catch (e) {
-      _showDialog(context);
+      _showDialog();
     }
 
     return true;
   }
 
-  _showDialog(context) {
+  _showDialog() {
     return showDialog(
       context: context,
       builder: (context) => new AlertDialog(
@@ -998,8 +850,7 @@ class _HomeScreen extends State<HomeScreen>
     );
   }
 
-  actionButtonMenu(NavigationIcon navigationIcon, Settings settings,
-      BuildContext context) async {
+  actionButtonMenu(NavigationIcon navigationIcon, Settings settings, BuildContext context) async {
     print("navigationIcon.type");
     print(navigationIcon.type);
     if (navigationIcon.type == "url") {
@@ -1018,8 +869,7 @@ class _HomeScreen extends State<HomeScreen>
           });
         }
       } else {
-        key0.currentState!._webViewController?.loadUrl(
-            urlRequest: URLRequest(url: Uri.parse(navigationIcon.url!)));
+        key0.currentState!._webViewController?.loadUrl(urlRequest: URLRequest(url: Uri.parse(navigationIcon.url!)));
       }
     } else {
       switch (navigationIcon.value) {
@@ -1039,8 +889,7 @@ class _HomeScreen extends State<HomeScreen>
               });
             }
           } else {
-            key0.currentState!._webViewController?.loadUrl(
-                urlRequest: URLRequest(url: Uri.parse(settings.url!)));
+            key0.currentState!._webViewController?.loadUrl(urlRequest: URLRequest(url: Uri.parse(settings.url!)));
           }
           break;
         case "icon_reload":
@@ -1056,7 +905,7 @@ class _HomeScreen extends State<HomeScreen>
           getCurrentKey().currentState!._webViewController?.goForward();
           break;
         case "icon_exit":
-          _showDialog(context);
+          _showDialog();
           break;
 
         default:
@@ -1067,9 +916,7 @@ class _HomeScreen extends State<HomeScreen>
 
   shareApp(BuildContext context, String? text, String share) {
     final RenderBox box = context.findRenderObject() as RenderBox;
-    Share.share(share,
-        subject: text,
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    Share.share(share, subject: text, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
   GlobalKey<_WebViewScreen> getCurrentKey() {
@@ -1137,15 +984,16 @@ class _WebViewScreen extends State<WebViewScreen>
   bool get wantKeepAlive => true;
 
   InAppWebViewController? _webViewController;
-  String url = "";
+
   PullToRefreshController? pullToRefreshController;
 
   List<StreamSubscription<Position>> webViewGPSPositionStreams = [];
   late bool isLoading;
 
+  bool hasError = false;
+
   final Set<Factory<OneSequenceGestureRecognizer>> _gSet = [
-    Factory<VerticalDragGestureRecognizer>(
-        () => VerticalDragGestureRecognizer()),
+    Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer()),
     Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
     Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
   ].toSet();
@@ -1164,8 +1012,7 @@ class _WebViewScreen extends State<WebViewScreen>
         if (Platform.isAndroid) {
           _webViewController?.reload();
         } else if (Platform.isIOS) {
-          _webViewController?.loadUrl(
-              urlRequest: URLRequest(url: await _webViewController?.getUrl()));
+          _webViewController?.loadUrl(urlRequest: URLRequest(url: await _webViewController?.getUrl()));
         }
       },
     );
@@ -1221,9 +1068,8 @@ class _WebViewScreen extends State<WebViewScreen>
   @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
-    webViewGPSPositionStreams.forEach(
-        (StreamSubscription<Position> _flutterGeolocationStream) =>
-            _flutterGeolocationStream.cancel());
+    webViewGPSPositionStreams
+        .forEach((StreamSubscription<Position> _flutterGeolocationStream) => _flutterGeolocationStream.cancel());
     super.dispose();
   }
 
@@ -1232,160 +1078,137 @@ class _WebViewScreen extends State<WebViewScreen>
     return Stack(
       fit: StackFit.expand,
       children: [
-        InAppWebView(
-          // contextMenu: contextMenu,
-          initialUrlRequest: URLRequest(url: Uri.parse(widget.path!)),
-          gestureRecognizers: _gSet,
-          initialOptions: InAppWebViewGroupOptions(
-              crossPlatform: InAppWebViewOptions(
-                supportZoom: false,
-                useShouldOverrideUrlLoading: true,
-                useOnDownloadStart: true,
-                mediaPlaybackRequiresUserGesture: false,
-                userAgent: Platform.isAndroid
-                    ? widget.settings!.userAgent!.valueAndroid!
-                    : widget.settings!.userAgent!.valueIOS!,
-              ),
-              android: AndroidInAppWebViewOptions(
-                useHybridComposition: true,
-              ),
-              ios: IOSInAppWebViewOptions(
-                allowsInlineMediaPlayback: true,
-              )),
-          pullToRefreshController: widget.settings!.pullRefresh == "1"
-              ? pullToRefreshController
-              : null,
-          onWebViewCreated: (InAppWebViewController controller) {
-            controller.addJavaScriptHandler(
-                handlerName: '_flutterGeolocation',
-                callback: (args) {
-                  dynamic geolocationData;
-                  // try to decode json
-                  try {
-                    geolocationData = json.decode(args[0]);
-                    //geolocationData = json.decode(args[0].message);
-                  } catch (e) {
-                    // empty or what ever
-                    return;
+        hasError
+            ? buildErrorWidget()
+            : InAppWebView(
+                // contextMenu: contextMenu,
+                initialUrlRequest: URLRequest(url: Uri.parse(widget.path!)),
+                gestureRecognizers: _gSet,
+                initialOptions: InAppWebViewGroupOptions(
+                    crossPlatform: InAppWebViewOptions(
+                      supportZoom: false,
+                      useShouldOverrideUrlLoading: true,
+                      useOnDownloadStart: true,
+                      mediaPlaybackRequiresUserGesture: false,
+                      userAgent: Platform.isAndroid
+                          ? widget.settings!.userAgent!.valueAndroid!
+                          : widget.settings!.userAgent!.valueIOS!,
+                    ),
+                    android: AndroidInAppWebViewOptions(
+                      useHybridComposition: true,
+                    ),
+                    ios: IOSInAppWebViewOptions(
+                      allowsInlineMediaPlayback: true,
+                    )),
+                pullToRefreshController: widget.settings!.pullRefresh == "1" ? pullToRefreshController : null,
+                onWebViewCreated: (InAppWebViewController controller) {
+                  controller.addJavaScriptHandler(
+                      handlerName: '_flutterGeolocation',
+                      callback: (args) {
+                        dynamic geolocationData;
+                        // try to decode json
+                        try {
+                          geolocationData = json.decode(args[0]);
+                          //geolocationData = json.decode(args[0].message);
+                        } catch (e) {
+                          // empty or what ever
+                          return;
+                        }
+                        // Get action from JSON
+                        final String action = geolocationData['action'] ?? "";
+
+                        switch (action) {
+                          case "clearWatch":
+                            _geolocationClearWatch(parseInt(geolocationData['flutterGeolocationIndex'] ?? 0)!);
+                            break;
+
+                          case "getCurrentPosition":
+                            _geolocationGetCurrentPosition(parseInt(geolocationData['flutterGeolocationIndex'] ?? 0),
+                                PositionOptions().from(geolocationData['option'] ?? null));
+                            break;
+
+                          case "watchPosition":
+                            _geolocationWatchPosition(parseInt(geolocationData['flutterGeolocationIndex'] ?? 0)!,
+                                PositionOptions().from(geolocationData['option'] ?? null));
+                            break;
+                          default:
+                        }
+                      });
+                  _webViewController = controller;
+                },
+                androidOnPermissionRequest:
+                    (InAppWebViewController controller, String origin, List<String> resources) async {
+                  return PermissionRequestResponse(resources: resources, action: PermissionRequestResponseAction.GRANT);
+                },
+                shouldOverrideUrlLoading: (controller, navigationAction) async {
+                  var uri = navigationAction.request.url!;
+                  print("uri.scheme");
+                  print(uri.scheme);
+                  if (Platform.isAndroid && ["intent"].contains(uri.scheme)) {
+                    if (uri.toString().indexOf("maps") != -1) {
+                      var link = uri.toString().substring(uri.toString().indexOf('?link=') + 6);
+                      print(link);
+                      AndroidIntent intent = AndroidIntent(action: 'action_view', data: link);
+                      await intent.launch();
+                    } else {
+                      String id = uri
+                          .toString()
+                          .substring(uri.toString().indexOf('id%3D') + 5, uri.toString().indexOf('#Intent'));
+                      await StoreRedirect.redirect(androidAppId: id);
+                    }
+                    return NavigationActionPolicy.CANCEL;
+                  } else if (!["http", "https", "chrome", "data", "javascript", "file", "about"].contains(uri.scheme)) {
+                    if (await canLaunch(uri.toString())) {
+                      // Launch the App
+                      await launch(
+                        uri.toString(),
+                      );
+                      // and cancel the request
+                      return NavigationActionPolicy.CANCEL;
+                    }
                   }
-                  // Get action from JSON
-                  final String action = geolocationData['action'] ?? "";
+                  return NavigationActionPolicy.ALLOW;
+                },
+                onLoadStart: (controller, url) {
+                  setState(() {
+                    isLoading = true;
+                  });
+                },
+                onLoadStop: (controller, url) async {
+                  pullToRefreshController!.endRefreshing();
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    _geolocationAlertFix();
+                  });
 
-                  switch (action) {
-                    case "clearWatch":
-                      _geolocationClearWatch(parseInt(
-                          geolocationData['flutterGeolocationIndex'] ?? 0)!);
-                      break;
-
-                    case "getCurrentPosition":
-                      _geolocationGetCurrentPosition(
-                          parseInt(
-                              geolocationData['flutterGeolocationIndex'] ?? 0),
-                          PositionOptions()
-                              .from(geolocationData['option'] ?? null));
-                      break;
-
-                    case "watchPosition":
-                      _geolocationWatchPosition(
-                          parseInt(
-                              geolocationData['flutterGeolocationIndex'] ?? 0)!,
-                          PositionOptions()
-                              .from(geolocationData['option'] ?? null));
-                      break;
-                    default:
+                  this.setState(() {
+                    isLoading = false;
+                  });
+                },
+                onDownloadStart: (controller, url) async {
+                  if (await canLaunch(url.toString())) {
+                    // Launch the App
+                    await launch(
+                      url.toString(),
+                    );
+                    // and cancel the request
                   }
-                });
-            _webViewController = controller;
-          },
-          androidOnPermissionRequest: (InAppWebViewController controller,
-              String origin, List<String> resources) async {
-            return PermissionRequestResponse(
-                resources: resources,
-                action: PermissionRequestResponseAction.GRANT);
-          },
-          shouldOverrideUrlLoading: (controller, navigationAction) async {
-            var uri = navigationAction.request.url!;
-            print("uri.scheme");
-            print(uri.scheme);
-            if (Platform.isAndroid && ["intent"].contains(uri.scheme)) {
-              if (uri.toString().indexOf("maps") != -1) {
-                var link = uri
-                    .toString()
-                    .substring(uri.toString().indexOf('?link=') + 6);
-                print(link);
-                AndroidIntent intent =
-                    AndroidIntent(action: 'action_view', data: link);
-                await intent.launch();
-              } else {
-                String id = uri.toString().substring(
-                    uri.toString().indexOf('id%3D') + 5,
-                    uri.toString().indexOf('#Intent'));
-                await StoreRedirect.redirect(androidAppId: id);
-              }
-              return NavigationActionPolicy.CANCEL;
-            } else if (![
-              "http",
-              "https",
-              "chrome",
-              "data",
-              "javascript",
-              "file",
-              "about"
-            ].contains(uri.scheme)) {
-              if (await canLaunch(uri.toString())) {
-                // Launch the App
-                await launch(
-                  uri.toString(),
-                );
-                // and cancel the request
-                return NavigationActionPolicy.CANCEL;
-              }
-            }
-            return NavigationActionPolicy.ALLOW;
-          },
-          onLoadStart: (controller, url) {
-            setState(() {
-              this.url = url.toString();
-              isLoading = true;
-            });
-          },
-          onLoadStop: (controller, url) async {
-            pullToRefreshController!.endRefreshing();
-            Future.delayed(const Duration(milliseconds: 500), () {
-              _geolocationAlertFix();
-            });
-
-            this.setState(() {
-              this.url = url.toString();
-              isLoading = false;
-            });
-          },
-          onDownloadStart: (controller, url) async {
-            if (await canLaunch(url.toString())) {
-              // Launch the App
-              await launch(
-                url.toString(),
-              );
-              // and cancel the request
-            }
-          },
-          onLoadError: (controller, url, code, message) {
-            pullToRefreshController!.endRefreshing();
-          },
-          onProgressChanged: (controller, progress) {
-            if (progress == 100) {
-              pullToRefreshController!.endRefreshing();
-            }
-          },
-          onUpdateVisitedHistory: (controller, url, androidIsReload) {
-            setState(() {
-              this.url = url.toString();
-            });
-          },
-          onConsoleMessage: (controller, consoleMessage) {
-            print(consoleMessage);
-          },
-        ),
+                },
+                onLoadError: (controller, url, code, message) {
+                  pullToRefreshController!.endRefreshing();
+                  setState(() {
+                    hasError = true;
+                  });
+                },
+                onProgressChanged: (controller, progress) {
+                  if (progress == 100) {
+                    pullToRefreshController!.endRefreshing();
+                  }
+                },
+                onUpdateVisitedHistory: (controller, url, androidIsReload) {},
+                onConsoleMessage: (controller, consoleMessage) {
+                  print(consoleMessage);
+                },
+              ),
         (isLoading && widget.settings!.loader != "empty")
             ? Positioned(
                 top: 0,
@@ -1402,6 +1225,25 @@ class _WebViewScreen extends State<WebViewScreen>
     );
   }
 
+  Widget buildErrorWidget() {
+    return WillPopScope(
+      child: OfflineScreen(),
+      onWillPop: () async {
+        print('will pop ');
+        if (await _webViewController?.canGoBack() == true) {
+          setState(() {
+            hasError = false;
+            isLoading = true;
+          });
+          await _webViewController!.goBack();
+          return false;
+        }
+
+        return true;
+      },
+    );
+  }
+
   int? parseInt(dynamic value) {
     if (value == null) return null;
     if (value is int) return value;
@@ -1409,24 +1251,19 @@ class _WebViewScreen extends State<WebViewScreen>
     return int.tryParse(value) ?? null;
   }
 
-  Future<PositionResponse> getCurrentPosition(
-      PositionOptions positionOptions) async {
+  Future<PositionResponse> getCurrentPosition(PositionOptions positionOptions) async {
     PositionResponse positionResponse = PositionResponse();
 
     int? timeout = 30000;
     if (positionOptions.timeout! > 0) timeout = positionOptions.timeout;
 
     try {
-      LocationPermission geolocationStatus =
-          await GeolocatorPlatform.instance.requestPermission();
+      LocationPermission geolocationStatus = await GeolocatorPlatform.instance.requestPermission();
 
-      if (geolocationStatus == LocationPermission.always ||
-          geolocationStatus == LocationPermission.whileInUse) {
+      if (geolocationStatus == LocationPermission.always || geolocationStatus == LocationPermission.whileInUse) {
         positionResponse.position = await Future.any([
           Geolocator.getCurrentPosition(
-              desiredAccuracy: (positionOptions.enableHighAccuracy
-                  ? LocationAccuracy.best
-                  : LocationAccuracy.medium)),
+              desiredAccuracy: (positionOptions.enableHighAccuracy ? LocationAccuracy.best : LocationAccuracy.medium)),
           Future.delayed(Duration(milliseconds: timeout!), () {
             if (positionOptions.timeout! > 0) positionResponse.timedOut = true;
             return;
@@ -1545,20 +1382,14 @@ class _WebViewScreen extends State<WebViewScreen>
     _webViewController!.evaluateJavascript(source: javascript);
   }
 
-  void _geolocationGetCurrentPosition(
-      int? flutterGeolocationIndex, PositionOptions positionOptions) async {
-    PositionResponse positionResponse =
-        await getCurrentPosition(positionOptions);
+  void _geolocationGetCurrentPosition(int? flutterGeolocationIndex, PositionOptions positionOptions) async {
+    PositionResponse positionResponse = await getCurrentPosition(positionOptions);
 
-    _geolocationResponse(
-        flutterGeolocationIndex, positionOptions, positionResponse, false);
+    _geolocationResponse(flutterGeolocationIndex, positionOptions, positionResponse, false);
   }
 
   void _geolocationResponse(
-      int? flutterGeolocationIndex,
-      PositionOptions positionOptions,
-      PositionResponse positionResponse,
-      bool watcher) {
+      int? flutterGeolocationIndex, PositionOptions positionOptions, PositionResponse positionResponse, bool watcher) {
     if (positionResponse.position != null) {
       String javascript = '''
         function _flutterGeolocationResponse() {
@@ -1585,20 +1416,11 @@ class _WebViewScreen extends State<WebViewScreen>
           '''
             },
             timestamp: ''' +
-          positionResponse.position!.timestamp!.millisecondsSinceEpoch
-              .toString() +
+          positionResponse.position!.timestamp!.millisecondsSinceEpoch.toString() +
           '''
           });''' +
-          (!watcher
-              ? "  _flutterGeolocationSuccess[" +
-                  flutterGeolocationIndex.toString() +
-                  "] = null; "
-              : "") +
-          (!watcher
-              ? "  _flutterGeolocationError[" +
-                  flutterGeolocationIndex.toString() +
-                  "] = null; "
-              : "") +
+          (!watcher ? "  _flutterGeolocationSuccess[" + flutterGeolocationIndex.toString() + "] = null; " : "") +
+          (!watcher ? "  _flutterGeolocationError[" + flutterGeolocationIndex.toString() + "] = null; " : "") +
           '''
           return true;
         };
@@ -1621,16 +1443,8 @@ class _WebViewScreen extends State<WebViewScreen>
                   flutterGeolocationIndex.toString() +
                   "]({code: 1, message: 'User denied Geolocationg', PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3}); ") +
           "}" +
-          (!watcher
-              ? "  _flutterGeolocationSuccess[" +
-                  flutterGeolocationIndex.toString() +
-                  "] = null; "
-              : "") +
-          (!watcher
-              ? "  _flutterGeolocationError[" +
-                  flutterGeolocationIndex.toString() +
-                  "] = null; "
-              : "") +
+          (!watcher ? "  _flutterGeolocationSuccess[" + flutterGeolocationIndex.toString() + "] = null; " : "") +
+          (!watcher ? "  _flutterGeolocationError[" + flutterGeolocationIndex.toString() + "] = null; " : "") +
           '''
           return true;
         };
@@ -1647,29 +1461,26 @@ class _WebViewScreen extends State<WebViewScreen>
   ) {
     // init new strem
     var locationOptions = LocationSettings(
-        accuracy: (positionOptions.enableHighAccuracy
-            ? LocationAccuracy.best
-            : LocationAccuracy.medium),
+        accuracy: (positionOptions.enableHighAccuracy ? LocationAccuracy.best : LocationAccuracy.medium),
         distanceFilter: 10);
 
     webViewGPSPositionStreams[flutterGeolocationIndex] =
-        Geolocator.getPositionStream(locationSettings: locationOptions)
-            .listen((Position position) {
+        Geolocator.getPositionStream(locationSettings: locationOptions).listen((Position position) {
       // Send data to each warcher
-      PositionResponse positionResponse = PositionResponse()
-        ..position = position;
-      _geolocationResponse(
-          flutterGeolocationIndex, positionOptions, positionResponse, true);
+      PositionResponse positionResponse = PositionResponse()..position = position;
+      _geolocationResponse(flutterGeolocationIndex, positionOptions, positionResponse, true);
     });
   }
 
   Future<bool> goBack() async {
+    print(await _webViewController!.canGoBack());
+
     if (_webViewController != null) {
       if (await _webViewController!.canGoBack()) {
         _webViewController!.goBack();
         return false;
       } else {
-        return showDialog(
+        return await showDialog<bool>(
               context: context,
               builder: (context) => new AlertDialog(
                 title: new Text(S.of(context).closeApp),
@@ -1686,7 +1497,7 @@ class _WebViewScreen extends State<WebViewScreen>
                   ),
                 ],
               ),
-            ) as FutureOr<bool>? ??
+            ) ??
             false;
       }
     }

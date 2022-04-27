@@ -33,6 +33,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to Homepage"),
+        "backendError": MessageLookupByLibrary.simpleMessage(
+            "Having problem connect to backend server \ncheck your internet or try again later"),
         "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
         "changeMosque": MessageLookupByLibrary.simpleMessage("Change Mosque"),
         "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
@@ -46,15 +47,19 @@ class _SplashScreen extends State<Splash> {
 
   /// navigates to first screen
   void _navigateToHome() async {
-    var settings = await _initSettings();
+    try {
+      var settings = await _initSettings();
 
-    var goBoarding = await loadBoarding();
-    var mosqueId = await loadMosqueId();
+      var goBoarding = await loadBoarding();
+      var mosqueId = await loadMosqueId();
 
-    if (mosqueId == null || goBoarding && settings.boarding == "1") {
-      AppRouter.pushReplacement(OnBoardingScreen(settings));
-    } else {
-      AppRouter.pushReplacement(HomeScreen(settings));
+      if (mosqueId == null || goBoarding && settings.boarding == "1") {
+        AppRouter.pushReplacement(OnBoardingScreen(settings));
+      } else {
+        AppRouter.pushReplacement(HomeScreen(settings));
+      }
+    } catch (e) {
+      setState(() => applicationProblem = true);
     }
   }
 
@@ -74,9 +79,7 @@ class _SplashScreen extends State<Splash> {
               child: SplashScreen.callback(
                 isLoading: true,
                 onSuccess: (e) => _navigateToHome(),
-                onError: (error, stacktrace) {
-                  //todo  handle error
-                },
+                onError: (error, stacktrace) {},
                 name: 'assets/animations/rive/mawaqit_logo_animation1.riv',
                 fit: BoxFit.cover,
                 startAnimation: 'idle',
@@ -86,6 +89,17 @@ class _SplashScreen extends State<Splash> {
                 height: 100,
               ),
             ),
+            if (applicationProblem)
+              Align(
+                alignment: Alignment(0, .3),
+                child: Text(
+                  S.of(context).backendError,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Colors.redAccent.withOpacity(.6),
+                      ),
+                ),
+              ),
           ],
         ),
       ),
