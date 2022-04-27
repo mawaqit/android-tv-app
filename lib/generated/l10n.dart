@@ -549,6 +549,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Having problem connect to backend server \ncheck your internet or try again later`
+  String get backendError {
+    return Intl.message(
+      'Having problem connect to backend server \ncheck your internet or try again later',
+      name: 'backendError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

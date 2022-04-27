@@ -48,5 +48,6 @@
     "TermsOfService": "Terms of Service",
     "InstallationGuide": "Installation Guide",
     "drawerTitle": "Mawaqit",
-    "drawerDesc": "Connecting Muslims to Mosques"
+    "drawerDesc": "Connecting Muslims to Mosques",
+    "backendError" : "Having problem connect to backend server \ncheck your internet or try again later"
 }

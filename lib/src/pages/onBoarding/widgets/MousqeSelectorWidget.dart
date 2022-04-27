@@ -44,10 +44,17 @@ class _OnBoardingMosqueSelectorState extends State<OnBoardingMosqueSelector> {
       sharedPref.save('boarding', 'true');
       widget.onDone();
     }).catchError((e) {
-      setState(() {
-        loading = false;
-        error = S.of(context).mosqueIdIsNotValid(mosqueId);
-      });
+      if (e is InvalidMosqueId) {
+        setState(() {
+          loading = false;
+          error = S.of(context).mosqueIdIsNotValid(mosqueId);
+        });
+      } else {
+        setState(() {
+          loading = false;
+          error = S.of(context).backendError;
+        });
+      }
     });
   }
 

@@ -57,12 +57,7 @@ Future<void> main() async {
       SystemChrome.restoreSystemUIOverlays();
     });
 
-    return runApp(
-      ChangeNotifierProvider<ThemeNotifier>(
-        create: (_) => new ThemeNotifier(),
-        child: MyApp(),
-      ),
-    );
+    return runApp(MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
@@ -71,6 +66,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => AppLanguage()),
         ChangeNotifierProvider(create: (context) => MosqueManager()),
         ChangeNotifierProvider(create: (context) => SettingsManager()),
@@ -79,13 +75,16 @@ class MyApp extends StatelessWidget {
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) =>
-                ConnectivityService().connectionStatusController.stream,
+            create: (context) => ConnectivityService().connectionStatusController.stream.map((event) {
+              if (event == ConnectivityStatus.Wifi || event == ConnectivityStatus.Cellular) {
+                //todo check actual internet
+              }
+
+              return event;
+            }),
             child: Consumer<ThemeNotifier>(
               builder: (context, theme, _) => Shortcuts(
-                shortcuts: {
-                  SingleActivator(LogicalKeyboardKey.select): ActivateIntent()
-                },
+                shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
                 child: MaterialApp(
                   themeMode: theme.mode,
                   theme: theme.lightTheme,

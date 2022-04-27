@@ -66,7 +66,7 @@ android {
           keyAlias keystoreProperties != null ? keystoreProperties['keyAlias'] : null
           keyPassword keystoreProperties != null ? keystoreProperties['keyPassword'] : null
           storePassword keystoreProperties != null ? keystoreProperties['storePassword'] : null
-          storeFile keystoreProperties != null ? file(keystoreProperties['storeFile']) : null
+          storeFile keystoreProperties != null && keystoreProperties['storeFile'] != null ? file(keystoreProperties['storeFile']) : null
         }
 //        debug {
 //            storeFile file(storeFile_)
