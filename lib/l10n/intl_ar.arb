@@ -48,5 +48,6 @@
     "TermsOfService": "شروط الخدمة",
     "InstallationGuide": "دليل التثبيت",
     "drawerTitle": "مواقيت",
-    "drawerDesc": "توصيل المسلمين بالمساجد"
+    "drawerDesc": "توصيل المسلمين بالمساجد",
+    "backendError": "Having problem connect to backend server \ncheck your internet or try again later"
 }
