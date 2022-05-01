@@ -44,9 +44,9 @@
     "selectMosqueId": "حدد معرف المسجد",
     "mawaqitWelcome": "مرحبا بك في مواقيت",
     "mawaqitDesc": "توفر لك مواقيت طريقة جديدة لتتبع وإدارة أوقات الصلاة، والواقع أننا نقدم نظاما من النهاية إلى النهاية يوفر لمديري المساجد أداة متاحة على الإنترنت على مدار الساعة 24/24.",
-    "PrivacyPolicy": "سياسة الخصوصية",
-    "TermsOfService": "شروط الخدمة",
-    "InstallationGuide": "دليل التثبيت",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة",
+    "installationGuide": "دليل التثبيت",
     "drawerTitle": "مواقيت",
     "drawerDesc": "توصيل المسلمين بالمساجد",
     "backendError": "Having problem connect to backend server \ncheck your internet or try again later"
