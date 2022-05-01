@@ -501,30 +501,30 @@ class S {
   }
 
   /// `Privacy policy`
-  String get PrivacyPolicy {
+  String get privacyPolicy {
     return Intl.message(
       'Privacy policy',
-      name: 'PrivacyPolicy',
+      name: 'privacyPolicy',
       desc: '',
       args: [],
     );
   }
 
   /// `Terms of Service`
-  String get TermsOfService {
+  String get termsOfService {
     return Intl.message(
       'Terms of Service',
-      name: 'TermsOfService',
+      name: 'termsOfService',
       desc: '',
       args: [],
     );
   }
 
   /// `Installation Guide`
-  String get InstallationGuide {
+  String get installationGuide {
     return Intl.message(
       'Installation Guide',
-      name: 'InstallationGuide',
+      name: 'installationGuide',
       desc: '',
       args: [],
     );
