@@ -103,6 +103,7 @@ flutter:
     - assets/img/
     - assets/img/flag/
     - assets/cfg/
+    - assets/scripts/
     - assets/backgrounds/
     - assets/animations/rive/
     - assets/animations/lottie/
