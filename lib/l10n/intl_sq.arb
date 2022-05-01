@@ -44,10 +44,10 @@
     "selectMosqueId": "Zgjidhni ID-në e xhamisë",
     "mawaqitWelcome": "Mirë se vini në MAWAQIT",
     "mawaqitDesc": "MAWAQIT ju ofron një mënyrë të re për të gjurmuar dhe menaxhuar kohët e namazit, në të vërtetë ne ofrojmë një sistem nga fundi në fund që u ofron menaxherëve të xhamive një mjet në internet të disponueshëm 24/24 orë.",
-    "privacyPolicy": "Politika e privatësisë.",
-    "termsOfService": "Kushtet e shërbimit",
+    "privacyPolicy": "Politika e privatësisë",
+    "termsOfService": "Kushtet e Shërbimit",
     "installationGuide": "Udhëzuesi i instalimit",
     "drawerTitle": "MAWAQIT",
     "drawerDesc": "Connecting Muslims to Mosques",
-    "backendError": "Sorry, we could not connect to server.\nPlease verify Internet connectivity or try again later."
+    "backendError": "Na vjen keq, nuk mundëm të lidheshim me serverin.\nVerifiko lidhjen me internetin ose provo sërish më vonë."
 }

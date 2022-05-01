@@ -35,13 +35,13 @@
     "whatsApp": "হোয়াটস অ্যাপ",
     "messenger": "ম্যাসেঞ্জার",
     "snapchat": "Snapchat",
-    "changeMosque": "Change Mosque",
-    "mosque": "Mosque",
-    "enterMosqueId": "Enter Mosque ID : ",
-    "mosqueId": "Mosque ID ",
-    "missingMosqueId": "Missing mosque ID",
-    "mosqueIdIsNotValid": "{mosqueId} isn't a valid mosque ID",
-    "selectMosqueId": "Select your Mosque ID",
+    "changeMosque": "মসজিদ পরিবর্তন করুন",
+    "mosque": "মসজিদ",
+    "enterMosqueId": "মসজিদ আইডি লিখুন:",
+    "mosqueId": "মসজিদ আইডি ",
+    "missingMosqueId": "মসজিদের আইডি নেই",
+    "mosqueIdIsNotValid": "{mosqueId} একটি বৈধ মসজিদ আইডি নয়",
+    "selectMosqueId": "আপনার মসজিদ আইডি নির্বাচন করুন",
     "mawaqitWelcome": "মাওয়াকিতে স্বাগতম",
     "mawaqitDesc": "মাওয়াকিট আপনাকে নামাজের সময়গুলি ট্র্যাক এবং পরিচালনা করার একটি নতুন উপায় অফার করে, প্রকৃতপক্ষে আমরা একটি এন্ড-টু-এন্ড সিস্টেম অফার করি যা মসজিদ পরিচালকদের 24/24 ঘন্টা উপলব্ধ একটি অনলাইন টুল সরবরাহ করে।",
     "privacyPolicy": "গোপনীয়তার নীতিমালা",
@@ -49,5 +49,5 @@
     "installationGuide": "ইনস্টলকরণের সহায়িকা",
     "drawerTitle": "MAWAQIT",
     "drawerDesc": "Connecting Muslims to Mosques",
-    "backendError": "Sorry, we could not connect to server.\nPlease verify Internet connectivity or try again later."
+    "backendError": "দুঃখিত, আমরা সার্ভারের সাথে সংযোগ করতে পারিনি৷\nঅনুগ্রহ করে ইন্টারনেট সংযোগ যাচাই করুন বা পরে আবার চেষ্টা করুন৷"
 }
