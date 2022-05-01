@@ -49,5 +49,5 @@
     "installationGuide": "Installationsanleitungen",
     "drawerTitle": "MAWAQIT",
     "drawerDesc": "Connecting Muslims to Mosques",
-    "backendError": "Entschuldigung, wir konnten keine Verbindung zum Server herstellen.\nBitte überprüfen Sie die Internetverbindung oder versuchen Sie es später erneut."
+    "backendError": "Sorry, we could not connect to the server.\nPlease verify Internet connectivity or try again later."
 }
