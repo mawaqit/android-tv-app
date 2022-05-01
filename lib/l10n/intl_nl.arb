@@ -49,5 +49,5 @@
     "installationGuide": "Installation Guide",
     "drawerTitle": "Mawaqit",
     "drawerDesc": "Connecting Muslims to Mosques",
-    "backendError": "Having problem connect to backend server \ncheck your internet or try again later"
+    "backendError": "Sorry, we could not connect to server.\nPlease verify Internet connectivity or try again later."
 }
