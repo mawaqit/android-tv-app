@@ -1,4 +1,4 @@
-package com.mawaqit.admin
+package com.kanout.mawaqit
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -22,12 +22,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '10'
+    flutterVersionCode = '116'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0.6 Onboarding V2 + Android Manifest Update + Upgraded all packages except #PUSH NOTIFICATION, #FIREBASE #MAP'
+    flutterVersionName = '1.0.12'
 }
 
 apply plugin: 'com.android.application'
@@ -37,9 +37,14 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+  keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -47,9 +52,9 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.mawaqit.admin"
+        applicationId "com.kanout.mawaqit"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         // FIREBASE PACKAGES
@@ -58,17 +63,17 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(storeFile_)
-            storePassword storePassword_
-            keyAlias keyAlias_
-            keyPassword keyPassword_
+          keyAlias keystoreProperties != null ? keystoreProperties['keyAlias'] : null
+          keyPassword keystoreProperties != null ? keystoreProperties['keyPassword'] : null
+          storePassword keystoreProperties != null ? keystoreProperties['storePassword'] : null
+          storeFile keystoreProperties != null && keystoreProperties['storeFile'] != null ? file(keystoreProperties['storeFile']) : null
         }
-        debug {
-            storeFile file(storeFile_)
-            storePassword storePassword_
-            keyAlias keyAlias_
-            keyPassword keyPassword_
-        }
+//        debug {
+//            storeFile file(storeFile_)
+//            storePassword storePassword_
+//            keyAlias keyAlias_
+//            keyPassword keyPassword_
+//        }
     }
 
     buildTypes {
@@ -91,5 +96,8 @@ dependencies {
 
   implementation platform('com.google.firebase:firebase-bom:29.1.0')
   implementation 'com.google.firebase:firebase-analytics-ktx'
+
+  implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+  implementation 'androidx.leanback:leanback:1.0.0'
 }
 
