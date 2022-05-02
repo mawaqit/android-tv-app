@@ -3,7 +3,16 @@ import 'package:intl/intl.dart';
 extension StringUtils on String {
   /// convert string to UpperCamelCaseFormat
   String get toCamelCase {
-    return trim().split(' ').map((e) => toBeginningOfSentenceCase(e)).join();
+    final separated = trim().toLowerCase().split(' ');
+
+    var value = separated.first;
+    for (var i = 1; i < separated.length; i++) {
+      final val = separated[i];
+
+      value += toBeginningOfSentenceCase(val) ?? '';
+    }
+
+    return value;
   }
 }
 
