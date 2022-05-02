@@ -49,5 +49,5 @@
     "installationGuide": "انسٹالیشن گائیڈ",
     "drawerTitle": "مواقیت",
     "drawerDesc": "Connecting Muslims to Mosques",
-    "backendError": "معذرت، ہم سرور سے منسلک نہیں ہو سکے۔\nبراہ کرم انٹرنیٹ کنیکٹیویٹی کی تصدیق کریں یا بعد میں دوبارہ کوشش کریں۔"
+    "backendError": "Sorry, we could not connect to the server.\nPlease verify Internet connectivity or try again later."
 }
