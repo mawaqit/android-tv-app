@@ -49,5 +49,5 @@
     "installationGuide": "Vodič za instalaciju",
     "drawerTitle": "MAWAQIT",
     "drawerDesc": "Connecting Muslims to Mosques",
-    "backendError": "Sorry, we could not connect to the server.\nPlease verify Internet connectivity or try again later."
+    "backendError": "Nažalost, nismo se mogli povezati s poslužiteljem.\nProvjerite internetsku vezu ili pokušajte ponovo kasnije."
 }
