@@ -25,7 +25,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Android TV/Box (please complete the following information):**
  - Device: [e.g. MawaqitBox A95X]
- - OS: [e.g. Andrdoid 11]
+ - OS: [e.g. Android 11]
  - Version [e.g. 1.0.0]
 - Build [e.g. 137]
 
