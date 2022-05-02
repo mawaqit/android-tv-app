@@ -19,7 +19,6 @@ import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/elements/Loader.dart';
-import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
@@ -103,7 +102,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
   @override
   void initState() {
     super.initState();
-    // _initPackageInfo();
 
     _handleIncomingLinks();
 
@@ -609,10 +607,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
             (Page page) => DrawerListTitle(
               forceThemeColor: true,
               iconUrl: page.iconUrl,
-              text: Intl.message(
-                page.title ?? '',
-                name: page.title?.toCamelCase,
-              ),
+              text: Intl.message(page.title ?? '', name: page.title?.toCamelCase),
               onTap: () => AppRouter.popAndPush(PageScreen(page), name: page.title),
             ),
           )
