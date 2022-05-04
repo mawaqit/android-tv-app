@@ -47,6 +47,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "Please enter the Mosque ID :"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "gpsError": MessageLookupByLibrary.simpleMessage(
+            "Can access current device location check your device GPS"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
@@ -68,6 +70,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "mosque": MessageLookupByLibrary.simpleMessage("Mosque"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("Mosque ID"),
         "mosqueIdIsNotValid": m0,
+        "mosqueInput": MessageLookupByLibrary.simpleMessage("Mosque Input"),
+        "mosqueNameError":
+            MessageLookupByLibrary.simpleMessage("Enter Mosque name"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "noInternet":
@@ -78,10 +83,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchForMosque":
+            MessageLookupByLibrary.simpleMessage("Search for mosque"),
+        "searchMosque": MessageLookupByLibrary.simpleMessage("Search Mosque"),
         "selectMosqueId":
             MessageLookupByLibrary.simpleMessage("Select your Mosque ID"),
+        "selectWithMosqueId":
+            MessageLookupByLibrary.simpleMessage("Enter Mosque ID"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
+        "slugError":
+            MessageLookupByLibrary.simpleMessage("Isn\'t a valid mosque slug"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to quit the application?"),

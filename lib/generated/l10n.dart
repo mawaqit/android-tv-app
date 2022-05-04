@@ -559,6 +559,76 @@ class S {
       args: [],
     );
   }
+
+  /// `Mosque Input`
+  String get mosqueInput {
+    return Intl.message(
+      'Mosque Input',
+      name: 'mosqueInput',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Mosque ID`
+  String get selectWithMosqueId {
+    return Intl.message(
+      'Enter Mosque ID',
+      name: 'selectWithMosqueId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search for mosque`
+  String get searchForMosque {
+    return Intl.message(
+      'Search for mosque',
+      name: 'searchForMosque',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search Mosque`
+  String get searchMosque {
+    return Intl.message(
+      'Search Mosque',
+      name: 'searchMosque',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can access current device location check your device GPS`
+  String get gpsError {
+    return Intl.message(
+      'Can access current device location check your device GPS',
+      name: 'gpsError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Mosque name`
+  String get mosqueNameError {
+    return Intl.message(
+      'Enter Mosque name',
+      name: 'mosqueNameError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Isn't a valid mosque slug`
+  String get slugError {
+    return Intl.message(
+      'Isn\'t a valid mosque slug',
+      name: 'slugError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

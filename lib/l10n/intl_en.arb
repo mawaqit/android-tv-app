@@ -49,5 +49,12 @@
     "installationGuide": "Installation Guide",
     "drawerTitle": "MAWAQIT",
     "drawerDesc": "Connecting Muslims to Mosques",
-    "backendError": "Sorry, we could not connect to the server.\nPlease verify Internet connectivity or try again later."
+    "backendError": "Sorry, we could not connect to the server.\nPlease verify Internet connectivity or try again later.",
+    "mosqueInput" : "Mosque Input",
+    "selectWithMosqueId" : "Enter Mosque ID",
+    "searchForMosque" : "Search for mosque",
+    "searchMosque" : "Search Mosque",
+    "gpsError" :"Can access current device location check your device GPS" ,
+    "mosqueNameError": "Enter Mosque name",
+    "slugError" : "Isn't a valid mosque slug"
 }

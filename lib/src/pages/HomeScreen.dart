@@ -170,7 +170,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     final settingsManager = context.read<SettingsManager>();
     final settings = settingsManager.settings;
 
-    var url = 'https://mawaqit.net/${appLanguage.appLocal.languageCode}/id/${mosqueManager.mosqueId}?view=desktop';
+    var url = mosqueManager.buildUrl(appLanguage.appLocal.languageCode);
 
     print(url);
     var bottomPadding = MediaQuery.of(context).padding.bottom;
