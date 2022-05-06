@@ -117,6 +117,8 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
                 mosque: mosque,
                 onTap: () => _selectMosque(mosque),
               ),
+            // to allow user to scroll to the end of lis
+            FocusableActionDetector(child: SizedBox(height: 40))
           ],
         ),
       ),
@@ -145,6 +147,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
         suffixIcon: IconButton(
           tooltip: "Search by GPS",
           icon: loading ? CircularProgressIndicator() : Icon(Icons.gps_fixed),
+          color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
           onPressed: () => _searchGps(),
         ),
         focusedBorder: OutlineInputBorder(

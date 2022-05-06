@@ -1,77 +1,129 @@
 class Mosque {
-  final int id;
+  final String? jumua;
+
+  // final String? proximity;
+  final String? label;
+  final String? localisation;
+  final String? image;
+  final String? jumua2;
+  final bool? jumuaAsDuhr;
+
+  // final int id;
   final String uuid;
   final String name;
   final String slug;
-  final String image;
-  final String? location;
 
-//<editor-fold desc="Data Methods">
+  final double? latitude;
+  final double? longitude;
+  final String? associationName;
+  final String? phone;
+  final String? paymentWebsite;
+  final String? email;
+  final String? site;
 
-  const Mosque({
-    required this.id,
-    required this.uuid,
-    required this.name,
-    required this.slug,
-    required this.image,
-    this.location,
-  });
+  // final String? closed;
+  final bool? womenSpace;
+  final bool? janazaPrayer;
+  final bool? aidPrayer;
+  final bool? childrenCourses;
+  final bool? adultCourses;
+  final bool? ramadanMeal;
+  final bool? handicapAccessibility;
+  final bool? ablutions;
+  final bool? parking;
+  final List<String>? times;
+  final List<String>? iqama;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Mosque &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          uuid == other.uuid &&
-          name == other.name &&
-          slug == other.slug &&
-          image == other.image &&
-          location == other.location);
+  Mosque(
+      {this.jumua,
+      this.label,
+      this.localisation,
+      this.image,
+      this.jumua2,
+      this.jumuaAsDuhr,
+      required this.uuid,
+      required this.name,
+      required this.slug,
+      this.latitude,
+      this.longitude,
+      this.associationName,
+      this.phone,
+      this.paymentWebsite,
+      this.email,
+      this.site,
+      this.womenSpace,
+      this.janazaPrayer,
+      this.aidPrayer,
+      this.childrenCourses,
+      this.adultCourses,
+      this.ramadanMeal,
+      this.handicapAccessibility,
+      this.ablutions,
+      this.parking,
+      this.times,
+      this.iqama});
 
-  @override
-  int get hashCode => id.hashCode ^ uuid.hashCode ^ name.hashCode ^ slug.hashCode ^ image.hashCode ^ location.hashCode;
-
-  @override
-  String toString() {
-    return 'Mosque{' +
-        ' id: $id,' +
-        ' uuid: $uuid,' +
-        ' name: $name,' +
-        ' slug: $slug,' +
-        ' image: $image,' +
-        ' location: $location,' +
-        '}';
-  }
-
-  Mosque copyWith({
-    int? id,
-    String? uuid,
-    String? name,
-    String? slug,
-    String? image,
-    String? location,
-  }) {
-    return Mosque(
-      id: id ?? this.id,
-      uuid: uuid ?? this.uuid,
-      name: name ?? this.name,
-      slug: slug ?? this.slug,
-      image: image ?? this.image,
-      location: location ?? this.location,
-    );
+  Map<String, dynamic> toMap() {
+    return {
+      'jumua': this.jumua,
+      'label': this.label,
+      'localisation': this.localisation,
+      'image': this.image,
+      'jumua2': this.jumua2,
+      'jumuaAsDuhr': this.jumuaAsDuhr,
+      'uuid': this.uuid,
+      'name': this.name,
+      'slug': this.slug,
+      'latitude': this.latitude,
+      'longitude': this.longitude,
+      'associationName': this.associationName,
+      'phone': this.phone,
+      'paymentWebsite': this.paymentWebsite,
+      'email': this.email,
+      'site': this.site,
+      'womenSpace': this.womenSpace,
+      'janazaPrayer': this.janazaPrayer,
+      'aidPrayer': this.aidPrayer,
+      'childrenCourses': this.childrenCourses,
+      'adultCourses': this.adultCourses,
+      'ramadanMeal': this.ramadanMeal,
+      'handicapAccessibility': this.handicapAccessibility,
+      'ablutions': this.ablutions,
+      'parking': this.parking,
+      'times': this.times,
+      'iqama': this.iqama,
+    };
   }
 
   factory Mosque.fromMap(Map<String, dynamic> map) {
     return Mosque(
-      id: map['id'] ?? 0,
+      jumua: map['jumua'],
+      label: map['label'],
+      localisation: map['localisation'],
+      image: map['image'],
+      jumua2: map['jumua2'],
+      jumuaAsDuhr: map['jumuaAsDuhr'],
       uuid: map['uuid'],
       name: map['name'],
       slug: map['slug'],
-      image: map['image'],
-      location: map['localisation'],
+      latitude: map['latitude'],
+      longitude: map['longitude'],
+      associationName: map['associationName'],
+      phone: map['phone'],
+      paymentWebsite: map['paymentWebsite'],
+      email: map['email'],
+      site: map['site'],
+      womenSpace: map['womenSpace'],
+      janazaPrayer: map['janazaPrayer'],
+      aidPrayer: map['aidPrayer'],
+      childrenCourses: map['childrenCourses'],
+      adultCourses: map['adultCourses'],
+      ramadanMeal: map['ramadanMeal'],
+      handicapAccessibility: map['handicapAccessibility'],
+      ablutions: map['ablutions'],
+      parking: map['parking'],
+      times: map['times'].cast<String>(),
+      iqama: map['iqama'].cast<String>(),
     );
   }
-
-//</editor-fold>
 }

@@ -100,6 +100,7 @@ class _MosqueInputIdState extends State<MosqueInputId> {
                     suffixIcon: IconButton(
                       tooltip: "Search by Id",
                       icon: loading ? CircularProgressIndicator() : Icon(Icons.search),
+                      color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
                       onPressed: () => _setMosqueId(inputController.text),
                     ),
                     focusedBorder: OutlineInputBorder(
