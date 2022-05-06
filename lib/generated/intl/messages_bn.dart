@@ -29,7 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("হোমপেজে ব্যাক করো"),
         "backendError": MessageLookupByLibrary.simpleMessage(
-            "দুঃখিত, আমরা সার্ভারের সাথে সংযোগ করতে পারিনি৷\nঅনুগ্রহ করে ইন্টারনেট সংযোগ যাচাই করুন বা পরে আবার চেষ্টা করুন৷"),
+            "ക്ഷമിക്കണം, ഞങ്ങൾക്ക് സെർവറിലേക്ക് കണക്റ്റുചെയ്യാനായില്ല.\nദയവായി ഇന്റർനെറ്റ് കണക്റ്റിവിറ്റി പരിശോധിക്കുക അല്ലെങ്കിൽ പിന്നീട് വീണ്ടും ശ്രമിക്കുക."),
         "cancel": MessageLookupByLibrary.simpleMessage("বাতিল করুন"),
         "changeMosque":
             MessageLookupByLibrary.simpleMessage("মসজিদ পরিবর্তন করুন"),

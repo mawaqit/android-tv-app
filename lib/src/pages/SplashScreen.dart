@@ -38,22 +38,16 @@ class _SplashScreen extends State<Splash> {
     return res == null;
   }
 
-  ///
-  Future<String?> loadMosqueId() async {
-    String? id = await sharedPref.read("mosqueId");
-
-    return id;
-  }
-
   /// navigates to first screen
   void _navigateToHome() async {
     try {
       var settings = await _initSettings();
 
       var goBoarding = await loadBoarding();
-      var mosqueId = await loadMosqueId();
+      var mosqueManager = context.read<MosqueManager>();
+      bool hasNoMosque = mosqueManager.mosqueId == null && mosqueManager.mosqueSlug == null;
 
-      if (mosqueId == null || goBoarding && settings.boarding == "1") {
+      if (hasNoMosque || goBoarding && settings.boarding == "1") {
         AppRouter.pushReplacement(OnBoardingScreen(settings));
       } else {
         AppRouter.pushReplacement(HomeScreen(settings));
@@ -77,7 +71,7 @@ class _SplashScreen extends State<Splash> {
             Container(
               width: double.infinity,
               child: SplashScreen.callback(
-                isLoading: true,
+                isLoading: false,
                 onSuccess: (e) => _navigateToHome(),
                 onError: (error, stacktrace) {},
                 name: 'assets/animations/rive/mawaqit_logo_animation1.riv',

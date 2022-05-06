@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mawaqit/src/helpers/AppRouter.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
+import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
 
 class MosqueSearchScreen extends StatelessWidget {
   const MosqueSearchScreen({Key? key}) : super(key: key);
@@ -22,7 +21,7 @@ class MosqueSearchScreen extends StatelessWidget {
           ),
           Expanded(
             flex: 6,
-            child: OnBoardingMosqueSelector(onDone: AppRouter.pop),
+            child: MosqueSearch(onDone: () => Navigator.of(context, rootNavigator: true).pop()),
           ),
         ],
       ),

@@ -30,7 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "backToHomePage": MessageLookupByLibrary.simpleMessage(
             "Volver a la página de inicio"),
         "backendError": MessageLookupByLibrary.simpleMessage(
-            "Lo sentimos, no pudimos conectarnos al servidor.\nVerifique la conectividad a Internet o inténtelo de nuevo más tarde."),
+            "Lo sentimos, no pudimos conectarnos al servidor.\nPor favor verifique la conectividad a Internet o inténtelo de nuevo más tarde."),
         "cancel": MessageLookupByLibrary.simpleMessage("CANCAR"),
         "changeMosque":
             MessageLookupByLibrary.simpleMessage("Cambiar Mezquita"),

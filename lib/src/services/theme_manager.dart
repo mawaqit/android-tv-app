@@ -5,6 +5,12 @@ import './storage_manager.dart';
 class ThemeNotifier with ChangeNotifier {
   /// used getter to support hot restart in development
   ThemeData get darkTheme => ThemeData(
+        primaryIconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.white.withOpacity(.3),
+        ),
         brightness: Brightness.dark,
         primaryColor: Colors.deepPurple[400],
         primaryColorDark: Colors.deepPurple[800],
@@ -20,9 +26,15 @@ class ThemeNotifier with ChangeNotifier {
 
   /// used getter to support hot restart in development
   ThemeData get lightTheme => ThemeData(
+
         primarySwatch: Colors.deepPurple,
         selectedRowColor: Colors.deepPurple[100],
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple, backgroundColor: Colors.white),
+        cardColor: Colors.deepPurple[50],
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.deepPurple,
+          backgroundColor: Colors.white,
+          cardColor: Colors.deepPurple[50],
+        ),
         focusColor: Colors.deepPurpleAccent.withOpacity(.5),
       );
 

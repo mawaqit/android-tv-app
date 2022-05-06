@@ -170,7 +170,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     final settingsManager = context.read<SettingsManager>();
     final settings = settingsManager.settings;
 
-    var url = 'https://mawaqit.net/${appLanguage.appLocal.languageCode}/id/${mosqueManager.mosqueId}?view=desktop';
+    var url = mosqueManager.buildUrl(appLanguage.appLocal.languageCode);
 
     print(url);
     var bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -1076,6 +1076,8 @@ class _WebViewScreen extends State<WebViewScreen>
         hasError
             ? buildErrorWidget()
             : InAppWebView(
+                // recreate in app web-view when the path is changed
+                key: ValueKey(widget.path),
                 // contextMenu: contextMenu,
                 initialUrlRequest: URLRequest(url: Uri.parse(widget.path!)),
                 gestureRecognizers: _gSet,

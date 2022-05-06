@@ -29,7 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("ہوم پیج پر جائیں"),
         "backendError": MessageLookupByLibrary.simpleMessage(
-            "معذرت، ہم سرور سے منسلک نہیں ہو سکے۔\nبراہ کرم انٹرنیٹ کنیکٹیویٹی کی تصدیق کریں یا بعد میں دوبارہ کوشش کریں۔"),
+            "معذرت، ہم سرور سے منسلک نہیں ہو سکے۔\n براہ کرم انٹرنیٹ کنیکٹیویٹی کی تصدیق کریں یا بعد میں دوبارہ کوشش کریں۔"),
         "cancel": MessageLookupByLibrary.simpleMessage("منسوخ کریں"),
         "changeMosque": MessageLookupByLibrary.simpleMessage("تغيير المسجد"),
         "changeTheme": MessageLookupByLibrary.simpleMessage("تھیم تبدیل کریں۔"),

@@ -559,6 +559,268 @@ class S {
       args: [],
     );
   }
+
+  /// `Mosque Input`
+  String get mosqueInput {
+    return Intl.message(
+      'Mosque Input',
+      name: 'mosqueInput',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Mosque ID`
+  String get selectWithMosqueId {
+    return Intl.message(
+      'Enter Mosque ID',
+      name: 'selectWithMosqueId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search for mosque`
+  String get searchForMosque {
+    return Intl.message(
+      'Search for mosque',
+      name: 'searchForMosque',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search Mosque`
+  String get searchMosque {
+    return Intl.message(
+      'Search Mosque',
+      name: 'searchMosque',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can access current device location check your device GPS`
+  String get gpsError {
+    return Intl.message(
+      'Can access current device location check your device GPS',
+      name: 'gpsError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Mosque name`
+  String get mosqueNameError {
+    return Intl.message(
+      'Enter Mosque name',
+      name: 'mosqueNameError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Isn't a valid mosque slug`
+  String get slugError {
+    return Intl.message(
+      'Isn\'t a valid mosque slug',
+      name: 'slugError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Parking`
+  String get mosque_Facilities_Parking {
+    return Intl.message(
+      'Parking',
+      name: 'mosque_Facilities_Parking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disabled access`
+  String get mosque_Facilities_DisabledAccess {
+    return Intl.message(
+      'Disabled access',
+      name: 'mosque_Facilities_DisabledAccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ablution room`
+  String get mosque_Facilities_AblutionsRoom {
+    return Intl.message(
+      'Ablution room',
+      name: 'mosque_Facilities_AblutionsRoom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Woman space`
+  String get mosque_Facilities_WomanSpace {
+    return Intl.message(
+      'Woman space',
+      name: 'mosque_Facilities_WomanSpace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Adults courses`
+  String get mosque_Facilities_AdultsCourse {
+    return Intl.message(
+      'Adults courses',
+      name: 'mosque_Facilities_AdultsCourse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Children courses`
+  String get mosque_Facilities_ChildrenCourses {
+    return Intl.message(
+      'Children courses',
+      name: 'mosque_Facilities_ChildrenCourses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Salat Al Eid`
+  String get mosque_Facilities_SalatAlAid {
+    return Intl.message(
+      'Salat Al Eid',
+      name: 'mosque_Facilities_SalatAlAid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Salat Al janaza`
+  String get mosque_Facilities_SalatAlJanaza {
+    return Intl.message(
+      'Salat Al janaza',
+      name: 'mosque_Facilities_SalatAlJanaza',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Iftar Ramadan`
+  String get mosques_Facilities_IftarRamadan {
+    return Intl.message(
+      'Iftar Ramadan',
+      name: 'mosques_Facilities_IftarRamadan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All this information is filled in by the people in charge of the mosque`
+  String get mosque_facilities_Info {
+    return Intl.message(
+      'All this information is filled in by the people in charge of the mosque',
+      name: 'mosque_facilities_Info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jumua`
+  String get jumua {
+    return Intl.message(
+      'Jumua',
+      name: 'jumua',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `no jumua`
+  String get noJumua {
+    return Intl.message(
+      'no jumua',
+      name: 'noJumua',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `shuruq`
+  String get shuruq {
+    return Intl.message(
+      'shuruq',
+      name: 'shuruq',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fajr`
+  String get fajr {
+    return Intl.message(
+      'Fajr',
+      name: 'fajr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duhr`
+  String get duhr {
+    return Intl.message(
+      'Duhr',
+      name: 'duhr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Asr`
+  String get asr {
+    return Intl.message(
+      'Asr',
+      name: 'asr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maghrib`
+  String get maghrib {
+    return Intl.message(
+      'Maghrib',
+      name: 'maghrib',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Isha`
+  String get isha {
+    return Intl.message(
+      'Isha',
+      name: 'isha',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All this information is filled in by the people in charge of the mosque`
+  String get mosqueAnnouncement {
+    return Intl.message(
+      'All this information is filled in by the people in charge of the mosque',
+      name: 'mosqueAnnouncement',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '' key
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

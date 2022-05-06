@@ -87,6 +87,7 @@ class MyApp extends StatelessWidget {
                 shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
                 child: MaterialApp(
                   themeMode: theme.mode,
+                  // themeMode: ThemeMode.dark,
                   theme: theme.lightTheme,
                   darkTheme: theme.darkTheme,
                   locale: model.appLocal,
