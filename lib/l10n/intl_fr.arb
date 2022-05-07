@@ -41,7 +41,7 @@
     "mosqueId": "ID de la mosquée ",
     "missingMosqueId": "Il manque l'ID de la mosquée",
     "mosqueIdIsNotValid": "{mosqueId} n'est pas un id de mosquée valide",
-    "selectMosqueId": "Sélectionner l'ID de la mosquée",
+    "selectMosqueId": "Please enter your Mosque ID",
     "mawaqitWelcome": "Bienvenue sur MAWAQIT",
     "mawaqitDesc": "MAWAQIT vous offre une nouvelle façon de suivre et de gérer les temps de prière, en effet nous offrons un système de bout en bout qui fournit aux gestionnaires de mosquées un outil en ligne disponible 24/24h.",
     "privacyPolicy": "Politique de confidentialité",
@@ -76,7 +76,7 @@
     "maghrib": "Maghrib",
     "isha": "Isha",
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
-    "doYouKnowMosqueId": "Connaissez-vous l'ID de votre installation ou l'ID de la mosquée (Mosque ID) ?",
+    "doYouKnowMosqueId": "Do you know your installation ID or your Mosque ID?",
     "yes": "Oui",
     "no": "Non"
 }
