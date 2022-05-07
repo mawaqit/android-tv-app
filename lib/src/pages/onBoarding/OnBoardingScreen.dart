@@ -2,12 +2,13 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
+import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/MousqeSelectorWidget.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/mawaqit_circle_button_widget.dart';
 
@@ -22,6 +23,7 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
+  final sharedPref = SharedPref();
   final _nextButtonFocusNode = FocusNode();
 
   int currentScreen = 0;
@@ -49,9 +51,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     if (currentScreen == 1) return OnBoardingMawaqitAboutWidget();
 
     if (currentScreen == 2)
-      return OnBoardingMosqueSelector(
-        onDone: () => AppRouter.push(HomeScreen(widget.settings)),
+      return MosqueSearch(
+        onDone: () {
+          sharedPref.save('boarding', 'true');
+          AppRouter.pushReplacement(HomeScreen(widget.settings));
+        },
       );
+    // return OnBoardingMosqueSelector(
+    //   onDone: () => AppRouter.push(HomeScreen(widget.settings)),
+    // );
 
     return SizedBox();
   }
@@ -91,11 +99,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               children: [
                 VersionWidget(
                   style: TextStyle(
-                    color: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        ?.color
-                        ?.withOpacity(.5),
+                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
                   ),
                 ),
                 Spacer(flex: 2),
@@ -106,8 +110,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   decorator: DotsDecorator(
                     size: const Size.square(9.0),
                     activeSize: const Size(21.0, 9.0),
-                    activeShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0)),
+                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                     spacing: EdgeInsets.all(3),
                   ),
                 ),

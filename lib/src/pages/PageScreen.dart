@@ -112,7 +112,7 @@ class _PageScreen extends State<PageScreen> {
                   right: 0,
                   left: 0,
                   child: Container(
-                    color: Theme.of(context).cardColor,
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     child: Loader(
                       type: settings.loader,
                       color: Theme.of(context).brightness == Brightness.light
