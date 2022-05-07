@@ -41,7 +41,7 @@
     "mosqueId": "Cami ID (sayı) ",
     "missingMosqueId": "Eksik Cami ID",
     "mosqueIdIsNotValid": "{mosqueId} geçerli bir Cami ID değil",
-    "selectMosqueId": "Lütfen Cami ID Seçiniz",
+    "selectMosqueId": "Please enter your Mosque ID",
     "mawaqitWelcome": "MAWAQIT'e hoş geldiniz",
     "mawaqitDesc": "MAWAQIT size namaz vakitlerini takip etmeniz ve yönetmeniz için yeni bir yol sunuyor, aslında biz cami yöneticilerine 24/24 saat çevrimiçi bir araç sağlayan uçtan uca bir sistem sunuyoruz.",
     "privacyPolicy": "Gizlilik politikası",
@@ -76,7 +76,7 @@
     "maghrib": "Maghrib",
     "isha": "Isha",
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
-    "doYouKnowMosqueId": "Do you know your Mosque ID?",
+    "doYouKnowMosqueId": "Do you know your installation ID or your Mosque ID?",
     "yes": "Yes",
     "no": "No"
 }
