@@ -101,7 +101,7 @@ class _LanguageTileState extends State<LanguageTile> {
           vertical: 1.0,
         ),
         child: Ink(
-          decoration: BoxDecoration( 
+          decoration: BoxDecoration(
             color: isFocused || widget.isSelected ? themeData.selectedRowColor : null,
             borderRadius: BorderRadius.circular(10),
           ),

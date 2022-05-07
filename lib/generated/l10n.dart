@@ -600,10 +600,10 @@ class S {
     );
   }
 
-  /// `Can access current device location check your device GPS`
+  /// `Cannot access current device location check your device GPS`
   String get gpsError {
     return Intl.message(
-      'Can access current device location check your device GPS',
+      'Cannot access current device location check your device GPS',
       name: 'gpsError',
       desc: '',
       args: [],
@@ -820,7 +820,35 @@ class S {
     );
   }
 
-  // skipped getter for the '' key
+  /// `Do you know your mosque ID?`
+  String get doYouKnowMosqueId {
+    return Intl.message(
+      'Do you know your mosque ID?',
+      name: 'doYouKnowMosqueId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No`
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -22,7 +22,7 @@ class InputTypeSelector extends StatelessWidget {
           // shrinkWrap: true,
           children: [
             Text(
-              S.of(context).mosqueInput,
+              S.of(context).doYouKnowMosqueId,
               // "Mosque Input",
               textAlign: TextAlign.center,
               style: theme.textTheme.headlineSmall?.copyWith(
@@ -34,13 +34,13 @@ class InputTypeSelector extends StatelessWidget {
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => MosqueInputId(onDone: onDone)));
               },
-              child: Text(S.current.selectWithMosqueId),
+              child: Text(S.current.yes),
             ),
             OutlinedButton(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => MosqueInputSearch(onDone: onDone)));
               },
-              child: Text(S.current.searchForMosque),
+              child: Text(S.current.no),
             ),
           ],
         ),
