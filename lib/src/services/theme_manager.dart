@@ -12,7 +12,7 @@ class ThemeNotifier with ChangeNotifier {
         primaryColorLight: Color(0xff490094),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
-            overlayColor: MaterialStateProperty.all(Colors.deepPurple.withOpacity(.3)),
+            overlayColor: MaterialStateProperty.all(Color(0xff490094)),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -20,12 +20,12 @@ class ThemeNotifier with ChangeNotifier {
             ),
           ),
         ),
-        focusColor: Colors.deepPurple.withOpacity(.12),
+        focusColor: Color(0xff490094),
         dialogBackgroundColor: Color(0xff121212),
         canvasColor: Color(0xff121212),
         backgroundColor: Color(0xff121212),
         scaffoldBackgroundColor: Color(0xff121212),
-        selectedRowColor: Colors.deepPurple[800],
+        selectedRowColor: Color(0xff490094),
         colorScheme: ColorScheme.dark(
           brightness: Brightness.dark,
           primary: Colors.white,
@@ -35,8 +35,8 @@ class ThemeNotifier with ChangeNotifier {
   /// used getter to support hot restart in development
   ThemeData get lightTheme => ThemeData(
         primarySwatch: Colors.deepPurple,
-        selectedRowColor: Colors.deepPurple[100],
-        cardColor: Colors.deepPurple[50],
+        selectedRowColor: Color(0xff490094),
+        cardColor: Color(0xff490094),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
@@ -49,9 +49,9 @@ class ThemeNotifier with ChangeNotifier {
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: Colors.deepPurple,
           backgroundColor: Colors.white,
-          cardColor: Colors.deepPurple[50],
+          cardColor: Color(0xff490094),
         ),
-        focusColor: Colors.deepPurpleAccent.withOpacity(.5),
+        focusColor: Color(0xff490094),
       );
 
   bool? isLightTheme;

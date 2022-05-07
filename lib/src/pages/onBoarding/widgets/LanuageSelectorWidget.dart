@@ -56,6 +56,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                 var locale = locales[index];
                 return Material(
                   child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
                     onTap: () {
                       appLanguage.changeLanguage(locale, mosqueManager.mosqueId);
                       onSelect();
