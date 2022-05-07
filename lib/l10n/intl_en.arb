@@ -67,8 +67,8 @@
     "mosque_Facilities_SalatAlJanaza": "Salat Al janaza",
     "mosques_Facilities_IftarRamadan": "Iftar Ramadan",
     "mosque_facilities_Info": "All this information is filled in by the people in charge of the mosque",
-    "jumua" : "Jumua",
-    "noJumua": "no jumua" ,
+    "jumua": "Jumua",
+    "noJumua": "no jumua",
     "shuruq": "shuruq",
     "fajr": "Fajr",
     "duhr": "Duhr",
@@ -78,5 +78,4 @@
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
     "doYouKnowMosqueId": "Do you know your mosque ID?",
     "yes": "Yes",
-    "no" : "No"
 }
