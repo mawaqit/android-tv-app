@@ -41,7 +41,7 @@
     "mosqueId": "ID džamije",
     "missingMosqueId": "Nedostaje ID džamije",
     "mosqueIdIsNotValid": "{mosqueId} nije važeći ID džamije",
-    "selectMosqueId": "Odaberite ID džamije",
+    "selectMosqueId": "Please enter your Mosque ID",
     "mawaqitWelcome": "Dobrodošli u MAWAQIT",
     "mawaqitDesc": "MAWAQIT vam nudi novi način praćenja i upravljanja vremenom namaza, zapravo nudimo end-to-end sustav koji upraviteljima džamija pruža online alat dostupan 24/24 sata.",
     "privacyPolicy": "Pravila privatnosti",
@@ -76,7 +76,7 @@
     "maghrib": "Maghrib",
     "isha": "Isha",
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
-    "doYouKnowMosqueId": "Do you know your Mosque ID?",
+    "doYouKnowMosqueId": "Do you know your installation ID or your Mosque ID?",
     "yes": "Yes",
     "no": "No"
 }
