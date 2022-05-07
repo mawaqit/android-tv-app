@@ -177,6 +177,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
 
     var themeProvider = Provider.of<ThemeNotifier>(context);
+    final theme = Theme.of(context);
 
     if (connectionStatus == ConnectivityStatus.Offline)
       return WillPopScope(
@@ -207,144 +208,146 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
               drawer: (widget.settings.leftNavigationIcon!.value == "icon_menu" ||
                       widget.settings.rightNavigationIcon!.value == "icon_menu")
                   ? Drawer(
-                      child: ListView(
-                        padding: const EdgeInsets.all(0.0),
-                        children: <Widget>[
-                          DrawerHeader(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: <Color>[
-                                    Theme.of(context).brightness == Brightness.light
-                                        ? HexColor(settings.firstColor)
-                                        : Theme.of(context).primaryColor,
-                                    Theme.of(context).brightness == Brightness.light
-                                        ? HexColor(settings.secondColor)
-                                        : Theme.of(context).primaryColor,
-                                  ],
-                                ),
+                    child: ListView(
+                      padding: const EdgeInsets.all(0.0),
+                      children: <Widget>[
+                        FocusableActionDetector(child: SizedBox()),
+                        DrawerHeader(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: <Color>[
+                                  Theme.of(context).brightness == Brightness.light
+                                      ? HexColor(settings.firstColor)
+                                      : Theme.of(context).primaryColor,
+                                  Theme.of(context).brightness == Brightness.light
+                                      ? HexColor(settings.secondColor)
+                                      : Theme.of(context).primaryColor,
+                                ],
                               ),
-                              child: Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Container(
-                                      width: 70.0,
-                                      height: 70.0,
-                                      child: Image.network(
-                                        settings.logoHeaderUrl!,
-                                      ),
+                            ),
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    width: 70.0,
+                                    height: 70.0,
+                                    child: Image.network(
+                                      settings.logoHeaderUrl!,
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 5),
-                                      child: Text(
-                                          // settings.title!,
-                                          S.of(context).drawerTitle,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(color: Colors.white, fontSize: 16)),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 5),
-                                      child: Text(
-                                          // settings.subTitle!,
-                                          S.of(context).drawerDesc,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(color: Colors.white, fontSize: 14)),
-                                    )
-                                  ],
-                                ),
-                              )),
-                          DrawerListTitle(
-                              icon: Icons.home,
-                              text: S.of(context).home,
-                              onTap: () async {
-                                if (widget.settings.tabNavigationEnable == "1") {
-                                  if (goToWeb) {
-                                    setState(() => goToWeb = false);
-                                    AppRouter.popAndPush(WebScreen(widget.settings.url), name: 'HomeScreen');
-
-                                    Navigator.pop(context);
-                                  }
-                                } else {
-                                  key0.currentState!._webViewController?.loadUrl(
-                                    urlRequest: URLRequest(
-                                      url: Uri.parse(url),
-                                    ),
-                                  );
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5),
+                                    child: Text(
+                                        // settings.title!,
+                                        S.of(context).drawerTitle,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: Colors.white, fontSize: 16)),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5),
+                                    child: Text(
+                                        // settings.subTitle!,
+                                        S.of(context).drawerDesc,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: Colors.white, fontSize: 14)),
+                                  )
+                                ],
+                              ),
+                            )),
+                        DrawerListTitle(
+                            icon: Icons.home,
+                            text: S.of(context).home,
+                            onTap: () async {
+                              if (widget.settings.tabNavigationEnable == "1") {
+                                if (goToWeb) {
+                                  setState(() => goToWeb = false);
+                                  AppRouter.popAndPush(WebScreen(widget.settings.url), name: 'HomeScreen');
 
                                   Navigator.pop(context);
                                 }
-                              }),
-                          _renderMenuDrawer(settings.menus!, context),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            child: Divider(height: 1, color: Colors.grey[400]),
+                              } else {
+                                key0.currentState!._webViewController?.loadUrl(
+                                  urlRequest: URLRequest(
+                                    url: Uri.parse(url),
+                                  ),
+                                );
+
+                                Navigator.pop(context);
+                              }
+                            }),
+                        _renderMenuDrawer(settings.menus!, context),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                          child: Divider(height: 1, color: Colors.grey[400]),
+                        ),
+                        DrawerListTitle(
+                          icon: Icons.translate,
+                          text: S.of(context).languages,
+                          onTap: () => AppRouter.popAndPush(LanguageScreen()),
+                        ),
+                        DrawerListTitle(
+                          icon: Icons.museum_outlined,
+                          text: S.of(context).changeMosque,
+                          onTap: () => AppRouter.popAndPush(MosqueSearchScreen()),
+                        ),
+                        DrawerListTitle(
+                            icon: Icons.brightness_medium,
+                            text: Theme.of(context).brightness == Brightness.light
+                                ? S.of(context).darkMode
+                                : S.of(context).lightMode,
+                            onTap: () {
+                              if (Theme.of(context).brightness == Brightness.light) {
+                                themeProvider.setDarkMode();
+                              } else {
+                                themeProvider.setLightMode();
+                              }
+                            }),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                          child: Divider(height: 1, color: Colors.grey[400]),
+                        ),
+                        _renderPageDrawer(settings.pages!, context),
+                        settings.pages!.length != 0
+                            ? Padding(
+                                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                child: Divider(height: 1, color: Colors.grey[400]),
+                              )
+                            : Container(height: 0),
+                        DrawerListTitle(
+                          icon: Icons.info,
+                          text: S.of(context).about,
+                          onTap: () => AppRouter.popAndPush(AboutScreen()),
+                        ),
+                        DrawerListTitle(
+                            icon: Icons.share,
+                            text: S.of(context).share,
+                            onTap: () {
+                              shareApp(context, settings.title, settings.share!);
+                            }),
+                        DrawerListTitle(
+                          icon: Icons.star,
+                          text: S.of(context).rate,
+                          onTap: () => LaunchReview.launch(
+                            androidAppId: settings.androidId,
+                            iOSAppId: settings.iosId,
                           ),
-                          DrawerListTitle(
-                            icon: Icons.translate,
-                            text: S.of(context).languages,
-                            onTap: () => AppRouter.popAndPush(LanguageScreen()),
-                          ),
-                          DrawerListTitle(
-                            icon: Icons.museum_outlined,
-                            text: S.of(context).changeMosque,
-                            onTap: () => AppRouter.popAndPush(MosqueSearchScreen()),
-                          ),
-                          DrawerListTitle(
-                              icon: Icons.brightness_medium,
-                              text: Theme.of(context).brightness == Brightness.light
-                                  ? S.of(context).darkMode
-                                  : S.of(context).lightMode,
-                              onTap: () {
-                                if (Theme.of(context).brightness == Brightness.light) {
-                                  themeProvider.setDarkMode();
-                                } else {
-                                  themeProvider.setLightMode();
-                                }
-                              }),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            child: Divider(height: 1, color: Colors.grey[400]),
-                          ),
-                          _renderPageDrawer(settings.pages!, context),
-                          settings.pages!.length != 0
-                              ? Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                  child: Divider(height: 1, color: Colors.grey[400]),
-                                )
-                              : Container(height: 0),
-                          DrawerListTitle(
-                            icon: Icons.info,
-                            text: S.of(context).about,
-                            onTap: () => AppRouter.popAndPush(AboutScreen()),
-                          ),
-                          DrawerListTitle(
-                              icon: Icons.share,
-                              text: S.of(context).share,
-                              onTap: () {
-                                shareApp(context, settings.title, settings.share!);
-                              }),
-                          DrawerListTitle(
-                            icon: Icons.star,
-                            text: S.of(context).rate,
-                            onTap: () => LaunchReview.launch(
-                              androidAppId: settings.androidId,
-                              iOSAppId: settings.iosId,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            child: Divider(height: 1, color: Colors.grey[400]),
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.system_update),
-                            isThreeLine: true,
-                            dense: true,
-                            title: Text(S.of(context).update),
-                            subtitle: VersionWidget(),
-                          ),
-                        ],
-                      ),
-                    )
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                          child: Divider(height: 1, color: Colors.grey[400]),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.system_update),
+                          isThreeLine: true,
+                          dense: true,
+                          title: Text(S.of(context).update),
+                          subtitle: VersionWidget(),
+                        ),
+                        FocusableActionDetector(child: SizedBox()),
+                      ],
+                    ),
+                  )
                   : null,
               body: Stack(
                 fit: StackFit.expand,

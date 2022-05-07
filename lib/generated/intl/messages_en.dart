@@ -42,6 +42,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Select your preferred language."),
+        "doYouKnowMosqueId":
+            MessageLookupByLibrary.simpleMessage("Do you know your mosque ID?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
@@ -51,7 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
-            "Can access current device location check your device GPS"),
+            "Cannot access current device location check your device GPS"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
@@ -103,6 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Iftar Ramadan"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
+        "no": MessageLookupByLibrary.simpleMessage("No"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("No internet connection"),
         "noJumua": MessageLookupByLibrary.simpleMessage("no jumua"),
@@ -134,6 +137,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "update": MessageLookupByLibrary.simpleMessage("Update Application"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
         "whoops": MessageLookupByLibrary.simpleMessage("Whoops!"),
+        "yes": MessageLookupByLibrary.simpleMessage("Yes"),
         "youtube": MessageLookupByLibrary.simpleMessage("Youtube")
       };
 }

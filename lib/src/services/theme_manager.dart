@@ -5,37 +5,53 @@ import './storage_manager.dart';
 class ThemeNotifier with ChangeNotifier {
   /// used getter to support hot restart in development
   ThemeData get darkTheme => ThemeData(
-        primaryIconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        iconTheme: IconThemeData(
-          color: Colors.white.withOpacity(.3),
-        ),
         brightness: Brightness.dark,
-        primaryColor: Colors.deepPurple[400],
-        primaryColorDark: Colors.deepPurple[800],
-        selectedRowColor: Colors.deepPurple[800],
-        focusColor: Colors.deepPurpleAccent.withOpacity(.3),
+        primarySwatch: Colors.deepPurple,
+        primaryColor: Color(0xff490094),
+        primaryColorDark: Color(0xff490094),
+        primaryColorLight: Color(0xff490094),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(Color(0xff490094)),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
+        ),
+        focusColor: Color(0xff490094),
+        dialogBackgroundColor: Color(0xff121212),
         canvasColor: Color(0xff121212),
-        colorScheme: ColorScheme.fromSwatch(
+        backgroundColor: Color(0xff121212),
+        scaffoldBackgroundColor: Color(0xff121212),
+        selectedRowColor: Color(0xff490094),
+        colorScheme: ColorScheme.dark(
           brightness: Brightness.dark,
-          primarySwatch: Colors.deepPurple,
-          // backgroundColor: Color(0xff121212),
+          primary: Colors.white,
         ),
       );
 
   /// used getter to support hot restart in development
   ThemeData get lightTheme => ThemeData(
-
         primarySwatch: Colors.deepPurple,
-        selectedRowColor: Colors.deepPurple[100],
-        cardColor: Colors.deepPurple[50],
+        selectedRowColor: Color(0xff490094),
+        cardColor: Color(0xff490094),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
+        ),
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: Colors.deepPurple,
           backgroundColor: Colors.white,
-          cardColor: Colors.deepPurple[50],
+          cardColor: Color(0xff490094),
         ),
-        focusColor: Colors.deepPurpleAccent.withOpacity(.5),
+        focusColor: Color(0xff490094),
       );
 
   bool? isLightTheme;
