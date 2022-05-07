@@ -210,6 +210,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                       child: ListView(
                         padding: const EdgeInsets.all(0.0),
                         children: <Widget>[
+                          FocusableActionDetector(child: SizedBox()),
                           DrawerHeader(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
@@ -342,6 +343,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                             title: Text(S.of(context).update),
                             subtitle: VersionWidget(),
                           ),
+                          FocusableActionDetector(child: SizedBox()),
                         ],
                       ),
                     )

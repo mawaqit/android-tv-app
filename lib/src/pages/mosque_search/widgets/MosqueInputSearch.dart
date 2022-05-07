@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:mawaqit/src/widgets/mosque_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -113,7 +114,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
             searchField(theme),
             SizedBox(height: 20),
             for (var mosque in results)
-              MosqueTileWidget(
+              MosqueSimpleTile(
                 mosque: mosque,
                 onTap: () => _selectMosque(mosque),
               ),

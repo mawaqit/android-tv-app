@@ -101,9 +101,7 @@ class MosqueTileWidget extends StatelessWidget {
                         ),
                         elevation: 0,
                         backgroundColor: Theme.of(context).canvasColor,
-                        builder: (context) => MosqaueInfoWidget(
-                          mosque: mosque,
-                        ),
+                        builder: (context) => MosqaueInfoWidget(mosque: mosque),
                       );
                     },
                   ),
