@@ -41,7 +41,7 @@
     "mosqueId": "معرف المسجد (Mosque ID)",
     "missingMosqueId": "معرف المسجد مفقود",
     "mosqueIdIsNotValid": "{mosqueId} ليس معرف مسجد صحيح",
-    "selectMosqueId": "حدد معرف المسجد",
+    "selectMosqueId": "Please enter your Mosque ID",
     "mawaqitWelcome": "مرحبا بك في مواقيت",
     "mawaqitDesc": "توفر لك مواقيت طريقة جديدة لتتبع وإدارة أوقات الصلاة، والواقع أننا نقدم نظاما من النهاية إلى النهاية يوفر لمديري المساجد أداة متاحة على الإنترنت على مدار الساعة 24/24.",
     "privacyPolicy": "سياسة الخصوصية",
@@ -76,7 +76,7 @@
     "maghrib": "Maghrib",
     "isha": "Isha",
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
-    "doYouKnowMosqueId": "هل تعرف معرف المسجد الخاص بك (Mosque ID)؟",
+    "doYouKnowMosqueId": "Do you know your installation ID or your Mosque ID?",
     "yes": "نعم",
     "no": "لا"
 }
