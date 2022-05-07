@@ -76,7 +76,7 @@
     "maghrib": "Maghrib",
     "isha": "Isha",
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
-    "doYouKnowMosqueId": "Do you know your Mosque ID?",
+    "doYouKnowMosqueId": "Connaissez-vous l'ID de votre installation ou l'ID de la mosquée (Mosque ID) ?",
     "yes": "Oui",
     "no": "Non"
 }
