@@ -41,7 +41,7 @@
     "mosqueId": "مسجد کی شناخت",
     "missingMosqueId": "مسجد کی شناخت غائب ہے۔",
     "mosqueIdIsNotValid": "{mosqueId} ایک درست مسجد ID نہیں ہے۔",
-    "selectMosqueId": "مسجد کی شناخت منتخب کریں۔",
+    "selectMosqueId": "Please enter your Mosque ID",
     "mawaqitWelcome": "مواقیت میں خوش آمدید",
     "mawaqitDesc": "مواقیت آپ کو نماز کے اوقات کو ٹریک کرنے اور ان کا نظم کرنے کا ایک نیا طریقہ پیش کرتا ہے، درحقیقت ہم ایک اینڈ ٹو اینڈ سسٹم پیش کرتے ہیں جو مسجد کے منتظمین کو 24/24 گھنٹے دستیاب آن لائن ٹول فراہم کرتا ہے۔",
     "privacyPolicy": "رازداری کی پالیسی",
@@ -76,7 +76,7 @@
     "maghrib": "Maghrib",
     "isha": "Isha",
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
-    "doYouKnowMosqueId": "Do you know your Mosque ID?",
+    "doYouKnowMosqueId": "Do you know your installation ID or your Mosque ID?",
     "yes": "Yes",
     "no": "No"
 }
