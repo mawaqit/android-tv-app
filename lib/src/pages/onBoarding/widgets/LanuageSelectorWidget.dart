@@ -54,53 +54,82 @@ class OnBoardingLanguageSelector extends StatelessWidget {
               separatorBuilder: (BuildContext context, int index) => Divider(height: 1),
               itemBuilder: (BuildContext context, int index) {
                 var locale = locales[index];
-                return Material(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(10),
-                    onTap: () {
-                      appLanguage.changeLanguage(locale, mosqueManager.mosqueId);
-                      onSelect();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6.0,
-                        vertical: 1.0,
-                      ),
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          color: isSelected(locale.languageCode) ? themeData.selectedRowColor : null,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          dense: true,
-                          leading: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Image.asset('assets/img/flag/${locale.languageCode}.png'),
-                          ),
-                          title: Text(
-                            appLanguage.languageName(locale.languageCode),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          trailing: isSelected(locale.languageCode)
-                              ? Icon(
-                                  MawaqitIcons.icon_checked,
-                                  color: themeData.primaryColor,
-                                )
-                              : null,
-                        ),
-                      ),
-                    ),
-                  ),
+                return LanguageTile(
+                  onSelect: onSelect,
+                  locale: locale,
+                  isSelected: isSelected(locale.languageCode),
                 );
               },
             ),
           ),
         )
       ],
+    );
+  }
+}
+
+class LanguageTile extends StatefulWidget {
+  const LanguageTile({
+    Key? key,
+    required this.isSelected,
+    required this.locale,
+    required this.onSelect,
+  }) : super(key: key);
+
+  final bool isSelected;
+  final Locale locale;
+
+  final void Function() onSelect;
+
+  @override
+  State<LanguageTile> createState() => _LanguageTileState();
+}
+
+class _LanguageTileState extends State<LanguageTile> {
+  bool isFocused = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+    final appLanguage = Provider.of<AppLanguage>(context);
+    final mosqueManager = Provider.of<MosqueManager>(context);
+
+    return Material(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 6.0,
+          vertical: 1.0,
+        ),
+        child: Ink(
+          decoration: BoxDecoration( 
+            color: isFocused || widget.isSelected ? themeData.selectedRowColor : null,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: InkWell(
+            onFocusChange: (i) => setState(() => isFocused = i),
+            borderRadius: BorderRadius.circular(10),
+
+            onTap: () {
+              appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueId);
+              widget.onSelect();
+            },
+            child: ListTile(
+              dense: true,
+
+              textColor: isFocused || widget.isSelected ? Colors.white : null,
+              leading: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Image.asset('assets/img/flag/${widget.locale.languageCode}.png'),
+              ),
+              title: Text(
+                appLanguage.languageName(widget.locale.languageCode),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+              trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
