@@ -34,9 +34,7 @@ class _DrawerListTitle extends State<DrawerListTitle> {
         title: Text(
           widget.text!,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 15.0,
-          ),
+          style: TextStyle(fontSize: 15.0),
         ),
         leading: _renderIcon(
           widget.iconUrl,
@@ -49,6 +47,7 @@ class _DrawerListTitle extends State<DrawerListTitle> {
                 Directionality.of(context) == TextDirection.ltr
                     ? Icons.keyboard_arrow_right
                     : Icons.keyboard_arrow_left,
+                color: isFocused ? Colors.white : Theme.of(context).textTheme.bodyMedium?.color,
               ),
         onTap: widget.onTap,
       ),
