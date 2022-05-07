@@ -51,7 +51,7 @@
     "drawerDesc": "Connecting muslims to Mosques",
     "backendError": "Désolé, nous n'avons pas pu nous connecter au serveur.\nVeuillez vérifier votre connectivité Internet ou réessayer plus tard.",
     "mosqueInput": "Mosque Input",
-    "selectWithMosqueId": "Enter Mosque ID",
+    "selectWithMosqueId": "Entrer l'ID de la mosquée (Mosque  ID)",
     "searchForMosque": "Search for mosque",
     "searchMosque": "Search Mosque",
     "gpsError": "Cannot access current device location check your device GPS",
@@ -76,7 +76,7 @@
     "maghrib": "Maghrib",
     "isha": "Isha",
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
-    "doYouKnowMosqueId": "Do you know your mosque ID?",
-    "yes": "Yes",
-    "no": "No"
+    "doYouKnowMosqueId": "Connaissez-vous votre ID d'installation ou l'ID de la mosquée (Mosque ID)?",
+    "yes": "Oui",
+    "no": "Non"
 }
