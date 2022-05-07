@@ -41,7 +41,7 @@
     "mosqueId": "ID e xhamisë ",
     "missingMosqueId": "Mungon ID e xhamisë",
     "mosqueIdIsNotValid": "{mosqueId} nuk është një id i vlefshëm i xhamisë",
-    "selectMosqueId": "Zgjidhni ID-në e xhamisë",
+    "selectMosqueId": "Please enter your Mosque ID",
     "mawaqitWelcome": "Mirë se vini në MAWAQIT",
     "mawaqitDesc": "MAWAQIT ju ofron një mënyrë të re për të gjurmuar dhe menaxhuar kohët e namazit, në të vërtetë ne ofrojmë një sistem nga fundi në fund që u ofron menaxherëve të xhamive një mjet në internet të disponueshëm 24/24 orë.",
     "privacyPolicy": "Politika e privatësisë",
@@ -76,7 +76,7 @@
     "maghrib": "Maghrib",
     "isha": "Isha",
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
-    "doYouKnowMosqueId": "Do you know your Mosque ID?",
+    "doYouKnowMosqueId": "Do you know your installation ID or your Mosque ID?",
     "yes": "Po",
     "no": "Jo"
 }
