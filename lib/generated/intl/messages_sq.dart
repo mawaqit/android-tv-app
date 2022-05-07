@@ -30,7 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to Homepage"),
         "backendError": MessageLookupByLibrary.simpleMessage(
-            "Na vjen keq, nuk mundëm të lidheshim me serverin.\nVerifiko lidhjen me internetin ose provo sërish më vonë."),
+            "Na vjen keq, nuk mundëm të lidheshim me serverin.\nJu lutemi verifikoni lidhjen me internetin ose provoni përsëri më vonë."),
         "cancel": MessageLookupByLibrary.simpleMessage("ANULON"),
         "changeMosque":
             MessageLookupByLibrary.simpleMessage("Promijenite džamiju"),

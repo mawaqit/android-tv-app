@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class DrawerListTitle extends StatefulWidget {
-  String? iconUrl;
-  IconData icon;
-  String? text;
-  void Function()? onTap;
+  final String? iconUrl;
+  final IconData icon;
+  final String? text;
+  final void Function()? onTap;
 
-  bool forceThemeColor;
+  final bool forceThemeColor;
 
   DrawerListTitle({
     Key? key,
@@ -22,25 +22,36 @@ class DrawerListTitle extends StatefulWidget {
 }
 
 class _DrawerListTitle extends State<DrawerListTitle> {
+  bool isFocused = false;
+
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        widget.text!,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 15.0),
+    return Focus(
+      onFocusChange: (i) => setState(() => isFocused = i),
+      child: ListTile(
+        tileColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
+        textColor: isFocused ? Colors.white : Theme.of(context).textTheme.bodyMedium?.color,
+        title: Text(
+          widget.text!,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 15.0,
+          ),
+        ),
+        leading: _renderIcon(
+          widget.iconUrl,
+          widget.icon,
+          isFocused ? Colors.white : Theme.of(context).textTheme.bodyMedium?.color,
+        ),
+        trailing: widget.onTap == null
+            ? null
+            : Icon(
+                Directionality.of(context) == TextDirection.ltr
+                    ? Icons.keyboard_arrow_right
+                    : Icons.keyboard_arrow_left,
+              ),
+        onTap: widget.onTap,
       ),
-      leading: _renderIcon(
-        widget.iconUrl,
-        widget.icon,
-        Theme.of(context).iconTheme.color,
-      ),
-      trailing: widget.onTap == null
-          ? null
-          : Icon(
-              Directionality.of(context) == TextDirection.ltr ? Icons.keyboard_arrow_right : Icons.keyboard_arrow_left,
-            ),
-      onTap: widget.onTap,
     );
   }
 
@@ -52,6 +63,6 @@ class _DrawerListTitle extends State<DrawerListTitle> {
             height: 20,
             color: widget.forceThemeColor ? color : null,
           )
-        : Icon(icon);
+        : Icon(icon, color: color);
   }
 }
