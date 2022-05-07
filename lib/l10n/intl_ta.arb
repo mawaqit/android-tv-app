@@ -41,7 +41,7 @@
     "mosqueId": "மசூதி ஐடி ",
     "missingMosqueId": "மசூதி ஐடி காணவில்லை",
     "mosqueIdIsNotValid": "{mosqueId} என்பது சரியான மசூதி ஐடி அல்ல",
-    "selectMosqueId": "மசூதி ஐடியைத் தேர்ந்தெடுக்கவும்",
+    "selectMosqueId": "Please enter your Mosque ID",
     "mawaqitWelcome": "MAWAQIT க்கு வரவேற்கிறோம்",
     "mawaqitDesc": "MAWAQIT தொழுகை நேரத்தைக் கண்காணிக்கவும் நிர்வகிக்கவும் ஒரு புதிய வழியை உங்களுக்கு வழங்குகிறது, உண்மையில் நாங்கள் மசூதி மேலாளர்களுக்கு 24/24 மணிநேரம் கிடைக்கும் ஆன்லைன் கருவியை வழங்கும் இறுதி முதல் இறுதி முறையை வழங்குகிறோம்.",
     "privacyPolicy": "தனியுரிமை கொள்கை",
@@ -76,7 +76,7 @@
     "maghrib": "Maghrib",
     "isha": "Isha",
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
-    "doYouKnowMosqueId": "Do you know your Mosque ID?",
+    "doYouKnowMosqueId": "Do you know your installation ID or your Mosque ID?",
     "yes": "Yes",
     "no": "No"
 }
