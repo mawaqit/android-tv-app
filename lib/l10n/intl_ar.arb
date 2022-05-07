@@ -56,7 +56,7 @@
     "searchMosque": "البحث عن مسجد",
     "gpsError": "لا يمكن الوصول إلى الموقع الحالي للجهاز، الرجاء التحقق من أن نظام تحديد المواقع الخاص بك مفعل",
     "mosqueNameError": "أدخل اسم المسجد",
-    "slugError": "Isn't a valid mosque slug",
+    "slugError": "ليس \"slug\" مسجد صحيح",
     "mosque_Facilities_Parking": "Parking",
     "mosque_Facilities_DisabledAccess": "Disabled access",
     "mosque_Facilities_AblutionsRoom": "Ablution room",
