@@ -470,10 +470,10 @@ class S {
     );
   }
 
-  /// `Select your Mosque ID`
+  /// `Please enter your Mosque ID`
   String get selectMosqueId {
     return Intl.message(
-      'Select your Mosque ID',
+      'Please enter your Mosque ID',
       name: 'selectMosqueId',
       desc: '',
       args: [],
@@ -570,50 +570,50 @@ class S {
     );
   }
 
-  /// `Enter Mosque ID`
+  /// `Please enter your Mosque ID`
   String get selectWithMosqueId {
     return Intl.message(
-      'Enter Mosque ID',
+      'Please enter your Mosque ID',
       name: 'selectWithMosqueId',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search for mosque`
+  /// `Search for a Mosque`
   String get searchForMosque {
     return Intl.message(
-      'Search for mosque',
+      'Search for a Mosque',
       name: 'searchForMosque',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search Mosque`
+  /// `Search for a Mosque`
   String get searchMosque {
     return Intl.message(
-      'Search Mosque',
+      'Search for a Mosque',
       name: 'searchMosque',
       desc: '',
       args: [],
     );
   }
 
-  /// `Cannot access current device location check your device GPS`
+  /// `Cannot access current device location, please check that your device GPS is enabled`
   String get gpsError {
     return Intl.message(
-      'Cannot access current device location check your device GPS',
+      'Cannot access current device location, please check that your device GPS is enabled',
       name: 'gpsError',
       desc: '',
       args: [],
     );
   }
 
-  /// `Enter Mosque name`
+  /// `Enter the Mosque name`
   String get mosqueNameError {
     return Intl.message(
-      'Enter Mosque name',
+      'Enter the Mosque name',
       name: 'mosqueNameError',
       desc: '',
       args: [],
@@ -820,10 +820,10 @@ class S {
     );
   }
 
-  /// `Do you know your mosque ID?`
+  /// `Do you know your installation ID or your Mosque ID?`
   String get doYouKnowMosqueId {
     return Intl.message(
-      'Do you know your mosque ID?',
+      'Do you know your installation ID or your Mosque ID?',
       name: 'doYouKnowMosqueId',
       desc: '',
       args: [],
