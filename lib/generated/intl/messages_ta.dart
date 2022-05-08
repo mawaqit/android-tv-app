@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("இதைப் பற்றி"),
         "appLang": MessageLookupByLibrary.simpleMessage("ஆப் மொழி"),
+        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to Homepage"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -43,23 +44,32 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("இருள் பயன்முறை"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "தாங்கள் விரும்பும் மொழியினைத் தேர்வு செய்க."),
+        "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
+            "உங்கள் நிறுவல் ஐடி அல்லது உங்கள் மசூதி ஐடி உங்களுக்குத் தெரியுமா?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("மசூதி ஐடியை உள்ளிடவும்:"),
         "facebook": MessageLookupByLibrary.simpleMessage("முகநூல்"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
+        "gpsError": MessageLookupByLibrary.simpleMessage(
+            "சாதனத்தின் தற்போதைய இருப்பிடத்தை அணுக முடியவில்லை, உங்கள் சாதனத்தின் ஜிபிஎஸ் இயக்கப்பட்டுள்ளதா என்பதைச் சரிபார்க்கவும்"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("வீடு"),
         "instagram": MessageLookupByLibrary.simpleMessage("இன்ஸ்டாகிராம்"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("நிறுவல் வழிகாட்டி"),
+        "isha": MessageLookupByLibrary.simpleMessage("Isha"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "languages": MessageLookupByLibrary.simpleMessage("மொழி"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("வெளிர்ந்த பயன்முறை"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("ஏற்றுதல் வட்ட அனிமேஷன்"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT தொழுகை நேரத்தைக் கண்காணிக்கவும் நிர்வகிக்கவும் ஒரு புதிய வழியை உங்களுக்கு வழங்குகிறது, உண்மையில் நாங்கள் மசூதி மேலாளர்களுக்கு 24/24 மணிநேரம் கிடைக்கும் ஆன்லைன் கருவியை வழங்கும் இறுதி முதல் இறுதி முறையை வழங்குகிறோம்."),
         "mawaqitWelcome":
@@ -68,12 +78,39 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("மசூதி ஐடி காணவில்லை"),
         "mosque": MessageLookupByLibrary.simpleMessage("மசூதி"),
+        "mosqueAnnouncement": MessageLookupByLibrary.simpleMessage(
+            "All this information is filled in by the people in charge of the mosque"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("மசூதி ஐடி "),
         "mosqueIdIsNotValid": m0,
+        "mosqueInput": MessageLookupByLibrary.simpleMessage("மசூதி உள்ளீடு"),
+        "mosqueNameError":
+            MessageLookupByLibrary.simpleMessage("மசூதியின் பெயரை உள்ளிடவும்"),
+        "mosque_Facilities_AblutionsRoom":
+            MessageLookupByLibrary.simpleMessage("Ablution room"),
+        "mosque_Facilities_AdultsCourse":
+            MessageLookupByLibrary.simpleMessage("Adults courses"),
+        "mosque_Facilities_ChildrenCourses":
+            MessageLookupByLibrary.simpleMessage("Children courses"),
+        "mosque_Facilities_DisabledAccess":
+            MessageLookupByLibrary.simpleMessage("Disabled access"),
+        "mosque_Facilities_Parking":
+            MessageLookupByLibrary.simpleMessage("Parking"),
+        "mosque_Facilities_SalatAlAid":
+            MessageLookupByLibrary.simpleMessage("Salat Al Eid"),
+        "mosque_Facilities_SalatAlJanaza":
+            MessageLookupByLibrary.simpleMessage("Salat Al janaza"),
+        "mosque_Facilities_WomanSpace":
+            MessageLookupByLibrary.simpleMessage("Woman space"),
+        "mosque_facilities_Info": MessageLookupByLibrary.simpleMessage(
+            "All this information is filled in by the people in charge of the mosque"),
+        "mosques_Facilities_IftarRamadan":
+            MessageLookupByLibrary.simpleMessage("Iftar Ramadan"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
+        "no": MessageLookupByLibrary.simpleMessage("இல்லை"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("இணைய இணைப்பு இல்லை"),
+        "noJumua": MessageLookupByLibrary.simpleMessage("no jumua"),
         "notification": MessageLookupByLibrary.simpleMessage("அறிவிப்புகள்"),
         "ok": MessageLookupByLibrary.simpleMessage("சரி"),
         "privacyPolicy":
@@ -81,10 +118,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("எங்களை மதிப்பிடுங்கள்"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchForMosque":
+            MessageLookupByLibrary.simpleMessage("ஒரு மசூதியைத் தேடுங்கள்"),
+        "searchMosque":
+            MessageLookupByLibrary.simpleMessage("ஒரு மசூதியைத் தேடுங்கள்"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
-            "மசூதி ஐடியைத் தேர்ந்தெடுக்கவும்"),
+            "உங்கள் மசூதி ஐடியை உள்ளிடவும்"),
+        "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
+            "உங்கள் மசூதி ஐடியை உள்ளிடவும்"),
         "share": MessageLookupByLibrary.simpleMessage("பகிர்"),
+        "shuruq": MessageLookupByLibrary.simpleMessage("shuruq"),
         "skype": MessageLookupByLibrary.simpleMessage("ஸ்கைப்"),
+        "slugError": MessageLookupByLibrary.simpleMessage(
+            "செல்லுபடியாகும் மசூதி ஸ்லக் அல்லவா"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
             "விண்ணப்பத்திலிருந்து நிச்சயமாக வெளியேற விரும்புகிறீர்களா?"),
@@ -95,6 +141,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ஆப்-ஐ அப்டேட் செய்யவும்"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("வாட்ஸ்அப்"),
         "whoops": MessageLookupByLibrary.simpleMessage("அச்சச்சோ!"),
+        "yes": MessageLookupByLibrary.simpleMessage("ஆம்"),
         "youtube": MessageLookupByLibrary.simpleMessage("வலைஒளி")
       };
 }

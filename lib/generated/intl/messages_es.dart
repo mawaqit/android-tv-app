@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "about": MessageLookupByLibrary.simpleMessage("Acerca de"),
         "appLang":
             MessageLookupByLibrary.simpleMessage("Idioma de la aplicación"),
+        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage": MessageLookupByLibrary.simpleMessage(
             "Volver a la página de inicio"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -44,23 +45,32 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("Modo oscuro"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Selecciona tu idioma preferido."),
+        "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
+            "¿Conoces tu ID de instalación o tu Mezquita?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "Introducir ID de Mezquita : "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
+        "gpsError": MessageLookupByLibrary.simpleMessage(
+            "No se puede acceder a la ubicación actual del dispositivo, por favor comprueba que el GPS de tu dispositivo está activado"),
         "headerType": MessageLookupByLibrary.simpleMessage("Tipo de cabecera"),
         "home": MessageLookupByLibrary.simpleMessage("Inicio"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagrama"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Guía de Instalación"),
+        "isha": MessageLookupByLibrary.simpleMessage("Isha"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "languages": MessageLookupByLibrary.simpleMessage("Idiomas"),
         "leftButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opciones del botón de radio (izquierda)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Modo claro"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Cargando Animación"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT te ofrece una nueva forma de rastrear y gestionar los tiempos de oración, de hecho ofrecemos un sistema de extremo a extremo que proporciona a los gestores de mezquitas una herramienta en línea disponible las 24 horas del día."),
         "mawaqitWelcome":
@@ -69,12 +79,40 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Falta el ID de la mezquita"),
         "mosque": MessageLookupByLibrary.simpleMessage("Mezquita"),
+        "mosqueAnnouncement": MessageLookupByLibrary.simpleMessage(
+            "All this information is filled in by the people in charge of the mosque"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("Mezquita ID"),
         "mosqueIdIsNotValid": m0,
+        "mosqueInput":
+            MessageLookupByLibrary.simpleMessage("Entrada de Mezquita"),
+        "mosqueNameError": MessageLookupByLibrary.simpleMessage(
+            "Introduzca el nombre de la Mezquita"),
+        "mosque_Facilities_AblutionsRoom":
+            MessageLookupByLibrary.simpleMessage("Ablution room"),
+        "mosque_Facilities_AdultsCourse":
+            MessageLookupByLibrary.simpleMessage("Adults courses"),
+        "mosque_Facilities_ChildrenCourses":
+            MessageLookupByLibrary.simpleMessage("Children courses"),
+        "mosque_Facilities_DisabledAccess":
+            MessageLookupByLibrary.simpleMessage("Disabled access"),
+        "mosque_Facilities_Parking":
+            MessageLookupByLibrary.simpleMessage("Parking"),
+        "mosque_Facilities_SalatAlAid":
+            MessageLookupByLibrary.simpleMessage("Salat Al Eid"),
+        "mosque_Facilities_SalatAlJanaza":
+            MessageLookupByLibrary.simpleMessage("Salat Al janaza"),
+        "mosque_Facilities_WomanSpace":
+            MessageLookupByLibrary.simpleMessage("Woman space"),
+        "mosque_facilities_Info": MessageLookupByLibrary.simpleMessage(
+            "All this information is filled in by the people in charge of the mosque"),
+        "mosques_Facilities_IftarRamadan":
+            MessageLookupByLibrary.simpleMessage("Iftar Ramadan"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Estilo barras de navegación"),
+        "no": MessageLookupByLibrary.simpleMessage("No"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("No hay conexión a internet"),
+        "noJumua": MessageLookupByLibrary.simpleMessage("no jumua"),
         "notification": MessageLookupByLibrary.simpleMessage("Notificaciones"),
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
         "privacyPolicy":
@@ -82,10 +120,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Califícanos"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opciones del botón de radio (derecha)"),
-        "selectMosqueId":
-            MessageLookupByLibrary.simpleMessage("Seleccionar ID de mezquita"),
+        "searchForMosque":
+            MessageLookupByLibrary.simpleMessage("Buscar una Mezquita"),
+        "searchMosque":
+            MessageLookupByLibrary.simpleMessage("Buscar una Mezquita"),
+        "selectMosqueId": MessageLookupByLibrary.simpleMessage(
+            "Por favor, introduzca su ID de la Mezquita"),
+        "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
+            "Por favor, introduzca su ID de la Mezquita"),
         "share": MessageLookupByLibrary.simpleMessage("Compartir"),
+        "shuruq": MessageLookupByLibrary.simpleMessage("shuruq"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
+        "slugError": MessageLookupByLibrary.simpleMessage(
+            "No es un slug de mezquita válido"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
             "¿Está seguro de que desea salir de la aplicación?"),
@@ -96,6 +143,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "update": MessageLookupByLibrary.simpleMessage("Actualizar aplicación"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
         "whoops": MessageLookupByLibrary.simpleMessage("¡Ups!"),
+        "yes": MessageLookupByLibrary.simpleMessage("Si"),
         "youtube": MessageLookupByLibrary.simpleMessage("Youtube")
       };
 }
