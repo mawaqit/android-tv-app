@@ -147,10 +147,13 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     final settingsManager = context.read<SettingsManager>();
     final settings = settingsManager.settings;
 
-    var url = 'https://mawaqit.net/${appLanguage.appLocal.languageCode}/id/${mosqueManager.mosqueId}?view=desktop';
+    var url = mosqueManager.buildUrl(appLanguage.appLocal.languageCode);
 
     var bottomPadding = MediaQuery.of(context).padding.bottom;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
+    var themeProvider = Provider.of<ThemeNotifier>(context);
+    final theme = Theme.of(context);
 
     if (connectionStatus == ConnectivityStatus.Offline)
       return WillPopScope(
