@@ -42,8 +42,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Select your preferred language."),
-        "doYouKnowMosqueId":
-            MessageLookupByLibrary.simpleMessage("Do you know your mosque ID?"),
+        "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
+            "Do you know your installation ID or your Mosque ID?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
@@ -53,7 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
-            "Cannot access current device location check your device GPS"),
+            "Cannot access current device location, please check that your device GPS is enabled"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
@@ -82,7 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Mosque Input"),
         "mosqueNameError":
-            MessageLookupByLibrary.simpleMessage("Enter Mosque name"),
+            MessageLookupByLibrary.simpleMessage("Enter the Mosque name"),
         "mosque_Facilities_AblutionsRoom":
             MessageLookupByLibrary.simpleMessage("Ablution room"),
         "mosque_Facilities_AdultsCourse":
@@ -116,12 +116,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchForMosque":
-            MessageLookupByLibrary.simpleMessage("Search for mosque"),
-        "searchMosque": MessageLookupByLibrary.simpleMessage("Search Mosque"),
+            MessageLookupByLibrary.simpleMessage("Search for a Mosque"),
+        "searchMosque":
+            MessageLookupByLibrary.simpleMessage("Search for a Mosque"),
         "selectMosqueId":
-            MessageLookupByLibrary.simpleMessage("Select your Mosque ID"),
+            MessageLookupByLibrary.simpleMessage("Please enter your Mosque ID"),
         "selectWithMosqueId":
-            MessageLookupByLibrary.simpleMessage("Enter Mosque ID"),
+            MessageLookupByLibrary.simpleMessage("Please enter your Mosque ID"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
         "shuruq": MessageLookupByLibrary.simpleMessage("shuruq"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),

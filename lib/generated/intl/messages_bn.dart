@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("সম্পর্কে"),
         "appLang": MessageLookupByLibrary.simpleMessage("অ্যাপ্লিকেশনের ভাষা"),
+        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("হোমপেজে ব্যাক করো"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -45,24 +46,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("ডার্ক মোডঃ"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "আপনার পছন্দের ভাষাটি পছন্দ করুন."),
+        "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
+            "আপনি কি আপনার ইনস্টলেশন আইডি বা আপনার মসজিদ আইডি জানেন?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("মসজিদ আইডি লিখুন:"),
         "facebook": MessageLookupByLibrary.simpleMessage(
             "ফেসবুকের মাধ্যমে সাইন আপ করুন"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
+        "gpsError": MessageLookupByLibrary.simpleMessage(
+            "বর্তমান ডিভাইস অবস্থান অ্যাক্সেস করতে পারবেন না, আপনার ডিভাইস GPS সক্ষম আছে কিনা দয়া করে পরীক্ষা করুন"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("নীড়"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("ইনস্টলকরণের সহায়িকা"),
+        "isha": MessageLookupByLibrary.simpleMessage("Isha"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "languages": MessageLookupByLibrary.simpleMessage("ভাষা"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("হালকা মোড"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Loading animation"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "মাওয়াকিট আপনাকে নামাজের সময়গুলি ট্র্যাক এবং পরিচালনা করার একটি নতুন উপায় অফার করে, প্রকৃতপক্ষে আমরা একটি এন্ড-টু-এন্ড সিস্টেম অফার করি যা মসজিদ পরিচালকদের 24/24 ঘন্টা উপলব্ধ একটি অনলাইন টুল সরবরাহ করে।"),
         "mawaqitWelcome":
@@ -71,12 +81,39 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("মসজিদের আইডি নেই"),
         "mosque": MessageLookupByLibrary.simpleMessage("মসজিদ"),
+        "mosqueAnnouncement": MessageLookupByLibrary.simpleMessage(
+            "All this information is filled in by the people in charge of the mosque"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("মসজিদ আইডি "),
         "mosqueIdIsNotValid": m0,
+        "mosqueInput": MessageLookupByLibrary.simpleMessage("Mosque Input"),
+        "mosqueNameError":
+            MessageLookupByLibrary.simpleMessage("মসজিদের নাম লিখুন"),
+        "mosque_Facilities_AblutionsRoom":
+            MessageLookupByLibrary.simpleMessage("Ablution room"),
+        "mosque_Facilities_AdultsCourse":
+            MessageLookupByLibrary.simpleMessage("Adults courses"),
+        "mosque_Facilities_ChildrenCourses":
+            MessageLookupByLibrary.simpleMessage("Children courses"),
+        "mosque_Facilities_DisabledAccess":
+            MessageLookupByLibrary.simpleMessage("Disabled access"),
+        "mosque_Facilities_Parking":
+            MessageLookupByLibrary.simpleMessage("Parking"),
+        "mosque_Facilities_SalatAlAid":
+            MessageLookupByLibrary.simpleMessage("Salat Al Eid"),
+        "mosque_Facilities_SalatAlJanaza":
+            MessageLookupByLibrary.simpleMessage("Salat Al janaza"),
+        "mosque_Facilities_WomanSpace":
+            MessageLookupByLibrary.simpleMessage("Woman space"),
+        "mosque_facilities_Info": MessageLookupByLibrary.simpleMessage(
+            "All this information is filled in by the people in charge of the mosque"),
+        "mosques_Facilities_IftarRamadan":
+            MessageLookupByLibrary.simpleMessage("Iftar Ramadan"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
+        "no": MessageLookupByLibrary.simpleMessage("না"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("কোনও ইন্টারনেট সংযোগ নেই"),
+        "noJumua": MessageLookupByLibrary.simpleMessage("no jumua"),
         "notification": MessageLookupByLibrary.simpleMessage("নোটিফিকেশন সমূহ"),
         "ok": MessageLookupByLibrary.simpleMessage("আচ্ছা"),
         "privacyPolicy":
@@ -84,10 +121,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("আমাদের মতামত দিন"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchForMosque":
+            MessageLookupByLibrary.simpleMessage("একটি মসজিদ সন্ধান করুন"),
+        "searchMosque":
+            MessageLookupByLibrary.simpleMessage("একটি মসজিদ সন্ধান করুন"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
-            "আপনার মসজিদ আইডি নির্বাচন করুন"),
+            "অনুগ্রহ করে আপনার \'মসজিদ আইডি\' লিখুন"),
+        "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
+            "অনুগ্রহ করে আপনার \'মসজিদ আইডি\' লিখুন"),
         "share": MessageLookupByLibrary.simpleMessage("শেয়ার"),
+        "shuruq": MessageLookupByLibrary.simpleMessage("shuruq"),
         "skype": MessageLookupByLibrary.simpleMessage("স্কাইপ"),
+        "slugError": MessageLookupByLibrary.simpleMessage(
+            "একটি বৈধ মসজিদ \'স্লাগ\' নয়"),
         "snapchat": MessageLookupByLibrary.simpleMessage("স্ন্যাপচ্যাট"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
             "আপনি কি নিশ্চিত যে আপনি ছেড়ে যেতে চান?"),
@@ -99,6 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("অ্যাপ্লিকেশন আপডেট করুন"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("হোয়াটস অ্যাপ"),
         "whoops": MessageLookupByLibrary.simpleMessage("দুঃখিত!"),
+        "yes": MessageLookupByLibrary.simpleMessage("হ্যাঁ"),
         "youtube": MessageLookupByLibrary.simpleMessage("ইউটিউব")
       };
 }
