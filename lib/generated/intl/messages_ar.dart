@@ -83,6 +83,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Mosque Input"),
         "mosqueNameError":
             MessageLookupByLibrary.simpleMessage("أدخل اسم المسجد"),
+        "mosqueNoMore": MessageLookupByLibrary.simpleMessage("No more results"),
+        "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results"),
         "mosque_Facilities_AblutionsRoom":
             MessageLookupByLibrary.simpleMessage("Ablution room"),
         "mosque_Facilities_AdultsCourse":

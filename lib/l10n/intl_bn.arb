@@ -78,5 +78,7 @@
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
     "doYouKnowMosqueId": "আপনি কি আপনার ইনস্টলেশন আইডি বা আপনার মসজিদ আইডি জানেন?",
     "yes": "হ্যাঁ",
-    "no": "না"
+    "no": "না",
+    "mosqueNoMore": "No more results",
+    "mosqueNoResults": "No results"
 }

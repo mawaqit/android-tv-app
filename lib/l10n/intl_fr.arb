@@ -78,5 +78,7 @@
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
     "doYouKnowMosqueId": "Connaissez-vous votre ID d'installation ou votre ID de mosquée (Mosque ID)?",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "mosqueNoMore": "No more results",
+    "mosqueNoResults": "No results"
 }

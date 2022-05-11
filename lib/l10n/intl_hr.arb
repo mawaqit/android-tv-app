@@ -78,5 +78,7 @@
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
     "doYouKnowMosqueId": "Znate li svoj ID instalacije ili ID džamije?",
     "yes": "Da",
-    "no": "Ne"
+    "no": "Ne",
+    "mosqueNoMore": "No more results",
+    "mosqueNoResults": "No results"
 }

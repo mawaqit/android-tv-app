@@ -78,5 +78,7 @@
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
     "doYouKnowMosqueId": "هل تعرف معرف التثبيت الخاص بك أو معرف المسجد الخاص بك؟",
     "yes": "نعم",
-    "no": "لا"
+    "no": "لا",
+    "mosqueNoMore": "No more results",
+    "mosqueNoResults": "No results"
 }
