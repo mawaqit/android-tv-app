@@ -19,11 +19,9 @@ class InputTypeSelector extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          // shrinkWrap: true,
           children: [
             Text(
               S.of(context).doYouKnowMosqueId,
-              // "Mosque Input",
               textAlign: TextAlign.center,
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: isLight ? theme.primaryColor : Colors.white,
@@ -31,6 +29,7 @@ class InputTypeSelector extends StatelessWidget {
             ),
             SizedBox(height: 10),
             OutlinedButton(
+              autofocus: true,
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => MosqueInputId(onDone: onDone)));
               },

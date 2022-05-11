@@ -15,7 +15,6 @@ class OnBoardingLanguageSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final locales = S.delegate.supportedLocales;
     final appLanguage = Provider.of<AppLanguage>(context);
-    final mosqueManager = Provider.of<MosqueManager>(context);
     final themeData = Theme.of(context);
 
     /// if the [langCode] is current used language
@@ -86,7 +85,7 @@ class LanguageTile extends StatefulWidget {
 }
 
 class _LanguageTileState extends State<LanguageTile> {
-  bool isFocused = false;
+  late bool isFocused = widget.isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -96,26 +95,22 @@ class _LanguageTileState extends State<LanguageTile> {
 
     return Material(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 6.0,
-          vertical: 1.0,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
         child: Ink(
           decoration: BoxDecoration(
             color: isFocused || widget.isSelected ? themeData.selectedRowColor : null,
             borderRadius: BorderRadius.circular(10),
           ),
           child: InkWell(
+            autofocus: widget.isSelected,
             onFocusChange: (i) => setState(() => isFocused = i),
             borderRadius: BorderRadius.circular(10),
-
             onTap: () {
               appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueId);
               widget.onSelect();
             },
             child: ListTile(
               dense: true,
-
               textColor: isFocused || widget.isSelected ? Colors.white : null,
               leading: Padding(
                 padding: const EdgeInsets.all(4.0),

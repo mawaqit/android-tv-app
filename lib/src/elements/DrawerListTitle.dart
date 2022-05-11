@@ -7,6 +7,7 @@ class DrawerListTitle extends StatefulWidget {
   final void Function()? onTap;
 
   final bool forceThemeColor;
+  final bool autoFocus;
 
   DrawerListTitle({
     Key? key,
@@ -15,6 +16,7 @@ class DrawerListTitle extends StatefulWidget {
     this.icon = Icons.edit,
     this.text = "",
     this.onTap,
+    this.autoFocus = false,
   }) : super(key: key);
 
   @override
@@ -22,13 +24,14 @@ class DrawerListTitle extends StatefulWidget {
 }
 
 class _DrawerListTitle extends State<DrawerListTitle> {
-  bool isFocused = false;
+  late bool isFocused = widget.autoFocus;
 
   @override
   Widget build(BuildContext context) {
     return Focus(
       onFocusChange: (i) => setState(() => isFocused = i),
       child: ListTile(
+        autofocus: widget.autoFocus,
         tileColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
         textColor: isFocused ? Colors.white : Theme.of(context).textTheme.bodyMedium?.color,
         title: Text(
