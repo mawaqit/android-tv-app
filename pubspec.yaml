@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0-alpha+144
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -31,10 +31,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 
   # FIREBASE PACKAGES
-  firebase_core: ^1.13.1
-  firebase_messaging: ^11.2.8
-  firebase_analytics: ^9.1.2
-  firebase_crashlytics: ^2.5.3
+  firebase_core: ^1.16.0
+  firebase_messaging: ^11.3.0
+  firebase_analytics: ^9.1.7
+  firebase_crashlytics: ^2.7.2
 
   # STORAGE
   shared_preferences: ^2.0.13
@@ -44,25 +44,25 @@ dependencies:
   flutter_spinkit: ^5.1.0
   page_transition: ^2.0.5
   #modal_progress_hud: ^0.1.3
-  flutter_inappwebview: ^5.4.2+1
+  flutter_inappwebview: ^5.4.3+7
 
   # CONNECTIVITY
   http: ^0.13.4
   share: ^2.0.4
   launch_review: ^3.0.1
-  url_launcher: ^6.0.20
+  url_launcher: ^6.1.0
   store_redirect: ^2.0.1
   connectivity: ^3.0.6
   uni_links: ^0.5.1
 
   # TOOLS
-  google_fonts: ^2.3.1
+  google_fonts: ^2.3.2
   package_info: ^2.0.2
   android_intent: ^2.0.2
   global_configuration: ^2.0.0-nullsafety.1
   #flutter_downloader: 1.6.1
   #  flutter_barcode_scanner: ^2.0.0
-  flutter_speed_dial: ^5.0.0+1
+  flutter_speed_dial: ^6.0.0
 
   # STATE MANAGEMENT
   provider: ^6.0.2
@@ -70,13 +70,13 @@ dependencies:
 
   # MAP
   location: ^4.3.0
-  geolocator: ^8.2.0
+  geolocator: ^8.2.1
 #  webview_flutter: ^3.0.0
 
   rive_splash_screen: ^0.1.0
-  lottie: ^1.2.2
+  lottie: ^1.3.0
   flutter_svg: ^1.0.3
-  introduction_screen: ^3.0.0
+  introduction_screen: ^3.0.2
   dots_indicator: ^2.1.0
   sizer: ^2.0.15
 

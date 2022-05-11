@@ -152,9 +152,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     var bottomPadding = MediaQuery.of(context).padding.bottom;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
 
-    var themeProvider = Provider.of<ThemeNotifier>(context);
-    final theme = Theme.of(context);
-
     if (connectionStatus == ConnectivityStatus.Offline)
       return WillPopScope(
         onWillPop: _onBackPressed,
@@ -189,15 +186,21 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                               physics: NeverScrollableScrollPhysics(),
                               children: List.generate(
                                 widget.settings.tab!.length,
-                                (index) => MawaqitWebViewWidget(
-                                  key: listKey[index],
-                                  path: widget.settings.tab![index].url,
+                                (index) => SizedBox(
+                                  key: ValueKey(url),
+                                  child: MawaqitWebViewWidget(
+                                    key: listKey[index],
+                                    path: widget.settings.tab![index].url,
+                                  ),
                                 ),
                               ),
                             )
-                          : MawaqitWebViewWidget(
-                              key: listKey[0],
-                              path: url,
+                          : SizedBox(
+                              key: ValueKey(url),
+                              child: MawaqitWebViewWidget(
+                                key: listKey[0],
+                                path: url,
+                              ),
                             ),
                     ),
                   ]),
