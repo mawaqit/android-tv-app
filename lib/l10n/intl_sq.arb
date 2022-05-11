@@ -50,7 +50,7 @@
     "drawerTitle": "MAWAQIT",
     "drawerDesc": "Connecting Muslims to Mosques",
     "backendError": "Na vjen keq, nuk mundëm të lidheshim me serverin.\nJu lutemi verifikoni lidhjen me internetin ose provoni përsëri më vonë.",
-    "mosqueInput": "Mosque Input",
+    "mosqueInput": "Xhamia",
     "selectWithMosqueId": "Shkruani ID-në e Xhamisë",
     "searchForMosque": "Kërkoni për një xhami",
     "searchMosque": "Kërkoni për një xhami",
@@ -79,6 +79,6 @@
     "doYouKnowMosqueId": "A e dini ID-në tuaj të instalimit apo ID-në tuaj të Xhamisë?",
     "yes": "Po",
     "no": "Jo",
-    "mosqueNoMore": "No more results",
-    "mosqueNoResults": "No results"
+    "mosqueNoMore": "Na vjen keq, nuk ka më rezultate",
+    "mosqueNoResults": "Na vjen keq, nuk ka rezultate"
 }
