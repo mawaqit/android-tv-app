@@ -849,6 +849,26 @@ class S {
       args: [],
     );
   }
+
+  /// `No more results`
+  String get mosqueNoMore {
+    return Intl.message(
+      'No more results',
+      name: 'mosqueNoMore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No results`
+  String get mosqueNoResults {
+    return Intl.message(
+      'No results',
+      name: 'mosqueNoResults',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

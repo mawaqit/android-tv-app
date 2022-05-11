@@ -256,6 +256,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                               ),
                             )),
                         DrawerListTitle(
+                            autoFocus: true,
                             icon: Icons.home,
                             text: S.of(context).home,
                             onTap: () async {
