@@ -20,9 +20,15 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
 
   List<Mosque> results = [];
   bool loading = false;
+  bool noMore = false;
   String? error;
 
-  void _searchMosque(String mosque) async {
+  void Function()? loadMore;
+
+  void _searchMosque(String mosque, int page) async {
+    if (loading) return;
+    loadMore = () => _searchMosque(mosque, page + 1);
+
     if (mosque.isEmpty) {
       setState(() {
         error = S.of(context).mosqueNameError;
@@ -34,13 +40,19 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
     setState(() {
       error = null;
       loading = true;
+      if (page == 1) results = [];
     });
     final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
     await mosqueManager
-        .searchMosques(mosque)
+        .searchMosques(mosque, page: page)
         .then((value) => setState(() {
               loading = false;
-              results = value;
+
+              if (page == 1) results = [];
+
+              results = [...results, ...value];
+
+              noMore = results.isEmpty;
             }))
         .catchError((e) => setState(() {
               loading = false;
@@ -48,7 +60,10 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
             }));
   }
 
-  void _searchGps() async {
+  void _searchGps(int page) async {
+    if (loading) return;
+    loadMore = () => _searchGps(page + 1);
+
     inputController.text = '';
     setState(() {
       error = null;
@@ -58,7 +73,12 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
     await mosqueManager.searchWithGps().then((value) {
       setState(() {
         loading = false;
-        results = value;
+
+        if (page == 1) results = [];
+
+        results = [...results, ...value];
+
+        noMore = results.isEmpty;
       });
     }).catchError((e) {
       setState(() {
@@ -93,33 +113,58 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
     final theme = Theme.of(context);
 
     return Material(
-      child: Align(
-        alignment: Alignment(0, -.3),
-        child: ListView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(vertical: 80, horizontal: 10),
-          shrinkWrap: true,
-          children: [
-            Text(
-              S.of(context).searchMosque,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 25.0,
-                fontWeight: FontWeight.w700,
-                color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+      child: FocusTraversalGroup(
+        policy: OrderedTraversalPolicy(),
+        child: Align(
+          alignment: Alignment(0, -.3),
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(vertical: 80, horizontal: 10),
+            shrinkWrap: true,
+            children: [
+              Text(
+                S.of(context).searchMosque,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.w700,
+                  color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            searchField(theme),
-            SizedBox(height: 20),
-            for (var mosque in results)
-              MosqueSimpleTile(
-                mosque: mosque,
-                onTap: () => _selectMosque(mosque),
+              SizedBox(height: 20),
+              searchField(theme),
+              SizedBox(height: 20),
+              for (var mosque in results)
+                MosqueSimpleTile(
+                  mosque: mosque,
+                  onTap: () => _selectMosque(mosque),
+                ),
+              // to allow user to scroll to the end of lis
+              FocusableActionDetector(
+                onFocusChange: (i) {
+                  if (!i) return;
+                  if (noMore) return;
+
+                  loadMore?.call();
+                },
+                child: Center(
+                  child: SizedBox(
+                    height: 40,
+                    child: Builder(
+                      builder: (context) {
+                        if (loading) return CircularProgressIndicator();
+
+                        if (noMore && results.isEmpty) return Text(S.of(context).mosqueNoResults);
+                        if (noMore) return Text(S.of(context).mosqueNoMore);
+
+                        return SizedBox();
+                      },
+                    ),
+                  ),
+                ),
               ),
-            // to allow user to scroll to the end of lis
-            FocusableActionDetector(child: SizedBox(height: 40))
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -131,7 +176,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
       style: GoogleFonts.inter(
         color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
       ),
-      onFieldSubmitted: _searchMosque,
+      onFieldSubmitted: (val) => _searchMosque(val, 1),
       cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
       autofocus: true,
       textInputAction: TextInputAction.search,
@@ -146,9 +191,9 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
         ),
         suffixIcon: IconButton(
           tooltip: "Search by GPS",
-          icon: loading ? CircularProgressIndicator() : Icon(Icons.gps_fixed),
+          icon: Icon(Icons.gps_fixed),
           color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
-          onPressed: () => _searchGps(),
+          onPressed: () => _searchGps(1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
