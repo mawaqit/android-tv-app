@@ -48,6 +48,7 @@ Future<void> main() async {
     }
 
     HttpOverrides.global = MyHttpOverrides();
+    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
 
     // hide status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
