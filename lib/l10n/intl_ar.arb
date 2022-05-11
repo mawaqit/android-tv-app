@@ -79,6 +79,6 @@
     "doYouKnowMosqueId": "هل تعرف معرف التثبيت الخاص بك أو معرف المسجد الخاص بك؟",
     "yes": "نعم",
     "no": "لا",
-    "mosqueNoMore": "No more results",
-    "mosqueNoResults": "No results"
+    "mosqueNoMore": "لايوجد المزيد من النتائج",
+    "mosqueNoResults": "لا توجد نتائج"
 }
