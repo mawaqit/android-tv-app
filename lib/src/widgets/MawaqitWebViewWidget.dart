@@ -133,6 +133,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
             buildErrorWidget()
           else
             InAppWebView(
+              key: ValueKey(widget.path),
               // contextMenu: contextMenu,
               initialUrlRequest: URLRequest(url: Uri.parse(widget.path!)),
               gestureRecognizers: _gSet,

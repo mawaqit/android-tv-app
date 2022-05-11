@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 
 class MosqueSimpleTile extends StatefulWidget {
-  const MosqueSimpleTile({Key? key, required this.mosque, this.onTap}) : super(key: key);
+  const MosqueSimpleTile({
+    Key? key,
+    required this.mosque,
+    this.onTap,
+    this.onFocusChange,
+    this.focusNode,
+  }) : super(key: key);
 
   final Mosque mosque;
   final void Function()? onTap;
+  final void Function(bool i)? onFocusChange;
+  final FocusNode? focusNode;
 
   @override
   State<MosqueSimpleTile> createState() => _MosqueSimpleTileState();
@@ -26,7 +34,11 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
     return Theme(
       data: theme,
       child: Focus(
-        onFocusChange: (i) => setState(() => isFocused = i),
+        focusNode: widget.focusNode,
+        onFocusChange: (i) {
+          widget.onFocusChange?.call(i);
+          setState(() => isFocused = i);
+        },
         child: Card(
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000)),

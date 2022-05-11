@@ -39,6 +39,7 @@ class MawaqitDrawer extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.all(0.0),
         children: <Widget>[
+          Focus(child: SizedBox()),
           DrawerHeader(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -83,6 +84,7 @@ class MawaqitDrawer extends StatelessWidget {
                 ),
               )),
           DrawerListTitle(
+              autoFocus: true,
               icon: Icons.home,
               text: S.of(context).home,
               onTap: () async {
@@ -160,6 +162,7 @@ class MawaqitDrawer extends StatelessWidget {
             title: Text(S.of(context).update),
             subtitle: VersionWidget(),
           ),
+          Focus(child: SizedBox()),
         ],
       ),
     );

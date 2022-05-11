@@ -186,21 +186,15 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
                               physics: NeverScrollableScrollPhysics(),
                               children: List.generate(
                                 widget.settings.tab!.length,
-                                (index) => SizedBox(
-                                  key: ValueKey(url),
-                                  child: MawaqitWebViewWidget(
-                                    key: listKey[index],
-                                    path: widget.settings.tab![index].url,
-                                  ),
+                                (index) => MawaqitWebViewWidget(
+                                  key: listKey[index],
+                                  path: widget.settings.tab![index].url,
                                 ),
                               ),
                             )
-                          : SizedBox(
-                              key: ValueKey(url),
-                              child: MawaqitWebViewWidget(
-                                key: listKey[0],
-                                path: url,
-                              ),
+                          : MawaqitWebViewWidget(
+                              key: listKey[0],
+                              path: url,
                             ),
                     ),
                   ]),
