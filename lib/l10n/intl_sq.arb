@@ -78,5 +78,7 @@
     "mosqueAnnouncement": "All this information is filled in by the people in charge of the mosque",
     "doYouKnowMosqueId": "A e dini ID-në tuaj të instalimit apo ID-në tuaj të Xhamisë?",
     "yes": "Po",
-    "no": "Jo"
+    "no": "Jo",
+    "mosqueNoMore": "No more results",
+    "mosqueNoResults": "No results"
 }
