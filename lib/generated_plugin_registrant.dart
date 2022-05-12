@@ -10,7 +10,7 @@ import 'package:firebase_analytics_web/firebase_analytics_web.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_messaging_web/firebase_messaging_web.dart';
 import 'package:geolocator_web/geolocator_web.dart';
-import 'package:location_web/location_web.dart';
+//import 'package:location_web/location_web.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:uni_links_web/uni_links_web.dart';
 import 'package:url_launcher_web/url_launcher_web.dart';
@@ -24,7 +24,7 @@ void registerPlugins(Registrar registrar) {
   FirebaseCoreWeb.registerWith(registrar);
   FirebaseMessagingWeb.registerWith(registrar);
   GeolocatorPlugin.registerWith(registrar);
-  LocationWebPlugin.registerWith(registrar);
+  //LocationWebPlugin.registerWith(registrar);
   SharedPreferencesPlugin.registerWith(registrar);
   UniLinksPlugin.registerWith(registrar);
   UrlLauncherPlugin.registerWith(registrar);
