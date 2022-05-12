@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' hide TextDirection;
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 
 class DrawerListTitle extends StatefulWidget {
   final String? iconUrl;
@@ -9,6 +11,9 @@ class DrawerListTitle extends StatefulWidget {
   final bool forceThemeColor;
   final bool autoFocus;
 
+  /// translate the title or not
+  final bool autoTranslate;
+
   DrawerListTitle({
     Key? key,
     this.iconUrl,
@@ -17,6 +22,7 @@ class DrawerListTitle extends StatefulWidget {
     this.text = "",
     this.onTap,
     this.autoFocus = false,
+    this.autoTranslate = false,
   }) : super(key: key);
 
   @override
@@ -35,7 +41,7 @@ class _DrawerListTitle extends State<DrawerListTitle> {
         tileColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
         textColor: isFocused ? Colors.white : Theme.of(context).textTheme.bodyMedium?.color,
         title: Text(
-          widget.text!,
+          widget.autoTranslate ? Intl.message(widget.text ?? '', name: widget.text?.toCamelCase) : widget.text ?? '',
           overflow: TextOverflow.ellipsis,
           style: TextStyle(fontSize: 15.0),
         ),

@@ -60,7 +60,7 @@
     "doYouKnowMosqueId": "هل تعرف معرف التثبيت الخاص بك أو معرف المسجد الخاص بك؟",
     "yes": "نعم",
     "no": "لا",
-    "networkStatus": "Network Status",
+    "networkStatus" : "حاله الشبكه",
     "mosqueNoMore": "لايوجد المزيد من النتائج",
     "mosqueNoResults": "لا توجد نتائج"
 }

@@ -26,7 +26,6 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("O aplikaciji"),
         "appLang": MessageLookupByLibrary.simpleMessage("Jezik aplikacije"),
-        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Idi na početnu stranicu"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -49,11 +48,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
-        "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Unesite ID džamije :"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
-        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Ne možete pristupiti trenutnoj lokaciji uređaja, provjerite je li GPS na vašem uređaju omogućen"),
         "headerType": MessageLookupByLibrary.simpleMessage("Vrsta zaglavlja"),
@@ -61,15 +58,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Vodič za instalaciju"),
-        "isha": MessageLookupByLibrary.simpleMessage("Isha"),
-        "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "languages": MessageLookupByLibrary.simpleMessage("Jezici"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Svijetli način"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Učitavanje kružne animacije"),
-        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT vam nudi novi način praćenja i upravljanja vremenom namaza, zapravo nudimo end-to-end sustav koji upraviteljima džamija pruža online alat dostupan 24/24 sata."),
         "mawaqitWelcome":
@@ -78,41 +72,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Nedostaje ID džamije"),
         "mosque": MessageLookupByLibrary.simpleMessage("Džamija"),
-        "mosqueAnnouncement": MessageLookupByLibrary.simpleMessage(
-            "All this information is filled in by the people in charge of the mosque"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("ID džamije"),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Mosque Input"),
         "mosqueNameError":
             MessageLookupByLibrary.simpleMessage("Unesite naziv džamije"),
-        "mosqueNoMore": MessageLookupByLibrary.simpleMessage("No more results"),
-        "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results"),
-        "mosque_Facilities_AblutionsRoom":
-            MessageLookupByLibrary.simpleMessage("Ablution room"),
-        "mosque_Facilities_AdultsCourse":
-            MessageLookupByLibrary.simpleMessage("Adults courses"),
-        "mosque_Facilities_ChildrenCourses":
-            MessageLookupByLibrary.simpleMessage("Children courses"),
-        "mosque_Facilities_DisabledAccess":
-            MessageLookupByLibrary.simpleMessage("Disabled access"),
-        "mosque_Facilities_Parking":
-            MessageLookupByLibrary.simpleMessage("Parking"),
-        "mosque_Facilities_SalatAlAid":
-            MessageLookupByLibrary.simpleMessage("Salat Al Eid"),
-        "mosque_Facilities_SalatAlJanaza":
-            MessageLookupByLibrary.simpleMessage("Salat Al janaza"),
-        "mosque_Facilities_WomanSpace":
-            MessageLookupByLibrary.simpleMessage("Woman space"),
-        "mosque_facilities_Info": MessageLookupByLibrary.simpleMessage(
-            "All this information is filled in by the people in charge of the mosque"),
-        "mosques_Facilities_IftarRamadan":
-            MessageLookupByLibrary.simpleMessage("Iftar Ramadan"),
+        "mosqueNoMore":
+            MessageLookupByLibrary.simpleMessage("Nema više rezultata"),
+        "mosqueNoResults":
+            MessageLookupByLibrary.simpleMessage("Nema rezultata"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "no": MessageLookupByLibrary.simpleMessage("Ne"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Nema internetske veze"),
-        "noJumua": MessageLookupByLibrary.simpleMessage("no jumua"),
         "notification": MessageLookupByLibrary.simpleMessage("Obavijesti"),
         "ok": MessageLookupByLibrary.simpleMessage("U REDU"),
         "privacyPolicy":
@@ -129,7 +102,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Unesite ID džamije (Mosque ID)"),
         "share": MessageLookupByLibrary.simpleMessage("Podijeli"),
-        "shuruq": MessageLookupByLibrary.simpleMessage("shuruq"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "Nije li valjana džamija \'slug\'"),
