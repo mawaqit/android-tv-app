@@ -27,7 +27,6 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("Rreth"),
         "appLang": MessageLookupByLibrary.simpleMessage("Gjuha e Aplikacionit"),
-        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to Homepage"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -50,11 +49,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
-        "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Shkruani ID-në e Xhamisë : "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
-        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Nuk mund të qaseni në vendndodhjen aktuale të pajisjes, ju lutemi kontrolloni nëse pajisja juaj GPS është e aktivizuar"),
         "headerType": MessageLookupByLibrary.simpleMessage("Lloji i Headerit"),
@@ -62,15 +59,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Udhëzuesi i instalimit"),
-        "isha": MessageLookupByLibrary.simpleMessage("Isha"),
-        "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "languages": MessageLookupByLibrary.simpleMessage("Gjuha"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Mënyra e çelët"),
         "loadingAnimation": MessageLookupByLibrary.simpleMessage(
             "Duke ngarkuar animimin e qerthullit"),
-        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT ju ofron një mënyrë të re për të gjurmuar dhe menaxhuar kohët e namazit, në të vërtetë ne ofrojmë një sistem nga fundi në fund që u ofron menaxherëve të xhamive një mjet në internet të disponueshëm 24/24 orë."),
         "mawaqitWelcome":
@@ -79,40 +73,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Mungon ID e xhamisë"),
         "mosque": MessageLookupByLibrary.simpleMessage("Džamija"),
-        "mosqueAnnouncement": MessageLookupByLibrary.simpleMessage(
-            "All this information is filled in by the people in charge of the mosque"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("ID e xhamisë "),
         "mosqueIdIsNotValid": m0,
-        "mosqueInput": MessageLookupByLibrary.simpleMessage("Mosque Input"),
+        "mosqueInput": MessageLookupByLibrary.simpleMessage("Xhamia"),
         "mosqueNameError":
             MessageLookupByLibrary.simpleMessage("Shkruani emrin e xhamisë"),
-        "mosqueNoMore": MessageLookupByLibrary.simpleMessage("No more results"),
-        "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results"),
-        "mosque_Facilities_AblutionsRoom":
-            MessageLookupByLibrary.simpleMessage("Ablution room"),
-        "mosque_Facilities_AdultsCourse":
-            MessageLookupByLibrary.simpleMessage("Adults courses"),
-        "mosque_Facilities_ChildrenCourses":
-            MessageLookupByLibrary.simpleMessage("Children courses"),
-        "mosque_Facilities_DisabledAccess":
-            MessageLookupByLibrary.simpleMessage("Disabled access"),
-        "mosque_Facilities_Parking":
-            MessageLookupByLibrary.simpleMessage("Parking"),
-        "mosque_Facilities_SalatAlAid":
-            MessageLookupByLibrary.simpleMessage("Salat Al Eid"),
-        "mosque_Facilities_SalatAlJanaza":
-            MessageLookupByLibrary.simpleMessage("Salat Al janaza"),
-        "mosque_Facilities_WomanSpace":
-            MessageLookupByLibrary.simpleMessage("Woman space"),
-        "mosque_facilities_Info": MessageLookupByLibrary.simpleMessage(
-            "All this information is filled in by the people in charge of the mosque"),
-        "mosques_Facilities_IftarRamadan":
-            MessageLookupByLibrary.simpleMessage("Iftar Ramadan"),
+        "mosqueNoMore": MessageLookupByLibrary.simpleMessage(
+            "Na vjen keq, nuk ka më rezultate"),
+        "mosqueNoResults": MessageLookupByLibrary.simpleMessage(
+            "Na vjen keq, nuk ka rezultate"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "no": MessageLookupByLibrary.simpleMessage("Jo"),
         "noInternet": MessageLookupByLibrary.simpleMessage("Nuk ka internet"),
-        "noJumua": MessageLookupByLibrary.simpleMessage("no jumua"),
         "notification": MessageLookupByLibrary.simpleMessage("Njoftim"),
         "ok": MessageLookupByLibrary.simpleMessage("NE RREGULL"),
         "privacyPolicy":
@@ -129,7 +102,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId":
             MessageLookupByLibrary.simpleMessage("Shkruani ID-në e Xhamisë"),
         "share": MessageLookupByLibrary.simpleMessage("Pjesë"),
-        "shuruq": MessageLookupByLibrary.simpleMessage("shuruq"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "A nuk është një xhami e vlefshme \'slug\'"),

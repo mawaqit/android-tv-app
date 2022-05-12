@@ -14,8 +14,15 @@ class SettingsManager extends ChangeNotifier {
   bool get settingsLoaded => _settings != null;
 
   Future<void> init() async {
-    _settings = await settingsService.getSettings();
+    _settings = await settingsService.getLocalSettings();
 
+    if (_settings != null) {
+      notifyListeners();
+      Future.delayed(Duration(seconds: 3), () async => _settings = await settingsService.getSettings());
+      return;
+    }
+
+    _settings = await settingsService.getSettings();
     notifyListeners();
   }
 }

@@ -26,7 +26,6 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("عن التطبيق"),
         "appLang": MessageLookupByLibrary.simpleMessage("لغة التطبيق"),
-        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("الرجوع إلى الصفحة الرئيسية"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -46,11 +45,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc":
             MessageLookupByLibrary.simpleMessage("توصيل المسلمين بالمساجد"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("مواقيت"),
-        "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "أدخل معرف المسجد (Mosque ID) : "),
         "facebook": MessageLookupByLibrary.simpleMessage("فيسبوك"),
-        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "لا يمكن الوصول إلى الموقع الحالي للجهاز، الرجاء التحقق من أن نظام تحديد المواقع الخاص بك مفعل"),
         "headerType": MessageLookupByLibrary.simpleMessage("نوع الرأس"),
@@ -58,15 +55,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "instagram": MessageLookupByLibrary.simpleMessage("انستغرام"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("دليل التثبيت"),
-        "isha": MessageLookupByLibrary.simpleMessage("Isha"),
-        "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "languages": MessageLookupByLibrary.simpleMessage("اللغات"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيسر"),
         "lightMode": MessageLookupByLibrary.simpleMessage("المظهر الفاتح"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("دائرة التحميل المتحركة"),
-        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "توفر لك مواقيت طريقة جديدة لتتبع وإدارة أوقات الصلاة، والواقع أننا نقدم نظاما من النهاية إلى النهاية يوفر لمديري المساجد أداة متاحة على الإنترنت على مدار الساعة 24/24."),
         "mawaqitWelcome":
@@ -75,42 +69,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("معرف المسجد مفقود"),
         "mosque": MessageLookupByLibrary.simpleMessage("المسجد"),
-        "mosqueAnnouncement": MessageLookupByLibrary.simpleMessage(
-            "All this information is filled in by the people in charge of the mosque"),
         "mosqueId":
             MessageLookupByLibrary.simpleMessage("معرف المسجد (Mosque ID)"),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Mosque Input"),
         "mosqueNameError":
             MessageLookupByLibrary.simpleMessage("أدخل اسم المسجد"),
-        "mosqueNoMore": MessageLookupByLibrary.simpleMessage("No more results"),
-        "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results"),
-        "mosque_Facilities_AblutionsRoom":
-            MessageLookupByLibrary.simpleMessage("Ablution room"),
-        "mosque_Facilities_AdultsCourse":
-            MessageLookupByLibrary.simpleMessage("Adults courses"),
-        "mosque_Facilities_ChildrenCourses":
-            MessageLookupByLibrary.simpleMessage("Children courses"),
-        "mosque_Facilities_DisabledAccess":
-            MessageLookupByLibrary.simpleMessage("Disabled access"),
-        "mosque_Facilities_Parking":
-            MessageLookupByLibrary.simpleMessage("Parking"),
-        "mosque_Facilities_SalatAlAid":
-            MessageLookupByLibrary.simpleMessage("Salat Al Eid"),
-        "mosque_Facilities_SalatAlJanaza":
-            MessageLookupByLibrary.simpleMessage("Salat Al janaza"),
-        "mosque_Facilities_WomanSpace":
-            MessageLookupByLibrary.simpleMessage("Woman space"),
-        "mosque_facilities_Info": MessageLookupByLibrary.simpleMessage(
-            "All this information is filled in by the people in charge of the mosque"),
-        "mosques_Facilities_IftarRamadan":
-            MessageLookupByLibrary.simpleMessage("Iftar Ramadan"),
+        "mosqueNoMore":
+            MessageLookupByLibrary.simpleMessage("لايوجد المزيد من النتائج"),
+        "mosqueNoResults":
+            MessageLookupByLibrary.simpleMessage("لا توجد نتائج"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("نمط شريط التنقل"),
+        "networkStatus": MessageLookupByLibrary.simpleMessage("حاله الشبكه"),
         "no": MessageLookupByLibrary.simpleMessage("لا"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("لا يوجد اتصال بالإنترنت"),
-        "noJumua": MessageLookupByLibrary.simpleMessage("no jumua"),
         "notification": MessageLookupByLibrary.simpleMessage("الإشعارات"),
         "ok": MessageLookupByLibrary.simpleMessage("موافق"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("سياسة الخصوصية"),
@@ -125,7 +99,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال معرف المسجد (Mosque ID)"),
         "share": MessageLookupByLibrary.simpleMessage("مشاركة"),
-        "shuruq": MessageLookupByLibrary.simpleMessage("shuruq"),
         "skype": MessageLookupByLibrary.simpleMessage("سكايب"),
         "slugError":
             MessageLookupByLibrary.simpleMessage("ليس \"slug\" مسجد صحيح"),
