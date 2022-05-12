@@ -59,5 +59,7 @@
     "slugError": "Dit is geen geldige moskee slug",
     "doYouKnowMosqueId": "Ken je je installatie-ID of je Moske-ID?",
     "yes": "Ja",
-    "no": "Nee"
+    "no": "Nee",
+    "mosqueNoMore": "Niet meer resultaten",
+    "mosqueNoResults": "Geen resultaten"
 }

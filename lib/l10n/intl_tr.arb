@@ -59,5 +59,7 @@
     "slugError": "Geçerli bir cami 'slug' değil mi",
     "doYouKnowMosqueId": "Kurulum kimliğinizi veya Cami kimliğinizi biliyor musunuz?",
     "yes": "Evet",
-    "no": "Hayır"
+    "no": "Hayır",
+    "mosqueNoMore": "Daha fazla sonuç yok",
+    "mosqueNoResults": "Sonuç yok"
 }

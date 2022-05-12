@@ -59,5 +59,7 @@
     "slugError": "No es un slug de mezquita válido",
     "doYouKnowMosqueId": "¿Conoces tu ID de instalación o tu Mezquita?",
     "yes": "Si",
-    "no": "No"
+    "no": "No",
+    "mosqueNoMore": "No hay más resultados",
+    "mosqueNoResults": "No hay resultados"
 }

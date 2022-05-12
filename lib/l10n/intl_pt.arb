@@ -59,5 +59,7 @@
     "slugError": "Não é um slug de mesquita válido",
     "doYouKnowMosqueId": "Você sabe o seu ID de instalação ou o seu ID de Mesquita?",
     "yes": "Sim",
-    "no": "Não"
+    "no": "Não",
+    "mosqueNoMore": "Sem mais resultados",
+    "mosqueNoResults": "Sem resultados"
 }

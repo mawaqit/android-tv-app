@@ -59,5 +59,7 @@
     "slugError": "Nije li valjana džamija 'slug'",
     "doYouKnowMosqueId": "Znate li svoj ID instalacije ili ID džamije?",
     "yes": "Da",
-    "no": "Ne"
+    "no": "Ne",
+    "mosqueNoMore": "Nema više rezultata",
+    "mosqueNoResults": "Nema rezultata"
 }

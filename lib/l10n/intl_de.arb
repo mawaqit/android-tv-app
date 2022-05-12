@@ -59,5 +59,7 @@
     "slugError": "Ist kein gültiger Mosche-Slug",
     "doYouKnowMosqueId": "Kennst du deine Installations-ID oder deine Moscheen-ID?",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "mosqueNoMore": "Keine weiteren Ergebnisse",
+    "mosqueNoResults": "Kein Ergebnis"
 }
