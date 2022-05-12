@@ -50,7 +50,7 @@
     "drawerTitle": "MAWAQIT",
     "drawerDesc": "Connecting muslims to Mosques",
     "backendError": "Désolé, nous n'avons pas pu nous connecter au serveur.\nVeuillez vérifier votre connectivité Internet ou réessayer plus tard.",
-    "mosqueInput": "Mosque Input",
+    "mosqueInput": "Mosquée",
     "selectWithMosqueId": "Veuillez saisir l'ID de votre installation de la mosquée (Mosque ID)",
     "searchForMosque": "Chercher une mosquée",
     "searchMosque": "Chercher une mosquée",
@@ -60,6 +60,7 @@
     "doYouKnowMosqueId": "Connaissez-vous votre ID d'installation ou votre ID de mosquée (Mosque ID)?",
     "yes": "Oui",
     "no": "Non",
+    "networkStatus": "État du réseau",
     "mosqueNoMore": "Aucun autre résultat",
     "mosqueNoResults": "Aucun résultat"
 }
