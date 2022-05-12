@@ -60,6 +60,7 @@
     "doYouKnowMosqueId": "¿Conoces tu ID de instalación o tu Mezquita?",
     "yes": "Si",
     "no": "No",
+    "networkStatus": "Estado de la red",
     "mosqueNoMore": "No hay más resultados",
     "mosqueNoResults": "No hay resultados"
 }

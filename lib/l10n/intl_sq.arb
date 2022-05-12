@@ -60,6 +60,7 @@
     "doYouKnowMosqueId": "A e dini ID-në tuaj të instalimit apo ID-në tuaj të Xhamisë?",
     "yes": "Po",
     "no": "Jo",
+    "networkStatus": "Statusi i rrjetit",
     "mosqueNoMore": "Na vjen keq, nuk ka më rezultate",
     "mosqueNoResults": "Na vjen keq, nuk ka rezultate"
 }

@@ -50,7 +50,7 @@
     "drawerTitle": "MAWAQIT",
     "drawerDesc": "Connecting Muslims to Mosques",
     "backendError": "Nažalost, nismo se mogli povezati s poslužiteljem.\nProvjerite internetsku vezu ili pokušajte ponovo kasnije.",
-    "mosqueInput": "Mosque Input",
+    "mosqueInput": "Džamija",
     "selectWithMosqueId": "Unesite ID džamije (Mosque ID)",
     "searchForMosque": "Potražite džamiju",
     "searchMosque": "Potražite džamiju",
@@ -60,6 +60,7 @@
     "doYouKnowMosqueId": "Znate li svoj ID instalacije ili ID džamije?",
     "yes": "Da",
     "no": "Ne",
+    "networkStatus": "Mrežni status",
     "mosqueNoMore": "Nema više rezultata",
     "mosqueNoResults": "Nema rezultata"
 }
