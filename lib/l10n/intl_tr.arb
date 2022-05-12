@@ -60,7 +60,7 @@
     "doYouKnowMosqueId": "Kurulum kimliğinizi veya Cami kimliğinizi biliyor musunuz?",
     "yes": "Evet",
     "no": "Hayır",
-    "networkStatus": "Network Status",
+    "networkStatus": "Ağ Durumu",
     "mosqueNoMore": "Daha fazla sonuç yok",
     "mosqueNoResults": "Sonuç yok"
 }

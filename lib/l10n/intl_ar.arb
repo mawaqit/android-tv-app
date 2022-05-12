@@ -50,7 +50,7 @@
     "drawerTitle": "مواقيت",
     "drawerDesc": "توصيل المسلمين بالمساجد",
     "backendError": "عذراً، لم نتمكن من الاتصال بالخادم.\nالرجاء التحقق من اتصال الإنترنت أو المحاولة مرة أخرى لاحقاً.",
-    "mosqueInput": "Mosque Input",
+    "mosqueInput": "المسجد",
     "selectWithMosqueId": "الرجاء إدخال معرف المسجد (Mosque ID)",
     "searchForMosque": "البحث عن مسجد",
     "searchMosque": "البحث عن مسجد",
@@ -60,7 +60,7 @@
     "doYouKnowMosqueId": "هل تعرف معرف التثبيت الخاص بك أو معرف المسجد الخاص بك؟",
     "yes": "نعم",
     "no": "لا",
-    "networkStatus" : "حاله الشبكه",
+    "networkStatus": "حالة الشبكة",
     "mosqueNoMore": "لايوجد المزيد من النتائج",
     "mosqueNoResults": "لا توجد نتائج"
 }
