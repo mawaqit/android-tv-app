@@ -26,7 +26,6 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("متعلق"),
         "appLang": MessageLookupByLibrary.simpleMessage("ایپ کی زبانیں۔"),
-        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("ہوم پیج پر جائیں"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -47,11 +46,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("مواقیت"),
-        "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("مسجد کی شناخت درج کریں:"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
-        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "آلہ کے موجودہ مقام تک رسائی حاصل نہیں کر سکتے، براہ کرم چیک کریں کہ آپ کا آلہ GPS فعال ہے۔"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
@@ -59,15 +56,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("انسٹالیشن گائیڈ"),
-        "isha": MessageLookupByLibrary.simpleMessage("Isha"),
-        "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "languages": MessageLookupByLibrary.simpleMessage("زبانیں"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("لائٹ موڈ"),
         "loadingAnimation": MessageLookupByLibrary.simpleMessage(
             "گولدائرہ اینیمیشن لوڈ کر رہا ہے"),
-        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "مواقیت آپ کو نماز کے اوقات کو ٹریک کرنے اور ان کا نظم کرنے کا ایک نیا طریقہ پیش کرتا ہے، درحقیقت ہم ایک اینڈ ٹو اینڈ سسٹم پیش کرتے ہیں جو مسجد کے منتظمین کو 24/24 گھنٹے دستیاب آن لائن ٹول فراہم کرتا ہے۔"),
         "mawaqitWelcome":
@@ -76,41 +70,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("مسجد کی شناخت غائب ہے۔"),
         "mosque": MessageLookupByLibrary.simpleMessage("المسجد"),
-        "mosqueAnnouncement": MessageLookupByLibrary.simpleMessage(
-            "All this information is filled in by the people in charge of the mosque"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("مسجد کی شناخت"),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("مسجد ان پٹ"),
         "mosqueNameError":
             MessageLookupByLibrary.simpleMessage("مسجد کا نام درج کریں۔"),
-        "mosqueNoMore": MessageLookupByLibrary.simpleMessage("No more results"),
-        "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results"),
-        "mosque_Facilities_AblutionsRoom":
-            MessageLookupByLibrary.simpleMessage("Ablution room"),
-        "mosque_Facilities_AdultsCourse":
-            MessageLookupByLibrary.simpleMessage("Adults courses"),
-        "mosque_Facilities_ChildrenCourses":
-            MessageLookupByLibrary.simpleMessage("Children courses"),
-        "mosque_Facilities_DisabledAccess":
-            MessageLookupByLibrary.simpleMessage("Disabled access"),
-        "mosque_Facilities_Parking":
-            MessageLookupByLibrary.simpleMessage("Parking"),
-        "mosque_Facilities_SalatAlAid":
-            MessageLookupByLibrary.simpleMessage("Salat Al Eid"),
-        "mosque_Facilities_SalatAlJanaza":
-            MessageLookupByLibrary.simpleMessage("Salat Al janaza"),
-        "mosque_Facilities_WomanSpace":
-            MessageLookupByLibrary.simpleMessage("Woman space"),
-        "mosque_facilities_Info": MessageLookupByLibrary.simpleMessage(
-            "All this information is filled in by the people in charge of the mosque"),
-        "mosques_Facilities_IftarRamadan":
-            MessageLookupByLibrary.simpleMessage("Iftar Ramadan"),
+        "mosqueNoMore":
+            MessageLookupByLibrary.simpleMessage("کوئی مزید نتائج نہیں"),
+        "mosqueNoResults":
+            MessageLookupByLibrary.simpleMessage("کوئی نتیجہ نہیں"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "no": MessageLookupByLibrary.simpleMessage("نہیں"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("کوئی انٹرنیٹ کنکشن"),
-        "noJumua": MessageLookupByLibrary.simpleMessage("no jumua"),
         "notification": MessageLookupByLibrary.simpleMessage("اطلاعات"),
         "ok": MessageLookupByLibrary.simpleMessage("ٹھیک ہے"),
         "privacyPolicy":
@@ -126,7 +99,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "براہ کرم اپنی مسجد کی شناخت درج کریں۔"),
         "share": MessageLookupByLibrary.simpleMessage("بانٹیں"),
-        "shuruq": MessageLookupByLibrary.simpleMessage("shuruq"),
         "skype": MessageLookupByLibrary.simpleMessage("سکائپ"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "کیا ایک درست مسجد \'slug\' نہیں ہے؟"),

@@ -31,6 +31,7 @@ class _PageScreen extends State<PageScreen> {
       appBar: _renderAppBar(context, settings, widget.page),
       body: MawaqitWebViewWidget(
         path: widget.page.url,
+        clean: true,
       ),
     );
   }

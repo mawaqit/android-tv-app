@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -18,17 +19,15 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+        _current != null, 'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
     return _current!;
   }
 
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -630,196 +629,6 @@ class S {
     );
   }
 
-  /// `Parking`
-  String get mosque_Facilities_Parking {
-    return Intl.message(
-      'Parking',
-      name: 'mosque_Facilities_Parking',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Disabled access`
-  String get mosque_Facilities_DisabledAccess {
-    return Intl.message(
-      'Disabled access',
-      name: 'mosque_Facilities_DisabledAccess',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Ablution room`
-  String get mosque_Facilities_AblutionsRoom {
-    return Intl.message(
-      'Ablution room',
-      name: 'mosque_Facilities_AblutionsRoom',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Woman space`
-  String get mosque_Facilities_WomanSpace {
-    return Intl.message(
-      'Woman space',
-      name: 'mosque_Facilities_WomanSpace',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Adults courses`
-  String get mosque_Facilities_AdultsCourse {
-    return Intl.message(
-      'Adults courses',
-      name: 'mosque_Facilities_AdultsCourse',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Children courses`
-  String get mosque_Facilities_ChildrenCourses {
-    return Intl.message(
-      'Children courses',
-      name: 'mosque_Facilities_ChildrenCourses',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Salat Al Eid`
-  String get mosque_Facilities_SalatAlAid {
-    return Intl.message(
-      'Salat Al Eid',
-      name: 'mosque_Facilities_SalatAlAid',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Salat Al janaza`
-  String get mosque_Facilities_SalatAlJanaza {
-    return Intl.message(
-      'Salat Al janaza',
-      name: 'mosque_Facilities_SalatAlJanaza',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Iftar Ramadan`
-  String get mosques_Facilities_IftarRamadan {
-    return Intl.message(
-      'Iftar Ramadan',
-      name: 'mosques_Facilities_IftarRamadan',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `All this information is filled in by the people in charge of the mosque`
-  String get mosque_facilities_Info {
-    return Intl.message(
-      'All this information is filled in by the people in charge of the mosque',
-      name: 'mosque_facilities_Info',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Jumua`
-  String get jumua {
-    return Intl.message(
-      'Jumua',
-      name: 'jumua',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `no jumua`
-  String get noJumua {
-    return Intl.message(
-      'no jumua',
-      name: 'noJumua',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `shuruq`
-  String get shuruq {
-    return Intl.message(
-      'shuruq',
-      name: 'shuruq',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Fajr`
-  String get fajr {
-    return Intl.message(
-      'Fajr',
-      name: 'fajr',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Duhr`
-  String get duhr {
-    return Intl.message(
-      'Duhr',
-      name: 'duhr',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Asr`
-  String get asr {
-    return Intl.message(
-      'Asr',
-      name: 'asr',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Maghrib`
-  String get maghrib {
-    return Intl.message(
-      'Maghrib',
-      name: 'maghrib',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Isha`
-  String get isha {
-    return Intl.message(
-      'Isha',
-      name: 'isha',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `All this information is filled in by the people in charge of the mosque`
-  String get mosqueAnnouncement {
-    return Intl.message(
-      'All this information is filled in by the people in charge of the mosque',
-      name: 'mosqueAnnouncement',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Do you know your installation ID or your Mosque ID?`
   String get doYouKnowMosqueId {
     return Intl.message(
@@ -845,6 +654,16 @@ class S {
     return Intl.message(
       'No',
       name: 'no',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network Status`
+  String get networkStatus {
+    return Intl.message(
+      'Network Status',
+      name: 'networkStatus',
       desc: '',
       args: [],
     );
@@ -876,8 +695,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'ar'),
+      Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'bn'),
       Locale.fromSubtags(languageCode: 'de'),
       Locale.fromSubtags(languageCode: 'es'),
@@ -896,8 +715,10 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
+
   @override
   Future<S> load(Locale locale) => S.load(locale);
+
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

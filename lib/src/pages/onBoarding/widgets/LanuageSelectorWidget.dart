@@ -20,6 +20,14 @@ class OnBoardingLanguageSelector extends StatelessWidget {
     /// if the [langCode] is current used language
     bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
 
+    final sortedLocales = [
+      locales.first,
+      ...locales.sublist(1)
+        ..sort(
+          (a, b) => appLanguage.languageName(a.languageCode).compareTo(appLanguage.languageName(b.languageCode)),
+        ),
+    ];
+
     return Column(
       children: [
         SizedBox(height: 10),
@@ -49,10 +57,10 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                 top: 5,
                 bottom: 5,
               ),
-              itemCount: locales.length,
+              itemCount: sortedLocales.length,
               separatorBuilder: (BuildContext context, int index) => Divider(height: 1),
               itemBuilder: (BuildContext context, int index) {
-                var locale = locales[index];
+                var locale = sortedLocales[index];
                 return LanguageTile(
                   onSelect: onSelect,
                   locale: locale,
