@@ -58,7 +58,7 @@ class ThemeNotifier with ChangeNotifier {
 
   ///when isLightTheme == null will use the default system theme
   ThemeMode? get mode => isLightTheme == null
-      ? null
+      ? ThemeMode.dark
       : isLightTheme!
           ? ThemeMode.light
           : ThemeMode.dark;

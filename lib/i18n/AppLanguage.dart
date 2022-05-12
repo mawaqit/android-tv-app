@@ -19,6 +19,7 @@ class AppLanguage extends ChangeNotifier {
     var prefs = await SharedPreferences.getInstance();
     if (prefs.getString('language_code') == null) {
       _appLocale = Locale('${GlobalConfiguration().getValue('defaultLanguage')}', '');
+      notifyListeners();
       return null;
     }
     _appLocale = Locale(prefs.getString('language_code')!);

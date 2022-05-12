@@ -40,49 +40,60 @@ class MawaqitDrawer extends StatelessWidget {
         padding: const EdgeInsets.all(0.0),
         children: <Widget>[
           Focus(child: SizedBox()),
-          DrawerHeader(
+          Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.only(bottom: 10),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: <Color>[
-                    Theme.of(context).brightness == Brightness.light
-                        ? HexColor(settings.firstColor)
-                        : Theme.of(context).primaryColor,
-                    Theme.of(context).brightness == Brightness.light
-                        ? HexColor(settings.secondColor)
-                        : Theme.of(context).primaryColor,
-                  ],
-                ),
+                // color: Theme.of(context).brightness == Brightness.light
+                //     ? HexColor(settings.firstColor)
+                //     : Theme.of(context).primaryColor,
+                // gradient: LinearGradient(
+                //   colors: <Color>[
+                //     Theme.of(context).brightness == Brightness.light
+                //         ? HexColor(settings.firstColor)
+                //         : Theme.of(context).primaryColor,
+                //     Theme.of(context).brightness == Brightness.light
+                //         ? HexColor(settings.secondColor)
+                //         : Theme.of(context).primaryColor,
+                //   ],
+                // ),
               ),
               child: Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      width: 70.0,
+                      // width: 70.0,
                       height: 70.0,
-                      child: Image.network(
-                        settings.logoHeaderUrl!,
-                      ),
+                      // child: Image.network(settings.logoHeaderUrl!),
+                      child: Image.asset('assets/img/logo/logo-mawaqit-2022-horizontal.png'),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 5),
                       child: Text(
-                          // settings.title!,
-                          S.of(context).drawerTitle,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.white, fontSize: 16)),
+                        // settings.title!,
+                        S.of(context).drawerTitle,
+                        overflow: TextOverflow.ellipsis,
+                        // style: TextStyle( fontSize: 16),
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 5),
+                      padding: EdgeInsets.only(top: 3),
                       child: Text(
                           // settings.subTitle!,
                           S.of(context).drawerDesc,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.white, fontSize: 14)),
-                    )
+                          style: TextStyle(  fontSize: 14)),
+                    ),
+                    SizedBox(height: 7),
+                    VersionWidget(
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
                   ],
                 ),
               )),
+          Divider(),
           DrawerListTitle(
               autoFocus: true,
               icon: Icons.home,
@@ -151,18 +162,6 @@ class MawaqitDrawer extends StatelessWidget {
               iOSAppId: settings.iosId,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            child: Divider(height: 1, color: Colors.grey[400]),
-          ),
-          ListTile(
-            leading: Icon(Icons.system_update),
-            isThreeLine: true,
-            dense: true,
-            title: Text(S.of(context).update),
-            subtitle: VersionWidget(),
-          ),
-          Focus(child: SizedBox()),
         ],
       ),
     );
@@ -176,6 +175,8 @@ class MawaqitDrawer extends StatelessWidget {
           .map(
             (Menu menu) => DrawerListTitle(
                 iconUrl: menu.iconUrl,
+                forceThemeColor: true,
+                autoTranslate: true,
                 text: menu.title,
                 onTap: () async {
                   if (settings.tabNavigationEnable == "1") {
