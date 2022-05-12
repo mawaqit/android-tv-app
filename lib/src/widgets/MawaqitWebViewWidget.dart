@@ -25,7 +25,10 @@ import 'package:url_launcher/url_launcher.dart';
 class MawaqitWebViewWidget extends StatefulWidget {
   final String? path;
 
-  MawaqitWebViewWidget({Key? key, this.path}) : super(key: key);
+  /// clean up web specific component like header - footer - breadcrumb
+  final bool clean;
+
+  MawaqitWebViewWidget({Key? key, this.path, this.clean = false}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -134,7 +137,6 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
           else
             InAppWebView(
               key: ValueKey(widget.path),
-              // contextMenu: contextMenu,
               initialUrlRequest: URLRequest(url: Uri.parse(widget.path!)),
               gestureRecognizers: _gSet,
               initialOptions: InAppWebViewGroupOptions(
@@ -211,11 +213,9 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                   }
                   return NavigationActionPolicy.CANCEL;
                 } else if (!["http", "https", "chrome", "data", "javascript", "file", "about"].contains(uri.scheme)) {
-                  if (await canLaunch(uri.toString())) {
+                  if (await canLaunchUrl(uri)) {
                     // Launch the App
-                    await launch(
-                      uri.toString(),
-                    );
+                    await launchUrl(uri);
                     // and cancel the request
                     return NavigationActionPolicy.CANCEL;
                   }
@@ -228,9 +228,11 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
               onLoadStop: (controller, url) async {
                 pullToRefreshController!.endRefreshing();
                 Future.delayed(const Duration(milliseconds: 500), () => _geolocationAlertFix());
-                await webViewController!.injectJavascriptFileFromAsset(
-                  assetFilePath: 'assets/scripts/clean.js',
-                );
+                if (widget.clean) {
+                  await webViewController!.injectJavascriptFileFromAsset(
+                    assetFilePath: 'assets/scripts/clean.js',
+                  );
+                }
                 this.setState(() => isLoading = false);
               },
               onDownloadStart: (controller, url) async {
