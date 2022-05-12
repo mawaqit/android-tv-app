@@ -69,7 +69,7 @@ dependencies:
   path_provider: ^2.0.9
 
   # MAP
-  location: ^4.3.0
+  #location: ^4.3.0
   geolocator: ^8.2.1
 #  webview_flutter: ^3.0.0
 
