@@ -79,6 +79,6 @@
     "doYouKnowMosqueId": "আপনি কি আপনার ইনস্টলেশন আইডি বা আপনার মসজিদ আইডি জানেন?",
     "yes": "হ্যাঁ",
     "no": "না",
-    "mosqueNoMore": "No more results",
-    "mosqueNoResults": "No results"
+    "mosqueNoMore": "আরো কোনো ফলাফল নেই",
+    "mosqueNoResults": "রেসাল্টস নেই"
 }

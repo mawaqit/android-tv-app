@@ -79,6 +79,6 @@
     "doYouKnowMosqueId": "Kennst du deine Installations-ID oder deine Moscheen-ID?",
     "yes": "Ja",
     "no": "Nein",
-    "mosqueNoMore": "No more results",
-    "mosqueNoResults": "No results"
+    "mosqueNoMore": "Keine weiteren Ergebnisse",
+    "mosqueNoResults": "Kein Ergebnis"
 }

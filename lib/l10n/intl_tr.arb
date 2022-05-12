@@ -79,6 +79,6 @@
     "doYouKnowMosqueId": "Kurulum kimliğinizi veya Cami kimliğinizi biliyor musunuz?",
     "yes": "Evet",
     "no": "Hayır",
-    "mosqueNoMore": "No more results",
-    "mosqueNoResults": "No results"
+    "mosqueNoMore": "Daha fazla sonuç yok",
+    "mosqueNoResults": "Sonuç yok"
 }
