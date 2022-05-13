@@ -52,7 +52,7 @@
     "backendError": "Na vjen keq, nuk mundëm të lidheshim me serverin.\nJu lutemi verifikoni lidhjen me internetin ose provoni përsëri më vonë.",
     "mosqueInput": "Xhamia",
     "selectWithMosqueId": "Provoni: 256, është ID e 'Xhamisë së Parisit'",
-    "searchForMosque": "Çfarë xhamie po kërkoni? (Emri, Qyteti, Kodi Postar...)",
+    "searchForMosque": "Cilën xhami po kërkoni? (Emri, Qyteti, Kodi Postar...)",
     "searchMosque": "Kërkoni për një xhami",
     "gpsError": "Nuk mund të qaseni në vendndodhjen aktuale të pajisjes, ju lutemi kontrolloni nëse pajisja juaj GPS është e aktivizuar",
     "mosqueNameError": "Shkruani emrin e xhamisë",
