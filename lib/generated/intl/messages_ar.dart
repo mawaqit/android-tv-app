@@ -92,7 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيمن"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
-            "ما هو المسجد الذي تبحث عنه ? (الاسم، المدينة، الرمز البريدي... )"),
+            "ما هو المسجد الذي تبحث عنه؟ (الاسم، المدينة، الرمز البريدي...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("البحث عن مسجد"),
         "selectMosqueId":
             MessageLookupByLibrary.simpleMessage("الرجاء إدخال معرف المسجد"),
