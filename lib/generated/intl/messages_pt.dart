@@ -42,7 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Personalizar o seu caminho"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Modo noturno"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Selecione os idiomas preferenciais."),
+            "Selecione os idiomas preferenciais"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Você sabe o seu ID de instalação ou o seu ID de Mesquita?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -95,14 +95,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Avalie-nos"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opções do Botão Rádio (esquerda)"),
-        "searchForMosque":
-            MessageLookupByLibrary.simpleMessage("Procure por uma Mesquita"),
+        "searchForMosque": MessageLookupByLibrary.simpleMessage(
+            "Qual mesquita você está procurando? (Nome, Cidade, CEP...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("Procure por uma Mesquita"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "Por favor, insira sua ID de Mesquita"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "Por favor, insira sua ID de Mesquita"),
+            "Tente: 256, é o ID do \'Mosquée de Paris\'"),
         "share": MessageLookupByLibrary.simpleMessage("Compartilhar"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(

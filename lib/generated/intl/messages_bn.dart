@@ -44,7 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
         "darkMode": MessageLookupByLibrary.simpleMessage("ডার্ক মোডঃ"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "আপনার পছন্দের ভাষাটি পছন্দ করুন."),
+            "আপনার পছন্দের ভাষাটি পছন্দ করুন"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "আপনি কি আপনার ইনস্টলেশন আইডি বা আপনার মসজিদ আইডি জানেন?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -97,14 +97,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("আমাদের মতামত দিন"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchForMosque":
-            MessageLookupByLibrary.simpleMessage("একটি মসজিদ সন্ধান করুন"),
+        "searchForMosque": MessageLookupByLibrary.simpleMessage(
+            "আপনি কোন মসজিদ খুঁজছেন? (নাম, শহর, পোস্টাল কোড...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("একটি মসজিদ সন্ধান করুন"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "অনুগ্রহ করে আপনার \'মসজিদ আইডি\' লিখুন"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "অনুগ্রহ করে আপনার \'মসজিদ আইডি\' লিখুন"),
+            "চেষ্টা করুন: 256 (এটি \'মসজিদ দে প্যারিস\' এর আইডি)"),
         "share": MessageLookupByLibrary.simpleMessage("শেয়ার"),
         "skype": MessageLookupByLibrary.simpleMessage("স্কাইপ"),
         "slugError": MessageLookupByLibrary.simpleMessage(

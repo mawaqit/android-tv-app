@@ -43,7 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Modeliteti i errët"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Përzgjidhni gjuhën tuaj të parapëlqyer."),
+            "Përzgjidhni gjuhën tuaj të parapëlqyer"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "A e dini ID-në tuaj të instalimit apo ID-në tuaj të Xhamisë?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -95,14 +95,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Na vlerso"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchForMosque":
-            MessageLookupByLibrary.simpleMessage("Kërkoni për një xhami"),
+        "searchForMosque": MessageLookupByLibrary.simpleMessage(
+            "Çfarë xhamie po kërkoni? (Emri, Qyteti, Kodi Postar...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("Kërkoni për një xhami"),
         "selectMosqueId":
             MessageLookupByLibrary.simpleMessage("Shkruani ID-në e Xhamisë"),
-        "selectWithMosqueId":
-            MessageLookupByLibrary.simpleMessage("Shkruani ID-në e Xhamisë"),
+        "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
+            "Provoni: 256, është ID e \'Xhamisë së Parisit\'"),
         "share": MessageLookupByLibrary.simpleMessage("Pjesë"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(

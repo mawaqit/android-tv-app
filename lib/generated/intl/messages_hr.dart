@@ -42,7 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Tamni način"),
         "descLang":
-            MessageLookupByLibrary.simpleMessage("Odaberi željeni jezik."),
+            MessageLookupByLibrary.simpleMessage("Odaberi željeni jezik"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Znate li svoj ID instalacije ili ID džamije?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -94,14 +94,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Ocijenite Nas"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchForMosque":
-            MessageLookupByLibrary.simpleMessage("Potražite džamiju"),
+        "searchForMosque": MessageLookupByLibrary.simpleMessage(
+            "Koju džamiju tražite? (ime, grad, poštanski broj...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("Potražite džamiju"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "Unesite ID džamije (Mosque ID)"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "Unesite ID džamije (Mosque ID)"),
+            "Pokušajte: 256, to je ID \'Mosquée de Paris\'"),
         "share": MessageLookupByLibrary.simpleMessage("Podijeli"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(

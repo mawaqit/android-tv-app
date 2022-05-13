@@ -42,7 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
         "darkMode": MessageLookupByLibrary.simpleMessage("இருள் பயன்முறை"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "தாங்கள் விரும்பும் மொழியினைத் தேர்வு செய்க."),
+            "தாங்கள் விரும்பும் மொழியினைத் தேர்வு செய்க"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "உங்கள் நிறுவல் ஐடி அல்லது உங்கள் மசூதி ஐடி உங்களுக்குத் தெரியுமா?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -94,14 +94,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("எங்களை மதிப்பிடுங்கள்"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchForMosque":
-            MessageLookupByLibrary.simpleMessage("ஒரு மசூதியைத் தேடுங்கள்"),
+        "searchForMosque": MessageLookupByLibrary.simpleMessage(
+            "நீங்கள் எந்த மசூதியைத் தேடுகிறீர்கள்? (பெயர், நகரம், அஞ்சல் குறியீடு...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("ஒரு மசூதியைத் தேடுங்கள்"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "உங்கள் மசூதி ஐடியை உள்ளிடவும்"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "உங்கள் மசூதி ஐடியை உள்ளிடவும்"),
+            "முயற்சிக்கவும்: 256, இது \'Mosquee de Paris\' ஐடி"),
         "share": MessageLookupByLibrary.simpleMessage("பகிர்"),
         "skype": MessageLookupByLibrary.simpleMessage("ஸ்கைப்"),
         "slugError": MessageLookupByLibrary.simpleMessage(

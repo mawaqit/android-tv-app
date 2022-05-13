@@ -40,7 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Pas je eigen manier aan"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Donkere modus"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Kies één of meer voorkeurstalen."),
+            "Kies één of meer voorkeurstalen"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Ken je je installatie-ID of je Moske-ID?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -91,13 +91,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Beoordeel ons"),
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Knop opties (links)"),
-        "searchForMosque":
-            MessageLookupByLibrary.simpleMessage("Zoek een moskee"),
+        "searchForMosque": MessageLookupByLibrary.simpleMessage(
+            "Naar welke moskee ben je op zoek? (Naam, Plaats, Postcode...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("Zoek een moskee"),
         "selectMosqueId":
             MessageLookupByLibrary.simpleMessage("Voer Moske-ID in"),
-        "selectWithMosqueId":
-            MessageLookupByLibrary.simpleMessage("Voer Moske-ID in"),
+        "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
+            "Probeer: 256, het is de ID van de \'Mosquée de Paris\'"),
         "share": MessageLookupByLibrary.simpleMessage("Delen"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(

@@ -25,7 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("متعلق"),
-        "appLang": MessageLookupByLibrary.simpleMessage("ایپ کی زبانیں۔"),
+        "appLang": MessageLookupByLibrary.simpleMessage("ایپ کی زبانیں"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("ہوم پیج پر جائیں"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -40,7 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
         "darkMode": MessageLookupByLibrary.simpleMessage("ڈارک موڈ"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "اپنی پسند کی زبان منتخب کریں۔"),
+            "اپنی پسند کی زبان منتخب کریں"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "کیا آپ کو اپنی انسٹالیشن آئی ڈی یا اپنی مسجد کی شناخت معلوم ہے؟"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -92,13 +92,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("ہمیں شرح"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchForMosque":
-            MessageLookupByLibrary.simpleMessage("مسجد تلاش کریں۔"),
+        "searchForMosque": MessageLookupByLibrary.simpleMessage(
+            "آپ کونسی مسجد ڈھونڈ رہے ہیں؟ (نام، شہر، پوسٹل کوڈ...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("مسجد تلاش کریں۔"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "براہ کرم اپنی مسجد کی شناخت درج کریں۔"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "براہ کرم اپنی مسجد کی شناخت درج کریں۔"),
+            "آزمائیں: 256، یہ \'Mosquée de Paris\' کی ID ہے"),
         "share": MessageLookupByLibrary.simpleMessage("بانٹیں"),
         "skype": MessageLookupByLibrary.simpleMessage("سکائپ"),
         "slugError": MessageLookupByLibrary.simpleMessage(

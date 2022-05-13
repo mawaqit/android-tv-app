@@ -41,7 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("തീം മാറ്റുക"),
         "darkMode": MessageLookupByLibrary.simpleMessage("ഡാർക്ക്‌ മോഡ്"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "നിങ്ങൾക്ക് ഇഷ്ടപ്പെട്ട ഭാഷ തിരഞ്ഞെടുക്കുക."),
+            "നിങ്ങൾക്ക് ഇഷ്ടപ്പെട്ട ഭാഷ തിരഞ്ഞെടുക്കുക"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "നിങ്ങളുടെ ഇൻസ്റ്റലേഷൻ ഐഡി അല്ലെങ്കിൽ മോസ്‌ക് ഐഡി അറിയാമോ?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -93,14 +93,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("ഞങ്ങളെ റേറ്റുചെയ്യുക"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchForMosque":
-            MessageLookupByLibrary.simpleMessage("ഒരു മസ്ജിദ് തിരയുക"),
+        "searchForMosque": MessageLookupByLibrary.simpleMessage(
+            "നിങ്ങൾ ഏത് പള്ളിയാണ് അന്വേഷിക്കുന്നത്? (പേര്, നഗരം, തപാൽ കോഡ്...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("ഒരു മസ്ജിദ് തിരയുക"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "ദയവായി നിങ്ങളുടെ മസ്ജിദ് ഐഡി നൽകുക"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "ദയവായി നിങ്ങളുടെ മസ്ജിദ് ഐഡി നൽകുക"),
+            "ശ്രമിക്കുക: 256, ഇത് \'മോസ്‌ക്യൂ ഡി പാരീസിന്റെ\' ഐഡിയാണ്"),
         "share": MessageLookupByLibrary.simpleMessage("പങ്കുവയ്ക്കുക"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(

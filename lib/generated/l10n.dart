@@ -130,10 +130,10 @@ class S {
     );
   }
 
-  /// `Select your preferred language.`
+  /// `Select your preferred language`
   String get descLang {
     return Intl.message(
-      'Select your preferred language.',
+      'Select your preferred language',
       name: 'descLang',
       desc: '',
       args: [],
@@ -570,20 +570,20 @@ class S {
     );
   }
 
-  /// `Please enter your Mosque ID`
+  /// `Try: 256, It's the ID of the 'Mosquée de Paris'`
   String get selectWithMosqueId {
     return Intl.message(
-      'Please enter your Mosque ID',
+      'Try: 256, It\'s the ID of the \'Mosquée de Paris\'',
       name: 'selectWithMosqueId',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search for a Mosque`
+  /// `Which Mosque are you looking for ? (Name, City, Postal code...)`
   String get searchForMosque {
     return Intl.message(
-      'Search for a Mosque',
+      'Which Mosque are you looking for ? (Name, City, Postal code...)',
       name: 'searchForMosque',
       desc: '',
       args: [],
