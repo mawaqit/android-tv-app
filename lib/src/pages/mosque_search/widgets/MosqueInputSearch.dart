@@ -184,7 +184,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
         filled: true,
         errorText: error,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-        hintText: S.of(context).searchMosque,
+        hintText: S.of(context).searchForMosque,
         hintStyle: TextStyle(
           fontWeight: FontWeight.normal,
           color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
