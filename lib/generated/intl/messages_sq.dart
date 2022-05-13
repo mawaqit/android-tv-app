@@ -96,7 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
-            "Çfarë xhamie po kërkoni? (Emri, Qyteti, Kodi Postar...)"),
+            "Cilën xhami po kërkoni? (Emri, Qyteti, Kodi Postar...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("Kërkoni për një xhami"),
         "selectMosqueId":

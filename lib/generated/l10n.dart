@@ -130,10 +130,10 @@ class S {
     );
   }
 
-  /// `Select your preferred language`
+  /// `Please select your preferred language`
   String get descLang {
     return Intl.message(
-      'Select your preferred language',
+      'Please select your preferred language',
       name: 'descLang',
       desc: '',
       args: [],

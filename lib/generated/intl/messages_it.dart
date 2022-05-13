@@ -42,7 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Personalizzare la propria opzione"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Modalità scura"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Seleziona la tua lingua preferita"),
+            "Per favore scegli la lingua preferita"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Conosci il tuo ID di installazione o il tuo ID della Moschea?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -98,13 +98,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opzioni Pulsante Di Scelta (Destra)"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
-            "Che Moschea stai cercando? (Nome, Città, CAP...)"),
+            "Quale moschea stai cercando? (Nomo, Città, Codice postale...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("Cerca una Moschea"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "Per favore inserisci il tuo Mosque ID"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "Prova: 256, è l\'ID della \'Mosquée de Paris\'"),
+            "Prova: 256, E \'l\'ID della \'Mosquea e de Paris\'"),
         "share": MessageLookupByLibrary.simpleMessage("Condividi"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(

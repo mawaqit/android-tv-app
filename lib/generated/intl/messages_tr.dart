@@ -40,7 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Karanlık modu"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Tercih ettiğiniz dilleri seçin"),
+            "Please select your preferred language"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Kurulum kimliğinizi veya Cami kimliğinizi biliyor musunuz?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -97,7 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "Lütfen Cami Kimliğinizi giriniz (Mosque ID)"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "Deneyin: 256, \'Mosquée de Paris\'in kimliği"),
+            "Deneyin: 256, Mosquée de Paris\'in kimliği"),
         "share": MessageLookupByLibrary.simpleMessage("Paylaş"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(

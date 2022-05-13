@@ -39,8 +39,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "customizeYourOwnWay":
             MessageLookupByLibrary.simpleMessage("Pas je eigen manier aan"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Donkere modus"),
-        "descLang": MessageLookupByLibrary.simpleMessage(
-            "Kies één of meer voorkeurstalen"),
+        "descLang":
+            MessageLookupByLibrary.simpleMessage("Kies uw voorkeurstaal"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Ken je je installatie-ID of je Moske-ID?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -92,7 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Knop opties (links)"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
-            "Naar welke moskee ben je op zoek? (Naam, Plaats, Postcode...)"),
+            "Welke moskee zoekt u? (Naam, Plaats, Postcode...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("Zoek een moskee"),
         "selectMosqueId":
             MessageLookupByLibrary.simpleMessage("Voer Moske-ID in"),

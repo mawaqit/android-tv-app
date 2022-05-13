@@ -104,7 +104,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "অনুগ্রহ করে আপনার \'মসজিদ আইডি\' লিখুন"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "চেষ্টা করুন: 256 (এটি \'মসজিদ দে প্যারিস\' এর আইডি)"),
+            "চেষ্টা করুন: 256, এটি \'মসজিদ দে প্যারিস\'-এর আইডি"),
         "share": MessageLookupByLibrary.simpleMessage("শেয়ার"),
         "skype": MessageLookupByLibrary.simpleMessage("স্কাইপ"),
         "slugError": MessageLookupByLibrary.simpleMessage(

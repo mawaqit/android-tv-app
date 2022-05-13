@@ -94,7 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
-            "നിങ്ങൾ ഏത് പള്ളിയാണ് അന്വേഷിക്കുന്നത്? (പേര്, നഗരം, തപാൽ കോഡ്...)"),
+            "ഏത് പള്ളിയാണ് നിങ്ങൾ അന്വേഷിക്കുന്നത്? (പേര്, നഗരം, തപാൽ കോഡ്...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("ഒരു മസ്ജിദ് തിരയുക"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(

@@ -40,7 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Select your preferred language"),
+            "Please select your preferred language"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Do you know your installation ID or your Mosque ID?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(

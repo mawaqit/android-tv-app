@@ -101,7 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "உங்கள் மசூதி ஐடியை உள்ளிடவும்"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "முயற்சிக்கவும்: 256, இது \'Mosquee de Paris\' ஐடி"),
+            "முயற்சிக்கவும்: 256, இது பாரிஸ் மசூதியின் ஐடி"),
         "share": MessageLookupByLibrary.simpleMessage("பகிர்"),
         "skype": MessageLookupByLibrary.simpleMessage("ஸ்கைப்"),
         "slugError": MessageLookupByLibrary.simpleMessage(

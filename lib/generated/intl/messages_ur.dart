@@ -93,12 +93,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
-            "آپ کونسی مسجد ڈھونڈ رہے ہیں؟ (نام، شہر، پوسٹل کوڈ...)"),
+            "آپ کونسی مسجد کی تلاش ہے؟ (نام، شہر، پوسٹل کوڈ...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("مسجد تلاش کریں۔"),
         "selectMosqueId": MessageLookupByLibrary.simpleMessage(
             "براہ کرم اپنی مسجد کی شناخت درج کریں۔"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "آزمائیں: 256، یہ \'Mosquée de Paris\' کی ID ہے"),
+            "آزمائیں: 256، یہ مسجد ڈی پیرس کی ID ہے۔"),
         "share": MessageLookupByLibrary.simpleMessage("بانٹیں"),
         "skype": MessageLookupByLibrary.simpleMessage("سکائپ"),
         "slugError": MessageLookupByLibrary.simpleMessage(

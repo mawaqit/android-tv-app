@@ -42,7 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Personalizar o seu caminho"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Modo noturno"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Selecione os idiomas preferenciais"),
+            "Selecione o seu idioma preferido"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Você sabe o seu ID de instalação ou o seu ID de Mesquita?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(

@@ -39,11 +39,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "customizeYourOwnWay":
             MessageLookupByLibrary.simpleMessage("تخصيص الخيار الخاص بك"),
         "darkMode": MessageLookupByLibrary.simpleMessage("المظهر الداكن"),
-        "descLang": MessageLookupByLibrary.simpleMessage("إختر لغتك المفضلة"),
+        "descLang": MessageLookupByLibrary.simpleMessage("اختر لغتك المفضّلة"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "هل تعرف معرف التثبيت الخاص بك أو معرف المسجد الخاص بك؟"),
         "drawerDesc":
-            MessageLookupByLibrary.simpleMessage("توصيل المسلمين بالمساجد"),
+            MessageLookupByLibrary.simpleMessage("نربط المسلمين بالمساجد"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("مواقيت"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "أدخل معرف المسجد (Mosque ID) : "),
@@ -92,12 +92,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيمن"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
-            "ما المسجد الذي تبحث عنه؟ (الاسم ، المدينة ، الرمز البريدي ...)"),
+            "ما هو المسجد الذي تبحث عنه ? (الاسم، المدينة، الرمز البريدي... )"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("البحث عن مسجد"),
         "selectMosqueId":
             MessageLookupByLibrary.simpleMessage("الرجاء إدخال معرف المسجد"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "جَرِّب : 256, إنه معرِّف \'Mosquée de Paris\'"),
+            "حاول: 256، إنه معرف \'مسجد باريس\'"),
         "share": MessageLookupByLibrary.simpleMessage("مشاركة"),
         "skype": MessageLookupByLibrary.simpleMessage("سكايب"),
         "slugError":
