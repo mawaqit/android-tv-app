@@ -52,7 +52,7 @@
     "backendError": "Désolé, nous n'avons pas pu nous connecter au serveur.\nVeuillez vérifier votre connectivité Internet ou réessayer plus tard.",
     "mosqueInput": "Mosquée",
     "selectWithMosqueId": "Essayez: 256, c'est l'ID de la Mosquée de Paris",
-    "searchForMosque": "Quelle mosquée cherchez-vous ? (Name, Ville, Code Postal...)",
+    "searchForMosque": "Quelle mosquée cherchez-vous ? (Nom, Ville, Code Postal...)",
     "searchMosque": "Chercher une mosquée",
     "gpsError": "Impossible d'accéder à votre localisation, vérifiez que le GPS de votre appareil est actif.",
     "mosqueNameError": "Entrer le nom de la mosquée",
