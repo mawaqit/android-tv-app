@@ -92,7 +92,7 @@ class _MosqueInputIdState extends State<MosqueInputId> {
                     filled: true,
                     errorText: error,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                    hintText: S.of(context).selectMosqueId,
+                    hintText: S.of(context).selectWithMosqueId,
                     hintStyle: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),

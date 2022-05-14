@@ -97,7 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectMosqueId":
             MessageLookupByLibrary.simpleMessage("الرجاء إدخال معرف المسجد"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "حاول: 256، إنه معرف \'مسجد باريس\'"),
+            "علي سبيل المثال, جَرِّب 256، إنه معرف \'مسجد باريس\'"),
         "share": MessageLookupByLibrary.simpleMessage("مشاركة"),
         "skype": MessageLookupByLibrary.simpleMessage("سكايب"),
         "slugError":
