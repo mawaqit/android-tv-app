@@ -21,8 +21,8 @@ class OnBoardingLanguageSelector extends StatelessWidget {
     bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
 
     final sortedLocales = [
-      locales.first,
-      ...locales.sublist(1)
+      Locale('ar'),
+      ...locales.where((element) => element.languageCode != 'ar').toList()
         ..sort(
           (a, b) => appLanguage.languageName(a.languageCode).compareTo(appLanguage.languageName(b.languageCode)),
         ),
