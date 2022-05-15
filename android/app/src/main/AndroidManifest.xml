@@ -3,7 +3,7 @@
 
   <!-- Restrict app for tablets and TVs only -->
   <supports-screens
-    android:largeScreens="true"
+    android:largeScreens="false"
     android:normalScreens="false"
     android:smallScreens="false"
     android:xlargeScreens="true" />
