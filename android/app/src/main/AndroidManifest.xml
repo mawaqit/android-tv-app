@@ -1,14 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.kanout.mawaqit">
 
-  <!-- Restrict app for tablets and TVs only -->
-  <supports-screens
-    android:largeScreens="true"
-    android:normalScreens="false"
-    android:smallScreens="false"
-    android:xlargeScreens="true"
-    android:requiresSmallestWidthDp="600"/>
-
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
