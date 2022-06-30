@@ -13,7 +13,16 @@ class SettingsManager extends ChangeNotifier {
 
   bool get settingsLoaded => _settings != null;
 
+  /// 1- check for cached value first to speed up the first load time
+  /// 2- fetch the new value and cache it for future use
   Future<void> init() async {
+    _settings = await settingsService.getCachedSettings().catchError((e) => null);
+
+    if (_settings != null) {
+      notifyListeners();
+      await Future.delayed(Duration(seconds: 3));
+    }
+
     _settings = await settingsService.getSettings();
     notifyListeners();
   }
