@@ -37,12 +37,12 @@ class SettingsService {
         throw Exception('Getting local saved settings');
       }
     } catch (e) {
-      var localeSettings = await getCachedSettings().catchError((e) => null);
-      localeSettings ??= await getLocalSettings();
+      var localSettings = await getCachedSettings().catchError((e) => null);
+      localSettings ??= await getLocalSettings();
 
-      if (localeSettings == null) throw Exception('Failed to load /api/settings');
+      if (localSettings == null) throw Exception('Failed to load /api/settings');
 
-      return localeSettings;
+      return localSettings;
     }
   }
 
