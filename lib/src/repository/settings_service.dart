@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
@@ -11,6 +12,11 @@ ValueNotifier<Settings> setting = new ValueNotifier(new Settings());
 class SettingsService {
   final _sharedPref = SharedPref();
 
+  /// fetch the setting from the server and cache it for future usage
+  ///
+  /// 1. load settings from server
+  /// 2. in case of server error uses the last cached settings value
+  /// 3. in case of not exists uses the default value in `assets/cfg/settings.json`
   Future<Settings> getSettings() async {
     try {
       var res = await get(
@@ -24,14 +30,15 @@ class SettingsService {
 
         Settings settings = Settings.fromJson(json["data"]);
 
-        _sharedPref.save('settings', json['data']);
+        saveCachedSettings(json['data']);
 
         return settings;
       } else {
         throw Exception('Getting local saved settings');
       }
     } catch (e) {
-      final localeSettings = await getLocalSettings();
+      var localeSettings = await getCachedSettings().catchError((e) => null);
+      localeSettings ??= await getLocalSettings();
 
       if (localeSettings == null) throw Exception('Failed to load /api/settings');
 
@@ -39,11 +46,22 @@ class SettingsService {
     }
   }
 
+  Future<void> saveCachedSettings(dynamic settings) => _sharedPref.save("settings", settings);
+
+  /// used for performance improvement (initial start up time)
+  /// used for fall back in case of server down
+  Future<Settings?> getCachedSettings() async {
+    final settings = await _sharedPref.read('settings');
+
+    if (settings == null) return null;
+
+    return Settings.fromJson(settings);
+  }
+
   Future<Settings?> getLocalSettings() async {
-    var set = await _sharedPref.read("settings");
+    final data = await rootBundle.loadString('assets/cfg/settings.json');
 
-    if (set != null) return Settings.fromJson(set);
-
-    return null;
+    final settings = jsonDecode(data);
+    return Settings.fromJson(settings);
   }
 }
