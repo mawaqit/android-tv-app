@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/settings.dart';
 
@@ -19,11 +19,13 @@ class SettingsService {
   /// 3. in case of not exists uses the default value in `assets/cfg/settings.json`
   Future<Settings> getSettings() async {
     try {
-      var res = await get(
-        Uri.parse(
-          '${GlobalConfiguration().getValue('api_base_url')}/api/settings/settings.php',
-        ),
-      );
+      var res = await http
+          .get(
+            Uri.parse(
+              '${GlobalConfiguration().getValue('api_base_url')}/api/settings/settings.php',
+            ),
+          )
+          .timeout(Duration(seconds: 5));
 
       if (res.statusCode == 200) {
         final json = jsonDecode(res.body);
