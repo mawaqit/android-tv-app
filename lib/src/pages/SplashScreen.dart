@@ -14,6 +14,8 @@ import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 
+import 'package:wakelock/wakelock.dart';
+
 class Splash extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new _SplashScreen();
@@ -41,6 +43,8 @@ class _SplashScreen extends State<Splash> {
   /// navigates to first screen
   void _navigateToHome() async {
     try {
+      Wakelock.enable().catchError((e) {});
+
       var settings = await _initSettings();
 
       var goBoarding = await loadBoarding();
