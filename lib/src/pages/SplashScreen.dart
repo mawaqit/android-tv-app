@@ -67,7 +67,7 @@ class _SplashScreen extends State<Splash> {
           fit: StackFit.expand,
           children: <Widget>[
             Image.asset(
-              'assets/backgrounds/splash_screen_5.jpg',
+              'assets/backgrounds/splash_screen_5.png',
               fit: BoxFit.cover,
             ),
             Container(
