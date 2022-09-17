@@ -180,6 +180,16 @@ class S {
     );
   }
 
+  /// `Quit`
+  String get quit {
+    return Intl.message(
+      'Quit',
+      name: 'quit',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Are you sure you want to quit the application?`
   String get sureCloseApp {
     return Intl.message(
