@@ -78,8 +78,8 @@ class MawaqitDrawer extends StatelessWidget {
                               }
                               return Colors.white;
                             }),
-                            elevation: MaterialStatePropertyAll(0),
-                            overlayColor: MaterialStatePropertyAll(Colors.transparent),
+                            elevation: MaterialStateProperty.all(0),
+                            overlayColor: MaterialStateProperty.all(Colors.transparent),
                             //     foregroundColor: MaterialStateProperty.resolveWith((states) {
                             //   if (states.contains(MaterialState.focused)) {
                             //     return Colors.white;
@@ -91,12 +91,12 @@ class MawaqitDrawer extends StatelessWidget {
                               }
                               return theme.primaryColor;
                             }),
-                            shape: MaterialStatePropertyAll(
+                            shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            padding: MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
                           ),
                           onPressed: () {
                             Navigator.maybePop(context);
