@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -13,6 +12,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
+import 'package:wakelock/wakelock.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -41,6 +41,8 @@ class _SplashScreen extends State<Splash> {
   /// navigates to first screen
   void _navigateToHome() async {
     try {
+      Wakelock.enable().catchError((e) {});
+
       var settings = await _initSettings();
 
       var goBoarding = await loadBoarding();
@@ -64,8 +66,8 @@ class _SplashScreen extends State<Splash> {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            SvgPicture.asset(
-              'assets/backgrounds/splash_screen_5.svg',
+            Image.asset(
+              'assets/backgrounds/splash_screen_5.png',
               fit: BoxFit.cover,
             ),
             Container(
