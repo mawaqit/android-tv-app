@@ -8,7 +8,6 @@ import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/models/menu.dart';
 import 'package:mawaqit/src/models/page.dart';
@@ -34,6 +33,7 @@ class MawaqitDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsManager>(context).settings;
     final themeProvider = Provider.of<ThemeNotifier>(context);
+    final theme = Theme.of(context);
 
     return Drawer(
       child: ListView(
@@ -44,29 +44,100 @@ class MawaqitDrawer extends StatelessWidget {
               padding: EdgeInsets.all(10),
               margin: EdgeInsets.only(bottom: 10),
               decoration: BoxDecoration(
-                // color: Theme.of(context).brightness == Brightness.light
-                //     ? HexColor(settings.firstColor)
-                //     : Theme.of(context).primaryColor,
-                // gradient: LinearGradient(
-                //   colors: <Color>[
-                //     Theme.of(context).brightness == Brightness.light
-                //         ? HexColor(settings.firstColor)
-                //         : Theme.of(context).primaryColor,
-                //     Theme.of(context).brightness == Brightness.light
-                //         ? HexColor(settings.secondColor)
-                //         : Theme.of(context).primaryColor,
-                //   ],
-                // ),
-              ),
+                  // color: theme.brightness == Brightness.light
+                  //     ? HexColor(settings.firstColor)
+                  //     : theme.primaryColor,
+                  // gradient: LinearGradient(
+                  //   colors: <Color>[
+                  //     theme.brightness == Brightness.light
+                  //         ? HexColor(settings.firstColor)
+                  //         : theme.primaryColor,
+                  //     theme.brightness == Brightness.light
+                  //         ? HexColor(settings.secondColor)
+                  //         : theme.primaryColor,
+                  //   ],
+                  // ),
+                  ),
               child: Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      // width: 70.0,
-                      height: 70.0,
-                      // child: Image.network(settings.logoHeaderUrl!),
-                      child: Image.asset('assets/img/logo/logo-mawaqit-2022-horizontal.png'),
+                    Row(
+                      children: [
+                        Container(
+                          height: 70.0,
+                          // child: Image.network(settings.logoHeaderUrl!),
+                          child: Image.asset('assets/img/logo/logo-mawaqit-2022-horizontal.png'),
+                        ),
+                        Spacer(),
+                        ElevatedButton.icon(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return theme.primaryColorDark;
+                              }
+                              return Colors.white;
+                            }),
+                            elevation: MaterialStateProperty.all(0),
+                            overlayColor: MaterialStateProperty.all(Colors.transparent),
+                            //     foregroundColor: MaterialStateProperty.resolveWith((states) {
+                            //   if (states.contains(MaterialState.focused)) {
+                            //     return Colors.white;
+                            //   }
+                            // })
+                            foregroundColor: MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return Colors.white;
+                              }
+                              return theme.primaryColor;
+                            }),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
+                          ),
+                          onPressed: () {
+                            Navigator.maybePop(context);
+                            Navigator.maybePop(context);
+                          },
+                          icon: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.close,
+                              size: 15,
+                              color: theme.primaryColor,
+                            ),
+                          ),
+                          label: Text(S.of(context).quit),
+                        ),
+                        // ActionChip(
+                        //   // backgroundColor: theme.brightness == Brightness.dark ? Colors.white : theme.primaryColor,
+                        //   // labelStyle: TextStyle(
+                        //   //   color: theme.brightness == Brightness.dark ? theme.primaryColor : Colors.white,
+                        //   // ),
+                        //   onPressed: () {},
+                        //   label: Text("Quit"),
+                        //   padding: EdgeInsets.all(0),
+                        //   avatar: Container(
+                        //     padding: EdgeInsets.all(3),
+                        //     decoration: BoxDecoration(
+                        //       color: Colors.black26,
+                        //       shape: BoxShape.circle,
+                        //     ),
+                        //     child: Icon(
+                        //       Icons.close,
+                        //       color: theme.primaryColor,
+                        //       size: 15,
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 5),
@@ -75,7 +146,7 @@ class MawaqitDrawer extends StatelessWidget {
                         S.of(context).drawerTitle,
                         overflow: TextOverflow.ellipsis,
                         // style: TextStyle( fontSize: 16),
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: theme.textTheme.titleLarge,
                       ),
                     ),
                     Padding(
@@ -84,11 +155,11 @@ class MawaqitDrawer extends StatelessWidget {
                           // settings.subTitle!,
                           S.of(context).drawerDesc,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(  fontSize: 14)),
+                          style: TextStyle(fontSize: 14)),
                     ),
                     SizedBox(height: 7),
                     VersionWidget(
-                      style: Theme.of(context).textTheme.labelSmall,
+                      style: theme.textTheme.labelSmall,
                     ),
                   ],
                 ),
@@ -124,9 +195,9 @@ class MawaqitDrawer extends StatelessWidget {
           ),
           DrawerListTitle(
               icon: Icons.brightness_medium,
-              text: Theme.of(context).brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
+              text: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
               onTap: () {
-                if (Theme.of(context).brightness == Brightness.light) {
+                if (theme.brightness == Brightness.light) {
                   themeProvider.setDarkMode();
                 } else {
                   themeProvider.setLightMode();
@@ -162,6 +233,7 @@ class MawaqitDrawer extends StatelessWidget {
               iOSAppId: settings.iosId,
             ),
           ),
+          SizedBox(height: 20),
         ],
       ),
     );
