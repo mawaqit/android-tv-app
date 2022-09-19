@@ -94,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Política de Privacidad"),
+        "quit": MessageLookupByLibrary.simpleMessage("Salir"),
         "rate": MessageLookupByLibrary.simpleMessage("Califícanos"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opciones del botón de radio (derecha)"),

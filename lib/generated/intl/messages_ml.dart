@@ -90,6 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("അറിയിപ്പുകൾ"),
         "ok": MessageLookupByLibrary.simpleMessage("ശരി"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("സ്വകാര്യതാനയം"),
+        "quit": MessageLookupByLibrary.simpleMessage("ഉപേക്ഷിക്കുക"),
         "rate": MessageLookupByLibrary.simpleMessage("ഞങ്ങളെ റേറ്റുചെയ്യുക"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),

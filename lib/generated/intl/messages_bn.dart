@@ -94,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "ok": MessageLookupByLibrary.simpleMessage("আচ্ছা"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("গোপনীয়তার নীতিমালা"),
+        "quit": MessageLookupByLibrary.simpleMessage("কুইট"),
         "rate": MessageLookupByLibrary.simpleMessage("আমাদের মতামত দিন"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),

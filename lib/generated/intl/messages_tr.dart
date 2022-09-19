@@ -40,7 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Customize your own option"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Karanlık modu"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Please select your preferred language"),
+            "Lütfen tercih ettiğiniz dili seçin"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Kurulum kimliğinizi veya Cami kimliğinizi biliyor musunuz?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -88,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "ok": MessageLookupByLibrary.simpleMessage("TAMAM"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Gizlilik politikası"),
+        "quit": MessageLookupByLibrary.simpleMessage("Çıkmak"),
         "rate": MessageLookupByLibrary.simpleMessage("Bizi Değerlendirin"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),

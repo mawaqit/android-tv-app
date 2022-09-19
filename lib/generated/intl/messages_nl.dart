@@ -88,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Meldingen"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacybeleid"),
+        "quit": MessageLookupByLibrary.simpleMessage("Sluiten"),
         "rate": MessageLookupByLibrary.simpleMessage("Beoordeel ons"),
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Knop opties (links)"),

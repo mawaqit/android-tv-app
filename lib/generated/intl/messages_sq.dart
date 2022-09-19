@@ -92,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "ok": MessageLookupByLibrary.simpleMessage("NE RREGULL"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Politika e privatësisë"),
+        "quit": MessageLookupByLibrary.simpleMessage("Dilni"),
         "rate": MessageLookupByLibrary.simpleMessage("Na vlerso"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
