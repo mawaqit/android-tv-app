@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart' hide Page;
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:launch_review/launch_review.dart';
@@ -102,10 +101,7 @@ class MawaqitDrawer extends StatelessWidget {
                             ),
                             padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
                           ),
-                          onPressed: () {
-                            Navigator.maybePop(context);
-                            Navigator.maybePop(context);
-                          },
+                          onPressed: () => exit(0),
                           icon: Container(
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
