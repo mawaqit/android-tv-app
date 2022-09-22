@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart' hide Page;
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:launch_review/launch_review.dart';
@@ -64,12 +63,16 @@ class MawaqitDrawer extends StatelessWidget {
                   children: <Widget>[
                     Row(
                       children: [
-                        Container(
-                          height: 70.0,
-                          // child: Image.network(settings.logoHeaderUrl!),
-                          child: Image.asset('assets/img/logo/logo-mawaqit-2022-horizontal.png'),
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Container(
+                              height: 70.0,
+                              // child: Image.network(settings.logoHeaderUrl!),
+                              child: Image.asset('assets/img/logo/logo-mawaqit-2022-horizontal.png'),
+                            ),
+                          ),
                         ),
-                        Spacer(),
                         ElevatedButton.icon(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -98,10 +101,7 @@ class MawaqitDrawer extends StatelessWidget {
                             ),
                             padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
                           ),
-                          onPressed: () {
-                            Navigator.maybePop(context);
-                            Navigator.maybePop(context);
-                          },
+                          onPressed: () => exit(0),
                           icon: Container(
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
