@@ -64,12 +64,16 @@ class MawaqitDrawer extends StatelessWidget {
                   children: <Widget>[
                     Row(
                       children: [
-                        Container(
-                          height: 70.0,
-                          // child: Image.network(settings.logoHeaderUrl!),
-                          child: Image.asset('assets/img/logo/logo-mawaqit-2022-horizontal.png'),
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Container(
+                              height: 70.0,
+                              // child: Image.network(settings.logoHeaderUrl!),
+                              child: Image.asset('assets/img/logo/logo-mawaqit-2022-horizontal.png'),
+                            ),
+                          ),
                         ),
-                        Spacer(),
                         ElevatedButton.icon(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith((states) {
