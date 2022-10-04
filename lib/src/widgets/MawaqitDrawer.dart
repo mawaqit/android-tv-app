@@ -16,6 +16,7 @@ import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
+import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
@@ -158,9 +159,7 @@ class MawaqitDrawer extends StatelessWidget {
                           style: TextStyle(fontSize: 14)),
                     ),
                     SizedBox(height: 7),
-                    VersionWidget(
-                      style: theme.textTheme.labelSmall,
-                    ),
+                    VersionWidget(style: theme.textTheme.labelSmall),
                   ],
                 ),
               )),
@@ -177,6 +176,13 @@ class MawaqitDrawer extends StatelessWidget {
 
                   Navigator.pop(context);
                 }
+              }),
+          DrawerListTitle(
+              icon: Icons.home_filled,
+              text: "Offline home",
+              onTap: () async {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OfflineHomeScreen()));
               }),
           _renderMenuDrawer(settings, context),
           Padding(
