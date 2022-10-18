@@ -48,6 +48,8 @@ dependencies:
 
   # CONNECTIVITY
   http: ^0.13.4
+  dio: ^4.0.6
+
   share: ^2.0.4
   launch_review: ^3.0.1
   url_launcher: ^6.1.0

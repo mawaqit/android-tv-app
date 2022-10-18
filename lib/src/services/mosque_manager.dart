@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
+import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/mosque.dart';
+import 'package:mawaqit/src/models/times.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
@@ -13,17 +15,29 @@ class MosqueManager extends ChangeNotifier {
   final sharedPref = SharedPref();
 
   String? mosqueId;
-  String? mosqueSlug;
+  String? mosqueUUID;
+
+  Mosque? mosque;
+  Times? times;
+
+  final today = DateTime.now();
+
+  List get todayTimes => times!.times;
+
+  List get todayIqama => times!.iqamaCalendar[today.month - 1][today.day.toString()];
+
+  bool loading = false;
 
   /// get current home url
   String buildUrl(String languageCode) {
     if (mosqueId != null) return 'https://mawaqit.net/$languageCode/id/$mosqueId?view=desktop';
-    if (mosqueSlug != null) return 'https://mawaqit.net/$languageCode/$mosqueSlug?view=desktop';
+    // if (mosqueSlug != null) return 'https://mawaqit.net/$languageCode/$mosqueSlug?view=desktop';
 
     return '';
   }
 
   Future<void> init() async {
+    await Api.init();
     await loadFromLocale();
     notifyListeners();
   }
@@ -40,7 +54,8 @@ class MosqueManager extends ChangeNotifier {
       AnalyticsWrapper.changeMosque(id);
 
       mosqueId = id;
-      mosqueSlug = null;
+
+      // mosqueSlug = null;
 
       _saveToLocale();
 
@@ -61,7 +76,7 @@ class MosqueManager extends ChangeNotifier {
       AnalyticsWrapper.changeMosque(slug);
 
       mosqueId = null;
-      mosqueSlug = slug;
+      // mosqueSlug = slug;
 
       _saveToLocale();
       notifyListeners();
@@ -72,12 +87,19 @@ class MosqueManager extends ChangeNotifier {
 
   void _saveToLocale() {
     sharedPref.save('mosqueId', mosqueId);
-    sharedPref.save('mosqueSlug', mosqueSlug);
+    // sharedPref.save('mosqueSlug', mosqueSlug);
   }
 
   Future<void> loadFromLocale() async {
     mosqueId = await sharedPref.read('mosqueId');
-    mosqueSlug = await sharedPref.read('mosqueSlug');
+    await fetchMosque();
+  }
+
+  fetchMosque() async {
+    if (mosqueId != null) {
+      mosque = await Api.getMosque('8e8a41cf-62d4-4890-9454-120d27b229e1');
+      times = await Api.getMosqueTimes('8e8a41cf-62d4-4890-9454-120d27b229e1');
+    }
   }
 
   Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async {

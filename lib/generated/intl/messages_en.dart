@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
         "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
+        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to Homepage"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -46,22 +47,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "Please enter the Mosque ID :"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Cannot access current device location, please check that your device GPS is enabled"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Installation Guide"),
+        "isha": MessageLookupByLibrary.simpleMessage("Isha"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "languages": MessageLookupByLibrary.simpleMessage("Languages"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Light mode"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Loading animation"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."),
         "mawaqitWelcome":
@@ -84,6 +91,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("No internet connection"),
         "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
         "quit": MessageLookupByLibrary.simpleMessage("Quit"),

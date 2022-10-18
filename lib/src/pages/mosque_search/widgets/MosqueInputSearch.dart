@@ -91,7 +91,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
 
   /// handle on mosque tile clicked
   void _selectMosque(Mosque mosque) {
-    context.read<MosqueManager>().setMosqueSlug(mosque.slug).then((value) {
+    context.read<MosqueManager>().setMosqueId(mosque.id.toString()).then((value) {
       widget.onDone?.call();
     }).catchError((e) {
       if (e is InvalidMosqueId) {

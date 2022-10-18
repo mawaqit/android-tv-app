@@ -63,5 +63,13 @@
     "no": "No",
     "networkStatus": "Network Status",
     "mosqueNoMore": "No more results",
-    "mosqueNoResults": "No results"
+    "mosqueNoResults": "No results",
+    "offline": "Offline",
+    "imsak" : "Imsak",
+    "jumua": "Jumua",
+    "duhr": "Duhr",
+    "fajr": "Fajr",
+    "asr": "Asr",
+    "maghrib": "Maghrib",
+    "isha": "Isha"
 }

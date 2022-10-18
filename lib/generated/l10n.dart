@@ -699,6 +699,86 @@ class S {
       args: [],
     );
   }
+
+  /// `Offline`
+  String get offline {
+    return Intl.message(
+      'Offline',
+      name: 'offline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Imsak`
+  String get imsak {
+    return Intl.message(
+      'Imsak',
+      name: 'imsak',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jumua`
+  String get jumua {
+    return Intl.message(
+      'Jumua',
+      name: 'jumua',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duhr`
+  String get duhr {
+    return Intl.message(
+      'Duhr',
+      name: 'duhr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fajr`
+  String get fajr {
+    return Intl.message(
+      'Fajr',
+      name: 'fajr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Asr`
+  String get asr {
+    return Intl.message(
+      'Asr',
+      name: 'asr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maghrib`
+  String get maghrib {
+    return Intl.message(
+      'Maghrib',
+      name: 'maghrib',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Isha`
+  String get isha {
+    return Intl.message(
+      'Isha',
+      name: 'isha',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
