@@ -32,24 +32,27 @@ class _MosqueInputIdState extends State<MosqueInputId> {
       error = null;
       loading = true;
     });
-    final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
-    await mosqueManager.setMosqueId(mosqueId).then((value) {
-      setState(() => loading = false);
-
-      widget.onDone?.call();
-    }).catchError((e) {
-      if (e is InvalidMosqueId) {
-        setState(() {
-          loading = false;
-          error = S.of(context).mosqueIdIsNotValid(mosqueId);
-        });
-      } else {
-        setState(() {
-          loading = false;
-          error = S.of(context).backendError;
-        });
-      }
+    // final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
+    setState(() {
+      error = 'this feature is not supported right now';
     });
+    // await mosqueManager.setMosqueId(mosqueId).then((value) {
+    //   setState(() => loading = false);
+    //
+    //   widget.onDone?.call();
+    // }).catchError((e) {
+    //   if (e is InvalidMosqueId) {
+    //     setState(() {
+    //       loading = false;
+    //       error = S.of(context).mosqueIdIsNotValid(mosqueId);
+    //     });
+    //   } else {
+    //     setState(() {
+    //       loading = false;
+    //       error = S.of(context).backendError;
+    //     });
+    //   }
+    // });
   }
 
   @override

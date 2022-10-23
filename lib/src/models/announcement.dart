@@ -99,8 +99,8 @@ class Announcement {
     );
   }
 
-  static List<Announcement> fromList(List data) {
-    return data.map((e) => Announcement.fromMap(e)).toList();
+  static List<Announcement> fromList(List? data) {
+    return data == null ? [] : data.map((e) => Announcement.fromMap(e)).toList();
   }
 
 //</editor-fold>

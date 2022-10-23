@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mawaqit/src/helpers/time_utils.dart';
 
 class Times {
   final String jumua;
@@ -15,17 +16,6 @@ class Times {
   final List calendar;
   final List iqamaCalendar;
 
-  String get imsak {
-    try {
-      int minutes =
-          int.parse(times.first.split(':').first) * 60 + int.parse(times.first.split(':').last) - imsakNbMinBeforeFajr;
-
-      return DateFormat('HH:mm').format(DateTime(200, 1, 1, minutes ~/ 60, minutes % 60));
-    } catch (e, stack) {
-      debugPrintStack(stackTrace: stack);
-      return '';
-    }
-  }
 
 //<editor-fold desc="Data Methods">
 

@@ -20,7 +20,6 @@ import 'package:mawaqit/src/models/navigationIcon.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/OfflineScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
-import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/themes/UIImages.dart';
@@ -139,7 +138,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
         .forEach((StreamSubscription<Position> _flutterGeolocationStream) => _flutterGeolocationStream.cancel());
 
     super.dispose();
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {

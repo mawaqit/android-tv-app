@@ -76,6 +76,8 @@ dependencies:
   marquee: ^2.2.3
   text_scroll: ^0.1.0
 
+  easy_debounce: ^2.0.2+1
+
   # MAP
   #location: ^4.3.0
   geolocator: ^8.2.1
@@ -87,6 +89,8 @@ dependencies:
   introduction_screen: ^3.0.2
   dots_indicator: ^2.1.0
   sizer: ^2.0.15
+
+  timeago_flutter: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -116,6 +120,7 @@ flutter:
     - assets/animations/rive/
     - assets/animations/lottie/
     - assets/img/logo/
+    - assets/icon/
 
 
   fonts:

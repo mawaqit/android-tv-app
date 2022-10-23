@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Config {
   /* Images Dir */
-  static const String imageDir = "assets/img";
+  static const String imageDir = "assets/adhan_icon";
 
   /* Default Logo Application*/
   static Image logo =

@@ -114,7 +114,7 @@ class _LanguageTileState extends State<LanguageTile> {
             onFocusChange: (i) => setState(() => isFocused = i),
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueId);
+              appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueUUID);
               widget.onSelect();
             },
             child: ListTile(

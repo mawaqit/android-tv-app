@@ -31,6 +31,7 @@ class Api {
       '/mosque/$id/info',
       options: Options(headers: {
         'Api-Access-Token': token,
+        'accept': 'application/json',
       }),
     );
 
@@ -38,9 +39,35 @@ class Api {
   }
 
   static Future<Times> getMosqueTimes(String id) async {
-    final response = await dio.get('/mosque/$id/times');
-
-    return Times.fromMap(response.data);
+    // final response = await dio.get('/mosque/$id/times');
+    //
+    // return Times.fromMap(response.data);
+    return Times(
+      jumua: '13:02',
+      jumua2: '13:59',
+      aidPrayerTime: '',
+      aidPrayerTime2: '',
+      hijriAdjustment: 1,
+      hijriDateForceTo30: false,
+      jumuaAsDuhr: true,
+      imsakNbMinBeforeFajr: 30,
+      shuruq: '13:50',
+      times: ['06:51', '13:26', '16:07', '18:40', '19:49'],
+      calendar: [],
+      iqamaCalendar: [
+        for (var i = 0; i < 13; i++)
+          {
+            for (var j = 1; j < 31; j++)
+              '$j': [
+                '08:51',
+                '15:00',
+                '+10',
+                '+0',
+                '+10',
+              ],
+          },
+      ],
+    );
   }
 
   static Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async {
