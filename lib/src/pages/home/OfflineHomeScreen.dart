@@ -129,17 +129,19 @@ class OfflineHomeScreen extends StatelessWidget {
                   Expanded(
                     child: SizedBox(
                       height: 60,
-                      child: Marquee(
-                        text: mosque.flash?.content ?? '',
-                        scrollAxis: Axis.horizontal,
-                        blankSpace: 500,
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          wordSpacing: 3,
-                          shadows: kHomeTextShadow,
-                        ),
-                      ),
+                      child: mosque.flash?.content.isEmpty != false
+                          ? null
+                          : Marquee(
+                              text: mosque.flash?.content ?? '',
+                              scrollAxis: Axis.horizontal,
+                              blankSpace: 500,
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                wordSpacing: 3,
+                                shadows: kHomeTextShadow,
+                              ),
+                            ),
                     ),
                   ),
                   HomeLogoVersion(),
