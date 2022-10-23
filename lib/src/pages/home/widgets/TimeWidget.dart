@@ -54,8 +54,16 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
       builder: (context, snapShot) {
         final now = mosqueManager.mosqueDate();
 
+        print(mosqueManager.nextSalahTime());
+
         var nextSalahTime = mosqueManager.nextSalahTime().toTimeOfDay()!.toDate().difference(now);
-        var nextIqamaTime = mosqueManager.nextIqamaTime().toTimeOfDay()!.toDate().difference(now);
+        var nextIqamaTime = mosqueManager
+            .nextIqamaTime()
+            .toTimeOfDay(
+              tryOffset: mosqueManager.nextSalahTime().toTimeOfDay()?.toDate(),
+            )!
+            .toDate()
+            .difference(now);
 
         // in case of fajr of the next day
         if (nextSalahTime < Duration.zero) {

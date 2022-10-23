@@ -3,12 +3,18 @@ import 'package:intl/intl.dart';
 
 extension StringTimeUtils on String {
   /// expect value of xx:xx with
-  TimeOfDay? toTimeOfDay() {
+  TimeOfDay? toTimeOfDay({DateTime? tryOffset}) {
     try {
-      final date = DateFormat('HH:mm').parse(this);
+      final date = DateFormat('HH:mm').parse(trim());
 
       return TimeOfDay(hour: date.hour, minute: date.minute);
-    } on FormatException catch (e) {}
+    } on FormatException catch (e, stack) {
+      if (tryOffset != null) {
+        final value = int.tryParse(this);
+        if (value != null) return TimeOfDay.fromDateTime(tryOffset.add(Duration(minutes: value)));
+      }
+      debugPrintStack(stackTrace: stack);
+    }
 
     return null;
   }
