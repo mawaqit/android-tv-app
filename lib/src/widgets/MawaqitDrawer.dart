@@ -7,6 +7,7 @@ import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/RouteHelpers.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/models/menu.dart';
 import 'package:mawaqit/src/models/page.dart';
@@ -16,6 +17,7 @@ import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
+import 'package:mawaqit/src/pages/hadith_screens/AfterAdanHadith.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -183,6 +185,13 @@ class MawaqitDrawer extends StatelessWidget {
               onTap: () async {
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => OfflineHomeScreen()));
+              }),
+          DrawerListTitle(
+              icon: Icons.home_filled,
+              text: "After adan screen",
+              onTap: () async {
+                Navigator.pop(context);
+                Navigator.push(context, AfterAdanHadith().buildRoute());
               }),
           _renderMenuDrawer(settings, context),
           Padding(

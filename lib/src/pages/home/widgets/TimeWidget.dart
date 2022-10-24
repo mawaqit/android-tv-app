@@ -2,9 +2,11 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mawaqit/src/helpers/RouteHelpers.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/pages/alert_screen/alert_screen.dart';
+import 'package:mawaqit/src/pages/hadith_screens/AfterAdanHadith.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
@@ -17,18 +19,17 @@ class HomeTimeWidget extends StatefulWidget {
 }
 
 class _HomeTimeWidgetState extends State<HomeTimeWidget> {
-  void openAzhanScreen(BuildContext context) {
-    Navigator.push(
+  Future<void> openAzhanScreen(BuildContext context) async {
+    await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => AlertScreen(
-          title: "Al Adan",
-          subTitle: "الأذان",
-          duration: Duration(seconds: 5),
-          icon: Image.asset('assets/icon/adhan_icon.png'),
-        ),
-      ),
+      AlertScreen(
+        title: "Al Adan",
+        subTitle: "الأذان",
+        icon: Image.asset('assets/icon/adhan_icon.png'),
+      ).buildRoute(),
     );
+
+    Navigator.push(context, AfterAdanHadith().buildRoute());
   }
 
   void openIqamaaScreen(BuildContext context) {

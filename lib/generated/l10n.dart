@@ -779,6 +779,26 @@ class S {
       args: [],
     );
   }
+
+  /// `After salah Du'a`
+  String get afterSalahHadithTitle {
+    return Intl.message(
+      'After salah Du`a',
+      name: 'afterSalahHadithTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allahumma Rabba hadhihid-da'wati-ttammati, was-salatil-qa'imati, ati Muhammadanil-wasilata wal-fadhilata, wab'athu maqaman mahmuda nilladhi wa 'adtahu [O Allah, Rubb of this perfect call (Da'wah) and of the established prayer (As-Salat), grant Muhammad the Wasilah and superiority, and raise him up to a praiseworthy position which You have promised him]`
+  String get afterSalahHadith {
+    return Intl.message(
+      'Allahumma Rabba hadhihid-da\'wati-ttammati, was-salatil-qa\'imati, ati Muhammadanil-wasilata wal-fadhilata, wab\'athu maqaman mahmuda nilladhi wa \'adtahu [O Allah, Rubb of this perfect call (Da\'wah) and of the established prayer (As-Salat), grant Muhammad the Wasilah and superiority, and raise him up to a praiseworthy position which You have promised him]',
+      name: 'afterSalahHadith',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

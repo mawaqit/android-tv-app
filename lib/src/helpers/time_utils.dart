@@ -13,7 +13,8 @@ extension StringTimeUtils on String {
         final value = int.tryParse(this);
         if (value != null) return TimeOfDay.fromDateTime(tryOffset.add(Duration(minutes: value)));
       }
-      debugPrintStack(stackTrace: stack);
+
+      debugPrintStack(label: 'Failed to format $this $tryOffset', stackTrace: stack);
     }
 
     return null;

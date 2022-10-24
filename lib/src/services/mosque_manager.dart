@@ -24,16 +24,14 @@ class MosqueManager extends ChangeNotifier {
 
   final today = DateTime.now();
 
-  List<String> iqamas() {
-    return times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()];
-  }
+  List<String> iqamas() => times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()];
 
   /// get the actual iqamaa time
   List<TimeOfDay> iqamasTimes() {
     final iqamas = this.iqamas();
 
     return [
-      for (var i = 0; i < 5; i++) iqamas[i].toTimeOfDay() ?? iqamas[i].toTimeOffset(times!.times[i])!,
+      for (var i = 0; i < 5; i++) iqamas[i].toTimeOfDay(tryOffset: times!.times[i].toTimeOfDay()!.toDate())!,
     ];
   }
 
@@ -93,7 +91,7 @@ class MosqueManager extends ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() => DateTime.now().add(Duration(hours: 1, minutes: 25));
+  DateTime mosqueDate() => DateTime.now().add(Duration());
 
   List get todayTimes => times!.times;
 
