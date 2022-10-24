@@ -16,7 +16,6 @@ import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
-import 'package:mawaqit/src/pages/alert_screen/alert_screen.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -185,24 +184,6 @@ class MawaqitDrawer extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => OfflineHomeScreen()));
               }),
-          DrawerListTitle(
-            icon: Icons.home_filled,
-            text: "Alert Screen",
-            onTap: () async {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AlertScreen(
-                    title: "Al Adhan",
-                    subTitle: "الأذان",
-                    duration: Duration(seconds: 5),
-                    icon: Image.asset('assets/icon/adhan_icon.png'),
-                  ),
-                ),
-              );
-            },
-          ),
           _renderMenuDrawer(settings, context),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
