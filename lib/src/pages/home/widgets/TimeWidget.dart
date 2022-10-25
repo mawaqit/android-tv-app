@@ -55,8 +55,6 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
       builder: (context, snapShot) {
         final now = mosqueManager.mosqueDate();
 
-        print(mosqueManager.nextSalahTime());
-
         var nextSalahTime = mosqueManager.nextSalahTime().toTimeOfDay()!.toDate().difference(now);
         var nextIqamaTime = mosqueManager
             .nextIqamaTime()
@@ -75,7 +73,6 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
           nextIqamaTime = nextIqamaTime + Duration(days: 1);
         }
 
-        print(mosqueManager.nextIqamaTime);
         bool showIqama = nextIqamaTime < nextSalahTime;
 
         /// use debounce to make sure alert will be shown once
@@ -100,7 +97,7 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
         return Container(
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: Colors.black26,
+            color: Colors.black.withOpacity(.70),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -122,6 +119,7 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
                               fontWeight: FontWeight.bold,
                               fontSize: 50,
                               shadows: kHomeTextShadow,
+                              letterSpacing: 1,
                             ),
                           ),
                           TextSpan(
@@ -131,6 +129,7 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
                               fontWeight: FontWeight.bold,
                               fontSize: 50,
                               shadows: kHomeTextShadow,
+                              letterSpacing: 1,
                             ),
                           ),
                         ],
@@ -153,6 +152,7 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
                               color: Colors.white,
                               fontSize: 24,
                               shadows: kHomeTextShadow,
+                              letterSpacing: .5,
                             ),
                           ),
                           FadeAnimatedText(
@@ -164,6 +164,7 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
                               color: Colors.white,
                               fontSize: 24,
                               shadows: kHomeTextShadow,
+                              letterSpacing: .5,
                             ),
                           ),
                         ],

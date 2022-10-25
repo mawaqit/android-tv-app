@@ -29,9 +29,9 @@ class SalahItemWidget extends StatelessWidget {
             ? Color(0x994e2b81)
             : removeBackground
                 ? null
-                : Colors.black45,
+                : Colors.black.withOpacity(.70),
       ),
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -43,24 +43,34 @@ class SalahItemWidget extends StatelessWidget {
           Text(
             time,
             style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
+              fontSize: 40,
+              fontWeight: FontWeight.w700,
               shadows: kHomeTextShadow,
             ),
           ),
-          Container(
-            height: .7,
-            margin: EdgeInsets.all(3),
-            width: 100,
-            color: iqama != null && withDivider ? Colors.white : null,
+          // Container(
+          //   height: .7,
+          //   margin: EdgeInsets.all(3),
+          //   width: 100,
+          //   color: iqama != null && withDivider ? Colors.white : null,
+          // ),
+          SizedBox(
+            width: 90,
+            child: Divider(
+              // height: 20,
+              thickness: 1,
+              color: withDivider ? Colors.white : Colors.transparent,
+            ),
           ),
+
           if (iqama != null)
             Text(
-              iqama!,
+              '$iqama${iqama!.startsWith('+') ? "\'" : ""}',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
                 shadows: kHomeTextShadow,
+                letterSpacing: 1,
               ),
             ),
         ],

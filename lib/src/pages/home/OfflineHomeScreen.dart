@@ -34,7 +34,7 @@ class OfflineHomeScreen extends StatelessWidget {
           children: [
             buildHeader(context, mosque),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Center(
@@ -42,6 +42,7 @@ class OfflineHomeScreen extends StatelessWidget {
                       title: S.of(context).imsak,
                       time: mosqueProvider.imsak,
                       removeBackground: true,
+                      withDivider: false,
                     ),
                   ),
                 ),
@@ -110,12 +111,15 @@ class OfflineHomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "ID ${mosque.id}",
-                        style: TextStyle(
-                          fontSize: 7,
-                          color: Colors.grey,
-                          shadows: kHomeTextShadow,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
+                        child: Text(
+                          "ID ${mosque.id}",
+                          style: TextStyle(
+                            fontSize: 7,
+                            color: Colors.grey,
+                            shadows: kHomeTextShadow,
+                          ),
                         ),
                       ),
                       SizedBox(height: 5),
@@ -181,6 +185,7 @@ class OfflineHomeScreen extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           shadows: kHomeTextShadow,
+                          fontWeight: FontWeight.w500,
                         ),
                   ),
                 ),

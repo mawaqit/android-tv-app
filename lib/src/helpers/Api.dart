@@ -20,7 +20,7 @@ class Api {
     // dio.options.headers['Api-Access-Token'] = response.data['apiAccessToken'];
   }
 
-  static Future<bool> checkMosqueExistence(int id) {
+  static Future<bool> kMosqueExistence(int id) {
     var url = 'https://mawaqit.net/en/id/$id?view=desktop';
 
     return dio.get(url).then((value) => true).catchError((e) => false);
@@ -39,9 +39,9 @@ class Api {
   }
 
   static Future<Times> getMosqueTimes(String id) async {
-    // final response = await dio.get('/mosque/$id/times');
-    //
-    // return Times.fromMap(response.data);
+    final response = await dio.get('/mosque/$id/times');
+
+    return Times.fromMap(response.data);
     return Times(
       jumua: '13:02',
       jumua2: '13:59',

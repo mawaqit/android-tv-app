@@ -24,7 +24,7 @@ class MosqueManager extends ChangeNotifier {
 
   final today = DateTime.now();
 
-  List<String> iqamas() => times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()];
+  List<String> iqamas() => times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
 
   /// get the actual iqamaa time
   List<TimeOfDay> iqamasTimes() {
