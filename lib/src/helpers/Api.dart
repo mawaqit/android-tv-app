@@ -52,7 +52,7 @@ class Api {
       jumuaAsDuhr: true,
       imsakNbMinBeforeFajr: 30,
       shuruq: '13:50',
-      times: ['06:51', '13:26', '16:07', '18:40', '19:49'],
+      // times: ['06:51', '13:26', '16:07', '18:40', '19:49'],
       calendar: [],
       iqamaCalendar: [
         for (var i = 0; i < 13; i++)

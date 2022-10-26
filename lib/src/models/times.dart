@@ -12,7 +12,7 @@ class Times {
   final bool jumuaAsDuhr;
   final int imsakNbMinBeforeFajr;
   final String shuruq;
-  final List<String> times;
+  // final List<String> times;
   final List calendar;
   final List iqamaCalendar;
 
@@ -29,7 +29,7 @@ class Times {
     required this.jumuaAsDuhr,
     required this.imsakNbMinBeforeFajr,
     required this.shuruq,
-    required this.times,
+    // required this.times,
     required this.calendar,
     required this.iqamaCalendar,
   });
@@ -48,7 +48,7 @@ class Times {
           jumuaAsDuhr == other.jumuaAsDuhr &&
           imsakNbMinBeforeFajr == other.imsakNbMinBeforeFajr &&
           shuruq == other.shuruq &&
-          times == other.times &&
+          // times == other.times &&
           calendar == other.calendar &&
           iqamaCalendar == other.iqamaCalendar);
 
@@ -63,7 +63,7 @@ class Times {
       jumuaAsDuhr.hashCode ^
       imsakNbMinBeforeFajr.hashCode ^
       shuruq.hashCode ^
-      times.hashCode ^
+      // times.hashCode ^
       calendar.hashCode ^
       iqamaCalendar.hashCode;
 
@@ -79,7 +79,7 @@ class Times {
         ' jumuaAsDuhr: $jumuaAsDuhr,' +
         ' imsakNbMinBeforeFajr: $imsakNbMinBeforeFajr,' +
         ' shuruq: $shuruq,' +
-        ' times: $times,' +
+        // ' times: $times,' +
         ' calendar: $calendar,' +
         ' iqamaCalendar: $iqamaCalendar,' +
         '}';
@@ -109,7 +109,7 @@ class Times {
       jumuaAsDuhr: jumuaAsDuhr ?? this.jumuaAsDuhr,
       imsakNbMinBeforeFajr: imsakNbMinBeforeFajr ?? this.imsakNbMinBeforeFajr,
       shuruq: shuruq ?? this.shuruq,
-      times: times ?? this.times,
+      // times: times ?? this.times,
       calendar: calendar ?? this.calendar,
       iqamaCalendar: iqamaCalendar ?? this.iqamaCalendar,
     );
@@ -126,7 +126,7 @@ class Times {
       'jumuaAsDuhr': this.jumuaAsDuhr,
       'imsakNbMinBeforeFajr': this.imsakNbMinBeforeFajr,
       'shuruq': this.shuruq,
-      'times': this.times,
+      // 'times': this.times,
       'calendar': this.calendar,
       'iqamaCalendar': this.iqamaCalendar,
     };
@@ -143,7 +143,7 @@ class Times {
       jumuaAsDuhr: map['jumuaAsDuhr'],
       imsakNbMinBeforeFajr: map['imsakNbMinBeforeFajr'],
       shuruq: map['shuruq'],
-      times: List<String>.from(map['times']),
+      // times: List<String>.from(map['times']),
       calendar: map['calendar'],
       iqamaCalendar: map['iqamaCalendar'],
     );

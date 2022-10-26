@@ -1,12 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mawaqit/src/helpers/RouteHelpers.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
-import 'package:mawaqit/src/pages/alert_screen/alert_screen.dart';
-import 'package:mawaqit/src/pages/hadith_screens/AfterAdanHadith.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
@@ -19,32 +15,32 @@ class HomeTimeWidget extends StatefulWidget {
 }
 
 class _HomeTimeWidgetState extends State<HomeTimeWidget> {
-  Future<void> openAzhanScreen(BuildContext context) async {
-    await Navigator.push(
-      context,
-      AlertScreen(
-        title: "Al Adan",
-        subTitle: "الأذان",
-        icon: Image.asset('assets/icon/adhan_icon.png'),
-      ).buildRoute(),
-    );
-
-    Navigator.push(context, AfterAdanHadith().buildRoute());
-  }
-
-  void openIqamaaScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AlertScreen(
-          title: "Al Iqama",
-          subTitle: "الاقامه",
-          duration: Duration(seconds: 5),
-          icon: Image.asset('assets/icon/iqama_icon.png'),
-        ),
-      ),
-    );
-  }
+  // Future<void> openAzhanScreen(BuildContext context) async {
+  //   await Navigator.push(
+  //     context,
+  //     AlertScreen(
+  //       title: "Al Adan",
+  //       subTitle: "الأذان",
+  //       icon: Image.asset('assets/icon/adhan_icon.png'),
+  //     ).buildRoute(),
+  //   );
+  //
+  //   Navigator.push(context, AfterAdanHadith().buildRoute());
+  // }
+  //
+  // void openIqamaaScreen(BuildContext context) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => AlertScreen(
+  //         title: "Al Iqama",
+  //         subTitle: "الاقامه",
+  //         duration: Duration(seconds: 5),
+  //         icon: Image.asset('assets/icon/iqama_icon.png'),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -74,25 +70,6 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
         }
 
         bool showIqama = nextIqamaTime < nextSalahTime;
-
-        /// use debounce to make sure alert will be shown once
-        /// and make sure in case of lag it will be fired at least once
-        if (nextSalahTime.inSeconds.abs() < 2) {
-          print('open home screen ${nextSalahTime.inSeconds}');
-          EasyDebounce.debounce(
-            'AlertScreen.adan',
-            Duration(seconds: 3),
-            () => openAzhanScreen(context),
-          );
-        }
-        if (nextIqamaTime.inSeconds.abs() < 2) {
-          print('open home screen ${nextSalahTime.inSeconds}');
-          EasyDebounce.debounce(
-            'AlertScreen.adan',
-            Duration(seconds: 3),
-            () => openIqamaaScreen(context),
-          );
-        }
 
         return Container(
           clipBehavior: Clip.antiAlias,

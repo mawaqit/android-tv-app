@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
@@ -22,80 +24,9 @@ class MosqueManager extends ChangeNotifier {
   Mosque? mosque;
   Times? times;
 
+  HomeActiveScreen state = HomeActiveScreen.normal;
+
   final today = DateTime.now();
-
-  List<String> iqamas() => times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
-
-  /// get the actual iqamaa time
-  List<TimeOfDay> iqamasTimes() {
-    final iqamas = this.iqamas();
-
-    return [
-      for (var i = 0; i < 5; i++) iqamas[i].toTimeOfDay(tryOffset: times!.times[i].toTimeOfDay()!.toDate())!,
-    ];
-  }
-
-  /// return the upcoming salah index
-  /// return -1 in case of issue(invalid times format)
-  int nextIqamaIndex() {
-    final now = TimeOfDay.fromDateTime(mosqueDate());
-    final t = iqamasTimes();
-
-    for (var i = 0; i < 5; i++) {
-      final first = t[(i - 1) % 5];
-      final second = t[i];
-
-      if (now.between(first, second)) {
-        return i;
-      }
-    }
-
-    return -1;
-  }
-
-  String nextIqamaTime() => iqamas()[nextIqamaIndex()];
-
-  /// return the upcoming salah index
-  /// return -1 in case of issue(invalid times format)
-  int nextSalahIndex() {
-    final t = times!.times.map((e) => e.toTimeOfDay()).toList();
-    final now = TimeOfDay.fromDateTime(mosqueDate());
-
-    for (var i = 0; i < times!.times.length; i++) {
-      final first = t[(i - 1) % times!.times.length];
-      final second = t[i];
-
-      if (first == null || second == null) continue;
-
-      if (now.between(first, second)) {
-        return i;
-      }
-    }
-
-    return -1;
-  }
-
-  String nextSalahTime() => times!.times[nextSalahIndex()];
-
-  String get imsak {
-    try {
-      int minutes = int.parse(times!.times.first.split(':').first) * 60 +
-          int.parse(times!.times.first.split(':').last) -
-          times!.imsakNbMinBeforeFajr;
-
-      return DateFormat('HH:mm').format(DateTime(200, 1, 1, minutes ~/ 60, minutes % 60));
-    } catch (e, stack) {
-      debugPrintStack(stackTrace: stack);
-      return '';
-    }
-  }
-
-  /// used to test time
-  DateTime mosqueDate() => DateTime.now().add(Duration());
-
-  List get todayTimes => times!.times;
-
-  List get todayIqama => times!.iqamaCalendar[today.month - 1][today.day.toString()];
 
   bool loading = false;
 
@@ -258,6 +189,108 @@ class MosqueManager extends ChangeNotifier {
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }
+}
+
+extension MosqueHelperUtils on MosqueManager {
+  /// listen to time and update the screens values
+  subscribeToTime() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      var state = HomeActiveScreen.normal;
+
+      //todo calculate the state
+
+      //todo get last salah time
+      final lastSalahIndex = nextSalahIndex() - 1 % 5;
+      final item = salahTime(lastSalahIndex).toTimeOfDay()!.toDate();
+
+      if (item.difference(mosqueDate()) < Duration(minutes: 2)) {
+        state = HomeActiveScreen.adhan;
+      }
+
+      //todo get last iqamaa time
+
+      if (state != this.state) {
+        this.state = state;
+        notifyListeners();
+      }
+    });
+  }
+
+  List<String> iqamas() => times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
+
+  /// get the actual iqamaa time
+  List<TimeOfDay> iqamasTimes() {
+    final iqamas = this.iqamas();
+
+    return [
+      for (var i = 0; i < 5; i++) iqamas[i].toTimeOfDay(tryOffset: todayTimes[i].toTimeOfDay()!.toDate())!,
+    ];
+  }
+
+  /// return the upcoming salah index
+  /// return -1 in case of issue(invalid times format)
+  int nextIqamaIndex() {
+    final now = TimeOfDay.fromDateTime(mosqueDate());
+    final t = iqamasTimes();
+
+    for (var i = 0; i < 5; i++) {
+      final first = t[(i - 1) % 5];
+      final second = t[i];
+
+      if (now.between(first, second)) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  String nextIqamaTime() => iqamas()[nextIqamaIndex()];
+
+  /// return the upcoming salah index
+  /// return -1 in case of issue(invalid times format)
+  int nextSalahIndex() {
+    final t = todayTimes.map((e) => e.toTimeOfDay()).toList();
+    final now = TimeOfDay.fromDateTime(mosqueDate());
+
+    for (var i = 0; i < todayTimes.length; i++) {
+      final first = t[(i - 1) % todayTimes.length];
+      final second = t[i];
+
+      if (first == null || second == null) continue;
+
+      if (now.between(first, second)) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  String nextSalahTime() => times!.calendar[today.month - 1][today.day.toString()][nextSalahIndex()];
+
+  String salahTime(int index) => times!.calendar[today.month - 1][today.day.toString()][index];
+
+  String get imsak {
+    try {
+      int minutes = int.parse(todayTimes.first.split(':').first) * 60 +
+          int.parse(todayTimes.first.split(':').last) -
+          times!.imsakNbMinBeforeFajr;
+
+      return DateFormat('HH:mm').format(DateTime(200, 1, 1, minutes ~/ 60, minutes % 60));
+    } catch (e, stack) {
+      debugPrintStack(stackTrace: stack);
+      return '';
+    }
+  }
+
+  /// used to test time
+  DateTime mosqueDate() => DateTime.now().add(Duration());
+
+  List<String> get todayTimes => times!.calendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
+
+  List<String> get todayIqama =>
+      times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
 }
 
 /// user for invalid mosque id-slug
