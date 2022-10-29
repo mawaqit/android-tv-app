@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -58,6 +59,14 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
           nextSalahTime = nextSalahTime + Duration(days: 1);
         }
 
+        var hijriDate = HijriCalendar.fromDate(now.add(Duration(
+          days: mosqueManager.times!.hijriAdjustment,
+        )));
+
+        if (mosqueManager.times!.hijriDateForceTo30) {
+          hijriDate.hDay = 30;
+        }
+
         return Container(
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -108,7 +117,7 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
                         displayFullTextOnTap: true,
                         animatedTexts: [
                           FadeAnimatedText(
-                            'Friday, Sep 30, 2022',
+                            DateFormat("EEE, MMM dd, yyyy").format(mosqueManager.mosqueDate()),
                             duration: Duration(seconds: 6),
                             fadeInEnd: .1,
                             fadeOutBegin: .9,
@@ -120,7 +129,12 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
                             ),
                           ),
                           FadeAnimatedText(
-                            '04 Rabi Awal 1444',
+                            hijriDate.format(
+                              hijriDate.hYear,
+                              hijriDate.hMonth,
+                              hijriDate.hDay,
+                              "dd MMMM yyyy",
+                            ),
                             duration: Duration(seconds: 4),
                             fadeInEnd: .1,
                             fadeOutBegin: .9,

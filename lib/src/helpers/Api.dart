@@ -9,7 +9,10 @@ const kBaseUrl = 'https://mawaqit.net/api/3.0';
 const token = 'ad283fb2-844b-40fe-967c-5cb593e9005e';
 
 class Api {
-  static final dio = Dio(BaseOptions(baseUrl: kBaseUrl));
+  static final dio = Dio(BaseOptions(baseUrl: kBaseUrl, headers: {
+    'Api-Access-Token': token,
+    'accept': 'application/json',
+  }));
 
   static Future<void> init() async {
     // final response = await dio.get(
@@ -27,13 +30,7 @@ class Api {
   }
 
   static Future<Mosque> getMosque(String id) async {
-    final response = await dio.get(
-      '/mosque/$id/info',
-      options: Options(headers: {
-        'Api-Access-Token': token,
-        'accept': 'application/json',
-      }),
-    );
+    final response = await dio.get('/mosque/$id/info');
 
     return Mosque.fromMap(response.data);
   }
