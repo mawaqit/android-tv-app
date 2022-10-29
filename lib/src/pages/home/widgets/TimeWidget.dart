@@ -2,7 +2,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
-import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
@@ -51,25 +50,13 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
       builder: (context, snapShot) {
         final now = mosqueManager.mosqueDate();
 
-        var nextSalahTime = mosqueManager.nextSalahTime().toTimeOfDay()!.toDate().difference(now);
-        var nextIqamaTime = mosqueManager
-            .nextIqamaTime()
-            .toTimeOfDay(
-              tryOffset: mosqueManager.nextSalahTime().toTimeOfDay()?.toDate(),
-            )!
-            .toDate()
-            .difference(now);
+        final nextSalahIndex = mosqueManager.nextSalahIndex();
+        var nextSalahTime = mosqueManager.actualTimes()[nextSalahIndex].difference(now);
 
         // in case of fajr of the next day
         if (nextSalahTime < Duration.zero) {
           nextSalahTime = nextSalahTime + Duration(days: 1);
         }
-
-        if (nextIqamaTime < Duration.zero) {
-          nextIqamaTime = nextIqamaTime + Duration(days: 1);
-        }
-
-        bool showIqama = nextIqamaTime < nextSalahTime;
 
         return Container(
           clipBehavior: Clip.antiAlias,
@@ -157,38 +144,21 @@ class _HomeTimeWidgetState extends State<HomeTimeWidget> {
                   children: [
                     Icon(MawaqitIcons.icon_adhan),
                     SizedBox(width: 10),
-                    if (showIqama)
-                      Text(
-                        [
-                          "Iqamaa in ",
-                          if (nextIqamaTime.inMinutes > 0)
-                            "${nextIqamaTime.inHours.toString().padLeft(2, '0')}:${(nextIqamaTime.inMinutes % 60).toString().padLeft(2, '0')} ",
-                          if (nextIqamaTime.inMinutes == 0)
-                            "${(nextIqamaTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
-                        ].join(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          height: 2,
-                          shadows: kHomeTextShadow,
-                        ),
-                      )
-                    else
-                      Text(
-                        [
-                          "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} in ",
-                          if (nextSalahTime.inMinutes > 0)
-                            "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')} ",
-                          if (nextSalahTime.inMinutes == 0)
-                            "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
-                        ].join(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          height: 2,
-                          shadows: kHomeTextShadow,
-                        ),
+                    Text(
+                      [
+                        "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} in ",
+                        if (nextSalahTime.inMinutes > 0)
+                          "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')} ",
+                        if (nextSalahTime.inMinutes == 0)
+                          "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+                      ].join(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        height: 2,
+                        shadows: kHomeTextShadow,
                       ),
+                    ),
                     SizedBox(width: 10),
                     Icon(MawaqitIcons.icon_adhan),
                   ],

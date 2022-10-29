@@ -799,6 +799,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Al Iqama`
+  String get alIqama {
+    return Intl.message(
+      'Al Iqama',
+      name: 'alIqama',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Al adhan`
+  String get alAdhan {
+    return Intl.message(
+      'Al adhan',
+      name: 'alAdhan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please turn of your mobile phones!`
+  String get turnOfPhones {
+    return Intl.message(
+      'Please turn of your mobile phones!',
+      name: 'turnOfPhones',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Iqama in`
+  String get iqamaIn {
+    return Intl.message(
+      'Iqama in',
+      name: 'iqamaIn',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

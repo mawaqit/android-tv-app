@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 extension StringTimeUtils on String {
   /// expect value of xx:xx with
+  /// incase of [tryOffset] handle also the relative timing in minutes like +5
   TimeOfDay? toTimeOfDay({DateTime? tryOffset}) {
     try {
       final date = DateFormat('HH:mm').parse(trim());

@@ -4,15 +4,15 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 class SalahItemWidget extends StatelessWidget {
   SalahItemWidget({
     Key? key,
-    required this.title,
     required this.time,
+    this.title,
     this.iqama,
     this.active = false,
     this.removeBackground = false,
     this.withDivider = true,
   }) : super(key: key);
 
-  final String title;
+  final String? title;
   final String time;
   final String? iqama;
 
@@ -35,10 +35,11 @@ class SalahItemWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 24, shadows: kHomeTextShadow),
-          ),
+          if (title != null)
+            Text(
+              title!,
+              style: TextStyle(fontSize: 24, shadows: kHomeTextShadow),
+            ),
           SizedBox(height: 10),
           Text(
             time,

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/AdhanSubScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/IqamaSubScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +19,8 @@ class OfflineHomeScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: mosque.image != null
@@ -23,7 +29,10 @@ class OfflineHomeScreen extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: subScreen(mosqueProvider.state),
+        child: Container(
+          color: Colors.black54,
+          child: subScreen(mosqueProvider.state),
+        ),
       ),
     );
   }
@@ -32,12 +41,14 @@ class OfflineHomeScreen extends StatelessWidget {
     switch (state) {
       case HomeActiveScreen.normal:
         return NormalHomeSubScreen();
-
       case HomeActiveScreen.adhan:
-
+        return AdhanSubScreen();
       case HomeActiveScreen.afterAdhanHadith:
-
+        return AfterAdhanSubScreen();
+      case HomeActiveScreen.iqamaaCountDown:
+        return IqamaaCountDownSubScreen();
       case HomeActiveScreen.iqamaa:
+        return IqamaSubScreen();
 
       default:
         return SizedBox();

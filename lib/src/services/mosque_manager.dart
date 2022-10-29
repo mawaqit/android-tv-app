@@ -15,6 +15,10 @@ import 'package:mawaqit/src/models/times.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
+const kAdhanDuration = Duration(minutes: 2);
+const kAfterAdhanHadithDuration = Duration(minutes: 1);
+const kIqamaaDuration = Duration(minutes: 1);
+
 class MosqueManager extends ChangeNotifier {
   final sharedPref = SharedPref();
 
@@ -25,10 +29,6 @@ class MosqueManager extends ChangeNotifier {
   Times? times;
 
   HomeActiveScreen state = HomeActiveScreen.normal;
-
-  final today = DateTime.now();
-
-  bool loading = false;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -43,6 +43,7 @@ class MosqueManager extends ChangeNotifier {
   Future<void> init() async {
     await Api.init();
     await loadFromLocale();
+    subscribeToTime();
     notifyListeners();
   }
 
@@ -192,84 +193,78 @@ class MosqueManager extends ChangeNotifier {
 }
 
 extension MosqueHelperUtils on MosqueManager {
-  /// listen to time and update the screens values
-  subscribeToTime() {
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      var state = HomeActiveScreen.normal;
+  calculateActiveScreen() {
+    var state = HomeActiveScreen.normal;
 
-      //todo calculate the state
+    final lastSalahIndex = (nextSalahIndex() - 1) % 5;
 
-      //todo get last salah time
-      final lastSalahIndex = nextSalahIndex() - 1 % 5;
-      final item = salahTime(lastSalahIndex).toTimeOfDay()!.toDate();
+    final lastSalah = actualTimes()[lastSalahIndex];
 
-      if (item.difference(mosqueDate()) < Duration(minutes: 2)) {
-        state = HomeActiveScreen.adhan;
-      }
+    final nextIqamaIndex = this.nextIqamaIndex();
+    final lastIqamaIndex = (nextIqamaIndex - 1) % 5;
+    final lastIqama = actualIqamaTimes()[lastIqamaIndex];
 
-      //todo get last iqamaa time
+    if (lastSalah.difference(mosqueDate()).abs() < kAdhanDuration) {
+      /// we are in adhan time
+      state = HomeActiveScreen.adhan;
+    } else if (lastSalah.difference(mosqueDate()).abs() < kAdhanDuration + kAfterAdhanHadithDuration) {
+      /// adhan has just done
+      state = HomeActiveScreen.afterAdhanHadith;
+    } else if (lastIqama.difference(mosqueDate()).abs() < kIqamaaDuration) {
+      /// we are in iqama time
+      state = HomeActiveScreen.iqamaa;
+    } else if (nextIqamaIndex == lastSalahIndex) {
+      /// we are in time between adhan and iqama
+      state = HomeActiveScreen.iqamaaCountDown;
+    }
 
-      if (state != this.state) {
-        this.state = state;
-        notifyListeners();
-      }
-    });
+    // state = HomeActiveScreen.iqamaaCountDown;
+
+    if (state != this.state) {
+      this.state = state;
+      notifyListeners();
+    }
   }
 
-  List<String> iqamas() => times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
+  /// listen to time and update the active home screens values
+  subscribeToTime() => Timer.periodic(Duration(seconds: 1), (timer) => calculateActiveScreen());
 
-  /// get the actual iqamaa time
-  List<TimeOfDay> iqamasTimes() {
-    final iqamas = this.iqamas();
+  /// get today salah prayer times as a list of times
+  List<DateTime> actualTimes() => todayTimes.map((e) => e.toTimeOfDay()!.toDate()).toList();
 
-    return [
-      for (var i = 0; i < 5; i++) iqamas[i].toTimeOfDay(tryOffset: todayTimes[i].toTimeOfDay()!.toDate())!,
-    ];
-  }
+  /// get today iqama prayer times as a list of times
+  List<DateTime> actualIqamaTimes() => [
+        for (var i = 0; i < 5; i++)
+          todayIqama[i]
+              .toTimeOfDay(
+                tryOffset: todayTimes[i].toTimeOfDay()!.toDate(),
+              )!
+              .toDate(),
+      ];
 
   /// return the upcoming salah index
   /// return -1 in case of issue(invalid times format)
   int nextIqamaIndex() {
-    final now = TimeOfDay.fromDateTime(mosqueDate());
-    final t = iqamasTimes();
+    final now = mosqueDate();
+    final nextIqama = actualIqamaTimes().firstWhere(
+      (element) => element.isAfter(now),
+      orElse: () => actualIqamaTimes().first,
+    );
 
-    for (var i = 0; i < 5; i++) {
-      final first = t[(i - 1) % 5];
-      final second = t[i];
-
-      if (now.between(first, second)) {
-        return i;
-      }
-    }
-
-    return -1;
+    return actualIqamaTimes().indexOf(nextIqama);
   }
-
-  String nextIqamaTime() => iqamas()[nextIqamaIndex()];
 
   /// return the upcoming salah index
   /// return -1 in case of issue(invalid times format)
   int nextSalahIndex() {
-    final t = todayTimes.map((e) => e.toTimeOfDay()).toList();
-    final now = TimeOfDay.fromDateTime(mosqueDate());
+    final now = mosqueDate();
+    final nextSalah = actualTimes().firstWhere(
+      (element) => element.isAfter(now),
+      orElse: () => actualTimes().first,
+    );
 
-    for (var i = 0; i < todayTimes.length; i++) {
-      final first = t[(i - 1) % todayTimes.length];
-      final second = t[i];
-
-      if (first == null || second == null) continue;
-
-      if (now.between(first, second)) {
-        return i;
-      }
-    }
-
-    return -1;
+    return actualTimes().indexOf(nextSalah);
   }
-
-  String nextSalahTime() => times!.calendar[today.month - 1][today.day.toString()][nextSalahIndex()];
-
-  String salahTime(int index) => times!.calendar[today.month - 1][today.day.toString()][index];
 
   String get imsak {
     try {
@@ -287,7 +282,11 @@ extension MosqueHelperUtils on MosqueManager {
   /// used to test time
   DateTime mosqueDate() => DateTime.now().add(Duration());
 
-  List<String> get todayTimes => times!.calendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
+  List<String> get todayTimes {
+    var t = times!.calendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
+    if (t.length == 6) t.removeAt(1);
+    return t;
+  }
 
   List<String> get todayIqama =>
       times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();

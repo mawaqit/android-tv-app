@@ -29,6 +29,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Allahumma Rabba hadhihid-da\'wati-ttammati, was-salatil-qa\'imati, ati Muhammadanil-wasilata wal-fadhilata, wab\'athu maqaman mahmuda nilladhi wa \'adtahu [O Allah, Rubb of this perfect call (Da\'wah) and of the established prayer (As-Salat), grant Muhammad the Wasilah and superiority, and raise him up to a praiseworthy position which You have promised him]"),
         "afterSalahHadithTitle":
             MessageLookupByLibrary.simpleMessage("After salah Du`a"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Al adhan"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("Al Iqama"),
         "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
         "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
@@ -64,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Installation Guide"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("Iqama in"),
         "isha": MessageLookupByLibrary.simpleMessage("Isha"),
         "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "languages": MessageLookupByLibrary.simpleMessage("Languages"),
@@ -120,6 +123,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Terms of Service"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+        "turnOfPhones": MessageLookupByLibrary.simpleMessage(
+            "Please turn of your mobile phones!"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update": MessageLookupByLibrary.simpleMessage("Update Application"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
