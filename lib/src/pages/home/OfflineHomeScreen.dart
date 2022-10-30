@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AdhanSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/AfterSalahAzkarScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
@@ -49,9 +50,15 @@ class OfflineHomeScreen extends StatelessWidget {
         return IqamaaCountDownSubScreen();
       case HomeActiveScreen.iqamaa:
         return IqamaSubScreen();
-
-      default:
-        return SizedBox();
+      case HomeActiveScreen.afterSalahAzkar:
+        return AfterSalahAzkar();
+      case HomeActiveScreen.randomHadith:
+        // TODO: Handle this case.
+        break;
+      case HomeActiveScreen.jumuaaHadith:
+        // TODO: Handle this case.
+        break;
     }
+    return SizedBox();
   }
 }

@@ -3,6 +3,7 @@ import 'package:marquee/marquee.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/pages/home/widgets/HomeLogoVersion.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
+import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/TimeWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -49,46 +50,7 @@ class NormalHomeSubScreen extends StatelessWidget {
             ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SalahItemWidget(
-              title: S.of(context).fajr,
-              time: mosqueProvider.todayTimes[0],
-              iqama: mosqueProvider.todayIqama[0],
-              active: mosqueProvider.nextSalahIndex() == 1,
-              withDivider: false,
-            ),
-            SalahItemWidget(
-              title: S.of(context).duhr,
-              time: mosqueProvider.todayTimes[1],
-              iqama: mosqueProvider.todayIqama[1],
-              active: mosqueProvider.nextSalahIndex() == 2,
-              withDivider: false,
-            ),
-            SalahItemWidget(
-              title: S.of(context).asr,
-              time: mosqueProvider.todayTimes[2],
-              iqama: mosqueProvider.todayIqama[2],
-              active: mosqueProvider.nextSalahIndex() == 3,
-              withDivider: false,
-            ),
-            SalahItemWidget(
-              title: S.of(context).maghrib,
-              time: mosqueProvider.todayTimes[3],
-              iqama: mosqueProvider.todayIqama[3],
-              active: mosqueProvider.nextSalahIndex() == 4,
-              withDivider: false,
-            ),
-            SalahItemWidget(
-              title: S.of(context).isha,
-              time: mosqueProvider.todayTimes[4],
-              iqama: mosqueProvider.todayIqama[4],
-              active: mosqueProvider.nextSalahIndex() == 0,
-              withDivider: false,
-            ),
-          ],
-        ),
+        SalahTimesBar(),
         Container(
           padding: EdgeInsets.all(2),
           width: double.infinity,

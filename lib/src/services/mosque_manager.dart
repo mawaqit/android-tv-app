@@ -19,6 +19,10 @@ const kAdhanDuration = Duration(minutes: 2);
 const kAfterAdhanHadithDuration = Duration(minutes: 1);
 const kIqamaaDuration = Duration(minutes: 1);
 
+const kAzkarDuration = Duration(minutes: 2);
+
+const salahDuration = Duration(minutes: 10);
+
 class MosqueManager extends ChangeNotifier {
   final sharedPref = SharedPref();
 
@@ -216,9 +220,11 @@ extension MosqueHelperUtils on MosqueManager {
     } else if (nextIqamaIndex == lastSalahIndex) {
       /// we are in time between adhan and iqama
       state = HomeActiveScreen.iqamaaCountDown;
+    } else if ((mosqueDate().difference(lastIqama) - salahDuration).abs() < kAzkarDuration) {
+      state = HomeActiveScreen.afterSalahAzkar;
     }
 
-    // state = HomeActiveScreen.iqamaaCountDown;
+    // state = HomeActiveScreen.afterSalahAzkar;
 
     if (state != this.state) {
       this.state = state;
@@ -280,7 +286,7 @@ extension MosqueHelperUtils on MosqueManager {
   }
 
   /// used to test time
-  DateTime mosqueDate() => DateTime.now().add(Duration());
+  DateTime mosqueDate() => DateTime.now().add(Duration(hours: 1, minutes: 26));
 
   List<String> get todayTimes {
     var t = times!.calendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();

@@ -6,6 +6,6 @@ enum HomeActiveScreen {
   iqamaa,
   randomHadith,
   jumuaaHadith,
-
+  afterSalahAzkar,
   /// todo add other screens
 }

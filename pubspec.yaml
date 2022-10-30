@@ -128,6 +128,9 @@ flutter:
     - family: MawaqitIcons
       fonts:
         - asset: assets/fonts/MawaqitIcons.ttf
+    - family: Hafs
+      fonts:
+        - asset: assets/fonts/original-hafs.ttf
 
 flutter_intl:
   enabled: true
