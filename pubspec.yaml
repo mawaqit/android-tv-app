@@ -49,6 +49,7 @@ dependencies:
   # CONNECTIVITY
   http: ^0.13.4
   dio: ^4.0.6
+  dio_http_cache: ^0.3.0
 
   share: ^2.0.4
   launch_review: ^3.0.1
@@ -73,6 +74,7 @@ dependencies:
   path_provider: ^2.0.9
 
   animated_text_kit: ^4.2.2
+  auto_size_text: ^3.0.0
   marquee: ^2.2.3
   text_scroll: ^0.1.0
 

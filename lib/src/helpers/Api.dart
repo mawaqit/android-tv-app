@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mawaqit/src/models/times.dart';
 
@@ -15,6 +16,7 @@ class Api {
   }));
 
   static Future<void> init() async {
+    dio.interceptors.add(DioCacheManager(CacheConfig()).interceptor);
     // final response = await dio.get(
     //   '$kBaseUrlV2/me',
     //   options: Options(headers: {'Authorization': token}),
@@ -39,32 +41,6 @@ class Api {
     final response = await dio.get('/mosque/$id/times');
 
     return Times.fromMap(response.data);
-    return Times(
-      jumua: '13:02',
-      jumua2: '13:59',
-      aidPrayerTime: '',
-      aidPrayerTime2: '',
-      hijriAdjustment: 1,
-      hijriDateForceTo30: false,
-      jumuaAsDuhr: true,
-      imsakNbMinBeforeFajr: 30,
-      shuruq: '13:50',
-      // times: ['06:51', '13:26', '16:07', '18:40', '19:49'],
-      calendar: [],
-      iqamaCalendar: [
-        for (var i = 0; i < 13; i++)
-          {
-            for (var j = 1; j < 31; j++)
-              '$j': [
-                '08:51',
-                '15:00',
-                '+10',
-                '+0',
-                '+10',
-              ],
-          },
-      ],
-    );
   }
 
   static Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async {
@@ -86,5 +62,15 @@ class Api {
       // If that response was not OK, throw an error.
       throw Exception('Failed to fetch mosque');
     }
+  }
+
+  static Future<String> randomHadith({String language = 'ar'}) async {
+    final response = await dio.get(
+      '$kBaseUrlV2/hadith/random',
+      options: buildCacheOptions(Duration(days: 1)),
+      queryParameters: {'lang': language},
+    );
+
+    return response.data['text'];
   }
 }

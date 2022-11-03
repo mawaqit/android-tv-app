@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 
+const kSalahItemWidgetWidth = 135.0;
+
 class SalahItemWidget extends StatelessWidget {
   SalahItemWidget({
     Key? key,
@@ -23,6 +25,7 @@ class SalahItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: kSalahItemWidgetWidth,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: active

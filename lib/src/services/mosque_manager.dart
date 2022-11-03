@@ -286,7 +286,7 @@ extension MosqueHelperUtils on MosqueManager {
   }
 
   /// used to test time
-  DateTime mosqueDate() => DateTime.now().add(Duration(hours: 1, minutes: 26));
+  DateTime mosqueDate() => DateTime.now().add(Duration());
 
   List<String> get todayTimes {
     var t = times!.calendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
