@@ -31,10 +31,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 
   # FIREBASE PACKAGES
-  firebase_core: ^1.16.0
-  firebase_messaging: ^11.3.0
-  firebase_analytics: ^9.1.7
-  firebase_crashlytics: ^2.7.2
+  firebase_core: ^2.1.1
+  firebase_messaging: ^14.0.3
+  firebase_analytics: ^10.0.3
+  firebase_crashlytics: ^3.0.3
 
   # STORAGE
   shared_preferences: ^2.0.13
@@ -84,7 +84,7 @@ dependencies:
   #location: ^4.3.0
   geolocator: ^8.2.1
   hijri: ^3.0.0
-#  webview_flutter: ^3.0.0
+  #  webview_flutter: ^3.0.0
 
   rive_splash_screen: ^0.1.0
   lottie: ^1.3.0
