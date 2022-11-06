@@ -5,6 +5,7 @@ import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dar
 import 'package:mawaqit/src/pages/home/sub_screens/AfterSalahAzkarScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/JumuaHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -56,8 +57,7 @@ class OfflineHomeScreen extends StatelessWidget {
       case HomeActiveScreen.randomHadith:
         return RandomHadithScreen();
       case HomeActiveScreen.jumuaaHadith:
-        // TODO: Handle this case.
-        break;
+        return JumuaHadithSubScreen();
     }
     return SizedBox();
   }

@@ -77,6 +77,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "iqamaIn": MessageLookupByLibrary.simpleMessage("Iqama in"),
         "isha": MessageLookupByLibrary.simpleMessage("Isha"),
         "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "The Prophet (peace and blessings of Allah be upon him) said \"Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility\""),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("Jumuaa Time"),
         "languages": MessageLookupByLibrary.simpleMessage("Languages"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),

@@ -200,6 +200,7 @@ extension MosqueHelperUtils on MosqueManager {
   calculateActiveScreen() {
     var state = HomeActiveScreen.normal;
 
+    final now = mosqueDate();
     final lastSalahIndex = (nextSalahIndex() - 1) % 5;
 
     final lastSalah = actualTimes()[lastSalahIndex];
@@ -208,19 +209,23 @@ extension MosqueHelperUtils on MosqueManager {
     final lastIqamaIndex = (nextIqamaIndex - 1) % 5;
     final lastIqama = actualIqamaTimes()[lastIqamaIndex];
 
-    if (lastSalah.difference(mosqueDate()).abs() < kAdhanDuration) {
+    if (lastSalah.difference(now).abs() < kAdhanDuration) {
       /// we are in adhan time
       state = HomeActiveScreen.adhan;
-    } else if (lastSalah.difference(mosqueDate()).abs() < kAdhanDuration + kAfterAdhanHadithDuration) {
+    } else if (lastSalah.difference(now).abs() < kAdhanDuration + kAfterAdhanHadithDuration) {
       /// adhan has just done
       state = HomeActiveScreen.afterAdhanHadith;
-    } else if (lastIqama.difference(mosqueDate()).abs() < kIqamaaDuration) {
+    } else if (lastIqama.difference(now).abs() < kIqamaaDuration) {
       /// we are in iqama time
       state = HomeActiveScreen.iqamaa;
     } else if (nextIqamaIndex == lastSalahIndex) {
       /// we are in time between adhan and iqama
-      state = HomeActiveScreen.iqamaaCountDown;
-    } else if ((mosqueDate().difference(lastIqama) - salahDuration).abs() < kAzkarDuration) {
+      if (now.weekday == DateTime.friday) {
+        state = HomeActiveScreen.jumuaaHadith;
+      } else {
+        state = HomeActiveScreen.iqamaaCountDown;
+      }
+    } else if ((now.difference(lastIqama) - salahDuration).abs() < kAzkarDuration) {
       state = HomeActiveScreen.afterSalahAzkar;
     }
 

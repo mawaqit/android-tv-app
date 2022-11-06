@@ -926,6 +926,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Jumuaa Time`
+  String get jumuaaScreenTitle {
+    return Intl.message(
+      'Jumuaa Time',
+      name: 'jumuaaScreenTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The Prophet (peace and blessings of Allah be upon him) said "Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility"`
+  String get jumuaaHadith {
+    return Intl.message(
+      'The Prophet (peace and blessings of Allah be upon him) said "Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility"',
+      name: 'jumuaaHadith',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
