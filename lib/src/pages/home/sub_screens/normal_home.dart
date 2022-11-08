@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/HomeLogoVersion.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
@@ -35,7 +36,7 @@ class NormalHomeSubScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(child: HomeTimeWidget()),
+            HomeTimeWidget(),
             Expanded(
               child: Center(
                 child: SalahItemWidget(
@@ -52,39 +53,38 @@ class NormalHomeSubScreen extends StatelessWidget {
         ),
         SalahTimesBar(),
         Container(
-          padding: EdgeInsets.all(2),
+          padding: EdgeInsets.symmetric(horizontal: 1.vw, vertical: .3.vw),
           width: double.infinity,
-          color: Colors.black38,
+          color: mosque.flash?.content.isEmpty != false ? null : Colors.black38,
           child: Row(
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: Text(
-                      "ID ${mosque.id}",
-                      style: TextStyle(
-                        fontSize: 7,
-                        color: Colors.grey,
-                        shadows: kHomeTextShadow,
-                      ),
+                  Text(
+                    "ID ${mosque.id}",
+                    style: TextStyle(
+                      fontSize: .7.vw,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      shadows: kHomeTextShadow,
                     ),
                   ),
                   SizedBox(height: 5),
                   Image.network(
                     'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
-                    width: 40,
-                    height: 40,
+                    width: 3.vw,
+                    height: 3.vw,
                   ),
                 ],
               ),
               Expanded(
                 child: SizedBox(
-                  height: 60,
+                  height: 5.vw,
                   child: mosque.flash?.content.isEmpty != false
-                      ? null
+                      //todo get the message
+                      ? SizedBox()
                       : Marquee(
                           text: mosque.flash?.content ?? '',
                           scrollAxis: Axis.horizontal,
@@ -94,6 +94,7 @@ class NormalHomeSubScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             wordSpacing: 3,
                             shadows: kHomeTextShadow,
+                            color: Colors.white,
                           ),
                         ),
                 ),

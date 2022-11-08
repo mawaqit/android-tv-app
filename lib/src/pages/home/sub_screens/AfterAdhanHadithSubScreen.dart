@@ -29,6 +29,7 @@ class AfterAdhanSubScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 36,
+                color: Colors.white,
               ),
             ),
           ),
@@ -48,6 +49,7 @@ class AfterAdhanSubScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 36,
+                  color: Colors.white,
                 ),
               ),
             ),

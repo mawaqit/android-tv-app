@@ -18,6 +18,9 @@ class OfflineHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
 
+    //todo handle this case
+    if (mosqueProvider.mosque == null || mosqueProvider.times == null) return SizedBox();
+
     final mosque = mosqueProvider.mosque!;
 
     return Scaffold(

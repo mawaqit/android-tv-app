@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 
 const kSalahItemWidgetWidth = 135.0;
@@ -25,56 +26,52 @@ class SalahItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: kSalahItemWidgetWidth,
+      width: 16.vw,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(2.vw),
         color: active
             ? Color(0x994e2b81)
             : removeBackground
                 ? null
                 : Colors.black.withOpacity(.70),
       ),
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+      padding: EdgeInsets.symmetric(vertical: 1.vw, horizontal: 2.vw),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (title != null)
             Text(
               title!,
-              style: TextStyle(fontSize: 24, shadows: kHomeTextShadow),
+              style: TextStyle(
+                fontSize: 3.vw,
+                shadows: kHomeTextShadow,
+                color: Colors.white,
+              ),
             ),
           SizedBox(height: 10),
           Text(
             time,
             style: TextStyle(
-              fontSize: 40,
+              fontSize: 4.vw,
               fontWeight: FontWeight.w700,
               shadows: kHomeTextShadow,
+              color: Colors.white,
             ),
           ),
-          // Container(
-          //   height: .7,
-          //   margin: EdgeInsets.all(3),
-          //   width: 100,
-          //   color: iqama != null && withDivider ? Colors.white : null,
-          // ),
           SizedBox(
-            width: 90,
-            child: Divider(
-              // height: 20,
-              thickness: 1,
-              color: withDivider ? Colors.white : Colors.transparent,
-            ),
+            height: 1.3.vw,
+            width: double.infinity,
+            child: Divider(thickness: 1, color: withDivider ? Colors.white : Colors.transparent),
           ),
-
           if (iqama != null)
             Text(
               '$iqama${iqama!.startsWith('+') ? "\'" : ""}',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 3.vw,
                 fontWeight: FontWeight.bold,
                 shadows: kHomeTextShadow,
                 letterSpacing: 1,
+                color: Colors.white,
               ),
             ),
         ],

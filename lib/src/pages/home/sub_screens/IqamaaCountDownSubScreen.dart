@@ -26,6 +26,7 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
           S.of(context).iqamaIn,
           style: TextStyle(
             fontSize: 70,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -42,6 +43,7 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
                     '${remaining.inMinutes}:${remaining.inSeconds % 60}',
                     style: TextStyle(
                       fontSize: 200,
+                      color: Colors.white,
                       fontWeight: FontWeight.w500,
                       shadows: kHomeTextShadow,
                     ),

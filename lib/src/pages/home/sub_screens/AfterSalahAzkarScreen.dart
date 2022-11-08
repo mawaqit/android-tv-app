@@ -45,7 +45,9 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
           children: [
             Text(
               "$azkarTitle ${isArabic ? '' : '(${S.of(context).alAthkar})'}",
-              style: Theme.of(context).textTheme.displaySmall,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    color: Colors.white,
+                  ),
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.center,
             ),
@@ -65,6 +67,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                       fontSize: 62,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'hafs',
+                      color: Colors.white,
                     ),
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.center,
@@ -82,6 +85,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                       translatedHadith,
                       style: TextStyle(
                         fontSize: 62,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,

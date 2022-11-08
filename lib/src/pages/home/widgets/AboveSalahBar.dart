@@ -44,7 +44,9 @@ class AboveSalahBar extends StatelessWidget {
                       if (nextSalahTime.inMinutes == 0)
                         "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
                     ].join(),
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                        ),
                   ),
                 ),
                 Container(
@@ -55,7 +57,9 @@ class AboveSalahBar extends StatelessWidget {
                   ),
                   child: Text(
                     DateFormat("HH:mm").format(now),
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                        ),
                   ),
                 ),
               ],

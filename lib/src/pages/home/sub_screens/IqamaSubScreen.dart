@@ -33,11 +33,13 @@ class IqamaSubScreen extends StatelessWidget {
                 children: [
                   Text(
                     S.of(context).alIqama,
-                    style: theme.textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w500),
+                    style: theme.textTheme.displayMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
                   ),
                   Text(
                     "الإقامة",
-                    style: theme.textTheme.displaySmall,
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -56,6 +58,7 @@ class IqamaSubScreen extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 33,
+            color: Colors.white,
           ),
         ),
         SizedBox(height: 50),

@@ -26,6 +26,7 @@ class RandomHadithScreen extends StatelessWidget {
                       fontSize: 62,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'hafs',
+                      color: Colors.white,
                     ),
                   ),
                 ),

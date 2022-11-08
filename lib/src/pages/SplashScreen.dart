@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
@@ -61,6 +62,8 @@ class _SplashScreen extends State<Splash> {
   }
 
   Widget build(BuildContext context) {
+    RelativeSizes.instance.size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         color: Colors.black,

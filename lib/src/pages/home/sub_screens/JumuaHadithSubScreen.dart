@@ -21,6 +21,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
               fontSize: 30,
               fontWeight: FontWeight.bold,
               fontFamily: 'hafs',
+              color: Colors.white,
             ),
           ),
         ),
@@ -37,6 +38,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
                 fontSize: 60,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'hafs',
+                color: Colors.white,
               ),
             ),
           ),
@@ -53,6 +55,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ),

@@ -33,12 +33,17 @@ class AdhanSubScreen extends StatelessWidget {
                   Container(
                     child: Text(
                       S.of(context).alAdhan,
-                      style: theme.textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w500),
+                      style: theme.textTheme.displayMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   Text(
                     "الأذان",
-                    style: theme.textTheme.displaySmall,
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
