@@ -237,20 +237,29 @@ extension MosqueHelperUtils on MosqueManager {
     }
   }
 
+  /// show imsak between midnight and fajr
+  bool get showImsak {
+    final now = mosqueDate();
+    final midnight = DateUtils.dateOnly(now);
+    final fajrDate = actualTimes()[0];
+
+    return now.isAfter(midnight) && now.isBefore(fajrDate);
+  }
+
   /// listen to time and update the active home screens values
   subscribeToTime() => Timer.periodic(Duration(seconds: 1), (timer) => calculateActiveScreen());
 
   /// get today salah prayer times as a list of times
-  List<DateTime> actualTimes() => todayTimes.map((e) => e.toTimeOfDay()!.toDate()).toList();
+  List<DateTime> actualTimes() => todayTimes.map((e) => e.toTimeOfDay()!.toDate(mosqueDate())).toList();
 
   /// get today iqama prayer times as a list of times
   List<DateTime> actualIqamaTimes() => [
         for (var i = 0; i < 5; i++)
           todayIqama[i]
               .toTimeOfDay(
-                tryOffset: todayTimes[i].toTimeOfDay()!.toDate(),
+                tryOffset: todayTimes[i].toTimeOfDay()!.toDate(mosqueDate()),
               )!
-              .toDate(),
+              .toDate(mosqueDate()),
       ];
 
   /// return the upcoming salah index

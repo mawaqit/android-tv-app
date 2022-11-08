@@ -67,7 +67,6 @@ class HomeTimeWidget extends TimerRefreshWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
             color: Color(0xb34e2b81),
@@ -116,7 +115,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                         fadeOutBegin: 1,
                         textStyle: TextStyle(
                           color: Colors.white,
-                          fontSize: 2.7.vw,
+                          fontSize: 2.3.vw,
                           shadows: kHomeTextShadow,
                           letterSpacing: 1,
                         ),
@@ -133,7 +132,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                         fadeOutBegin: 1,
                         textStyle: TextStyle(
                           color: Colors.white,
-                          fontSize: 2.5.vw,
+                          fontSize: 2.3.vw,
                           shadows: kHomeTextShadow,
                           letterSpacing: 1,
                         ),

@@ -126,6 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Try: 256, It\'s the ID of the \'Mosquée de Paris\'"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("Shuruk"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError":
             MessageLookupByLibrary.simpleMessage("Isn\'t a valid mosque slug"),

@@ -28,12 +28,19 @@ class NormalHomeSubScreen extends StatelessWidget {
           children: [
             Expanded(
               child: Center(
-                child: SalahItemWidget(
-                  title: S.of(context).imsak,
-                  time: mosqueProvider.imsak,
-                  removeBackground: true,
-                  withDivider: false,
-                ),
+                child: mosqueProvider.showImsak
+                    ? SalahItemWidget(
+                        title: S.of(context).imsak,
+                        time: mosqueProvider.imsak,
+                        removeBackground: true,
+                        withDivider: false,
+                      )
+                    : SalahItemWidget(
+                        title: S.of(context).shuruk,
+                        time: mosqueProvider.times!.shuruq,
+                        removeBackground: true,
+                        withDivider: false,
+                      ),
               ),
             ),
             HomeTimeWidget(),
