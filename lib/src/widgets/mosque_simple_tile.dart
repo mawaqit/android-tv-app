@@ -58,7 +58,7 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.mosque.label ?? widget.mosque.name,
+                      /*widget.mosque.label ??*/ widget.mosque.name,
                       style: theme.textTheme.titleMedium,
                     ),
                     SizedBox(height: 2),

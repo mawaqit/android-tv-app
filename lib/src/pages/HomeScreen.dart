@@ -148,7 +148,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     final settings = settingsManager.settings;
 
     var url = mosqueManager.buildUrl(appLanguage.appLocal.languageCode);
-
+    print(url);
     var bottomPadding = MediaQuery.of(context).padding.bottom;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
 

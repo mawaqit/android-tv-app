@@ -1,0 +1,60 @@
+import 'package:flutter/material.dart';
+import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/themes/UIShadows.dart';
+import 'package:provider/provider.dart';
+
+class IqamaaCountDownSubScreen extends StatelessWidget {
+  const IqamaaCountDownSubScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final mosqueManager = context.read<MosqueManager>();
+
+    final nextIqamaIndex = mosqueManager.nextIqamaIndex();
+    var nextIqamaTime = mosqueManager.actualIqamaTimes()[nextIqamaIndex];
+
+    if (nextIqamaTime.isBefore(mosqueManager.mosqueDate())) {
+      nextIqamaTime = nextIqamaTime.add(Duration(days: 1));
+    }
+
+    return Column(
+      children: [
+        SizedBox(height: 50),
+        Text(
+          S.of(context).iqamaIn,
+          style: TextStyle(
+            fontSize: 70,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Expanded(
+          child: FittedBox(
+            alignment: Alignment.center,
+            fit: BoxFit.scaleDown,
+            child: StreamBuilder(
+                stream: Stream.periodic(Duration(seconds: 1)),
+                builder: (context, snapshot) {
+                  final remaining = nextIqamaTime.difference(mosqueManager.mosqueDate());
+
+                  return Text(
+                    '${remaining.inMinutes}:${remaining.inSeconds % 60}',
+                    style: TextStyle(
+                      fontSize: 200,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      shadows: kHomeTextShadow,
+                    ),
+                  );
+                }),
+          ),
+        ),
+        SizedBox(height: 50),
+        SalahTimesBar(miniStyle: true),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+}

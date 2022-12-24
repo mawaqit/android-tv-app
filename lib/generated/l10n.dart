@@ -699,6 +699,263 @@ class S {
       args: [],
     );
   }
+
+  /// `Offline`
+  String get offline {
+    return Intl.message(
+      'Offline',
+      name: 'offline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Imsak`
+  String get imsak {
+    return Intl.message(
+      'Imsak',
+      name: 'imsak',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jumua`
+  String get jumua {
+    return Intl.message(
+      'Jumua',
+      name: 'jumua',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duhr`
+  String get duhr {
+    return Intl.message(
+      'Duhr',
+      name: 'duhr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fajr`
+  String get fajr {
+    return Intl.message(
+      'Fajr',
+      name: 'fajr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Asr`
+  String get asr {
+    return Intl.message(
+      'Asr',
+      name: 'asr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maghrib`
+  String get maghrib {
+    return Intl.message(
+      'Maghrib',
+      name: 'maghrib',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Isha`
+  String get isha {
+    return Intl.message(
+      'Isha',
+      name: 'isha',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `After salah Du'a`
+  String get afterSalahHadithTitle {
+    return Intl.message(
+      'After salah Du`a',
+      name: 'afterSalahHadithTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allahumma Rabba hadhihid-da'wati-ttammati, was-salatil-qa'imati, ati Muhammadanil-wasilata wal-fadhilata, wab'athu maqaman mahmuda nilladhi wa 'adtahu [O Allah, Rubb of this perfect call (Da'wah) and of the established prayer (As-Salat), grant Muhammad the Wasilah and superiority, and raise him up to a praiseworthy position which You have promised him]`
+  String get afterSalahHadith {
+    return Intl.message(
+      'Allahumma Rabba hadhihid-da\'wati-ttammati, was-salatil-qa\'imati, ati Muhammadanil-wasilata wal-fadhilata, wab\'athu maqaman mahmuda nilladhi wa \'adtahu [O Allah, Rubb of this perfect call (Da\'wah) and of the established prayer (As-Salat), grant Muhammad the Wasilah and superiority, and raise him up to a praiseworthy position which You have promised him]',
+      name: 'afterSalahHadith',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Al Iqama`
+  String get alIqama {
+    return Intl.message(
+      'Al Iqama',
+      name: 'alIqama',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Al adhan`
+  String get alAdhan {
+    return Intl.message(
+      'Al adhan',
+      name: 'alAdhan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please turn of your mobile phones!`
+  String get turnOfPhones {
+    return Intl.message(
+      'Please turn of your mobile phones!',
+      name: 'turnOfPhones',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Iqama in`
+  String get iqamaIn {
+    return Intl.message(
+      'Iqama in',
+      name: 'iqamaIn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Al-Athkar`
+  String get alAthkar {
+    return Intl.message(
+      'Al-Athkar',
+      name: 'alAthkar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ``
+  String get AlAthkar_0 {
+    return Intl.message(
+      '',
+      name: 'AlAthkar_0',
+      desc:
+          'أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله \\nاللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ',
+      args: [],
+    );
+  }
+
+  /// ``
+  String get AlAthkar_1 {
+    return Intl.message(
+      '',
+      name: 'AlAthkar_1',
+      desc:
+          'سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة \\nلا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير',
+      args: [],
+    );
+  }
+
+  /// ``
+  String get AlAthkar_2 {
+    return Intl.message(
+      '',
+      name: 'AlAthkar_2',
+      desc:
+          'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ \\nقُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس',
+      args: [],
+    );
+  }
+
+  /// ``
+  String get AlAthkar_3 {
+    return Intl.message(
+      '',
+      name: 'AlAthkar_3',
+      desc:
+          'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ\\nقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ',
+      args: [],
+    );
+  }
+
+  /// ``
+  String get AlAthkar_4 {
+    return Intl.message(
+      '',
+      name: 'AlAthkar_4',
+      desc:
+          'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ\\n قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ',
+      args: [],
+    );
+  }
+
+  /// ``
+  String get AlAthkar_5 {
+    return Intl.message(
+      '',
+      name: 'AlAthkar_5',
+      desc:
+          'ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ',
+      args: [],
+    );
+  }
+
+  /// ``
+  String get AlAthkar_6 {
+    return Intl.message(
+      '',
+      name: 'AlAthkar_6',
+      desc:
+          'لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد',
+      args: [],
+    );
+  }
+
+  /// `Jumuaa Time`
+  String get jumuaaScreenTitle {
+    return Intl.message(
+      'Jumuaa Time',
+      name: 'jumuaaScreenTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The Prophet (peace and blessings of Allah be upon him) said "Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility"`
+  String get jumuaaHadith {
+    return Intl.message(
+      'The Prophet (peace and blessings of Allah be upon him) said "Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility"',
+      name: 'jumuaaHadith',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shuruk`
+  String get shuruk {
+    return Intl.message(
+      'Shuruk',
+      name: 'shuruk',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
