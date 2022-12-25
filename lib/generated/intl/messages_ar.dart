@@ -55,8 +55,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "instagram": MessageLookupByLibrary.simpleMessage("انستغرام"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("دليل التثبيت"),
-        "jumuaaScreenTitle": MessageLookupByLibrary.simpleMessage(
-            "حَانَ وَقْتُ صَلاَةِ الجُمُعَة"),
         "languages": MessageLookupByLibrary.simpleMessage("اللغات"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيسر"),

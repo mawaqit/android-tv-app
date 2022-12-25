@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
@@ -48,7 +47,7 @@ class _SplashScreen extends State<Splash> {
 
       var goBoarding = await loadBoarding();
       var mosqueManager = context.read<MosqueManager>();
-      bool hasNoMosque = mosqueManager.mosqueUUID == null;
+      bool hasNoMosque = mosqueManager.mosqueId == null && mosqueManager.mosqueSlug == null;
 
       if (hasNoMosque || goBoarding && settings.boarding == "1") {
         AppRouter.pushReplacement(OnBoardingScreen(settings));
@@ -57,13 +56,10 @@ class _SplashScreen extends State<Splash> {
       }
     } catch (e) {
       setState(() => applicationProblem = true);
-      rethrow;
     }
   }
 
   Widget build(BuildContext context) {
-    RelativeSizes.instance.size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Container(
         color: Colors.black,

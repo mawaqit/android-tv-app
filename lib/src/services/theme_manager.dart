@@ -10,12 +10,6 @@ class ThemeNotifier with ChangeNotifier {
         primaryColor: Color(0xff490094),
         primaryColorDark: Color(0xff490094),
         primaryColorLight: Color(0xff490094),
-        textTheme: ThemeData().textTheme.apply(
-          bodyColor: Colors.white,
-          displayColor: Colors.white,
-          decorationColor: Colors.white,
-          // fontFamily: '',
-        ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
             overlayColor: MaterialStateProperty.all(Color(0xff490094)),

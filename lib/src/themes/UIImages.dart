@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class UIImages {
-  static const String imageDir = "assets/adhan_icon";
+  static const String imageDir = "assets/img";
   static Image logo = Image.asset("$imageDir/logo.png");
   static Image bg = Image.asset("$imageDir/bg.jpg");
 

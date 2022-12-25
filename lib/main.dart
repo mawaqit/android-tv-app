@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
@@ -32,11 +31,6 @@ Future<void> main() async {
     await GlobalConfiguration().loadFromAsset("configuration");
 
     await Firebase.initializeApp();
-
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
 
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     Isolate.current.addErrorListener(RawReceivePort((pair) async {
@@ -64,7 +58,7 @@ Future<void> main() async {
       SystemChrome.restoreSystemUIOverlays();
     });
 
-    return runApp(ProviderScope(child: MyApp()));
+    return runApp(MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
