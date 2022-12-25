@@ -25,16 +25,6 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(
-            "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah\nAllahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram\nAllahumma A`inni `ala dhikrika wa chukrika wa husni `ibadatik"),
-        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(
-            "Subhan Allah wal hamdu lillah wallahu akbar (33 fois)\nLa ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir"),
-        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
-        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
-        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
-        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
-        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(
-            "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima mana`ate, wa la yanefa`u dhal djaddi mineka eldjad"),
         "about": MessageLookupByLibrary.simpleMessage("À propos"),
         "appLang":
             MessageLookupByLibrary.simpleMessage("Langue de l\'application"),

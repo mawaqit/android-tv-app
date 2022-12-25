@@ -73,14 +73,9 @@ android {
 //            keyAlias keyAlias_
 //            keyPassword keyPassword_
 //        }
-
-      debug {}
     }
 
     buildTypes {
-      debug {
-        signingConfig signingConfigs.debug
-      }
       release {
         signingConfig signingConfigs.release
       }
