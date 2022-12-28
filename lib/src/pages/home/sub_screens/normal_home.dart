@@ -37,7 +37,7 @@ class NormalHomeSubScreen extends StatelessWidget {
                       )
                     : SalahItemWidget(
                         title: S.of(context).shuruk,
-                        time: mosqueProvider.times!.shuruq,
+                        time: mosqueProvider.times!.shuruq??"",
                         removeBackground: true,
                         withDivider: false,
                       ),
@@ -48,7 +48,7 @@ class NormalHomeSubScreen extends StatelessWidget {
               child: Center(
                 child: SalahItemWidget(
                   title: S.of(context).jumua,
-                  time: mosqueProvider.times!.jumua,
+                  time: mosqueProvider.times!.jumua??"",
                   iqama: mosqueProvider.times!.jumua2,
                   active:
                       mosqueProvider.nextSalahIndex() == 2 && mosqueProvider.mosqueDate().weekday == DateTime.friday,

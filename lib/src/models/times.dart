@@ -3,15 +3,15 @@ import 'package:intl/intl.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 
 class Times {
-  final String jumua;
-  final String jumua2;
-  final String aidPrayerTime;
-  final String aidPrayerTime2;
+  final String? jumua;
+  final String? jumua2;
+  final String? aidPrayerTime;
+  final String? aidPrayerTime2;
   final int hijriAdjustment;
   final bool hijriDateForceTo30;
   final bool jumuaAsDuhr;
   final int imsakNbMinBeforeFajr;
-  final String shuruq;
+  final String? shuruq;
   // final List<String> times;
   final List calendar;
   final List iqamaCalendar;
@@ -147,6 +147,7 @@ class Times {
       calendar: map['calendar'],
       iqamaCalendar: map['iqamaCalendar'],
     );
+
   }
 
 //</editor-fold>
