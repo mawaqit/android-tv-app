@@ -6,9 +6,12 @@ extension StringTimeUtils on String {
   /// incase of [tryOffset] handle also the relative timing in minutes like +5
   TimeOfDay? toTimeOfDay({DateTime? tryOffset}) {
     try {
-      final date = DateFormat('HH:mm').parse(trim());
+      final String hour = this.split(":").first;
+      final String minute = this.replaceFirst(hour + ":", "");
 
-      return TimeOfDay(hour: date.hour, minute: date.minute);
+      // final date = DateFormat('HH:mm').parse(trim());
+
+      return TimeOfDay(hour: int.parse(hour), minute: int.parse(minute));
     } on FormatException catch (e, stack) {
       if (tryOffset != null) {
         final value = int.tryParse(this);

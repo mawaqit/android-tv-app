@@ -94,7 +94,11 @@ class MosqueManager extends ChangeNotifier {
       mosqueUUID = mosque!.uuid!;
 
       _saveToLocale();
-    } catch (e) {}
+      notifyListeners();
+      print("mosque url${mosque?.url}");
+    } catch (e,stack) {
+      debugPrintStack(stackTrace: stack);
+    }
   }
 
   Future<void> _saveToLocale() async {
