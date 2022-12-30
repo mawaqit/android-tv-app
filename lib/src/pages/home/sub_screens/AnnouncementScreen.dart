@@ -1,12 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:chewie/chewie.dart';
-import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
 import 'normal_home.dart';
 
 class AnnouncementScreen extends StatefulWidget {
@@ -21,8 +17,9 @@ class AnnouncementScreen extends StatefulWidget {
 class _AnnouncementScreenState extends State<AnnouncementScreen> {
   int activeIndex = 0;
   bool showHome = true;
-  Duration homeDuration = Duration(seconds: 60);
+  Duration homeDuration = Duration(seconds: 50);
   Duration announcementDuration = Duration(seconds: 30);
+
   @override
   void initState() {
     super.initState();
@@ -43,7 +40,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     final announcement = context.read<MosqueManager>().mosque!.announcements[activeIndex];
 
     if (announcement.content != null) {
-      return textAnnouncement(announcement.content!);
+      return textAnnouncement(announcement.content!, announcement.title);
     } else if (announcement.image != null) {
       return imageAnnouncement(announcement.image!);
     } else if (announcement.video != null) {
@@ -52,23 +49,44 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     return SizedBox();
   }
 
-  Widget textAnnouncement(String content) {
-    return Center(
-      child: AutoSizeText(content ?? '',
-          stepGranularity: 12,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 62,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'hafs',
-            color: Colors.white,
-          )),
+  Widget textAnnouncement(String content, String title) {
+    return Column(
+      children: [
+        // title
+        AutoSizeText(title,
+            stepGranularity: 12,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              shadows: kAnnouncementTextShadow,
+              fontSize: 62,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'hafs',
+              color: Colors.amber,
+                letterSpacing: 1
+
+            )),
+        // content
+        Expanded(
+          child: AutoSizeText(content,
+              stepGranularity: 12,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+
+                shadows: kAnnouncementTextShadow,
+                fontSize: 62,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'hafs',
+                color: Colors.white,
+                letterSpacing: 1
+              )),
+        ),
+      ],
     );
   }
 
   Widget imageAnnouncement(String image) {
     return Image.network(
-      image ?? "",
+      image,
       fit: BoxFit.cover,
     );
   }
@@ -83,12 +101,18 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
         mute: true,
       ),
     );
-    return YoutubePlayer(
-      onEnded: (metaData) {
-        nextScreen();
-      },
-      controller: _controller,
-      showVideoProgressIndicator: true,
+    return Stack(
+      children: [
+
+        YoutubePlayer(
+          onEnded: (metaData) {
+            nextScreen();
+          },
+          controller: _controller,
+          showVideoProgressIndicator: true,
+        ),
+
+      ],
     );
   }
 
@@ -115,4 +139,13 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
         (value) => nextScreen(),
       );
   }
+  get kAnnouncementTextShadow => [
+    Shadow(
+      offset: Offset(0, 9),
+      blurRadius: 15,
+      color: Colors.black54,
+
+    ),
+  ];
+
 }
