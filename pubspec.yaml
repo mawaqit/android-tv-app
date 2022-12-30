@@ -95,6 +95,9 @@ dependencies:
 
   timeago_flutter: ^1.2.0
 
+  #  media
+  youtube_player_flutter: ^8.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
