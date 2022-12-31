@@ -17,26 +17,29 @@ class AnnouncementScreen extends StatefulWidget {
 class _AnnouncementScreenState extends State<AnnouncementScreen> {
   int activeIndex = 0;
   bool showHome = true;
-  Duration homeDuration = Duration(seconds: 50);
+  Duration homeDuration = Duration(seconds: 30);
   Duration announcementDuration = Duration(seconds: 30);
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(homeDuration).then((value) {
-      nextScreen();
-    });
+     if (context.read<MosqueManager>().mosque!.announcements.isNotEmpty) {
+       Future.delayed(homeDuration).then((value) {
+         nextScreen();
+       });
+     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     if (showHome) {
       return NormalHomeSubScreen();
     }
-    return announcementWidget();
+    return announcementWidgets();
   }
 
-  Widget announcementWidget() {
+  Widget announcementWidgets() {
     final announcement = context.read<MosqueManager>().mosque!.announcements[activeIndex];
 
     if (announcement.content != null) {
@@ -46,6 +49,8 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     } else if (announcement.video != null) {
       return videoAnnouncement(announcement.video!);
     }
+
+
     return SizedBox();
   }
 

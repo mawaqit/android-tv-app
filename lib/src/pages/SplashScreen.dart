@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:wakelock/wakelock.dart';
 
+import 'OfflineScreen.dart';
+
 class Splash extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new _SplashScreen();
@@ -41,15 +43,14 @@ class _SplashScreen extends State<Splash> {
 
   /// navigates to first screen
   void _navigateToHome() async {
+
     try {
       Wakelock.enable().catchError((e) {});
 
       var settings = await _initSettings();
-
       var goBoarding = await loadBoarding();
       var mosqueManager = context.read<MosqueManager>();
       bool hasNoMosque = mosqueManager.mosqueUUID == null;
-
       if (hasNoMosque || goBoarding && settings.boarding == "1") {
         AppRouter.pushReplacement(OnBoardingScreen(settings));
       } else {
@@ -63,7 +64,10 @@ class _SplashScreen extends State<Splash> {
 
   Widget build(BuildContext context) {
     RelativeSizes.instance.size = MediaQuery.of(context).size;
-
+    if (applicationProblem)
+      {
+       return OfflineScreen(onPressedTryAgain: _navigateToHome,);
+      }
     return Scaffold(
       body: Container(
         color: Colors.black,
@@ -89,17 +93,7 @@ class _SplashScreen extends State<Splash> {
                 height: 100,
               ),
             ),
-            if (applicationProblem)
-              Align(
-                alignment: Alignment(0, .3),
-                child: Text(
-                  S.of(context).backendError,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Colors.redAccent.withOpacity(.6),
-                      ),
-                ),
-              ),
+
           ],
         ),
       ),

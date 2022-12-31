@@ -18,12 +18,15 @@ class RaisedGradientButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double radius = 80;
     return Container(
       width: width,
       height: 50.0,
       decoration: BoxDecoration(
           gradient: gradient,
-          borderRadius: BorderRadius.all(Radius.circular(80.0)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(radius),
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey[500]!,
@@ -34,10 +37,14 @@ class RaisedGradientButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-            onTap: onPressed as void Function()?,
-            child: Center(
-              child: child,
-            )),
+          onTap: onPressed as void Function()?,
+          child: Center(
+            child: child,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(radius),
+          ),
+        ),
       ),
     );
   }

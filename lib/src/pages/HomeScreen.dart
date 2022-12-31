@@ -140,6 +140,7 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     final appLanguage = context.watch<AppLanguage>();
@@ -152,12 +153,9 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     var bottomPadding = MediaQuery.of(context).padding.bottom;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
 
-    if (connectionStatus == ConnectivityStatus.Offline)
-      return WillPopScope(
-        onWillPop: _onBackPressed,
-        child: OfflineScreen(),
-      );
 
+
+       
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: CallbackShortcuts(
