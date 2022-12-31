@@ -96,7 +96,7 @@ class MosqueManager extends ChangeNotifier {
       _saveToLocale();
       notifyListeners();
       print("mosque url${mosque?.url}");
-    } catch (e,stack) {
+    } catch (e, stack) {
       debugPrintStack(stackTrace: stack);
     }
   }
@@ -202,7 +202,7 @@ class MosqueManager extends ChangeNotifier {
 
 extension MosqueHelperUtils on MosqueManager {
   calculateActiveScreen() {
-    var state = HomeActiveScreen.normal;
+    var state = HomeActiveScreen.announcementScreen;
 
     final now = mosqueDate();
     final lastSalahIndex = (nextSalahIndex() - 1) % 5;
@@ -234,6 +234,7 @@ extension MosqueHelperUtils on MosqueManager {
     }
 
     // state = HomeActiveScreen.afterSalahAzkar;
+    // state = HomeActiveScreen.announcementScreen;
 
     if (state != this.state) {
       this.state = state;

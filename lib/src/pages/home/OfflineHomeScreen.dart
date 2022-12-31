@@ -11,7 +11,10 @@ import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import 'sub_screens/AnnouncementScreen.dart';
+
 class OfflineHomeScreen extends StatelessWidget {
+
   const OfflineHomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -61,6 +64,8 @@ class OfflineHomeScreen extends StatelessWidget {
         return RandomHadithScreen();
       case HomeActiveScreen.jumuaaHadith:
         return JumuaHadithSubScreen();
+      case HomeActiveScreen.announcementScreen:
+        return AnnouncementScreen();
     }
     return SizedBox();
   }
