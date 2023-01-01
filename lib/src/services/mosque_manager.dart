@@ -202,7 +202,8 @@ class MosqueManager extends ChangeNotifier {
 
 extension MosqueHelperUtils on MosqueManager {
   calculateActiveScreen() {
-    var state = HomeActiveScreen.announcementScreen;
+    ///todo change iqamaaCountdown to announcementScreen
+    var state = HomeActiveScreen.iqamaaCountDown;
 
     final now = mosqueDate();
     final lastSalahIndex = (nextSalahIndex() - 1) % 5;
