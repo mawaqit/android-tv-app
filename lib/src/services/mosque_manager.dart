@@ -12,6 +12,7 @@ import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/times.dart';
+import 'package:mawaqit/src/services/weather_mixin.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
@@ -23,7 +24,7 @@ const kAzkarDuration = Duration(minutes: 2);
 
 const salahDuration = Duration(minutes: 10);
 
-class MosqueManager extends ChangeNotifier {
+class MosqueManager extends ChangeNotifier with WeatherMixin {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -118,6 +119,9 @@ class MosqueManager extends ChangeNotifier {
     if (mosqueUUID != null) {
       mosque = await Api.getMosque(mosqueUUID!);
       times = await Api.getMosqueTimes(mosqueUUID!);
+
+      // get weather data
+      await loadWeather(mosque!);
     }
   }
 
@@ -202,6 +206,9 @@ class MosqueManager extends ChangeNotifier {
 
 extension MosqueHelperUtils on MosqueManager {
   calculateActiveScreen() {
+    /// still user didn't select his mosque
+    if (mosque == null || times == null) return;
+
     var state = HomeActiveScreen.announcementScreen;
 
     final now = mosqueDate();
@@ -234,7 +241,7 @@ extension MosqueHelperUtils on MosqueManager {
     }
 
     // state = HomeActiveScreen.afterSalahAzkar;
-    // state = HomeActiveScreen.announcementScreen;
+    state = HomeActiveScreen.normal;
 
     if (state != this.state) {
       this.state = state;

@@ -139,6 +139,9 @@ flutter:
     - family: kufi
       fonts:
         - asset: assets/fonts/kufi-normal.ttf
+    - family: WeatherIcons
+      fonts:
+        - asset: assets/fonts/weathericons-regular-webfont.ttf
 
 flutter_intl:
   enabled: true

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mawaqit/src/models/times.dart';
 
 import '../models/mosque.dart';
+import '../models/weather.dart';
 
 const kBaseUrlV2 = 'https://mawaqit.net/api/2.0';
 const kBaseUrl = 'https://mawaqit.net/api/3.0';
@@ -72,5 +73,13 @@ class Api {
     );
 
     return response.data['text'];
+  }
+
+  static Future<dynamic> getWeather(String mosqueUUID) async {
+    final response = await dio.get(
+      '$kBaseUrlV2/mosque/$mosqueUUID/weather',
+    );
+
+    return Weather.fromMap(response.data);
   }
 }
