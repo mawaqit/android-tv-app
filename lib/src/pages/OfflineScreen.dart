@@ -1,56 +1,96 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
-import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:mawaqit/src/themes/UIImages.dart';
-import 'package:provider/provider.dart';
 
-class OfflineScreen extends StatelessWidget {
-  const OfflineScreen({Key? key}) : super(key: key);
+
+class OfflineScreen extends StatefulWidget {
+  final VoidCallback onPressedTryAgain;
+  const OfflineScreen({Key? key, required this.onPressedTryAgain}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final settings = context.read<SettingsManager>().settings;
+  State<OfflineScreen> createState() => _OfflineScreenState();
+}
 
-    return Scaffold(
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Spacer(),
-            Container(
-                width: 100.0,
-                height: 100.0,
-                child: Image.asset(
-                  UIImages.imageDir + "/wifi.png",
-                  color: Colors.black26,
-                  fit: BoxFit.contain,
-                )),
-            Text(
-              S.of(context).whoops,
-              style: TextStyle(color: Colors.black45, fontSize: 40.0, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              S.of(context).noInternet,
-              style: TextStyle(color: Colors.black87, fontSize: 15.0),
-            ),
-            SizedBox(height: 20),
-            RaisedGradientButton(
-              child: Text(
-                S.of(context).tryAgain,
-                style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+class _OfflineScreenState extends State<OfflineScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        body: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Spacer(),
+              Container(
+                  width: 100.0,
+                  height: 100.0,
+                  child: Image.asset(
+                    "assets/img/wifi.png",
+                    color: Colors.white70,
+                    fit: BoxFit.contain,
+                  )),
+              Text(
+                S.of(context).whoops,
+                style: TextStyle(color: Colors.white70, fontSize: 40.0, fontWeight: FontWeight.bold),
               ),
-              width: 250,
-              gradient: LinearGradient(
-                colors: <Color>[HexColor(settings.secondColor), HexColor(settings.firstColor)],
+              Text(
+                S.of(context).noInternet,
+                style: TextStyle(color: Colors.white70, fontSize: 15.0),
               ),
-              onPressed: () {},
-            ),
-            Spacer(),
-          ],
+              SizedBox(height: 20),
+              RaisedGradientButton(
+
+                child: Text(
+                  S.of(context).tryAgain,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                width: 250,
+                gradient: LinearGradient(
+                  colors: <Color>[
+                    HexColor("#391e61"),
+                    HexColor("#490094"),
+                  ],
+                ),
+                onPressed: widget.onPressedTryAgain,
+              ),
+              Spacer(),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Future<bool> _onBackPressed() async {
+    return _showDialog();
+  }
+
+  _showDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text(S.of(context).closeApp),
+        content: new Text(S.of(context).sureCloseApp),
+        actions: <Widget>[
+          new TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text(S.of(context).cancel),
+          ),
+          SizedBox(height: 16),
+          new TextButton(
+            onPressed: () => exit(0),
+            child: new Text(S.of(context).ok),
+          ),
+        ],
       ),
     );
   }

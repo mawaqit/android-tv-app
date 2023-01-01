@@ -283,9 +283,11 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
 
   Widget buildErrorWidget() {
     return WillPopScope(
-      child: OfflineScreen(),
+      child: OfflineScreen(onPressedTryAgain:(){
+        webViewController?.reload();
+      } ),
       onWillPop: () async {
-        print('will pop ');
+        print('will pop');
         if (await webViewController?.canGoBack() == true) {
           setState(() {
             hasError = false;

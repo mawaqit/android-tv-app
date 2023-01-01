@@ -38,9 +38,13 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
                 stream: Stream.periodic(Duration(seconds: 1)),
                 builder: (context, snapshot) {
                   final remaining = nextIqamaTime.difference(mosqueManager.mosqueDate());
+                  int seconds = remaining.inSeconds % 60;
+                  String twoDigitSecond = "${seconds < 10 ? "0" : ""}$seconds";
+                  int minutes = remaining.inMinutes;
+                  String twoDigitMinute= "${minutes < 10 ? "0" : ""}$minutes";
 
                   return Text(
-                    '${remaining.inMinutes}:${remaining.inSeconds % 60}',
+                    '$twoDigitMinute:$twoDigitSecond',
                     style: TextStyle(
                       fontSize: 200,
                       color: Colors.white,
