@@ -13,18 +13,19 @@ class MosqueHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(radius: 6, backgroundColor: Colors.red[700]),
-          SizedBox(width: 5),
+          CircleAvatar(radius: .5.vw, backgroundColor: Colors.red[700]),
+          SizedBox(width: .4.vw),
           Text(
             S.of(context).offline,
             style: TextStyle(
               color: Colors.white,
               shadows: kHomeTextShadow,
-              fontSize: 1.5.vw,
+              fontSize: 1.3.vw,
+              height: .8,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -40,6 +41,7 @@ class MosqueHeader extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 4.vw,
+                height: 1,
                 shadows: kHomeTextShadow,
                 fontWeight: FontWeight.bold,
               ),

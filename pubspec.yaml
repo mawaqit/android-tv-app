@@ -136,6 +136,9 @@ flutter:
     - family: Hafs
       fonts:
         - asset: assets/fonts/original-hafs.ttf
+    - family: kufi
+      fonts:
+        - asset: assets/fonts/kufi-normal.ttf
 
 flutter_intl:
   enabled: true

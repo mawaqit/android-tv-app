@@ -47,6 +47,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
     final mosqueManager = context.watch<MosqueManager>();
 
     final now = mosqueManager.mosqueDate();
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final nextSalahIndex = mosqueManager.nextSalahIndex();
     var nextSalahTime = mosqueManager.actualTimes()[nextSalahIndex].difference(now);
 
@@ -57,20 +58,28 @@ class HomeTimeWidget extends TimerRefreshWidget {
       days: mosqueManager.times!.hijriAdjustment,
     )));
 
+    if (isArabic) {
+      HijriCalendar.language = 'ar';
+    } else {
+      HijriCalendar.language = 'en';
+    }
+
     if (mosqueManager.times!.hijriDateForceTo30) hijriDate.hDay = 30;
 
     return Container(
       clipBehavior: Clip.antiAlias,
+      width: 40.vw,
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(.70),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             color: Color(0xb34e2b81),
-            padding: EdgeInsets.symmetric(vertical: 1.vw, horizontal: 5.vw),
+            padding: EdgeInsets.symmetric(vertical: 1.5.vw, horizontal: 5.vw),
             child: Column(
               children: [
                 RichText(
@@ -78,22 +87,24 @@ class HomeTimeWidget extends TimerRefreshWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: DateFormat('HH:mm').format(now),
+                        text: DateFormat('HH:mm', 'en').format(now),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 8.vw,
                           shadows: kHomeTextShadow,
                           color: Colors.white,
+                          height: 1,
                           // letterSpacing: 1,
                         ),
                       ),
                       TextSpan(
-                        text: ':${DateFormat('ss').format(now)}',
+                        text: ':${DateFormat('ss', 'en').format(now)}',
                         style: TextStyle(
                           color: Colors.white54,
                           fontWeight: FontWeight.bold,
-                          fontSize: 7.5.vw,
+                          fontSize: 6.5.vw,
                           shadows: kHomeTextShadow,
+                          height: 1,
                           // letterSpacing: 1.vw,
                         ),
                       ),
@@ -101,7 +112,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 3.2.vw,
+                  height: 2.2.vw,
                   child: AnimatedTextKit(
                     key: ValueKey('122'),
                     isRepeatingAnimation: true,
@@ -117,7 +128,9 @@ class HomeTimeWidget extends TimerRefreshWidget {
                           color: Colors.white,
                           fontSize: 2.3.vw,
                           shadows: kHomeTextShadow,
-                          letterSpacing: 1,
+                          // letterSpacing: 1,
+                          height: .8,
+                          fontFamily: isArabic ? 'kufi' : null,
                         ),
                       ),
                       FadeAnimatedText(
@@ -134,7 +147,8 @@ class HomeTimeWidget extends TimerRefreshWidget {
                           color: Colors.white,
                           fontSize: 2.3.vw,
                           shadows: kHomeTextShadow,
-                          letterSpacing: 1,
+                          height: .8,
+                          fontFamily: isArabic ? 'kufi' : null,
                         ),
                       ),
                     ],
