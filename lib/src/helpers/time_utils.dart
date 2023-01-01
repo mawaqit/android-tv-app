@@ -7,7 +7,8 @@ extension StringTimeUtils on String {
   TimeOfDay? toTimeOfDay({DateTime? tryOffset}) {
     try {
       final String hour = this.split(":").first;
-      final String minute = this.replaceFirst(hour + ":", "");
+      final String minute = this.replaceFirst(hour , "").replaceFirst(":", "");
+
 
       // final date = DateFormat('HH:mm').parse(trim());
 
