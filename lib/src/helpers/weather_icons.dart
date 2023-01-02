@@ -1,28 +1,30 @@
 import 'package:flutter/cupertino.dart';
 
 class WeatherIcons extends IconData {
-  WeatherIcons(super.codePoint) : super(fontFamily: 'WeatherIcons');
+  const WeatherIcons(super.codePoint) : super(fontFamily: 'WeatherIcons');
 
-  WeatherIcons.fromString(String value) : this(values[value] ?? 0xf00);
+  factory WeatherIcons.fromString(String value) {
+    return _values[value];
+  }
 
-  static const Map values = {
-    'storm-showers': 0xf00e,
-    'thunderstorm': 0xf010,
-    'sprinkle': 0xf00b,
-    'rain': 0xf008,
-    'rain-mix': 0xf006,
-    'showers': 0xf009,
-    'snow': 0xf01b,
-    'sleet': 0xf0b5,
-    'smoke': 0xf062,
-    'haze': 0xf0b6,
-    'cloudy-gusts': 0xf000,
-    'fog': 0xf014,
-    'dust': 0xf063,
-    'smog': 0xf074,
-    'windy': 0xf085,
-    'tornado': 0xf056,
-    'sunny': 0xf00d,
-    'cloudy': 0xf07d,
+  static const Map _values = {
+    'storm-showers': const WeatherIcons(0xf00e),
+    'thunderstorm': const WeatherIcons(0xf010),
+    'sprinkle': const WeatherIcons(0xf00b),
+    'rain': const WeatherIcons(0xf008),
+    'rain-mix': const WeatherIcons(0xf006),
+    'showers': const WeatherIcons(0xf009),
+    'snow': const WeatherIcons(0xf01b),
+    'sleet': const WeatherIcons(0xf0b5),
+    'smoke': const WeatherIcons(0xf062),
+    'haze': const WeatherIcons(0xf0b6),
+    'cloudy-gusts': const WeatherIcons(0xf000),
+    'fog': const WeatherIcons(0xf014),
+    'dust': const WeatherIcons(0xf063),
+    'smog': const WeatherIcons(0xf074),
+    'windy': const WeatherIcons(0xf085),
+    'tornado': const WeatherIcons(0xf056),
+    'sunny': const WeatherIcons(0xf00d),
+    'cloudy': const WeatherIcons(0xf07d),
   };
 }
