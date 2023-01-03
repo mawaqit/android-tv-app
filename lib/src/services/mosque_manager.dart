@@ -208,7 +208,7 @@ extension MosqueHelperUtils on MosqueManager {
   calculateActiveScreen() {
     /// still user didn't select his mosque
     if (mosque == null || times == null) return;
-
+     // normal screen in announcement screen
     var state = HomeActiveScreen.announcementScreen;
 
     final now = mosqueDate();
@@ -241,7 +241,7 @@ extension MosqueHelperUtils on MosqueManager {
     }
 
     // state = HomeActiveScreen.afterSalahAzkar;
-    state = HomeActiveScreen.normal;
+    // state = HomeActiveScreen.normal;
 
     if (state != this.state) {
       this.state = state;
