@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/generated/l10n.dart';
@@ -20,14 +19,14 @@ import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
-import 'package:mawaqit/src/widgets/MawaqitWebViewWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 class MawaqitDrawer extends StatelessWidget {
-  const MawaqitDrawer({Key? key, required this.webViewKey}) : super(key: key);
+  const MawaqitDrawer({Key? key, required this.goHome}) : super(key: key);
 
-  final GlobalKey<MawaqitWebViewWidgetState> webViewKey;
+  // final GlobalKey<MawaqitWebViewWidgetState> webViewKey;
+  final VoidCallback goHome;
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +156,7 @@ class MawaqitDrawer extends StatelessWidget {
                 if (settings.tabNavigationEnable == "1") {
                   AppRouter.popAndPush(WebScreen(settings.url), name: 'HomeScreen');
                 } else {
-                  webViewKey.currentState?.goHome();
+                  goHome();
 
                   Navigator.pop(context);
                 }
@@ -235,23 +234,15 @@ class MawaqitDrawer extends StatelessWidget {
 
     return new Column(
       children: menus
-          .map(
-            (Menu menu) => DrawerListTitle(
-                iconUrl: menu.iconUrl,
-                forceThemeColor: true,
-                autoTranslate: true,
-                text: menu.title,
-                onTap: () async {
-                  if (settings.tabNavigationEnable == "1") {
-                    AppRouter.push(WebScreen(menu.url), name: menu.title);
-                  } else {
-                    webViewKey.currentState!.webViewController
-                        ?.loadUrl(urlRequest: URLRequest(url: Uri.parse(menu.url!)));
-
-                    Navigator.pop(context);
-                  }
-                }),
-          )
+          .map((Menu menu) => DrawerListTitle(
+              iconUrl: menu.iconUrl,
+              forceThemeColor: true,
+              autoTranslate: true,
+              text: menu.title,
+              onTap: () async {
+                AppRouter.push(WebScreen(menu.url), name: menu.title);
+                Navigator.pop(context);
+              }))
           .toList(),
     );
   }
@@ -259,14 +250,12 @@ class MawaqitDrawer extends StatelessWidget {
   Widget _renderPageDrawer(List<Page> pages, context) {
     return new Column(
       children: pages
-          .map(
-            (Page page) => DrawerListTitle(
-              forceThemeColor: true,
-              iconUrl: page.iconUrl,
-              text: Intl.message(page.title ?? '', name: page.title?.toCamelCase),
-              onTap: () => AppRouter.popAndPush(PageScreen(page), name: page.title),
-            ),
-          )
+          .map((Page page) => DrawerListTitle(
+                forceThemeColor: true,
+                iconUrl: page.iconUrl,
+                text: Intl.message(page.title ?? '', name: page.title?.toCamelCase),
+                onTap: () => AppRouter.popAndPush(PageScreen(page), name: page.title),
+              ))
           .toList(),
     );
   }

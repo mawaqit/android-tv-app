@@ -18,7 +18,6 @@ import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/floating.dart';
 import 'package:mawaqit/src/models/navigationIcon.dart';
 import 'package:mawaqit/src/models/settings.dart';
-import 'package:mawaqit/src/pages/OfflineScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
@@ -140,7 +139,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final appLanguage = context.watch<AppLanguage>();
@@ -153,9 +151,6 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
     var bottomPadding = MediaQuery.of(context).padding.bottom;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
 
-
-
-       
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: CallbackShortcuts(
@@ -171,7 +166,9 @@ class _HomeScreen extends State<HomeScreen> with SingleTickerProviderStateMixin 
               appBar: _renderAppBar(context, settings) as PreferredSizeWidget?,
               drawer: (widget.settings.leftNavigationIcon!.value == "icon_menu" ||
                       widget.settings.rightNavigationIcon!.value == "icon_menu")
-                  ? MawaqitDrawer(webViewKey: key0)
+                  ? MawaqitDrawer(
+                      goHome: () => key0.currentState?.goHome(),
+                    )
                   : null,
               body: Stack(
                 fit: StackFit.expand,

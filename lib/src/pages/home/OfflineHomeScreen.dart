@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AdhanSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
@@ -9,38 +10,50 @@ import 'package:mawaqit/src/pages/home/sub_screens/JumuaHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/widgets/MawaqitDrawer.dart';
 import 'package:provider/provider.dart';
 
 import 'sub_screens/AnnouncementScreen.dart';
 
 class OfflineHomeScreen extends StatelessWidget {
+  OfflineHomeScreen({Key? key}) : super(key: key);
 
-  const OfflineHomeScreen({Key? key}) : super(key: key);
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
 
-    //todo handle this case
     if (mosqueProvider.mosque == null || mosqueProvider.times == null) return SizedBox();
 
     final mosque = mosqueProvider.mosque!;
 
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: mosque.image != null
-                ? NetworkImage(mosque.image!) as ImageProvider
-                : AssetImage('assets/backgrounds/splash_screen_5.png'),
-            fit: BoxFit.cover,
+    return CallbackShortcuts(
+      bindings: {
+        SingleActivator(LogicalKeyboardKey.arrowLeft): () => _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowRight): () => _scaffoldKey.currentState?.openDrawer(),
+      },
+      child: Focus(
+        autofocus: true,
+        child: Scaffold(
+          key: _scaffoldKey,
+          drawer: MawaqitDrawer(goHome: () => Navigator.pop(context)),
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: mosque.image != null
+                    ? NetworkImage(mosque.image!) as ImageProvider
+                    : AssetImage('assets/backgrounds/splash_screen_5.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Container(
+              color: Colors.black54,
+              child: subScreen(mosqueProvider.state),
+            ),
           ),
-        ),
-        child: Container(
-          color: Colors.black54,
-          child: subScreen(mosqueProvider.state),
         ),
       ),
     );
