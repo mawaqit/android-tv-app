@@ -5,6 +5,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
+import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/models/menu.dart';
@@ -21,6 +22,10 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+
+import '../../TestSubScreens.dart';
+import '../pages/home/sub_screens/AdhanSubScreen.dart';
+import '../pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 
 class MawaqitDrawer extends StatelessWidget {
   const MawaqitDrawer({Key? key, required this.goHome}) : super(key: key);
@@ -173,6 +178,78 @@ class MawaqitDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: Divider(height: 1, color: Colors.grey[400]),
           ),
+          /////////////// drawer test////////////////
+          DrawerListTitle(
+            icon: Icons.timer_rounded,
+            text: "Prayer Times ",
+            onTap: () {
+              AppRouter.popAndPush(TestSubScreens(
+                state: HomeActiveScreen.normal,
+              ));
+            },
+          ),
+          DrawerListTitle(
+            icon: Icons.notifications,
+            text: "Alert",
+            onTap: () {
+              AppRouter.popAndPush(TestSubScreens(
+                state: HomeActiveScreen.adhan,
+              ));
+            },
+          ),
+          DrawerListTitle(
+            icon: Icons.countertops_rounded,
+            text: " Iqama Count Down  ",
+            onTap: () => AppRouter.popAndPush(
+              TestSubScreens(state: HomeActiveScreen.iqamaaCountDown),
+            ),
+          ),
+          DrawerListTitle(
+            icon: Icons.next_plan_rounded,
+            text: " After Adahn Hadith  ",
+            onTap: () => AppRouter.popAndPush(
+              TestSubScreens(state: HomeActiveScreen.afterAdhanHadith),
+            ),
+          ),
+          DrawerListTitle(
+            icon: Icons.front_hand_rounded,
+            text: " After Salah Azkar  ",
+            onTap: () => AppRouter.popAndPush(
+              TestSubScreens(state: HomeActiveScreen.afterSalahAzkar),
+            ),
+          ),
+          DrawerListTitle(
+            icon: Icons.mic_external_on,
+            text: " Iqama",
+            onTap: () => AppRouter.popAndPush(
+              TestSubScreens(state: HomeActiveScreen.iqamaa),
+            ),
+          ),
+          DrawerListTitle(
+            icon: Icons.message_outlined,
+            text: " JumuaaHadith  ",
+            onTap: () => AppRouter.popAndPush(
+              TestSubScreens(state: HomeActiveScreen.jumuaaHadith),
+            ),
+          ),
+          DrawerListTitle(
+            icon: Icons.message_outlined,
+            text: " Random Hadith ",
+            onTap: () => AppRouter.popAndPush(
+              TestSubScreens(state: HomeActiveScreen.randomHadith),
+            ),
+          ),
+          DrawerListTitle(
+            icon: Icons.notifications,
+            text: " Announcement ",
+            onTap: () => AppRouter.popAndPush(
+              TestSubScreens(state: HomeActiveScreen.announcementScreen),
+            ),
+          ),
+          Divider(
+            color: Colors.grey,
+          ),
+          //////////////////// end test ///////////////////
           DrawerListTitle(
             icon: Icons.translate,
             text: S.of(context).languages,
