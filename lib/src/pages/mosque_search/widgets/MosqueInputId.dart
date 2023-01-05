@@ -34,7 +34,7 @@ class _MosqueInputIdState extends State<MosqueInputId> {
     });
     // final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
     setState(() {
-      error = 'this feature is not supported right now';
+      error = S.of(context).thisFeatureIsNotSupportedRightNow;
     });
     // await mosqueManager.setMosqueId(mosqueId).then((value) {
     //   setState(() => loading = false);

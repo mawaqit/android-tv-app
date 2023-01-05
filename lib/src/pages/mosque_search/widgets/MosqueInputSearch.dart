@@ -190,7 +190,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
           color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
         ),
         suffixIcon: IconButton(
-          tooltip: "Search by GPS",
+          tooltip: S.of(context).searchByGps,
           icon: Icon(Icons.gps_fixed),
           color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
           onPressed: () => _searchGps(1),
