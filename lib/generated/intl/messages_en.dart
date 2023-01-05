@@ -117,6 +117,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Which Mosque are you looking for ? (Name, City, Postal code...)"),
         "searchMosque":
@@ -135,6 +136,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to quit the application?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Terms of Service"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Please turn of your mobile phones!"),

@@ -956,6 +956,26 @@ class S {
       args: [],
     );
   }
+
+  /// `this feature is not supported right now`
+  String get thisFeatureIsNotSupportedRightNow {
+    return Intl.message(
+      'this feature is not supported right now',
+      name: 'thisFeatureIsNotSupportedRightNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search by GPS`
+  String get searchByGps {
+    return Intl.message(
+      'Search by GPS',
+      name: 'searchByGps',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
