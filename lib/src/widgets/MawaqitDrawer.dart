@@ -23,6 +23,7 @@ import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
+import '../../AnnouncementTest.dart';
 import '../../TestSubScreens.dart';
 import '../pages/home/sub_screens/AdhanSubScreen.dart';
 import '../pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
@@ -243,7 +244,7 @@ class MawaqitDrawer extends StatelessWidget {
             icon: Icons.notifications,
             text: " Announcement ",
             onTap: () => AppRouter.popAndPush(
-              TestSubScreens(state: HomeActiveScreen.announcementScreen),
+              AnnouncementTest(),
             ),
           ),
           Divider(
