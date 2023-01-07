@@ -19,7 +19,7 @@ class _JummuaLiveState extends State<JummuaLive> {
     // if (mosqueProvider.mosque == null || mosqueProvider.times == null) return SizedBox();
     //
     // final mosque = mosqueProvider.mosque!;
-    return liveStream("https://www.youtube.com/watch?v=hrnT2IFqyro");
+    return liveStream("https://www.youtube.com/watch?v=NP-hZRXIrYs");
   }
 
   Widget liveStream(String video) {
