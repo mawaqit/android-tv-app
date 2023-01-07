@@ -27,6 +27,7 @@ import '../../AnnouncementTest.dart';
 import '../../TestSubScreens.dart';
 import '../pages/home/sub_screens/AdhanSubScreen.dart';
 import '../pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
+import '../pages/home/sub_screens/JummuaLive.dart';
 
 class MawaqitDrawer extends StatelessWidget {
   const MawaqitDrawer({Key? key, required this.goHome}) : super(key: key);
@@ -245,6 +246,13 @@ class MawaqitDrawer extends StatelessWidget {
             text: " Announcement ",
             onTap: () => AppRouter.popAndPush(
               AnnouncementTest(),
+            ),
+          ),
+          DrawerListTitle(
+            icon: Icons.live_tv,
+            text: " Jumua live ",
+            onTap: () => AppRouter.popAndPush(
+              JummuaLive(),
             ),
           ),
           Divider(
