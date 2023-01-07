@@ -79,3 +79,10 @@ extension TimeUtils on TimeOfDay {
     }
   }
 }
+
+String timeTwoDigit({required int seconds ,required int minutes}){
+
+  String twoDigitSecond = "${seconds < 10 ? "0" : ""}$seconds";
+  String twoDigitMinute= "${minutes < 10 ? "0" : ""}$minutes";
+  return "$twoDigitMinute:$twoDigitSecond";
+}

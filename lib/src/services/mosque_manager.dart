@@ -304,7 +304,12 @@ extension MosqueHelperUtils on MosqueManager {
           int.parse(todayTimes.first.split(':').last) -
           times!.imsakNbMinBeforeFajr;
 
-      return DateFormat('HH:mm').format(DateTime(200, 1, 1, minutes ~/ 60, minutes % 60));
+      String _timeTwoDigit = timeTwoDigit(
+        seconds: minutes % 60,
+        minutes: minutes ~/ 60,
+      );
+      return _timeTwoDigit;
+      // return DateFormat('HH:mm').format(DateTime(200, 1, 1, minutes ~/ 60, minutes % 60));
     } catch (e, stack) {
       debugPrintStack(stackTrace: stack);
       return '';
