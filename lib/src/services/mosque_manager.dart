@@ -39,8 +39,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin {
   String buildUrl(String languageCode) {
     // if (mosqueId != null) return 'https://mawaqit.net/$languageCode/id/$mosqueId?view=desktop';
     // if (mosqueSlug != null) return 'https://mawaqit.net/$languageCode/$mosqueSlug?view=desktop';
-
-    return mosque!.url ?? '';
+    return  'https://mawaqit.net/$languageCode/id/${mosque?.id}?view=desktop';
+    // return mosque!.url ?? '';
 
     return '';
   }
