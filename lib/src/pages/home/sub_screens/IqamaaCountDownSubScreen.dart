@@ -5,6 +5,8 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/time_utils.dart';
+
 class IqamaaCountDownSubScreen extends StatelessWidget {
   const IqamaaCountDownSubScreen({Key? key}) : super(key: key);
 
@@ -39,12 +41,13 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
                 builder: (context, snapshot) {
                   final remaining = nextIqamaTime.difference(mosqueManager.mosqueDate());
                   int seconds = remaining.inSeconds % 60;
-                  String twoDigitSecond = "${seconds < 10 ? "0" : ""}$seconds";
                   int minutes = remaining.inMinutes;
-                  String twoDigitMinute= "${minutes < 10 ? "0" : ""}$minutes";
-
+                  String _timeTwoDigit = timeTwoDigit(
+                    seconds: seconds,
+                    minutes: minutes,
+                  );
                   return Text(
-                    '$twoDigitMinute:$twoDigitSecond',
+                    _timeTwoDigit,
                     style: TextStyle(
                       fontSize: 200,
                       color: Colors.white,
