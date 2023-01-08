@@ -232,7 +232,9 @@ extension MosqueHelperUtils on MosqueManager {
     } else if (nextIqamaIndex == lastSalahIndex) {
       /// we are in time between adhan and iqama
       if (now.weekday == DateTime.friday) {
-        state = HomeActiveScreen.jumuaaHadith;
+        ///todo handle jumuaa live when url is ready
+        // state = HomeActiveScreen.jumuaaHadith;
+        state = HomeActiveScreen.jumuaaLiveScreen;
       } else {
         state = HomeActiveScreen.iqamaaCountDown;
       }
