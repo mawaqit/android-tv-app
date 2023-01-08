@@ -35,12 +35,21 @@ class NormalHomeSubScreen extends StatelessWidget {
                         removeBackground: true,
                         withDivider: false,
                       )
-                    : SalahItemWidget(
-                        title: S.of(context).shuruk,
-                        time: mosqueProvider.times!.shuruq ?? "",
-                        removeBackground: true,
-                        withDivider: false,
-                      ),
+                    : mosqueProvider.showEid
+                        ? SalahItemWidget(
+                            title: "Salat El Eid",
+                            iqama: mosqueProvider.times!.aidPrayerTime2,
+                            time: mosqueProvider.times!.aidPrayerTime ?? "",
+                            removeBackground: false,
+                            withDivider: mosqueProvider.times!.aidPrayerTime2 != null,
+                            active: true,
+                          )
+                        : SalahItemWidget(
+                            title: S.of(context).shuruk,
+                            time: mosqueProvider.times!.shuruq ?? "",
+                            removeBackground: true,
+                            withDivider: false,
+                          ),
               ),
             ),
             HomeTimeWidget(),
