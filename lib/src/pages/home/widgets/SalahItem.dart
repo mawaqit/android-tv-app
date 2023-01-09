@@ -40,12 +40,14 @@ class SalahItemWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (title != null)
-            Text(
-              title!,
-              style: TextStyle(
-                fontSize: 3.vw,
-                shadows: kHomeTextShadow,
-                color: Colors.white,
+            FittedBox(
+              child: Text(
+                title!,
+                style: TextStyle(
+                  fontSize: 3.vw,
+                  shadows: kHomeTextShadow,
+                  color: Colors.white,
+                ),
               ),
             ),
           SizedBox(height: 10),
