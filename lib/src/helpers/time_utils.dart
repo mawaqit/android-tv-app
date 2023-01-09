@@ -19,7 +19,7 @@ extension StringTimeUtils on String {
         if (value != null) return TimeOfDay.fromDateTime(tryOffset.add(Duration(minutes: value)));
       }
 
-      debugPrintStack(label: 'Failed to format $this $tryOffset', stackTrace: stack);
+      // debugPrintStack(label: 'Failed to format $this $tryOffset', stackTrace: stack);
     }
 
     return null;
