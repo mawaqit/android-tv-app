@@ -250,7 +250,7 @@ extension MosqueHelperUtils on MosqueManager {
     }
 
     // state = HomeActiveScreen.afterSalahAzkar;
-    // state = HomeActiveScreen.normal;
+    state = HomeActiveScreen.normal;
 
     if (state != this.state) {
       this.state = state;
