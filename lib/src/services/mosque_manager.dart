@@ -11,6 +11,7 @@ import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/models/mosque.dart';
+import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/services/weather_mixin.dart';
 import 'package:hijri/hijri_calendar.dart';
@@ -34,15 +35,15 @@ class MosqueManager extends ChangeNotifier with WeatherMixin {
 
   Mosque? mosque;
   Times? times;
-
+  MosqueConfig? mosqueConfig;
   HomeActiveScreen state = HomeActiveScreen.normal;
 
   /// get current home url
   String buildUrl(String languageCode) {
     // if (mosqueId != null) return 'https://mawaqit.net/$languageCode/id/$mosqueId?view=desktop';
     // if (mosqueSlug != null) return 'https://mawaqit.net/$languageCode/$mosqueSlug?view=desktop';
+    return 'https://mawaqit.net/$languageCode/id/${mosque?.id}?view=desktop';
 
-    return  'https://mawaqit.net/$languageCode/id/${mosque?.id}?view=desktop';
 
 
 
@@ -94,6 +95,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin {
     try {
       mosque = await Api.getMosque(uuid);
       times = await Api.getMosqueTimes(uuid);
+      mosqueConfig = await Api.getMosqueConfig(uuid);
 
       // mosqueId = mosque!.id.toString();
       mosqueUUID = mosque!.uuid!;
@@ -123,6 +125,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin {
     if (mosqueUUID != null) {
       mosque = await Api.getMosque(mosqueUUID!);
       times = await Api.getMosqueTimes(mosqueUUID!);
+      mosqueConfig = await Api.getMosqueConfig(mosqueUUID!);
 
       // get weather data
       await loadWeather(mosque!);

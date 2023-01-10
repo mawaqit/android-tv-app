@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
 
 import '../models/mosque.dart';
@@ -36,6 +37,11 @@ class Api {
     final response = await dio.get('/mosque/$id/info');
 
     return Mosque.fromMap(response.data);
+  }
+  static Future<MosqueConfig> getMosqueConfig(String id) async {
+    final response = await dio.get('/mosque/$id/config');
+
+    return MosqueConfig.fromMap(response.data);
   }
 
   static Future<Times> getMosqueTimes(String id) async {
