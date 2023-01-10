@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
@@ -14,8 +14,6 @@ import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/services/weather_mixin.dart';
-import 'package:hijri/hijri_calendar.dart';
-import 'package:hijri/hijri_array.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
@@ -43,11 +41,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin {
     // if (mosqueId != null) return 'https://mawaqit.net/$languageCode/id/$mosqueId?view=desktop';
     // if (mosqueSlug != null) return 'https://mawaqit.net/$languageCode/$mosqueSlug?view=desktop';
     return 'https://mawaqit.net/$languageCode/id/${mosque?.id}?view=desktop';
-
-
-
-
-
   }
 
   Future<void> init() async {
@@ -96,6 +89,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin {
       mosque = await Api.getMosque(uuid);
       times = await Api.getMosqueTimes(uuid);
       mosqueConfig = await Api.getMosqueConfig(uuid);
+      await loadWeather(mosque!);
 
       // mosqueId = mosque!.id.toString();
       mosqueUUID = mosque!.uuid!;

@@ -84,6 +84,7 @@ class Api {
   static Future<dynamic> getWeather(String mosqueUUID) async {
     final response = await dio.get(
       '$kBaseUrlV2/mosque/$mosqueUUID/weather',
+      options: buildCacheOptions(Duration.zero, maxStale: Duration.zero),
     );
 
     return Weather.fromMap(response.data);
