@@ -4,6 +4,9 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
+import 'package:provider/provider.dart';
+
+import '../../../enum/connectivity_status.dart';
 
 class MosqueHeader extends StatelessWidget {
   const MosqueHeader({Key? key, required this.mosque}) : super(key: key);
@@ -12,21 +15,36 @@ class MosqueHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    bool isOffline = connectionStatus == ConnectivityStatus.Offline;
+    final tr = S.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(radius: .5.vw, backgroundColor: Colors.red[700]),
-          SizedBox(width: .4.vw),
-          Text(
-            S.of(context).offline,
-            style: TextStyle(
-              color: Colors.white,
-              shadows: kHomeTextShadow,
-              fontSize: 1.3.vw,
-              height: .8,
-              fontWeight: FontWeight.bold,
+          Padding(
+            padding:  EdgeInsets.symmetric(vertical: .5.vh,horizontal: .5.vw),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  radius: .7.vw,
+                  backgroundColor: isOffline ? Colors.red[700] : Colors.green,
+                ),
+                SizedBox(width: .4.vw),
+                Text(
+                  //todo translate online
+                 "${isOffline?tr.offline:"Online"}" ,
+                  style: TextStyle(
+                    color: Colors.white,
+                    shadows: kHomeTextShadow,
+                    fontSize: 1.5.vw,
+                    height: 1.1,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
             ),
           ),
           Spacer(),
