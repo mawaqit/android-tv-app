@@ -209,7 +209,7 @@ extension MosqueHelperUtils on MosqueManager {
   calculateActiveScreen() {
     /// still user didn't select his mosque
     if (mosque == null || times == null) return;
-     // normal screen in announcement screen
+    // normal screen in announcement screen
     var state = HomeActiveScreen.announcementScreen;
 
     final now = mosqueDate();
@@ -252,6 +252,15 @@ extension MosqueHelperUtils on MosqueManager {
     }
   }
 
+  bool get activateShroukItem {
+    final shuruqTimeInMinutes = times?.shuruq?.toTimeOfDay()?.inMinutes;
+    final duhrTime = todayTimes[1].toTimeOfDay()?.inMinutes;
+    final nowInMinutes = mosqueTimeOfDay().inMinutes;
+    if (shuruqTimeInMinutes == null || duhrTime == null) return false;
+
+    return nowInMinutes >= shuruqTimeInMinutes && nowInMinutes <= duhrTime;
+  }
+
   /// show imsak between midnight and fajr
   bool get showImsak {
     final now = mosqueDate();
@@ -265,9 +274,9 @@ extension MosqueHelperUtils on MosqueManager {
     if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) {
       return false;
     }
-    return (((mosqueHijriDate().hMonth == 9    && mosqueHijriDate().hDay >= 23) ||
-            ( mosqueHijriDate().hMonth == 10   && mosqueHijriDate().hDay == 1)) ||
-        (     mosqueHijriDate().hMonth == 12   && mosqueHijriDate().hDay < 11));
+    return (((mosqueHijriDate().hMonth == 9 && mosqueHijriDate().hDay >= 23) ||
+            (mosqueHijriDate().hMonth == 10 && mosqueHijriDate().hDay == 1)) ||
+        (mosqueHijriDate().hMonth == 12 && mosqueHijriDate().hDay < 11));
   }
 
   /// listen to time and update the active home screens values
@@ -329,7 +338,10 @@ extension MosqueHelperUtils on MosqueManager {
   }
 
   /// used to test time
-  DateTime mosqueDate() => DateTime.now().add(Duration());
+  DateTime mosqueDate() => DateTime.now().add(Duration(hours: -3, minutes: 5));
+
+  /// used to test time
+  TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
 
   HijriCalendar mosqueHijriDate() => HijriCalendar.fromDate(mosqueDate().add(
         Duration(

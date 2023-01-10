@@ -1,10 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
+
 import '../../../services/mosque_manager.dart';
 
 const kSalahItemWidgetWidth = 135.0;
@@ -54,9 +55,6 @@ class SalahItemWidget extends StatelessWidget {
             "",
             "en",
           );
-
-    /// is current salah item has no data
-    final isEmpty = time.trim().isEmpty && (iqama?.trim().isEmpty ?? true);
 
     return Container(
       width: 16.vw,

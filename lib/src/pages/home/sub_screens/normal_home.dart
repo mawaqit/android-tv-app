@@ -49,6 +49,7 @@ class NormalHomeSubScreen extends StatelessWidget {
                             time: mosqueProvider.times!.shuruq ?? "",
                             removeBackground: true,
                             withDivider: false,
+                            active: mosqueProvider.activateShroukItem,
                           ),
               ),
             ),
