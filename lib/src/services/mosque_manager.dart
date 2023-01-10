@@ -14,6 +14,8 @@ import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/services/weather_mixin.dart';
+import 'package:hijri/hijri_calendar.dart';
+import 'package:hijri/hijri_array.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
@@ -41,9 +43,11 @@ class MosqueManager extends ChangeNotifier with WeatherMixin {
     // if (mosqueId != null) return 'https://mawaqit.net/$languageCode/id/$mosqueId?view=desktop';
     // if (mosqueSlug != null) return 'https://mawaqit.net/$languageCode/$mosqueSlug?view=desktop';
     return 'https://mawaqit.net/$languageCode/id/${mosque?.id}?view=desktop';
-    // return mosque!.url ?? '';
 
-    return '';
+
+
+
+
   }
 
   Future<void> init() async {
@@ -235,7 +239,9 @@ extension MosqueHelperUtils on MosqueManager {
     } else if (nextIqamaIndex == lastSalahIndex) {
       /// we are in time between adhan and iqama
       if (now.weekday == DateTime.friday) {
-        state = HomeActiveScreen.jumuaaHadith;
+        ///todo handle jumuaa live when url is ready
+        // state = HomeActiveScreen.jumuaaHadith;
+        state = HomeActiveScreen.jumuaaLiveScreen;
       } else {
         state = HomeActiveScreen.iqamaaCountDown;
       }
@@ -259,6 +265,15 @@ extension MosqueHelperUtils on MosqueManager {
     final fajrDate = actualTimes()[0];
 
     return now.isAfter(midnight) && now.isBefore(fajrDate);
+  }
+
+  bool get showEid {
+    if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) {
+      return false;
+    }
+    return (((mosqueHijriDate().hMonth == 9    && mosqueHijriDate().hDay >= 23) ||
+            ( mosqueHijriDate().hMonth == 10   && mosqueHijriDate().hDay == 1)) ||
+        (     mosqueHijriDate().hMonth == 12   && mosqueHijriDate().hDay < 11));
   }
 
   /// listen to time and update the active home screens values
@@ -322,14 +337,26 @@ extension MosqueHelperUtils on MosqueManager {
   /// used to test time
   DateTime mosqueDate() => DateTime.now().add(Duration());
 
+  HijriCalendar mosqueHijriDate() => HijriCalendar.fromDate(mosqueDate().add(
+        Duration(
+          days: times!.hijriAdjustment,
+        ),
+      ));
+
   List<String> get todayTimes {
     var t = times!.calendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
     if (t.length == 6) t.removeAt(1);
     return t;
   }
 
-  List<String> get todayIqama =>
-      times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
+  List<String> get todayIqama {
+    final todayIqama = times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
+
+    if (mosqueDate().weekday == DateTime.friday) {
+      todayIqama[1] = "+30";
+    }
+    return todayIqama;
+  }
 }
 
 /// user for invalid mosque id-slug
