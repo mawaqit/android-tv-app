@@ -24,6 +24,7 @@ class SalahItemWidget extends StatelessWidget {
   final String time;
   final String? iqama;
 
+  /// show divider only when both time and iqama exists
   final bool withDivider;
   final bool active;
   final bool removeBackground;
@@ -54,8 +55,10 @@ class SalahItemWidget extends StatelessWidget {
             "en",
           );
 
-    return Container(
+    /// is current salah item has no data
+    final isEmpty = time.trim().isEmpty && (iqama?.trim().isEmpty ?? true);
 
+    return Container(
       width: 16.vw,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2.vw),
@@ -69,7 +72,6 @@ class SalahItemWidget extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Column(
-
           mainAxisSize: MainAxisSize.min,
           children: [
             if (title != null)
@@ -82,6 +84,7 @@ class SalahItemWidget extends StatelessWidget {
                 ),
               ),
             SizedBox(height: 10),
+            if (time.trim().isEmpty) Icon(Icons.dnd_forwardslash, size: 6.vw),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -94,30 +97,29 @@ class SalahItemWidget extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-
-                if( timeDate != null)
-                SizedBox(
-                  width: 1.vw,
-                  child: Text(
-
-                    dateTimePeriodConverter.format(timeDate),
-                    style: TextStyle(
-                      height: .9,
-                      letterSpacing: 9,
-                      fontSize: 1.6.vw,
-                      fontWeight: FontWeight.w300,
-                      // shadows: kHomeTextShadow,
-                      color: Colors.white,
+                if (timeDate != null)
+                  SizedBox(
+                    width: 1.vw,
+                    child: Text(
+                      dateTimePeriodConverter.format(timeDate),
+                      style: TextStyle(
+                        height: .9,
+                        letterSpacing: 9,
+                        fontSize: 1.6.vw,
+                        fontWeight: FontWeight.w300,
+                        // shadows: kHomeTextShadow,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
-            SizedBox(
-              height: 1.3.vw,
-              width: double.infinity,
-              child: Divider(thickness: 1, color: withDivider ? Colors.white : Colors.transparent),
-            ),
+            if (iqama != null)
+              SizedBox(
+                height: 1.3.vw,
+                width: double.infinity,
+                child: Divider(thickness: 1, color: withDivider ? Colors.white : Colors.transparent),
+              ),
             if (iqama != null)
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -133,8 +135,7 @@ class SalahItemWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-
-                  if( iqamaDate != null)
+                  if (iqamaDate != null)
                     SizedBox(
                       width: 1.vw,
                       child: Text(
