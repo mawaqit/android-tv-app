@@ -228,11 +228,11 @@ extension MosqueHelperUtils on MosqueManager {
         mosqueConfig?.wakeForFajrTime != null) {
       state = HomeActiveScreen.adhan;
       /// we are in wake up adhan before adhanFajr
-    } else if (lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig) && now.weekday != DateTime.friday) {
+    } else if (lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig)&& (now.weekday != DateTime.friday && salahIndex!=1 )) {
       /// we are in adhan time
       state = HomeActiveScreen.adhan;
     } else if ((lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig) + kAfterAdhanHadithDuration) &&
-        now.weekday != DateTime.friday &&
+        (now.weekday != DateTime.friday && salahIndex!=1 )&&
         mosqueConfig!.duaAfterAzanEnabled!) {
       /// adhan has just done
       state = HomeActiveScreen.afterAdhanHadith;
