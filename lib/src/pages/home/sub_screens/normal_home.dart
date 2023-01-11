@@ -24,46 +24,41 @@ class NormalHomeSubScreen extends StatelessWidget {
       children: [
         MosqueHeader(mosque: mosque),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Center(
-                child: mosqueProvider.showImsak
-                    ? SalahItemWidget(
-                        title: S.of(context).imsak,
-                        time: mosqueProvider.imsak,
-                        removeBackground: true,
-                        withDivider: false,
-                      )
-                    : mosqueProvider.showEid
-                        ? SalahItemWidget(
-                            title: "Salat El Eid",
-                            iqama: mosqueProvider.times!.aidPrayerTime2,
-                            time: mosqueProvider.times!.aidPrayerTime ?? "",
-                            removeBackground: false,
-                            withDivider: mosqueProvider.times!.aidPrayerTime2 != null,
-                            active: true,
-                          )
-                        : SalahItemWidget(
-                            title: S.of(context).shuruk,
-                            time: mosqueProvider.times!.shuruq ?? "",
-                            removeBackground: true,
-                            withDivider: false,
-                            active: mosqueProvider.activateShroukItem,
-                          ),
-              ),
+              child: mosqueProvider.showImsak
+                  ? SalahItemWidget(
+                      title: S.of(context).imsak,
+                      time: mosqueProvider.imsak,
+                      removeBackground: true,
+                      withDivider: false,
+                    )
+                  : mosqueProvider.showEid
+                      ? SalahItemWidget(
+                          title: "Salat El Eid",
+                          iqama: mosqueProvider.times!.aidPrayerTime2,
+                          time: mosqueProvider.times!.aidPrayerTime ?? "",
+                          removeBackground: false,
+                          withDivider: mosqueProvider.times!.aidPrayerTime2 != null,
+                          active: true,
+                        )
+                      : SalahItemWidget(
+                          title: S.of(context).shuruk,
+                          time: mosqueProvider.times!.shuruq ?? "",
+                          removeBackground: true,
+                          withDivider: false,
+                          active: mosqueProvider.activateShroukItem,
+                        ),
             ),
             HomeTimeWidget(),
             Expanded(
-              child: Center(
-                child: SalahItemWidget(
-                  title: S.of(context).jumua,
-                  time: mosqueProvider.times!.jumua ?? "",
-                  iqama: mosqueProvider.times!.jumua2,
-                  active:
-                      mosqueProvider.nextSalahIndex() == 2 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
-                  removeBackground: true,
-                ),
+              child: SalahItemWidget(
+                title: S.of(context).jumua,
+                time: mosqueProvider.times!.jumua ?? "",
+                iqama: mosqueProvider.times!.jumua2,
+                active:
+                    mosqueProvider.nextSalahIndex() == 2 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
+                removeBackground: true,
               ),
             ),
           ],

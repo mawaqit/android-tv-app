@@ -234,8 +234,8 @@ extension MosqueHelperUtils on MosqueManager {
       /// we are in time between adhan and iqama
       if (now.weekday == DateTime.friday) {
         ///todo handle jumuaa live when url is ready
-        // state = HomeActiveScreen.jumuaaHadith;
-        state = HomeActiveScreen.jumuaaLiveScreen;
+        state = HomeActiveScreen.jumuaaHadith;
+        // state = HomeActiveScreen.jumuaaLiveScreen;
       } else {
         state = HomeActiveScreen.iqamaaCountDown;
       }
@@ -338,7 +338,7 @@ extension MosqueHelperUtils on MosqueManager {
   }
 
   /// used to test time
-  DateTime mosqueDate() => DateTime.now().add(Duration(hours: -3, minutes: 5));
+  DateTime mosqueDate() => DateTime.now().add(Duration());
 
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
