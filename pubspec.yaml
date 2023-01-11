@@ -97,6 +97,7 @@ dependencies:
 
   #  media
   youtube_player_flutter: ^8.1.2
+  audiofileplayer: ^2.1.1
 
 dev_dependencies:
   flutter_test:

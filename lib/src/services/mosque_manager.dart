@@ -15,17 +15,19 @@ import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/services/weather_mixin.dart';
 
+import 'audio_mixin.dart';
+
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
-const kAdhanDuration = Duration(minutes: 2);
 const kAfterAdhanHadithDuration = Duration(minutes: 1);
-const kIqamaaDuration = Duration(minutes: 1);
+const kIqamaaDuration = Duration(seconds: 37);
+const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = Duration(minutes: 2);
 
 const salahDuration = Duration(minutes: 10);
 
-class MosqueManager extends ChangeNotifier with WeatherMixin {
+class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -203,6 +205,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin {
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }
+
+  get salahIndex => (nextSalahIndex() - 1) % 5;
 }
 
 extension MosqueHelperUtils on MosqueManager {
@@ -213,18 +217,23 @@ extension MosqueHelperUtils on MosqueManager {
     var state = HomeActiveScreen.announcementScreen;
 
     final now = mosqueDate();
-    final lastSalahIndex = (nextSalahIndex() - 1) % 5;
+    final lastSalahIndex = salahIndex;
 
     final lastSalah = actualTimes()[lastSalahIndex];
 
     final nextIqamaIndex = this.nextIqamaIndex();
-    final lastIqamaIndex = (nextIqamaIndex - 1) % 5;
+    final lastIqamaIndex = salahIndex;
     final lastIqama = actualIqamaTimes()[lastIqamaIndex];
-
-    if (lastSalah.difference(now).abs() < kAdhanDuration) {
+    if (actualTimes()[0].subtract(kAdhanBeforeFajrDuration).difference(now).abs() < (getAdhanDuration(mosqueConfig)) &&
+        mosqueConfig?.wakeForFajrTime != null) {
+      state = HomeActiveScreen.adhan;
+      /// we are in wake up adhan before adhanFajr
+    } else if (lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig)&& (now.weekday != DateTime.friday && salahIndex!=1 )) {
       /// we are in adhan time
       state = HomeActiveScreen.adhan;
-    } else if (lastSalah.difference(now).abs() < kAdhanDuration + kAfterAdhanHadithDuration) {
+    } else if ((lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig) + kAfterAdhanHadithDuration) &&
+        (now.weekday != DateTime.friday && salahIndex!=1 )&&
+        mosqueConfig!.duaAfterAzanEnabled!) {
       /// adhan has just done
       state = HomeActiveScreen.afterAdhanHadith;
     } else if (lastIqama.difference(now).abs() < kIqamaaDuration) {

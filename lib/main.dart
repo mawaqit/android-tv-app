@@ -18,6 +18,7 @@ import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/ConnectivityService.dart';
 import 'package:mawaqit/src/helpers/HttpOverrides.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
+import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -77,6 +78,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AppLanguage()),
         ChangeNotifierProvider(create: (context) => MosqueManager()),
         ChangeNotifierProvider(create: (context) => SettingsManager()),
+        ChangeNotifierProvider(create: (context) => AudioManager()),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {
