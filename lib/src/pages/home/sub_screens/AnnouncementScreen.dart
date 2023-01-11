@@ -1,8 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import '../widgets/SalahTimesBar.dart';
 import 'normal_home.dart';
 
 class AnnouncementScreen extends StatefulWidget {
@@ -36,7 +38,15 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     if (showHome) {
       return NormalHomeSubScreen();
     }
-    return announcementWidgets();
+    return Stack(
+      children: [
+        announcementWidgets(),
+        Padding(
+          padding:  EdgeInsets.only(bottom:1.5.vh ),
+          child: SalahTimesBar(miniStyle: true),
+        )
+      ],
+    );
   }
 
   Widget announcementWidgets() {

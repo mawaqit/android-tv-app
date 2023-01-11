@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -53,7 +55,17 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
                 .read<MosqueManager>()
                 .mosque!
                 .announcements
-                .isNotEmpty) ? announcementWidgets():Center(
+                .isNotEmpty) ? Stack(
+              alignment: Alignment.bottomCenter,
+
+                  children: [
+                    announcementWidgets(),
+                   Padding(
+                     padding:  EdgeInsets.only(bottom:1.5.vh ),
+                     child: SalahTimesBar(miniStyle: true),
+                   )
+                  ],
+                ):Center(
                 child: Container(
                   child: Text(
                     style: TextStyle(
