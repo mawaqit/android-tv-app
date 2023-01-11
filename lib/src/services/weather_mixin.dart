@@ -17,4 +17,27 @@ mixin WeatherMixin on ChangeNotifier {
         debugPrintStack(stackTrace: stack, label: e.toString());
       });
   }
+
+  String getColorFeeling() {
+    String? feeling = weather?.feeling;
+    String color = "#FFFFFF";
+    switch (feeling) {
+      case "very-hot":
+        color = "#AA3333";
+        return color;
+      case "hot":
+        color = "#d58512";
+        return color;
+      case "middle":
+        color = "#ffd05f";
+        return color;
+      case "cold":
+        color = "#FFFFFF";
+        return color;
+      case " very-cold":
+        color = "";
+        return color;
+    }
+    return color;
+  }
 }
