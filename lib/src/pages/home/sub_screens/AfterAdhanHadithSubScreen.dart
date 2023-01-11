@@ -1,11 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:provider/provider.dart';
 
-class AfterAdhanSubScreen extends StatelessWidget {
+import '../../../services/audio_manager.dart';
+import '../../../services/mosque_manager.dart';
+
+class AfterAdhanSubScreen extends StatefulWidget {
   const AfterAdhanSubScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AfterAdhanSubScreen> createState() => _AfterAdhanSubScreenState();
+}
+
+class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
   final kTitleArabic = 'دعاء ما بعد الأذان';
+
   final kHadithArabic =
       ' اللَّهمَّ ربَّ هذِهِ الدَّعوةِ التَّامَّةِ ، والصَّلاةِ القائمةِ ، آتِ سيِّدَنا مُحمَّدًا الوسيلةَ والفَضيلةَ ، وابعثهُ مقامًا مَحمودًا الَّذي وعدتَهُ، إنَّكَ لا تخلفُ الميعادَ.';
+
+  @override
+  void initState() {
+    final mosqueConfig =context.read<MosqueManager>().mosqueConfig;
+    final audioProvider = context.read<AudioManager>();
+    if (mosqueConfig!.duaAfterAzanEnabled!) {
+      audioProvider.loadDuaAfterAdhanVoice(mosqueConfig);
+      audioProvider.playDuaAfterAdhan();
+
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
