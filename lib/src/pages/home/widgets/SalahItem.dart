@@ -141,11 +141,8 @@ class SalahItemWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-<<<<<<< Updated upstream
-                  if (iqamaDate != null)
-=======
+
                   if (iqamaDate != null )
->>>>>>> Stashed changes
                     SizedBox(
                       width: 1.vw,
                       child: Text(
