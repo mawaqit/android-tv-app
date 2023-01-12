@@ -60,9 +60,11 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
 
                   children: [
                     announcementWidgets(),
-                   Padding(
-                     padding:  EdgeInsets.only(bottom:1.5.vh ),
-                     child: SalahTimesBar(miniStyle: true),
+                   IgnorePointer(
+                     child: Padding(
+                       padding:  EdgeInsets.only(bottom:1.5.vh ),
+                       child: SalahTimesBar(miniStyle: true),
+                     ),
                    )
                   ],
                 ):Center(

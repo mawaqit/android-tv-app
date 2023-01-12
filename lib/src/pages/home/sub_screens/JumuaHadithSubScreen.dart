@@ -67,7 +67,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
         ],
       );
     }
-      return SizedBox();
+      return Scaffold(backgroundColor: Colors.black,);
 
   }
 }

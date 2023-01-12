@@ -34,8 +34,8 @@ mixin WeatherMixin on ChangeNotifier {
       case "cold":
         color = "#FFFFFF";
         return color;
-      case " very-cold":
-        color = "";
+      case "very-cold":
+        color = "#3498db";
         return color;
     }
     return color;

@@ -32,12 +32,17 @@ class SalahItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double bigFont = 4.vw;
+    double smallFont = 3.vw;
+
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
-
+    bool? isIqamaEnabled = mosqueConfig?.iqamaEnabled!;
+    bool? isIqamaMoreImportant = mosqueConfig!.iqamaMoreImportant!&&isIqamaEnabled! ;
     final timeDate = time.toTimeOfDay()?.toDate();
     final iqamaDate = iqama?.toTimeOfDay()?.toDate();
-    final DateFormat dateTimeConverter = mosqueConfig?.timeDisplayFormat == "12"
+    print (isIqamaEnabled);
+    final DateFormat dateTimeConverter = mosqueConfig.timeDisplayFormat == "12"
         ? DateFormat(
             "hh:mm",
             "en-En",
@@ -46,7 +51,7 @@ class SalahItemWidget extends StatelessWidget {
             "HH:mm",
             "en",
           );
-    final DateFormat dateTimePeriodConverter = mosqueConfig?.timeDisplayFormat == "12"
+    final DateFormat dateTimePeriodConverter = mosqueConfig.timeDisplayFormat == "12"
         ? DateFormat(
             "a",
             "en",
@@ -89,7 +94,7 @@ class SalahItemWidget extends StatelessWidget {
                 Text(
                   timeDate == null ? time : dateTimeConverter.format(timeDate),
                   style: TextStyle(
-                    fontSize: 3.8.vw,
+                    fontSize: isIqamaMoreImportant! ? smallFont : bigFont,
                     fontWeight: FontWeight.w700,
                     shadows: kHomeTextShadow,
                     color: Colors.white,
@@ -112,13 +117,16 @@ class SalahItemWidget extends StatelessWidget {
                   ),
               ],
             ),
-            if (iqama != null)
+            if (iqama != null &&isIqamaEnabled!)
               SizedBox(
                 height: 1.3.vw,
                 width: double.infinity,
-                child: Divider(thickness: 1, color: withDivider ? Colors.white : Colors.transparent),
+                child: Divider(
+                  thickness: 1,
+                  color: withDivider ? Colors.white : Colors.transparent,
+                ),
               ),
-            if (iqama != null)
+            if (iqama != null&&isIqamaEnabled!)
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -126,14 +134,18 @@ class SalahItemWidget extends StatelessWidget {
                     iqamaDate == null ? iqama! : dateTimeConverter.format(iqamaDate),
                     // '$iqama${iqama!.startsWith('+') ? "\'" : ""}',
                     style: TextStyle(
-                      fontSize: 3.vw,
+                      fontSize: isIqamaMoreImportant ? bigFont : smallFont,
                       fontWeight: FontWeight.bold,
                       shadows: kHomeTextShadow,
                       letterSpacing: 1,
                       color: Colors.white,
                     ),
                   ),
+<<<<<<< Updated upstream
                   if (iqamaDate != null)
+=======
+                  if (iqamaDate != null )
+>>>>>>> Stashed changes
                     SizedBox(
                       width: 1.vw,
                       child: Text(

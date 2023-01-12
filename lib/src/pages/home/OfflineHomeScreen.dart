@@ -80,6 +80,8 @@ class OfflineHomeScreen extends StatelessWidget {
         return JumuaHadithSubScreen();
       case HomeActiveScreen.announcementScreen:
         return AnnouncementScreen();
+      case HomeActiveScreen.salahDurationBlackScreen:
+        return Scaffold(backgroundColor: Colors.black,);
       case HomeActiveScreen.jumuaaLiveScreen:
         return JummuaLive();
         break;
