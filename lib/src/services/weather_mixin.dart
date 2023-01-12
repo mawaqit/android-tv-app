@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/models/mosque.dart';
+import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/weather.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
 /// this is an extend for [MosqueManager]
 mixin WeatherMixin on ChangeNotifier {
   Weather? weather;
+  MosqueConfig? mosqueConfig;
 
   Future<void> loadWeather(Mosque mosque) async {
     if (mosque.uuid != null)
@@ -39,5 +41,22 @@ mixin WeatherMixin on ChangeNotifier {
         return color;
     }
     return color;
+  }
+
+  Color getColorTheme() {
+    String? theme = mosqueConfig?.theme?.toLowerCase();
+
+    switch (theme) {
+      case "spring":
+        return Colors.green.shade900;
+      case "winter":
+        return Colors.cyan.shade700;
+      case "summer":
+        return Colors.red.shade900;
+      case "autumn":
+        return Colors.lime.shade900;
+      default:
+        return Color(0xff38008a);
+    }
   }
 }

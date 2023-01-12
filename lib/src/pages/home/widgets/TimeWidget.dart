@@ -81,7 +81,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              color: Color(0xb34e2b81),
+              color: mosqueManager.getColorTheme().withOpacity(.7),
               padding: EdgeInsets.symmetric(vertical: 1.5.vw, horizontal: 5.vw),
               child: Column(
                 children: [

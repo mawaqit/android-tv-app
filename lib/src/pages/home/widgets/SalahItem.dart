@@ -61,7 +61,7 @@ class SalahItemWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2.vw),
         color: active
-            ? Color(0x994e2b81)
+            ? mosqueProvider.getColorTheme().withOpacity(.7)
             : removeBackground
                 ? null
                 : Colors.black.withOpacity(.70),
