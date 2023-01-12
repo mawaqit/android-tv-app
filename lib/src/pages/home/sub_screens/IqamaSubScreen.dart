@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/services/audio_manager.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:provider/provider.dart';
 
-class IqamaSubScreen extends StatelessWidget {
+class IqamaSubScreen extends StatefulWidget {
   const IqamaSubScreen({Key? key}) : super(key: key);
+
+  @override
+  State<IqamaSubScreen> createState() => _IqamaSubScreenState();
+}
+
+class _IqamaSubScreenState extends State<IqamaSubScreen> {
+  @override
+  void initState() {
+    context.read<AudioManager>().loadAndPlayIqamaBipVoice(
+          context.read<MosqueManager>().mosqueConfig,
+        );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

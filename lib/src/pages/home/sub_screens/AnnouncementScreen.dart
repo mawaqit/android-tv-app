@@ -24,26 +24,29 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   @override
   void initState() {
+    Future.delayed(homeDuration).then((value) {
+      nextScreen();
+    });
     super.initState();
-     if (context.read<MosqueManager>().mosque!.announcements.isNotEmpty) {
-       Future.delayed(homeDuration).then((value) {
-         nextScreen();
-       });
-     }
+
   }
 
 
   @override
   Widget build(BuildContext context) {
-    if (showHome) {
+
+    if (showHome ||context.read<MosqueManager>().mosque!.announcements.length<=activeIndex) {
       return NormalHomeSubScreen();
     }
     return Stack(
+      alignment:Alignment.bottomCenter,
       children: [
         announcementWidgets(),
-        Padding(
-          padding:  EdgeInsets.only(bottom:1.5.vh ),
-          child: SalahTimesBar(miniStyle: true),
+        IgnorePointer(
+          child: Padding(
+            padding:  EdgeInsets.only(bottom:1.5.vh ),
+            child: SalahTimesBar(miniStyle: true),
+          ),
         )
       ],
     );

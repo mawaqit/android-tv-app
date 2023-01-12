@@ -7,6 +7,7 @@ enum HomeActiveScreen {
   randomHadith,
   jumuaaHadith,
   jumuaaLiveScreen,
+  salahDurationBlackScreen,
   afterSalahAzkar,
   announcementScreen,
 
