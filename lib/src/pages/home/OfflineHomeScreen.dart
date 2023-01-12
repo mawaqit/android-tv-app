@@ -14,6 +14,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/MawaqitDrawer.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/HexColor.dart';
 import 'sub_screens/AnnouncementScreen.dart';
 
 class OfflineHomeScreen extends StatelessWidget {
@@ -24,7 +25,9 @@ class OfflineHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
-
+    final mosqueConfig = mosqueProvider.mosqueConfig;
+    final String backGroundImage =
+        "https://mawaqit.net/bundles/app/prayer-times/img/background/${mosqueConfig?.backgroundMotif??5}.jpg";
     if (mosqueProvider.mosque == null || mosqueProvider.times == null) return SizedBox();
 
     final mosque = mosqueProvider.mosque!;
@@ -42,16 +45,18 @@ class OfflineHomeScreen extends StatelessWidget {
           body: Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: mosque.image != null
-                    ? NetworkImage(mosque.image!) as ImageProvider
-                    : AssetImage('assets/backgrounds/splash_screen_5.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
+            decoration: mosqueConfig!.backgroundType == "color"
+                ? BoxDecoration(
+                    color: HexColor(
+                    mosqueConfig.backgroundColor,
+                  ))
+                : BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(backGroundImage),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
             child: Container(
-              color: Colors.black54,
               child: subScreen(mosqueProvider.state),
             ),
           ),
@@ -81,7 +86,9 @@ class OfflineHomeScreen extends StatelessWidget {
       case HomeActiveScreen.announcementScreen:
         return AnnouncementScreen();
       case HomeActiveScreen.salahDurationBlackScreen:
-        return Scaffold(backgroundColor: Colors.black,);
+        return Scaffold(
+          backgroundColor: Colors.black,
+        );
       case HomeActiveScreen.jumuaaLiveScreen:
         return JummuaLive();
         break;
