@@ -72,10 +72,10 @@
   "asr": "Asr",
   "maghrib": "Maghrib",
   "isha": "Isha",
-  "afterSalahHadithTitle": "After salah Du`a\n",
+  "afterSalahHadithTitle": "Duaa après la salah",
   "afterSalahHadith": "Ô Allah, Maître de cet appel parfait et de la prière que l'on va accomplir, donne à Mohammed le pouvoir d'intercéder\n (le Jour du Jugement) et la place d'honneur [au Paradis], et ressuscite-le dans la position louable que Tu lui as promise",
   "alIqama": "Al Iqama",
-  "alAdhan": "Al Adan",
+  "alAdhan": "Al adhan",
   "turnOfPhones": "Veuillez tourner vos téléphones portables!",
   "iqamaIn": "Iqama en",
   "alAthkar": "Al-Athékar",
@@ -110,6 +110,6 @@
   "jumuaaScreenTitle": "Heure de Jumuaa",
   "jumuaaHadith": "Le Prophète (que la prière d'Allah et son salut soient sur lui) a dit\n \"Celui qui fait les ablutions parfaitement puis se rend au jumu'a puis écoute et se tait,\n il lui est pardonné ce qu'il y a entre ce moment et le vendredi suivant et trois jours en plus\n et celui qui touche des cailloux a certes fait une futilité\"",
   "shuruk": "Shuruk",
-  "thisFeatureIsNotSupportedRightNow": "this feature is not supported right now",
-  "searchByGps": "Search by GPS"
+  "thisFeatureIsNotSupportedRightNow": "Cette fonctionnalité n'est pas encore prise en charge par le serveur MAWAQIT",
+  "searchByGps": "Recherche par GPS"
 }
