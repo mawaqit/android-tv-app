@@ -26,6 +26,7 @@ import 'package:share/share.dart';
 
 import '../../AnnouncementTest.dart';
 import '../../TestSubScreens.dart';
+import '../developer_mode/DrawerListTest.dart';
 import '../pages/home/sub_screens/JummuaLive.dart';
 
 class MawaqitDrawer extends StatelessWidget {
@@ -170,7 +171,7 @@ class MawaqitDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: Divider(height: 1, color: Colors.grey[400]),
           ),
-          if (developerManager.developerModeEnabled) ...developerOptions(context),
+          if (developerManager.developerModeEnabled) DrawerListDeveloper(),
           DrawerListTitle(
             icon: Icons.translate,
             text: S.of(context).languages,
