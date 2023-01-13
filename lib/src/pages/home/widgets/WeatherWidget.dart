@@ -16,10 +16,8 @@ class WeatherWidget extends StatelessWidget {
     final temperature = weather?.temperature;
     final temperatureUnit = mosqueConfig?.temperatureUnit;
     final temperatureEnable = mosqueConfig?.temperatureEnabled;
-    print ("temp ${mosqueManager.weather?.feeling}");
 
     if (temperature == null || !temperatureEnable!) return SizedBox();
-    print(mosqueManager.weather!.icon);
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Padding(

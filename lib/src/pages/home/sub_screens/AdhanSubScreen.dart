@@ -23,7 +23,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final mosqueConfig = mosqueManager.mosqueConfig;
     final audioProvider = context.read<AudioManager>();
     if (mosqueConfig?.adhanEnabledByPrayer![salahIndex] == "1" ||
-        (mosqueConfig?.wakeForFajrTime == null && mosqueManager.salahIndex == 0)) {
+        (mosqueConfig?.wakeForFajrTime != null && mosqueManager.salahIndex == 0)) {
       if (mosqueConfig?.adhanVoice != null) {
       audioProvider.loadAdhanVoice(mosqueConfig);
       audioProvider.playAdhan();
