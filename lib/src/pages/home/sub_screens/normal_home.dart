@@ -11,6 +11,8 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/FlashWidget.dart';
+
 class NormalHomeSubScreen extends StatelessWidget {
   const NormalHomeSubScreen({Key? key}) : super(key: key);
 
@@ -102,21 +104,7 @@ class NormalHomeSubScreen extends StatelessWidget {
               Expanded(
                 child: SizedBox(
                   height: 5.vw,
-                  child: mosque.flash?.content.isEmpty != false
-                      //todo get the message
-                      ? SizedBox()
-                      : Marquee(
-                          text: mosque.flash?.content ?? '',
-                          scrollAxis: Axis.horizontal,
-                          blankSpace: 500,
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            wordSpacing: 3,
-                            shadows: kHomeTextShadow,
-                            color: Colors.white,
-                          ),
-                        ),
+                  child:FlashWidget()
                 ),
               ),
               HomeLogoVersion(),
