@@ -24,8 +24,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("عن التطبيق"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "\nاللّهُـمَّ رَبَّ هَذِهِ الدّعْـوَةِ التّـامَّة وَالصّلاةِ القَـائِمَة آتِ محَـمَّداً الوَسيـلةَ وَالْفَضـيلَة وَابْعَـثْه مَقـامـاً مَحـموداً الَّذي وَعَـدْتَه"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("دعاء مابعد الصلاه"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("الأذان"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("الاذكار"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("الاقامه"),
         "appLang": MessageLookupByLibrary.simpleMessage("لغة التطبيق"),
+        "asr": MessageLookupByLibrary.simpleMessage("العصر"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("الرجوع إلى الصفحة الرئيسية"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -45,24 +60,32 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc":
             MessageLookupByLibrary.simpleMessage("نربط المسلمين بالمساجد"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("مواقيت"),
+        "duhr": MessageLookupByLibrary.simpleMessage("الظهر"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "أدخل معرف المسجد (Mosque ID) : "),
         "facebook": MessageLookupByLibrary.simpleMessage("فيسبوك"),
+        "fajr": MessageLookupByLibrary.simpleMessage("الفجر"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "لا يمكن الوصول إلى الموقع الحالي للجهاز، الرجاء التحقق من أن نظام تحديد المواقع الخاص بك مفعل"),
         "headerType": MessageLookupByLibrary.simpleMessage("نوع الرأس"),
         "home": MessageLookupByLibrary.simpleMessage("الصفحة الرئيسية"),
+        "imsak": MessageLookupByLibrary.simpleMessage("امساك"),
         "instagram": MessageLookupByLibrary.simpleMessage("انستغرام"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("دليل التثبيت"),
-        "jumuaaScreenTitle": MessageLookupByLibrary.simpleMessage(
-            "حَانَ وَقْتُ صَلاَةِ الجُمُعَة"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("الاقامه بعد"),
+        "isha": MessageLookupByLibrary.simpleMessage("العشاء"),
+        "jumua": MessageLookupByLibrary.simpleMessage("الجمعة"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "\nعَنْ أَبِي هُرَيْرَةَ قَالَ قَالَ رَسُولُ اللَّهِ صَلَّى اللَّه عَلَيْهِ وَسَلَّمَ مَنْ تَوَضَّأَ فَأَحْسَنَ الْوُضُوءَ ثُمَّ أَتَى الْجُمُعَةَ فَاسْتَمَعَ وَأَنْصَتَ غُفِرَ لَهُ مَا بَيْنَهُ وَبَيْنَ الْجُمُعَةِ وَزِيَادَةُ ثَلاثَةِ أَيَّامٍ وَمَنْ مَسَّ الْحَصَى فَقَدْ لَغَا"),
+        "jumuaaScreenTitle": MessageLookupByLibrary.simpleMessage("وقت الجمعه"),
         "languages": MessageLookupByLibrary.simpleMessage("اللغات"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيسر"),
         "lightMode": MessageLookupByLibrary.simpleMessage("المظهر الفاتح"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("دائرة التحميل المتحركة"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("المغرب"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "توفر لك مواقيت طريقة جديدة لتتبع وإدارة أوقات الصلاة، والواقع أننا نقدم نظاما من النهاية إلى النهاية يوفر لمديري المساجد أداة متاحة على الإنترنت على مدار الساعة 24/24."),
         "mawaqitWelcome":
@@ -88,12 +111,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("لا يوجد اتصال بالإنترنت"),
         "notification": MessageLookupByLibrary.simpleMessage("الإشعارات"),
+        "offline": MessageLookupByLibrary.simpleMessage("دون اتصال"),
         "ok": MessageLookupByLibrary.simpleMessage("موافق"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("سياسة الخصوصية"),
         "quit": MessageLookupByLibrary.simpleMessage("خروج"),
         "rate": MessageLookupByLibrary.simpleMessage("قم بتقييمنا"),
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيمن"),
+        "searchByGps":
+            MessageLookupByLibrary.simpleMessage("البحث عن طريق GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "ما هو المسجد الذي تبحث عنه؟ (الاسم، المدينة، الرمز البريدي...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("البحث عن مسجد"),
@@ -102,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "علي سبيل المثال, جَرِّب 256، إنه معرف \'مسجد باريس\'"),
         "share": MessageLookupByLibrary.simpleMessage("مشاركة"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("الشروق"),
         "skype": MessageLookupByLibrary.simpleMessage("سكايب"),
         "slugError":
             MessageLookupByLibrary.simpleMessage("ليس \"slug\" مسجد صحيح"),
@@ -109,7 +136,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
             "هل أنت متأكد من أنك تريد الخروج من التطبيق؟"),
         "termsOfService": MessageLookupByLibrary.simpleMessage("شروط الخدمة"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage("هذه الميزة غير مدعومة الآن"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("حاول مرة اخرى"),
+        "turnOfPhones":
+            MessageLookupByLibrary.simpleMessage("الرجاء اغلاق الهاتف الجوال"),
         "twitter": MessageLookupByLibrary.simpleMessage("تويتر"),
         "update": MessageLookupByLibrary.simpleMessage("تحديث التطبيق"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("واتس آب"),

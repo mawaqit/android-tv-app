@@ -25,19 +25,24 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(
-            "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah\nAllahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram\nAllahumma A`inni `ala dhikrika wa chukrika wa husni `ibadatik"),
-        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(
-            "Subhan Allah wal hamdu lillah wallahu akbar (33 fois)\nLa ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir"),
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
         "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
         "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
         "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
         "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
-        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(
-            "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima mana`ate, wa la yanefa`u dhal djaddi mineka eldjad"),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("À propos"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "Ô Allah, Maître de cet appel parfait et de la prière que l\'on va accomplir, donne à Mohammed le pouvoir d\'intercéder\n (le Jour du Jugement) et la place d\'honneur [au Paradis], et ressuscite-le dans la position louable que Tu lui as promise"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("Après la salah Du`a"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Al adhan"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("Al-Athékar"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("Al Iqama"),
         "appLang":
             MessageLookupByLibrary.simpleMessage("Langue de l\'application"),
+        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage": MessageLookupByLibrary.simpleMessage(
             "Revenir à la page d\'accueil"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -61,22 +66,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "Veuillez saisir l\'ID de votre installation ou l\'ID de la mosquée (Mosque ID)"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Impossible d\'accéder à votre localisation, vérifiez que le GPS de votre appareil est actif."),
         "headerType": MessageLookupByLibrary.simpleMessage("Type d\'en-tête"),
         "home": MessageLookupByLibrary.simpleMessage("Accueil"),
+        "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Guide d\'installation"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("Iqama en"),
+        "isha": MessageLookupByLibrary.simpleMessage("Isha"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "Le Prophète (que la prière d\'Allah et son salut soient sur lui) a dit\n \"Celui qui fait les ablutions parfaitement puis se rend au jumu\'a puis écoute et se tait,\n il lui est pardonné ce qu\'il y a entre ce moment et le vendredi suivant et trois jours en plus\n et celui qui touche des cailloux a certes fait une futilité\""),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("Heure de Jumuaa"),
         "languages": MessageLookupByLibrary.simpleMessage("Langues"),
         "leftButtonOption": MessageLookupByLibrary.simpleMessage(
             "Options du bouton radio (à gauche)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Mode clair"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Animation lors du lancement"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT vous offre une nouvelle façon de suivre et de gérer les temps de prière, en effet nous offrons un système de bout en bout qui fournit aux gestionnaires de mosquées un outil en ligne disponible 24/24h."),
         "mawaqitWelcome":
@@ -101,6 +117,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Aucune connexion internet"),
         "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "offline": MessageLookupByLibrary.simpleMessage("Hors ligne"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage(
             "Politique de confidentialité"),
@@ -108,6 +125,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Laisser une évaluation"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Options du bouton radio (à droite)"),
+        "searchByGps":
+            MessageLookupByLibrary.simpleMessage("Recherche par GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Quelle mosquée cherchez-vous ? (Nom, Ville, Code Postal...)"),
         "searchMosque":
@@ -117,6 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Essayez: 256, c\'est l\'ID de la Mosquée de Paris"),
         "share": MessageLookupByLibrary.simpleMessage("Partager"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("Shuruk"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "Ce n\'est pas un slug de mosquée valide"),
@@ -125,7 +145,11 @@ class MessageLookup extends MessageLookupByLibrary {
             "Voulez-vous vraiment quitter l\'application ?"),
         "termsOfService": MessageLookupByLibrary.simpleMessage(
             "Conditions générales d’utilisation"),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "Cette fonctionnalité n\'est pas encore prise en charge par le serveur MAWAQIT"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Réessayez"),
+        "turnOfPhones": MessageLookupByLibrary.simpleMessage(
+            "Veuillez tourner vos téléphones portables!"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update": MessageLookupByLibrary.simpleMessage(
             "Mettre à jour l\'application"),

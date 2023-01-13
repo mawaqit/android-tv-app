@@ -35,8 +35,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
             "Allahumma Rabba hadhihid-da\'wati-ttammati, was-salatil-qa\'imati, ati Muhammadanil-wasilata wal-fadhilata, wab\'athu maqaman mahmuda nilladhi wa \'adtahu [O Allah, Rubb of this perfect call (Da\'wah) and of the established prayer (As-Salat), grant Muhammad the Wasilah and superiority, and raise him up to a praiseworthy position which You have promised him]"),
         "afterSalahHadithTitle":
-            MessageLookupByLibrary.simpleMessage("After salah Du`a"),
-        "alAdhan": MessageLookupByLibrary.simpleMessage("Al adhan"),
+            MessageLookupByLibrary.simpleMessage("After salah Du`a\n"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Al Adan"),
         "alAthkar": MessageLookupByLibrary.simpleMessage("Al-Athkar"),
         "alIqama": MessageLookupByLibrary.simpleMessage("Al Iqama"),
         "appLang": MessageLookupByLibrary.simpleMessage("App Language"),

@@ -24,8 +24,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("সম্পর্কে"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "হে আল্লাহ এই পরিপূর্ণ আহ্বান এবং স্থায়ী সালাতের মালিক! মুহাম্মদ সাঃ কে (বিচারের দিন) ওসীলা তথা জান্নাতের ফজিলতপূর্ণ উঁচু স্তর এবং সকল সৃষ্টির উপর অতিরিক্ত সম্মান দান করুন, আর তাঁকে সম্মানিত স্থান মাকামে মাহমুদে পৌঁছে দিন, যার ওয়াদা আপনি তাঁকে দিয়েছিলেন, নিশ্চয়ই আপনি ওয়াদা ভঙ্গ করেন না, এবং কিয়ামতের দিন আমাদেরকে তাঁর সুপারিশ মঞ্জুর করুন।"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("সালাতের পর দুআ"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("আজান"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("স্মরণ"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("ইকামত"),
         "appLang": MessageLookupByLibrary.simpleMessage("অ্যাপ্লিকেশনের ভাষা"),
+        "asr": MessageLookupByLibrary.simpleMessage("দুপুরের"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("হোমপেজে ব্যাক করো"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -50,23 +65,34 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("দুপুর"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("মসজিদ আইডি লিখুন:"),
         "facebook": MessageLookupByLibrary.simpleMessage(
             "ফেসবুকের মাধ্যমে সাইন আপ করুন"),
+        "fajr": MessageLookupByLibrary.simpleMessage("ফজর"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "বর্তমান ডিভাইস অবস্থান অ্যাক্সেস করতে পারবেন না, আপনার ডিভাইস GPS সক্ষম আছে কিনা দয়া করে পরীক্ষা করুন"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("নীড়"),
+        "imsak": MessageLookupByLibrary.simpleMessage("ইমসাক"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("ইনস্টলকরণের সহায়িকা"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("জামাতের সময় বাকি"),
+        "isha": MessageLookupByLibrary.simpleMessage("সন্ধ্যার"),
+        "jumua": MessageLookupByLibrary.simpleMessage("জুম\'আ"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "রাসূলুল্লাহ সাঃ বলেন:\n যে ব্যক্তি নিখুঁতভাবে অযু করে তারপর জুম\'আয় যায় এবং মনোযোগ সহকারে খুতবা শুনে ও চুপ থাকে, সেই সময় থেকে পরের জুম\'আ এবং আরও তিন দিনের মাঝে যা আছে তাকে মাফ করে দেওয়া।"),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("জুম্মার সময়"),
         "languages": MessageLookupByLibrary.simpleMessage("ভাষা"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("হালকা মোড"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Loading animation"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("মাগরিবের"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "মাওয়াকিট আপনাকে নামাজের সময়গুলি ট্র্যাক এবং পরিচালনা করার একটি নতুন উপায় অফার করে, প্রকৃতপক্ষে আমরা একটি এন্ড-টু-এন্ড সিস্টেম অফার করি যা মসজিদ পরিচালকদের 24/24 ঘন্টা উপলব্ধ একটি অনলাইন টুল সরবরাহ করে।"),
         "mawaqitWelcome":
@@ -91,6 +117,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("কোনও ইন্টারনেট সংযোগ নেই"),
         "notification": MessageLookupByLibrary.simpleMessage("নোটিফিকেশন সমূহ"),
+        "offline": MessageLookupByLibrary.simpleMessage("অফলাইন"),
         "ok": MessageLookupByLibrary.simpleMessage("আচ্ছা"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("গোপনীয়তার নীতিমালা"),
@@ -98,6 +125,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("আমাদের মতামত দিন"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "আপনি কোন মসজিদ খুঁজছেন? (নাম, শহর, পোস্টাল কোড...)"),
         "searchMosque":
@@ -107,6 +135,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "চেষ্টা করুন: 256, এটি \'মসজিদ দে প্যারিস\'-এর আইডি"),
         "share": MessageLookupByLibrary.simpleMessage("শেয়ার"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("সূর্যোদয়"),
         "skype": MessageLookupByLibrary.simpleMessage("স্কাইপ"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "একটি বৈধ মসজিদ \'স্লাগ\' নয়"),
@@ -115,7 +144,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "আপনি কি নিশ্চিত যে আপনি ছেড়ে যেতে চান?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("পরিষেবার শর্তাদি"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("আবার চেষ্টা কর"),
+        "turnOfPhones":
+            MessageLookupByLibrary.simpleMessage("দয়া করে মোবাইল বন্ধ রাখুন!"),
         "twitter": MessageLookupByLibrary.simpleMessage("টুইটার"),
         "update":
             MessageLookupByLibrary.simpleMessage("অ্যাপ্লিকেশন আপডেট করুন"),

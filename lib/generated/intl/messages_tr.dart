@@ -24,8 +24,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("Hakkında"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "Ey şu eksiksiz davetin ve kılınacak namazın rabbi Allahım! Muhammed\'s. a. v\'e vesîleyi ve fazîleti ver.\n Onu, kendisine vaadettiğin makâm-ı mahmûda ulaştır, Muhakkak ki sen vaadinden dönmezsin"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("Namazdan Sonra Dua"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Ezan"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("Zikir"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("Kamet"),
         "appLang": MessageLookupByLibrary.simpleMessage("Uygulama Dili"),
+        "asr": MessageLookupByLibrary.simpleMessage("İkindi"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Ana sayfaya dön"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -46,22 +61,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Öğle"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "Lütfen Cami Kimliğinizi giriniz : "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Sabah"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Mevcut cihaz konumuna erişilemiyor, lütfen cihazınızın GPS\'inin etkin olduğunu kontrol edin"),
         "headerType": MessageLookupByLibrary.simpleMessage("Başlık Türü"),
         "home": MessageLookupByLibrary.simpleMessage("Ana sayfa"),
+        "imsak": MessageLookupByLibrary.simpleMessage("İmsak"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Kurulum Kılavuzu"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("Sonra kamet"),
+        "isha": MessageLookupByLibrary.simpleMessage("Yatsı"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Cuma Vâkti"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "Yine Ebu Hüreyre (Allah Ondan razı olsun)\'den rivayet edildiğine göre Rasûlullah (sallallahu aleyhi vesellem) şöyle buyurdu:\n Bir kimse abdestini güzelce alarak Cuma için camiye gelir, hutbeyi sessizce dinlerse iki Cuma arasındaki ve fazladan üç günlük daha(10 günlük işlenen küçük) günahları bağışlanır.\n Kim hutbe okunurken gereği gibi dinlemeyip çakıl taşlarıyla oynarsa, meşgul olursa boş ve manasız bir iş yapmış olur. (Müslim, Cuma 27)"),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("Cuma zamanı"),
         "languages": MessageLookupByLibrary.simpleMessage("Diller"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Aydınlık mod"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Şarj animasyonu"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Akşam"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT size namaz vakitlerini takip etmeniz ve yönetmeniz için yeni bir yol sunuyor, aslında biz cami yöneticilerine 24/24 saat çevrimiçi bir araç sağlayan uçtan uca bir sistem sunuyoruz."),
         "mawaqitWelcome":
@@ -85,6 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("İnternet bağlantısı yok"),
         "notification": MessageLookupByLibrary.simpleMessage("Bildirimler"),
+        "offline": MessageLookupByLibrary.simpleMessage("Çevrimdışı"),
         "ok": MessageLookupByLibrary.simpleMessage("TAMAM"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Gizlilik politikası"),
@@ -92,6 +119,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Bizi Değerlendirin"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Hangi Camii arıyorsunuz? (İsim, Şehir, Posta kodu...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("Cami Ara"),
@@ -100,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Deneyin: 256, Mosquée de Paris\'in kimliği"),
         "share": MessageLookupByLibrary.simpleMessage("Paylaş"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("Güneşin doğuşu"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "Geçerli bir cami \'slug\' değil mi"),
@@ -108,7 +137,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Uygulamadan çıkmak istediğinizden emin misiniz?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Hizmet Şartları"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Tekrar Dene"),
+        "turnOfPhones": MessageLookupByLibrary.simpleMessage(
+            "Cep telefonlarınızı lütfen kapalı tutunuz!"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update": MessageLookupByLibrary.simpleMessage("Uygulamayı güncelle"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),

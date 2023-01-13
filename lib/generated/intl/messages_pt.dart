@@ -24,8 +24,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("SOBRE"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "Ó Allah! Senhor deste chamamento perfeito e do Salah que lhe será oferecido, conceda a Muhammad (Que a paz e a misericórdia de Allah esteja sobre ele) a intercessão, graça e alta posição. Elevai-o ao lugar glorioso (Maqame-Mahmud), que lhe prometeste"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("Dua depois da oração"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Azán"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("Dhikr"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("Al Iqama"),
         "appLang": MessageLookupByLibrary.simpleMessage("Idioma do aplicativo"),
+        "asr": MessageLookupByLibrary.simpleMessage("Assr"),
         "backToHomePage": MessageLookupByLibrary.simpleMessage(
             "Voltar para a página inicial"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -48,22 +63,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Zuhr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Insira a ID da Mesquita: "),
         "facebook": MessageLookupByLibrary.simpleMessage("Siga-nos"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Não é possível acessar a localização atual do dispositivo, por favor, verifique se o GPS do seu dispositivo está ativado"),
         "headerType": MessageLookupByLibrary.simpleMessage("Tipo de cabeçalho"),
         "home": MessageLookupByLibrary.simpleMessage("Residencial"),
+        "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Guia de instalação"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("Iqama em"),
+        "isha": MessageLookupByLibrary.simpleMessage("Ishá"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Jumu\'ah"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "Rasulullah (Sallalahu Aleihi Wassalam) disse\n \"Aquele que efectuar a ablução perfeitamente e dirigir-se para a oração de Jumuah, ouvir o sermão com atenção e em silêncio, todos os seus pequenos pecados entre aquela hora e o próximo Jumuah mais três dias (total 10 dias) serão perdoados. E aquele que durante o sermão brincar com uma pedra (ou seja, distrair-se), na realidade, fez algo fútil.\""),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("Hora de Jumuaa"),
         "languages": MessageLookupByLibrary.simpleMessage("Idiomas"),
         "leftButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opções do Botão Rádio (esquerda)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Modo claro"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Carregando Animação"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Magrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT oferece uma nova maneira de acompanhar e gerenciar as preces, na verdade, oferecemos um sistema de ponta a ponta que oferece aos gestores de mesquitas uma ferramenta online disponível 24/24h."),
         "mawaqitWelcome":
@@ -89,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Sem conexão à internet"),
         "notification": MessageLookupByLibrary.simpleMessage("Notificações"),
+        "offline": MessageLookupByLibrary.simpleMessage("Desligada"),
         "ok": MessageLookupByLibrary.simpleMessage("CERTO"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Política de privacidade"),
@@ -96,6 +123,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Avalie-nos"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opções do Botão Rádio (esquerda)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Qual mesquita você está procurando? (Nome, Cidade, CEP...)"),
         "searchMosque":
@@ -105,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Tente: 256, é o ID do \'Mosquée de Paris\'"),
         "share": MessageLookupByLibrary.simpleMessage("Compartilhar"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("Nascer do Sol"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "Não é um slug de mesquita válido"),
@@ -113,7 +142,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "De certeza que quer sair da aplicação?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Termos de Utilização"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Tente novamente"),
+        "turnOfPhones": MessageLookupByLibrary.simpleMessage(
+            "Por favor desligue o telemóvel!"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update": MessageLookupByLibrary.simpleMessage("Atualizar aplicativo"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),

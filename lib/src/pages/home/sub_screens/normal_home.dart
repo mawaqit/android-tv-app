@@ -74,38 +74,6 @@ class NormalHomeSubScreen extends StatelessWidget {
           ],
         ),
         SalahTimesBar(),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 1.vw, vertical: .3.vw),
-          width: double.infinity,
-          color: mosque.flash?.content.isEmpty != false ? null : Colors.black38,
-          child: Row(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "ID ${mosque.id}",
-                    style: TextStyle(
-                      fontSize: .7.vw,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      shadows: kHomeTextShadow,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Image.network(
-                    'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
-                    width: 3.vw,
-                    height: 3.vw,
-                  ),
-                ],
-              ),
-              Expanded(
-                child: SizedBox(
-                  height: 5.vw,
-                  child:FlashWidget()
-
         mosqueConfig!.footer!
             ? Container(
                 padding: EdgeInsets.symmetric(horizontal: 1.vw, vertical: .3.vw),
@@ -137,26 +105,11 @@ class NormalHomeSubScreen extends StatelessWidget {
                     Expanded(
                       child: SizedBox(
                         height: 5.vw,
-                        child: mosque.flash?.content.isEmpty != false
-                            //todo get the message
-                            ? SizedBox()
-                            : Marquee(
-                                text: mosque.flash?.content ?? '',
-                                scrollAxis: Axis.horizontal,
-                                blankSpace: 500,
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  wordSpacing: 3,
-                                  shadows: kHomeTextShadow,
-                                  color: Colors.white,
-                                ),
-                              ),
+                        child: FlashWidget(),
                       ),
                     ),
                     HomeLogoVersion(),
                   ],
-
                 ),
               )
             : SizedBox(

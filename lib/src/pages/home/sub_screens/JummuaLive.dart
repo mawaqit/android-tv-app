@@ -22,20 +22,16 @@ class _JummuaLiveState extends State<JummuaLive> {
     //
     // final mosque = mosqueProvider.mosque!;
     final hive = context.watch<HiveManager>();
-    final developer = context.read<DeveloperManager>();
-    if (hive.isSecondaryScreen()) {
-      return Scaffold(backgroundColor: Colors.black,
-        body: developer.developerModeEnabled ? Center(
-          child: Text(
-            "For Developer: \nthis main screen in jummua", style: TextStyle(fontSize: 40),),
-        ) : SizedBox(),);
+    if (!hive.isSecondaryScreen()) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+      );
     }
     return liveStream("https://www.youtube.com/watch?v=NP-hZRXIrYs");
   }
 
   Widget liveStream(String video) {
     late YoutubePlayerController _controller = YoutubePlayerController(
-
       initialVideoId: YoutubePlayer.convertUrlToId(
         video,
       )!,
@@ -47,9 +43,7 @@ class _JummuaLiveState extends State<JummuaLive> {
 
         /// todo if type is mosque live is mute
         //mute: isMosque?false:true
-
       ),
-
     );
     return YoutubePlayer(
       controller: _controller,
