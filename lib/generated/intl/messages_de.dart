@@ -24,8 +24,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("Über"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "O Allah, Herr dieses vollkommenen Rufes dieses bevorstehenden Gebet, gewähre Muhammad die Wasilah ( Ort im Paradies) und die Fadhilah ( die höchste Stufe des Paradieses) und lass ihn auferstehen in einer lobenswerten Rangstellung, die Du ihm versprochen hast"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("Dua Nach dem Gebet"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Al adhan"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("Al-Athkar"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("Al Iqama"),
         "appLang": MessageLookupByLibrary.simpleMessage("App-Sprache"),
+        "asr": MessageLookupByLibrary.simpleMessage("Assr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Zurück zur Startseite"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -46,22 +61,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Dohr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Moschee ID eingeben: "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Fadjr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Zugriff auf den aktuellen Gerätespeicher nicht möglich, bitte überprüfen Sie, ob Ihr Gerät GPS aktiviert ist"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header-Typ"),
         "home": MessageLookupByLibrary.simpleMessage("Zuhause"),
+        "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Installationsanleitungen"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("Al-Iqama in"),
+        "isha": MessageLookupByLibrary.simpleMessage("Ishaa"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Freitagsgebet"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "Der Prophet ( Allahs Frieden und Segen auf ihm) hat gesagt:\n \"Derjenige der in einer schönen weise seine Gebetswaschung vollzieht und dann zum Freitagsgebet kommt, leise die Khutba zuhört, dessen Sünden werden zwichen den zwei Freitage und noch drei Tage, vergeben. Und wer während der Khutba mit Kieselsteine spielt, der macht etwas sinnloses\""),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("Jumuaa-Zeit"),
         "languages": MessageLookupByLibrary.simpleMessage("Sprachen"),
         "leftButtonOption": MessageLookupByLibrary.simpleMessage(
             "Optionen der Optionsleiste (links)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Lichtmodus"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Lade Animation"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT bietet dir eine neue Möglichkeit, Gebetszeiten zu verfolgen und zu verwalten, in der Tat bieten wir ein Ende-zu-End-System, das Mosche-Managern ein Online-Tool rund um die Uhr zur Verfügung stellt."),
         "mawaqitWelcome":
@@ -87,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Keine Internetverbindung"),
         "notification":
             MessageLookupByLibrary.simpleMessage("Benachrichtigungen"),
+        "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Datenschutzrichtlinie"),
@@ -94,6 +121,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Bewerte uns"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Optionen der Optionsschaltfläche (rechts)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Welche Moschee suchen Sie ? (Name, Stadt, Postleitzahl ...)"),
         "searchMosque":
@@ -103,6 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Versuch: 256, es ist die ID der \'Moschee e de Paris\'"),
         "share": MessageLookupByLibrary.simpleMessage("Teilen"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("Shuruk"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "Ist kein gültiger Mosche-Slug"),
@@ -111,7 +140,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Sind Sie sicher, dass Sie den Antrag aufgeben möchten?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Nutzungsbedingungen"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Erneut versuchen"),
+        "turnOfPhones": MessageLookupByLibrary.simpleMessage(
+            "Bitte drehen Sie Ihre Handys ab!"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update":
             MessageLookupByLibrary.simpleMessage("Anwendung aktualisieren"),

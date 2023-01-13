@@ -24,8 +24,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("متعلق"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "یااللہ! اس کامل اعلان اور قائم ہونے والی نماز کے مالک، محمدﷺ کو مقامِ وسیلہ عطا فرما اور ان کی فضیلت میں اضافہ فرما اور ان کو مقامِ محمود پر پہنچا جس کا تو نے ان سے وعدہ کیا ہے ۔"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("After salah Du`a"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Al adhan"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("ذکر"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("اقامت"),
         "appLang": MessageLookupByLibrary.simpleMessage("ایپ کی زبانیں"),
+        "asr": MessageLookupByLibrary.simpleMessage("عصر"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("ہوم پیج پر جائیں"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -46,22 +61,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("مواقیت"),
+        "duhr": MessageLookupByLibrary.simpleMessage("ظہر"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("مسجد کی شناخت درج کریں:"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "fajr": MessageLookupByLibrary.simpleMessage("فجر"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "آلہ کے موجودہ مقام تک رسائی حاصل نہیں کر سکتے، براہ کرم چیک کریں کہ آپ کا آلہ GPS فعال ہے۔"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("ہوم"),
+        "imsak": MessageLookupByLibrary.simpleMessage("روزہ"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("انسٹالیشن گائیڈ"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("اقامت میں"),
+        "isha": MessageLookupByLibrary.simpleMessage("عشاء"),
+        "jumua": MessageLookupByLibrary.simpleMessage("جمعہ"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "نبی کریم صلی اللہ علیہ وسلم نے فرمایا\n \"جس نے اچھی طرح وضو کیا، پھر جمعہ کی نماز پڑھی، پھر سنے اور خاموش رہے۔\"\n اس وقت اور اگلے جمعہ اور مزید تین دن کے درمیان جو کچھ ہے اسے بخش دیا جاتا ہے۔\n اور جس نے پتھروں کو چھو لیا اس نے یقیناً فضول خرچی کی\""),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("جمعہ کا وقت"),
         "languages": MessageLookupByLibrary.simpleMessage("زبانیں"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("لائٹ موڈ"),
         "loadingAnimation": MessageLookupByLibrary.simpleMessage(
             "گولدائرہ اینیمیشن لوڈ کر رہا ہے"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("مغرب"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "مواقیت آپ کو نماز کے اوقات کو ٹریک کرنے اور ان کا نظم کرنے کا ایک نیا طریقہ پیش کرتا ہے، درحقیقت ہم ایک اینڈ ٹو اینڈ سسٹم پیش کرتے ہیں جو مسجد کے منتظمین کو 24/24 گھنٹے دستیاب آن لائن ٹول فراہم کرتا ہے۔"),
         "mawaqitWelcome":
@@ -86,6 +112,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("کوئی انٹرنیٹ کنکشن"),
         "notification": MessageLookupByLibrary.simpleMessage("اطلاعات"),
+        "offline": MessageLookupByLibrary.simpleMessage("آف لائن"),
         "ok": MessageLookupByLibrary.simpleMessage("ٹھیک ہے"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("رازداری کی پالیسی"),
@@ -93,6 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("ہمیں شرح"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "آپ کونسی مسجد کی تلاش ہے؟ (نام، شہر، پوسٹل کوڈ...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("مسجد تلاش کریں۔"),
@@ -101,6 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "آزمائیں: 256، یہ مسجد ڈی پیرس کی ID ہے۔"),
         "share": MessageLookupByLibrary.simpleMessage("بانٹیں"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("اشراق"),
         "skype": MessageLookupByLibrary.simpleMessage("سکائپ"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "کیا ایک درست مسجد \'slug\' نہیں ہے؟"),
@@ -109,7 +138,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "کیا آپ واقعی یہ درخواست حذف کرنا چاہتے ہیں?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("خدمات کی شرائط"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("دوبارہ کوشش کریں"),
+        "turnOfPhones": MessageLookupByLibrary.simpleMessage(
+            "براہ کرم اپنے موبائل فون بند کر دیں!"),
         "twitter": MessageLookupByLibrary.simpleMessage("ٹویٹر"),
         "update": MessageLookupByLibrary.simpleMessage("اپ ڈیٹ ایپلیکیشن"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("واتس آب"),

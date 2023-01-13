@@ -780,10 +780,10 @@ class S {
     );
   }
 
-  /// `After salah Du'a`
+  /// `After salah Du'a\n`
   String get afterSalahHadithTitle {
     return Intl.message(
-      'After salah Du`a',
+      'After salah Du`a\n',
       name: 'afterSalahHadithTitle',
       desc: '',
       args: [],
@@ -810,10 +810,10 @@ class S {
     );
   }
 
-  /// `Al adhan`
+  /// `Al Adan`
   String get alAdhan {
     return Intl.message(
-      'Al adhan',
+      'Al Adan',
       name: 'alAdhan',
       desc: '',
       args: [],

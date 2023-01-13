@@ -24,8 +24,24 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("இதைப் பற்றி"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "அல்லாஹும்ம ரப்ப ஹாதிஹித் தஃவதித் தாம்மா, வஸ்ஸலாதில் காயிமா ஆதி முஹம்மதன் அல்வஸீலத வல் ஃபைளீலத, வப்அஸ்ஹு மகாமம் மஹ்மூதனில்லதீ வஅத்தஹு (இன்னக லா துக்லிஃபுல் மீஆத்).\n போருள்: நிறைவான இவ்வழைப்பு மற்றும் நிலை பெற்று விட்ட தொழுகையின் இரட்சகனே! முஹம்மது (ஸல்லல்லாஹு அலைஹி வஸல்லம்) அவர்களுக்கு வஸீலா (சுவனத்தில் உள்ள உயர்பதவி) மற்றும் சிறப்பை நல்குவாயாக! நீ வாக்களித்துள்ளாயே அத்தகைய\n (போற்றுதலுக்குரிய இடமான) மகாமம் மஹ்மூதாவில் அவர்களை எழுப்புவாயாக"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("தொழுகைக்குப் பின் துஆ"),
+        "alAdhan":
+            MessageLookupByLibrary.simpleMessage("பிரார்த்தனைக்கான அழைப்பு"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("அல்-அத்கார்"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("இகாமத்"),
         "appLang": MessageLookupByLibrary.simpleMessage("ஆப் மொழி"),
+        "asr": MessageLookupByLibrary.simpleMessage("அஸர்"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to Homepage"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -48,22 +64,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("அடுஹெர்"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("மசூதி ஐடியை உள்ளிடவும்:"),
         "facebook": MessageLookupByLibrary.simpleMessage("முகநூல்"),
+        "fajr": MessageLookupByLibrary.simpleMessage("அல்-ஃபஜ்ர்"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "சாதனத்தின் தற்போதைய இருப்பிடத்தை அணுக முடியவில்லை, உங்கள் சாதனத்தின் ஜிபிஎஸ் இயக்கப்பட்டுள்ளதா என்பதைச் சரிபார்க்கவும்"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("வீடு"),
+        "imsak": MessageLookupByLibrary.simpleMessage("ஸஹர் முடிவு"),
         "instagram": MessageLookupByLibrary.simpleMessage("இன்ஸ்டாகிராம்"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("நிறுவல் வழிகாட்டி"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("இகாமா உள்ள"),
+        "isha": MessageLookupByLibrary.simpleMessage("இஷா"),
+        "jumua": MessageLookupByLibrary.simpleMessage("ஜும்ஆ"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "நபி (ஸல்) கூறினார்கள்: “யாராவது வுழூவை அழகாக செய்து விட்டு, பிறகு ஜும்ஆவுக்கு வந்து, மொளனமாக இருந்து, காது தாழ்த்தி கேட்டால் அந்த ஜும்ஆவுக்கும் அடுத்த ஜும்ஆவுக்கும் இடைப்பட்ட நாட்களினதும், மேலும் மூன்று நாட்களினதும் பாவம் மன்னிக்கப்படும்” (முஸ்லிம்)"),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("வெள்ளிக்கிழமை நேரம்"),
         "languages": MessageLookupByLibrary.simpleMessage("மொழி"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("வெளிர்ந்த பயன்முறை"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("ஏற்றுதல் வட்ட அனிமேஷன்"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("மக்ரிப்"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT தொழுகை நேரத்தைக் கண்காணிக்கவும் நிர்வகிக்கவும் ஒரு புதிய வழியை உங்களுக்கு வழங்குகிறது, உண்மையில் நாங்கள் மசூதி மேலாளர்களுக்கு 24/24 மணிநேரம் கிடைக்கும் ஆன்லைன் கருவியை வழங்கும் இறுதி முதல் இறுதி முறையை வழங்குகிறோம்."),
         "mawaqitWelcome":
@@ -88,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("இணைய இணைப்பு இல்லை"),
         "notification": MessageLookupByLibrary.simpleMessage("அறிவிப்புகள்"),
+        "offline": MessageLookupByLibrary.simpleMessage("ஆஃப்லைன்"),
         "ok": MessageLookupByLibrary.simpleMessage("சரி"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("தனியுரிமை கொள்கை"),
@@ -95,6 +123,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("எங்களை மதிப்பிடுங்கள்"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "நீங்கள் எந்த மசூதியைத் தேடுகிறீர்கள்? (பெயர், நகரம், அஞ்சல் குறியீடு...)"),
         "searchMosque":
@@ -104,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "முயற்சிக்கவும்: 256, இது பாரிஸ் மசூதியின் ஐடி"),
         "share": MessageLookupByLibrary.simpleMessage("பகிர்"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("சூரிய உதயம்"),
         "skype": MessageLookupByLibrary.simpleMessage("ஸ்கைப்"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "செல்லுபடியாகும் மசூதி ஸ்லக் அல்லவா"),
@@ -111,7 +141,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
             "விண்ணப்பத்திலிருந்து நிச்சயமாக வெளியேற விரும்புகிறீர்களா?"),
         "termsOfService": MessageLookupByLibrary.simpleMessage("விதிமுறைகள்"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("மீண்டும் முயற்சி"),
+        "turnOfPhones": MessageLookupByLibrary.simpleMessage(
+            "உங்கள் மொபைல் போன்களை சைலண்டில் வைக்கவும்!"),
         "twitter": MessageLookupByLibrary.simpleMessage("ட்விட்டர்"),
         "update":
             MessageLookupByLibrary.simpleMessage("ஆப்-ஐ அப்டேட் செய்யவும்"),

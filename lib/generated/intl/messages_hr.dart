@@ -24,8 +24,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("O aplikaciji"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "Allahu moj, Gospodaru ovog cjelovitog poziva i namaza koji se upravo uspostavlja, podari Muhammedu veliki stepen u Džennetu i posebno dobro i uzdigni ga na uzvišeno mjesto, koje si mu obećao"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("Nakon namaz dove"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Ezan"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("Al-Athkar"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("ِِAl iqama"),
         "appLang": MessageLookupByLibrary.simpleMessage("Jezik aplikacije"),
+        "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Idi na početnu stranicu"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -48,22 +63,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Podne"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Unesite ID džamije :"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Zora"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Ne možete pristupiti trenutnoj lokaciji uređaja, provjerite je li GPS na vašem uređaju omogućen"),
         "headerType": MessageLookupByLibrary.simpleMessage("Vrsta zaglavlja"),
         "home": MessageLookupByLibrary.simpleMessage("Početna"),
+        "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Vodič za instalaciju"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("Iqama in"),
+        "isha": MessageLookupByLibrary.simpleMessage("Noćni"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Džuma"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "Prenosi se od Evsq ibn Evsq es-Sekqfija koji je rekao: \"Čuo sam Allahovog Poslanika, (sallallahu \'alayhi wa sallam), kako kaže: \'Ko se očisti i okupa u petak, rano ustane i među prvima dođe pješke, a ne na jahalici, sjedne blizu imama i sasluša ga, a sam riječ ne progovori - za svaki će korak imati nagradu kao što se ima nagrada od godine dana dobrovoljnog posta i namaza\'\""),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("Petak vrijeme"),
         "languages": MessageLookupByLibrary.simpleMessage("Jezici"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Svijetli način"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Učitavanje kružne animacije"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Magribija"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT vam nudi novi način praćenja i upravljanja vremenom namaza, zapravo nudimo end-to-end sustav koji upraviteljima džamija pruža online alat dostupan 24/24 sata."),
         "mawaqitWelcome":
@@ -88,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Nema internetske veze"),
         "notification": MessageLookupByLibrary.simpleMessage("Obavijesti"),
+        "offline": MessageLookupByLibrary.simpleMessage("Izvan mreže"),
         "ok": MessageLookupByLibrary.simpleMessage("U REDU"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Pravila privatnosti"),
@@ -95,6 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Ocijenite Nas"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Koju džamiju tražite? (ime, grad, poštanski broj...)"),
         "searchMosque":
@@ -104,6 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Pokušajte: 256, to je ID \'Mosquée de Paris\'"),
         "share": MessageLookupByLibrary.simpleMessage("Podijeli"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("Izlazak sunca"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "Nije li valjana džamija \'slug\'"),
@@ -112,7 +141,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Jeste li sigurni da želite obrisati ovu prijavu?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Uvjeti korištenja"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Pokušaj ponovno"),
+        "turnOfPhones": MessageLookupByLibrary.simpleMessage(
+            "Molimo vas da isključite svoje mobitele!"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update": MessageLookupByLibrary.simpleMessage("Ažuriraj prijavnicu"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),

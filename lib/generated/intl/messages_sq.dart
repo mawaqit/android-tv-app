@@ -25,8 +25,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("Rreth"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "O Allahu im, Zot i kësaj thirrje të plotë dhe i namazit që do të falet, jepi Muhamedit ndërmjetësimin dhe nderimin, si dhe dërgoje atë në vendin e lavdishëm të cilin ia ke premtuar. Pa dyshim, Ti e mban premtimin e dhënë. Me të vërtetë Ti nuk e thyen premtimin"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("Dua pas namazit"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Ezani"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("Dhikri"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("Al Iqama"),
         "appLang": MessageLookupByLibrary.simpleMessage("Gjuha e Aplikacionit"),
+        "asr": MessageLookupByLibrary.simpleMessage("I ikindisë"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Back to Homepage"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -49,22 +64,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Mesditë"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Shkruani ID-në e Xhamisë : "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Agimi"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Nuk mund të qaseni në vendndodhjen aktuale të pajisjes, ju lutemi kontrolloni nëse pajisja juaj GPS është e aktivizuar"),
         "headerType": MessageLookupByLibrary.simpleMessage("Lloji i Headerit"),
         "home": MessageLookupByLibrary.simpleMessage("Shtëpia"),
+        "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Udhëzuesi i instalimit"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("Iqama Tani"),
+        "isha": MessageLookupByLibrary.simpleMessage("Natës"),
+        "jumua": MessageLookupByLibrary.simpleMessage("E premte"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "Profeti (salallahu ‘alejhi wa salam) ka thenë\n « Kush merr abdes dhe e persos abdesin pastaj vjen per në xhuma dhe degjon me kujdes (hytben) dhe hesht (nuk flet) do ti falen atij gjynahet cfar ka ndermjet xhumase deri në xhumanë tjeter gjithashtu tre ditë shtese"),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("Ora e premte"),
         "languages": MessageLookupByLibrary.simpleMessage("Gjuha"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Mënyra e çelët"),
         "loadingAnimation": MessageLookupByLibrary.simpleMessage(
             "Duke ngarkuar animimin e qerthullit"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Akshamit"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT ju ofron një mënyrë të re për të gjurmuar dhe menaxhuar kohët e namazit, në të vërtetë ne ofrojmë një sistem nga fundi në fund që u ofron menaxherëve të xhamive një mjet në internet të disponueshëm 24/24 orë."),
         "mawaqitWelcome":
@@ -89,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no": MessageLookupByLibrary.simpleMessage("Jo"),
         "noInternet": MessageLookupByLibrary.simpleMessage("Nuk ka internet"),
         "notification": MessageLookupByLibrary.simpleMessage("Njoftim"),
+        "offline": MessageLookupByLibrary.simpleMessage("Jashtë linje"),
         "ok": MessageLookupByLibrary.simpleMessage("NE RREGULL"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Politika e privatësisë"),
@@ -96,6 +123,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rate": MessageLookupByLibrary.simpleMessage("Na vlerso"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Cilën xhami po kërkoni? (Emri, Qyteti, Kodi Postar...)"),
         "searchMosque":
@@ -105,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Provoni: 256, është ID e \'Xhamisë së Parisit\'"),
         "share": MessageLookupByLibrary.simpleMessage("Pjesë"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("Lindja e diellit"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "A nuk është një xhami e vlefshme \'slug\'"),
@@ -113,7 +142,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Jeni i sigurt që dëshironi të dilni nga?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Kushtet e Shërbimit"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Pokušajte ponovno"),
+        "turnOfPhones":
+            MessageLookupByLibrary.simpleMessage("Ju lutemi fikni celularët!"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update":
             MessageLookupByLibrary.simpleMessage("Përditëso aplikacionin"),

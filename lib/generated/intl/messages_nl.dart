@@ -24,8 +24,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AlAthkar_0": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_1": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_2": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_3": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
+        "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
         "about": MessageLookupByLibrary.simpleMessage("Informatie"),
+        "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
+            "Allah, Heer van deze perfecte oproep en van het te verrichten gebed, schenk Mohammed\n al-wasielah en al-fadielah en schenk hem de verheven positie die U hem heeft beloofd.\n (Voorwaar, U verbreekt geen belofte)"),
+        "afterSalahHadithTitle":
+            MessageLookupByLibrary.simpleMessage("Dua na gebed"),
+        "alAdhan": MessageLookupByLibrary.simpleMessage("Al-Athan"),
+        "alAthkar": MessageLookupByLibrary.simpleMessage("Al-Atkar"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("Al-Iqama"),
         "appLang": MessageLookupByLibrary.simpleMessage("App taal"),
+        "asr": MessageLookupByLibrary.simpleMessage("‘Asr"),
         "backToHomePage":
             MessageLookupByLibrary.simpleMessage("Terug naar Startpagina"),
         "backendError": MessageLookupByLibrary.simpleMessage(
@@ -46,22 +61,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
             "Connecting Muslims to Mosques"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
+        "duhr": MessageLookupByLibrary.simpleMessage("Dhoehr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Voer Moske-ID in: "),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "fajr": MessageLookupByLibrary.simpleMessage("Fadjr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
             "Geen toegang tot de huidige locatie van het apparaat, controleer of de GPS is ingeschakeld"),
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Startpagina"),
+        "imsak": MessageLookupByLibrary.simpleMessage("Imsaak"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Installatiehandleiding"),
+        "iqamaIn": MessageLookupByLibrary.simpleMessage("Al-Iqama in"),
+        "isha": MessageLookupByLibrary.simpleMessage("‘Ishaa"),
+        "jumua": MessageLookupByLibrary.simpleMessage("Djoemoe’ah"),
+        "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
+            "Het is overgeleverd van Aboe Hoerayrah dat de Profeet (vrede zij met hem) heeft gezegd:\n “Wie de grote wassing verricht en naar het vrijdaggebed komt, het aantal gebeden verricht die Allah voor hem bepaalt,\n aandachtig luistert naar de vrijdagpreek tot deze voorbij is, dan het gebed (met de imam) verricht; (zijn zonden)\n tussen het ene vrijdaggebed en het andere en drie dagen erna zullen vergeven worden en wie een steen aanraakt heeft\n zich schuldig gemaakt aan ijdele gepraat (zijn beloning wordt minder)"),
+        "jumuaaScreenTitle":
+            MessageLookupByLibrary.simpleMessage("Jumuaa Tijd"),
         "languages": MessageLookupByLibrary.simpleMessage("Leren"),
         "leftButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Knop opties (links)"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Lichte modus"),
         "loadingAnimation":
             MessageLookupByLibrary.simpleMessage("Animatie laden"),
+        "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
             "MAWAQIT biedt je een nieuwe manier om gebedstijden bij te houden en te beheren. We bieden inderdaad een end-to-end systeem dat moskeemanagers een online tool biedt die 24/24 uur beschikbaar is."),
         "mawaqitWelcome":
@@ -86,12 +112,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Geen internetverbinding"),
         "notification": MessageLookupByLibrary.simpleMessage("Meldingen"),
+        "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacybeleid"),
         "quit": MessageLookupByLibrary.simpleMessage("Sluiten"),
         "rate": MessageLookupByLibrary.simpleMessage("Beoordeel ons"),
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Knop opties (links)"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Welke moskee zoekt u? (Naam, Plaats, Postcode...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("Zoek een moskee"),
@@ -100,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Probeer: 256, het is de ID van de \'Mosquée de Paris\'"),
         "share": MessageLookupByLibrary.simpleMessage("Delen"),
+        "shuruk": MessageLookupByLibrary.simpleMessage("Zonsopkomst"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError": MessageLookupByLibrary.simpleMessage(
             "Dit is geen geldige moskee slug"),
@@ -108,7 +137,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Weet u zeker dat u de toepassing wilt afsluiten?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Servicevoorwaarden"),
+        "thisFeatureIsNotSupportedRightNow":
+            MessageLookupByLibrary.simpleMessage(
+                "this feature is not supported right now"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Probeer opnieuw"),
+        "turnOfPhones": MessageLookupByLibrary.simpleMessage(
+            "Vriendelijk verzoek om uw telefoon uit te zetten!"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "update": MessageLookupByLibrary.simpleMessage("Toepassing bijwerken"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
