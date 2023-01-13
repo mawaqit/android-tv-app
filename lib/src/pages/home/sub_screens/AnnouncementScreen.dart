@@ -19,8 +19,7 @@ class AnnouncementScreen extends StatefulWidget {
 class _AnnouncementScreenState extends State<AnnouncementScreen> {
   int activeIndex = 0;
   bool showHome = true;
-  Duration homeDuration = Duration(seconds: 30);
-  Duration announcementDuration = Duration(seconds: 30);
+  Duration homeDuration = Duration(minutes: 9);
 
   @override
   void initState() {
@@ -28,24 +27,25 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
       nextScreen();
     });
     super.initState();
-
   }
-
 
   @override
   Widget build(BuildContext context) {
-
-    if (showHome ||context.read<MosqueManager>().mosque!.announcements.length<=activeIndex) {
+    final announcements = context
+        .read<MosqueManager>()
+        .mosque!
+        .announcements;
+    if (showHome || announcements.length <= activeIndex) {
       return NormalHomeSubScreen();
     }
     return Stack(
-      alignment:Alignment.bottomCenter,
+      alignment: Alignment.bottomCenter,
       children: [
         announcementWidgets(),
         IgnorePointer(
           child: Padding(
-            padding:  EdgeInsets.only(bottom:1.5.vh ),
-            child: SalahTimesBar(miniStyle: true),
+            padding: EdgeInsets.only(bottom: 1.5.vh),
+            child: SalahTimesBar(miniStyle: true,microStyle: true,),
           ),
         )
       ],
@@ -54,15 +54,29 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   Widget announcementWidgets() {
     final announcement = context.read<MosqueManager>().mosque!.announcements[activeIndex];
-
-    if (announcement.content != null) {
-      return textAnnouncement(announcement.content!, announcement.title);
-    } else if (announcement.image != null) {
-      return imageAnnouncement(announcement.image!);
-    } else if (announcement.video != null) {
-      return videoAnnouncement(announcement.video!);
+    DateTime? startDate;
+    DateTime? endDate;
+    if (announcement.startDate != null) {
+      startDate = DateTime.parse(announcement.startDate!);
+    }
+    if (announcement.endDate != null) {
+      endDate = DateTime.parse(announcement.endDate!);
     }
 
+    // final updatedDate = DateTime.parse(announcement.updatedDate!);
+    bool isAvailableTime = ((DateTime.now().isBefore(endDate ?? DateTime.now())) &&
+        DateTime.now().isAfter(
+          startDate ?? DateTime.now(),
+        ));
+    bool isNoDate = announcement.startDate == null || announcement.endDate == null;
+    print("time$isAvailableTime");
+    if (announcement.content != null && (isAvailableTime || isNoDate)) {
+      return textAnnouncement(announcement.content!, announcement.title);
+    } else if (announcement.image != null && (isAvailableTime || isNoDate)) {
+      return imageAnnouncement(announcement.image!);
+    } else if (announcement.video != null && (isAvailableTime || isNoDate)) {
+      return videoAnnouncement(announcement.video!);
+    }
 
     return SizedBox();
   }
@@ -75,28 +89,24 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
             stepGranularity: 12,
             textAlign: TextAlign.center,
             style: TextStyle(
-              shadows: kAnnouncementTextShadow,
-              fontSize: 62,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'hafs',
-              color: Colors.amber,
-                letterSpacing: 1
-
-            )),
+                shadows: kAnnouncementTextShadow,
+                fontSize: 62,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'hafs',
+                color: Colors.amber,
+                letterSpacing: 1)),
         // content
         Expanded(
           child: AutoSizeText(content,
               stepGranularity: 12,
               textAlign: TextAlign.center,
               style: TextStyle(
-
-                shadows: kAnnouncementTextShadow,
-                fontSize: 62,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'hafs',
-                color: Colors.white,
-                letterSpacing: 1
-              )),
+                  shadows: kAnnouncementTextShadow,
+                  fontSize: 62,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'hafs',
+                  color: Colors.white,
+                  letterSpacing: 1)),
         ),
       ],
     );
@@ -121,7 +131,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     );
     return Stack(
       children: [
-
         YoutubePlayer(
           onEnded: (metaData) {
             nextScreen();
@@ -129,19 +138,21 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
           controller: _controller,
           showVideoProgressIndicator: true,
         ),
-
       ],
     );
   }
 
   nextScreen() {
-    final announcement = context.read<MosqueManager>().mosque!.announcements;
+    final announcement = context
+        .read<MosqueManager>()
+        .mosque!
+        .announcements;
     if (!showHome) {
       setState(() {
         showHome = true;
       });
       return Future.delayed(homeDuration).then(
-        (value) => nextScreen(),
+            (value) => nextScreen(),
       );
     }
 
@@ -153,17 +164,17 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
       showHome = false;
     });
     if (announcement[activeIndex].video == null)
-      Future.delayed(announcementDuration).then(
-        (value) => nextScreen(),
+      Future.delayed(Duration(seconds: announcement[activeIndex].duration ?? 30)).then(
+            (value) => nextScreen(),
       );
   }
-  get kAnnouncementTextShadow => [
-    Shadow(
-      offset: Offset(0, 9),
-      blurRadius: 15,
-      color: Colors.black54,
 
-    ),
-  ];
-
+  get kAnnouncementTextShadow =>
+      [
+        Shadow(
+          offset: Offset(0, 9),
+          blurRadius: 15,
+          color: Colors.black54,
+        ),
+      ];
 }

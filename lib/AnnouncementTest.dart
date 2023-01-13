@@ -20,11 +20,7 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
   @override
   void initState() {
     super.initState();
-    if (context
-        .read<MosqueManager>()
-        .mosque!
-        .announcements
-        .isNotEmpty) {
+    if (context.read<MosqueManager>().mosque!.announcements.isNotEmpty) {
       nextScreen();
     }
   }
@@ -36,39 +32,39 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
     if (mosqueProvider.mosque == null || mosqueProvider.times == null) return SizedBox();
 
     final mosque = mosqueProvider.mosque!;
-    return
-      Scaffold(
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: mosque.image != null
-                  ? NetworkImage(mosque.image!) as ImageProvider
-                  : AssetImage('assets/backgrounds/splash_screen_5.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Container(
-            color: Colors.black54,
-            child: (context
-                .read<MosqueManager>()
-                .mosque!
-                .announcements
-                .isNotEmpty) ? Stack(
-              alignment: Alignment.bottomCenter,
 
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: mosque.image != null
+                ? NetworkImage(mosque.image!) as ImageProvider
+                : AssetImage('assets/backgrounds/splash_screen_5.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Container(
+          color: Colors.black54,
+          child: (context.read<MosqueManager>().mosque!.announcements.isNotEmpty)
+              ? Stack(
+                  alignment: Alignment.bottomCenter,
                   children: [
                     announcementWidgets(),
-                   IgnorePointer(
-                     child: Padding(
-                       padding:  EdgeInsets.only(bottom:1.5.vh ),
-                       child: SalahTimesBar(miniStyle: true),
-                     ),
-                   )
+                    IgnorePointer(
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 1.5.vh),
+                        child: SalahTimesBar(
+                          miniStyle: true,
+                          microStyle: true,
+                        ),
+                      ),
+                    )
                   ],
-                ):Center(
-                child: Container(
+                )
+              : Center(
+                  child: Container(
                   child: Text(
                     style: TextStyle(
                       fontSize: 62,
@@ -77,35 +73,38 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
                     "Not found Announcement",
                   ),
                 )),
-          ),
         ),
-      );
+      ),
+    );
   }
 
   Widget announcementWidgets() {
-    final announcement = context
-        .read<MosqueManager>()
-        .mosque!
-        .announcements[activeIndex];
+    final announcement = context.read<MosqueManager>().mosque!.announcements[activeIndex];
+    DateTime? startDate;
+    DateTime? endDate;
+    if (announcement.startDate != null) {
+      startDate = DateTime.parse(announcement.startDate!);
+    }
+    if (announcement.endDate != null) {
+      endDate = DateTime.parse(announcement.endDate!);
+    }
 
-    if (announcement.content != null) {
+    // final updatedDate = DateTime.parse(announcement.updatedDate!);
+    bool isAvailableTime = ((DateTime.now().isBefore(endDate ?? DateTime.now())) &&
+        DateTime.now().isAfter(
+          startDate ?? DateTime.now(),
+        ));
+    bool isNoDate = announcement.startDate == null || announcement.endDate == null;
+    print("time$isAvailableTime");
+    if (announcement.content != null && (isAvailableTime || isNoDate)) {
       return textAnnouncement(announcement.content!, announcement.title);
-    } else if (announcement.image != null) {
+    } else if (announcement.image != null && (isAvailableTime || isNoDate)) {
       return imageAnnouncement(announcement.image!);
-    } else if (announcement.video != null) {
+    } else if (announcement.video != null && (isAvailableTime || isNoDate)) {
       return videoAnnouncement(announcement.video!);
     }
 
-    return Center(
-        child: Container(
-          child: Text(
-            style: TextStyle(
-              fontSize: 62,
-              color: Colors.white70,
-            ),
-            "Not found Announcement",
-          ),
-        ));
+    return SizedBox();
   }
 
   Widget textAnnouncement(String content, String title) {
@@ -171,10 +170,7 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
   }
 
   nextScreen() {
-    final announcement = context
-        .read<MosqueManager>()
-        .mosque!
-        .announcements;
+    final announcement = context.read<MosqueManager>().mosque!.announcements;
     setState(() {
       activeIndex++;
       if (activeIndex >= announcement.length) {
@@ -182,14 +178,14 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
       }
     });
     if (announcement[activeIndex].video == null) {
-      Future.delayed(announcementDuration).then(
-            (value) => nextScreen(),
+      //announcement[activeIndex].duration ??
+      Future.delayed(Duration(seconds:  5)).then(
+        (value) => nextScreen(),
       );
     }
   }
 
-  get kAnnouncementTextShadow =>
-      [
+  get kAnnouncementTextShadow => [
         Shadow(
           offset: Offset(0, 9),
           blurRadius: 15,

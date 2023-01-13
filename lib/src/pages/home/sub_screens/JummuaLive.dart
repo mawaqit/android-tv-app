@@ -33,6 +33,8 @@ class _JummuaLiveState extends State<JummuaLive> {
         isLive: true,
         hideControls: true,
         autoPlay: true,
+        /// todo if type is mosque live is mute 
+        //mute: isMosque?false:true
 
       ),
 
