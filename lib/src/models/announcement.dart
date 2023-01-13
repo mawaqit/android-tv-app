@@ -119,6 +119,7 @@ class Announcement {
       duration: map["duration"],
       startDate: map['startDate'],
       endDate: map['endDate'],
+      // endDate: map['endDate']==null?null:DateTime.parse(map['endDate']),
       updatedDate: map['updated'],
     );
   }
