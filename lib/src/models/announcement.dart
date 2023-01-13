@@ -2,6 +2,10 @@ class Announcement {
   final int id;
   final String title;
   final String? content;
+  final int? duration;
+  final String? startDate;
+  final String? updatedDate;
+  final String? endDate;
   final bool isMobile;
   final bool isDesktop;
   final String? image;
@@ -17,6 +21,10 @@ class Announcement {
     required this.isDesktop,
     required this.image,
     required this.video,
+    required this.duration,
+    required this.startDate,
+    required this.endDate,
+    required this.updatedDate,
   });
 
   @override
@@ -63,6 +71,10 @@ class Announcement {
     bool? isDesktop,
     String? image,
     String? video,
+    int? duration,
+    String? startDate,
+    String? updatedDa,
+    String? endDate,
   }) {
     return Announcement(
       id: id ?? this.id,
@@ -72,6 +84,10 @@ class Announcement {
       isDesktop: isDesktop ?? this.isDesktop,
       image: image ?? this.image,
       video: video ?? this.video,
+      duration: this.duration,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      updatedDate: this.updatedDate,
     );
   }
 
@@ -84,6 +100,10 @@ class Announcement {
       'isDesktop': this.isDesktop,
       'image': this.image,
       'video': this.video,
+      "duration": this.duration,
+      'startDate': this.startDate,
+      'endDate': this.endDate,
+      'updated': this.updatedDate,
     };
   }
 
@@ -96,6 +116,11 @@ class Announcement {
       isDesktop: map['isDesktop'],
       image: map['image'],
       video: map['video'],
+      duration: map["duration"],
+      startDate: map['startDate'],
+      endDate: map['endDate'],
+      // endDate: map['endDate']==null?null:DateTime.parse(map['endDate']),
+      updatedDate: map['updated'],
     );
   }
 

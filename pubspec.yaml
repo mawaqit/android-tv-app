@@ -38,9 +38,14 @@ dependencies:
 
   # STORAGE
   shared_preferences: ^2.0.13
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+
 
   # UI
   cupertino_icons: ^1.0.4
+  font_awesome_flutter: ^10.3.0
   flutter_spinkit: ^5.1.0
   page_transition: ^2.0.5
   #modal_progress_hud: ^0.1.3

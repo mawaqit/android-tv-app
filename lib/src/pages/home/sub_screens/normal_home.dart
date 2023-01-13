@@ -20,7 +20,7 @@ class NormalHomeSubScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueProvider = context.read<MosqueManager>();
     final mosque = mosqueProvider.mosque!;
-
+    final mosqueConfig = mosqueProvider.mosqueConfig;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -30,16 +30,16 @@ class NormalHomeSubScreen extends StatelessWidget {
             Expanded(
               child: mosqueProvider.showImsak
                   ? Center(
-                    child: SalahItemWidget(
+                      child: SalahItemWidget(
                         title: S.of(context).imsak,
                         time: mosqueProvider.imsak,
                         removeBackground: true,
                         withDivider: false,
                       ),
-                  )
+                    )
                   : mosqueProvider.showEid
                       ? Center(
-                        child: SalahItemWidget(
+                          child: SalahItemWidget(
                             title: "Salat El Eid",
                             iqama: mosqueProvider.times!.aidPrayerTime2,
                             time: mosqueProvider.times!.aidPrayerTime ?? "",
@@ -47,16 +47,16 @@ class NormalHomeSubScreen extends StatelessWidget {
                             withDivider: mosqueProvider.times!.aidPrayerTime2 != null,
                             active: true,
                           ),
-                      )
+                        )
                       : Center(
-                        child: SalahItemWidget(
+                          child: SalahItemWidget(
                             title: S.of(context).shuruk,
                             time: mosqueProvider.times!.shuruq ?? "",
                             removeBackground: true,
                             withDivider: false,
                             active: mosqueProvider.activateShroukItem,
                           ),
-                      ),
+                        ),
             ),
             HomeTimeWidget(),
             Expanded(
@@ -105,12 +105,63 @@ class NormalHomeSubScreen extends StatelessWidget {
                 child: SizedBox(
                   height: 5.vw,
                   child:FlashWidget()
+
+        mosqueConfig!.footer!
+            ? Container(
+                padding: EdgeInsets.symmetric(horizontal: 1.vw, vertical: .3.vw),
+                width: double.infinity,
+                color: mosque.flash?.content.isEmpty != false ? null : Colors.black38,
+                child: Row(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "ID ${mosque.id}",
+                          style: TextStyle(
+                            fontSize: .7.vw,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            shadows: kHomeTextShadow,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Image.network(
+                          'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
+                          width: 3.vw,
+                          height: 3.vw,
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        height: 5.vw,
+                        child: mosque.flash?.content.isEmpty != false
+                            //todo get the message
+                            ? SizedBox()
+                            : Marquee(
+                                text: mosque.flash?.content ?? '',
+                                scrollAxis: Axis.horizontal,
+                                blankSpace: 500,
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  wordSpacing: 3,
+                                  shadows: kHomeTextShadow,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ),
+                    HomeLogoVersion(),
+                  ],
+
                 ),
-              ),
-              HomeLogoVersion(),
-            ],
-          ),
-        ),
+              )
+            : SizedBox(
+                height: 40,
+              )
       ],
     );
   }

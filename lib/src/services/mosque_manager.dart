@@ -22,8 +22,7 @@ final mawaqitApi = "https://mawaqit.net/api/2.0";
 const kAfterAdhanHadithDuration = Duration(minutes: 1);
 const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
-const kAzkarDuration = Duration(minutes: 2);
-
+const kAzkarDuration = const Duration(minutes: 2);
 
 class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin {
   final sharedPref = SharedPref();
@@ -210,10 +209,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin {
 extension MosqueHelperUtils on MosqueManager {
   calculateActiveScreen() {
     Duration iqamaaDuration = Duration(seconds: mosqueConfig!.iqamaDisplayTime!);
-    print (iqamaaDuration);
-
-
-
 
     /// still user didn't select his mosque
     if (mosque == null || times == null) return;
@@ -229,21 +224,23 @@ extension MosqueHelperUtils on MosqueManager {
     final lastIqamaIndex = salahIndex;
     final lastIqama = actualIqamaTimes()[lastIqamaIndex];
     int salahMinute = int.parse(mosqueConfig!.duaAfterPrayerShowTimes[lastSalahIndex]);
-     Duration salahDuration = Duration(minutes:salahMinute);
-     print (salahMinute);
+    Duration salahDuration = Duration(minutes: salahMinute);
+    print(salahMinute);
     if (actualTimes()[0].subtract(kAdhanBeforeFajrDuration).difference(now).abs() < (getAdhanDuration(mosqueConfig)) &&
         mosqueConfig?.wakeForFajrTime != null) {
       state = HomeActiveScreen.adhan;
+
       /// we are in wake up adhan before adhanFajr
-    } else if (lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig)&& (now.weekday != DateTime.friday && salahIndex!=1 )) {
+    } else if (lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig) &&
+        (now.weekday != DateTime.friday && salahIndex != 1)) {
       /// we are in adhan time
       state = HomeActiveScreen.adhan;
     } else if ((lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig) + kAfterAdhanHadithDuration) &&
-        (now.weekday != DateTime.friday && salahIndex!=1 )&&
+        (now.weekday != DateTime.friday && salahIndex != 1) &&
         mosqueConfig!.duaAfterAzanEnabled!) {
       /// adhan has just done
       state = HomeActiveScreen.afterAdhanHadith;
-    } else if (lastIqama.difference(now).abs() < iqamaaDuration&&mosqueConfig!.iqamaEnabled!) {
+    } else if (lastIqama.difference(now).abs() < iqamaaDuration && mosqueConfig!.iqamaEnabled!) {
       /// we are in iqama time
       state = HomeActiveScreen.iqamaa;
     } else if (nextIqamaIndex == lastSalahIndex) {
@@ -255,7 +252,9 @@ extension MosqueHelperUtils on MosqueManager {
       } else if (mosqueConfig!.iqamaFullScreenCountdown!) {
         state = HomeActiveScreen.iqamaaCountDown;
       }
-    } else if ((now.difference(lastIqama) - salahDuration).abs() < kAzkarDuration&&mosqueConfig!.iqamaEnabled!) {
+    } else if ((now.difference(lastIqama) - salahDuration).abs() < kAzkarDuration &&
+        mosqueConfig!.iqamaEnabled! &&
+        mosqueConfig!.duaAfterPrayerEnabled!) {
       state = HomeActiveScreen.afterSalahAzkar;
     }
 

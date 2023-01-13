@@ -15,6 +15,7 @@ class Api {
   static final dio = Dio(BaseOptions(baseUrl: kBaseUrl, headers: {
     'Api-Access-Token': token,
     'accept': 'application/json',
+    'mawaqit-device':'android-tv'
   }));
 
   static Future<void> init() async {

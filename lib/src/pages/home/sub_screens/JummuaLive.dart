@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/services/developer_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../helpers/HiveLocalDatabase.dart';
 import '../../../services/mosque_manager.dart';
 
 class JummuaLive extends StatefulWidget {
@@ -19,6 +21,15 @@ class _JummuaLiveState extends State<JummuaLive> {
     // if (mosqueProvider.mosque == null || mosqueProvider.times == null) return SizedBox();
     //
     // final mosque = mosqueProvider.mosque!;
+    final hive = context.watch<HiveManager>();
+    final developer = context.read<DeveloperManager>();
+    if (hive.isSecondaryScreen()) {
+      return Scaffold(backgroundColor: Colors.black,
+        body: developer.developerModeEnabled ? Center(
+          child: Text(
+            "For Developer: \nthis main screen in jummua", style: TextStyle(fontSize: 40),),
+        ) : SizedBox(),);
+    }
     return liveStream("https://www.youtube.com/watch?v=NP-hZRXIrYs");
   }
 
@@ -33,6 +44,9 @@ class _JummuaLiveState extends State<JummuaLive> {
         isLive: true,
         hideControls: true,
         autoPlay: true,
+
+        /// todo if type is mosque live is mute
+        //mute: isMosque?false:true
 
       ),
 

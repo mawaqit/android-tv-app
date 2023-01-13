@@ -8,6 +8,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeTimeWidget extends TimerRefreshWidget {
   const HomeTimeWidget({
@@ -45,7 +46,6 @@ class HomeTimeWidget extends TimerRefreshWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
-
     final now = mosqueManager.mosqueDate();
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final nextSalahIndex = mosqueManager.nextSalahIndex();
@@ -57,7 +57,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
     var hijriDate = HijriCalendar.fromDate(now.add(Duration(
       days: mosqueManager.times!.hijriAdjustment,
     )));
-
+    bool isLunarDays = hijriDate.hDay==13||hijriDate.hDay==14||hijriDate.hDay==15;
     if (isArabic) {
       HijriCalendar.language = 'ar';
     } else {
@@ -136,46 +136,73 @@ class HomeTimeWidget extends TimerRefreshWidget {
                     ],
                   ),
                   SizedBox(
-                    height: 2.2.vw,
-                    child: AnimatedTextKit(
-                      key: ValueKey('122'),
-                      isRepeatingAnimation: true,
-                      repeatForever: true,
-                      displayFullTextOnTap: true,
-                      animatedTexts: [
-                        FadeAnimatedText(
-                          DateFormat("EEEE, MMM dd, yyyy").format(now),
-                          duration: Duration(seconds: 6),
-                          fadeInEnd: 200 / 10000,
-                          fadeOutBegin: 1,
-                          textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 2.3.vw,
-                            shadows: kHomeTextShadow,
-                            // letterSpacing: 1,
-                            height: .8,
-                            fontFamily: isArabic ? 'kufi' : null,
+                    height: 2.5.vw,
+                    child: mosqueConfig!.hijriDateEnabled!? Row(
+                      children: [
+                        Expanded(
+                          child: FittedBox(
+                            child: Center(
+                              child: AnimatedTextKit(
+                                key: ValueKey('122'),
+                                isRepeatingAnimation: true,
+                                repeatForever: true,
+                                displayFullTextOnTap: true,
+                                animatedTexts: [
+                                  FadeAnimatedText(
+                                    DateFormat("EEEE, MMM dd, yyyy",).format(now),
+                                    duration: Duration(seconds: 6),
+                                    fadeInEnd: 200 / 10000,
+                                    fadeOutBegin: 1,
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 2.3.vw,
+                                      shadows: kHomeTextShadow,
+                                      // letterSpacing: 1,
+                                      height: .8,
+                                      fontFamily: isArabic ? 'kufi' : null,
+                                    ),
+                                  ),
+                                  FadeAnimatedText(
+                                    hijriDate.format(
+                                      hijriDate.hYear,
+                                      hijriDate.hMonth,
+                                      hijriDate.hDay,
+                                      "dd MMMM yyyy",
+                                    ),
+                                    duration: Duration(seconds: 4),
+                                    fadeInEnd: 200 / 4000,
+                                    fadeOutBegin: 1,
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 2.3.vw,
+                                      shadows: kHomeTextShadow,
+                                      height: .8,
+                                      fontFamily: isArabic ? 'kufi' : null,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                        FadeAnimatedText(
-                          hijriDate.format(
-                            hijriDate.hYear,
-                            hijriDate.hMonth,
-                            hijriDate.hDay,
-                            "dd MMMM yyyy",
+                        if(isLunarDays)
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: FaIcon(FontAwesomeIcons.solidMoon,size: 2.5.vw,),
                           ),
-                          duration: Duration(seconds: 4),
-                          fadeInEnd: 200 / 4000,
-                          fadeOutBegin: 1,
-                          textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 2.3.vw,
-                            shadows: kHomeTextShadow,
-                            height: .8,
-                            fontFamily: isArabic ? 'kufi' : null,
-                          ),
-                        ),
+                        )
                       ],
+                    ):Text(
+                      DateFormat("EEEE, MMM dd, yyyy",).format(now),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 2.3.vw,
+                        shadows: kHomeTextShadow,
+                        // letterSpacing: 1,
+                        height: .8,
+                        fontFamily: isArabic ? 'kufi' : null,
+                      ),
                     ),
                   ),
                 ],
