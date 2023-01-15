@@ -38,6 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "Promijenite džamiju",
   "mosque": "Džamija",
+  "in1": "in",
+  "online": "Online",
   "enterMosqueId": "Shkruani ID-në e Xhamisë : ",
   "mosqueId": "ID e xhamisë ",
   "missingMosqueId": "Mungon ID e xhamisë",
