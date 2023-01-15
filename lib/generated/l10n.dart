@@ -440,6 +440,26 @@ class S {
     );
   }
 
+  /// `in`
+  String get in1 {
+    return Intl.message(
+      'in',
+      name: 'in1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online`
+  String get online {
+    return Intl.message(
+      'Online',
+      name: 'online',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please enter the Mosque ID :`
   String get enterMosqueId {
     return Intl.message(
