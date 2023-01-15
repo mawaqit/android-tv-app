@@ -38,6 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "Alterar Mesquita",
   "mosque": "Mesquita",
+  "in1": "in",
+  "online": "Online",
   "enterMosqueId": "Insira a ID da Mesquita: ",
   "mosqueId": "ID de Mesquita ",
   "missingMosqueId": "ID da mesquita ausente",
