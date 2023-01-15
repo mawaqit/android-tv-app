@@ -38,6 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "Changer de Mosquée",
   "mosque": "Mosquée",
+  "in1": "in",
+  "online": "Online",
   "enterMosqueId": "Veuillez saisir l'ID de votre installation ou l'ID de la mosquée (Mosque ID)",
   "mosqueId": "ID de la mosquée ",
   "missingMosqueId": "Il manque l'ID de la mosquée",
