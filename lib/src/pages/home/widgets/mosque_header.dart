@@ -34,8 +34,7 @@ class MosqueHeader extends StatelessWidget {
                 ),
                 SizedBox(width: .4.vw),
                 Text(
-                  //todo translate online
-                 "${isOffline?tr.offline:"Online"}" ,
+                 "${isOffline?tr.offline:tr.online}" ,
                   style: TextStyle(
                     color: Colors.white,
                     shadows: kHomeTextShadow,
@@ -48,7 +47,7 @@ class MosqueHeader extends StatelessWidget {
             ),
           ),
           Spacer(),
-          Image.asset('assets/img/logo.png', width: 40, height: 40),
+        mosque.logo!=null?  Image.network(mosque.logo!, width: 40, height: 40):SizedBox(),
           SizedBox(width: 10),
           Container(
             constraints: BoxConstraints(maxWidth: 60.vw),
@@ -66,7 +65,7 @@ class MosqueHeader extends StatelessWidget {
             ),
           ),
           SizedBox(width: 10),
-          Image.asset('assets/img/logo.png', width: 40, height: 40),
+          mosque.logo!=null?  Image.network(mosque.logo!, width: 40, height: 40):SizedBox(),
           Spacer(),
           WeatherWidget(),
         ],

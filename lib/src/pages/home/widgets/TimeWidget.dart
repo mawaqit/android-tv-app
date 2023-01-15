@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../generated/l10n.dart';
+
 class HomeTimeWidget extends TimerRefreshWidget {
   const HomeTimeWidget({
     Key? key,
@@ -220,7 +222,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                   SizedBox(width: 1.5.vw),
                   Text(
                     [
-                      "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} in ",
+                      "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
                       if (nextSalahTime.inMinutes > 0)
                         "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')} ",
                       if (nextSalahTime.inMinutes == 0)

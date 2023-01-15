@@ -10,6 +10,7 @@ class Mosque {
   final String? phone;
   final String? url;
   final String? image;
+  final String? logo;
   final String? site;
   final String? association;
   final String? localisation;
@@ -40,6 +41,7 @@ class Mosque {
     required this.phone,
     required this.url,
     required this.image,
+    required this.logo,
     required this.site,
     required this.association,
     required this.localisation,
@@ -162,6 +164,7 @@ class Mosque {
     String? phone,
     String? url,
     String? image,
+    String? logo,
     String? site,
     String? association,
     String? localisation,
@@ -190,6 +193,7 @@ class Mosque {
       phone: phone ?? this.phone,
       url: url ?? this.url,
       image: image ?? this.image,
+      logo: logo ?? this.logo,
       site: site ?? this.site,
       association: association ?? this.association,
       localisation: localisation ?? this.localisation,
@@ -221,6 +225,7 @@ class Mosque {
       'phone': this.phone,
       'url': this.url,
       'image': this.image,
+      'logo': this.logo,
       'site': this.site,
       'association': this.association,
       'localisation': this.localisation,
@@ -253,6 +258,7 @@ class Mosque {
       phone: map['phone'],
       url: map['url'],
       image: map['image'],
+      logo: map['logo'],
       site: map['site'],
       association: map['association'],
       localisation: map['localisation'],
