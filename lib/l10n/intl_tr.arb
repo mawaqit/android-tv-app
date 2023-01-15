@@ -38,6 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "Cami değiştir",
   "mosque": "Cami",
+  "in1": "in",
+  "online": "Online",
   "enterMosqueId": "Lütfen Cami Kimliğinizi giriniz : ",
   "mosqueId": "Cami ID (sayı) ",
   "missingMosqueId": "Eksik Cami ID",
