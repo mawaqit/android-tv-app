@@ -38,6 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "Wijzigen Moskee",
   "mosque": "Moskee",
+  "in1": "in",
+  "online": "Online",
   "enterMosqueId": "Voer Moske-ID in: ",
   "mosqueId": "Moske-ID ",
   "missingMosqueId": "Ontbrekende moske-ID",
