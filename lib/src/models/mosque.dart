@@ -1,3 +1,5 @@
+
+import 'package:flutter/cupertino.dart';
 import 'package:mawaqit/src/models/flash.dart';
 
 import 'announcement.dart';
@@ -6,6 +8,7 @@ class Mosque {
   final int id;
   final String? uuid;
   final String name;
+  final String label;
   final String? email;
   final String? phone;
   final String? url;
@@ -37,6 +40,7 @@ class Mosque {
     required this.id,
     required this.uuid,
     required this.name,
+    required this.label,
     required this.email,
     required this.phone,
     required this.url,
@@ -160,6 +164,7 @@ class Mosque {
     int? id,
     String? uuid,
     String? name,
+    String? label,
     String? email,
     String? phone,
     String? url,
@@ -189,6 +194,7 @@ class Mosque {
       id: id ?? this.id,
       uuid: uuid ?? this.uuid,
       name: name ?? this.name,
+      label: label ?? this.label,
       email: email ?? this.email,
       phone: phone ?? this.phone,
       url: url ?? this.url,
@@ -225,6 +231,7 @@ class Mosque {
       'phone': this.phone,
       'url': this.url,
       'image': this.image,
+      'label': this.label,
       'logo': this.logo,
       'site': this.site,
       'association': this.association,
@@ -249,11 +256,12 @@ class Mosque {
   }
 
   factory Mosque.fromMap(Map<String, dynamic> map) {
-    print(map);
+    debugPrint(map.toString(),wrapWidth: 500);
     return Mosque(
       id: map['id'] ?? -1,
       uuid: map['uuid'],
       name: map['name'],
+      label: map['label'],
       email: map['email'],
       phone: map['phone'],
       url: map['url'],
