@@ -38,6 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "تغيير المسجد",
   "mosque": "المسجد",
+  "in1": "in",
+  "online": "Online",
   "enterMosqueId": "مسجد کی شناخت درج کریں:",
   "mosqueId": "مسجد کی شناخت",
   "missingMosqueId": "مسجد کی شناخت غائب ہے۔",
