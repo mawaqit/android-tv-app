@@ -19,17 +19,17 @@ class MosqueHeader extends StatelessWidget {
     bool isOffline = connectionStatus == ConnectivityStatus.Offline;
     final tr = S.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      padding:  EdgeInsets.only(top: 1.8.vh, left: .8.vw,right: .8.vw),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding:  EdgeInsets.symmetric(vertical: .5.vh,horizontal: .5.vw),
+            padding:  EdgeInsets.symmetric(vertical: .5.vh,horizontal: .35.vw),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircleAvatar(
-                  radius: .7.vw,
+                  radius: .6.vw,
                   backgroundColor: isOffline ? Colors.red[700] : Colors.green,
                 ),
                 SizedBox(width: .4.vw),

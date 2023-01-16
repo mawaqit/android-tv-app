@@ -5,6 +5,8 @@ import 'package:mawaqit/src/helpers/weather_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../themes/UIShadows.dart';
+
 class WeatherWidget extends StatelessWidget {
   const WeatherWidget({Key? key}) : super(key: key);
 
@@ -21,7 +23,7 @@ class WeatherWidget extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Padding(
-        padding: EdgeInsets.only(top: 2.vh),
+        padding: EdgeInsets.only(top: 4.vh),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -30,6 +32,7 @@ class WeatherWidget extends StatelessWidget {
               WeatherIcons.fromString(mosqueManager.weather!.icon),
               size: 3.vw,
               color: Colors.white,
+              shadows: kHomeTextShadow,
             ),
             SizedBox(width: 1.6.vw),
             Text(
@@ -38,6 +41,7 @@ class WeatherWidget extends StatelessWidget {
                     fontSize: 3.vw,
                     fontWeight: FontWeight.w500,
                     color: HexColor(mosqueManager.getColorFeeling()),
+                shadows: kHomeTextShadow
                   ),
             ),
             Text(
@@ -47,6 +51,7 @@ class WeatherWidget extends StatelessWidget {
                 height: 1,
                 color: HexColor(mosqueManager.getColorFeeling()),
                 fontSize: 2.4.vw,
+                shadows: kHomeTextShadow
               ),
             ),
           ],
