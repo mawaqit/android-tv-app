@@ -15,7 +15,7 @@ class HomeLogoVersion extends StatelessWidget {
          ),
         Positioned(
           top: 0,
-          bottom: -2,
+          bottom: -3,
           left: 0,
           right: 0,
           child: Align(

@@ -101,20 +101,21 @@ class NormalHomeSubScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                        padding: EdgeInsets.only(
-                          bottom: 1.vh,
-                          left: .5.vw,
-                          right: .5.vw,
-                          top: .6.vh,
-                        ),
-                        height: 9.5.vh,
-                        decoration: BoxDecoration(
-                          color: Colors.black38,
-                        ),
-                        child: HomeLogoVersion()),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                          padding: EdgeInsets.only(
+                            bottom: 1.vh,
+                            left: .5.vw,
+                            right: .5.vw,
+                            top: .6.vh,
+                          ),
+                          height: 9.5.vh,
+
+                          child: HomeLogoVersion()),
+                    ),
                   ),
                 ],
               )
