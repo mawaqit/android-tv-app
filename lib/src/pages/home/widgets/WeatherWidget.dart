@@ -21,7 +21,7 @@ class WeatherWidget extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Padding(
-        padding: EdgeInsets.only(top: 2.vh),
+        padding: EdgeInsets.only(top: 4.vh),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,

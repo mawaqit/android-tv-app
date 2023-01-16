@@ -5,6 +5,7 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/HomeLogoVersion.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
+import 'package:mawaqit/src/pages/home/widgets/ShurukWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/TimeWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -24,96 +25,96 @@ class NormalHomeSubScreen extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        MosqueHeader(mosque: mosque),
-        Row(
+        Column(
           children: [
-            Expanded(
-              child: mosqueProvider.showImsak
-                  ? Center(
+            MosqueHeader(mosque: mosque),
+            Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 2.vw,top:1.5.vh ),
+                    child: ShurukWidget(),
+                  ),
+                  HomeTimeWidget(),
+                  Padding(
+                    padding: EdgeInsets.only(right: 5.7.vw,top: 1.3.vh),
+                    child: Center(
                       child: SalahItemWidget(
-                        title: S.of(context).imsak,
-                        time: mosqueProvider.imsak,
+                        title: S.of(context).jumua,
+                        time: mosqueProvider.times!.jumua ?? "",
+                        iqama: mosqueProvider.times!.jumua2,
+                        active: mosqueProvider.nextSalahIndex() == 2 &&
+                            mosqueProvider.mosqueDate().weekday == DateTime.friday,
                         removeBackground: true,
-                        withDivider: false,
                       ),
-                    )
-                  : mosqueProvider.showEid
-                      ? Center(
-                          child: SalahItemWidget(
-                            title: "Salat El Eid",
-                            iqama: mosqueProvider.times!.aidPrayerTime2,
-                            time: mosqueProvider.times!.aidPrayerTime ?? "",
-                            removeBackground: false,
-                            withDivider: mosqueProvider.times!.aidPrayerTime2 != null,
-                            active: true,
-                          ),
-                        )
-                      : Center(
-                          child: SalahItemWidget(
-                            title: S.of(context).shuruk,
-                            time: mosqueProvider.times!.shuruq ?? "",
-                            removeBackground: true,
-                            withDivider: false,
-                            active: mosqueProvider.activateShroukItem,
-                          ),
-                        ),
-            ),
-            HomeTimeWidget(),
-            Expanded(
-              child: Center(
-                child: SalahItemWidget(
-                  title: S.of(context).jumua,
-                  time: mosqueProvider.times!.jumua ?? "",
-                  iqama: mosqueProvider.times!.jumua2,
-                  active:
-                      mosqueProvider.nextSalahIndex() == 2 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
-                  removeBackground: true,
-                ),
+                    ),
+                  ),
+                ],
               ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: 7.3.vh,
+                right: 1.vw
+              ),
+              child: SalahTimesBar(),
             ),
           ],
         ),
-        SalahTimesBar(),
         mosqueConfig!.footer!
-            ? Container(
-                padding: EdgeInsets.symmetric(horizontal: 1.vw, vertical: .3.vw),
-                width: double.infinity,
-                color: mosque.flash?.content.isEmpty != false ? null : Colors.black38,
-                child: Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "ID ${mosque.id}",
-                          style: TextStyle(
-                            fontSize: .7.vw,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            shadows: kHomeTextShadow,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Image.network(
-                          'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
-                          width: 3.vw,
-                          height: 3.vw,
-                        ),
-                      ],
+            ? Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),
+                    width: double.infinity,
+                    color: mosque.flash?.content.isEmpty != false ? null : Colors.black38,
+                    child: SizedBox(
+                      height: 5.vw,
+                      child: FlashWidget(),
                     ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 5.vw,
-                        child: FlashWidget(),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: .4.vw, vertical: .2.vw),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "ID ${mosque.id}",
+                            style: TextStyle(
+                              fontSize: .7.vw,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              shadows: kHomeTextShadow,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Image.network(
+                            'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
+                            width: 5.vw,
+                            height: 5.vw,
+                          ),
+                        ],
                       ),
                     ),
-                    HomeLogoVersion(),
-                  ],
-                ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 1.5.vh,left: 1.vw),
+                      child: HomeLogoVersion(),
+                    ),
+                  ),
+                ],
               )
             : SizedBox(
-                height: 40,
+                height: 5.vw,
               )
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/HexColor.dart';
@@ -28,7 +29,7 @@ class FlashWidget extends StatelessWidget {
             scrollAxis: Axis.horizontal,
             blankSpace: 500,
             style: TextStyle(
-              fontSize: 30,
+              fontSize:3.4.vw,
               fontWeight: FontWeight.bold,
               wordSpacing: 3,
               shadows: kHomeTextShadow,

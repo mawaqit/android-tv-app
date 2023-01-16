@@ -32,7 +32,7 @@ class SalahItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bigFont = 4.vw;
+    double bigFont = 4.5.vw;
     double smallFont = 3.vw;
 
     final mosqueProvider = context.watch<MosqueManager>();
@@ -71,7 +71,7 @@ class SalahItemWidget extends StatelessWidget {
                 ? null
                 : Colors.black.withOpacity(.70),
       ),
-      padding: EdgeInsets.symmetric(vertical: 1.vw, horizontal: 2.vw),
+      padding: EdgeInsets.symmetric(vertical: 1.vw, horizontal: 1.vw),
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Column(
