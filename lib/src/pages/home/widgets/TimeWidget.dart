@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart' hide TextDirection;
+import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -53,7 +54,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final nextSalahIndex = mosqueManager.nextSalahIndex();
     var nextSalahTime = mosqueManager.actualTimes()[nextSalahIndex].difference(now);
-
+    final lang = context.read<AppLanguage>();
     // in case of fajr of the next day
     if (nextSalahTime < Duration.zero) nextSalahTime = nextSalahTime + Duration(days: 1);
 
@@ -152,7 +153,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                       height: 2.5.vw,
                       child: mosqueConfig!.hijriDateEnabled!
                           ? Stack(
-                        clipBehavior: Clip.none,
+                              clipBehavior: Clip.none,
                               alignment: Alignment.center,
                               children: [
                                 AnimatedTextKit(
@@ -164,6 +165,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                     FadeAnimatedText(
                                       DateFormat(
                                         "EEEE, MMM dd, yyyy",
+                                        "${lang.appLocal}-${mosqueManager.mosque?.countryCode}",
                                       ).format(now),
                                       duration: Duration(seconds: 6),
                                       fadeInEnd: 200 / 10000,
@@ -195,7 +197,6 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                         fontFamily: isArabic ? 'kufi' : null,
                                       ),
                                     ),
-
                                   ],
                                 ),
                                 if (isLunarDays)
