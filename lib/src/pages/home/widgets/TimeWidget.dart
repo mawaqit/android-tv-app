@@ -12,6 +12,7 @@ import 'package:timeago_flutter/timeago_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../generated/l10n.dart';
+import 'SalahInWidget.dart';
 
 class HomeTimeWidget extends TimerRefreshWidget {
   const HomeTimeWidget({
@@ -149,123 +150,94 @@ class HomeTimeWidget extends TimerRefreshWidget {
                       ],
                     ),
                     // date time
-                    SizedBox(
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 28.vw),
                       height: 2.5.vw,
                       child: mosqueConfig!.hijriDateEnabled!
-                          ? Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                AnimatedTextKit(
-                                  key: ValueKey('122'),
-                                  isRepeatingAnimation: true,
-                                  repeatForever: true,
-                                  displayFullTextOnTap: true,
-                                  animatedTexts: [
-                                    FadeAnimatedText(
-                                      DateFormat(
-                                        "EEEE, MMM dd, yyyy",
-                                        "${lang.appLocal}-${mosqueManager.mosque?.countryCode}",
-                                      ).format(now),
-                                      duration: Duration(seconds: 6),
-                                      fadeInEnd: 200 / 10000,
-                                      fadeOutBegin: 1,
-                                      textStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 2.7.vw,
-                                        shadows: kHomeTextShadow,
-                                        // letterSpacing: 1,
-                                        height: .8,
-                                        fontFamily: isArabic ? 'kufi' : null,
+                          ? FittedBox(
+                            child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  AnimatedTextKit(
+                                    key: ValueKey('122'),
+                                    isRepeatingAnimation: true,
+                                    repeatForever: true,
+                                    displayFullTextOnTap: true,
+                                    animatedTexts: [
+                                      FadeAnimatedText(
+                                        DateFormat(
+                                          "EEEE, MMM dd, yyyy",
+                                          "${lang.appLocal}-${mosqueManager.mosque?.countryCode}",
+                                        ).format(now),
+                                        duration: Duration(seconds: 6),
+                                        fadeInEnd: 200 / 10000,
+                                        fadeOutBegin: 1,
+                                        textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 2.7.vw,
+                                          shadows: kHomeTextShadow,
+                                          // letterSpacing: 1,
+                                          height: .8,
+                                          fontFamily: isArabic ? 'kufi' : null,
+                                        ),
                                       ),
-                                    ),
-                                    FadeAnimatedText(
-                                      hijriDate.format(
-                                        hijriDate.hYear,
-                                        hijriDate.hMonth,
-                                        hijriDate.hDay,
-                                        "dd MMMM yyyy",
+                                      FadeAnimatedText(
+                                        hijriDate.format(
+                                          hijriDate.hYear,
+                                          hijriDate.hMonth,
+                                          hijriDate.hDay,
+                                          "dd MMMM yyyy",
+                                        ),
+                                        duration: Duration(seconds: 4),
+                                        fadeInEnd: 200 / 4000,
+                                        fadeOutBegin: 1,
+                                        textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 2.5.vw,
+                                          shadows: kHomeTextShadow,
+                                          height: .8,
+                                          fontFamily: isArabic ? 'kufi' : null,
+                                        ),
                                       ),
-                                      duration: Duration(seconds: 4),
-                                      fadeInEnd: 200 / 4000,
-                                      fadeOutBegin: 1,
-                                      textStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 2.5.vw,
-                                        shadows: kHomeTextShadow,
-                                        height: .8,
-                                        fontFamily: isArabic ? 'kufi' : null,
+                                    ],
+                                  ),
+                                  if (isLunarDays)
+                                    Positioned(
+                                      right: -2.5.vw,
+                                      child: FaIcon(
+                                        FontAwesomeIcons.solidMoon,
+                                        size: 2.5.vw,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                if (isLunarDays)
-                                  Positioned(
-                                    right: -2.5.vw,
-                                    child: FaIcon(
-                                      FontAwesomeIcons.solidMoon,
-                                      size: 2.5.vw,
-                                    ),
-                                  )
-                              ],
-                            )
-                          : Text(
-                              DateFormat(
-                                "EEEE, MMM dd, yyyy",
-                              ).format(now),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 2.9.vw,
-                                shadows: kHomeTextShadow,
-                                // letterSpacing: 1,
-                                height: .8,
-                                fontFamily: isArabic ? 'kufi' : null,
+                                    )
+                                ],
                               ),
-                            ),
+                          )
+                          : FittedBox(
+                            child: Text(
+                                DateFormat(
+                                  "EEEE, MMM dd, yyyy",
+                                ).format(now),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 2.9.vw,
+                                  shadows: kHomeTextShadow,
+                                  // letterSpacing: 1,
+                                  height: .8,
+                                  fontFamily: isArabic ? 'kufi' : null,
+                                ),
+                              ),
+                          ),
                     ),
                   ],
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(1.vw),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      MawaqitIcons.icon_adhan,
-                      color: Colors.white,
-                      size: adhanIconSize,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 1.45.vw,
-                      ),
-                      child: Text(
-                        [
-                          "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
-                          if (nextSalahTime.inMinutes > 0)
-                            "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
-                          if (nextSalahTime.inMinutes == 0)
-                            "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
-                        ].join(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 2.8.vw,
-                          // height: 2,
-                          color: Colors.white,
-                          shadows: kHomeTextShadow,
-                        ),
-                      ),
-                    ),
-                    Icon(
-                      MawaqitIcons.icon_adhan,
-                      color: Colors.white,
-                      size: adhanIconSize,
-                    ),
-                  ],
-                ),
-              ),
+                  padding: EdgeInsets.all(1.vw),
+                  child: SalahInWidget(
+                    adhanIconSize: adhanIconSize,
+                    nextSalahTime: nextSalahTime,
+                  )),
               SizedBox(height: .5.vw),
             ],
           ),
