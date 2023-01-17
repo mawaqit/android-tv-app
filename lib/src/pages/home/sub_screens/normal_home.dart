@@ -56,7 +56,10 @@ class NormalHomeSubScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 7.3.vh, right: 1.vw),
+              padding: EdgeInsets.only(
+                top: 7.3.vh,
+                right: 1.vw
+              ),
               child: SalahTimesBar(),
             ),
           ],
@@ -77,7 +80,7 @@ class NormalHomeSubScreen extends StatelessWidget {
                     ),
                   ),
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.bottomLeft,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: .4.vw, vertical: .2.vw),
                       child: Column(
@@ -103,11 +106,20 @@ class NormalHomeSubScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 1.5.vh, left: 1.vw),
-                      child: HomeLogoVersion(),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                          padding: EdgeInsets.only(
+                            bottom: 1.vh,
+                            left: .5.vw,
+                            right: .5.vw,
+                            top: .6.vh,
+                          ),
+                          height: 9.5.vh,
+
+                          child: HomeLogoVersion()),
                     ),
                   ),
                 ],
