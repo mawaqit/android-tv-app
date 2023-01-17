@@ -76,6 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("নীড়"),
         "imsak": MessageLookupByLibrary.simpleMessage("ইমসাক"),
+        "in1": MessageLookupByLibrary.simpleMessage("পর"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("ইনস্টলকরণের সহায়িকা"),
@@ -119,13 +120,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("নোটিফিকেশন সমূহ"),
         "offline": MessageLookupByLibrary.simpleMessage("অফলাইন"),
         "ok": MessageLookupByLibrary.simpleMessage("আচ্ছা"),
+        "online": MessageLookupByLibrary.simpleMessage("অনলাইন"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("গোপনীয়তার নীতিমালা"),
         "quit": MessageLookupByLibrary.simpleMessage("কুইট"),
         "rate": MessageLookupByLibrary.simpleMessage("আমাদের মতামত দিন"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage(
+            "জিপিএস দ্বারা অনুসন্ধান করুন"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "আপনি কোন মসজিদ খুঁজছেন? (নাম, শহর, পোস্টাল কোড...)"),
         "searchMosque":
@@ -146,7 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("পরিষেবার শর্তাদি"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "এই বৈশিষ্ট্যটি এখন সমর্থিত নয়"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("আবার চেষ্টা কর"),
         "turnOfPhones":
             MessageLookupByLibrary.simpleMessage("দয়া করে মোবাইল বন্ধ রাখুন!"),

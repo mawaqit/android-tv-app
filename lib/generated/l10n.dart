@@ -977,10 +977,10 @@ class S {
     );
   }
 
-  /// `this feature is not supported right now`
+  /// `Sorry, this feature (search by Mosque ID) is no longer supported by MAWAQIT.`
   String get thisFeatureIsNotSupportedRightNow {
     return Intl.message(
-      'this feature is not supported right now',
+      'Sorry, this feature (search by Mosque ID) is no longer supported by MAWAQIT.',
       name: 'thisFeatureIsNotSupportedRightNow',
       desc: '',
       args: [],

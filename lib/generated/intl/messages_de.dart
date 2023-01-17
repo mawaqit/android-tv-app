@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Header-Typ"),
         "home": MessageLookupByLibrary.simpleMessage("Zuhause"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
+        "in1": MessageLookupByLibrary.simpleMessage("nach"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Installationsanleitungen"),
@@ -115,13 +116,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Benachrichtigungen"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
+        "online": MessageLookupByLibrary.simpleMessage("Online"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Datenschutzrichtlinie"),
         "quit": MessageLookupByLibrary.simpleMessage("Beenden"),
         "rate": MessageLookupByLibrary.simpleMessage("Bewerte uns"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Optionen der Optionsschaltfläche (rechts)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Suche per GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Welche Moschee suchen Sie ? (Name, Stadt, Postleitzahl ...)"),
         "searchMosque":
@@ -142,7 +144,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nutzungsbedingungen"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "Diese Funktion wird derzeit nicht unterstützt."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Erneut versuchen"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Bitte drehen Sie Ihre Handys ab!"),

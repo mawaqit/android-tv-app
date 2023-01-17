@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Lloji i Headerit"),
         "home": MessageLookupByLibrary.simpleMessage("Shtëpia"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
+        "in1": MessageLookupByLibrary.simpleMessage("pas"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Udhëzuesi i instalimit"),
@@ -117,13 +118,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Njoftim"),
         "offline": MessageLookupByLibrary.simpleMessage("Jashtë linje"),
         "ok": MessageLookupByLibrary.simpleMessage("NE RREGULL"),
+        "online": MessageLookupByLibrary.simpleMessage("Në linjë"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Politika e privatësisë"),
         "quit": MessageLookupByLibrary.simpleMessage("Dilni"),
         "rate": MessageLookupByLibrary.simpleMessage("Na vlerso"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Kërko me GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Cilën xhami po kërkoni? (Emri, Qyteti, Kodi Postar...)"),
         "searchMosque":
@@ -144,7 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Kushtet e Shërbimit"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "kjo veçori nuk mbështetet për momentin"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Pokušajte ponovno"),
         "turnOfPhones":
             MessageLookupByLibrary.simpleMessage("Ju lutemi fikni celularët!"),

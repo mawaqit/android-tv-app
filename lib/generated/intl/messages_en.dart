@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
+        "in1": MessageLookupByLibrary.simpleMessage("in"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Installation Guide"),
@@ -112,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "online": MessageLookupByLibrary.simpleMessage("Online"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
         "quit": MessageLookupByLibrary.simpleMessage("Quit"),
         "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
@@ -136,9 +138,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to quit the application?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Terms of Service"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "Sorry, this feature (search by Mosque ID) is no longer supported by MAWAQIT."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Please turn of your mobile phones!"),

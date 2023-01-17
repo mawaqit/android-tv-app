@@ -73,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Vrsta zaglavlja"),
         "home": MessageLookupByLibrary.simpleMessage("Početna"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
+        "in1": MessageLookupByLibrary.simpleMessage("nakon"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Vodič za instalaciju"),
@@ -116,13 +117,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Obavijesti"),
         "offline": MessageLookupByLibrary.simpleMessage("Izvan mreže"),
         "ok": MessageLookupByLibrary.simpleMessage("U REDU"),
+        "online": MessageLookupByLibrary.simpleMessage("Spojen"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Pravila privatnosti"),
         "quit": MessageLookupByLibrary.simpleMessage("Prestati"),
         "rate": MessageLookupByLibrary.simpleMessage("Ocijenite Nas"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Traži po GPS-u"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Koju džamiju tražite? (ime, grad, poštanski broj...)"),
         "searchMosque":
@@ -143,7 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Uvjeti korištenja"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "ova značajka trenutno nije podržana."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Pokušaj ponovno"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Molimo vas da isključite svoje mobitele!"),

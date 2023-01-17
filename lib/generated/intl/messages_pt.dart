@@ -73,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Tipo de cabeçalho"),
         "home": MessageLookupByLibrary.simpleMessage("Residencial"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
+        "in1": MessageLookupByLibrary.simpleMessage("em"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Guia de instalação"),
@@ -117,13 +118,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Notificações"),
         "offline": MessageLookupByLibrary.simpleMessage("Desligada"),
         "ok": MessageLookupByLibrary.simpleMessage("CERTO"),
+        "online": MessageLookupByLibrary.simpleMessage("On-line"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Política de privacidade"),
         "quit": MessageLookupByLibrary.simpleMessage("Sair"),
         "rate": MessageLookupByLibrary.simpleMessage("Avalie-nos"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opções do Botão Rádio (esquerda)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps":
+            MessageLookupByLibrary.simpleMessage("Pesquisar por GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Qual mesquita você está procurando? (Nome, Cidade, CEP...)"),
         "searchMosque":
@@ -144,7 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Termos de Utilização"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "Este recurso não é compatível Agora mesmo"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Tente novamente"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Por favor desligue o telemóvel!"),

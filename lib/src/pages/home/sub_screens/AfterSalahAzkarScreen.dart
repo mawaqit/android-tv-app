@@ -31,10 +31,13 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
 
   @override
   void initState() {
-    if (context.read<MosqueManager>().mosqueConfig?.duaAfterPrayerEnabled == false) return widget.onDone?.call();
-
+    if (context.read<MosqueManager>().mosqueConfig?.duaAfterPrayerEnabled == false)
+      Future.delayed(Duration(milliseconds: 80), widget.onDone);
+    else
+      Future.delayed(kAzkarDuration, widget.onDone);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
@@ -45,7 +48,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
       builder: (context, snapshot) {
         final time = snapshot.data ?? 0;
 
-        if (time == azkarList.length) widget.onDone?.call();
+        // if (time >= azkarList.length) widget.onDone?.call();
 
         int activeHadith = (time ~/ itemDuration) % azkarList.length;
 

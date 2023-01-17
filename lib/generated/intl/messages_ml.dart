@@ -73,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("വീട്"),
         "imsak": MessageLookupByLibrary.simpleMessage("മലബന്ധം"),
+        "in1": MessageLookupByLibrary.simpleMessage("ശേഷം"),
         "instagram": MessageLookupByLibrary.simpleMessage("ഇൻസ്റ്റാഗ്രാം"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("ഇൻസ്റ്റലേഷൻ ഗൈഡ്"),
@@ -117,12 +118,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("അറിയിപ്പുകൾ"),
         "offline": MessageLookupByLibrary.simpleMessage("ഓഫ്‌ലൈൻ"),
         "ok": MessageLookupByLibrary.simpleMessage("ശരി"),
+        "online": MessageLookupByLibrary.simpleMessage("ഓൺലൈൻ"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("സ്വകാര്യതാനയം"),
         "quit": MessageLookupByLibrary.simpleMessage("ഉപേക്ഷിക്കുക"),
         "rate": MessageLookupByLibrary.simpleMessage("ഞങ്ങളെ റേറ്റുചെയ്യുക"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps":
+            MessageLookupByLibrary.simpleMessage("GPS ഉപയോഗിച്ച് തിരയുക"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "ഏത് പള്ളിയാണ് നിങ്ങൾ അന്വേഷിക്കുന്നത്? (പേര്, നഗരം, തപാൽ കോഡ്...)"),
         "searchMosque":
@@ -143,7 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("സേവന നിബന്ധനകൾ"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "ഈ സവിശേഷത ഇപ്പോൾ പിന്തുണയ്ക്കുന്നില്ല"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("വീണ്ടും ശ്രമിക്കൂ"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "ദയവായി നിങ്ങളുടെ മൊബൈൽ ഫോണുകൾ ഓഫ് ചെയ്യുക!"),

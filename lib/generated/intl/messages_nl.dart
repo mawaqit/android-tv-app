@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("Startpagina"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsaak"),
+        "in1": MessageLookupByLibrary.simpleMessage("na"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Installatiehandleiding"),
@@ -114,12 +115,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Meldingen"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "online": MessageLookupByLibrary.simpleMessage("Online"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacybeleid"),
         "quit": MessageLookupByLibrary.simpleMessage("Sluiten"),
         "rate": MessageLookupByLibrary.simpleMessage("Beoordeel ons"),
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Knop opties (links)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Zoeken met GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Welke moskee zoekt u? (Naam, Plaats, Postcode...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("Zoek een moskee"),
@@ -139,7 +141,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Servicevoorwaarden"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "deze functie wordt hier niet ondersteund"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Probeer opnieuw"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Vriendelijk verzoek om uw telefoon uit te zetten!"),
