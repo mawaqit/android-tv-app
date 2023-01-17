@@ -38,7 +38,7 @@
   "snapchat": "Snapchat",
   "changeMosque": "Wijzigen Moskee",
   "mosque": "Moskee",
-  "in1": "in",
+  "in1": "na",
   "online": "Online",
   "enterMosqueId": "Voer Moske-ID in: ",
   "mosqueId": "Moske-ID ",
@@ -112,6 +112,6 @@
   "jumuaaScreenTitle": "Jumuaa Tijd",
   "jumuaaHadith": "Het is overgeleverd van Aboe Hoerayrah dat de Profeet (vrede zij met hem) heeft gezegd:\n “Wie de grote wassing verricht en naar het vrijdaggebed komt, het aantal gebeden verricht die Allah voor hem bepaalt,\n aandachtig luistert naar de vrijdagpreek tot deze voorbij is, dan het gebed (met de imam) verricht; (zijn zonden)\n tussen het ene vrijdaggebed en het andere en drie dagen erna zullen vergeven worden en wie een steen aanraakt heeft\n zich schuldig gemaakt aan ijdele gepraat (zijn beloning wordt minder)",
   "shuruk": "Zonsopkomst",
-  "thisFeatureIsNotSupportedRightNow": "this feature is not supported right now",
-  "searchByGps": "Search by GPS"
+  "thisFeatureIsNotSupportedRightNow": "deze functie wordt hier niet ondersteund",
+  "searchByGps": "Zoeken met GPS"
 }
