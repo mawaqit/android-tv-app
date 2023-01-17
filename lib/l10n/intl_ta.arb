@@ -38,8 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "மசூதியை மாற்றவும்",
   "mosque": "மசூதி",
-  "in1": "in",
-  "online": "Online",
+  "in1": "பிறகு",
+  "online": "ஆன்லைன்",
   "enterMosqueId": "மசூதி ஐடியை உள்ளிடவும்:",
   "mosqueId": "மசூதி ஐடி ",
   "missingMosqueId": "மசூதி ஐடி காணவில்லை",
@@ -112,6 +112,6 @@
   "jumuaaScreenTitle": "வெள்ளிக்கிழமை நேரம்",
   "jumuaaHadith": "நபி (ஸல்) கூறினார்கள்: “யாராவது வுழூவை அழகாக செய்து விட்டு, பிறகு ஜும்ஆவுக்கு வந்து, மொளனமாக இருந்து, காது தாழ்த்தி கேட்டால் அந்த ஜும்ஆவுக்கும் அடுத்த ஜும்ஆவுக்கும் இடைப்பட்ட நாட்களினதும், மேலும் மூன்று நாட்களினதும் பாவம் மன்னிக்கப்படும்” (முஸ்லிம்)",
   "shuruk": "சூரிய உதயம்",
-  "thisFeatureIsNotSupportedRightNow": "this feature is not supported right now",
-  "searchByGps": "Search by GPS"
+  "thisFeatureIsNotSupportedRightNow": "இந்த அம்சம் தற்போது ஆதரிக்கப்படவில்லை",
+  "searchByGps": "ஜிபிஎஸ் மூலம் தேடவும்"
 }

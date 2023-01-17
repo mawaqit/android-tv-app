@@ -38,7 +38,7 @@
   "snapchat": "Snapchat",
   "changeMosque": "Cambia Moschea",
   "mosque": "Moschea",
-  "in1": "in",
+  "in1": "dopo",
   "online": "Online",
   "enterMosqueId": "Inserisci ID Della Moschea : ",
   "mosqueId": "Moschea ID",
@@ -112,6 +112,6 @@
   "jumuaaScreenTitle": "Jumuaa Time",
   "jumuaaHadith": "Il profeta Muhammad (pace e benedizione su di lui) disse\n Chiunque si faccia un bagno e presti la massima attenzione alla sua igiene personale, si ponga\n olio (nei capelli) o si profumi, quindi si diriga verso la preghiera senza forzare il suo cammino\n tra due persone (riunite nella moschea per la preghiera del venerdì), e preghi in accordo a quanto\n è stato scritto per lui e rimanga quieto mentre l’imam pronuncia il sermone, otterrà che tutti\n i peccati commessi in quel giorno fino al venerdì seguente siano perdonati",
   "shuruk": "Alba",
-  "thisFeatureIsNotSupportedRightNow": "this feature is not supported right now",
-  "searchByGps": "Search by GPS"
+  "thisFeatureIsNotSupportedRightNow": "Tris funzionalità non è supportata in questo momento",
+  "searchByGps": "Ricerca tramite GPS"
 }

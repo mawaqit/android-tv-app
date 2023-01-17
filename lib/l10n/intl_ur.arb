@@ -38,8 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "تغيير المسجد",
   "mosque": "المسجد",
-  "in1": "in",
-  "online": "Online",
+  "in1": "کے بعد",
+  "online": "آن لائن",
   "enterMosqueId": "مسجد کی شناخت درج کریں:",
   "mosqueId": "مسجد کی شناخت",
   "missingMosqueId": "مسجد کی شناخت غائب ہے۔",
@@ -112,6 +112,6 @@
   "jumuaaScreenTitle": "جمعہ کا وقت",
   "jumuaaHadith": "نبی کریم صلی اللہ علیہ وسلم نے فرمایا\n \"جس نے اچھی طرح وضو کیا، پھر جمعہ کی نماز پڑھی، پھر سنے اور خاموش رہے۔\"\n اس وقت اور اگلے جمعہ اور مزید تین دن کے درمیان جو کچھ ہے اسے بخش دیا جاتا ہے۔\n اور جس نے پتھروں کو چھو لیا اس نے یقیناً فضول خرچی کی\"",
   "shuruk": "اشراق",
-  "thisFeatureIsNotSupportedRightNow": "this feature is not supported right now",
-  "searchByGps": "Search by GPS"
+  "thisFeatureIsNotSupportedRightNow": "یہ خصوصیت ابھی تعاون یافتہ نہیں ہے۔",
+  "searchByGps": "GPS کے ذریعے تلاش کریں۔"
 }
