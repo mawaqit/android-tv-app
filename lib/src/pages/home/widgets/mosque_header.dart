@@ -50,11 +50,11 @@ class MosqueHeader extends StatelessWidget {
         mosque.logo!=null?  Image.network(mosque.logo!, width: 40, height: 40):SizedBox(),
           SizedBox(width: 10),
           Container(
-            constraints: BoxConstraints(maxWidth: 60.vw),
+            constraints: BoxConstraints(maxWidth: 80.vw),
             child: Text(
               mosque.name,
               maxLines: 1,
-              overflow: TextOverflow.fade,
+              overflow: TextOverflow.clip,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 4.vw,
