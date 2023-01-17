@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
+import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
+
+import '../../../themes/UIShadows.dart';
+import '../widgets/SalahItem.dart';
+import '../widgets/SalahTimesBar.dart';
+import '../widgets/ShurukWidget.dart';
+import '../widgets/TimeWidget.dart';
+import '../widgets/footer.dart';
+import '../widgets/mosque_header.dart';
 
 class AdhanSubScreen extends StatefulWidget {
   const AdhanSubScreen({Key? key, this.onDone, this.forceAdhan = false}) : super(key: key);
@@ -42,53 +53,56 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Column(
+    final mosqueProvider = context.read<MosqueManager>();
+    final mosque = mosqueProvider.mosque!;
+    double adhanIconSize = 15.vh;
+    return MosqueBackgroundScreen(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Center(
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 40),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(
-                  // transform: GradientRotation(pi / 2),
-                  begin: Alignment(0, 0),
-                  end: Alignment(0, 1),
-                  colors: [
-                    theme.primaryColor,
-                    theme.primaryColor.withOpacity(0),
+        Column(
+          children: [
+            Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
+            Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      MawaqitIcons.icon_adhan,
+                      size: adhanIconSize,
+                      shadows: kHomeTextShadow,
+                    ),
+                    Text(
+                      "    ${S.of(context).alAdhan}    ",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.vh,
+                        // height: 2,
+                        color: Colors.white,
+                        shadows: kHomeTextShadow,
+                      ),
+                    ),
+                    Icon(
+                      MawaqitIcons.icon_adhan,
+                      size: adhanIconSize,
+                      shadows: kHomeTextShadow,
+                    ),
                   ],
                 ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    child: Text(
-                      S.of(context).alAdhan,
-                      style: theme.textTheme.displayMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    "الأذان",
-                    style: theme.textTheme.displaySmall?.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.only(top: 7.3.vh, right: 1.vw),
+              child: SalahTimesBar(),
+            ),
+          ],
         ),
-        Expanded(
-          child: Image.asset(R.ASSETS_ICON_ADHAN_ICON_PNG),
-        ),
+        Directionality(textDirection: TextDirection.ltr, child: Footer()),
       ],
-    );
+    ));
+    
   }
 }
