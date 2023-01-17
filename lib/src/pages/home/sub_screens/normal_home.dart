@@ -13,6 +13,7 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/FlashWidget.dart';
+import '../widgets/footer.dart';
 
 class NormalHomeSubScreen extends StatelessWidget {
   const NormalHomeSubScreen({Key? key}) : super(key: key);
@@ -55,7 +56,10 @@ class NormalHomeSubScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 7.3.vh, right: 1.vw),
+              padding: EdgeInsets.only(
+                top: 7.3.vh,
+                right: 1.vw
+              ),
               child: SalahTimesBar(),
             ),
           ],
@@ -65,6 +69,7 @@ class NormalHomeSubScreen extends StatelessWidget {
                 clipBehavior: Clip.none,
                 alignment: Alignment.bottomCenter,
                 children: [
+                  MosqueInformationWidget(),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),
                     width: double.infinity,
