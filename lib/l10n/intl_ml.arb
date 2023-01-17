@@ -112,6 +112,6 @@
   "jumuaaScreenTitle": "വെള്ളിയാഴ്ച സമയം",
   "jumuaaHadith": "നബി(സ) പറഞ്ഞു\n \"ആരെങ്കിലും വുദൂ കൃത്യമായി ചെയ്താൽ അവൻ ജുമുഅയിൽ പോയി ശ്രവിക്കുകയും നിശബ്ദത പാലിക്കുകയും ചെയ്യുന്നു.\n ആ സമയത്തിനും അടുത്ത വെള്ളിയാഴ്ചയ്ക്കും മൂന്ന് ദിവസത്തിനുമിടയിലുള്ളത് അവനോട് ക്ഷമിക്കപ്പെട്ടിരിക്കുന്നു\n കല്ലിൽ തൊടുന്നവൻ തീർച്ചയായും വ്യർത്ഥതയുണ്ടാക്കി\"",
   "shuruk": "സൂര്യോദയം",
-  "thisFeatureIsNotSupportedRightNow": "ഈ സവിശേഷത ഇപ്പോൾ പിന്തുണയ്ക്കുന്നില്ല",
+  "thisFeatureIsNotSupportedRightNow": "Sorry, this feature (search by Mosque ID) is no longer supported by MAWAQIT.",
   "searchByGps": "GPS ഉപയോഗിച്ച് തിരയുക"
 }
