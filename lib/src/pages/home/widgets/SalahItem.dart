@@ -71,22 +71,26 @@ class SalahItemWidget extends StatelessWidget {
                 ? null
                 : Colors.black.withOpacity(.70),
       ),
-      padding: EdgeInsets.symmetric(vertical: 1.vw, horizontal: 1.vw),
+      padding: EdgeInsets.symmetric(vertical: .8.vh, horizontal: 1.vw),
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (title != null)
-              Text(
-                title!,
-                style: TextStyle(
-                  fontSize: 3.vw,
-                  shadows: kHomeTextShadow,
-                  color: Colors.white,
+              FittedBox(
+                child: Text(
+                  maxLines: 1,
+                  title!,
+                  style: TextStyle(
+                    fontSize: 3.vw,
+                    shadows: kHomeTextShadow,
+                    color: Colors.white,
+
+                  ),
                 ),
               ),
-            SizedBox(height: 10),
+            SizedBox(height: 1.vh),
             if (time.trim().isEmpty) Icon(Icons.dnd_forwardslash, size: 6.vw),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -94,7 +98,7 @@ class SalahItemWidget extends StatelessWidget {
                 Text(
                   timeDate == null ? time : dateTimeConverter.format(timeDate),
                   style: TextStyle(
-                    fontSize: isIqamaMoreImportant! ? smallFont : bigFont,
+                    fontSize: isIqamaMoreImportant ? smallFont : bigFont,
                     fontWeight: FontWeight.w700,
                     shadows: kHomeTextShadow,
                     color: Colors.white,

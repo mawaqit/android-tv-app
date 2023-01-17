@@ -244,7 +244,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                         [
                           "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
                           if (nextSalahTime.inMinutes > 0)
-                            "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')} ",
+                            "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
                           if (nextSalahTime.inMinutes == 0)
                             "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
                         ].join(),

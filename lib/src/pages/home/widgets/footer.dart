@@ -1,29 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../../helpers/mawaqit_icons_icons.dart';
+import '../../../themes/UIShadows.dart';
+import 'FlashWidget.dart';
+import 'HomeLogoVersion.dart';
+import 'MosqueInformationWidget.dart';
 
-class MosqueInformationWidget extends StatelessWidget {
-  const MosqueInformationWidget({Key? key}) : super(key: key);
+class Footer extends StatelessWidget {
+  const Footer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final mosque = context.read<MosqueManager>().mosque;
-    String phoneNumber = "${mosque?.phone!=null ?mosque!.phone:""} ";
-    String association = "${mosque?.association!=null ?mosque?.association:""} ";
-    // String bank = "${mosque?.} ";
+    final mosqueManager = context.read<MosqueManager>();
+    final mosqueConfig = mosqueManager.mosqueConfig;
+    final mosque = mosqueManager.mosque;
+    return   mosqueConfig!.footer!
+        ? Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.bottomCenter,
+      children: [
+        MosqueInformationWidget(),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),
+          width: double.infinity,
+          color: mosque?.flash?.content.isEmpty != false ? null : Colors.black38,
+          child: SizedBox(
+            height: 5.vw,
+            child: FlashWidget(),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: .4.vw, vertical: .2.vw),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "ID ${mosque?.id}",
+                  style: TextStyle(
+                    fontSize: .7.vw,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    shadows: kHomeTextShadow,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Image.network(
+                  'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
+                  width: 5.vw,
+                  height: 5.vw,
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+                padding: EdgeInsets.only(
+                  bottom: 1.vh,
+                  left: .5.vw,
+                  right: .5.vw,
+                  top: .6.vh,
+                ),
+                height: 9.5.vh,
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(association),
-          mosque!.phone != null ? Icon(Icons.phone_iphone) : SizedBox(),
-          Text(phoneNumber ),
-        ],
-      ),
+                child: HomeLogoVersion()),
+          ),
+        ),
+      ],
+    )
+        : SizedBox(
+      height: 5.vw,
     );
   }
 }
