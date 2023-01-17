@@ -112,6 +112,6 @@
   "jumuaaScreenTitle": "وقت الجمعه",
   "jumuaaHadith": "\nعَنْ أَبِي هُرَيْرَةَ قَالَ قَالَ رَسُولُ اللَّهِ صَلَّى اللَّه عَلَيْهِ وَسَلَّمَ مَنْ تَوَضَّأَ فَأَحْسَنَ الْوُضُوءَ ثُمَّ أَتَى الْجُمُعَةَ فَاسْتَمَعَ وَأَنْصَتَ غُفِرَ لَهُ مَا بَيْنَهُ وَبَيْنَ الْجُمُعَةِ وَزِيَادَةُ ثَلاثَةِ أَيَّامٍ وَمَنْ مَسَّ الْحَصَى فَقَدْ لَغَا",
   "shuruk": "الشروق",
-  "thisFeatureIsNotSupportedRightNow": "هذه الميزة غير مدعومة الآن",
+  "thisFeatureIsNotSupportedRightNow": "Sorry, this feature is not supported right now.",
   "searchByGps": "البحث عن طريق GPS"
 }
