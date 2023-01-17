@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Başlık Türü"),
         "home": MessageLookupByLibrary.simpleMessage("Ana sayfa"),
         "imsak": MessageLookupByLibrary.simpleMessage("İmsak"),
+        "in1": MessageLookupByLibrary.simpleMessage("sonra"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Kurulum Kılavuzu"),
@@ -113,13 +114,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Bildirimler"),
         "offline": MessageLookupByLibrary.simpleMessage("Çevrimdışı"),
         "ok": MessageLookupByLibrary.simpleMessage("TAMAM"),
+        "online": MessageLookupByLibrary.simpleMessage("Çevrimiçi"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Gizlilik politikası"),
         "quit": MessageLookupByLibrary.simpleMessage("Çıkmak"),
         "rate": MessageLookupByLibrary.simpleMessage("Bizi Değerlendirin"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("GPS ile ara"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Hangi Camii arıyorsunuz? (İsim, Şehir, Posta kodu...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("Cami Ara"),
@@ -139,7 +141,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Hizmet Şartları"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "Bu özellik burada desteklenmiyor."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Tekrar Dene"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Cep telefonlarınızı lütfen kapalı tutunuz!"),

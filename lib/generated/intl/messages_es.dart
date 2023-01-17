@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Tipo de cabecera"),
         "home": MessageLookupByLibrary.simpleMessage("Inicio"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
+        "in1": MessageLookupByLibrary.simpleMessage("en"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagrama"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Guía de Instalación"),
@@ -119,13 +120,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Notificaciones"),
         "offline": MessageLookupByLibrary.simpleMessage("Sin conexión"),
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
+        "online": MessageLookupByLibrary.simpleMessage("En línea"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Política de Privacidad"),
         "quit": MessageLookupByLibrary.simpleMessage("Salir"),
         "rate": MessageLookupByLibrary.simpleMessage("Califícanos"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opciones del botón de radio (derecha)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps": MessageLookupByLibrary.simpleMessage("Buscar por GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "¿Qué Mezquita estás buscando? (Nombre, Ciudad, Código Postal...)"),
         "searchMosque":
@@ -146,7 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Términos del Servicio"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "Esta característica no es compatible en este momento"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Inténtalo de nuevo"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Por favor, apague sus teléfonos móviles!"),

@@ -70,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("نوع الرأس"),
         "home": MessageLookupByLibrary.simpleMessage("الصفحة الرئيسية"),
         "imsak": MessageLookupByLibrary.simpleMessage("امساك"),
+        "in1": MessageLookupByLibrary.simpleMessage("بعد"),
         "instagram": MessageLookupByLibrary.simpleMessage("انستغرام"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("دليل التثبيت"),
@@ -113,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("الإشعارات"),
         "offline": MessageLookupByLibrary.simpleMessage("دون اتصال"),
         "ok": MessageLookupByLibrary.simpleMessage("موافق"),
+        "online": MessageLookupByLibrary.simpleMessage("متصل"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("سياسة الخصوصية"),
         "quit": MessageLookupByLibrary.simpleMessage("خروج"),
         "rate": MessageLookupByLibrary.simpleMessage("قم بتقييمنا"),
@@ -137,7 +139,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "هل أنت متأكد من أنك تريد الخروج من التطبيق؟"),
         "termsOfService": MessageLookupByLibrary.simpleMessage("شروط الخدمة"),
         "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage("هذه الميزة غير مدعومة الآن"),
+            MessageLookupByLibrary.simpleMessage(
+                "عذراً، هذه الميزة غير مدعومة الآن."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("حاول مرة اخرى"),
         "turnOfPhones":
             MessageLookupByLibrary.simpleMessage("الرجاء اغلاق الهاتف الجوال"),

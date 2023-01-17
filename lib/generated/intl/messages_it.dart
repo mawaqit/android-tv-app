@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Tipo di intestazione"),
         "home": MessageLookupByLibrary.simpleMessage("Pagina iniziale"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
+        "in1": MessageLookupByLibrary.simpleMessage("dopo"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Guida all\'installazione"),
@@ -119,13 +120,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Notifiche"),
         "offline": MessageLookupByLibrary.simpleMessage("Non in linea"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "online": MessageLookupByLibrary.simpleMessage("Online"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Politica sulla Riservatezza"),
         "quit": MessageLookupByLibrary.simpleMessage("Uscire"),
         "rate": MessageLookupByLibrary.simpleMessage("Votaci"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opzioni Pulsante Di Scelta (Destra)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps":
+            MessageLookupByLibrary.simpleMessage("Ricerca tramite GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Quale moschea stai cercando? (Nomo, Città, Codice postale...)"),
         "searchMosque":
@@ -146,7 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Condizioni del Servizio"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "Tris funzionalità non è supportata in questo momento"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Prova di nuovo"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Per favore spegnete il vostro cellulare!"),

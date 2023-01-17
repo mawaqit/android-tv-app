@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("ہوم"),
         "imsak": MessageLookupByLibrary.simpleMessage("روزہ"),
+        "in1": MessageLookupByLibrary.simpleMessage("کے بعد"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("انسٹالیشن گائیڈ"),
@@ -114,13 +115,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("اطلاعات"),
         "offline": MessageLookupByLibrary.simpleMessage("آف لائن"),
         "ok": MessageLookupByLibrary.simpleMessage("ٹھیک ہے"),
+        "online": MessageLookupByLibrary.simpleMessage("آن لائن"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("رازداری کی پالیسی"),
         "quit": MessageLookupByLibrary.simpleMessage("چھوڑو"),
         "rate": MessageLookupByLibrary.simpleMessage("ہمیں شرح"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps":
+            MessageLookupByLibrary.simpleMessage("GPS کے ذریعے تلاش کریں۔"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "آپ کونسی مسجد کی تلاش ہے؟ (نام، شہر، پوسٹل کوڈ...)"),
         "searchMosque": MessageLookupByLibrary.simpleMessage("مسجد تلاش کریں۔"),
@@ -140,7 +143,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("خدمات کی شرائط"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "یہ خصوصیت ابھی تعاون یافتہ نہیں ہے۔"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("دوبارہ کوشش کریں"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "براہ کرم اپنے موبائل فون بند کر دیں!"),

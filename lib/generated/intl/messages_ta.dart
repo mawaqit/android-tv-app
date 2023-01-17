@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
         "home": MessageLookupByLibrary.simpleMessage("வீடு"),
         "imsak": MessageLookupByLibrary.simpleMessage("ஸஹர் முடிவு"),
+        "in1": MessageLookupByLibrary.simpleMessage("பிறகு"),
         "instagram": MessageLookupByLibrary.simpleMessage("இன்ஸ்டாகிராம்"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("நிறுவல் வழிகாட்டி"),
@@ -117,13 +118,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("அறிவிப்புகள்"),
         "offline": MessageLookupByLibrary.simpleMessage("ஆஃப்லைன்"),
         "ok": MessageLookupByLibrary.simpleMessage("சரி"),
+        "online": MessageLookupByLibrary.simpleMessage("ஆன்லைன்"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("தனியுரிமை கொள்கை"),
         "quit": MessageLookupByLibrary.simpleMessage("விலகு"),
         "rate": MessageLookupByLibrary.simpleMessage("எங்களை மதிப்பிடுங்கள்"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
-        "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
+        "searchByGps":
+            MessageLookupByLibrary.simpleMessage("ஜிபிஎஸ் மூலம் தேடவும்"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "நீங்கள் எந்த மசூதியைத் தேடுகிறீர்கள்? (பெயர், நகரம், அஞ்சல் குறியீடு...)"),
         "searchMosque":
@@ -143,7 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "termsOfService": MessageLookupByLibrary.simpleMessage("விதிமுறைகள்"),
         "thisFeatureIsNotSupportedRightNow":
             MessageLookupByLibrary.simpleMessage(
-                "this feature is not supported right now"),
+                "இந்த அம்சம் தற்போது ஆதரிக்கப்படவில்லை"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("மீண்டும் முயற்சி"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "உங்கள் மொபைல் போன்களை சைலண்டில் வைக்கவும்!"),

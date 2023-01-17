@@ -49,7 +49,9 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
                 stream: Stream.periodic(Duration(seconds: 1)),
                 builder: (context, snapshot) {
                   final remaining = nextIqamaTime.difference(mosqueManager.mosqueDate());
-                  if (remaining <= Duration.zero) onDone?.call();
+                  if (remaining <= Duration.zero){
+                    Future.delayed(Duration(milliseconds:80),onDone);
+                  }
 
                   int seconds = remaining.inSeconds % 60;
                   int minutes = remaining.inMinutes;

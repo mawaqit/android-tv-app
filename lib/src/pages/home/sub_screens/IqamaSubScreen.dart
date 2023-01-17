@@ -17,10 +17,14 @@ class IqamaSubScreen extends StatefulWidget {
 class _IqamaSubScreenState extends State<IqamaSubScreen> {
   @override
   void initState() {
+    if (context.read<MosqueManager>().mosqueConfig!.iqamaBip){
     context.read<AudioManager>().loadAndPlayIqamaBipVoice(
           context.read<MosqueManager>().mosqueConfig,
           onDone: widget.onDone,
-        );
+        );}
+    else {
+      Future.delayed(Duration(minutes: 1),widget.onDone);
+    }
     super.initState();
   }
 

@@ -115,7 +115,7 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
       case SalahWorkflowScreens.iqamaa:
         return IqamaSubScreen(onDone: onIqamaaDone);
       case SalahWorkflowScreens.salahTime:
-        return Container();
+        return NormalHomeSubScreen();
       case SalahWorkflowScreens.afterSalahAzkar:
         return AfterSalahAzkar(onDone: widget.onDone);
     }

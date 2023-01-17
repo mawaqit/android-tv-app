@@ -76,6 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "headerType": MessageLookupByLibrary.simpleMessage("Type d\'en-tête"),
         "home": MessageLookupByLibrary.simpleMessage("Accueil"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
+        "in1": MessageLookupByLibrary.simpleMessage("dans"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
             MessageLookupByLibrary.simpleMessage("Guide d\'installation"),
@@ -119,6 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
         "offline": MessageLookupByLibrary.simpleMessage("Hors ligne"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "online": MessageLookupByLibrary.simpleMessage("Connecté"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage(
             "Politique de confidentialité"),
         "quit": MessageLookupByLibrary.simpleMessage("Quitter"),

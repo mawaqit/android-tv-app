@@ -25,6 +25,7 @@ class FlashWidget extends StatelessWidget {
         //todo get the message
         ? SizedBox()
         : Marquee(
+            velocity:90,
             text: mosque.flash?.content ?? '',
             scrollAxis: Axis.horizontal,
             blankSpace: 500,
