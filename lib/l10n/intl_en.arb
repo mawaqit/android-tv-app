@@ -38,8 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "Change Mosque",
   "mosque": "Mosque",
-  "in1":"in",
-  "online":"Online",
+  "in1": "in",
+  "online": "Online",
   "enterMosqueId": "Please enter the Mosque ID :",
   "mosqueId": "Mosque ID",
   "missingMosqueId": "Missing Mosque ID",
@@ -112,6 +112,6 @@
   "jumuaaScreenTitle": "Jumuaa Time",
   "jumuaaHadith": "The Prophet (peace and blessings of Allah be upon him) said \"Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility\"",
   "shuruk": "Shuruk",
-  "thisFeatureIsNotSupportedRightNow": "this feature is not supported right now",
+  "thisFeatureIsNotSupportedRightNow": "Sorry, this feature is not supported right now.",
   "searchByGps": "Search by GPS"
 }
