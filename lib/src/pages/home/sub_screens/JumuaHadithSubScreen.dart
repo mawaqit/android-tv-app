@@ -5,7 +5,9 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 class JumuaHadithSubScreen extends StatelessWidget {
-  const JumuaHadithSubScreen({Key? key}) : super(key: key);
+  const JumuaHadithSubScreen({Key? key, this.onDone}) : super(key: key);
+
+  final VoidCallback? onDone;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +69,8 @@ class JumuaHadithSubScreen extends StatelessWidget {
         ],
       );
     }
-      return Scaffold(backgroundColor: Colors.black,);
-
+    return Scaffold(
+      backgroundColor: Colors.black,
+    );
   }
 }

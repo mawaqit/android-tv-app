@@ -6,7 +6,9 @@ import '../../../services/audio_manager.dart';
 import '../../../services/mosque_manager.dart';
 
 class AfterAdhanSubScreen extends StatefulWidget {
-  const AfterAdhanSubScreen({Key? key}) : super(key: key);
+  const AfterAdhanSubScreen({Key? key, this.onDone}) : super(key: key);
+
+  final VoidCallback? onDone;
 
   @override
   State<AfterAdhanSubScreen> createState() => _AfterAdhanSubScreenState();
@@ -20,13 +22,14 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
 
   @override
   void initState() {
-    final mosqueConfig =context.read<MosqueManager>().mosqueConfig;
+    final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
     final audioProvider = context.read<AudioManager>();
     if (mosqueConfig!.duaAfterAzanEnabled!) {
-      audioProvider.loadDuaAfterAdhanVoice(mosqueConfig);
-      audioProvider.playDuaAfterAdhan();
-
+      audioProvider.loadAndPlayDuaAfterAdhanVoice(mosqueConfig, onDone: widget.onDone);
+    } else {
+      widget.onDone?.call();
     }
+
     super.initState();
   }
 

@@ -10,7 +10,7 @@ class AudioManager extends ChangeNotifier {
   late Audio duaAfterAdhan;
   late Audio bip;
 
-  void loadAdhanVoice(MosqueConfig? mosqueConfig) {
+  void loadAndPlayAdhanVoice(MosqueConfig? mosqueConfig, {VoidCallback? onDone}) {
     if (mosqueConfig!.adhanVoice != null && mosqueConfig.adhanVoice!.isNotEmpty) {
       adhanLink = "https://mawaqit.net/static/mp3/${mosqueConfig.adhanVoice!}.mp3";
     }
@@ -19,14 +19,17 @@ class AudioManager extends ChangeNotifier {
       onComplete: () {
         adhan.dispose();
         adhan.pause();
+        onDone?.call();
       },
       onError: (message) {
         print("error$message");
+        onDone?.call();
       },
     )!;
+    adhan.play();
   }
 
-  void loadAndPlayIqamaBipVoice(MosqueConfig? mosqueConfig) {
+  void loadAndPlayIqamaBipVoice(MosqueConfig? mosqueConfig, {VoidCallback? onDone}) {
     if (mosqueConfig!.iqamaBip) {
       adhanLink = "https://mawaqit.net/static/mp3/${mosqueConfig.adhanVoice!}.mp3";
       bip = Audio.loadFromRemoteUrl(
@@ -34,26 +37,31 @@ class AudioManager extends ChangeNotifier {
         onComplete: () {
           bip.dispose();
           bip.pause();
+          onDone?.call();
         },
         onError: (message) {
           print("error$message");
+          onDone?.call();
         },
       )!;
       bip.play();
     }
   }
 
-  void loadDuaAfterAdhanVoice(MosqueConfig? mosqueConfig) {
+  void loadAndPlayDuaAfterAdhanVoice(MosqueConfig? mosqueConfig, {VoidCallback? onDone}) {
     duaAfterAdhan = Audio.loadFromRemoteUrl(
       duaAfterAdhanLink,
       onComplete: () {
         duaAfterAdhan.dispose();
         duaAfterAdhan.pause();
+        onDone?.call();
       },
       onError: (message) {
         print("error$message");
+        onDone?.call();
       },
     )!;
+    duaAfterAdhan.play();
   }
 
   void playAdhan() {

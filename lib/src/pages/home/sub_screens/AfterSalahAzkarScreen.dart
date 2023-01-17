@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:provider/provider.dart';
 
 class AfterSalahAzkar extends StatefulWidget {
-  AfterSalahAzkar({Key? key}) : super(key: key);
+  AfterSalahAzkar({Key? key, this.onDone}) : super(key: key);
+
+  final VoidCallback? onDone;
 
   @override
   State<AfterSalahAzkar> createState() => _AfterSalahAzkarState();
@@ -27,6 +30,12 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
   ];
 
   @override
+  void initState() {
+    if (context.read<MosqueManager>().mosqueConfig?.duaAfterPrayerEnabled == false) return widget.onDone?.call();
+
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final screenWidth = MediaQuery.of(context).size.width;
@@ -35,6 +44,8 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
       stream: Stream.periodic(Duration(seconds: 1), (computationCount) => computationCount),
       builder: (context, snapshot) {
         final time = snapshot.data ?? 0;
+
+        if (time == azkarList.length) widget.onDone?.call();
 
         int activeHadith = (time ~/ itemDuration) % azkarList.length;
 

@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/i18n/AppLanguage.dart';
@@ -9,7 +10,6 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../generated/l10n.dart';
 import 'SalahInWidget.dart';

@@ -1,4 +1,3 @@
-import 'package:audiofileplayer/audiofileplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/generated/l10n.dart';
@@ -6,10 +5,13 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../generated/assets.dart';
-
 class AdhanSubScreen extends StatefulWidget {
-  const AdhanSubScreen({Key? key}) : super(key: key);
+  const AdhanSubScreen({Key? key, this.onDone, this.forceAdhan = false}) : super(key: key);
+
+  final VoidCallback? onDone;
+
+  /// used for before fajr alert
+  final bool forceAdhan;
 
   @override
   State<AdhanSubScreen> createState() => _AdhanSubScreenState();
@@ -21,13 +23,19 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final salahIndex = mosqueManager.salahIndex;
     final mosqueConfig = mosqueManager.mosqueConfig;
+
     final audioProvider = context.read<AudioManager>();
-    if (mosqueConfig?.adhanEnabledByPrayer![salahIndex] == "1" ||
-        (mosqueConfig?.wakeForFajrTime != null && mosqueManager.salahIndex == 0)) {
-      if (mosqueConfig?.adhanVoice != null) {
-      audioProvider.loadAdhanVoice(mosqueConfig);
-      audioProvider.playAdhan();
-      }
+
+    /// if there are no adhan voice
+    if (mosqueConfig?.adhanVoice == null) {
+      Future.delayed(Duration(minutes: 2), widget.onDone);
+      return super.initState();
+    }
+
+    if (widget.forceAdhan || mosqueConfig?.adhanEnabledByPrayer![salahIndex] == "1") {
+      audioProvider.loadAndPlayAdhanVoice(mosqueConfig, onDone: widget.onDone);
+    } else {
+      Future.delayed(Duration(minutes: 2), widget.onDone);
     }
     super.initState();
   }
