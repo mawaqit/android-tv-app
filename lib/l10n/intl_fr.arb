@@ -112,6 +112,6 @@
   "jumuaaScreenTitle": "Heure de Jumuaa",
   "jumuaaHadith": "Le Prophète (que la prière d'Allah et son salut soient sur lui) a dit\n \"Celui qui fait les ablutions parfaitement puis se rend au jumu'a puis écoute et se tait,\n il lui est pardonné ce qu'il y a entre ce moment et le vendredi suivant et trois jours en plus\n et celui qui touche des cailloux a certes fait une futilité\"",
   "shuruk": "Shuruk",
-  "thisFeatureIsNotSupportedRightNow": "Sorry, this feature is not supported right now.",
+  "thisFeatureIsNotSupportedRightNow": "Cette fonctionnalité n'est pas encore prise en charge par le serveur MAWAQIT",
   "searchByGps": "Recherche par GPS"
 }
