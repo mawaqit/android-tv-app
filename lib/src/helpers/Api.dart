@@ -3,6 +3,7 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
@@ -52,7 +53,7 @@ class Api {
   }
 
   static Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async {
-    final response = await dio.get('/mosque/search?word=$mosque&page=$page');
+    final response = await dio.get('$kBaseUrlV2/mosque/search?word=$mosque&page=$page');
     if (response.statusCode == 200) {
       List<Mosque> mosques = [];
 

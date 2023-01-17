@@ -14,9 +14,9 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/MawaqitDrawer.dart';
 import 'package:provider/provider.dart';
 
-
 class TestSubScreens extends StatelessWidget {
   final HomeActiveScreen state;
+
   TestSubScreens({Key? key, required this.state}) : super(key: key);
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -79,7 +79,13 @@ class TestSubScreens extends StatelessWidget {
       case HomeActiveScreen.jumuaaHadith:
         return JumuaHadithSubScreen();
       case HomeActiveScreen.announcementScreen:
-        return AnnouncementScreen();
+        return AnnouncementScreen(index: 0);
+      case HomeActiveScreen.jumuaaLiveScreen:
+        // TODO: Handle this case.
+        break;
+      case HomeActiveScreen.salahDurationBlackScreen:
+        // TODO: Handle this case.
+        break;
     }
     return SizedBox();
   }

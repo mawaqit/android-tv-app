@@ -6,7 +6,9 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 class IqamaSubScreen extends StatefulWidget {
-  const IqamaSubScreen({Key? key}) : super(key: key);
+  const IqamaSubScreen({Key? key, this.onDone}) : super(key: key);
+
+  final VoidCallback? onDone;
 
   @override
   State<IqamaSubScreen> createState() => _IqamaSubScreenState();
@@ -17,6 +19,7 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
   void initState() {
     context.read<AudioManager>().loadAndPlayIqamaBipVoice(
           context.read<MosqueManager>().mosqueConfig,
+          onDone: widget.onDone,
         );
     super.initState();
   }

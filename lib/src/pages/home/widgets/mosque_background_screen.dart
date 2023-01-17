@@ -1,29 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
-import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
-import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
-import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
+import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/MawaqitDrawer.dart';
 import 'package:provider/provider.dart';
 
-class OfflineHomeScreen extends StatelessWidget {
-  OfflineHomeScreen({Key? key}) : super(key: key);
+/// used to show the background of the mosque
+/// used with the sunscreens
+/// in case you need to show sub screen without the [OfflineHomeScreen]
+class MosqueBackgroundScreen extends StatelessWidget {
+  MosqueBackgroundScreen({Key? key, required this.child}) : super(key: key);
+
+  final Widget child;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  Widget activeWorkflow(MosqueManager mosqueManager) {
-    switch (mosqueManager.workflow) {
-      case HomeActiveWorkflow.normal:
-        return NormalWorkflowScreen();
-      case HomeActiveWorkflow.salah:
-        return SalahWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
-      case HomeActiveWorkflow.jumuaa:
-        return JumuaaWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +50,7 @@ class OfflineHomeScreen extends StatelessWidget {
                       onError: (exception, stackTrace) {},
                     ),
                   ),
-            child: Container(
-              child: activeWorkflow(mosqueProvider),
-            ),
+            child: child,
           ),
         ),
       ),

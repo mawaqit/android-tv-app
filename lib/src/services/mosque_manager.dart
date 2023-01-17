@@ -3,19 +3,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:hijri/hijri_calendar.dart';
 import 'package:http/http.dart' as http;
-import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
-import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
-import 'package:mawaqit/src/services/weather_mixin.dart';
+import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
+import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
-import 'audio_mixin.dart';
+import 'mixins/audio_mixin.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
@@ -24,7 +22,7 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(minutes: 2);
 
-class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin {
+class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, MosqueHelpersMixin {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -33,7 +31,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin {
   Mosque? mosque;
   Times? times;
   MosqueConfig? mosqueConfig;
-  HomeActiveScreen state = HomeActiveScreen.normal;
+
+  HomeActiveWorkflow workflow = HomeActiveWorkflow.normal;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -45,42 +44,10 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin {
   Future<void> init() async {
     await Api.init();
     await loadFromLocale();
-    subscribeToTime();
+    // subscribeToTime();
+    calculateActiveWorkflow();
     notifyListeners();
   }
-
-  salahName(int index) {
-    return [
-      S.current.fajr,
-      S.current.duhr,
-      S.current.asr,
-      S.current.maghrib,
-      S.current.isha,
-    ][index];
-  }
-
-  // // /// update mosque id in the app and shared preference
-  // Future<String> setMosqueId(String id) async {
-  //   var url = 'https://mawaqit.net/en/id/$id?view=desktop';
-  //
-  //   var value = await http.get(Uri.parse(url));
-  //   await fetchMosque();
-  //
-  //   if (value.statusCode != 200) {
-  //     throw InvalidMosqueId();
-  //   } else {
-  //     AnalyticsWrapper.changeMosque(id);
-  //
-  //     mosqueId = id;
-  //
-  //     // mosqueSlug = null;
-  //
-  //     _saveToLocale();
-  //
-  //     notifyListeners();
-  //     return mosqueId!;
-  //   }
-  // }
 
   /// update mosque id in the app and shared preference
   Future<void> setMosqueUUid(String uuid) async {
@@ -125,29 +92,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin {
     }
   }
 
-  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async {
-    final url = Uri.parse("$mawaqitApi/mosque/search?word=$mosque&page=$page");
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final results = jsonDecode(response.body);
-      List<Mosque> mosques = [];
-
-      for (var item in results) {
-        try {
-          mosques.add(Mosque.fromMap(item));
-        } catch (e, stack) {
-          debugPrintStack(label: e.toString(), stackTrace: stack);
-        }
-      }
-
-      return mosques;
-    } else {
-      print(response.body);
-      // If that response was not OK, throw an error.
-      throw Exception('Failed to fetch mosque');
-    }
-  }
+  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async => Api.searchMosques(mosque, page: page);
 
 //todo handle page and get more
   Future<List<Mosque>> searchWithGps() async {
@@ -202,186 +147,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin {
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }
-
-  get salahIndex => (nextSalahIndex() - 1) % 5;
-}
-
-extension MosqueHelperUtils on MosqueManager {
-  calculateActiveScreen() {
-    Duration iqamaaDuration = Duration(seconds: mosqueConfig!.iqamaDisplayTime!);
-
-    /// still user didn't select his mosque
-    if (mosque == null || times == null) return;
-    // normal screen in announcement screen
-    var state = HomeActiveScreen.announcementScreen;
-
-    final now = mosqueDate();
-    final lastSalahIndex = salahIndex;
-
-    final lastSalah = actualTimes()[lastSalahIndex];
-
-    final nextIqamaIndex = this.nextIqamaIndex();
-    final lastIqamaIndex = salahIndex;
-    final lastIqama = actualIqamaTimes()[lastIqamaIndex];
-    int salahMinute = int.parse(mosqueConfig!.duaAfterPrayerShowTimes[lastSalahIndex]);
-    Duration salahDuration = Duration(minutes: salahMinute);
-    print(salahMinute);
-    if (actualTimes()[0].subtract(kAdhanBeforeFajrDuration).difference(now).abs() < (getAdhanDuration(mosqueConfig)) &&
-        mosqueConfig?.wakeForFajrTime != null) {
-      state = HomeActiveScreen.adhan;
-
-      /// we are in wake up adhan before adhanFajr
-    } else if (lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig) &&
-        (now.weekday != DateTime.friday && salahIndex != 1)) {
-      /// we are in adhan time
-      state = HomeActiveScreen.adhan;
-    } else if ((lastSalah.difference(now).abs() < getAdhanDuration(mosqueConfig) + kAfterAdhanHadithDuration) &&
-        (now.weekday != DateTime.friday && salahIndex != 1) &&
-        mosqueConfig!.duaAfterAzanEnabled!) {
-      /// adhan has just done
-      state = HomeActiveScreen.afterAdhanHadith;
-    } else if (lastIqama.difference(now).abs() < iqamaaDuration && mosqueConfig!.iqamaEnabled!) {
-      /// we are in iqama time
-      state = HomeActiveScreen.iqamaa;
-    } else if (nextIqamaIndex == lastSalahIndex) {
-      /// we are in time between adhan and iqama
-      if (now.weekday == DateTime.friday) {
-        ///todo handle jumuaa live when url is ready
-        state = HomeActiveScreen.jumuaaHadith;
-        // state = HomeActiveScreen.jumuaaLiveScreen;
-      } else if (mosqueConfig!.iqamaFullScreenCountdown!) {
-        state = HomeActiveScreen.iqamaaCountDown;
-      }
-    } else if ((now.difference(lastIqama) - salahDuration).abs() < kAzkarDuration &&
-        mosqueConfig!.iqamaEnabled! &&
-        mosqueConfig!.duaAfterPrayerEnabled!) {
-      state = HomeActiveScreen.afterSalahAzkar;
-    }
-
-    // state = HomeActiveScreen.afterSalahAzkar;
-    // state = HomeActiveScreen.normal;
-
-    if (state != this.state) {
-      this.state = state;
-      notifyListeners();
-    }
-  }
-
-  bool get activateShroukItem {
-    final shuruqTimeInMinutes = times?.shuruq?.toTimeOfDay()?.inMinutes;
-    final duhrTime = todayTimes[1].toTimeOfDay()?.inMinutes;
-    final nowInMinutes = mosqueTimeOfDay().inMinutes;
-    if (shuruqTimeInMinutes == null || duhrTime == null) return false;
-
-    return nowInMinutes >= shuruqTimeInMinutes && nowInMinutes <= duhrTime;
-  }
-
-  /// show imsak between midnight and fajr
-  bool get showImsak {
-    final now = mosqueDate();
-    final midnight = DateUtils.dateOnly(now);
-    final fajrDate = actualTimes()[0];
-
-    return now.isAfter(midnight) && now.isBefore(fajrDate);
-  }
-
-  bool get showEid {
-    if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) {
-      return false;
-    }
-    return (((mosqueHijriDate().hMonth == 9 && mosqueHijriDate().hDay >= 23) ||
-            (mosqueHijriDate().hMonth == 10 && mosqueHijriDate().hDay == 1)) ||
-        (mosqueHijriDate().hMonth == 12 && mosqueHijriDate().hDay < 11));
-  }
-
-  /// listen to time and update the active home screens values
-  subscribeToTime() => Timer.periodic(Duration(seconds: 1), (timer) => calculateActiveScreen());
-
-  /// get today salah prayer times as a list of times
-  List<DateTime> actualTimes() => todayTimes.map((e) => e.toTimeOfDay()!.toDate(mosqueDate())).toList();
-
-  /// get today iqama prayer times as a list of times
-  List<DateTime> actualIqamaTimes() => [
-        for (var i = 0; i < 5; i++)
-          todayIqama[i]
-              .toTimeOfDay(
-                tryOffset: todayTimes[i].toTimeOfDay()!.toDate(mosqueDate()),
-              )!
-              .toDate(mosqueDate()),
-      ];
-
-  /// return the upcoming salah index
-  /// return -1 in case of issue(invalid times format)
-  int nextIqamaIndex() {
-    final now = mosqueDate();
-    final nextIqama = actualIqamaTimes().firstWhere(
-      (element) => element.isAfter(now),
-      orElse: () => actualIqamaTimes().first,
-    );
-
-    return actualIqamaTimes().indexOf(nextIqama);
-  }
-
-  /// return the upcoming salah index
-  /// return -1 in case of issue(invalid times format)
-  int nextSalahIndex() {
-    final now = mosqueDate();
-    final nextSalah = actualTimes().firstWhere(
-      (element) => element.isAfter(now),
-      orElse: () => actualTimes().first,
-    );
-
-    return actualTimes().indexOf(nextSalah);
-  }
-
-  String get imsak {
-    try {
-      int minutes = int.parse(todayTimes.first.split(':').first) * 60 +
-          int.parse(todayTimes.first.split(':').last) -
-          times!.imsakNbMinBeforeFajr;
-
-      String _timeTwoDigit = timeTwoDigit(
-        seconds: minutes % 60,
-        minutes: minutes ~/ 60,
-      );
-      return _timeTwoDigit;
-      // return DateFormat('HH:mm').format(DateTime(200, 1, 1, minutes ~/ 60, minutes % 60));
-    } catch (e, stack) {
-      debugPrintStack(stackTrace: stack);
-      return '';
-    }
-  }
-
-  /// used to test time
-  DateTime mosqueDate() => DateTime.now().add(Duration());
-
-  /// used to test time
-  TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
-
-  HijriCalendar mosqueHijriDate() => HijriCalendar.fromDate(mosqueDate().add(
-        Duration(
-          days: times!.hijriAdjustment,
-        ),
-      ));
-
-  List<String> get todayTimes {
-    var t = times!.calendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
-    if (t.length == 6) t.removeAt(1);
-    return t;
-  }
-
-  List<String> get todayIqama {
-    final todayIqama = times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
-
-    if (mosqueDate().weekday == DateTime.friday) {
-      todayIqama[1] = "+30";
-    }
-    return todayIqama;
-  }
 }
 
 /// user for invalid mosque id-slug
 class InvalidMosqueId implements Exception {}
 
-/// cant access gps
 class GpsError implements Exception {}

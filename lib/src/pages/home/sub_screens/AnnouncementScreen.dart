@@ -1,43 +1,53 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/models/announcement.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
 import '../widgets/SalahTimesBar.dart';
-import 'normal_home.dart';
 
 class AnnouncementScreen extends StatefulWidget {
   const AnnouncementScreen({
     Key? key,
+    required this.index,
+    this.onDone,
   }) : super(key: key);
+
+  /// index can be any number between 1 -> infinity
+  final int index;
+  final VoidCallback? onDone;
 
   @override
   State<AnnouncementScreen> createState() => _AnnouncementScreenState();
 }
 
 class _AnnouncementScreenState extends State<AnnouncementScreen> {
-  int activeIndex = 0;
-  bool showHome = true;
-  Duration homeDuration = Duration(minutes: 9);
+  late Announcement activeAnnouncement;
 
   @override
   void initState() {
-    Future.delayed(homeDuration).then((value) {
-      nextScreen();
-    });
+    final announcements = context.read<MosqueManager>().mosque?.announcements ?? [];
+
+    //todo test this
+    if (announcements.isEmpty) Future.delayed(Duration(milliseconds: 0), widget.onDone);
+
+    activeAnnouncement = announcements[widget.index % announcements.length];
+
+    if (activeAnnouncement.video == null) {
+      Future.delayed(Duration(seconds: activeAnnouncement.duration ?? 30), widget.onDone);
+    }
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final announcements = context
-        .read<MosqueManager>()
-        .mosque!
-        .announcements;
-    if (showHome || announcements.length <= activeIndex) {
-      return NormalHomeSubScreen();
-    }
+    final announcements = context.read<MosqueManager>().mosque!.announcements;
+    if (announcements.isEmpty) return NormalHomeSubScreen();
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -45,7 +55,10 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
         IgnorePointer(
           child: Padding(
             padding: EdgeInsets.only(bottom: 1.5.vh),
-            child: SalahTimesBar(miniStyle: true,microStyle: true,),
+            child: SalahTimesBar(
+              miniStyle: true,
+              microStyle: true,
+            ),
           ),
         )
       ],
@@ -53,29 +66,28 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   }
 
   Widget announcementWidgets() {
-    final announcement = context.read<MosqueManager>().mosque!.announcements[activeIndex];
     DateTime? startDate;
     DateTime? endDate;
-    if (announcement.startDate != null) {
-      startDate = DateTime.parse(announcement.startDate!);
+    if (activeAnnouncement.startDate != null) {
+      startDate = DateTime.parse(activeAnnouncement.startDate!);
     }
-    if (announcement.endDate != null) {
-      endDate = DateTime.parse(announcement.endDate!);
+    if (activeAnnouncement.endDate != null) {
+      endDate = DateTime.parse(activeAnnouncement.endDate!);
     }
 
-    // final updatedDate = DateTime.parse(announcement.updatedDate!);
+    // final updatedDate = DateTime.parse(activeAnnouncement.updatedDate!);
     bool isAvailableTime = ((DateTime.now().isBefore(endDate ?? DateTime.now())) &&
         DateTime.now().isAfter(
           startDate ?? DateTime.now(),
         ));
-    bool isNoDate = announcement.startDate == null || announcement.endDate == null;
+    bool isNoDate = activeAnnouncement.startDate == null || activeAnnouncement.endDate == null;
     print("time$isAvailableTime");
-    if (announcement.content != null && (isAvailableTime || isNoDate)) {
-      return textAnnouncement(announcement.content!, announcement.title);
-    } else if (announcement.image != null && (isAvailableTime || isNoDate)) {
-      return imageAnnouncement(announcement.image!);
-    } else if (announcement.video != null && (isAvailableTime || isNoDate)) {
-      return videoAnnouncement(announcement.video!);
+    if (activeAnnouncement.content != null && (isAvailableTime || isNoDate)) {
+      return textAnnouncement(activeAnnouncement.content!, activeAnnouncement.title);
+    } else if (activeAnnouncement.image != null && (isAvailableTime || isNoDate)) {
+      return imageAnnouncement(activeAnnouncement.image!);
+    } else if (activeAnnouncement.video != null && (isAvailableTime || isNoDate)) {
+      return videoAnnouncement(activeAnnouncement.video!);
     }
 
     return SizedBox();
@@ -132,9 +144,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     return Stack(
       children: [
         YoutubePlayer(
-          onEnded: (metaData) {
-            nextScreen();
-          },
+          onEnded: (metaData) => widget.onDone?.call(),
           controller: _controller,
           showVideoProgressIndicator: true,
         ),
@@ -142,35 +152,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     );
   }
 
-  nextScreen() {
-    final announcement = context
-        .read<MosqueManager>()
-        .mosque!
-        .announcements;
-    if (!showHome) {
-      setState(() {
-        showHome = true;
-      });
-      return Future.delayed(homeDuration).then(
-            (value) => nextScreen(),
-      );
-    }
-
-    setState(() {
-      activeIndex++;
-      if (activeIndex >= announcement.length) {
-        activeIndex = 0;
-      }
-      showHome = false;
-    });
-    if (announcement[activeIndex].video == null)
-      Future.delayed(Duration(seconds: announcement[activeIndex].duration ?? 30)).then(
-            (value) => nextScreen(),
-      );
-  }
-
-  get kAnnouncementTextShadow =>
-      [
+  get kAnnouncementTextShadow => [
         Shadow(
           offset: Offset(0, 9),
           blurRadius: 15,
