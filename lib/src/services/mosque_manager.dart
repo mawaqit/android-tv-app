@@ -45,7 +45,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     await Api.init();
     await loadFromLocale();
     // subscribeToTime();
-    calculateActiveWorkflow();
+    Future.delayed(Duration(milliseconds: 500)).then((value) => calculateActiveWorkflow());
+
     notifyListeners();
   }
 
@@ -77,7 +78,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   Future<void> loadFromLocale() async {
     // mosqueId = await sharedPref.read('mosqueId');
     mosqueUUID = await sharedPref.read('mosqueUUId');
-
     if (mosqueUUID != null) await fetchMosque();
   }
 

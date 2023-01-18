@@ -34,7 +34,7 @@ class AboveSalahBar extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Color(0x994e2b81),
+                    color: mosqueManager.getColorTheme().withOpacity(.70),
                   ),
                   child: Text(
                     [
@@ -53,7 +53,7 @@ class AboveSalahBar extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Color(0x994e2b81),
+                    color: mosqueManager.getColorTheme().withOpacity(.70),
                   ),
                   child: Text(
                     DateFormat("HH:mm").format(now),
