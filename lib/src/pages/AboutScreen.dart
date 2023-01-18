@@ -20,7 +20,7 @@ class AboutScreen extends StatelessWidget {
             context.read<DeveloperManager>().enableDeveloperOptions();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text("Macha'Allah 😎 You have activated the Abogabal secret menu رائع 😎 لقد قمت بتنشيط قائمة أبو جبل"),
+                content: Text("You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية"),
               ),
             );
             tapCount = 0;
