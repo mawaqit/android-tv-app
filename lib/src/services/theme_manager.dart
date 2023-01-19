@@ -5,6 +5,7 @@ import './storage_manager.dart';
 class ThemeNotifier with ChangeNotifier {
   /// used getter to support hot restart in development
   ThemeData get darkTheme => ThemeData(
+    toggleButtonsTheme: ToggleButtonsThemeData(disabledColor: Colors.white,color: Color(0xff490094)),
         brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
         primaryColor: Color(0xff490094),
@@ -40,6 +41,7 @@ class ThemeNotifier with ChangeNotifier {
 
   /// used getter to support hot restart in development
   ThemeData get lightTheme => ThemeData(
+    toggleButtonsTheme: ToggleButtonsThemeData(disabledColor: Colors.white,color: Color(0xff490094)),
         primarySwatch: Colors.deepPurple,
         selectedRowColor: Color(0xff490094),
         cardColor: Color(0xff490094),
