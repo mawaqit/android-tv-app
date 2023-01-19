@@ -18,7 +18,7 @@ class MawaqitCircleButton extends StatelessWidget {
     this.focusNode,
     this.size = 24,
     this.onPressed,
-    this.color = const Color(0xFF4E2B81),
+    this.color = const Color(0xFF490094),
     this.tooltip,
   }) : super(key: key);
 
@@ -33,8 +33,8 @@ class MawaqitCircleButton extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color.fromRGBO(200, 126, 201, 1),
-              Color(0xFF4E2B81),
+              Color.fromRGBO(73, 0, 148, 1),
+              Color(0xFF490094),
             ],
           ),
         ),
