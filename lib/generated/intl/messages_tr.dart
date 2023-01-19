@@ -139,9 +139,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Uygulamadan çıkmak istediğinizden emin misiniz?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Hizmet Şartları"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "Bu özellik burada desteklenmiyor."),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "Üzgünüz, bu özellik (Cami kimliğine göre arama) artık MAWAQIT tarafından desteklenmemektedir."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Tekrar Dene"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Cep telefonlarınızı lütfen kapalı tutunuz!"),

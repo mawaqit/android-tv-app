@@ -4,6 +4,8 @@ import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../generated/l10n.dart';
+
 class AboveSalahBar extends StatelessWidget {
   const AboveSalahBar({Key? key}) : super(key: key);
 
@@ -38,9 +40,9 @@ class AboveSalahBar extends StatelessWidget {
                   ),
                   child: Text(
                     [
-                      "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} in ",
+                      "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
                       if (nextSalahTime.inMinutes > 0)
-                        "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')} ",
+                        "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
                       if (nextSalahTime.inMinutes == 0)
                         "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
                     ].join(),

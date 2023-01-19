@@ -148,7 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "termsOfService": MessageLookupByLibrary.simpleMessage(
             "Conditions générales d’utilisation"),
         "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
-            "Cette fonctionnalité n\'est pas encore prise en charge par le serveur MAWAQIT"),
+            "Désolé, cette fonctionnalité (recherche par Mosque ID) n\'est plus prise en charge par MAWAQIT."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Réessayez"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Veuillez tourner vos téléphones portables!"),

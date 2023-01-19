@@ -144,9 +144,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
             "விண்ணப்பத்திலிருந்து நிச்சயமாக வெளியேற விரும்புகிறீர்களா?"),
         "termsOfService": MessageLookupByLibrary.simpleMessage("விதிமுறைகள்"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "இந்த அம்சம் தற்போது ஆதரிக்கப்படவில்லை"),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "மன்னிக்கவும், இந்த அம்சம் (மசூதி ஐடி மூலம் தேடுதல்) இனி MAWAQIT ஆல் ஆதரிக்கப்படாது."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("மீண்டும் முயற்சி"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "உங்கள் மொபைல் போன்களை சைலண்டில் வைக்கவும்!"),

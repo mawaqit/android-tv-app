@@ -139,9 +139,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Weet u zeker dat u de toepassing wilt afsluiten?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Servicevoorwaarden"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "deze functie wordt hier niet ondersteund"),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "Sorry, deze functie (zoeken op Moske-ID) wordt niet langer ondersteund door MAWAQIT."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Probeer opnieuw"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Vriendelijk verzoek om uw telefoon uit te zetten!"),

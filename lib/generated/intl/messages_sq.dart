@@ -144,9 +144,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Jeni i sigurt që dëshironi të dilni nga?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Kushtet e Shërbimit"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "kjo veçori nuk mbështetet për momentin"),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "Na vjen keq, kjo veçori (kërkimi sipas ID-së së xhamisë) nuk mbështetet më nga MAWAQIT."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Pokušajte ponovno"),
         "turnOfPhones":
             MessageLookupByLibrary.simpleMessage("Ju lutemi fikni celularët!"),
