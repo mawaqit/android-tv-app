@@ -70,7 +70,7 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
                       fontSize: 62,
                       color: Colors.white70,
                     ),
-                    "Not found Announcement",
+                    "No Announcement found",
                   ),
                 )),
         ),
