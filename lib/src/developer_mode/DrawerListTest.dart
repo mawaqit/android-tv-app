@@ -108,11 +108,14 @@ class DrawerListDeveloper extends StatelessWidget {
           ),
         ),
         SwitchListTile(
+          inactiveThumbColor: Theme.of(context).colorScheme.primary,
+         activeColor: Theme.of(context).primaryColor,
           secondary: Icon(Icons.tv),
           value: hive.isSecondaryScreen(),
           onChanged: (bool value) {
             hive.putIsSecondaryScreen(value);
           },
+
           title: Text("Show secondary screen"),
         ),
 
