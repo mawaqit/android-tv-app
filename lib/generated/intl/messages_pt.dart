@@ -145,9 +145,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "De certeza que quer sair da aplicação?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Termos de Utilização"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "Este recurso não é compatível Agora mesmo"),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "Desculpe, esta função (pesquisa por Mosque ID) não é mais suportada pelo MAWAQIT."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Tente novamente"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Por favor desligue o telemóvel!"),

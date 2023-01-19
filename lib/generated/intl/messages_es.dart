@@ -146,9 +146,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "¿Está seguro de que desea salir de la aplicación?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Términos del Servicio"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "Esta característica no es compatible en este momento"),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "Lo sentimos, esta característica (búsqueda por la Mezquita de ID) ya no está soportada por MAWAQIT."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Inténtalo de nuevo"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Por favor, apague sus teléfonos móviles!"),

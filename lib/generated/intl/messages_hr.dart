@@ -143,9 +143,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Jeste li sigurni da želite obrisati ovu prijavu?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Uvjeti korištenja"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "ova značajka trenutno nije podržana."),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "Žao nam je, MAWAQIT više ne podržava ovu značajku (pretraživanje po ID-u džamije)."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Pokušaj ponovno"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Molimo vas da isključite svoje mobitele!"),

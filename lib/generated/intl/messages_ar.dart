@@ -138,9 +138,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
             "هل أنت متأكد من أنك تريد الخروج من التطبيق؟"),
         "termsOfService": MessageLookupByLibrary.simpleMessage("شروط الخدمة"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "عذراً، هذه الميزة غير مدعومة الآن."),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "عذراً، هذه الميزة (البحث بواسطة معرف المسجد) لم تعد مدعومة من قبل MAWAQIT."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("حاول مرة اخرى"),
         "turnOfPhones":
             MessageLookupByLibrary.simpleMessage("الرجاء اغلاق الهاتف الجوال"),

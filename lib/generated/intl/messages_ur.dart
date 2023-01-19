@@ -141,9 +141,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "کیا آپ واقعی یہ درخواست حذف کرنا چاہتے ہیں?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("خدمات کی شرائط"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "یہ خصوصیت ابھی تعاون یافتہ نہیں ہے۔"),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "معذرت، یہ خصوصیت (مسجد ID کے ذریعہ تلاش) اب MAWAQIT کے ذریعہ تعاون یافتہ نہیں ہے۔"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("دوبارہ کوشش کریں"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "براہ کرم اپنے موبائل فون بند کر دیں!"),

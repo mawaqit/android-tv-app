@@ -147,9 +147,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "আপনি কি নিশ্চিত যে আপনি ছেড়ে যেতে চান?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("পরিষেবার শর্তাদি"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "এই বৈশিষ্ট্যটি এখন সমর্থিত নয়"),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "দুঃখিত, এই বৈশিষ্ট্যটি (মসজিদ আইডি দ্বারা অনুসন্ধান) আর MAWAQIT দ্বারা সমর্থিত নয়৷"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("আবার চেষ্টা কর"),
         "turnOfPhones":
             MessageLookupByLibrary.simpleMessage("দয়া করে মোবাইল বন্ধ রাখুন!"),

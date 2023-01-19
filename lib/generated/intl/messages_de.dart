@@ -142,9 +142,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Sind Sie sicher, dass Sie den Antrag aufgeben möchten?"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Nutzungsbedingungen"),
-        "thisFeatureIsNotSupportedRightNow":
-            MessageLookupByLibrary.simpleMessage(
-                "Diese Funktion wird derzeit nicht unterstützt."),
+        "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
+            "Leider wird diese Funktion (Suche nach Mosche-ID) nicht mehr von MAWAQIT unterstützt."),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Erneut versuchen"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Bitte drehen Sie Ihre Handys ab!"),
