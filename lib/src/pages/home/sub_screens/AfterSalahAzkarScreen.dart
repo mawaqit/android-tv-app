@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -80,7 +81,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                     style: TextStyle(
                       fontSize: 62,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'hafs',
+                      fontFamily: StringManager.getFontFamily(context),
                       color: Colors.white,
                     ),
                     textDirection: TextDirection.rtl,

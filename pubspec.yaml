@@ -145,6 +145,12 @@ flutter:
     - family: kufi
       fonts:
         - asset: assets/fonts/kufi-normal.ttf
+    - family: arial
+      fonts:
+        - asset: assets/fonts/ARIAL.TTF
+    - family: helvetica
+      fonts:
+        - asset: assets/fonts/Helvetica.ttf
     - family: WeatherIcons
       fonts:
         - asset: assets/fonts/weathericons-regular-webfont.ttf

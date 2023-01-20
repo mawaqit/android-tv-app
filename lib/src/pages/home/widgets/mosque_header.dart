@@ -7,6 +7,7 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../../../enum/connectivity_status.dart';
+import '../../../helpers/StringUtils.dart';
 
 class MosqueHeader extends StatelessWidget {
   const MosqueHeader({Key? key, required this.mosque}) : super(key: key);
@@ -41,6 +42,7 @@ class MosqueHeader extends StatelessWidget {
                     fontSize: 1.5.vw,
                     height: 1.1,
                     fontWeight: FontWeight.w400,
+                    fontFamily: StringManager.getFontFamily(context)
                   ),
                 ),
               ],
@@ -61,6 +63,8 @@ class MosqueHeader extends StatelessWidget {
                 height: 1,
                 shadows: kHomeTextShadow,
                 fontWeight: FontWeight.bold,
+                // fontFamily: StringManager.fontFamilyHelvetica
+
               ),
             ),
           ),

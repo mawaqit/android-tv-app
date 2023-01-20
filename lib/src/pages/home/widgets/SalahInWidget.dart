@@ -4,6 +4,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
+import '../../../helpers/StringUtils.dart';
 import '../../../helpers/mawaqit_icons_icons.dart';
 import '../../../themes/UIShadows.dart';
 
@@ -17,7 +18,7 @@ class SalahInWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueManager = context.read<MosqueManager>();
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
@@ -44,6 +45,7 @@ class SalahInWidget extends StatelessWidget {
                 fontSize: 2.8.vw,
                 // height: 2,
                 color: Colors.white,
+                fontFamily: StringManager.getFontFamily(context),
                 shadows: kHomeTextShadow,
               ),
             ),

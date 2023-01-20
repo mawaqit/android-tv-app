@@ -4,6 +4,8 @@ import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 
+import '../../../helpers/StringUtils.dart';
+
 class RandomHadithScreen extends StatelessWidget {
   const RandomHadithScreen({Key? key}) : super(key: key);
 
@@ -25,7 +27,7 @@ class RandomHadithScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 62,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'hafs',
+                      fontFamily: StringManager.getFontFamily(context),
                       color: Colors.white,
                     ),
                   ),

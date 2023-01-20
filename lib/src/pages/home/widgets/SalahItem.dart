@@ -6,6 +6,7 @@ import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
 
 const kSalahItemWidgetWidth = 135.0;
@@ -86,6 +87,7 @@ class SalahItemWidget extends StatelessWidget {
                     fontSize: 3.vw,
                     shadows: kHomeTextShadow,
                     color: Colors.white,
+                    fontFamily: StringManager.getFontFamily(context)
 
                   ),
                 ),
@@ -102,6 +104,7 @@ class SalahItemWidget extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                     shadows: kHomeTextShadow,
                     color: Colors.white,
+                    fontFamily: StringManager.getFontFamily(context),
                   ),
                 ),
                 if (timeDate != null)
@@ -143,6 +146,7 @@ class SalahItemWidget extends StatelessWidget {
                       shadows: kHomeTextShadow,
                       letterSpacing: 1,
                       color: Colors.white,
+                      fontFamily: StringManager.getFontFamily(context)
                     ),
                   ),
 
@@ -157,6 +161,7 @@ class SalahItemWidget extends StatelessWidget {
                           fontSize: 1.4.vw,
                           fontWeight: FontWeight.w300,
                           // shadows: kHomeTextShadow,
+                          fontFamily: StringManager.getFontFamily(context),
                           color: Colors.white,
                         ),
                       ),
