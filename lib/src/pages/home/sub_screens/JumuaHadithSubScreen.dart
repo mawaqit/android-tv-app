@@ -4,6 +4,8 @@ import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/StringUtils.dart';
+
 class JumuaHadithSubScreen extends StatelessWidget {
   const JumuaHadithSubScreen({Key? key, this.onDone}) : super(key: key);
 
@@ -25,7 +27,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'hafs',
+                fontFamily: StringManager.getFontFamily(context),
                 color: Colors.white,
               ),
             ),
@@ -42,7 +44,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 60,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'hafs',
+                  fontFamily: StringManager.getFontFamily(context),
                   color: Colors.white,
                 ),
               ),

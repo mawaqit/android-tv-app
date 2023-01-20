@@ -7,6 +7,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../helpers/StringUtils.dart';
 import '../widgets/SalahTimesBar.dart';
 
 class AnnouncementScreen extends StatefulWidget {
@@ -104,7 +105,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                 shadows: kAnnouncementTextShadow,
                 fontSize: 62,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'hafs',
+                fontFamily:StringManager.getFontFamily(context),
                 color: Colors.amber,
                 letterSpacing: 1)),
         // content
@@ -116,7 +117,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                   shadows: kAnnouncementTextShadow,
                   fontSize: 62,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'hafs',
+                  fontFamily: StringManager.getFontFamily(context),
                   color: Colors.white,
                   letterSpacing: 1)),
         ),

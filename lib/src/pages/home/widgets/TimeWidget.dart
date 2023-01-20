@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 
 import '../../../../generated/l10n.dart';
+import '../../../helpers/StringUtils.dart';
 import 'SalahInWidget.dart';
 
 class HomeTimeWidget extends TimerRefreshWidget {
@@ -179,7 +180,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                           shadows: kHomeTextShadow,
                                           // letterSpacing: 1,
                                           height: .8,
-                                          fontFamily: isArabic ? 'kufi' : null,
+                                          fontFamily: isArabic ? StringManager.getFontFamily(context): null,
                                         ),
                                       ),
                                       FadeAnimatedText(
@@ -197,7 +198,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                           fontSize: 2.5.vw,
                                           shadows: kHomeTextShadow,
                                           height: .8,
-                                          fontFamily: isArabic ? 'kufi' : null,
+                                          fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
                                         ),
                                       ),
                                     ],
@@ -224,7 +225,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                   shadows: kHomeTextShadow,
                                   // letterSpacing: 1,
                                   height: .8,
-                                  fontFamily: isArabic ? 'kufi' : null,
+                                  fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
                                 ),
                               ),
                           ),
@@ -233,12 +234,11 @@ class HomeTimeWidget extends TimerRefreshWidget {
                 ),
               ),
               Padding(
-                  padding: EdgeInsets.all(1.vw),
+                  padding: EdgeInsets.all(.1.vw),
                   child: SalahInWidget(
                     adhanIconSize: adhanIconSize,
                     nextSalahTime: nextSalahTime,
                   )),
-              SizedBox(height: .5.vw),
             ],
           ),
         ),
