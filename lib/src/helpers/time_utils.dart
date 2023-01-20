@@ -82,7 +82,7 @@ extension TimeUtils on TimeOfDay {
 
 String timeTwoDigit({required int seconds ,required int minutes}){
 
-  String twoDigitSecond = "${seconds < 10 ? "0" : ""}$seconds";
-  String twoDigitMinute= "${minutes < 10 ? "0" : ""}$minutes";
+  String twoDigitSecond = "${seconds.toString().padLeft(2,"0")}";
+  String twoDigitMinute= "${minutes.toString().padLeft(2,"0")}";
   return "$twoDigitMinute:$twoDigitSecond";
 }

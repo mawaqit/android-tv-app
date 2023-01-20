@@ -56,6 +56,8 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final mosqueProvider = context.read<MosqueManager>();
     final mosque = mosqueProvider.mosque!;
     double adhanIconSize = 15.vh;
+    final iconColor = Colors.white;
+
     return MosqueBackgroundScreen(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,6 +76,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                       MawaqitIcons.icon_adhan,
                       size: adhanIconSize,
                       shadows: kHomeTextShadow,
+                      color: iconColor,
                     ),
                     Text(
                       "    ${S.of(context).alAdhan}    ",
@@ -89,6 +92,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                       MawaqitIcons.icon_adhan,
                       size: adhanIconSize,
                       shadows: kHomeTextShadow,
+                      color: iconColor,
                     ),
                   ],
                 ),
@@ -103,6 +107,6 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
         Directionality(textDirection: TextDirection.ltr, child: Footer()),
       ],
     ));
-    
+
   }
 }
