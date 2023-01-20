@@ -58,7 +58,7 @@ class AboveSalahBar extends StatelessWidget {
                     color: mosqueManager.getColorTheme().withOpacity(.70),
                   ),
                   child: Text(
-                    DateFormat("HH:mm").format(now),
+                    DateFormat("HH:mm","en").format(now),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.white,
                         ),
