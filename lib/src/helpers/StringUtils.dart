@@ -29,11 +29,11 @@ class StringManager {
   static const fontFamilyArial = "arial";
   static const fontFamilyHelvetica = "helvetica";
 
-  static String getFontFamily(BuildContext context) {
+  static String? getFontFamily(BuildContext context) {
     String langCode = "${context.read<AppLanguage>().appLocal}";
     if (langCode == "ar" || langCode == "ur") {
       return fontFamilyKufi;
     }
-    return fontFamilyArial;
+    return null;
   }
 }
