@@ -89,6 +89,9 @@ dependencies:
   #location: ^4.3.0
   geolocator: ^8.2.1
   hijri: ^3.0.0
+  arabic_numbers: ^1.0.0
+  persian_number_utility: ^1.1.3
+
   #  webview_flutter: ^3.0.0
 
   rive_splash_screen: ^0.1.0
