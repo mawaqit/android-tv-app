@@ -5,6 +5,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
+import '../../../helpers/StringUtils.dart';
 
 class AboveSalahBar extends StatelessWidget {
   const AboveSalahBar({Key? key}) : super(key: key);
@@ -48,11 +49,12 @@ class AboveSalahBar extends StatelessWidget {
                     ].join(),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.white,
+                      fontFamily: StringManager.getFontFamily(context)
                         ),
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+                  padding: EdgeInsets.symmetric(horizontal: 20, ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: mosqueManager.getColorTheme().withOpacity(.70),
@@ -61,7 +63,9 @@ class AboveSalahBar extends StatelessWidget {
                     DateFormat("HH:mm","en").format(now),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.white,
-                        ),
+                        fontFamily: StringManager.getFontFamily(context)
+
+                    ),
                   ),
                 ),
               ],

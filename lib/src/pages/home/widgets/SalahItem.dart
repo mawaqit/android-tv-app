@@ -104,7 +104,7 @@ class SalahItemWidget extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                     shadows: kHomeTextShadow,
                     color: Colors.white,
-                    fontFamily: StringManager.getFontFamily(context),
+                    // fontFamily: StringManager.getFontFamily(context),
                   ),
                 ),
                 if (timeDate != null)
@@ -146,7 +146,7 @@ class SalahItemWidget extends StatelessWidget {
                       shadows: kHomeTextShadow,
                       letterSpacing: 1,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamily(context)
+                      // fontFamily: StringManager.getFontFamily(context)
                     ),
                   ),
 
@@ -161,7 +161,7 @@ class SalahItemWidget extends StatelessWidget {
                           fontSize: 1.4.vw,
                           fontWeight: FontWeight.w300,
                           // shadows: kHomeTextShadow,
-                          fontFamily: StringManager.getFontFamily(context),
+                          // fontFamily: StringManager.getFontFamily(context),
                           color: Colors.white,
                         ),
                       ),
