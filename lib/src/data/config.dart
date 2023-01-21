@@ -23,6 +23,7 @@ class Config {
     {"value": "es", "name": "Spanish", "subtitle": "Español"},
     {"value": "ta", "name": "Tamil", "subtitle": "Tamil"},
     {"value": "tr", "name": "Turkish", "subtitle": "Turc"},
-    {"value": "ur", "name": "Urdu", "subtitle": "Urdu"}
+    {"value": "ur", "name": "Urdu", "subtitle": "Urdu"},
+    {"value": "ba", "name": "Bashkir", "subtitle": "Bashkir"}
   ];
 }

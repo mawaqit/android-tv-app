@@ -272,7 +272,7 @@ class MosqueConfig {
       adhanVoice: map['adhanVoice'],
       adhanEnabledByPrayer: List.from(map['adhanEnabledByPrayer']),
       footer: map['footer'],
-      iqamaMoreImportant: map['iqamaMoreImportant'],
+      iqamaMoreImportant: map['iqamaMoreImportant'] ?? false,
       timeDisplayFormat: map['timeDisplayFormat'],
       backgroundType: map['backgroundType'],
       backgroundMotif: map['backgroundMotif'],
