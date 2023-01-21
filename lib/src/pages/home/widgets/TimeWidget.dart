@@ -5,14 +5,12 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
-import 'package:arabic_numbers/arabic_numbers.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
+import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
-import 'package:persian_number_utility/persian_number_utility.dart';
-import '../../../../generated/l10n.dart';
+
 import '../../../helpers/StringUtils.dart';
 import 'SalahInWidget.dart';
 
@@ -54,9 +52,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
     double adhanIconSize = 2.3.vw;
     final mosqueManager = context.watch<MosqueManager>();
     final now = mosqueManager.mosqueDate();
-    final isArabic = Localizations
-        .localeOf(context)
-        .languageCode == 'ar';
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final nextSalahIndex = mosqueManager.nextSalahIndex();
     var nextSalahTime = mosqueManager.actualTimes()[nextSalahIndex].difference(now);
     final lang = context.read<AppLanguage>();
@@ -158,76 +154,76 @@ class HomeTimeWidget extends TimerRefreshWidget {
                       constraints: BoxConstraints(maxWidth: 28.vw),
                       height: 2.5.vw,
                       child: mosqueConfig!.hijriDateEnabled!
-                          ? FittedBox(
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          alignment: Alignment.center,
-                          children: [
-                            AnimatedTextKit(
-                              key: ValueKey('122'),
-                              isRepeatingAnimation: true,
-                              repeatForever: true,
-                              displayFullTextOnTap: true,
-                              animatedTexts: [
-                                FadeAnimatedText(
-                                  "${DateFormat(
-                                    "EEEE, MMM",
-                                    "${lang.appLocal}_${mosqueManager.mosque?.countryCode}",
-                                  ).format(now)} ${DateFormat("dd, yyyy", "en_US").format(now)}",
-                                  duration: Duration(seconds: 6),
-                                  fadeInEnd: 200 / 10000,
-                                  fadeOutBegin: 1,
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 2.7.vw,
-                                    shadows: kHomeTextShadow,
-                                    // letterSpacing: 1,
-                                    height: .8,
-                                    fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                          ? Row(
+                              children: [
+                                Expanded(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: AnimatedTextKit(
+                                      key: ValueKey('122'),
+                                      isRepeatingAnimation: true,
+                                      repeatForever: true,
+                                      displayFullTextOnTap: true,
+                                      animatedTexts: [
+                                        FadeAnimatedText(
+                                          "${DateFormat(
+                                            "EEEE, MMM",
+                                            "${lang.appLocal}_${mosqueManager.mosque?.countryCode}",
+                                          ).format(now)} ${DateFormat("dd, yyyy", "en_US").format(now)}",
+                                          duration: Duration(seconds: 6),
+                                          fadeInEnd: 200 / 10000,
+                                          fadeOutBegin: 1,
+                                          textStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 2.7.vw,
+                                            shadows: kHomeTextShadow,
+                                            // letterSpacing: 1,
+                                            height: .8,
+                                            fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                          ),
+                                        ),
+                                        FadeAnimatedText(
+                                          "${hijriDate.toFormat("yyyy").toEnglishDigit()} ${hijriDate.toFormat("MMMM")} ${hijriDate.toFormat("dd").toEnglishDigit()}",
+                                          duration: Duration(seconds: 4),
+                                          fadeInEnd: 200 / 4000,
+                                          fadeOutBegin: 1,
+                                          textStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 2.5.vw,
+                                            shadows: kHomeTextShadow,
+                                            height: .8,
+                                            fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                FadeAnimatedText(
-                                  "${hijriDate.toFormat("yyyy").toEnglishDigit()} ${ hijriDate.toFormat("MMMM")} ${hijriDate.toFormat("dd").toEnglishDigit()}"
-                                  ,
-                                  duration: Duration(seconds: 4),
-                                  fadeInEnd: 200 / 4000,
-                                  fadeOutBegin: 1,
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 2.5.vw,
-                                    shadows: kHomeTextShadow,
-                                    height: .8,
-                                    fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
-                                  ),
-                                ),
+                                if (isLunarDays)
+                                  Positioned(
+                                    right: -2.5.vw,
+                                    child: FaIcon(
+                                      FontAwesomeIcons.solidMoon,
+                                      size: 2.5.vw,
+                                    ),
+                                  )
                               ],
-                            ),
-                            if (isLunarDays)
-                              Positioned(
-                                right: -2.5.vw,
-                                child: FaIcon(
-                                  FontAwesomeIcons.solidMoon,
-                                  size: 2.5.vw,
-                                ),
-                              )
-                          ],
-                        ),
-                      )
+                            )
                           : FittedBox(
-                        child: Text(
-                          DateFormat(
-                            "EEEE, MMM dd, yyyy",
-                          ).format(now),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 2.9.vw,
-                            shadows: kHomeTextShadow,
-                            // letterSpacing: 1,
-                            height: .8,
-                            fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
-                          ),
-                        ),
-                      ),
+                              child: Text(
+                                DateFormat(
+                                  "EEEE, MMM dd, yyyy",
+                                ).format(now),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 2.9.vw,
+                                  shadows: kHomeTextShadow,
+                                  // letterSpacing: 1,
+                                  height: .8,
+                                  fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                ),
+                              ),
+                            ),
                     ),
                   ],
                 ),

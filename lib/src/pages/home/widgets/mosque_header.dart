@@ -20,12 +20,12 @@ class MosqueHeader extends StatelessWidget {
     bool isOffline = connectionStatus == ConnectivityStatus.Offline;
     final tr = S.of(context);
     return Padding(
-      padding:  EdgeInsets.only(top: 1.8.vh, left: .8.vw,right: .8.vw),
+      padding: EdgeInsets.only(top: 1.8.vh, left: .8.vw, right: .8.vw),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding:  EdgeInsets.symmetric(vertical: .5.vh,horizontal: .35.vw),
+            padding: EdgeInsets.symmetric(vertical: .5.vh, horizontal: .35.vw),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -35,28 +35,27 @@ class MosqueHeader extends StatelessWidget {
                 ),
                 SizedBox(width: .4.vw),
                 Text(
-                 "${isOffline?tr.offline:tr.online}" ,
+                  "${isOffline ? tr.offline : tr.online}",
                   style: TextStyle(
-                    color: Colors.white,
-                    shadows: kHomeTextShadow,
-                    fontSize: 1.5.vw,
-                    height: 1.1,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: StringManager.getFontFamily(context)
-                  ),
+                      color: Colors.white,
+                      shadows: kHomeTextShadow,
+                      fontSize: 1.5.vw,
+                      height: 1.1,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: StringManager.getFontFamily(context)),
                 ),
               ],
             ),
           ),
           Spacer(),
-        mosque.logo!=null?  Image.network(mosque.logo!, width: 40, height: 40):SizedBox(),
+          mosque.logo != null ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
           SizedBox(width: 10),
           Container(
-            constraints: BoxConstraints(maxWidth: 80.vw),
+            constraints: BoxConstraints(maxWidth: 75.vw),
             child: Text(
               mosque.name,
               maxLines: 1,
-              overflow: TextOverflow.clip,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 4.vw,
@@ -64,12 +63,11 @@ class MosqueHeader extends StatelessWidget {
                 shadows: kHomeTextShadow,
                 fontWeight: FontWeight.bold,
                 // fontFamily: StringManager.fontFamilyHelvetica
-
               ),
             ),
           ),
           SizedBox(width: 10),
-          mosque.logo!=null?  Image.network(mosque.logo!, width: 40, height: 40):SizedBox(),
+          mosque.logo != null ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
           Spacer(),
           WeatherWidget(),
         ],
