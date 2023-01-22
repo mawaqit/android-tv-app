@@ -56,6 +56,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
     final nextSalahIndex = mosqueManager.nextSalahIndex();
     var nextSalahTime = mosqueManager.actualTimes()[nextSalahIndex].difference(now);
     final lang = context.read<AppLanguage>();
+    final isArabicLang = lang.isArabic();
     // in case of fajr of the next day
     if (nextSalahTime < Duration.zero) nextSalahTime = nextSalahTime + Duration(days: 1);
 
@@ -229,7 +230,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                 ),
               ),
               Padding(
-                  padding: EdgeInsets.all(.1.vw),
+                  padding: EdgeInsets.all(isArabicLang?0.1.vw:2.vh),
                   child: SalahInWidget(
                     adhanIconSize: adhanIconSize,
                     nextSalahTime: nextSalahTime,

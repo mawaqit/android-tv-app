@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 
@@ -37,9 +38,9 @@ class RandomHadithScreen extends StatelessWidget {
           ),
         ),
         AboveSalahBar(),
-        SizedBox(height: 5),
+        SizedBox(height: .7.vh),
         SalahTimesBar(),
-        SizedBox(height: 10),
+        SizedBox(height: 4.vh),
       ],
     );
   }
