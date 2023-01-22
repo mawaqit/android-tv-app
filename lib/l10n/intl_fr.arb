@@ -113,5 +113,10 @@
   "jumuaaHadith": "Le Prophète (que la prière d'Allah et son salut soient sur lui) a dit\n \"Celui qui fait les ablutions parfaitement puis se rend au jumu'a puis écoute et se tait,\n il lui est pardonné ce qu'il y a entre ce moment et le vendredi suivant et trois jours en plus\n et celui qui touche des cailloux a certes fait une futilité\"",
   "shuruk": "Shuruk",
   "thisFeatureIsNotSupportedRightNow": "Désolé, cette fonctionnalité (recherche par Mosque ID) n'est plus prise en charge par MAWAQIT.",
-  "searchByGps": "Recherche par GPS"
+  "searchByGps": "Recherche par GPS",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
