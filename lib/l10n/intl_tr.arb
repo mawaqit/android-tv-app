@@ -113,5 +113,10 @@
   "jumuaaHadith": "Yine Ebu Hüreyre (Allah Ondan razı olsun)'den rivayet edildiğine göre Rasûlullah (sallallahu aleyhi vesellem) şöyle buyurdu:\n Bir kimse abdestini güzelce alarak Cuma için camiye gelir, hutbeyi sessizce dinlerse iki Cuma arasındaki ve fazladan üç günlük daha(10 günlük işlenen küçük) günahları bağışlanır.\n Kim hutbe okunurken gereği gibi dinlemeyip çakıl taşlarıyla oynarsa, meşgul olursa boş ve manasız bir iş yapmış olur. (Müslim, Cuma 27)",
   "shuruk": "Güneşin doğuşu",
   "thisFeatureIsNotSupportedRightNow": "Üzgünüz, bu özellik (Cami kimliğine göre arama) artık MAWAQIT tarafından desteklenmemektedir.",
-  "searchByGps": "GPS ile ara"
+  "searchByGps": "GPS ile ara",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
