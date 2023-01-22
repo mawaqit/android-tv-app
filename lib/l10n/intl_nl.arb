@@ -113,5 +113,10 @@
   "jumuaaHadith": "Het is overgeleverd van Aboe Hoerayrah dat de Profeet (vrede zij met hem) heeft gezegd:\n “Wie de grote wassing verricht en naar het vrijdaggebed komt, het aantal gebeden verricht die Allah voor hem bepaalt,\n aandachtig luistert naar de vrijdagpreek tot deze voorbij is, dan het gebed (met de imam) verricht; (zijn zonden)\n tussen het ene vrijdaggebed en het andere en drie dagen erna zullen vergeven worden en wie een steen aanraakt heeft\n zich schuldig gemaakt aan ijdele gepraat (zijn beloning wordt minder)",
   "shuruk": "Zonsopkomst",
   "thisFeatureIsNotSupportedRightNow": "Sorry, deze functie (zoeken op Moske-ID) wordt niet langer ondersteund door MAWAQIT.",
-  "searchByGps": "Zoeken met GPS"
+  "searchByGps": "Zoeken met GPS",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
