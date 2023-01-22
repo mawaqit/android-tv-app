@@ -113,5 +113,10 @@
   "jumuaaHadith": "Der Prophet ( Allahs Frieden und Segen auf ihm) hat gesagt:\n \"Derjenige der in einer schönen weise seine Gebetswaschung vollzieht und dann zum Freitagsgebet kommt, leise die Khutba zuhört, dessen Sünden werden zwichen den zwei Freitage und noch drei Tage, vergeben. Und wer während der Khutba mit Kieselsteine spielt, der macht etwas sinnloses\"",
   "shuruk": "Shuruk",
   "thisFeatureIsNotSupportedRightNow": "Leider wird diese Funktion (Suche nach Mosche-ID) nicht mehr von MAWAQIT unterstützt.",
-  "searchByGps": "Suche per GPS"
+  "searchByGps": "Suche per GPS",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
