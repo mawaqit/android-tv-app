@@ -138,7 +138,7 @@ class _SplashScreen extends State<Splash> {
             ),
             Container(
               padding: EdgeInsets.all(10),
-              child: Opacity(child: VersionWidget(), opacity: .3),
+              child: Opacity(child: VersionWidget(), opacity: 1),
               alignment: Alignment.bottomCenter,
             ),
           ],
