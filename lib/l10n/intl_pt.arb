@@ -113,5 +113,10 @@
   "jumuaaHadith": "Rasulullah (Sallalahu Aleihi Wassalam) disse\n \"Aquele que efectuar a ablução perfeitamente e dirigir-se para a oração de Jumuah, ouvir o sermão com atenção e em silêncio, todos os seus pequenos pecados entre aquela hora e o próximo Jumuah mais três dias (total 10 dias) serão perdoados. E aquele que durante o sermão brincar com uma pedra (ou seja, distrair-se), na realidade, fez algo fútil.\"",
   "shuruk": "Nascer do Sol",
   "thisFeatureIsNotSupportedRightNow": "Desculpe, esta função (pesquisa por Mosque ID) não é mais suportada pelo MAWAQIT.",
-  "searchByGps": "Pesquisar por GPS"
+  "searchByGps": "Pesquisar por GPS",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
