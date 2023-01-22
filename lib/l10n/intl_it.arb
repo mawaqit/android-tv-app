@@ -113,5 +113,10 @@
   "jumuaaHadith": "Il profeta Muhammad (pace e benedizione su di lui) disse\n Chiunque si faccia un bagno e presti la massima attenzione alla sua igiene personale, si ponga\n olio (nei capelli) o si profumi, quindi si diriga verso la preghiera senza forzare il suo cammino\n tra due persone (riunite nella moschea per la preghiera del venerdì), e preghi in accordo a quanto\n è stato scritto per lui e rimanga quieto mentre l’imam pronuncia il sermone, otterrà che tutti\n i peccati commessi in quel giorno fino al venerdì seguente siano perdonati",
   "shuruk": "Alba",
   "thisFeatureIsNotSupportedRightNow": "Siamo spiacenti, questa funzione (ricerca per ID Moschea) non è più supportata da MAWAQIT.",
-  "searchByGps": "Ricerca tramite GPS"
+  "searchByGps": "Ricerca tramite GPS",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
