@@ -113,5 +113,10 @@
   "jumuaaHadith": "El Profeta la paz y bendiciones de Allah sean con él dijo: \"La persona que hace la ablución perfectamente y luego va para Yumuah y\n escucha silenciosa y atentamente, sus pecados serán perdonados entre ese tiempo y el próximo viernes más tres días adicionales.\n Y la persona que toca las piedras, ciertamente ha cometido un acto de futilidad\"",
   "shuruk": "Shuruq",
   "thisFeatureIsNotSupportedRightNow": "Lo sentimos, esta característica (búsqueda por la Mezquita de ID) ya no está soportada por MAWAQIT.",
-  "searchByGps": "Buscar por GPS"
+  "searchByGps": "Buscar por GPS",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
