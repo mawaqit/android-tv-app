@@ -51,7 +51,7 @@ class MosqueHeader extends StatelessWidget {
           mosque.logo != null ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
           SizedBox(width: 10),
           Container(
-            constraints: BoxConstraints(maxWidth: 75.vw),
+            constraints: BoxConstraints(maxWidth: 70.vw),
             child: Text(
               mosque.name,
               maxLines: 1,
