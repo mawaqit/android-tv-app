@@ -13,6 +13,7 @@ import 'package:mawaqit/src/pages/HomeScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:wakelock/wakelock.dart';
@@ -134,6 +135,11 @@ class _SplashScreen extends State<Splash> {
                 width: 100,
                 height: 100,
               ),
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Opacity(child: VersionWidget(), opacity: .3),
+              alignment: Alignment.bottomCenter,
             ),
           ],
         ),
