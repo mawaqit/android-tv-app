@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "Please enter the Mosque ID :"),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -97,6 +98,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Missing Mosque ID"),
         "mosque": MessageLookupByLibrary.simpleMessage("Mosque"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("Mosque ID"),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Mosque Input"),
@@ -104,12 +107,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enter the Mosque name"),
         "mosqueNoMore": MessageLookupByLibrary.simpleMessage("No more results"),
         "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("Network Status"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("No internet connection"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
@@ -117,6 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
         "quit": MessageLookupByLibrary.simpleMessage("Quit"),
         "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
