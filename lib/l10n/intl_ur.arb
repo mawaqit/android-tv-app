@@ -113,5 +113,10 @@
   "jumuaaHadith": "نبی کریم صلی اللہ علیہ وسلم نے فرمایا\n \"جس نے اچھی طرح وضو کیا، پھر جمعہ کی نماز پڑھی، پھر سنے اور خاموش رہے۔\"\n اس وقت اور اگلے جمعہ اور مزید تین دن کے درمیان جو کچھ ہے اسے بخش دیا جاتا ہے۔\n اور جس نے پتھروں کو چھو لیا اس نے یقیناً فضول خرچی کی\"",
   "shuruk": "اشراق",
   "thisFeatureIsNotSupportedRightNow": "معذرت، یہ خصوصیت (مسجد ID کے ذریعہ تلاش) اب MAWAQIT کے ذریعہ تعاون یافتہ نہیں ہے۔",
-  "searchByGps": "GPS کے ذریعے تلاش کریں۔"
+  "searchByGps": "GPS کے ذریعے تلاش کریں۔",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }

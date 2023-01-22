@@ -113,5 +113,10 @@
   "jumuaaHadith": "রাসূলুল্লাহ সাঃ বলেন:\n যে ব্যক্তি নিখুঁতভাবে অযু করে তারপর জুম'আয় যায় এবং মনোযোগ সহকারে খুতবা শুনে ও চুপ থাকে, সেই সময় থেকে পরের জুম'আ এবং আরও তিন দিনের মাঝে যা আছে তাকে মাফ করে দেওয়া।",
   "shuruk": "সূর্যোদয়",
   "thisFeatureIsNotSupportedRightNow": "দুঃখিত, এই বৈশিষ্ট্যটি (মসজিদ আইডি দ্বারা অনুসন্ধান) আর MAWAQIT দ্বারা সমর্থিত নয়৷",
-  "searchByGps": "জিপিএস দ্বারা অনুসন্ধান করুন"
+  "searchByGps": "জিপিএস দ্বারা অনুসন্ধান করুন",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
