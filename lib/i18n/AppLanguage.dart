@@ -47,6 +47,6 @@ class AppLanguage extends ChangeNotifier {
   }
 
   bool isArabic() {
-    return _appLocale.languageCode == "ar";
+    return _appLocale.languageCode == "ar" ||_appLocale.languageCode == "ur" ;
   }
 }

@@ -18,13 +18,15 @@ class Footer extends StatelessWidget {
     final mosqueConfig = mosqueManager.mosqueConfig;
     final mosque = mosqueManager.mosque;
     final isLTR = mosque?.flash?.orientation == "ltr";
-    return mosqueConfig!.footer!
-        ? Stack(
+    final isArabic = context.read<AppLanguage>().isArabic();
+    return Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.bottomCenter,
             children: [
+             if(mosqueConfig!.footer!)
               MosqueInformationWidget(),
-              Container(
+              if(mosqueConfig.footer!)
+                Container(
                 padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),
                 width: double.infinity,
                 color: mosque?.flash?.content.isEmpty != false ? null : Colors.black38,
@@ -37,7 +39,9 @@ class Footer extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: .4.vw, vertical: .2.vw),
+                  padding:
+                  isArabic?EdgeInsets.symmetric(horizontal: .5.vw, vertical: .5.vw)
+                  :EdgeInsets.symmetric(horizontal: .4.vw, vertical: .2.vw),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,9 +81,6 @@ class Footer extends StatelessWidget {
                 ),
               ),
             ],
-          )
-        : SizedBox(
-            height: 5.vw,
           );
   }
 }
