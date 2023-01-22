@@ -26,6 +26,8 @@ class FlashWidget extends StatelessWidget {
         ? SizedBox()
         : Marquee(
             velocity:90,
+            decelerationCurve: Curves.linear,
+            accelerationCurve: Curves.linear,
             text: mosque.flash?.content ?? '',
             scrollAxis: Axis.horizontal,
             blankSpace: 500,
