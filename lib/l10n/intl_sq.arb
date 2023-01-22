@@ -113,5 +113,10 @@
   "jumuaaHadith": "Profeti (salallahu ‘alejhi wa salam) ka thenë\n « Kush merr abdes dhe e persos abdesin pastaj vjen per në xhuma dhe degjon me kujdes (hytben) dhe hesht (nuk flet) do ti falen atij gjynahet cfar ka ndermjet xhumase deri në xhumanë tjeter gjithashtu tre ditë shtese",
   "shuruk": "Lindja e diellit",
   "thisFeatureIsNotSupportedRightNow": "Na vjen keq, kjo veçori (kërkimi sipas ID-së së xhamisë) nuk mbështetet më nga MAWAQIT.",
-  "searchByGps": "Kërko me GPS"
+  "searchByGps": "Kërko me GPS",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
