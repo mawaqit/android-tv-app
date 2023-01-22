@@ -113,5 +113,10 @@
   "jumuaaHadith": "நபி (ஸல்) கூறினார்கள்: “யாராவது வுழூவை அழகாக செய்து விட்டு, பிறகு ஜும்ஆவுக்கு வந்து, மொளனமாக இருந்து, காது தாழ்த்தி கேட்டால் அந்த ஜும்ஆவுக்கும் அடுத்த ஜும்ஆவுக்கும் இடைப்பட்ட நாட்களினதும், மேலும் மூன்று நாட்களினதும் பாவம் மன்னிக்கப்படும்” (முஸ்லிம்)",
   "shuruk": "சூரிய உதயம்",
   "thisFeatureIsNotSupportedRightNow": "மன்னிக்கவும், இந்த அம்சம் (மசூதி ஐடி மூலம் தேடுதல்) இனி MAWAQIT ஆல் ஆதரிக்கப்படாது.",
-  "searchByGps": "ஜிபிஎஸ் மூலம் தேடவும்"
+  "searchByGps": "ஜிபிஎஸ் மூலம் தேடவும்",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
