@@ -54,7 +54,7 @@ class _SplashScreen extends State<Splash> {
       var goBoarding = await loadBoarding();
       var mosqueManager = context.read<MosqueManager>();
       bool hasNoMosque = mosqueManager.mosqueUUID == null;
-      throw '';
+
       if (hasNoMosque || goBoarding && settings.boarding == "1") {
         AppRouter.pushReplacement(OnBoardingScreen(settings));
       } else {
