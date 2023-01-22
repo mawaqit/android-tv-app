@@ -113,5 +113,10 @@
   "jumuaaHadith": "The Prophet (peace and blessings of Allah be upon him) said \"Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility\"",
   "shuruk": "Shuruk",
   "thisFeatureIsNotSupportedRightNow": "Sorry, this feature (search by Mosque ID) is no longer supported by MAWAQIT.\n",
-  "searchByGps": "Search by GPS"
+  "searchByGps": "Search by GPS",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
+  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "error": "Error",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
 }
