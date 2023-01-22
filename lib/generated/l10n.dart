@@ -996,6 +996,56 @@ class S {
       args: [],
     );
   }
+
+  /// `Reset`
+  String get reset {
+    return Intl.message(
+      'Reset',
+      name: 'reset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your mosque not found. it might be missing or removed from the server`
+  String get mosqueNotFoundMessage {
+    return Intl.message(
+      'Your mosque not found. it might be missing or removed from the server',
+      name: 'mosqueNotFoundMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `it seems you have no internet access. checkout your internet and try again`
+  String get noInternetMessage {
+    return Intl.message(
+      'it seems you have no internet access. checkout your internet and try again',
+      name: 'noInternetMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error`
+  String get error {
+    return Intl.message(
+      'Error',
+      name: 'error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mosque error if you are mosque admin contact our support to fix this issue`
+  String get mosqueErrorMessage {
+    return Intl.message(
+      'Mosque error if you are mosque admin contact our support to fix this issue',
+      name: 'mosqueErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

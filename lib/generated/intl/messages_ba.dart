@@ -20,7 +20,7 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ba';
 
-  static String m0(mosqueId) => "Sorry, ${mosqueId} isn\'t a valid mosque ID";
+  static String m0(mosqueId) => "Кисерегеҙ, ${mosqueId} мәситтең ысын ID түгел";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -31,50 +31,52 @@ class MessageLookup extends MessageLookupByLibrary {
         "AlAthkar_4": MessageLookupByLibrary.simpleMessage(""),
         "AlAthkar_5": MessageLookupByLibrary.simpleMessage(""),
         "AlAthkar_6": MessageLookupByLibrary.simpleMessage(""),
-        "about": MessageLookupByLibrary.simpleMessage("About"),
+        "about": MessageLookupByLibrary.simpleMessage("Тураһында"),
         "afterSalahHadith": MessageLookupByLibrary.simpleMessage(
-            "Allahumma Rabba hadhihid-da\'wati-ttammati, was-salatil-qa\'imati, ati Muhammadanil-wasilata wal-fadhilata, wab\'athu maqaman mahmuda nilladhi wa \'adtahu [O Allah, Rubb of this perfect call (Da\'wah) and of the established prayer (As-Salat), grant Muhammad the Wasilah and superiority, and raise him up to a praiseworthy position which You have promised him]"),
+            "Allahumma Rabba hadhihid-da\'wati-ttammati, was-salatil-qa\'imati, ati Muhammadanil-wasilata wal-fadhilata, wab\'athu maqaman mahmuda nilladhi wa \'adtahu [O Allah, Rubb of this perfect call (Da\'wah) and of the established prayer (As-Salat), grant Muhammad the Wasilah and superiority, and raise him up to a praiseworthy position which You have promised him]\n"),
         "afterSalahHadithTitle":
-            MessageLookupByLibrary.simpleMessage("After salah Du`a\n"),
+            MessageLookupByLibrary.simpleMessage("After salah Du`a"),
         "alAdhan": MessageLookupByLibrary.simpleMessage("Al Adan"),
         "alAthkar": MessageLookupByLibrary.simpleMessage("Al-Athkar"),
-        "alIqama": MessageLookupByLibrary.simpleMessage("Al Iqama"),
-        "appLang": MessageLookupByLibrary.simpleMessage("App Language"),
+        "alIqama": MessageLookupByLibrary.simpleMessage("Al Iqama\n"),
+        "appLang": MessageLookupByLibrary.simpleMessage("Ҡушымтаның Теле"),
         "asr": MessageLookupByLibrary.simpleMessage("Asr"),
         "backToHomePage":
-            MessageLookupByLibrary.simpleMessage("Back to Homepage"),
+            MessageLookupByLibrary.simpleMessage("Төпбиткә Ҡайтырға"),
         "backendError": MessageLookupByLibrary.simpleMessage(
-            "Sorry, we could not connect to the server.\nPlease verify Internet connectivity or try again later."),
-        "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
-        "changeMosque": MessageLookupByLibrary.simpleMessage("Change Mosque"),
-        "changeTheme": MessageLookupByLibrary.simpleMessage("Change Theme"),
-        "closeApp": MessageLookupByLibrary.simpleMessage("Close app"),
-        "colorGradient": MessageLookupByLibrary.simpleMessage("Color Gradient"),
-        "colorSolid": MessageLookupByLibrary.simpleMessage("Color Solid"),
+            "Кисерегеҙ, беҙ серверға бәйләнеп алманыҡ. Зинһар, Интернет бәйләнеште тикшерегеҙ йәки аҙағыраҡ яңынан ҡабатлағыҙ."),
+        "cancel": MessageLookupByLibrary.simpleMessage("КИРЕ ҠАЙТАРЫУ"),
+        "changeMosque":
+            MessageLookupByLibrary.simpleMessage("Мәситте Алмаштырырға"),
+        "changeTheme":
+            MessageLookupByLibrary.simpleMessage("Теманы Алмаштырырға"),
+        "closeApp": MessageLookupByLibrary.simpleMessage("Ҡушымтаны ябығыҙ"),
+        "colorGradient": MessageLookupByLibrary.simpleMessage("Төҫлө Градиент"),
+        "colorSolid": MessageLookupByLibrary.simpleMessage("Тотош Төҫлө"),
         "customizeYourOwnWay":
-            MessageLookupByLibrary.simpleMessage("Customize your own option"),
-        "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
+            MessageLookupByLibrary.simpleMessage("Үҙ опцияғыҙҙы көйләгеҙ"),
+        "darkMode": MessageLookupByLibrary.simpleMessage("Ҡара режим"),
         "descLang": MessageLookupByLibrary.simpleMessage(
-            "Please select your preferred language"),
+            "Зинһар, кәрәкле телде һайлап алығыҙ"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
-            "Do you know your installation ID or your Mosque ID?"),
+            "Do you know your installation ID or your Mosque ID?\n"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
-            "Connecting Muslims to Mosques"),
+            "Мәситкә Мөсөлмәндәр ҡушылыуы"),
         "drawerTitle": MessageLookupByLibrary.simpleMessage("MAWAQIT"),
         "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
-            "Please enter the Mosque ID :"),
+            "Зинһар, Мәситтең ID индерегеҙ :"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
-            "Cannot access current device location, please check that your device GPS is enabled"),
-        "headerType": MessageLookupByLibrary.simpleMessage("Header type"),
-        "home": MessageLookupByLibrary.simpleMessage("Home"),
+            "Cannot access current device location, please check that your device GPS is enabled\n"),
+        "headerType": MessageLookupByLibrary.simpleMessage("Атаманың төрө"),
+        "home": MessageLookupByLibrary.simpleMessage("Төп"),
         "imsak": MessageLookupByLibrary.simpleMessage("Imsak"),
-        "in1": MessageLookupByLibrary.simpleMessage("in"),
+        "in1": MessageLookupByLibrary.simpleMessage("һуң"),
         "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
         "installationGuide":
-            MessageLookupByLibrary.simpleMessage("Installation Guide"),
+            MessageLookupByLibrary.simpleMessage("Ҡуйыу өсөн Ҡулланмаһы"),
         "iqamaIn": MessageLookupByLibrary.simpleMessage("Iqama in"),
         "isha": MessageLookupByLibrary.simpleMessage("Isha"),
         "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
@@ -82,72 +84,73 @@ class MessageLookup extends MessageLookupByLibrary {
             "The Prophet (peace and blessings of Allah be upon him) said \"Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility\""),
         "jumuaaScreenTitle":
             MessageLookupByLibrary.simpleMessage("Jumuaa Time"),
-        "languages": MessageLookupByLibrary.simpleMessage("Languages"),
-        "leftButtonOption":
-            MessageLookupByLibrary.simpleMessage("Radio Button Options (left)"),
-        "lightMode": MessageLookupByLibrary.simpleMessage("Light mode"),
+        "languages": MessageLookupByLibrary.simpleMessage("Njoftim"),
+        "leftButtonOption": MessageLookupByLibrary.simpleMessage(
+            "Борғостарҙың Опциялары (һулдан)"),
+        "lightMode": MessageLookupByLibrary.simpleMessage("Яҡты режим"),
         "loadingAnimation":
-            MessageLookupByLibrary.simpleMessage("Loading animation"),
+            MessageLookupByLibrary.simpleMessage("Анимацияны йөкләү"),
         "maghrib": MessageLookupByLibrary.simpleMessage("Maghrib"),
         "mawaqitDesc": MessageLookupByLibrary.simpleMessage(
-            "MAWAQIT offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h."),
+            "MAWAQIT offers you a new way to track and manage prayer times, indeed we offer an end-to-end system that provides mosque managers with an online tool available 24/24h.\n"),
         "mawaqitWelcome":
-            MessageLookupByLibrary.simpleMessage("Welcome to MAWAQIT"),
+            MessageLookupByLibrary.simpleMessage("MAWAQIT-ҡа Рәхим итегеҙ"),
         "messenger": MessageLookupByLibrary.simpleMessage("messenger"),
         "missingMosqueId":
-            MessageLookupByLibrary.simpleMessage("Missing Mosque ID"),
-        "mosque": MessageLookupByLibrary.simpleMessage("Mosque"),
-        "mosqueId": MessageLookupByLibrary.simpleMessage("Mosque ID"),
+            MessageLookupByLibrary.simpleMessage("Юғалтылған Мәситтең ID"),
+        "mosque": MessageLookupByLibrary.simpleMessage("Мәсит"),
+        "mosqueId": MessageLookupByLibrary.simpleMessage("Мәситтең ID"),
         "mosqueIdIsNotValid": m0,
-        "mosqueInput": MessageLookupByLibrary.simpleMessage("Mosque Input"),
+        "mosqueInput": MessageLookupByLibrary.simpleMessage("Мәситкә Кереү"),
         "mosqueNameError":
-            MessageLookupByLibrary.simpleMessage("Enter the Mosque name"),
-        "mosqueNoMore": MessageLookupByLibrary.simpleMessage("No more results"),
-        "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results"),
-        "navigationBarStyle":
-            MessageLookupByLibrary.simpleMessage("Navigation bars style"),
-        "networkStatus": MessageLookupByLibrary.simpleMessage("Network Status"),
-        "no": MessageLookupByLibrary.simpleMessage("No"),
+            MessageLookupByLibrary.simpleMessage("Мәситтең исемең индерегеҙ"),
+        "mosqueNoMore":
+            MessageLookupByLibrary.simpleMessage("Икенсе результаттар юҡ"),
+        "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results\n"),
+        "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
+            "Навигация панельдарҙың стиле"),
+        "networkStatus": MessageLookupByLibrary.simpleMessage("Ауҙың Торошо"),
+        "no": MessageLookupByLibrary.simpleMessage("Юҡ"),
         "noInternet":
-            MessageLookupByLibrary.simpleMessage("No internet connection"),
-        "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
+            MessageLookupByLibrary.simpleMessage("Интернет бәйләнеше юҡ"),
+        "notification": MessageLookupByLibrary.simpleMessage("Белдереүҙәр"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
-        "online": MessageLookupByLibrary.simpleMessage("Online"),
-        "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
-        "quit": MessageLookupByLibrary.simpleMessage("Quit"),
-        "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
+        "ok": MessageLookupByLibrary.simpleMessage("ЯРАЙ"),
+        "online": MessageLookupByLibrary.simpleMessage("Онлайн"),
+        "privacyPolicy":
+            MessageLookupByLibrary.simpleMessage("Йәшеренлек сәйәсәте"),
+        "quit": MessageLookupByLibrary.simpleMessage("Сығырға"),
+        "rate": MessageLookupByLibrary.simpleMessage("Беҙҙе Баһалағыҙ"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
-            "Radio Button Options (right)"),
+            "Борғостарҙың Опциялары (уңдан)"),
         "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
-            "Which Mosque are you looking for ? (Name, City, Postal code...)"),
-        "searchMosque":
-            MessageLookupByLibrary.simpleMessage("Search for a Mosque"),
-        "selectMosqueId":
-            MessageLookupByLibrary.simpleMessage("Please enter your Mosque ID"),
+            "Ниндәй Мәситте эҙләйһегеҙ? (Исеме, Ҡала, Индекс...)"),
+        "searchMosque": MessageLookupByLibrary.simpleMessage("Мәситте Эҙләү"),
+        "selectMosqueId": MessageLookupByLibrary.simpleMessage(
+            "Зинһар, үҙ Мәситтең ID индерегеҙ"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
-            "Try: 256, It\'s the ID of the \'Mosquée de Paris\'"),
-        "share": MessageLookupByLibrary.simpleMessage("Share"),
+            "Һынап ҡарағыҙ: 256, \'Парижтың Мәсите\' ID-һы"),
+        "share": MessageLookupByLibrary.simpleMessage("Бүленеү"),
         "shuruk": MessageLookupByLibrary.simpleMessage("Shuruk"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError":
             MessageLookupByLibrary.simpleMessage("Isn\'t a valid mosque slug"),
         "snapchat": MessageLookupByLibrary.simpleMessage("Snapchat"),
         "sureCloseApp": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to quit the application?"),
+            "Һеҙ ысынлап та сыҡҡыһы килә ме?"),
         "termsOfService":
-            MessageLookupByLibrary.simpleMessage("Terms of Service"),
+            MessageLookupByLibrary.simpleMessage("Хеҙмәтләндереү Шарттары"),
         "thisFeatureIsNotSupportedRightNow": MessageLookupByLibrary.simpleMessage(
-            "Sorry, this feature (search by Mosque ID) is no longer supported by MAWAQIT."),
-        "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+            "Sorry, this feature (search by Mosque ID) is no longer supported by MAWAQIT.\n"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("Яңынан Ҡабатлағыҙ"),
         "turnOfPhones": MessageLookupByLibrary.simpleMessage(
             "Please turn of your mobile phones!"),
         "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
-        "update": MessageLookupByLibrary.simpleMessage("Update Application"),
+        "update": MessageLookupByLibrary.simpleMessage("Ҡушымтаның Яңыртыуы"),
         "whatsApp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
-        "whoops": MessageLookupByLibrary.simpleMessage("Whoops!"),
-        "yes": MessageLookupByLibrary.simpleMessage("Yes"),
+        "whoops": MessageLookupByLibrary.simpleMessage("Упс!"),
+        "yes": MessageLookupByLibrary.simpleMessage("Эйе"),
         "youtube": MessageLookupByLibrary.simpleMessage("Youtube")
       };
 }

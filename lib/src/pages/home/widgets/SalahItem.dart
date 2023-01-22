@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
+import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
@@ -34,7 +35,7 @@ class SalahItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double bigFont = 4.5.vw;
-    double smallFont = 3.vw;
+    double smallFont = 3.6.vw;
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
@@ -43,6 +44,7 @@ class SalahItemWidget extends StatelessWidget {
     final timeDate = time.toTimeOfDay()?.toDate();
     final iqamaDate = iqama?.toTimeOfDay()?.toDate();
     print (isIqamaEnabled);
+    final isArabic = context.read<AppLanguage>().isArabic();
     final DateFormat dateTimeConverter = mosqueConfig.timeDisplayFormat == "12"
         ? DateFormat(
             "hh:mm",
@@ -72,7 +74,9 @@ class SalahItemWidget extends StatelessWidget {
                 ? null
                 : Colors.black.withOpacity(.70),
       ),
-      padding: EdgeInsets.symmetric(vertical: .8.vh, horizontal: 1.vw),
+      padding:
+      isArabic?EdgeInsets.only(bottom: 1.vh, right: 1.vw,left: 1.vw):
+      EdgeInsets.symmetric(vertical: 1.6.vh, horizontal: 1.vw),
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Column(
@@ -92,7 +96,7 @@ class SalahItemWidget extends StatelessWidget {
                   ),
                 ),
               ),
-            SizedBox(height: 1.vh),
+            SizedBox(height: isArabic?0.1.vh:1.vh),
             if (time.trim().isEmpty) Icon(Icons.dnd_forwardslash, size: 6.vw),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -126,7 +130,7 @@ class SalahItemWidget extends StatelessWidget {
             ),
             if (iqama != null &&isIqamaEnabled!)
               SizedBox(
-                height: 1.3.vw,
+                height:isArabic?1.5.vh :1.3.vw,
                 width: double.infinity,
                 child: Divider(
                   thickness: 1,
@@ -146,6 +150,7 @@ class SalahItemWidget extends StatelessWidget {
                       shadows: kHomeTextShadow,
                       letterSpacing: 1,
                       color: Colors.white,
+
                       // fontFamily: StringManager.getFontFamily(context)
                     ),
                   ),

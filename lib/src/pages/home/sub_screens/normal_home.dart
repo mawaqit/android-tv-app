@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/HomeLogoVersion.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
@@ -24,28 +25,32 @@ class NormalHomeSubScreen extends StatelessWidget {
     final mosqueProvider = context.read<MosqueManager>();
     final mosque = mosqueProvider.mosque!;
     final mosqueConfig = mosqueProvider.mosqueConfig;
+    final isArabic = context.read<AppLanguage>().isArabic();
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           children: [
-            Directionality(
-                textDirection: TextDirection.ltr,
-                child: MosqueHeader(mosque: mosque)),
+            Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
             Padding(
               padding: EdgeInsets.only(top: 4),
               child: Directionality(
                 textDirection: TextDirection.ltr,
                 child: Row(
+                  crossAxisAlignment: isArabic ? CrossAxisAlignment.center : CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 2.vw, top: 1.5.vh),
+                      padding:
+                      EdgeInsets.only(left: 2.vw,top: 1.5.vh),
+                      // :EdgeInsets.only(left: 2.vw,bottom: 6.vh),
                       child: ShurukWidget(),
                     ),
                     HomeTimeWidget(),
                     Padding(
-                      padding: EdgeInsets.only(right: 5.7.vw, top: 1.3.vh),
+                      padding: isArabic
+                          ? EdgeInsets.only(right: 5.7.vw, top: 1.3.vh)
+                          : EdgeInsets.only(right: 5.7.vw, top: 2.vh),
                       child: Center(
                         child: SalahItemWidget(
                           title: S.of(context).jumua,
@@ -62,17 +67,14 @@ class NormalHomeSubScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
-                top: 7.3.vh,
-                right: 1.vw
-              ),
+              padding:
+             isArabic? EdgeInsets.only(top: 7.3.vh, right: 1.vw):
+              EdgeInsets.only(top: 8.vh, right: 1.vw),
               child: SalahTimesBar(),
             ),
           ],
         ),
-        Directionality(
-            textDirection: TextDirection.ltr,
-            child: Footer()),
+        Directionality(textDirection: TextDirection.ltr, child: Footer()),
       ],
     );
   }

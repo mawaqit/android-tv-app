@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class MosqueInformationWidget extends StatelessWidget {
     // String bank = "${mosque?.} ";
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding:  EdgeInsets.symmetric(vertical: 2.5.vh),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

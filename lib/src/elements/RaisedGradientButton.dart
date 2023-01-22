@@ -6,6 +6,7 @@ class RaisedGradientButton extends StatelessWidget {
   final double width;
   final double height;
   final Function? onPressed;
+  final bool? autoFocus;
 
   const RaisedGradientButton({
     Key? key,
@@ -14,6 +15,7 @@ class RaisedGradientButton extends StatelessWidget {
     this.width = double.infinity,
     this.height = 50.0,
     this.onPressed,
+    this.autoFocus,
   }) : super(key: key);
 
   @override
@@ -37,6 +39,7 @@ class RaisedGradientButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
+          autofocus: autoFocus ?? false,
           onTap: onPressed as void Function()?,
           child: Center(
             child: child,
