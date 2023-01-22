@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
@@ -16,6 +17,7 @@ class MosqueHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = context.read<AppLanguage>().isArabic();
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     bool isOffline = connectionStatus == ConnectivityStatus.Offline;
     final tr = S.of(context);
@@ -26,25 +28,28 @@ class MosqueHeader extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: .5.vh, horizontal: .35.vw),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircleAvatar(
-                  radius: .6.vw,
-                  backgroundColor: isOffline ? Colors.red[700] : Colors.green,
-                ),
-                SizedBox(width: .4.vw),
-                Text(
-                  "${isOffline ? tr.offline : tr.online}",
-                  style: TextStyle(
-                      color: Colors.white,
-                      shadows: kHomeTextShadow,
-                      fontSize: 1.5.vw,
-                      height: 1.1,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: StringManager.getFontFamily(context)),
-                ),
-              ],
+            child: Directionality(
+              textDirection: isArabic?TextDirection.rtl:TextDirection.ltr,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: .6.vw,
+                    backgroundColor: isOffline ? Colors.red[700] : Colors.green,
+                  ),
+                  SizedBox(width: .4.vw),
+                  Text(
+                    "${isOffline ? tr.offline : tr.online}",
+                    style: TextStyle(
+                        color: Colors.white,
+                        shadows: kHomeTextShadow,
+                        fontSize: 1.5.vw,
+                        height: 1.1,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: StringManager.getFontFamily(context)),
+                  ),
+                ],
+              ),
             ),
           ),
           Spacer(),

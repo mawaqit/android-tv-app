@@ -75,7 +75,7 @@ class SalahItemWidget extends StatelessWidget {
                 : Colors.black.withOpacity(.70),
       ),
       padding:
-      isArabic?EdgeInsets.symmetric(vertical: .8.vh, horizontal: 1.vw):
+      isArabic?EdgeInsets.only(bottom: 1.vh, right: 1.vw,left: 1.vw):
       EdgeInsets.symmetric(vertical: 1.6.vh, horizontal: 1.vw),
       child: Directionality(
         textDirection: TextDirection.ltr,
@@ -96,7 +96,7 @@ class SalahItemWidget extends StatelessWidget {
                   ),
                 ),
               ),
-            SizedBox(height: 1.vh),
+            SizedBox(height: isArabic?0.1.vh:1.vh),
             if (time.trim().isEmpty) Icon(Icons.dnd_forwardslash, size: 6.vw),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -130,7 +130,7 @@ class SalahItemWidget extends StatelessWidget {
             ),
             if (iqama != null &&isIqamaEnabled!)
               SizedBox(
-                height: 1.3.vw,
+                height:isArabic?1.5.vh :1.3.vw,
                 width: double.infinity,
                 child: Divider(
                   thickness: 1,
