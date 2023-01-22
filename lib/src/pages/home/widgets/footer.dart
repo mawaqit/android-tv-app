@@ -20,67 +20,63 @@ class Footer extends StatelessWidget {
     final isLTR = mosque?.flash?.orientation == "ltr";
     final isArabic = context.read<AppLanguage>().isArabic();
     return Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.bottomCenter,
-            children: [
-             if(mosqueConfig!.footer!)
-              MosqueInformationWidget(),
-              if(mosqueConfig.footer!)
-                Container(
-                padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),
-                width: double.infinity,
-                color: mosque?.flash?.content.isEmpty != false ? null : Colors.black38,
-                child: SizedBox(
-                  height: 5.vw,
-                  child: Directionality(
-                      textDirection: isLTR ? TextDirection.ltr : TextDirection.rtl, child: FlashWidget()),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding:
-                  isArabic?EdgeInsets.symmetric(horizontal: .5.vw, vertical: .5.vw)
-                  :EdgeInsets.symmetric(horizontal: .4.vw, vertical: .2.vw),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "ID ${mosque?.id}",
-                        style: TextStyle(
-                          fontSize: .7.vw,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          shadows: kHomeTextShadow,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Image.network(
-                        'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
-                        width: 5.vw,
-                        height: 5.vw,
-                      ),
-                    ],
+      clipBehavior: Clip.none,
+      alignment: Alignment.bottomCenter,
+      children: [
+        if (mosqueConfig!.footer!) MosqueInformationWidget(),
+        if (mosqueConfig.footer!)
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),
+            width: double.infinity,
+            color: mosque?.flash?.content.isEmpty != false ? null : Colors.black38,
+            child: SizedBox(
+              height: 5.vw,
+              child: Directionality(textDirection: isLTR ? TextDirection.ltr : TextDirection.rtl, child: FlashWidget()),
+            ),
+          ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: 1.vh),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "ID ${mosque?.id}",
+                  style: TextStyle(
+                    fontSize: 1.1.vw,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    shadows: kAfterAdhanTextShadow,
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                      padding: EdgeInsets.only(
-                        bottom: 1.vh,
-                        left: .5.vw,
-                        right: .5.vw,
-                        top: .6.vh,
-                      ),
-                      height: 9.5.vh,
-                      child: HomeLogoVersion()),
+                SizedBox(height: .5.vh),
+                Image.network(
+                  'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
+                  width: 5.vw,
+                  height: 5.vw,
                 ),
-              ),
-            ],
-          );
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+                padding: EdgeInsets.only(
+                  bottom: .65.vh,
+                  left: .3.vw,
+                  right: .1.vw,
+                  top: 1.vh,
+                ),
+                height: 9.5.vh,
+                child: HomeLogoVersion()),
+          ),
+        ),
+      ],
+    );
   }
 }

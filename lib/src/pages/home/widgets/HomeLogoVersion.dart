@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 
 class HomeLogoVersion extends StatelessWidget {
@@ -11,17 +12,20 @@ class HomeLogoVersion extends StatelessWidget {
       children: [
         Image.asset(
           'assets/img/logo/logo-mawaqit-2022-horizontal.png',
-           height: 40,
-         ),
+          height: 3.8.vw,
+        ),
         Positioned(
           top: 0,
-          bottom: -3,
+          bottom: 0,
           left: 0,
           right: 0,
           child: Align(
-            alignment: Alignment(.5, 1.4),
+            alignment: Alignment(.5, 1.3),
             child: Container(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.symmetric(
+                horizontal: .5.vw,
+                vertical: .4.vh,
+              ),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.vertical(
@@ -30,7 +34,7 @@ class HomeLogoVersion extends StatelessWidget {
                 ),
               ),
               child: VersionWidget(
-                style: TextStyle(color: Colors.grey, fontSize: 8),
+                style: TextStyle(color: Colors.white, fontSize: 1.vw),
               ),
             ),
           ),

@@ -62,6 +62,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
               "$azkarTitle ${isArabic ? '' : '(${S.of(context).alAthkar})'}",
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
                     color: Colors.white,
+                fontFamily: StringManager.fontFamilyKufi
                   ),
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.center,

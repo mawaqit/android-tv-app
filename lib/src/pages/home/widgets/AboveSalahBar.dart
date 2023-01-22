@@ -31,15 +31,14 @@ class AboveSalahBar extends StatelessWidget {
           }
 
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: (size.width - 5 * kSalahItemWidgetWidth) / 6,vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: (size.width - 5 * kSalahItemWidgetWidth) / 6, vertical: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding:
-                  isArabic?EdgeInsets.symmetric(horizontal: 20, vertical: 3):
-                  EdgeInsets.symmetric(horizontal: 2.5.vw, vertical: 1.vh),
-
+                  padding: isArabic
+                      ? EdgeInsets.symmetric(horizontal: 3.vh, vertical: .5.vh)
+                      : EdgeInsets.symmetric(horizontal: 2.5.vw, vertical: 1.vh),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: mosqueManager.getColorTheme().withOpacity(.70),
@@ -52,15 +51,16 @@ class AboveSalahBar extends StatelessWidget {
                       if (nextSalahTime.inMinutes == 0)
                         "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
                     ].join(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: Colors.white, fontFamily: StringManager.getFontFamily(context)),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontFamily: StringManager.getFontFamily(context),
+                        ),
                   ),
                 ),
                 Container(
-                  padding: isArabic?EdgeInsets.symmetric(horizontal: 20, vertical: 3):
-                  EdgeInsets.symmetric(horizontal: 2.5.vw, vertical: 1.vh),
+                  padding: isArabic
+                      ? EdgeInsets.symmetric(horizontal: 3.vh, vertical: .5.vh)
+                      : EdgeInsets.symmetric(horizontal: 2.5.vw, vertical: 1.vh),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: mosqueManager.getColorTheme().withOpacity(.70),
@@ -70,7 +70,8 @@ class AboveSalahBar extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge
-                        ?.copyWith(color: Colors.white, fontFamily: StringManager.getFontFamily(context)),
+                        ?.copyWith(color: Colors.white, fontFamily: StringManager.getFontFamily(context),
+                    ),
                   ),
                 ),
               ],

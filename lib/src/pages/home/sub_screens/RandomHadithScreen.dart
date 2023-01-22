@@ -4,6 +4,7 @@ import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
+import 'package:mawaqit/src/themes/UIShadows.dart';
 
 import '../../../helpers/StringUtils.dart';
 
@@ -13,7 +14,12 @@ class RandomHadithScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+
       children: [
+        Padding(
+          padding:  EdgeInsets.only(top: 8.0),
+          child: AboveSalahBar(),
+        ),
         Expanded(
           child: FutureBuilder<String>(
             future: Api.randomHadith(),
@@ -26,8 +32,9 @@ class RandomHadithScreen extends StatelessWidget {
                     stepGranularity: 12,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 62,
+                      fontSize: 100.vw,
                       fontWeight: FontWeight.bold,
+                      shadows: kIqamaCountDownTextShadow,
                       fontFamily: StringManager.getFontFamily(context),
                       color: Colors.white,
                     ),
@@ -37,9 +44,8 @@ class RandomHadithScreen extends StatelessWidget {
             },
           ),
         ),
-        AboveSalahBar(),
         SizedBox(height: .7.vh),
-        SalahTimesBar(),
+        SalahTimesBar(miniStyle: true,microStyle: true,),
         SizedBox(height: 4.vh),
       ],
     );

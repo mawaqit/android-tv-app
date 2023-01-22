@@ -9,7 +9,16 @@ import '../elements/DrawerListTitle.dart';
 import '../enum/home_active_screen.dart';
 import '../helpers/AppRouter.dart';
 import '../pages/home/OfflineHomeScreen.dart';
+import '../pages/home/sub_screens/AdhanSubScreen.dart';
+import '../pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
+import '../pages/home/sub_screens/AfterSalahAzkarScreen.dart';
+import '../pages/home/sub_screens/IqamaSubScreen.dart';
+import '../pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import '../pages/home/sub_screens/JummuaLive.dart';
+import '../pages/home/sub_screens/JumuaHadithSubScreen.dart';
+import '../pages/home/sub_screens/RandomHadithScreen.dart';
+import '../pages/home/sub_screens/normal_home.dart';
+import '../pages/home/widgets/mosque_background_screen.dart';
 
 class DrawerListDeveloper extends StatelessWidget {
   const DrawerListDeveloper({Key? key}) : super(key: key);
@@ -29,7 +38,7 @@ class DrawerListDeveloper extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => OfflineHomeScreen(),
+                    builder: (context) => MosqueBackgroundScreen(child: OfflineHomeScreen()),
                   ));
             }),
         /////////////// drawer test////////////////
@@ -37,8 +46,8 @@ class DrawerListDeveloper extends StatelessWidget {
           icon: Icons.timer_rounded,
           text: "Prayer Times ",
           onTap: () {
-            AppRouter.popAndPush(TestSubScreens(
-              state: HomeActiveScreen.normal,
+            AppRouter.popAndPush(MosqueBackgroundScreen(
+              child: NormalHomeSubScreen(),
             ));
           },
         ),
@@ -46,59 +55,59 @@ class DrawerListDeveloper extends StatelessWidget {
           icon: Icons.notifications,
           text: "Alert",
           onTap: () {
-            AppRouter.popAndPush(TestSubScreens(
-              state: HomeActiveScreen.adhan,
+            AppRouter.popAndPush(MosqueBackgroundScreen(
+              child: AdhanSubScreen(),
             ));
           },
         ),
         DrawerListTitle(
           icon: Icons.countertops_rounded,
           text: " Iqama Count Down  ",
-          onTap: () => AppRouter.popAndPush(
-            TestSubScreens(state: HomeActiveScreen.iqamaaCountDown),
-          ),
+          onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
+            child: IqamaaCountDownSubScreen(),
+          )),
         ),
         DrawerListTitle(
           icon: Icons.next_plan_rounded,
           text: " After Adahn Hadith  ",
-          onTap: () => AppRouter.popAndPush(
-            TestSubScreens(state: HomeActiveScreen.afterAdhanHadith),
-          ),
+          onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
+            child: AfterAdhanSubScreen(),
+          )),
         ),
         DrawerListTitle(
           icon: Icons.front_hand_rounded,
           text: " After Salah Azkar  ",
-          onTap: () => AppRouter.popAndPush(
-            TestSubScreens(state: HomeActiveScreen.afterSalahAzkar),
-          ),
+          onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
+            child: AfterSalahAzkar(),
+          )),
         ),
         DrawerListTitle(
           icon: Icons.mic_external_on,
           text: " Iqama",
-          onTap: () => AppRouter.popAndPush(
-            TestSubScreens(state: HomeActiveScreen.iqamaa),
-          ),
+          onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
+            child: IqamaSubScreen(),
+          )),
         ),
         DrawerListTitle(
           icon: Icons.message_outlined,
           text: " JumuaaHadith  ",
-          onTap: () => AppRouter.popAndPush(
-            TestSubScreens(state: HomeActiveScreen.jumuaaHadith),
-          ),
+          onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
+            child: JumuaHadithSubScreen(),
+          )),
         ),
         DrawerListTitle(
           icon: Icons.message_outlined,
           text: " Random Hadith ",
-          onTap: () => AppRouter.popAndPush(
-            TestSubScreens(state: HomeActiveScreen.randomHadith),
-          ),
+          onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
+            child: RandomHadithScreen(),
+          )),
         ),
         DrawerListTitle(
           icon: Icons.notifications,
           text: " Announcement ",
-          onTap: () => AppRouter.popAndPush(
-            AnnouncementTest(),
-          ),
+          onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
+            child: AnnouncementTest(),
+          )),
         ),
         DrawerListTitle(
           icon: Icons.live_tv,
@@ -109,13 +118,12 @@ class DrawerListDeveloper extends StatelessWidget {
         ),
         SwitchListTile(
           inactiveThumbColor: Theme.of(context).toggleButtonsTheme.disabledColor,
-         activeColor: Theme.of(context).toggleButtonsTheme.color,
+          activeColor: Theme.of(context).toggleButtonsTheme.color,
           secondary: Icon(Icons.tv),
           value: hive.isSecondaryScreen(),
           onChanged: (bool value) {
             hive.putIsSecondaryScreen(value);
           },
-
           title: Text("Show secondary screen"),
         ),
 
