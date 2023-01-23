@@ -48,7 +48,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 40,
-                color: Colors.lightGreenAccent,
+                color: Colors.white,
                 shadows: kAfterAdhanTextShadow,
                 fontFamily: StringManager.fontFamilyKufi),
           ),
@@ -70,7 +70,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 40,
-                color: Colors.lightGreenAccent,
+                color: Colors.white,
                 shadows: kAfterAdhanTextShadow,
               ),
             ),

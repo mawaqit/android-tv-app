@@ -13,40 +13,45 @@ class RandomHadithScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-
+    return Stack(
       children: [
         Padding(
           padding:  EdgeInsets.only(top: 8.0),
           child: AboveSalahBar(),
         ),
-        Expanded(
-          child: FutureBuilder<String>(
-            future: Api.randomHadith(),
-            builder: (context, snapshot) {
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Center(
-                  child: AutoSizeText(
-                    snapshot.data?.padRight(500) ?? '',
-                    stepGranularity: 12,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 100.vw,
-                      fontWeight: FontWeight.bold,
-                      shadows: kIqamaCountDownTextShadow,
-                      fontFamily: StringManager.getFontFamily(context),
-                      color: Colors.white,
+        Column(
+
+          children: [
+           SizedBox(height: 7.vh,),
+            Expanded(
+              child: FutureBuilder<String>(
+                future: Api.randomHadith(),
+                builder: (context, snapshot) {
+                  return Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Center(
+                      child: AutoSizeText(
+                        snapshot.data?.padRight(500) ?? '',
+                        stepGranularity: 12,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 100.vw,
+                          fontWeight: FontWeight.bold,
+                          shadows: kIqamaCountDownTextShadow,
+                          fontFamily: StringManager.getFontFamily(context),
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: .7.vh),
+            SalahTimesBar(miniStyle: true,microStyle: true,),
+            SizedBox(height: 4.vh),
+          ],
         ),
-        SizedBox(height: .7.vh),
-        SalahTimesBar(miniStyle: true,microStyle: true,),
-        SizedBox(height: 4.vh),
       ],
     );
   }

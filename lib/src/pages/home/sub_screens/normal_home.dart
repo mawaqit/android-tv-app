@@ -33,7 +33,7 @@ class NormalHomeSubScreen extends StatelessWidget {
           children: [
             Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
             Padding(
-              padding: EdgeInsets.only(top: 2.vh),
+              padding: EdgeInsets.only(top: 1.vh),
               child: Directionality(
                 textDirection: TextDirection.ltr,
                 child: Row(
