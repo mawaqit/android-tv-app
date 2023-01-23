@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/AppLanguage.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
+import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
+import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
+import '../../../enum/connectivity_status.dart';
 import '../../../helpers/time_utils.dart';
 
 class IqamaaCountDownSubScreen extends StatelessWidget {
@@ -16,10 +22,12 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.read<MosqueManager>();
-
+    final isArabic = context.read<AppLanguage>().isArabic();
     final nextIqamaIndex = mosqueManager.nextIqamaIndex();
     var nextIqamaTime = mosqueManager.actualIqamaTimes()[nextIqamaIndex];
-
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    bool isOffline = connectionStatus == ConnectivityStatus.Offline;
+    final tr = S.of(context);
     if (nextIqamaTime.isBefore(mosqueManager.mosqueDate())) {
       nextIqamaTime = nextIqamaTime.add(Duration(days: 1));
     }
@@ -30,50 +38,86 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
         builder: (context, snapshot) => NormalHomeSubScreen(),
       );
 
-    return Column(
+    return Stack(
       children: [
-        SizedBox(height: 50),
-        Text(
-          S.of(context).iqamaIn,
-          style: TextStyle(
-            fontSize: 70,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Expanded(
-          child: FittedBox(
-            alignment: Alignment.center,
-            fit: BoxFit.scaleDown,
-            child: StreamBuilder(
-                stream: Stream.periodic(Duration(seconds: 1)),
-                builder: (context, snapshot) {
-                  final remaining = nextIqamaTime.difference(mosqueManager.mosqueDate());
-                  if (remaining <= Duration.zero){
-                    Future.delayed(Duration(milliseconds:80),onDone);
-                  }
-
-                  int seconds = remaining.inSeconds % 60;
-                  int minutes = remaining.inMinutes;
-                  String _timeTwoDigit = timeTwoDigit(
-                    seconds: seconds,
-                    minutes: minutes,
-                  );
-                  return Text(
-                    _timeTwoDigit,
-                    style: TextStyle(
-                      fontSize: 200,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      shadows: kHomeTextShadow,
+        Row(
+          textDirection: TextDirection.ltr,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: .5.vh, horizontal: 1.vw),
+              child: Directionality(
+                textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircleAvatar(
+                      radius: .6.vw,
+                      backgroundColor: isOffline ? Colors.red[700] : Colors.green,
                     ),
-                  );
-                }),
-          ),
+                    SizedBox(width: .4.vw),
+                    Text(
+                      "${isOffline ? tr.offline : tr.online}",
+                      style: TextStyle(
+                          color: Colors.white,
+                          shadows: kHomeTextShadow,
+                          fontSize: 1.5.vw,
+                          height: 1.1,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: StringManager.getFontFamily(context)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 1.vw),
+              child: WeatherWidget(),
+            )
+          ],
         ),
-        SizedBox(height: 50),
-        SalahTimesBar(miniStyle: true),
-        SizedBox(height: 10),
+        Column(
+          children: [
+            SizedBox(height: isArabic ? 1.vh : 4.vh),
+            Text(
+              S.of(context).iqamaIn,
+              style: TextStyle(
+                  fontSize: 7.vw,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  shadows: kIqamaCountDownTextShadow,
+                  fontFamily: StringManager.getFontFamily(context)),
+            ),
+            Expanded(
+              child: StreamBuilder(
+                  stream: Stream.periodic(Duration(seconds: 1)),
+                  builder: (context, snapshot) {
+                    final remaining = nextIqamaTime.difference(mosqueManager.mosqueDate());
+                    if (remaining <= Duration.zero) {
+                      Future.delayed(Duration(milliseconds: 80), onDone);
+                    }
+
+                    int seconds = remaining.inSeconds % 60;
+                    int minutes = remaining.inMinutes;
+                    String _timeTwoDigit = timeTwoDigit(
+                      seconds: seconds,
+                      minutes: minutes,
+                    );
+                    return Text(
+                      _timeTwoDigit,
+                      style: TextStyle(
+                        fontSize: 25.vw,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        shadows: kIqamaCountDownTextShadow,
+                      ),
+                    );
+                  }),
+            ),
+            SalahTimesBar(miniStyle: true),
+            SizedBox(height: 10),
+          ],
+        ),
       ],
     );
   }

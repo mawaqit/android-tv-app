@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/audio_manager.dart';
 import '../../../services/mosque_manager.dart';
+import '../../../themes/UIShadows.dart';
 
 class AfterAdhanSubScreen extends StatefulWidget {
   const AfterAdhanSubScreen({Key? key, this.onDone}) : super(key: key);
@@ -43,20 +46,22 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
           Text(
             kTitleArabic,
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 40,
-              color: Colors.lightGreenAccent,
-            ),
+                fontWeight: FontWeight.bold,
+                fontSize: 40,
+                color: Colors.white,
+                shadows: kAfterAdhanTextShadow,
+                fontFamily: StringManager.fontFamilyKufi),
           ),
           SizedBox(
-            width: 1000,
+            width: 110.vw,
             child: Text(
               kHadithArabic,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 36,
-                color: Colors.white,
-              ),
+                  fontSize: 36,
+                  color: Colors.white,
+                  shadows: kAfterAdhanTextShadow,
+                  fontFamily: StringManager.fontFamilyKufi),
             ),
           ),
           if (Localizations.localeOf(context).languageCode != 'ar') ...[
@@ -65,20 +70,26 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 40,
-                color: Colors.lightGreenAccent,
+                color: Colors.white,
+                shadows: kAfterAdhanTextShadow,
               ),
             ),
             SizedBox(
-              width: 1000,
+              width: 110.vw,
               child: Text(
                 S.of(context).afterSalahHadith,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 36,
-                  color: Colors.white,
+                    fontSize: 36,
+                    color: Colors.white,
+                    shadows: kAfterAdhanTextShadow,
                 ),
               ),
+
             ),
+            SizedBox(
+              height: 2.5.vh,
+            )
           ]
         ],
       ),

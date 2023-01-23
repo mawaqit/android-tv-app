@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart'hide TextDirection;
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
@@ -16,7 +17,7 @@ class AboveSalahBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final mosqueManager = context.watch<MosqueManager>();
-
+   final is12Hours =mosqueManager.mosqueConfig?.timeDisplayFormat == "12";
     return StreamBuilder(
         stream: Stream.periodic(Duration(seconds: 1)),
         builder: (context, snapshot) {
@@ -31,18 +32,19 @@ class AboveSalahBar extends StatelessWidget {
           }
 
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: (size.width - 5 * kSalahItemWidgetWidth) / 6,vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: (size.width - 5 * kSalahItemWidgetWidth) / 8, vertical: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding:
-                  isArabic?EdgeInsets.symmetric(horizontal: 20, vertical: 3):
-                  EdgeInsets.symmetric(horizontal: 2.5.vw, vertical: 1.vh),
-
+                  height: 8.vh,
+                  alignment: Alignment.center,
+                  padding: isArabic
+                      ? EdgeInsets.symmetric(horizontal: 3.vh,)
+                      : EdgeInsets.symmetric(horizontal: 2.5.vw, ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: mosqueManager.getColorTheme().withOpacity(.70),
+                    color:  Colors.black.withOpacity(.7),
                   ),
                   child: Text(
                     [
@@ -52,25 +54,35 @@ class AboveSalahBar extends StatelessWidget {
                       if (nextSalahTime.inMinutes == 0)
                         "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
                     ].join(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: Colors.white, fontFamily: StringManager.getFontFamily(context)),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                      shadows: kHomeTextShadow,
+                      fontFamily: StringManager.getFontFamily(context),
+                        ),
                   ),
                 ),
                 Container(
-                  padding: isArabic?EdgeInsets.symmetric(horizontal: 20, vertical: 3):
-                  EdgeInsets.symmetric(horizontal: 2.5.vw, vertical: 1.vh),
+                  height: 8.vh,
+                  alignment: Alignment.center,
+
+                  padding: isArabic
+                      ? EdgeInsets.symmetric(horizontal: 3.vh  , )
+                      : EdgeInsets.symmetric(horizontal: 2.5.vw, ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: mosqueManager.getColorTheme().withOpacity(.70),
+                    color: Colors.black.withOpacity(.7),
                   ),
                   child: Text(
-                    DateFormat("HH:mm", "en").format(now),
+                    textDirection: TextDirection.ltr,
+                    is12Hours?DateFormat("HH:mm a", "en").format(now):DateFormat("HH:mm", "en").format(now),
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge
-                        ?.copyWith(color: Colors.white, fontFamily: StringManager.getFontFamily(context)),
+                        ?.copyWith(
+                      shadows: kHomeTextShadow,
+                      color: Colors.white,
+
+                    ),
                   ),
                 ),
               ],
