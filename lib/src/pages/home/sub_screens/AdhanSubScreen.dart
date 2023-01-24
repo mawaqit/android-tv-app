@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
@@ -34,7 +36,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final salahIndex = mosqueManager.salahIndex;
     final mosqueConfig = mosqueManager.mosqueConfig;
-
+    final isArabic = context.read<AppLanguage>().isArabic();
     final audioProvider = context.read<AudioManager>();
 
     /// if there are no adhan voice
@@ -57,6 +59,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final mosque = mosqueProvider.mosque!;
     double adhanIconSize = 15.vh;
     final iconColor = Colors.white;
+    final isArabic = context.read<AppLanguage>().isArabic();
 
     return MosqueBackgroundScreen(
         child: Column(
@@ -66,7 +69,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
           children: [
             Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
             Padding(
-              padding: EdgeInsets.only(top: 4),
+              padding: EdgeInsets.only(top: isArabic ?4:4.vh),
               child: Directionality(
                 textDirection: TextDirection.ltr,
                 child: Animate(
@@ -105,7 +108,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 7.3.vh, right: 1.vw),
+              padding: EdgeInsets.only(top: isArabic?5.5.vh:12.vh, right: 1.vw),
               child: SalahTimesBar(),
             ),
           ],
