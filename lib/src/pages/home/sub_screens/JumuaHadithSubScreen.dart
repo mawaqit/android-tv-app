@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/StringUtils.dart';
@@ -21,19 +23,20 @@ class JumuaHadithSubScreen extends StatelessWidget {
     if (mosqueConfig!.jumuaDhikrReminderEnabled!) {
       return Column(
         children: [
+          SizedBox(height: 10,),
           Container(
             child: Text(
               jumuaTimeStartedAr,
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 4.vw,
                 fontWeight: FontWeight.bold,
                 fontFamily: StringManager.getFontFamily(context),
                 color: Colors.white,
+                shadows: kAfterAdhanTextShadow
               ),
             ),
           ),
           Expanded(
-            flex: 3,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: AutoSizeText(
@@ -42,32 +45,38 @@ class JumuaHadithSubScreen extends StatelessWidget {
                 stepGranularity: 6,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 60,
+                  fontSize: 6.vw,
                   fontWeight: FontWeight.bold,
-                  fontFamily: StringManager.getFontFamily(context),
+                  fontFamily: StringManager.fontFamilyKufi,
                   color: Colors.white,
+                    shadows: kAfterAdhanTextShadow
+
                 ),
               ),
             ),
           ),
           if (!isArabic)
             Expanded(
-              flex: 2,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: AutoSizeText(
                   S.of(context).jumuaaHadith,
                   minFontSize: 24,
                   stepGranularity: 12,
+
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                    fontSize: 3.vw,
+                    fontFamily: StringManager.getFontFamily(context),
+                      shadows: kAfterAdhanTextShadow
+
                   ),
                 ),
               ),
             ),
-          SizedBox(height: 40),
+          SizedBox(height: 20),
         ],
       );
     }
