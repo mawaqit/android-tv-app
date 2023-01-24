@@ -1,8 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
+import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 class IqamaSubScreen extends StatefulWidget {
@@ -17,13 +23,13 @@ class IqamaSubScreen extends StatefulWidget {
 class _IqamaSubScreenState extends State<IqamaSubScreen> {
   @override
   void initState() {
-    if (context.read<MosqueManager>().mosqueConfig!.iqamaBip){
-    context.read<AudioManager>().loadAndPlayIqamaBipVoice(
-          context.read<MosqueManager>().mosqueConfig,
-          onDone: widget.onDone,
-        );}
-    else {
-      Future.delayed(Duration(minutes: 1),widget.onDone);
+    if (context.read<MosqueManager>().mosqueConfig!.iqamaBip) {
+      context.read<AudioManager>().loadAndPlayIqamaBipVoice(
+            context.read<MosqueManager>().mosqueConfig,
+            onDone: widget.onDone,
+          );
+    } else {
+      Future.delayed(Duration(minutes: 1), widget.onDone);
     }
     super.initState();
   }
@@ -56,12 +62,19 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
                 children: [
                   Text(
                     S.of(context).alIqama,
-                    style: theme.textTheme.displayMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
+                    style: theme.textTheme.displayMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      shadows: kAfterAdhanTextShadow,
+                      fontFamily: StringManager.getFontFamily(context)
+                    ),
                   ),
                   Text(
                     "الإقامة",
                     style: theme.textTheme.displaySmall?.copyWith(
                       color: Colors.white,
+                      fontFamily: StringManager.fontFamilyKufi,
+                      shadows: kAfterAdhanTextShadow,
                     ),
                   ),
                 ],
@@ -70,18 +83,19 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
           ),
         ),
         Expanded(
-          child: Image.asset(
-            R.ASSETS_ICON_NO_PHONE_PNG,
-            color: Colors.white,
-            // width: 100,
-          ),
-        ),
+            child: Stack(children: [
+              Transform.scale(scaleX: 1.01,scaleY: 1.02,child: Image.asset(R.ASSETS_ICON_NO_PHONE_PNG,color: Colors.black38,)),
+              Image.asset(R.ASSETS_ICON_NO_PHONE_PNG,color:Colors.white,),
+
+        ])),
         Text(
           S.of(context).turnOfPhones,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 33,
+            fontSize: 4.vw,
             color: Colors.white,
+            fontFamily: StringManager.getFontFamily(context),
+            shadows: kAfterAdhanTextShadow,
           ),
         ),
         SizedBox(height: 50),
