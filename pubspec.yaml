@@ -80,6 +80,7 @@ dependencies:
 
   animated_text_kit: ^4.2.2
   auto_size_text: ^3.0.0
+  flutter_animate: ^3.0.0
   marquee: ^2.2.3
   text_scroll: ^0.1.0
 

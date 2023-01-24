@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -7,7 +8,6 @@ import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
-
 import '../../../themes/UIShadows.dart';
 import '../widgets/SalahItem.dart';
 import '../widgets/SalahTimesBar.dart';
@@ -69,32 +69,38 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
               padding: EdgeInsets.only(top: 4),
               child: Directionality(
                 textDirection: TextDirection.ltr,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      MawaqitIcons.icon_adhan,
-                      size: adhanIconSize,
-                      shadows: kHomeTextShadow,
-                      color: iconColor,
-                    ),
-                    Text(
-                      "    ${S.of(context).alAdhan}    ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.vh,
-                        // height: 2,
-                        color: Colors.white,
+                child: Animate(
+                  onPlay: (controller) {
+                    controller.repeat(reverse: true);
+                  },
+                  effects: [FadeEffect(curve: Curves.fastLinearToSlowEaseIn, delay: 1.seconds, begin: 1, end: 0)],
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        MawaqitIcons.icon_adhan,
+                        size: adhanIconSize,
                         shadows: kHomeTextShadow,
+                        color: iconColor,
                       ),
-                    ),
-                    Icon(
-                      MawaqitIcons.icon_adhan,
-                      size: adhanIconSize,
-                      shadows: kHomeTextShadow,
-                      color: iconColor,
-                    ),
-                  ],
+                      Text(
+                        "    ${S.of(context).alAdhan}    ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.vh,
+                          // height: 2,
+                          color: Colors.white,
+                          shadows: kHomeTextShadow,
+                        ),
+                      ),
+                      Icon(
+                        MawaqitIcons.icon_adhan,
+                        size: adhanIconSize,
+                        shadows: kHomeTextShadow,
+                        color: iconColor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -107,6 +113,5 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
         Directionality(textDirection: TextDirection.ltr, child: Footer()),
       ],
     ));
-
   }
 }
