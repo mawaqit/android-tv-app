@@ -5,6 +5,8 @@ import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../themes/UIShadows.dart';
+
 class AfterSalahAzkar extends StatefulWidget {
   AfterSalahAzkar({Key? key, this.onDone}) : super(key: key);
 
@@ -63,9 +65,11 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
                     color: Colors.white,
                 fontFamily: StringManager.fontFamilyKufi
+                  ,shadows: kAfterAdhanTextShadow
                   ),
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.center,
+
             ),
             FractionallySizedBox(
               widthFactor: .6,
@@ -84,6 +88,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                       fontWeight: FontWeight.bold,
                       fontFamily: StringManager.getFontFamily(context),
                       color: Colors.white,
+                        shadows: kIqamaCountDownTextShadow
                     ),
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.center,
@@ -103,6 +108,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                         fontSize: 62,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                          shadows: kAfterAdhanTextShadow
                       ),
                       textAlign: TextAlign.center,
                     ),
