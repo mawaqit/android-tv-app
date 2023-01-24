@@ -71,7 +71,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
                 fontWeight: FontWeight.bold,
                 fontSize: 40,
                 color: Colors.white,
-                shadows: kAfterAdhanTextShadow,
+                shadows: kIqamaCountDownTextShadow,
               ),
             ),
             SizedBox(
@@ -81,8 +81,9 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 36,
+                    wordSpacing: 2,
                     color: Colors.white,
-                    shadows: kAfterAdhanTextShadow,
+                    shadows: kIqamaCountDownTextShadow,
                 ),
               ),
 
