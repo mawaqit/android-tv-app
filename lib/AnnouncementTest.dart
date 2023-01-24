@@ -111,6 +111,7 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
   Widget textAnnouncement(String content, String title) {
     return Column(
       children: [
+        SizedBox(height: 2.vh,),
         // title
         AutoSizeText(title,
             stepGranularity: 12,
@@ -119,9 +120,10 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
                 shadows: kAnnouncementTextShadow,
                 fontSize: 62,
                 fontWeight: FontWeight.bold,
-                fontFamily: StringManager.getFontFamily(context),
+                // fontFamily: StringManager.getFontFamily(context),
                 color: Colors.amber,
                 letterSpacing: 1)),
+        SizedBox(height: 3.vh,),
         // content
         Expanded(
           child: AutoSizeText(content,
@@ -131,7 +133,7 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
                   shadows: kAnnouncementTextShadow,
                   fontSize: 62,
                   fontWeight: FontWeight.bold,
-                  fontFamily: StringManager.getFontFamily(context),
+                  // fontFamily: StringManager.getFontFamily(context),
                   color: Colors.white,
                   letterSpacing: 1)),
         ),
