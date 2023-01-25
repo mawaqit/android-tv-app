@@ -113,8 +113,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       (element) => element.isAfter(now),
       orElse: () => actualTimes().first,
     );
-
-    return actualTimes().indexOf(nextSalah);
+    var salahIndex = actualTimes().indexOf(nextSalah);
+    if (salahIndex > 4) salahIndex = 0;
+    if (salahIndex < 0) salahIndex = 4;
+    return salahIndex;
   }
 
   /// the duration until the next salah

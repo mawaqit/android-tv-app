@@ -22,7 +22,7 @@ class RandomHadithScreen extends StatelessWidget {
         Column(
 
           children: [
-           SizedBox(height: 7.vh,),
+           SizedBox(height: 9.vh,),
             Expanded(
               child: FutureBuilder<String>(
                 future: Api.randomHadith(),

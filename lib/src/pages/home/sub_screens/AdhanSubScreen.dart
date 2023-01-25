@@ -78,7 +78,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                   },
                   effects: [FadeEffect(curve: Curves.fastLinearToSlowEaseIn, delay: 1.seconds, begin: 1, end: 0)],
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
+mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Icon(
                         MawaqitIcons.icon_adhan,
@@ -86,14 +86,19 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                         shadows: kHomeTextShadow,
                         color: iconColor,
                       ),
-                      Text(
-                        "    ${S.of(context).alAdhan}    ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.vh,
-                          // height: 2,
-                          color: Colors.white,
-                          shadows: kHomeTextShadow,
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 70.vw),
+                        child: FittedBox(
+                          child: Text(
+                            "${S.of(context).alAdhan}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.vh,
+                              // height: 2,
+                              color: Colors.white,
+                              shadows: kHomeTextShadow,
+                            ),
+                          ),
                         ),
                       ),
                       Icon(

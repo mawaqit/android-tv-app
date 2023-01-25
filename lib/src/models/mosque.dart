@@ -261,7 +261,7 @@ class Mosque {
   }
 
   factory Mosque.fromMap(Map<String, dynamic> map) {
-    debugPrint(map.toString(),wrapWidth: 500);
+    // debugPrint(map.toString(),wrapWidth: 500);
     return Mosque(
       id: map['id'] ?? -1,
       uuid: map['uuid'],
