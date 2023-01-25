@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'hide TextDirection;
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
@@ -17,7 +17,7 @@ class AboveSalahBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final mosqueManager = context.watch<MosqueManager>();
-   final is12Hours =mosqueManager.mosqueConfig?.timeDisplayFormat == "12";
+    final is12Hours = mosqueManager.mosqueConfig?.timeDisplayFormat == "12";
     return StreamBuilder(
         stream: Stream.periodic(Duration(seconds: 1)),
         builder: (context, snapshot) {
@@ -37,14 +37,19 @@ class AboveSalahBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 8.vh,
+                  clipBehavior: Clip.hardEdge,
+                  height: 9.vh,
                   alignment: Alignment.center,
                   padding: isArabic
-                      ? EdgeInsets.symmetric(horizontal: 3.vh,)
-                      : EdgeInsets.symmetric(horizontal: 2.5.vw, ),
+                      ? EdgeInsets.symmetric(
+                          horizontal: 3.vh,
+                        )
+                      : EdgeInsets.symmetric(
+                          horizontal: 2.5.vw,
+                        ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color:  Colors.black.withOpacity(.7),
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.black.withOpacity(.7),
                   ),
                   child: Text(
                     [
@@ -56,32 +61,61 @@ class AboveSalahBar extends StatelessWidget {
                     ].join(),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.white,
-                      shadows: kHomeTextShadow,
-                      fontFamily: StringManager.getFontFamily(context),
-                        ),
+                          shadows: kHomeTextShadow,
+                          fontSize: isArabic?5.3.vh:6.vh,
+                          fontFamily: StringManager.getFontFamily(context),
+
+
+                    ),
                   ),
                 ),
                 Container(
-                  height: 8.vh,
+                  height: 9.vh,
                   alignment: Alignment.center,
-
                   padding: isArabic
-                      ? EdgeInsets.symmetric(horizontal: 3.vh  , )
-                      : EdgeInsets.symmetric(horizontal: 2.5.vw, ),
+                      ? EdgeInsets.symmetric(
+                          horizontal: 3.vh,
+                        )
+                      : EdgeInsets.symmetric(
+                          horizontal: 2.5.vw,
+                        ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(25),
                     color: Colors.black.withOpacity(.7),
                   ),
-                  child: Text(
+                  child: Directionality(
                     textDirection: TextDirection.ltr,
-                    is12Hours?DateFormat("HH:mm a", "en").format(now):DateFormat("HH:mm", "en").format(now),
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(
-                      shadows: kHomeTextShadow,
-                      color: Colors.white,
-
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          textDirection: TextDirection.ltr,
+                          is12Hours ? DateFormat("hh:mm", "en").format(now) : DateFormat("HH:mm", "en").format(now),
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                shadows: kHomeTextShadow,
+                                fontSize: isArabic?5.3.vh:6.vh,
+                                color: Colors.white,
+                            fontWeight: FontWeight.bold
+                              ),
+                        ),
+                        if (is12Hours)
+                          SizedBox(
+                            width: 2.6.vw,
+                            child: Text(
+                              maxLines: 2,
+                              textDirection: TextDirection.ltr,
+                              DateFormat("a", "en").format(now),
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    shadows: kHomeTextShadow,
+                                    letterSpacing: 1.vw,
+                                    height: .9,
+                                    fontSize: 1.2.vw,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
