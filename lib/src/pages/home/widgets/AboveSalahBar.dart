@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
 import '../../../helpers/StringUtils.dart';
+import '../../../widgets/TimePeriodWidget.dart';
 
 class AboveSalahBar extends StatelessWidget {
   const AboveSalahBar({Key? key}) : super(key: key);
@@ -42,11 +43,11 @@ class AboveSalahBar extends StatelessWidget {
                   alignment: Alignment.center,
                   padding: isArabic
                       ? EdgeInsets.symmetric(
-                          horizontal: 3.vh,
-                        )
+                    horizontal: 3.vh,
+                  )
                       : EdgeInsets.symmetric(
-                          horizontal: 2.5.vw,
-                        ),
+                    horizontal: 2.5.vw,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.black.withOpacity(.7),
@@ -60,12 +61,10 @@ class AboveSalahBar extends StatelessWidget {
                         "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
                     ].join(),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.white,
-                          shadows: kHomeTextShadow,
-                          fontSize: isArabic?5.3.vh:6.vh,
-                          fontFamily: StringManager.getFontFamily(context),
-
-
+                      color: Colors.white,
+                      shadows: kHomeTextShadow,
+                      fontSize: isArabic ? 5.3.vh : 6.vh,
+                      fontFamily: StringManager.getFontFamily(context),
                     ),
                   ),
                 ),
@@ -74,11 +73,11 @@ class AboveSalahBar extends StatelessWidget {
                   alignment: Alignment.center,
                   padding: isArabic
                       ? EdgeInsets.symmetric(
-                          horizontal: 3.vh,
-                        )
+                    horizontal: 3.vh,
+                  )
                       : EdgeInsets.symmetric(
-                          horizontal: 2.5.vw,
-                        ),
+                    horizontal: 2.5.vw,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.black.withOpacity(.7),
@@ -92,27 +91,24 @@ class AboveSalahBar extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           is12Hours ? DateFormat("hh:mm", "en").format(now) : DateFormat("HH:mm", "en").format(now),
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                shadows: kHomeTextShadow,
-                                fontSize: isArabic?5.3.vh:6.vh,
-                                color: Colors.white,
-                            fontWeight: FontWeight.bold
-                              ),
+                              shadows: kHomeTextShadow,
+                              fontSize: isArabic ? 5.3.vh : 6.vh,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
                         ),
                         if (is12Hours)
                           SizedBox(
                             width: 2.6.vw,
-                            child: Text(
-                              maxLines: 2,
-                              textDirection: TextDirection.ltr,
-                              DateFormat("a", "en").format(now),
+                            child: TimePeriodWidget(
+                              dateTime: now,
                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    shadows: kHomeTextShadow,
-                                    letterSpacing: 1.vw,
-                                    height: .9,
-                                    fontSize: 1.2.vw,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w300,
-                                  ),
+                                shadows: kHomeTextShadow,
+                                letterSpacing: 1.vw,
+                                height: .9,
+                                fontSize: 1.2.vw,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
                           ),
                       ],

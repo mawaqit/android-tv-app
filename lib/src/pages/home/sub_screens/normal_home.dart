@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:marquee/marquee.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/pages/home/widgets/HomeLogoVersion.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/ShurukWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/TimeWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/FlashWidget.dart';
-import '../widgets/MosqueInformationWidget.dart';
 import '../widgets/footer.dart';
 
 class NormalHomeSubScreen extends StatelessWidget {
@@ -41,8 +36,7 @@ class NormalHomeSubScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding:
-                      EdgeInsets.only(left: 2.vw,top: 1.5.vh),
+                      padding: EdgeInsets.only(left: 2.vw, top: 1.5.vh),
                       // :EdgeInsets.only(left: 2.vw,bottom: 6.vh),
                       child: ShurukWidget(),
                     ),
@@ -67,9 +61,7 @@ class NormalHomeSubScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding:
-             isArabic? EdgeInsets.only(top: 7.3.vh, right: 1.vw):
-              EdgeInsets.only(top: 8.vh, right: 1.vw),
+              padding: isArabic ? EdgeInsets.only(top: 7.3.vh, right: 1.vw) : EdgeInsets.only(top: 8.vh, right: 1.vw),
               child: SalahTimesBar(),
             ),
           ],

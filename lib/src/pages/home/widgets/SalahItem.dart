@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
+import '../../../widgets/TimePeriodWidget.dart';
 
 const kSalahItemWidgetWidth = 135.0;
 
@@ -40,29 +41,14 @@ class SalahItemWidget extends StatelessWidget {
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
     bool? isIqamaEnabled = mosqueConfig?.iqamaEnabled!;
-    bool? isIqamaMoreImportant = mosqueConfig!.iqamaMoreImportant!&&isIqamaEnabled! ;
+    bool? isIqamaMoreImportant = mosqueConfig!.iqamaMoreImportant! && isIqamaEnabled!;
     final timeDate = time.toTimeOfDay()?.toDate();
     final iqamaDate = iqama?.toTimeOfDay()?.toDate();
-    print (isIqamaEnabled);
+    print(isIqamaEnabled);
     final isArabic = context.read<AppLanguage>().isArabic();
-    final DateFormat dateTimeConverter = mosqueConfig.timeDisplayFormat == "12"
-        ? DateFormat(
-            "hh:mm",
-            "en-En",
-          )
-        : DateFormat(
-            "HH:mm",
-            "en",
-          );
-    final DateFormat dateTimePeriodConverter = mosqueConfig.timeDisplayFormat == "12"
-        ? DateFormat(
-            "a",
-            "en",
-          )
-        : DateFormat(
-            "",
-            "en",
-          );
+
+    final is12period = mosqueConfig.timeDisplayFormat == "12";
+    final DateFormat dateTimeConverter = is12period ? DateFormat("hh:mm", "en-En") : DateFormat("HH:mm", "en");
 
     return Container(
       width: 16.vw,
@@ -71,12 +57,12 @@ class SalahItemWidget extends StatelessWidget {
         color: active
             ? mosqueProvider.getColorTheme().withOpacity(.7)
             : removeBackground
-                ? null
-                : Colors.black.withOpacity(.70),
+            ? null
+            : Colors.black.withOpacity(.70),
       ),
-      padding:
-      isArabic?EdgeInsets.only(bottom: 1.vh, right: 1.vw,left: 1.vw):
-      EdgeInsets.symmetric(vertical: 1.6.vh, horizontal: 1.vw),
+      padding: isArabic
+          ? EdgeInsets.only(bottom: 1.vh, right: 1.vw, left: 1.vw)
+          : EdgeInsets.symmetric(vertical: 1.6.vh, horizontal: 1.vw),
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Column(
@@ -88,34 +74,38 @@ class SalahItemWidget extends StatelessWidget {
                   maxLines: 1,
                   title!,
                   style: TextStyle(
-                    fontSize: 3.vw,
-                    shadows: kHomeTextShadow,
-                    color: Colors.white,
-                    fontFamily: StringManager.getFontFamily(context)
-
-                  ),
+                      fontSize: 3.vw,
+                      shadows: kHomeTextShadow,
+                      color: Colors.white,
+                      fontFamily: StringManager.getFontFamily(context)),
                 ),
               ),
-            SizedBox(height: isArabic?0.1.vh:1.vh),
+            SizedBox(height: isArabic ? 0.1.vh : 1.vh),
             if (time.trim().isEmpty) Icon(Icons.dnd_forwardslash, size: 6.vw),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  timeDate == null ? time : dateTimeConverter.format(timeDate),
-                  style: TextStyle(
-                    fontSize: isIqamaMoreImportant ? smallFont : bigFont,
-                    fontWeight: FontWeight.w700,
-                    shadows: kHomeTextShadow,
-                    color: Colors.white,
-                    // fontFamily: StringManager.getFontFamily(context),
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      timeDate == null ? time : dateTimeConverter.format(timeDate),
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: isIqamaMoreImportant ? smallFont : bigFont,
+                        fontWeight: FontWeight.w700,
+                        shadows: kHomeTextShadow,
+                        color: Colors.white,
+                        // fontFamily: StringManager.getFontFamily(context),
+                      ),
+                    ),
                   ),
                 ),
-                if (timeDate != null)
+                if (timeDate != null && is12period)
                   SizedBox(
-                    width: 1.vw,
-                    child: Text(
-                      dateTimePeriodConverter.format(timeDate),
+                    // width: 2.vw,
+                    child: TimePeriodWidget(
+                      dateTime: timeDate,
                       style: TextStyle(
                         height: .9,
                         letterSpacing: 9,
@@ -128,16 +118,16 @@ class SalahItemWidget extends StatelessWidget {
                   ),
               ],
             ),
-            if (iqama != null &&isIqamaEnabled!)
+            if (iqama != null && isIqamaEnabled!)
               SizedBox(
-                height:isArabic?1.5.vh :1.3.vw,
+                height: isArabic ? 1.5.vh : 1.3.vw,
                 width: double.infinity,
                 child: Divider(
                   thickness: 1,
                   color: withDivider ? Colors.white : Colors.transparent,
                 ),
               ),
-            if (iqama != null&&isIqamaEnabled!)
+            if (iqama != null && isIqamaEnabled!)
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -154,12 +144,11 @@ class SalahItemWidget extends StatelessWidget {
                       // fontFamily: StringManager.getFontFamily(context)
                     ),
                   ),
-
-                  if (iqamaDate != null )
+                  if (iqamaDate != null && is12period)
                     SizedBox(
                       width: 1.vw,
-                      child: Text(
-                        dateTimePeriodConverter.format(iqamaDate),
+                      child: TimePeriodWidget(
+                        dateTime: iqamaDate,
                         style: TextStyle(
                           height: .9,
                           letterSpacing: 9,
