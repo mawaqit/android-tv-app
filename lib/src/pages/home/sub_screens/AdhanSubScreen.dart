@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -10,11 +9,9 @@ import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
+
 import '../../../themes/UIShadows.dart';
-import '../widgets/SalahItem.dart';
 import '../widgets/SalahTimesBar.dart';
-import '../widgets/ShurukWidget.dart';
-import '../widgets/TimeWidget.dart';
 import '../widgets/footer.dart';
 import '../widgets/mosque_header.dart';
 
@@ -69,7 +66,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
           children: [
             Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
             Padding(
-              padding: EdgeInsets.only(top: isArabic ?4:4.vh),
+              padding: EdgeInsets.only(top: isArabic ? 4 : 4.vh),
               child: Directionality(
                 textDirection: TextDirection.ltr,
                 child: Animate(
@@ -78,7 +75,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                   },
                   effects: [FadeEffect(curve: Curves.fastLinearToSlowEaseIn, delay: 1.seconds, begin: 1, end: 0)],
                   child: Row(
-mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Icon(
                         MawaqitIcons.icon_adhan,
@@ -94,6 +91,7 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20.vh,
+                              fontFamily: StringManager.getFontFamilyByString(S.of(context).alAdhan),
                               // height: 2,
                               color: Colors.white,
                               shadows: kHomeTextShadow,
@@ -113,7 +111,7 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: isArabic?5.5.vh:12.vh, right: 1.vw),
+              padding: EdgeInsets.only(top: isArabic ? 5.5.vh : 12.vh, right: 1.vw),
               child: SalahTimesBar(),
             ),
           ],
