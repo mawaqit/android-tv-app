@@ -230,7 +230,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                 ),
               ),
               Padding(
-                  padding: EdgeInsets.all(isArabicLang?0.1.vw:2.vh),
+                  padding: EdgeInsets.all(isArabicLang ? 0.1.vw : 2.vh),
                   child: SalahInWidget(
                     adhanIconSize: adhanIconSize,
                     nextSalahTime: nextSalahTime,

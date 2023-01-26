@@ -5,8 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
-import 'package:mawaqit/src/models/settings.dart';
-import 'package:mawaqit/src/pages/HomeScreen.dart';
+import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
@@ -14,10 +13,7 @@ import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/mawaqit_circle_button_widget.dart';
 
 class OnBoardingScreen extends StatefulWidget {
-  // final String url;
-  final Settings settings;
-
-  const OnBoardingScreen(this.settings);
+  const OnBoardingScreen();
 
   @override
   _OnBoardingScreenState createState() => _OnBoardingScreenState();
@@ -69,7 +65,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       return MosqueSearch(
         onDone: () {
           sharedPref.save('boarding', 'true');
-          AppRouter.pushReplacement(HomeScreen(widget.settings));
+          AppRouter.pushReplacement(OfflineHomeScreen());
         },
       );
 

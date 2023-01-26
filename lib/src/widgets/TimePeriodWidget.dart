@@ -18,7 +18,8 @@ class TimePeriodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = context.read<AppLanguage>().isArabic();
+    final appLanguage = context.read<AppLanguage>();
+    final isArabic = appLanguage.isArabic();
     final value = DateFormat("a").format(dateTime).trim().split('').join('\n');
 
     final defaultStyle = TextStyle(

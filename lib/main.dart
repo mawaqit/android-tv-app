@@ -35,7 +35,7 @@ Future<void> main() async {
     await GlobalConfiguration().loadFromAsset("configuration");
 
     await Firebase.initializeApp();
-  initHive();
+    initHive();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,

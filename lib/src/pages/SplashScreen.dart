@@ -9,7 +9,7 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/ErrorScreen.dart';
-import 'package:mawaqit/src/pages/HomeScreen.dart';
+import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
@@ -57,9 +57,9 @@ class _SplashScreen extends State<Splash> {
       bool hasNoMosque = mosqueManager.mosqueUUID == null;
 
       if (hasNoMosque || goBoarding && settings.boarding == "1") {
-        AppRouter.pushReplacement(OnBoardingScreen(settings));
+        AppRouter.pushReplacement(OnBoardingScreen());
       } else {
-        AppRouter.pushReplacement(HomeScreen(settings));
+        AppRouter.pushReplacement(OfflineHomeScreen());
       }
     } on DioError catch (e) {
       if (e.response == null) {
@@ -78,7 +78,7 @@ class _SplashScreen extends State<Splash> {
 
   /// reset the app
   void _changeMosque() {
-    AppRouter.pushReplacement(OnBoardingScreen(context.read<SettingsManager>().settings));
+    AppRouter.pushReplacement(OnBoardingScreen());
   }
 
   Widget build(BuildContext context) {

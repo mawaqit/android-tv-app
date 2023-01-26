@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
+import 'package:mawaqit/src/pages/HomeScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../../AnnouncementTest.dart';
-import '../../TestSubScreens.dart';
 import '../elements/DrawerListTitle.dart';
-import '../enum/home_active_screen.dart';
 import '../helpers/AppRouter.dart';
-import '../pages/home/OfflineHomeScreen.dart';
 import '../pages/home/sub_screens/AdhanSubScreen.dart';
 import '../pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
 import '../pages/home/sub_screens/AfterSalahAzkarScreen.dart';
@@ -32,13 +29,13 @@ class DrawerListDeveloper extends StatelessWidget {
       children: [
         DrawerListTitle(
             icon: Icons.home_filled,
-            text: "Offline home",
+            text: "Online home",
             onTap: () async {
               Navigator.pop(context);
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MosqueBackgroundScreen(child: OfflineHomeScreen()),
+                    builder: (context) => MosqueBackgroundScreen(child: HomeScreen()),
                   ));
             }),
         /////////////// drawer test////////////////
