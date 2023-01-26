@@ -29,7 +29,7 @@ class MosqueHeader extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: .5.vh, horizontal: .35.vw),
             child: Directionality(
-              textDirection: isArabic?TextDirection.rtl:TextDirection.ltr,
+              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -56,20 +56,43 @@ class MosqueHeader extends StatelessWidget {
           mosque.logo != null ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
           SizedBox(width: 10),
           Container(
-            constraints: BoxConstraints(maxWidth: 70.vw),
-            child: Text(
-              mosque.name,
-              maxLines: 1,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 4.vw,
-                height: 1,
-                shadows: kHomeTextShadow,
-                fontWeight: FontWeight.bold,
-                // fontFamily: StringManager.fontFamilyHelvetica
+              constraints: BoxConstraints(maxWidth: 70.vw),
+              child: FittedBox(
+                child: Row(
+                  children: StringManager.convertStringToList(
+                    mosque.name,
+                  ).map((e) {
+                       bool isArabicText = StringManager.arabicLetters.hasMatch(e)||StringManager.urduLetters.hasMatch(e);
+                       return Text(
+                         "$e ",
+                         style: TextStyle(
+                             color: Colors.white,
+                             fontSize: 4.vw,
+                             height:isArabicText? 1.2:1,
+                             shadows: kIqamaCountDownTextShadow,
+                             fontWeight: FontWeight.bold,
+                             fontFamily:isArabicText?StringManager.fontFamilyKufi:null
+                         ),
+                       );
+
+
+                  }).toList(),
+                ),
+              )
+
+              // Text(
+              //   mosque.name,
+              //   maxLines: 1,
+              //   style: TextStyle(
+              //     color: Colors.white,
+              //     fontSize: 4.vw,
+              //     height: 1,
+              //     shadows: kHomeTextShadow,
+              //     fontWeight: FontWeight.bold,
+              //     // fontFamily: StringManager.fontFamilyHelvetica
+              //   ),
+              // ),
               ),
-            ),
-          ),
           SizedBox(width: 10),
           mosque.logo != null ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
           Spacer(),
