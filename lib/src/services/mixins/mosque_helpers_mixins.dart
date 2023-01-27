@@ -1,13 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
+import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
 import '../../../generated/l10n.dart';
 import '../../models/mosque.dart';
 import '../../models/mosqueConfig.dart';
 import '../../models/times.dart';
+
+/// used to speed up the work flows in
+const kTestDurationFactor = kDebugMode ? 1 / 10 : 1;
 
 mixin MosqueHelpersMixin on ChangeNotifier {
   abstract Mosque? mosque;
@@ -70,9 +75,11 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     return now.isAfter(midnight) && now.isBefore(fajrDate);
   }
+
   bool get typeIsMosque {
-    return mosque?.type=="MOSQUE";
+    return mosque?.type == "MOSQUE";
   }
+
   bool get showEid {
     if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) {
       return false;
@@ -199,7 +206,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     );
 
     if (now.weekday != DateTime.friday) return false;
-    if (!typeIsMosque) return false ;
+    if (!typeIsMosque) return false;
     if (jumuaaStartTime == null) return false;
 
     if (now.isBefore(jumuaaStartTime) || now.isAfter(jumuaaEndTime!)) return false;
@@ -213,7 +220,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     //
     final lastIqamaIndex = (nextIqamaIndex() - 1) % 5;
     var lastIqamaTime = actualIqamaTimes()[lastIqamaIndex];
-    if (lastIqamaTime.isAfter(now)) lastIqamaTime = lastIqamaTime.subtract(Duration(days: 1));
+    if (lastIqamaTime.isAfter(now)) lastIqamaTime = lastIqamaTime.subtract(Duration(days: 1) * kTestDurationFactor);
 
     final salahDuration = mosqueConfig!.duaAfterPrayerShowTimes[lastIqamaIndex];
     final salahAndAzkarEndTime = lastIqamaTime.add(
@@ -229,5 +236,21 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     if (now.isBefore(salahAndAzkarEndTime)) return true;
 
     return false;
+  }
+
+  /// remove videos in case of mosque screen
+  /// todo check for primary/secondary screen
+  List<Announcement> get activeAnnouncements {
+    print(typeIsMosque);
+
+    return mosque!.announcements.where((element) {
+      final startDate = DateTime.tryParse(element.startDate ?? '');
+      final endDate = DateTime.tryParse(element.endDate ?? '');
+      final now = mosqueDate();
+
+      final inTime = now.isAfter(startDate ?? DateTime(2000)) && now.isBefore(endDate ?? DateTime(3000));
+
+      return (element.video == null || !typeIsMosque) && inTime;
+    }).toList();
   }
 }

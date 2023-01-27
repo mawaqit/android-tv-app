@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
+import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -17,7 +18,7 @@ class AnnouncementScreen extends StatefulWidget {
     this.onDone,
   }) : super(key: key);
 
-  /// index can be any number between 1 -> infinity
+  /// index can be any number between 0 -> infinity
   final int index;
   final VoidCallback? onDone;
 
@@ -30,7 +31,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   @override
   void initState() {
-    final announcements = context.read<MosqueManager>().mosque?.announcements ?? [];
+    final announcements = context.read<MosqueManager>().activeAnnouncements;
 
     //todo test this
     if (announcements.isEmpty) Future.delayed(Duration(milliseconds: 0), widget.onDone);
@@ -38,7 +39,10 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     activeAnnouncement = announcements[widget.index % announcements.length];
 
     if (activeAnnouncement.video == null) {
-      Future.delayed(Duration(seconds: activeAnnouncement.duration ?? 30), widget.onDone);
+      Future.delayed(
+        Duration(seconds: activeAnnouncement.duration ?? 30) * kTestDurationFactor,
+        widget.onDone,
+      );
     }
 
     super.initState();
@@ -46,7 +50,8 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final announcements = context.read<MosqueManager>().mosque!.announcements;
+    final announcements = context.read<MosqueManager>().activeAnnouncements;
+
     if (announcements.isEmpty) return NormalHomeSubScreen();
 
     return Stack(
@@ -67,28 +72,11 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   }
 
   Widget announcementWidgets() {
-    final isMosque = context.read<MosqueManager>().typeIsMosque;
-    DateTime? startDate;
-    DateTime? endDate;
-    if (activeAnnouncement.startDate != null) {
-      startDate = DateTime.parse(activeAnnouncement.startDate!);
-    }
-    if (activeAnnouncement.endDate != null) {
-      endDate = DateTime.parse(activeAnnouncement.endDate!);
-    }
-
-    // final updatedDate = DateTime.parse(activeAnnouncement.updatedDate!);
-    bool isAvailableTime = ((DateTime.now().isBefore(endDate ?? DateTime.now())) &&
-        DateTime.now().isAfter(
-          startDate ?? DateTime.now(),
-        ));
-    bool isNoDate = activeAnnouncement.startDate == null || activeAnnouncement.endDate == null;
-    print("time$isAvailableTime");
-    if (activeAnnouncement.content != null && (isAvailableTime || isNoDate)) {
+    if (activeAnnouncement.content != null) {
       return textAnnouncement(activeAnnouncement.content!, activeAnnouncement.title);
-    } else if (activeAnnouncement.image != null && (isAvailableTime || isNoDate)) {
+    } else if (activeAnnouncement.image != null) {
       return imageAnnouncement(activeAnnouncement.image!);
-    } else if (activeAnnouncement.video != null && (isAvailableTime || isNoDate) && !isMosque) {
+    } else if (activeAnnouncement.video != null) {
       return videoAnnouncement(activeAnnouncement.video!);
     }
 
@@ -99,7 +87,9 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     return Column(
       children: [
         // title
-        SizedBox(height: 2.vh,),
+        SizedBox(
+          height: 2.vh,
+        ),
         AutoSizeText(title,
             stepGranularity: 12,
             textAlign: TextAlign.center,
@@ -107,11 +97,13 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                 shadows: kAnnouncementTextShadow,
                 fontSize: 62,
                 fontWeight: FontWeight.bold,
-                fontFamily:StringManager.getFontFamily(context),
+                fontFamily: StringManager.getFontFamily(context),
                 color: Colors.amber,
                 letterSpacing: 1)),
         // content
-        SizedBox(height: 3.vh,),
+        SizedBox(
+          height: 3.vh,
+        ),
         Expanded(
           child: AutoSizeText(content,
               stepGranularity: 12,
