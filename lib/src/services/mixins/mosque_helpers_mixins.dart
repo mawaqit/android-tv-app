@@ -62,6 +62,22 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return nowInMinutes >= shuruqTimeInMinutes && nowInMinutes <= duhrTime;
   }
 
+  bool isShurukTime() {
+    return mosqueDate().isAfter(actualTimes()[0]) &&
+        mosqueDate().isBefore(times!.shuruq!.toTimeOfDay()!.toDate(mosqueDate()));
+  }
+
+  String getShurukInString(BuildContext context) {
+    final shurukTime = times!.shuruq!.toTimeOfDay()!.toDate(mosqueDate()).difference(mosqueDate());
+    print(shurukTime.inMinutes);
+    return [
+      "${S.of(context).shuruk} ${S.of(context).in1} ",
+      if (shurukTime.inMinutes > 0)
+        "${shurukTime.inHours.toString().padLeft(2, '0')}:${(shurukTime.inMinutes % 60).toString().padLeft(2, '0')}",
+      if (shurukTime.inMinutes == 0) "${(shurukTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+    ].join();
+  }
+
   /// show imsak between midnight and fajr
   bool get showImsak {
     final now = mosqueDate();
