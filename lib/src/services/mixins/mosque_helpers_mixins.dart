@@ -70,7 +70,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     return now.isAfter(midnight) && now.isBefore(fajrDate);
   }
-
+  bool get typeIsMosque {
+    return mosque?.type=="MOSQUE";
+  }
   bool get showEid {
     if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) {
       return false;
@@ -197,6 +199,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     );
 
     if (now.weekday != DateTime.friday) return false;
+    if (!typeIsMosque) return false ;
     if (jumuaaStartTime == null) return false;
 
     if (now.isBefore(jumuaaStartTime) || now.isAfter(jumuaaEndTime!)) return false;
