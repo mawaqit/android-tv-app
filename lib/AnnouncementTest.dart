@@ -80,6 +80,8 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
   }
 
   Widget announcementWidgets() {
+    final isMosque = context.read<MosqueManager>().typeIsMosque;
+
     final announcement = context.read<MosqueManager>().mosque!.announcements[activeIndex];
     DateTime? startDate;
     DateTime? endDate;
@@ -101,7 +103,7 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
       return textAnnouncement(announcement.content!, announcement.title);
     } else if (announcement.image != null && (isAvailableTime || isNoDate)) {
       return imageAnnouncement(announcement.image!);
-    } else if (announcement.video != null && (isAvailableTime || isNoDate)) {
+    } else if (announcement.video != null && (isAvailableTime || isNoDate)&& !isMosque) {
       return videoAnnouncement(announcement.video!);
     }
 

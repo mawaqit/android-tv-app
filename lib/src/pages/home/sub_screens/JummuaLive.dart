@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../helpers/HiveLocalDatabase.dart';
+import '../../../services/mosque_manager.dart';
 
 class JummuaLive extends StatefulWidget {
   const JummuaLive({Key? key, this.onDone}) : super(key: key);
@@ -16,13 +17,13 @@ class JummuaLive extends StatefulWidget {
 class _JummuaLiveState extends State<JummuaLive> {
   @override
   Widget build(BuildContext context) {
-    // final mosqueProvider = context.watch<MosqueManager>();
+    final mosqueProvider = context.read<MosqueManager>();
     //
     // if (mosqueProvider.mosque == null || mosqueProvider.times == null) return SizedBox();
     //
     // final mosque = mosqueProvider.mosque!;
     final hive = context.watch<HiveManager>();
-    if (!hive.isSecondaryScreen()) {
+    if (!hive.isSecondaryScreen() || mosqueProvider.typeIsMosque) {
       return Scaffold(
         backgroundColor: Colors.black,
       );

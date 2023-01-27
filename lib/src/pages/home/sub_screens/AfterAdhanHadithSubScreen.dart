@@ -27,7 +27,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
   void initState() {
     final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
     final audioProvider = context.read<AudioManager>();
-    if (mosqueConfig!.duaAfterAzanEnabled!) {
+    if (mosqueConfig!.duaAfterAzanEnabled! && !context.read<MosqueManager>().typeIsMosque) {
       audioProvider.loadAndPlayDuaAfterAdhanVoice(mosqueConfig, onDone: widget.onDone);
     } else {
       widget.onDone?.call();
