@@ -10,7 +10,7 @@ class MosqueConfig {
   final String? backgroundColor;
   final bool? jumuaDhikrReminderEnabled;
   final int? jumuaTimeout;
-  final bool? randomHadithEnabled;
+  final bool randomHadithEnabled;
   final bool? blackScreenWhenPraying;
   final bool? wakeForFajrTime;
   final bool? jumuaBlackScreenEnabled;

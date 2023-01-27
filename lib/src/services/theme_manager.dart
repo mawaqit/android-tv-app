@@ -77,7 +77,7 @@ class ThemeNotifier with ChangeNotifier {
       if (themeMode == 'light') {
         isLightTheme = true;
       } else if (themeMode == 'dark') {
-        print('setting dark theme');
+        // print('setting dark theme');
         isLightTheme = false;
       }
       notifyListeners();

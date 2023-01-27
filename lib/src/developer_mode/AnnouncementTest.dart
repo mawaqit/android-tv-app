@@ -7,6 +7,8 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../themes/UIShadows.dart';
+
 class AnnouncementTest extends StatefulWidget {
   const AnnouncementTest({Key? key}) : super(key: key);
 
@@ -68,10 +70,14 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
                   child: Container(
                   child: Text(
                     style: TextStyle(
+
                       fontSize: 62,
-                      color: Colors.white70,
+                      color: Colors.white,
+                        shadows: kIqamaCountDownTextShadow
+
                     ),
                     "No Announcement found",
+
                   ),
                 )),
         ),
@@ -162,7 +168,6 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
       children: [
         YoutubePlayer(
           onEnded: (metaData) {
-            print("end video");
             nextScreen();
           },
           controller: _controller,

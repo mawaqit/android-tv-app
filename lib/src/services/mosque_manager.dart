@@ -63,7 +63,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
 
       _saveToLocale();
       notifyListeners();
-      print("mosque url${mosque?.url}");
+      // print("mosque url${mosque?.url}");
     } catch (e, stack) {
       debugPrintStack(stackTrace: stack);
     }
@@ -103,7 +103,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       // "Api-Access-Token": mawaqitApiToken,
     };
     final response = await http.get(url, headers: requestHeaders);
-    print(response.body);
+    // print(response.body);
     if (response.statusCode == 200) {
       final results = jsonDecode(response.body);
       List<Mosque> mosques = [];
@@ -123,6 +123,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       throw Exception('Failed to fetch mosque');
     }
   }
+
 
   Future<Position> getCurrentLocation() async {
     // return Position(

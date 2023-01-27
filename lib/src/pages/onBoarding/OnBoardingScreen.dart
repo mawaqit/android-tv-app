@@ -49,7 +49,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       return Focus(
         autofocus: true,
         onKey: (FocusNode node, RawKeyEvent event) {
-          print(event.logicalKey);
+          // print(event.logicalKey);
 
           if (event.isKeyPressed(LogicalKeyboardKey.select) || event.isKeyPressed(LogicalKeyboardKey.enter)) {
             setState(() => currentScreen++);

@@ -82,7 +82,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
           startDate ?? DateTime.now(),
         ));
     bool isNoDate = activeAnnouncement.startDate == null || activeAnnouncement.endDate == null;
-    print("time$isAvailableTime");
+    // print("time$isAvailableTime");
     if (activeAnnouncement.content != null && (isAvailableTime || isNoDate)) {
       return textAnnouncement(activeAnnouncement.content!, activeAnnouncement.title);
     } else if (activeAnnouncement.image != null && (isAvailableTime || isNoDate)) {
