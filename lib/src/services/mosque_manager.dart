@@ -45,7 +45,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     await Api.init();
     await loadFromLocale();
     // subscribeToTime();
-    Future.delayed(Duration(milliseconds: 500)).then((value) => calculateActiveWorkflow());
 
     notifyListeners();
   }
@@ -57,6 +56,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       times = await Api.getMosqueTimes(uuid);
       mosqueConfig = await Api.getMosqueConfig(uuid);
       await loadWeather(mosque!);
+      calculateActiveWorkflow();
 
       // mosqueId = mosque!.id.toString();
       mosqueUUID = mosque!.uuid!;
@@ -86,6 +86,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       mosque = await Api.getMosque(mosqueUUID!);
       times = await Api.getMosqueTimes(mosqueUUID!);
       mosqueConfig = await Api.getMosqueConfig(mosqueUUID!);
+      calculateActiveWorkflow();
 
       // get weather data
       await loadWeather(mosque!);
@@ -123,7 +124,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       throw Exception('Failed to fetch mosque');
     }
   }
-
 
   Future<Position> getCurrentLocation() async {
     // return Position(

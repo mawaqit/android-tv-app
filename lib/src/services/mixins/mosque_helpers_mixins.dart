@@ -55,11 +55,12 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     notifyListeners();
   }
-  bool isDisableHadithBetweenSalah (){
-    if (mosqueConfig!.randomHadithIntervalDisabling!.trim().isNotEmpty){
-    final twoSalahIndex = mosqueConfig?.randomHadithIntervalDisabling!.split("-");
-    int firstSalahIndex = int.parse(twoSalahIndex!.first);
-    return salahIndex==firstSalahIndex ;
+
+  bool isDisableHadithBetweenSalah() {
+    if (mosqueConfig!.randomHadithIntervalDisabling!.trim().isNotEmpty) {
+      final twoSalahIndex = mosqueConfig?.randomHadithIntervalDisabling!.split("-");
+      int firstSalahIndex = int.parse(twoSalahIndex!.first);
+      return salahIndex == firstSalahIndex;
     }
     return false;
   }
@@ -241,7 +242,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// starting from before salah 5min until after the salah and azker
   bool salahWorkflow() {
     final now = mosqueDate();
-    //
+
     final lastIqamaIndex = (nextIqamaIndex() - 1) % 5;
     var lastIqamaTime = actualIqamaTimes()[lastIqamaIndex];
     if (lastIqamaTime.isAfter(now)) lastIqamaTime = lastIqamaTime.subtract(Duration(days: 1) * kTestDurationFactor);
@@ -251,13 +252,12 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       Duration(minutes: int.tryParse(salahDuration) ?? 0) + kAzkarDuration,
     );
 
-    // print(nextSalahAfter());
     if (nextSalahAfter() < Duration(minutes: 5)) return true;
 
     /// we are in time between salah and iqama
     if (nextSalahIndex() != nextIqamaIndex()) return true;
 
-    if (now.isBefore(salahAndAzkarEndTime)) return true;
+    if (now.isBefore(salahAndAzkarEndTime) && now.isAfter(lastIqamaTime)) return true;
 
     return false;
   }
