@@ -116,7 +116,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
             ),
           ],
         ),
-        Directionality(textDirection: TextDirection.ltr, child: Footer()),
+        // Directionality(textDirection: TextDirection.ltr, child: Footer()),
       ],
     ));
   }

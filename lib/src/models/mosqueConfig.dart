@@ -7,6 +7,8 @@ class MosqueConfig {
   final bool? duaAfterPrayerEnabled;
   final int? iqamaDisplayTime;
   final bool iqamaBip;
+  final bool showCityInTitle;
+  final bool showLogo;
   final String? backgroundColor;
   final bool? jumuaDhikrReminderEnabled;
   final int? jumuaTimeout;
@@ -60,6 +62,8 @@ class MosqueConfig {
     required this.iqamaFullScreenCountdown,
     required this.theme,
     required this.adhanEnabledByPrayer,
+    required this.showCityInTitle,
+    required this.showLogo,
   });
 
   @override
@@ -164,6 +168,8 @@ class MosqueConfig {
     bool? duaAfterPrayerEnabled,
     int? iqamaDisplayTime,
     bool? iqamaBip,
+    bool? showLogo,
+    bool? showCityInTitle,
     String? backgroundColor,
     bool? jumuaDhikrReminderEnabled,
     int? jumuaTimeout,
@@ -193,6 +199,8 @@ class MosqueConfig {
       duaAfterPrayerEnabled: duaAfterPrayerEnabled ?? this.duaAfterPrayerEnabled,
       iqamaDisplayTime: iqamaDisplayTime ?? this.iqamaDisplayTime,
       iqamaBip: iqamaBip ?? this.iqamaBip,
+      showLogo: showLogo ?? this.showLogo,
+      showCityInTitle: showCityInTitle ?? this.showCityInTitle,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       jumuaDhikrReminderEnabled: jumuaDhikrReminderEnabled ?? this.jumuaDhikrReminderEnabled,
       jumuaTimeout: jumuaTimeout ?? this.jumuaTimeout,
@@ -224,6 +232,7 @@ class MosqueConfig {
       'duaAfterPrayerEnabled': this.duaAfterPrayerEnabled,
       'iqamaDisplayTime': this.iqamaDisplayTime,
       'iqamaBip': this.iqamaBip,
+      'showCityInTitle': this.showCityInTitle,
       'backgroundColor': this.backgroundColor,
       'jumuaDhikrReminderEnabled': this.jumuaDhikrReminderEnabled,
       'jumuaTimeout': this.jumuaTimeout,
@@ -234,6 +243,7 @@ class MosqueConfig {
       'temperatureEnabled': this.temperatureEnabled,
       'temperatureUnit': this.temperatureUnit,
       'hadithLang': this.hadithLang,
+      'showLogo': this.showLogo,
       'iqamaEnabled': this.iqamaEnabled,
       'randomHadithIntervalDisabling': this.randomHadithIntervalDisabling,
       'adhanVoice': this.adhanVoice,
@@ -249,7 +259,7 @@ class MosqueConfig {
   }
 
   factory MosqueConfig.fromMap(Map<String, dynamic> map) {
-    debugPrint(map.toString(), wrapWidth: 500);
+    debugPrint(map.toString(),wrapWidth: 500);
     return MosqueConfig(
       duaAfterPrayerShowTimes: List.from(map["duaAfterPrayerShowTimes"]),
       hijriDateEnabled: map['hijriDateEnabled'],
@@ -272,6 +282,8 @@ class MosqueConfig {
       adhanVoice: map['adhanVoice'],
       adhanEnabledByPrayer: List.from(map['adhanEnabledByPrayer']),
       footer: map['footer'],
+      showLogo: map['showLogo'],
+      showCityInTitle: map['showCityInTitle'],
       iqamaMoreImportant: map['iqamaMoreImportant'] ?? false,
       timeDisplayFormat: map['timeDisplayFormat'],
       backgroundType: map['backgroundType'],

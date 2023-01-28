@@ -70,6 +70,22 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return nowInMinutes >= shuruqTimeInMinutes && nowInMinutes <= duhrTime;
   }
 
+  bool isShurukTime() {
+    return mosqueDate().isAfter(actualTimes()[0]) &&
+        mosqueDate().isBefore(times!.shuruq!.toTimeOfDay()!.toDate(mosqueDate()));
+  }
+
+  String getShurukInString(BuildContext context) {
+    final shurukTime = times!.shuruq!.toTimeOfDay()!.toDate(mosqueDate()).difference(mosqueDate());
+    print(shurukTime.inMinutes);
+    return [
+      "${S.of(context).shuruk} ${S.of(context).in1} ",
+      if (shurukTime.inMinutes > 0)
+        "${shurukTime.inHours.toString().padLeft(2, '0')}:${(shurukTime.inMinutes % 60).toString().padLeft(2, '0')}",
+      if (shurukTime.inMinutes == 0) "${(shurukTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+    ].join();
+  }
+
   /// show imsak between midnight and fajr
   bool get showImsak {
     final now = mosqueDate();
@@ -78,7 +94,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     return now.isAfter(midnight) && now.isBefore(fajrDate);
   }
-
+  bool get typeIsMosque {
+    return mosque?.type=="MOSQUE";
+  }
   bool get showEid {
     if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) {
       return false;
@@ -205,6 +223,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     );
 
     if (now.weekday != DateTime.friday) return false;
+    if (!typeIsMosque) return false ;
     if (jumuaaStartTime == null) return false;
 
     if (now.isBefore(jumuaaStartTime) || now.isAfter(jumuaaEndTime!)) return false;

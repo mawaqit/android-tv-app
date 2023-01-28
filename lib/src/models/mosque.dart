@@ -7,6 +7,7 @@ import 'announcement.dart';
 class Mosque {
   final int id;
   final String? uuid;
+  final String type ;
   final String name;
   final String label;
   final String? email;
@@ -41,6 +42,7 @@ class Mosque {
     required this.id,
     required this.uuid,
     required this.name,
+    required this.type,
     required this.label,
     required this.email,
     required this.phone,
@@ -167,6 +169,7 @@ class Mosque {
     String? uuid,
     String? name,
     String? label,
+    String? type,
     String? email,
     String? phone,
     String? url,
@@ -197,6 +200,7 @@ class Mosque {
       id: id ?? this.id,
       uuid: uuid ?? this.uuid,
       name: name ?? this.name,
+      type: name ?? this.type,
       label: label ?? this.label,
       email: email ?? this.email,
       phone: phone ?? this.phone,
@@ -234,6 +238,7 @@ class Mosque {
       'email': this.email,
       'phone': this.phone,
       'url': this.url,
+      'type': this.type,
       'image': this.image,
       'label': this.label,
       'logo': this.logo,
@@ -270,6 +275,7 @@ class Mosque {
       email: map['email'],
       phone: map['phone'],
       url: map['url'],
+      type: map['type'],
       image: map['image'],
       logo: map['logo'],
       countryCode: map['countryCode'],

@@ -4,6 +4,7 @@ import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class MosqueHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isArabic = context.read<AppLanguage>().isArabic();
+    final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     bool isOffline = connectionStatus == ConnectivityStatus.Offline;
     final tr = S.of(context);
@@ -53,14 +55,15 @@ class MosqueHeader extends StatelessWidget {
             ),
           ),
           Spacer(),
-          mosque.logo != null ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
+          mosque.logo != null && mosqueConfig!.showLogo ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
           SizedBox(width: 10),
           Container(
               constraints: BoxConstraints(maxWidth: 70.vw),
               child: FittedBox(
                 child: Row(
                   children: StringManager.convertStringToList(
-                    mosque.name,
+                    mosqueConfig!.showCityInTitle?
+                    mosque.name:mosque.name.split("-").first,
                   ).map((e) {
                        bool isArabicText = StringManager.arabicLetters.hasMatch(e)||StringManager.urduLetters.hasMatch(e);
                        return Text(
@@ -94,7 +97,7 @@ class MosqueHeader extends StatelessWidget {
               // ),
               ),
           SizedBox(width: 10),
-          mosque.logo != null ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
+          mosque.logo != null && mosqueConfig.showLogo ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
           Spacer(),
           WeatherWidget(),
         ],

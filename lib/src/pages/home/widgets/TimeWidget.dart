@@ -160,43 +160,46 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                 Expanded(
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
-                                    child: AnimatedTextKit(
-                                      key: ValueKey('122'),
-                                      isRepeatingAnimation: true,
-                                      repeatForever: true,
-                                      displayFullTextOnTap: true,
-                                      animatedTexts: [
-                                        FadeAnimatedText(
-                                          "${DateFormat(
-                                            "EEEE, MMM",
-                                            "${lang.appLocal}_${mosqueManager.mosque?.countryCode}",
-                                          ).format(now)} ${DateFormat("dd, yyyy", "en_US").format(now)}",
-                                          duration: Duration(seconds: 6),
-                                          fadeInEnd: 200 / 10000,
-                                          fadeOutBegin: 1,
-                                          textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 2.7.vw,
-                                            shadows: kHomeTextShadow,
-                                            // letterSpacing: 1,
-                                            height: .8,
-                                            fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                    child: Container(
+                                      // constraints: BoxConstraints(minWidth: 1, minHeight: 1),
+                                      child: AnimatedTextKit(
+                                        key: ValueKey('122'),
+                                        isRepeatingAnimation: true,
+                                        repeatForever: true,
+                                        displayFullTextOnTap: true,
+                                        animatedTexts: [
+                                          FadeAnimatedText(
+                                            "${DateFormat(
+                                              "EEEE, MMM",
+                                              "${lang.appLocal}_${mosqueManager.mosque?.countryCode}",
+                                            ).format(now)} ${DateFormat("dd, yyyy", "en_US").format(now)}",
+                                            duration: Duration(seconds: 6),
+                                            fadeInEnd: 200 / 10000,
+                                            fadeOutBegin: 1,
+                                            textStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 2.7.vw,
+                                              shadows: kHomeTextShadow,
+                                              // letterSpacing: 1,
+                                              height: .8,
+                                              fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                            ),
                                           ),
-                                        ),
-                                        FadeAnimatedText(
-                                          "${hijriDate.toFormat("yyyy").toEnglishDigit()} ${hijriDate.toFormat("MMMM")} ${hijriDate.toFormat("dd").toEnglishDigit()}",
-                                          duration: Duration(seconds: 4),
-                                          fadeInEnd: 200 / 4000,
-                                          fadeOutBegin: 1,
-                                          textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 2.5.vw,
-                                            shadows: kHomeTextShadow,
-                                            height: .8,
-                                            fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                          FadeAnimatedText(
+                                            "${hijriDate.toFormat("yyyy").toEnglishDigit()} ${hijriDate.toFormat("MMMM")} ${hijriDate.toFormat("dd").toEnglishDigit()}",
+                                            duration: Duration(seconds: 4),
+                                            fadeInEnd: 200 / 4000,
+                                            fadeOutBegin: 1,
+                                            textStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 2.5.vw,
+                                              shadows: kHomeTextShadow,
+                                              height: .8,
+                                              fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
