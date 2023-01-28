@@ -50,7 +50,7 @@ class AboveSalahBar extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: Colors.black.withOpacity(.7),
+                    color: mosqueManager.getColorTheme().withOpacity(.7),
                   ),
                   child: Text(
                     [
@@ -80,7 +80,7 @@ class AboveSalahBar extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: Colors.black.withOpacity(.7),
+                    color: mosqueManager.getColorTheme().withOpacity(.7),
                   ),
                   child: Directionality(
                     textDirection: TextDirection.ltr,

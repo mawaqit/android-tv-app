@@ -67,7 +67,7 @@ class Api {
 
       return mosques;
     } else {
-      print(response.data);
+
       // If that response was not OK, throw an error.
       throw Exception('Failed to fetch mosque');
     }

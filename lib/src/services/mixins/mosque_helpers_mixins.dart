@@ -55,6 +55,14 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     notifyListeners();
   }
+  bool isDisableHadithBetweenSalah (){
+    if (mosqueConfig!.randomHadithIntervalDisabling!.trim().isNotEmpty){
+    final twoSalahIndex = mosqueConfig?.randomHadithIntervalDisabling!.split("-");
+    int firstSalahIndex = int.parse(twoSalahIndex!.first);
+    return salahIndex==firstSalahIndex ;
+    }
+    return false;
+  }
 
   get salahIndex => (nextSalahIndex() - 1) % 5;
 
@@ -243,7 +251,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       Duration(minutes: int.tryParse(salahDuration) ?? 0) + kAzkarDuration,
     );
 
-    print(nextSalahAfter());
+    // print(nextSalahAfter());
     if (nextSalahAfter() < Duration(minutes: 5)) return true;
 
     /// we are in time between salah and iqama

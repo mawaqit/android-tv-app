@@ -44,7 +44,7 @@ class SalahItemWidget extends StatelessWidget {
     bool? isIqamaMoreImportant = mosqueConfig!.iqamaMoreImportant! && isIqamaEnabled!;
     final timeDate = time.toTimeOfDay()?.toDate();
     final iqamaDate = iqama?.toTimeOfDay()?.toDate();
-    print(isIqamaEnabled);
+    // print(isIqamaEnabled);
     final isArabic = context.read<AppLanguage>().isArabic();
 
     final is12period = mosqueConfig.timeDisplayFormat == "12";

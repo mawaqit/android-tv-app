@@ -202,7 +202,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                 if (Platform.isAndroid && ["intent"].contains(uri.scheme)) {
                   if (uri.toString().indexOf("maps") != -1) {
                     var link = uri.toString().substring(uri.toString().indexOf('?link=') + 6);
-                    print(link);
+                    // print(link);
                     AndroidIntent intent = AndroidIntent(action: 'action_view', data: link);
                     await intent.launch();
                   } else {
@@ -287,7 +287,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
         webViewController?.reload();
       } ),
       onWillPop: () async {
-        print('will pop');
+        // print('will pop');
         if (await webViewController?.canGoBack() == true) {
           setState(() {
             hasError = false;
@@ -538,7 +538,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
   }
 
   Future<bool> goBack() async {
-    print(await webViewController!.canGoBack());
+    // print(await webViewController!.canGoBack());
 
     if (webViewController != null) {
       if (await webViewController!.canGoBack()) {

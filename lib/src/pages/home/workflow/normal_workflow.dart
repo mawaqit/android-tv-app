@@ -49,9 +49,9 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
 
       if (beforeFajrTime.isBefore(mosqueManager.mosqueDate())) beforeFajrTime = beforeFajrTime.add(Duration(days: 1));
 
-      print(beforeFajrTime.difference(mosqueManager.mosqueDate()));
+      // print(beforeFajrTime.difference(mosqueManager.mosqueDate()));
 
-      print('register before fajr adhan in ${beforeFajrTime.difference(mosqueManager.mosqueDate())}');
+      // print('register before fajr adhan in ${beforeFajrTime.difference(mosqueManager.mosqueDate())}');
       beforeFajrFuture = Future.delayed(beforeFajrTime.difference(mosqueManager.mosqueDate()));
 
       beforeFajrFuture?.then((value) => showBeforeFajrAdhan());
@@ -112,7 +112,13 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
 
   @override
   void initState() {
-    randomHadithHandler();
+    final mosqueManager = context.read<MosqueManager>();
+    final mosqueConfig = mosqueManager.mosqueConfig;
+    if (mosqueConfig!.randomHadithEnabled) {
+       if (!mosqueManager.isDisableHadithBetweenSalah()||mosqueConfig.randomHadithIntervalDisabling!.isEmpty){
+        randomHadithHandler();
+       }
+    }
     announcementHandler();
     nextSalahHandler();
     beforeFajrWakeupHandler();

@@ -87,9 +87,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     return Column(
       children: [
         // title
-        SizedBox(
-          height: 2.vh,
-        ),
+        SizedBox(height: 2.vh,),
         AutoSizeText(title,
             stepGranularity: 12,
             textAlign: TextAlign.center,
