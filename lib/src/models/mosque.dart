@@ -14,6 +14,8 @@ class Mosque {
   final String? phone;
   final String? url;
   final String? image;
+  final String? interiorPicture;
+  final String? exteriorPicture;
   final String? logo;
   final String? site;
   final String? countryCode;
@@ -69,6 +71,8 @@ class Mosque {
     required this.flashMessage,
     required this.flash,
     required this.announcements,
+    required this.interiorPicture,
+    required this.exteriorPicture,
   });
 
   @override
@@ -174,6 +178,8 @@ class Mosque {
     String? phone,
     String? url,
     String? image,
+    String? interiorPicture,
+    String? exteriorPicture,
     String? logo,
     String? countryCode,
     String? site,
@@ -206,6 +212,8 @@ class Mosque {
       phone: phone ?? this.phone,
       url: url ?? this.url,
       image: image ?? this.image,
+      interiorPicture: interiorPicture ?? this.interiorPicture,
+      exteriorPicture: exteriorPicture ?? this.exteriorPicture,
       logo: logo ?? this.logo,
       countryCode: countryCode ?? this.countryCode,
       site: site ?? this.site,
@@ -242,6 +250,8 @@ class Mosque {
       'image': this.image,
       'label': this.label,
       'logo': this.logo,
+      'interiorPicture': this.interiorPicture,
+      'exteriorPicture': this.exteriorPicture,
       'countryCode': this.countryCode,
       'site': this.site,
       'association': this.association,
@@ -275,9 +285,11 @@ class Mosque {
       email: map['email'],
       phone: map['phone'],
       url: map['url'],
-      type: map['type'],
+      type: map["type"]==null?"MOSQUE":map['type'],
       image: map['image'],
       logo: map['logo'],
+      interiorPicture: map['interiorPicture'],
+      exteriorPicture: map['exteriorPicture'],
       countryCode: map['countryCode'],
       site: map['site'],
       association: map['association'],

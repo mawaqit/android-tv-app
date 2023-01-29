@@ -79,8 +79,12 @@ class OfflineHomeScreen extends StatelessWidget {
                     ))
                   : BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(
-                            "https://mawaqit.net/bundles/app/prayer-times/img/background/${mosqueConfig.backgroundMotif ?? 5}.jpg"),
+                        image: mosqueConfig.backgroundMotif == "0"
+                            ? NetworkImage(mosqueProvider.mosque?.exteriorPicture??"")
+                            : mosqueConfig.backgroundMotif == "-1"
+                                ? NetworkImage(mosqueProvider.mosque?.interiorPicture??"")
+                                : NetworkImage(
+                                    "https://mawaqit.net/bundles/app/prayer-times/img/background/${mosqueConfig.backgroundMotif ?? 5}.jpg"),
                         fit: BoxFit.cover,
                         onError: (exception, stackTrace) {},
                       ),

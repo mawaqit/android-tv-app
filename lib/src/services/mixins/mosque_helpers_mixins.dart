@@ -57,11 +57,13 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   bool isDisableHadithBetweenSalah() {
-    if (mosqueConfig!.randomHadithIntervalDisabling!.trim().isNotEmpty) {
+    if (mosqueConfig?.randomHadithIntervalDisabling !=null){
+    if (mosqueConfig!.randomHadithIntervalDisabling!.isNotEmpty ) {
       final twoSalahIndex = mosqueConfig?.randomHadithIntervalDisabling!.split("-");
       int firstSalahIndex = int.parse(twoSalahIndex!.first);
       return salahIndex == firstSalahIndex;
     }
+  }
     return false;
   }
 
