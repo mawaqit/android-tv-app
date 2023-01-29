@@ -7,6 +7,7 @@ import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
+import 'package:mawaqit/src/pages/home/widgets/offline_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
@@ -44,32 +45,7 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
           textDirection: TextDirection.ltr,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: .5.vh, horizontal: 1.vw),
-              child: Directionality(
-                textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircleAvatar(
-                      radius: .6.vw,
-                      backgroundColor: isOffline ? Colors.red[700] : Colors.green,
-                    ),
-                    SizedBox(width: .4.vw),
-                    Text(
-                      "${isOffline ? tr.offline : tr.online}",
-                      style: TextStyle(
-                          color: Colors.white,
-                          shadows: kHomeTextShadow,
-                          fontSize: 1.5.vw,
-                          height: 1.1,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: StringManager.getFontFamily(context)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            OfflineWidget(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 1.vw),
               child: WeatherWidget(),

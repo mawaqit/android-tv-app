@@ -162,7 +162,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Container(
-                                      // constraints: BoxConstraints(minWidth: 1, minHeight: 1),
+                                      constraints: BoxConstraints(minWidth: 1, minHeight: 1),
                                       child: AnimatedTextKit(
                                         key: ValueKey('122'),
                                         isRepeatingAnimation: true,

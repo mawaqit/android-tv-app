@@ -32,6 +32,10 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   Times? times;
   MosqueConfig? mosqueConfig;
 
+  StreamSubscription? _mosqueSubscription;
+  StreamSubscription? _timesSubscription;
+  StreamSubscription? _configSubscription;
+
   HomeActiveWorkflow workflow = HomeActiveWorkflow.normal;
 
   /// get current home url
@@ -52,17 +56,10 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   /// update mosque id in the app and shared preference
   Future<void> setMosqueUUid(String uuid) async {
     try {
-      mosque = await Api.getMosque(uuid);
-      times = await Api.getMosqueTimes(uuid);
-      mosqueConfig = await Api.getMosqueConfig(uuid);
-      await loadWeather(mosque!);
+      await fetchMosque(uuid);
       calculateActiveWorkflow();
 
-      // mosqueId = mosque!.id.toString();
-      mosqueUUID = mosque!.uuid!;
-
       _saveToLocale();
-      notifyListeners();
       // print("mosque url${mosque?.url}");
     } catch (e, stack) {
       debugPrintStack(stackTrace: stack);
@@ -78,19 +75,55 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   Future<void> loadFromLocale() async {
     // mosqueId = await sharedPref.read('mosqueId');
     mosqueUUID = await sharedPref.read('mosqueUUId');
-    if (mosqueUUID != null) await fetchMosque();
+    if (mosqueUUID != null) {
+      await fetchMosque(mosqueUUID!);
+      calculateActiveWorkflow();
+    }
   }
 
-  fetchMosque() async {
-    if (mosqueUUID != null) {
-      mosque = await Api.getMosque(mosqueUUID!);
-      times = await Api.getMosqueTimes(mosqueUUID!);
-      mosqueConfig = await Api.getMosqueConfig(mosqueUUID!);
-      calculateActiveWorkflow();
+  Future<void> fetchMosque(String uuid) async {
+    final completer = Completer();
 
-      // get weather data
-      await loadWeather(mosque!);
-    }
+    _mosqueSubscription?.cancel();
+    _timesSubscription?.cancel();
+    _configSubscription?.cancel();
+
+    bool isDone() => times != null && mosqueConfig != null && mosque != null && !completer.isCompleted;
+
+    /// if getting item returns an error
+    onItemError(e, d) {}
+
+    _mosqueSubscription = Api.getMosqueStream(uuid).listen((event) {
+      mosque = event;
+      loadWeather(mosque!);
+      notifyListeners();
+
+      if (isDone()) completer.complete();
+    }, onError: (e, stack) {
+      if (mosque == null && !completer.isCompleted) completer.completeError(e, stack);
+    });
+
+    _timesSubscription = Api.getMosqueTimesStream(uuid).listen((event) {
+      times = event;
+      notifyListeners();
+
+      if (isDone()) completer.complete();
+    }, onError: (e, stack) {
+      if (times == null && !completer.isCompleted) completer.completeError(e, stack);
+    });
+
+    _configSubscription = Api.getMosqueConfigStream(uuid).listen((event) {
+      mosqueConfig = event;
+      notifyListeners();
+
+      if (isDone()) completer.complete();
+    }, onError: (e, stack) {
+      if (mosqueConfig == null && !completer.isCompleted) completer.completeError(e, stack);
+    });
+
+    mosqueUUID = uuid;
+
+    return completer.future;
   }
 
   Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async => Api.searchMosques(mosque, page: page);

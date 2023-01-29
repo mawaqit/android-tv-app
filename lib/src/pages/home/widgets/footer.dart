@@ -54,6 +54,7 @@ class Footer extends StatelessWidget {
                 SizedBox(height: .5.vh),
                 Image.network(
                   'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
+                  errorBuilder: (context, error, stackTrace) => SizedBox(),
                   width: 5.vw,
                   height: 5.vw,
                 ),
