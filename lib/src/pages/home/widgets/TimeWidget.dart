@@ -102,6 +102,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                   children: [
                     //clock timer
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           DateFormat(
