@@ -39,7 +39,7 @@ class WeatherWidget extends StatelessWidget {
               "$temperature",
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontSize: 3.vw,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w700,
                     color: HexColor(mosqueManager.getColorFeeling()),
                 shadows: kHomeTextShadow
                   ),
@@ -47,7 +47,7 @@ class WeatherWidget extends StatelessWidget {
             Text(
               "°$temperatureUnit",
               style: TextStyle(
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w700,
                 height: 1,
                 color: HexColor(mosqueManager.getColorFeeling()),
                 fontSize: 2.4.vw,
