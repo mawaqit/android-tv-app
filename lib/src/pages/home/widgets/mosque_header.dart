@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
-import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
+import 'package:mawaqit/src/pages/home/widgets/offline_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
-import '../../../enum/connectivity_status.dart';
 import '../../../helpers/StringUtils.dart';
 
 class MosqueHeader extends StatelessWidget {
@@ -18,67 +17,43 @@ class MosqueHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = context.read<AppLanguage>().isArabic();
-    final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
-    var connectionStatus = Provider.of<ConnectivityStatus>(context);
-    bool isOffline = connectionStatus == ConnectivityStatus.Offline;
+    final mosqueManger = context.watch<MosqueManager>();
+
+    final mosqueConfig = mosqueManger.mosqueConfig;
+
     final tr = S.of(context);
     return Padding(
       padding: EdgeInsets.only(top: 1.8.vh, left: .8.vw, right: .8.vw),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: .5.vh, horizontal: .35.vw),
-            child: Directionality(
-              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    radius: .6.vw,
-                    backgroundColor: isOffline ? Colors.red[700] : Colors.green,
-                  ),
-                  SizedBox(width: .4.vw),
-                  Text(
-                    "${isOffline ? tr.offline : tr.online}",
-                    style: TextStyle(
-                        color: Colors.white,
-                        shadows: kHomeTextShadow,
-                        fontSize: 1.5.vw,
-                        height: 1.1,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: StringManager.getFontFamily(context)),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          OfflineWidget(),
           Spacer(),
-          mosque.logo != null && mosqueConfig!.showLogo ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
+          mosque.logo != null && mosqueConfig!.showLogo
+              ? Image.network(mosque.logo!, width: 40, height: 40)
+              : SizedBox(),
           SizedBox(width: 10),
           Container(
               constraints: BoxConstraints(maxWidth: 70.vw),
               child: FittedBox(
                 child: Row(
                   children: StringManager.convertStringToList(
-                    mosqueConfig!.showCityInTitle?
-                    mosque.name:mosque.name.substring(0,mosque.name.lastIndexOf("-")),
+                    mosqueConfig!.showCityInTitle
+                        ? mosque.name
+                        : mosque.name.substring(0, mosque.name.lastIndexOf("-")),
                   ).map((e) {
-                       bool isArabicText = StringManager.arabicLetters.hasMatch(e)||StringManager.urduLetters.hasMatch(e);
-                       return Text(
-                         "$e ",
-                         style: TextStyle(
-                             color: Colors.white,
-                             fontSize: 4.vw,
-                             height:isArabicText? 1.2:1,
-                             shadows: kIqamaCountDownTextShadow,
-                             fontWeight: FontWeight.bold,
-                             fontFamily:isArabicText?StringManager.fontFamilyKufi:null
-                         ),
-                       );
-
-
+                    bool isArabicText =
+                        StringManager.arabicLetters.hasMatch(e) || StringManager.urduLetters.hasMatch(e);
+                    return Text(
+                      "$e ",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 4.vw,
+                          height: isArabicText ? 1.2 : 1,
+                          shadows: kIqamaCountDownTextShadow,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: isArabicText ? StringManager.fontFamilyKufi : null),
+                    );
                   }).toList(),
                 ),
               )
@@ -97,7 +72,9 @@ class MosqueHeader extends StatelessWidget {
               // ),
               ),
           SizedBox(width: 10),
-          mosque.logo != null && mosqueConfig.showLogo ? Image.network(mosque.logo!, width: 40, height: 40) : SizedBox(),
+          mosque.logo != null && mosqueConfig.showLogo
+              ? Image.network(mosque.logo!, width: 40, height: 40)
+              : SizedBox(),
           Spacer(),
           WeatherWidget(),
         ],

@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import '../../../themes/UIShadows.dart';
 import '../widgets/SalahTimesBar.dart';
-import '../widgets/footer.dart';
 import '../widgets/mosque_header.dart';
 
 class AdhanSubScreen extends StatefulWidget {
