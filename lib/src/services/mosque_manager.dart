@@ -28,6 +28,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   // String? mosqueId;
   String? mosqueUUID;
 
+  bool get loaded => mosque != null && times != null && mosqueConfig != null;
+
   Mosque? mosque;
   Times? times;
   MosqueConfig? mosqueConfig;

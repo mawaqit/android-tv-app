@@ -156,9 +156,9 @@ class MawaqitDrawer extends StatelessWidget {
                 if (settings.tabNavigationEnable == "1") {
                   AppRouter.popAndPush(WebScreen(settings.url), name: 'HomeScreen');
                 } else {
-                  goHome();
-
                   Navigator.pop(context);
+
+                  goHome();
                 }
               }),
           _renderMenuDrawer(settings, context),

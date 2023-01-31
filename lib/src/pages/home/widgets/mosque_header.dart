@@ -38,9 +38,7 @@ class MosqueHeader extends StatelessWidget {
               child: FittedBox(
                 child: Row(
                   children: StringManager.convertStringToList(
-                    mosqueConfig!.showCityInTitle
-                        ? mosque.name
-                        : mosque.name.substring(0, mosque.name.lastIndexOf("-")),
+                    mosqueConfig!.showCityInTitle ? mosque.name : mosque.name.split('-').first,
                   ).map((e) {
                     bool isArabicText =
                         StringManager.arabicLetters.hasMatch(e) || StringManager.urduLetters.hasMatch(e);
