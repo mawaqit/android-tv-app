@@ -83,7 +83,7 @@ class AboveSalahBar extends StatelessWidget {
                     color: mosqueManager.getColorTheme().withOpacity(.7),
                   ),
                   child: Directionality(
-                    textDirection: TextDirection.ltr,
+                    textDirection: isArabic?TextDirection.rtl:TextDirection.ltr,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -96,6 +96,7 @@ class AboveSalahBar extends StatelessWidget {
                               color: Colors.white,
                               fontWeight: FontWeight.bold),
                         ),
+                        SizedBox(width: isArabic?5:0,),
                         if (is12Hours)
                           SizedBox(
                             width: 2.6.vw,
