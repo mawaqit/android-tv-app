@@ -38,61 +38,66 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
     return FittedBox(
       fit: BoxFit.scaleDown,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            kTitleArabic,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
-                color: Colors.white,
-                shadows: kAfterAdhanTextShadow,
-                fontFamily: StringManager.fontFamilyKufi),
-          ),
-          SizedBox(
-            width: 110.vw,
-            child: Text(
-              kHadithArabic,
-              textAlign: TextAlign.center,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              kTitleArabic,
               style: TextStyle(
-                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 62,
                   color: Colors.white,
                   shadows: kAfterAdhanTextShadow,
                   fontFamily: StringManager.fontFamilyKufi),
             ),
-          ),
-          if (Localizations.localeOf(context).languageCode != 'ar') ...[
-            Text(
-              S.of(context).afterSalahHadithTitle,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
-                color: Colors.white,
-                shadows: kIqamaCountDownTextShadow,
-              ),
-            ),
             SizedBox(
-              width: 110.vw,
+              width: isArabic?110.vw:200.vw,
               child: Text(
-                S.of(context).afterSalahHadith,
+                kHadithArabic,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 36,
-                    wordSpacing: 2,
+                    fontSize: 62,
                     color: Colors.white,
-                    shadows: kIqamaCountDownTextShadow,
+                    shadows: kAfterAdhanTextShadow,
+                    fontFamily: StringManager.fontFamilyKufi),
+              ),
+            ),
+            if (Localizations.localeOf(context).languageCode != 'ar') ...[
+              Text(
+                S.of(context).afterSalahHadithTitle,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 62,
+                  color: Colors.white,
+                  shadows: kIqamaCountDownTextShadow,
                 ),
               ),
+              SizedBox(
+                width: 200.vw,
+                child: Text(
+                  S.of(context).afterSalahHadith,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 62,
+                      wordSpacing: 2,
+                      color: Colors.white,
+                      shadows: kIqamaCountDownTextShadow,
+                  ),
+                ),
 
-            ),
-            SizedBox(
-              height: 2.5.vh,
-            )
-          ]
-        ],
+              ),
+              SizedBox(
+                height: 2.5.vh,
+              )
+            ]
+          ],
+        ),
       ),
     );
   }
