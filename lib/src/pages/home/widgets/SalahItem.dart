@@ -64,7 +64,7 @@ class SalahItemWidget extends StatelessWidget {
           ? EdgeInsets.only(bottom: 1.vh, right: 1.vw, left: 1.vw)
           : EdgeInsets.symmetric(vertical: 1.6.vh, horizontal: 1.vw),
       child: Directionality(
-        textDirection: TextDirection.ltr,
+        textDirection: isArabic?TextDirection.rtl:TextDirection.ltr,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

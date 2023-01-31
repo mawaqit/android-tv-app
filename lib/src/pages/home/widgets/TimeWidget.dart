@@ -103,6 +103,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                     //clock timer
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           DateFormat(
@@ -135,15 +136,21 @@ class HomeTimeWidget extends TimerRefreshWidget {
                             if (is12hourFormat)
                               Padding(
                                 padding: EdgeInsets.only(bottom: .6.vh, left: .9.vw),
-                                child: Text(
-                                  '${DateFormat('a', "en").format(now)}',
-                                  style: TextStyle(
-                                    color: Colors.white54,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 3.2.vw,
-                                    shadows: kHomeTextShadow,
-                                    height: .9,
-                                    // letterSpacing: 1.vw,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: 8.vw,),
+                                  child: FittedBox(
+                                    child: Text(
+                                      '${DateFormat('a').format(now)}',
+                                      style: TextStyle(
+                                        color: Colors.white54,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 3.2.vw,
+                                        shadows: kHomeTextShadow,
+                                        height: .9,
+
+                                        // letterSpacing: 1.vw,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
