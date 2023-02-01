@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -30,7 +31,11 @@ class MosqueHeader extends StatelessWidget {
           OfflineWidget(),
           Spacer(),
           mosque.logo != null && mosqueConfig!.showLogo
-              ? Image.network(mosque.logo!, width: 40, height: 40)
+              ? CachedNetworkImage(
+                  imageUrl: mosque.logo!,
+                  width: 40,
+                  height: 40,
+                )
               : SizedBox(),
           SizedBox(width: 10),
           Container(
@@ -38,10 +43,13 @@ class MosqueHeader extends StatelessWidget {
               child: FittedBox(
                 child: Row(
                   children: StringManager.convertStringToList(
-                    mosqueConfig!.showCityInTitle ? mosque.name : mosque.name.split('-').first,
+                    mosqueConfig!.showCityInTitle
+                        ? mosque.name
+                        : mosque.name.split('-').first,
                   ).map((e) {
                     bool isArabicText =
-                        StringManager.arabicLetters.hasMatch(e) || StringManager.urduLetters.hasMatch(e);
+                        StringManager.arabicLetters.hasMatch(e) ||
+                            StringManager.urduLetters.hasMatch(e);
                     return Text(
                       "$e ",
                       style: TextStyle(
@@ -50,7 +58,9 @@ class MosqueHeader extends StatelessWidget {
                           height: isArabicText ? 1.2 : 1,
                           shadows: kIqamaCountDownTextShadow,
                           fontWeight: FontWeight.bold,
-                          fontFamily: isArabicText ? StringManager.fontFamilyKufi : null),
+                          fontFamily: isArabicText
+                              ? StringManager.fontFamilyKufi
+                              : null),
                     );
                   }).toList(),
                 ),
@@ -71,7 +81,11 @@ class MosqueHeader extends StatelessWidget {
               ),
           SizedBox(width: 10),
           mosque.logo != null && mosqueConfig.showLogo
-              ? Image.network(mosque.logo!, width: 40, height: 40)
+              ? CachedNetworkImage(
+                  imageUrl: mosque.logo!,
+                  width: 40,
+                  height: 40,
+                )
               : SizedBox(),
           Spacer(),
           WeatherWidget(),

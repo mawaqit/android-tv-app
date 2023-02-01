@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/announcement.dart';
@@ -34,13 +35,15 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     final announcements = context.read<MosqueManager>().activeAnnouncements;
 
     //todo test this
-    if (announcements.isEmpty) Future.delayed(Duration(milliseconds: 0), widget.onDone);
+    if (announcements.isEmpty)
+      Future.delayed(Duration(milliseconds: 0), widget.onDone);
 
     activeAnnouncement = announcements[widget.index % announcements.length];
 
     if (activeAnnouncement.video == null) {
       Future.delayed(
-        Duration(seconds: activeAnnouncement.duration ?? 30) * kTestDurationFactor,
+        Duration(seconds: activeAnnouncement.duration ?? 30) *
+            kTestDurationFactor,
         widget.onDone,
       );
     }
@@ -73,7 +76,8 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   Widget announcementWidgets() {
     if (activeAnnouncement.content != null) {
-      return textAnnouncement(activeAnnouncement.content!, activeAnnouncement.title);
+      return textAnnouncement(
+          activeAnnouncement.content!, activeAnnouncement.title);
     } else if (activeAnnouncement.image != null) {
       return imageAnnouncement(activeAnnouncement.image!);
     } else if (activeAnnouncement.video != null) {
@@ -87,7 +91,9 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     return Column(
       children: [
         // title
-        SizedBox(height: 2.vh,),
+        SizedBox(
+          height: 2.vh,
+        ),
         AutoSizeText(title,
             stepGranularity: 12,
             textAlign: TextAlign.center,
@@ -119,8 +125,8 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   }
 
   Widget imageAnnouncement(String image) {
-    return Image.network(
-      image,
+    return CachedNetworkImage(
+      imageUrl: image,
       fit: BoxFit.cover,
     );
   }

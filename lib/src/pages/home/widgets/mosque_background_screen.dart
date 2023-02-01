@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -42,10 +43,10 @@ class MosqueBackgroundScreen extends StatelessWidget {
                 : BoxDecoration(
                     image: DecorationImage(
                       image: mosqueConfig.backgroundMotif == "0"
-                          ? NetworkImage(mosqueProvider.mosque?.exteriorPicture ?? "")
+                          ? CachedNetworkImageProvider(mosqueProvider.mosque?.exteriorPicture ?? "")
                           : mosqueConfig.backgroundMotif == "-1"
-                              ? NetworkImage(mosqueProvider.mosque?.interiorPicture ?? "")
-                              : NetworkImage(
+                              ? CachedNetworkImageProvider(mosqueProvider.mosque?.interiorPicture ?? "")
+                              : CachedNetworkImageProvider(
                                   "https://mawaqit.net/bundles/app/prayer-times/img/background/${mosqueConfig.backgroundMotif ?? 5}.jpg"),
                       fit: BoxFit.cover,
                       onError: (exception, stackTrace) {},

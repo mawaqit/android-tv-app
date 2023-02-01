@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -28,10 +29,13 @@ class Footer extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),
             width: double.infinity,
-            color: mosque?.flash?.content.isEmpty != false ? null : Colors.black38,
+            color:
+                mosque?.flash?.content.isEmpty != false ? null : Colors.black38,
             child: SizedBox(
               height: 5.vw,
-              child: Directionality(textDirection: isLTR ? TextDirection.ltr : TextDirection.rtl, child: FlashWidget()),
+              child: Directionality(
+                  textDirection: isLTR ? TextDirection.ltr : TextDirection.rtl,
+                  child: FlashWidget()),
             ),
           ),
         Align(
@@ -52,9 +56,10 @@ class Footer extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: .5.vh),
-                Image.network(
-                  'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
-                  errorBuilder: (context, error, stackTrace) => SizedBox(),
+                CachedNetworkImage(
+                  imageUrl:
+                      'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
+                  errorWidget: (context, url, error) => SizedBox(),
                   width: 5.vw,
                   height: 5.vw,
                 ),

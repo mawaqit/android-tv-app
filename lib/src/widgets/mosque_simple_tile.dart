@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 
@@ -51,7 +52,7 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(backgroundImage: NetworkImage(widget.mosque.image ?? ''), radius: 32),
+                  child: CircleAvatar(backgroundImage: CachedNetworkImageProvider(widget.mosque.image ?? ''), radius: 32),
                 ),
                 SizedBox(width: 8),
                 Column(
