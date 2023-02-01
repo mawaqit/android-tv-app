@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
@@ -45,7 +46,7 @@ class TestSubScreens extends StatelessWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: mosque.image != null
-                    ? NetworkImage(mosque.image!) as ImageProvider
+                    ? CachedNetworkImageProvider(mosque.image!) as ImageProvider
                     : AssetImage('assets/backgrounds/splash_screen_5.png'),
                 fit: BoxFit.cover,
               ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class SocialItem extends StatelessWidget {
@@ -31,8 +32,8 @@ class SocialItem extends StatelessWidget {
   Widget _renderIcon(String? iconUrl, IconData icon) {
     return Container(
       child: iconUrl != null && iconUrl != ""
-          ? Image.network(
-              iconUrl,
+          ? CachedNetworkImage(
+              imageUrl: iconUrl,
               width: 20,
               height: 20,
             )
