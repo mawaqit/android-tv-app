@@ -45,11 +45,12 @@ class MosqueHeader extends StatelessWidget {
                   children: StringManager.convertStringToList(
                     mosqueConfig!.showCityInTitle
                         ? mosque.name
-                        : mosque.name.split('-').first,
+                        : mosque.name.contains("-")
+                            ? mosque.name.substring(0, mosque.name.lastIndexOf("-"))
+                            : mosque.name,
                   ).map((e) {
                     bool isArabicText =
-                        StringManager.arabicLetters.hasMatch(e) ||
-                            StringManager.urduLetters.hasMatch(e);
+                        StringManager.arabicLetters.hasMatch(e) || StringManager.urduLetters.hasMatch(e);
                     return Text(
                       "$e ",
                       style: TextStyle(
@@ -58,9 +59,7 @@ class MosqueHeader extends StatelessWidget {
                           height: isArabicText ? 1.2 : 1,
                           shadows: kIqamaCountDownTextShadow,
                           fontWeight: FontWeight.bold,
-                          fontFamily: isArabicText
-                              ? StringManager.fontFamilyKufi
-                              : null),
+                          fontFamily: isArabicText ? StringManager.fontFamilyKufi : null),
                     );
                   }).toList(),
                 ),
