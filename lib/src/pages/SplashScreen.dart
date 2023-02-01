@@ -1,10 +1,17 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
+import 'package:mawaqit/src/helpers/HttpOverrides.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/settings.dart';
@@ -31,6 +38,33 @@ class _SplashScreen extends State<Splash> {
 
   // bool applicationProblem = false;
 
+  Future<void> initApplicationUI() async {
+    await GlobalConfiguration().loadFromAsset("configuration");
+    Wakelock.enable().catchError((e) {});
+
+    initHive();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
+
+    HttpOverrides.global = MyHttpOverrides();
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
+
+    // hide status bar
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
+      if (systemOverlaysAreVisible) return;
+      await Future.delayed(Duration(seconds: 3));
+      SystemChrome.restoreSystemUIOverlays();
+    });
+  }
+
   Future<Settings> _initSettings() async {
     await context.read<AppLanguage>().fetchLocale();
     await context.read<MosqueManager>().init();
@@ -49,8 +83,7 @@ class _SplashScreen extends State<Splash> {
   /// navigates to first screen
   void _navigateToHome() async {
     try {
-      Wakelock.enable().catchError((e) {});
-
+      await initApplicationUI();
       var settings = await _initSettings();
       var goBoarding = await loadBoarding();
       var mosqueManager = context.read<MosqueManager>();
