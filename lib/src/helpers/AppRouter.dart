@@ -36,8 +36,9 @@ class AppRouter {
 
   static void pop<T>([T? results]) => navigationKey.currentState!.pop(results);
 
-  static Route<T> _buildRoute<T>(Widget screen, {String? name}) =>
-      PageTransition<T>(
+  static void popAll<T>([T? results]) => navigationKey.currentState!.popUntil((route) => route.isFirst);
+
+  static Route<T> _buildRoute<T>(Widget screen, {String? name}) => PageTransition<T>(
         child: screen,
         type: _pageTransitionAnimation,
         settings: RouteSettings(name: name ?? screen.runtimeType.toString()),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -21,8 +22,7 @@ class MosqueBackgroundScreen extends StatelessWidget {
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
 
-    if (mosqueProvider.mosque == null || mosqueProvider.times == null || mosqueProvider.mosqueConfig == null)
-      return SizedBox();
+    if (!mosqueProvider.loaded) return SizedBox();
 
     return CallbackShortcuts(
       bindings: {
@@ -33,24 +33,25 @@ class MosqueBackgroundScreen extends StatelessWidget {
         autofocus: true,
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: MawaqitDrawer(goHome: () => Navigator.pop(context)),
+          drawer: MawaqitDrawer(goHome: () => AppRouter.popAll()),
           body: Container(
             width: double.infinity,
             height: double.infinity,
             decoration: mosqueConfig!.backgroundType == "color"
-                ? BoxDecoration(
-                    color: HexColor(
-                    mosqueConfig.backgroundColor,
-                  ))
+                ? BoxDecoration(color: HexColor(mosqueConfig.backgroundColor))
                 : BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(
-                          "https://mawaqit.net/bundles/app/prayer-times/img/background/${mosqueConfig.backgroundMotif ?? 5}.jpg"),
+                      image: mosqueConfig.backgroundMotif == "0"
+                          ? NetworkImage(mosqueProvider.mosque?.exteriorPicture ?? "")
+                          : mosqueConfig.backgroundMotif == "-1"
+                              ? NetworkImage(mosqueProvider.mosque?.interiorPicture ?? "")
+                              : NetworkImage(
+                                  "https://mawaqit.net/bundles/app/prayer-times/img/background/${mosqueConfig.backgroundMotif ?? 5}.jpg"),
                       fit: BoxFit.cover,
                       onError: (exception, stackTrace) {},
                     ),
                   ),
-            child: child,
+            child: Container(child: child),
           ),
         ),
       ),
