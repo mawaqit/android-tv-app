@@ -32,14 +32,14 @@ class StringManager {
   static const fontFamilyHelvetica = "helvetica";
 
   static String? getFontFamilyByString(String value) {
-    if (arabicLetters.hasMatch(value) || urduLetters.hasMatch(value)) {
+    if (value.isArabic() || value.isUrdu()) {
       return fontFamilyKufi;
     }
 
     return null;
   }
 
-  @Deprecated('user [StringManager.getFontFamilyByString]')
+  @Deprecated('user [StringManager.getFontFamilyByString] or anyString.isArabic')
   static String? getFontFamily(BuildContext context) {
     String langCode = "${context.read<AppLanguage>().appLocal}";
     if (langCode == "ar" || langCode == "ur") {
@@ -63,5 +63,15 @@ class StringManager {
     list.replaceRange(arabicIndexes.first, arabicIndexes.last + 1, sublist);
 
     return list;
+  }
+}
+
+extension StringConversion on String {
+  bool isArabic() {
+    return RegExp("[\u0600-\u06FF]").hasMatch(this);
+  }
+
+  bool isUrdu() {
+    return RegExp(r'[\u0600-\u06ff]+').hasMatch(this);
   }
 }

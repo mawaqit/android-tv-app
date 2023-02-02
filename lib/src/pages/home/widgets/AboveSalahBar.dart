@@ -19,6 +19,7 @@ class AboveSalahBar extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final mosqueManager = context.watch<MosqueManager>();
     final is12Hours = mosqueManager.mosqueConfig?.timeDisplayFormat == "12";
+
     return StreamBuilder(
         stream: Stream.periodic(Duration(seconds: 1)),
         builder: (context, snapshot) {
@@ -31,7 +32,13 @@ class AboveSalahBar extends StatelessWidget {
           if (nextSalahTime < Duration.zero) {
             nextSalahTime = nextSalahTime + Duration(days: 1);
           }
-
+          String countDownText = [
+            "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
+            if (nextSalahTime.inMinutes > 0)
+              "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
+            if (nextSalahTime.inMinutes == 0)
+              "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+          ].join();
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: (size.width - 5 * kSalahItemWidgetWidth) / 8, vertical: 5),
             child: Row(
@@ -53,18 +60,12 @@ class AboveSalahBar extends StatelessWidget {
                     color: mosqueManager.getColorTheme().withOpacity(.7),
                   ),
                   child: Text(
-                    [
-                      "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
-                      if (nextSalahTime.inMinutes > 0)
-                        "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
-                      if (nextSalahTime.inMinutes == 0)
-                        "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
-                    ].join(),
+                    countDownText,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: Colors.white,
                       shadows: kHomeTextShadow,
                       fontSize: isArabic ? 5.3.vh : 6.vh,
-                      fontFamily: StringManager.getFontFamily(context),
+                      fontFamily: StringManager.getFontFamilyByString(countDownText),
                     ),
                   ),
                 ),

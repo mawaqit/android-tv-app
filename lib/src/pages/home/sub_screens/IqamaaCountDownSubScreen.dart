@@ -56,13 +56,13 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
           children: [
             SizedBox(height: isArabic ? 1.vh : 4.vh),
             Text(
-              S.of(context).iqamaIn,
+              tr.iqamaIn,
               style: TextStyle(
                   fontSize: 7.vw,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   shadows: kIqamaCountDownTextShadow,
-                  fontFamily: StringManager.getFontFamily(context)),
+                  fontFamily: StringManager.getFontFamilyByString(tr.iqamaIn)),
             ),
             Expanded(
               child: StreamBuilder(

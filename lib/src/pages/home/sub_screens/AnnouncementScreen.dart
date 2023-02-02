@@ -101,7 +101,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                 shadows: kAnnouncementTextShadow,
                 fontSize: 62,
                 fontWeight: FontWeight.bold,
-                fontFamily: StringManager.getFontFamily(context),
+                fontFamily: StringManager.getFontFamilyByString(title),
                 color: Colors.amber,
                 letterSpacing: 1)),
         // content
@@ -116,7 +116,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                   shadows: kAnnouncementTextShadow,
                   fontSize: 62,
                   fontWeight: FontWeight.bold,
-                  fontFamily: StringManager.getFontFamily(context),
+                  fontFamily: StringManager.getFontFamilyByString(content),
                   color: Colors.white,
                   letterSpacing: 1)),
         ),

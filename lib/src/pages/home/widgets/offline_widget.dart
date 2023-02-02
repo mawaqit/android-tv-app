@@ -35,7 +35,7 @@ class _OfflineWidgetState extends State<OfflineWidget> {
   @override
   Widget build(BuildContext context) {
     final tr = S.of(context);
-
+    final concText = isOffline ? tr.offline : tr.online;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: .5.vh, horizontal: .35.vw),
       child: Row(
@@ -48,14 +48,14 @@ class _OfflineWidgetState extends State<OfflineWidget> {
           ),
           SizedBox(width: .4.vw),
           Text(
-            "${isOffline ? tr.offline : tr.online}",
+            "$concText",
             style: TextStyle(
                 color: Colors.white,
                 shadows: kHomeTextShadow,
                 fontSize: 1.5.vw,
                 height: 1.1,
                 fontWeight: FontWeight.w400,
-                fontFamily: StringManager.getFontFamily(context)),
+                fontFamily: StringManager.getFontFamilyByString(concText)),
           ),
         ],
       ),

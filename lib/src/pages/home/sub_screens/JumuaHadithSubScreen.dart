@@ -17,7 +17,8 @@ class JumuaHadithSubScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-    final jumuaTimeStartedAr = S.of(context).jumuaaScreenTitle;
+    final tr =S.of(context);
+    final jumuaTimeStartedAr = tr.jumuaaScreenTitle;
     final jumuaHadith =
         'عَنْ أَبِي هُرَيْرَةَ قَالَ قَالَ رَسُولُ اللَّهِ صَلَّى اللَّه عَلَيْهِ وَسَلَّمَ مَنْ تَوَضَّأَ فَأَحْسَنَ الْوُضُوءَ ثُمَّ أَتَى الْجُمُعَةَ فَاسْتَمَعَ وَأَنْصَتَ غُفِرَ لَهُ مَا بَيْنَهُ وَبَيْنَ الْجُمُعَةِ وَزِيَادَةُ ثَلاثَةِ أَيَّامٍ وَمَنْ مَسَّ الْحَصَى فَقَدْ لَغَا';
     if (mosqueConfig!.jumuaDhikrReminderEnabled!) {
@@ -30,7 +31,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 4.vw,
                 fontWeight: FontWeight.bold,
-                fontFamily: StringManager.getFontFamily(context),
+                fontFamily: StringManager.getFontFamilyByString(jumuaTimeStartedAr),
                 color: Colors.white,
                 shadows: kAfterAdhanTextShadow
               ),
@@ -60,7 +61,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: AutoSizeText(
-                  S.of(context).jumuaaHadith,
+                  tr.jumuaaHadith,
                   minFontSize: 24,
                   stepGranularity: 12,
 
@@ -69,7 +70,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     fontSize: 3.vw,
-                    fontFamily: StringManager.getFontFamily(context),
+                    fontFamily: StringManager.getFontFamilyByString(tr.jumuaaHadith),
                       shadows: kAfterAdhanTextShadow
 
                   ),

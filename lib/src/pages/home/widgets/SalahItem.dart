@@ -72,12 +72,12 @@ class SalahItemWidget extends StatelessWidget {
               FittedBox(
                 child: Text(
                   maxLines: 1,
-                  title!,
+                  title??"",
                   style: TextStyle(
                       fontSize: 3.vw,
                       shadows: kHomeTextShadow,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamily(context)),
+                      fontFamily: StringManager.getFontFamilyByString(title??"")),
                 ),
               ),
             SizedBox(height: isArabic ? 0.1.vh : 1.vh),

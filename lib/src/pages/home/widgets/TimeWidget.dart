@@ -235,7 +235,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                             ),
                                           ),
                                           FadeAnimatedText(
-                                            "${isArabicLang ? hijriDate.toFormat("DD ") : ""}${hijriDate.toFormat("dd").toEnglishDigit()} ${hijriDate.toFormat("MMMM")} ${hijriDate.toFormat("yyyy").toEnglishDigit()} ",
+                                            "${hijriDate.toFormat("DD ")}${hijriDate.toFormat("dd").toEnglishDigit()} ${hijriDate.toFormat("MMMM")} ${hijriDate.toFormat("yyyy").toEnglishDigit()} ",
                                             duration: Duration(seconds: 4),
                                             fadeInEnd: 200 / 4000,
                                             fadeOutBegin: 1,
