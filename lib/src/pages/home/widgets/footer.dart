@@ -24,7 +24,7 @@ class Footer extends StatelessWidget {
       clipBehavior: Clip.none,
       alignment: Alignment.bottomCenter,
       children: [
-        if (mosqueConfig!.footer!) MosqueInformationWidget(),
+        if (mosqueConfig!.footer! && mosque?.flashMessage ==null) MosqueInformationWidget(),
         if (mosqueConfig.footer!)
           Container(
             padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),
