@@ -32,7 +32,6 @@ class NormalHomeSubScreen extends StatelessWidget {
               child: Directionality(
                 textDirection: TextDirection.ltr,
                 child: Row(
-                  crossAxisAlignment: isArabic ? CrossAxisAlignment.center : CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(

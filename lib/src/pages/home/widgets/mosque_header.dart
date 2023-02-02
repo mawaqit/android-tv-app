@@ -26,10 +26,10 @@ class MosqueHeader extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 1.8.vh, left: .8.vw, right: .8.vw),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           OfflineWidget(),
-          Spacer(),
           mosque.logo != null && mosqueConfig!.showLogo
               ? CachedNetworkImage(
                   imageUrl: mosque.logo!,
@@ -37,11 +37,12 @@ class MosqueHeader extends StatelessWidget {
                   height: 40,
                 )
               : SizedBox(),
-          SizedBox(width: 10),
+          // SizedBox(width: 10),
           Container(
               constraints: BoxConstraints(maxWidth: 70.vw),
               child: FittedBox(
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: StringManager.convertStringToList(
                     mosqueConfig!.showCityInTitle
                         ? mosque.name
@@ -78,7 +79,7 @@ class MosqueHeader extends StatelessWidget {
               //   ),
               // ),
               ),
-          SizedBox(width: 10),
+          // SizedBox(width: 10),
           mosque.logo != null && mosqueConfig.showLogo
               ? CachedNetworkImage(
                   imageUrl: mosque.logo!,
@@ -86,7 +87,6 @@ class MosqueHeader extends StatelessWidget {
                   height: 40,
                 )
               : SizedBox(),
-          Spacer(),
           WeatherWidget(),
         ],
       ),
