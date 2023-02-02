@@ -27,8 +27,10 @@ class MosqueBackgroundScreen extends StatelessWidget {
 
     return CallbackShortcuts(
       bindings: {
-        SingleActivator(LogicalKeyboardKey.arrowLeft): () => _scaffoldKey.currentState?.openDrawer(),
-        SingleActivator(LogicalKeyboardKey.arrowRight): () => _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowLeft): () =>
+            _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowRight): () =>
+            _scaffoldKey.currentState?.openDrawer(),
       },
       child: Focus(
         autofocus: true,
@@ -43,12 +45,18 @@ class MosqueBackgroundScreen extends StatelessWidget {
                 : BoxDecoration(
                     image: DecorationImage(
                       image: mosqueConfig.backgroundMotif == "0"
-                          ? CachedNetworkImageProvider(mosqueProvider.mosque?.exteriorPicture ?? "")
+                          ? CachedNetworkImageProvider(
+                              mosqueProvider.mosque?.interiorPicture ?? "")
                           : mosqueConfig.backgroundMotif == "-1"
-                              ? CachedNetworkImageProvider(mosqueProvider.mosque?.interiorPicture ?? "")
+                              ? CachedNetworkImageProvider(
+                                  mosqueProvider.mosque?.exteriorPicture ?? "")
                               : CachedNetworkImageProvider(
                                   "https://mawaqit.net/bundles/app/prayer-times/img/background/${mosqueConfig.backgroundMotif ?? 5}.jpg"),
                       fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(.4),
+                        BlendMode.srcOver,
+                      ),
                       onError: (exception, stackTrace) {},
                     ),
                   ),
