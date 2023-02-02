@@ -20,45 +20,42 @@ class WeatherWidget extends StatelessWidget {
     final temperatureEnable = mosqueConfig?.temperatureEnabled;
 
     if (temperature == null || !temperatureEnable!)
-      return Padding(
-          padding: EdgeInsets.only(
-            top: 4.vh,
-          ),
-          child: SizedBox(width: 10.vw,height: 3.vw,));
+      return SizedBox(
+        width: 10.vw,
+        height: 3.vw,
+      );
+
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Padding(
-        padding: EdgeInsets.only(top: 4.vh),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              WeatherIcons.fromString(mosqueManager.weather!.icon),
-              size: 3.vw,
-              color: Colors.white,
-              shadows: kAfterAdhanTextShadow,
-            ),
-            SizedBox(width: 1.6.vw),
-            Text(
-              "$temperature",
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontSize: 3.vw,
-                  fontWeight: FontWeight.w700,
-                  color: HexColor(mosqueManager.getColorFeeling()),
-                  shadows: kHomeTextShadow),
-            ),
-            Text(
-              "°$temperatureUnit",
-              style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  height: 1,
-                  color: HexColor(mosqueManager.getColorFeeling()),
-                  fontSize: 2.4.vw,
-                  shadows: kHomeTextShadow),
-            ),
-          ],
-        ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            WeatherIcons.fromString(mosqueManager.weather!.icon),
+            size: 3.vw,
+            color: Colors.white,
+            shadows: kAfterAdhanTextShadow,
+          ),
+          SizedBox(width: 1.6.vw),
+          Text(
+            "$temperature",
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontSize: 3.vw,
+                fontWeight: FontWeight.w700,
+                color: HexColor(mosqueManager.getColorFeeling()),
+                shadows: kHomeTextShadow),
+          ),
+          Text(
+            "°$temperatureUnit",
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                height: 1,
+                color: HexColor(mosqueManager.getColorFeeling()),
+                fontSize: 2.4.vw,
+                shadows: kHomeTextShadow),
+          ),
+        ],
       ),
     );
   }
