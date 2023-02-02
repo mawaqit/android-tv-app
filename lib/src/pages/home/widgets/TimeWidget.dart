@@ -54,16 +54,19 @@ class HomeTimeWidget extends TimerRefreshWidget {
     final now = mosqueManager.mosqueDate();
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final nextSalahIndex = mosqueManager.nextSalahIndex();
-    var nextSalahTime = mosqueManager.actualTimes()[nextSalahIndex].difference(now);
+    var nextSalahTime =
+        mosqueManager.actualTimes()[nextSalahIndex].difference(now);
     final lang = context.read<AppLanguage>();
     final isArabicLang = lang.isArabic();
     // in case of fajr of the next day
-    if (nextSalahTime < Duration.zero) nextSalahTime = nextSalahTime + Duration(days: 1);
+    if (nextSalahTime < Duration.zero)
+      nextSalahTime = nextSalahTime + Duration(days: 1);
 
     var hijriDate = HijriCalendar.fromDate(now.add(Duration(
       days: mosqueManager.times!.hijriAdjustment,
     )));
-    bool isLunarDays = hijriDate.hDay == 13 || hijriDate.hDay == 14 || hijriDate.hDay == 15;
+    bool isLunarDays =
+        hijriDate.hDay == 13 || hijriDate.hDay == 14 || hijriDate.hDay == 15;
     if (isArabic) {
       HijriCalendar.language = 'ar';
     } else {
@@ -73,6 +76,38 @@ class HomeTimeWidget extends TimerRefreshWidget {
     if (mosqueManager.times!.hijriDateForceTo30) hijriDate.hDay = 30;
     final mosqueConfig = mosqueManager.mosqueConfig;
     bool is12hourFormat = mosqueConfig?.timeDisplayFormat == "12";
+
+    String arabicFormat = [
+      DateFormat(
+        'EEEE,',
+        lang.appLocal.languageCode,
+      ).format(now),
+      DateFormat('dd', 'en').format(now),
+      DateFormat(
+        'MMMM,',
+        lang.appLocal.languageCode,
+      ).format(now),
+      DateFormat('yyyy', 'en').format(now),
+    ].join(' ');
+
+    String defaultDateFormat = [
+      DateFormat(
+        'EEEE,',
+        lang.appLocal.languageCode,
+      ).format(now),
+      DateFormat(
+        'MMMM',
+        lang.appLocal.languageCode,
+      ).format(now),
+      DateFormat('dd,', 'en').format(now),
+      DateFormat('yyyy', 'en').format(now),
+    ].join(' ');
+
+    String activeDate =
+        lang.appLocal.languageCode == 'ar' || lang.appLocal.languageCode == 'fr'
+            ? arabicFormat
+            : defaultDateFormat;
+
     return Padding(
       padding: EdgeInsets.only(left: 1.25.vw),
       child: Container(
@@ -96,7 +131,8 @@ class HomeTimeWidget extends TimerRefreshWidget {
                   ),
                   color: mosqueManager.getColorTheme().withOpacity(.7),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 1.5.vw, horizontal: 5.vw),
+                padding:
+                    EdgeInsets.symmetric(vertical: 1.5.vw, horizontal: 5.vw),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -135,7 +171,8 @@ class HomeTimeWidget extends TimerRefreshWidget {
                             ),
                             if (is12hourFormat)
                               Padding(
-                                padding: EdgeInsets.only(bottom: .6.vh, left: .9.vw),
+                                padding:
+                                    EdgeInsets.only(bottom: .6.vh, left: .9.vw),
                                 child: ConstrainedBox(
                                   constraints: BoxConstraints(
                                     maxWidth: 8.vw,
@@ -161,6 +198,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                       ],
                     ),
                     // date time
+
                     Container(
                       constraints: BoxConstraints(maxWidth: 28.vw),
                       height: 2.5.vw,
@@ -171,7 +209,8 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Container(
-                                      constraints: BoxConstraints(minWidth: 1, minHeight: 1),
+                                      constraints: BoxConstraints(
+                                          minWidth: 1, minHeight: 1),
                                       child: AnimatedTextKit(
                                         key: ValueKey('122'),
                                         isRepeatingAnimation: true,
@@ -179,17 +218,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                         displayFullTextOnTap: true,
                                         animatedTexts: [
                                           FadeAnimatedText(
-                                            [
-                                              !isArabic
-                                                  ? "${DateFormat(
-                                                      "EEEE, MMM",
-                                                      "${lang.appLocal}}",
-                                                    ).format(now)} ${DateFormat("dd, yyyy", "en_US").format(now)}"
-                                                  : "  ${DateFormat("yyyy", "en_US").format(now)} ${DateFormat(
-                                                      "MMM",
-                                                      "${lang.appLocal}}",
-                                                    ).format(now)} ${DateFormat("dd", "en_US").format(now)}"
-                                            ].join(),
+                                            activeDate,
                                             duration: Duration(seconds: 6),
                                             fadeInEnd: 200 / 10000,
                                             fadeOutBegin: 1,
@@ -199,7 +228,10 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                               shadows: kHomeTextShadow,
                                               // letterSpacing: 1,
                                               height: .8,
-                                              fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                              fontFamily: isArabic
+                                                  ? StringManager.getFontFamily(
+                                                      context)
+                                                  : null,
                                             ),
                                           ),
                                           FadeAnimatedText(
@@ -212,7 +244,10 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                               fontSize: 2.5.vw,
                                               shadows: kHomeTextShadow,
                                               height: .8,
-                                              fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                              fontFamily: isArabic
+                                                  ? StringManager.getFontFamily(
+                                                      context)
+                                                  : null,
                                             ),
                                           ),
                                         ],
@@ -241,7 +276,9 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                   shadows: kHomeTextShadow,
                                   // letterSpacing: 1,
                                   height: .8,
-                                  fontFamily: isArabic ? StringManager.getFontFamily(context) : null,
+                                  fontFamily: isArabic
+                                      ? StringManager.getFontFamily(context)
+                                      : null,
                                 ),
                               ),
                             ),
