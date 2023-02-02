@@ -86,7 +86,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                     style: TextStyle(
                       fontSize: 62,
                       fontWeight: FontWeight.bold,
-                      fontFamily: StringManager.getFontFamily(context),
+                      fontFamily: StringManager.getFontFamilyByString(azkarList[activeHadith]),
                       color: Colors.white,
                         shadows: kIqamaCountDownTextShadow
                     ),

@@ -37,7 +37,7 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final tr =S.of(context);
     return Column(
       children: [
         Expanded(
@@ -61,12 +61,12 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    S.of(context).alIqama,
+                    tr.alIqama,
                     style: theme.textTheme.displayMedium?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                       shadows: kAfterAdhanTextShadow,
-                      fontFamily: StringManager.getFontFamily(context)
+                      fontFamily: StringManager.getFontFamilyByString(tr.alIqama)
                     ),
                   ),
                   Text(
@@ -89,12 +89,12 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
 
         ])),
         Text(
-          S.of(context).turnOfPhones,
+          tr.turnOfPhones,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 4.vw,
             color: Colors.white,
-            fontFamily: StringManager.getFontFamily(context),
+            fontFamily: StringManager.getFontFamilyByString(tr.turnOfPhones),
             shadows: kAfterAdhanTextShadow,
           ),
         ),
