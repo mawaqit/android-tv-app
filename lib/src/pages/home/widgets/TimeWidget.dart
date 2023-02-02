@@ -137,7 +137,9 @@ class HomeTimeWidget extends TimerRefreshWidget {
                               Padding(
                                 padding: EdgeInsets.only(bottom: .6.vh, left: .9.vw),
                                 child: ConstrainedBox(
-                                  constraints: BoxConstraints(maxWidth: 8.vw,),
+                                  constraints: BoxConstraints(
+                                    maxWidth: 8.vw,
+                                  ),
                                   child: FittedBox(
                                     child: Text(
                                       '${DateFormat('a').format(now)}',
@@ -177,10 +179,17 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                         displayFullTextOnTap: true,
                                         animatedTexts: [
                                           FadeAnimatedText(
-                                            "${DateFormat(
-                                              "EEEE, MMM",
-                                              "${lang.appLocal}_${mosqueManager.mosque?.countryCode}",
-                                            ).format(now)} ${DateFormat("dd, yyyy", "en_US").format(now)}",
+                                            [
+                                              !isArabic
+                                                  ? "${DateFormat(
+                                                      "EEEE, MMM",
+                                                      "${lang.appLocal}}",
+                                                    ).format(now)} ${DateFormat("dd, yyyy", "en_US").format(now)}"
+                                                  : "  ${DateFormat("yyyy", "en_US").format(now)} ${DateFormat(
+                                                      "MMM",
+                                                      "${lang.appLocal}}",
+                                                    ).format(now)} ${DateFormat("dd", "en_US").format(now)}"
+                                            ].join(),
                                             duration: Duration(seconds: 6),
                                             fadeInEnd: 200 / 10000,
                                             fadeOutBegin: 1,
@@ -194,7 +203,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                                             ),
                                           ),
                                           FadeAnimatedText(
-                                            "${hijriDate.toFormat("DD")} ${hijriDate.toFormat("dd").toEnglishDigit()} ${hijriDate.toFormat("MMMM")} ${hijriDate.toFormat("yyyy").toEnglishDigit()} ",
+                                            "${isArabicLang ? hijriDate.toFormat("DD ") : ""}${hijriDate.toFormat("dd").toEnglishDigit()} ${hijriDate.toFormat("MMMM")} ${hijriDate.toFormat("yyyy").toEnglishDigit()} ",
                                             duration: Duration(seconds: 4),
                                             fadeInEnd: 200 / 4000,
                                             fadeOutBegin: 1,
