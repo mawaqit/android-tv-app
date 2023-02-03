@@ -39,7 +39,7 @@ class StringManager {
       "$salahName ${S.of(context).in1} ",
       if (salahTime.inMinutes > 0)
         "${salahTime.inHours.toString().padLeft(2, '0')}:${(salahTime.inMinutes % 60).toString().padLeft(2, '0')}",
-      if (salahTime.inMinutes == 0) "${(salahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+      if (salahTime.inMinutes == 0) "${(salahTime.inSeconds % 60).toString().padLeft(2, '0')} ${S.of(context).sec}",
     ].join();
   }
 //////////// get font family

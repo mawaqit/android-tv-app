@@ -35,15 +35,13 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     final announcements = context.read<MosqueManager>().activeAnnouncements;
 
     //todo test this
-    if (announcements.isEmpty)
-      Future.delayed(Duration(milliseconds: 0), widget.onDone);
+    if (announcements.isEmpty) Future.delayed(Duration(milliseconds: 0), widget.onDone);
 
     activeAnnouncement = announcements[widget.index % announcements.length];
 
     if (activeAnnouncement.video == null) {
       Future.delayed(
-        Duration(seconds: activeAnnouncement.duration ?? 30) *
-            kTestDurationFactor,
+        Duration(seconds: activeAnnouncement.duration ?? 30) * kTestDurationFactor,
         widget.onDone,
       );
     }
@@ -76,8 +74,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   Widget announcementWidgets() {
     if (activeAnnouncement.content != null) {
-      return textAnnouncement(
-          activeAnnouncement.content!, activeAnnouncement.title);
+      return textAnnouncement(activeAnnouncement.content!, activeAnnouncement.title);
     } else if (activeAnnouncement.image != null) {
       return imageAnnouncement(activeAnnouncement.image!);
     } else if (activeAnnouncement.video != null) {
@@ -88,39 +85,46 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   }
 
   Widget textAnnouncement(String content, String title) {
-    return Column(
-      children: [
-        // title
-        SizedBox(
-          height: 2.vh,
-        ),
-        AutoSizeText(title,
-            stepGranularity: 12,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                shadows: kAnnouncementTextShadow,
-                fontSize: 62,
-                fontWeight: FontWeight.bold,
-                fontFamily: StringManager.getFontFamilyByString(title),
-                color: Colors.amber,
-                letterSpacing: 1)),
-        // content
-        SizedBox(
-          height: 3.vh,
-        ),
-        Expanded(
-          child: AutoSizeText(content,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Column(
+        children: [
+          // title
+          SizedBox(
+            height: 2.vh,
+          ),
+          AutoSizeText(title,
               stepGranularity: 12,
               textAlign: TextAlign.center,
               style: TextStyle(
                   shadows: kAnnouncementTextShadow,
                   fontSize: 62,
                   fontWeight: FontWeight.bold,
+                  fontFamily: StringManager.getFontFamilyByString(title),
+                  color: Colors.amber,
+                  letterSpacing: 1)),
+          // content
+          SizedBox(
+            height: 3.vh,
+          ),
+          Expanded(
+            child: AutoSizeText(content,
+                stepGranularity: 1,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  shadows: kAnnouncementTextShadow,
+                  fontSize: 62,
+                  fontWeight: FontWeight.bold,
                   fontFamily: StringManager.getFontFamilyByString(content),
                   color: Colors.white,
-                  letterSpacing: 1)),
-        ),
-      ],
+                  letterSpacing: 1,
+                )),
+          ),
+          SizedBox(
+            height: 15.vh,
+          ),
+        ],
+      ),
     );
   }
 
