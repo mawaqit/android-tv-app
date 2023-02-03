@@ -45,7 +45,7 @@ class Api {
   static Future<bool> checkTheInternetConnection() {
     final url = 'https://www.google.com/';
 
-    return dio.get(url).timeout(Duration(seconds: 5)).then((value) => true).catchError((e) => false);
+    return dio.get(url).timeout(Duration(seconds: 10)).then((value) => true).catchError((e) => false);
   }
 
   /// re check the mosque if there are any updated data

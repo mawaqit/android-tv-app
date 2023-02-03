@@ -9,21 +9,21 @@ import '../../../helpers/mawaqit_icons_icons.dart';
 import '../../../themes/UIShadows.dart';
 
 class SalahInWidget extends StatelessWidget {
-  final double adhanIconSize;
-
-  final Duration nextSalahTime;
-
-  const SalahInWidget({Key? key, required this.adhanIconSize, required this.nextSalahTime}) : super(key: key);
+  const SalahInWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.read<MosqueManager>();
+    final nextSalahTime = mosqueManager.nextSalahAfter();
+
     String countDownText = [
       "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
       if (nextSalahTime.inMinutes > 0)
         "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
-      if (nextSalahTime.inMinutes == 0) "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+      if (nextSalahTime.inMinutes == 0)
+        "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
     ].join();
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -31,7 +31,7 @@ class SalahInWidget extends StatelessWidget {
         Icon(
           MawaqitIcons.icon_adhan,
           color: Colors.white,
-          size: adhanIconSize,
+          size: 2.3.vw,
         ),
         Container(
           constraints: BoxConstraints(maxWidth: 30.vw),
@@ -47,7 +47,8 @@ class SalahInWidget extends StatelessWidget {
                       fontSize: 2.8.vw,
                       // height: 2,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(countDownText),
+                      fontFamily:
+                          StringManager.getFontFamilyByString(countDownText),
                       shadows: kHomeTextShadow,
                     ),
                   )
@@ -58,7 +59,8 @@ class SalahInWidget extends StatelessWidget {
                       fontSize: 2.8.vw,
                       // height: 2,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(mosqueManager.getShurukInString(context)),
+                      fontFamily: StringManager.getFontFamilyByString(
+                          mosqueManager.getShurukInString(context)),
                       shadows: kHomeTextShadow,
                     ),
                   ),
@@ -67,7 +69,7 @@ class SalahInWidget extends StatelessWidget {
         Icon(
           MawaqitIcons.icon_adhan,
           color: Colors.white,
-          size: adhanIconSize,
+          size: 2.3.vw,
         ),
       ],
     );
