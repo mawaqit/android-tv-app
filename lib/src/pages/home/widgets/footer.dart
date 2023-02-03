@@ -20,14 +20,11 @@ class Footer extends StatelessWidget {
     final mosque = mosqueManager.mosque;
     final isLTR = mosque?.flash?.orientation == "ltr";
     final isArabic = context.read<AppLanguage>().isArabic();
-    print (mosqueConfig?.footer);
-    print (mosque?.flash);
-    print ("flash");
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.bottomCenter,
       children: [
-        if (mosqueConfig!.footer! && mosque?.flash?.content == null) MosqueInformationWidget(),
+        if (mosqueConfig!.footer! && (mosque?.flash?.content == null || mosque!.flash!.content.isEmpty) ) MosqueInformationWidget(),
         if (mosqueConfig.footer!)
           Container(
             padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),

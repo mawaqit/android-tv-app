@@ -20,8 +20,9 @@ class FlashWidget extends StatelessWidget {
     if (startDate != null) startDate = DateTime.parse(mosque.flash!.startDate!);
     if (endDate != null) startDate = DateTime.parse(mosque.flash!.endDate!);
     bool flashIsInDateTime = now.isAfter(startDate ?? now) && now.isBefore(endDate ?? now);
-    bool isNoDate = mosque.flash?.startDate == null || mosque.flash?.endDate == null;
+    bool isNoDate = startDate == null || endDate == null;
     return mosque.flash?.content.isEmpty != false || (!flashIsInDateTime && !isNoDate)
+
         //todo get the message
         ? SizedBox()
         : Marquee(
