@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("Zuhr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Insira a ID da Mesquita: "),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("Siga-nos"),
         "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -99,6 +100,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("ID da mesquita ausente"),
         "mosque": MessageLookupByLibrary.simpleMessage("Mesquita"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("ID de Mesquita "),
         "mosqueIdIsNotValid": m0,
         "mosqueInput":
@@ -109,12 +112,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Sem mais resultados"),
         "mosqueNoResults":
             MessageLookupByLibrary.simpleMessage("Sem resultados"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
             "Estilo das barras de navegação"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("Estado da rede"),
         "no": MessageLookupByLibrary.simpleMessage("Não"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Sem conexão à internet"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("Notificações"),
         "offline": MessageLookupByLibrary.simpleMessage("Desligada"),
         "ok": MessageLookupByLibrary.simpleMessage("CERTO"),
@@ -123,6 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Política de privacidade"),
         "quit": MessageLookupByLibrary.simpleMessage("Sair"),
         "rate": MessageLookupByLibrary.simpleMessage("Avalie-nos"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Opções do Botão Rádio (esquerda)"),
         "searchByGps":

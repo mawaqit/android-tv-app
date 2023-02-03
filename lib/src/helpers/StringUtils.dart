@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
+
+import '../../generated/l10n.dart';
 
 extension StringUtils on String {
   /// convert string to UpperCamelCaseFormat
@@ -31,11 +34,21 @@ class StringManager {
   static const fontFamilyArial = "arial";
   static const fontFamilyHelvetica = "helvetica";
 
+  static String getCountDownText(BuildContext context) {
+   final mosqueManager = context.read<MosqueManager>();
+   final nextSalahTime = mosqueManager.nextSalahAfter();
+    return [
+      "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
+      if (nextSalahTime.inMinutes > 0)
+        "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
+      if (nextSalahTime.inMinutes == 0) "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+    ].join();
+  }
+
   static String? getFontFamilyByString(String value) {
     if (value.isArabic() || value.isUrdu()) {
       return fontFamilyKufi;
     }
-
     return null;
   }
 

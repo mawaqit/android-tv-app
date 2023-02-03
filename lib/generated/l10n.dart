@@ -450,6 +450,16 @@ class S {
     );
   }
 
+  /// `Sec`
+  String get sec {
+    return Intl.message(
+      'Sec',
+      name: 'sec',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Online`
   String get online {
     return Intl.message(

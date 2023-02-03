@@ -67,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("Mesditë"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Shkruani ID-në e Xhamisë : "),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("Agimi"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -100,6 +101,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Mungon ID e xhamisë"),
         "mosque": MessageLookupByLibrary.simpleMessage("Džamija"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("ID e xhamisë "),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Xhamia"),
@@ -109,12 +112,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "Na vjen keq, nuk ka më rezultate"),
         "mosqueNoResults": MessageLookupByLibrary.simpleMessage(
             "Na vjen keq, nuk ka rezultate"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "networkStatus":
             MessageLookupByLibrary.simpleMessage("Statusi i rrjetit"),
         "no": MessageLookupByLibrary.simpleMessage("Jo"),
         "noInternet": MessageLookupByLibrary.simpleMessage("Nuk ka internet"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("Njoftim"),
         "offline": MessageLookupByLibrary.simpleMessage("Jashtë linje"),
         "ok": MessageLookupByLibrary.simpleMessage("NE RREGULL"),
@@ -123,6 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Politika e privatësisë"),
         "quit": MessageLookupByLibrary.simpleMessage("Dilni"),
         "rate": MessageLookupByLibrary.simpleMessage("Na vlerso"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchByGps": MessageLookupByLibrary.simpleMessage("Kërko me GPS"),

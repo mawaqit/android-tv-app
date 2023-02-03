@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("അദുഹെർ"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "ദയവായി നിങ്ങളുടെ മസ്ജിദ് ഐഡി നൽകുക:"),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("ഫേസ്‌ബുക്ക്"),
         "fajr": MessageLookupByLibrary.simpleMessage("സുബ്ഹി"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -99,6 +100,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("മസ്ജിദ് ഐഡി കാണുന്നില്ല"),
         "mosque": MessageLookupByLibrary.simpleMessage("മസ്ജിദ്"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("മസ്ജിദ് ഐഡി:"),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("മസ്ജിദ് ഇൻപുട്ട്"),
@@ -108,6 +111,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ഫലങ്ങളൊന്നുമില്ല"),
         "mosqueNoResults":
             MessageLookupByLibrary.simpleMessage("ഫലങ്ങളൊന്നുമില്ല"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "networkStatus":
@@ -115,6 +120,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no": MessageLookupByLibrary.simpleMessage("ഇല്ല"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("ഇന്റർനെറ്റ് കണക്ഷൻ ഇല്ല"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("അറിയിപ്പുകൾ"),
         "offline": MessageLookupByLibrary.simpleMessage("ഓഫ്‌ലൈൻ"),
         "ok": MessageLookupByLibrary.simpleMessage("ശരി"),
@@ -122,6 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("സ്വകാര്യതാനയം"),
         "quit": MessageLookupByLibrary.simpleMessage("ഉപേക്ഷിക്കുക"),
         "rate": MessageLookupByLibrary.simpleMessage("ഞങ്ങളെ റേറ്റുചെയ്യുക"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchByGps":

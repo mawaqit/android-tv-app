@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("Podne"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Unesite ID džamije :"),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("Zora"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -99,6 +100,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Nedostaje ID džamije"),
         "mosque": MessageLookupByLibrary.simpleMessage("Džamija"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("ID džamije"),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Džamija"),
@@ -108,12 +111,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nema više rezultata"),
         "mosqueNoResults":
             MessageLookupByLibrary.simpleMessage("Nema rezultata"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("Mrežni status"),
         "no": MessageLookupByLibrary.simpleMessage("Ne"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Nema internetske veze"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("Obavijesti"),
         "offline": MessageLookupByLibrary.simpleMessage("Izvan mreže"),
         "ok": MessageLookupByLibrary.simpleMessage("U REDU"),
@@ -122,6 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Pravila privatnosti"),
         "quit": MessageLookupByLibrary.simpleMessage("Prestati"),
         "rate": MessageLookupByLibrary.simpleMessage("Ocijenite Nas"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchByGps": MessageLookupByLibrary.simpleMessage("Traži po GPS-u"),
