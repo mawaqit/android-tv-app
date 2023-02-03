@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("Duhr"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "Зинһар, Мәситтең ID индерегеҙ :"),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("Fajr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -99,6 +100,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Юғалтылған Мәситтең ID"),
         "mosque": MessageLookupByLibrary.simpleMessage("Мәсит"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("Мәситтең ID"),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Мәситкә Кереү"),
@@ -107,12 +110,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "mosqueNoMore":
             MessageLookupByLibrary.simpleMessage("Икенсе результаттар юҡ"),
         "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results\n"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
             "Навигация панельдарҙың стиле"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("Ауҙың Торошо"),
         "no": MessageLookupByLibrary.simpleMessage("Юҡ"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Интернет бәйләнеше юҡ"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("Белдереүҙәр"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("ЯРАЙ"),
@@ -121,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Йәшеренлек сәйәсәте"),
         "quit": MessageLookupByLibrary.simpleMessage("Сығырға"),
         "rate": MessageLookupByLibrary.simpleMessage("Беҙҙе Баһалағыҙ"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Борғостарҙың Опциялары (уңдан)"),
         "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),

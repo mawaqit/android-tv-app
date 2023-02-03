@@ -68,6 +68,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("দুপুর"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("মসজিদ আইডি লিখুন:"),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage(
             "ফেসবুকের মাধ্যমে সাইন আপ করুন"),
         "fajr": MessageLookupByLibrary.simpleMessage("ফজর"),
@@ -102,6 +103,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("মসজিদের আইডি নেই"),
         "mosque": MessageLookupByLibrary.simpleMessage("মসজিদ"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("মসজিদ আইডি "),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("মসজিদ"),
@@ -110,6 +113,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mosqueNoMore":
             MessageLookupByLibrary.simpleMessage("আরো কোনো ফলাফল নেই"),
         "mosqueNoResults": MessageLookupByLibrary.simpleMessage("রেসাল্টস নেই"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "networkStatus":
@@ -117,6 +122,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no": MessageLookupByLibrary.simpleMessage("না"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("কোনও ইন্টারনেট সংযোগ নেই"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("নোটিফিকেশন সমূহ"),
         "offline": MessageLookupByLibrary.simpleMessage("অফলাইন"),
         "ok": MessageLookupByLibrary.simpleMessage("আচ্ছা"),
@@ -125,6 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("গোপনীয়তার নীতিমালা"),
         "quit": MessageLookupByLibrary.simpleMessage("কুইট"),
         "rate": MessageLookupByLibrary.simpleMessage("আমাদের মতামত দিন"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchByGps": MessageLookupByLibrary.simpleMessage(

@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("Öğle"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "Lütfen Cami Kimliğinizi giriniz : "),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("Sabah"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -97,6 +98,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Eksik Cami ID"),
         "mosque": MessageLookupByLibrary.simpleMessage("Cami"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("Cami ID (sayı) "),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Cami Girişi"),
@@ -105,12 +108,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "mosqueNoMore":
             MessageLookupByLibrary.simpleMessage("Daha fazla sonuç yok"),
         "mosqueNoResults": MessageLookupByLibrary.simpleMessage("Sonuç yok"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
             "Gezinme çubuğu görüntüleme stili"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("Ağ Durumu"),
         "no": MessageLookupByLibrary.simpleMessage("Hayır"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("İnternet bağlantısı yok"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("Bildirimler"),
         "offline": MessageLookupByLibrary.simpleMessage("Çevrimdışı"),
         "ok": MessageLookupByLibrary.simpleMessage("TAMAM"),
@@ -119,6 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Gizlilik politikası"),
         "quit": MessageLookupByLibrary.simpleMessage("Çıkmak"),
         "rate": MessageLookupByLibrary.simpleMessage("Bizi Değerlendirin"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchByGps": MessageLookupByLibrary.simpleMessage("GPS ile ara"),

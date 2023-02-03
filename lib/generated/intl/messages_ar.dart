@@ -63,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("الظهر"),
         "enterMosqueId": MessageLookupByLibrary.simpleMessage(
             "أدخل معرف المسجد (Mosque ID) : "),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("فيسبوك"),
         "fajr": MessageLookupByLibrary.simpleMessage("الفجر"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -95,6 +96,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("معرف المسجد مفقود"),
         "mosque": MessageLookupByLibrary.simpleMessage("المسجد"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId":
             MessageLookupByLibrary.simpleMessage("معرف المسجد (Mosque ID)"),
         "mosqueIdIsNotValid": m0,
@@ -105,12 +108,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("لايوجد المزيد من النتائج"),
         "mosqueNoResults":
             MessageLookupByLibrary.simpleMessage("لا توجد نتائج"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("نمط شريط التنقل"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("حالة الشبكة"),
         "no": MessageLookupByLibrary.simpleMessage("لا"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("لا يوجد اتصال بالإنترنت"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("الإشعارات"),
         "offline": MessageLookupByLibrary.simpleMessage("دون اتصال"),
         "ok": MessageLookupByLibrary.simpleMessage("موافق"),
@@ -118,6 +125,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("سياسة الخصوصية"),
         "quit": MessageLookupByLibrary.simpleMessage("خروج"),
         "rate": MessageLookupByLibrary.simpleMessage("قم بتقييمنا"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيمن"),
         "searchByGps":

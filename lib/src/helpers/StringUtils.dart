@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
+
+import '../../generated/l10n.dart';
 
 extension StringUtils on String {
   /// convert string to UpperCamelCaseFormat
@@ -30,12 +33,20 @@ class StringManager {
   static const fontFamilyKufi = "kufi";
   static const fontFamilyArial = "arial";
   static const fontFamilyHelvetica = "helvetica";
-
+///////////// Salah count down text in Time widget
+  static String getCountDownText(BuildContext context,Duration salahTime,String salahName) {
+    return [
+      "$salahName ${S.of(context).in1} ",
+      if (salahTime.inMinutes > 0)
+        "${salahTime.inHours.toString().padLeft(2, '0')}:${(salahTime.inMinutes % 60).toString().padLeft(2, '0')}",
+      if (salahTime.inMinutes == 0) "${(salahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+    ].join();
+  }
+//////////// get font family
   static String? getFontFamilyByString(String value) {
     if (value.isArabic() || value.isUrdu()) {
       return fontFamilyKufi;
     }
-
     return null;
   }
 

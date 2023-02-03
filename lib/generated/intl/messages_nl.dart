@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("Dhoehr"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("Voer Moske-ID in: "),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("Fadjr"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -97,6 +98,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("Ontbrekende moske-ID"),
         "mosque": MessageLookupByLibrary.simpleMessage("Moskee"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("Moske-ID "),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("Moskee input"),
@@ -106,12 +109,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Niet meer resultaten"),
         "mosqueNoResults":
             MessageLookupByLibrary.simpleMessage("Geen resultaten"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Stijl navigatiebalken"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("Netwerk Status"),
         "no": MessageLookupByLibrary.simpleMessage("Nee"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("Geen internetverbinding"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("Meldingen"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
@@ -119,6 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacybeleid"),
         "quit": MessageLookupByLibrary.simpleMessage("Sluiten"),
         "rate": MessageLookupByLibrary.simpleMessage("Beoordeel ons"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("Radio Knop opties (links)"),
         "searchByGps": MessageLookupByLibrary.simpleMessage("Zoeken met GPS"),

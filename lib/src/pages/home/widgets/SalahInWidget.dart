@@ -15,14 +15,11 @@ class SalahInWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueManager = context.read<MosqueManager>();
     final nextSalahTime = mosqueManager.nextSalahAfter();
-
-    String countDownText = [
-      "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
-      if (nextSalahTime.inMinutes > 0)
-        "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
-      if (nextSalahTime.inMinutes == 0)
-        "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
-    ].join();
+    String countDownText = StringManager.getCountDownText(
+      context,
+      nextSalahTime,
+      mosqueManager.salahName(mosqueManager.nextSalahIndex()),
+    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,8 +44,7 @@ class SalahInWidget extends StatelessWidget {
                       fontSize: 2.8.vw,
                       // height: 2,
                       color: Colors.white,
-                      fontFamily:
-                          StringManager.getFontFamilyByString(countDownText),
+                      fontFamily: StringManager.getFontFamilyByString(countDownText),
                       shadows: kHomeTextShadow,
                     ),
                   )
@@ -59,8 +55,7 @@ class SalahInWidget extends StatelessWidget {
                       fontSize: 2.8.vw,
                       // height: 2,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(
-                          mosqueManager.getShurukInString(context)),
+                      fontFamily: StringManager.getFontFamilyByString(mosqueManager.getShurukInString(context)),
                       shadows: kHomeTextShadow,
                     ),
                   ),

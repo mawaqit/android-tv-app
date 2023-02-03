@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "duhr": MessageLookupByLibrary.simpleMessage("ظہر"),
         "enterMosqueId":
             MessageLookupByLibrary.simpleMessage("مسجد کی شناخت درج کریں:"),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "fajr": MessageLookupByLibrary.simpleMessage("فجر"),
         "gpsError": MessageLookupByLibrary.simpleMessage(
@@ -97,6 +98,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "missingMosqueId":
             MessageLookupByLibrary.simpleMessage("مسجد کی شناخت غائب ہے۔"),
         "mosque": MessageLookupByLibrary.simpleMessage("المسجد"),
+        "mosqueErrorMessage": MessageLookupByLibrary.simpleMessage(
+            "Mosque error if you are mosque admin contact our support to fix this issue"),
         "mosqueId": MessageLookupByLibrary.simpleMessage("مسجد کی شناخت"),
         "mosqueIdIsNotValid": m0,
         "mosqueInput": MessageLookupByLibrary.simpleMessage("مسجد ان پٹ"),
@@ -106,12 +109,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("کوئی مزید نتائج نہیں"),
         "mosqueNoResults":
             MessageLookupByLibrary.simpleMessage("کوئی نتیجہ نہیں"),
+        "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "Your mosque not found. it might be missing or removed from the server"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("نیٹ ورک اسٹیٹس"),
         "no": MessageLookupByLibrary.simpleMessage("نہیں"),
         "noInternet":
             MessageLookupByLibrary.simpleMessage("کوئی انٹرنیٹ کنکشن"),
+        "noInternetMessage": MessageLookupByLibrary.simpleMessage(
+            "it seems you have no internet access. checkout your internet and try again"),
         "notification": MessageLookupByLibrary.simpleMessage("اطلاعات"),
         "offline": MessageLookupByLibrary.simpleMessage("آف لائن"),
         "ok": MessageLookupByLibrary.simpleMessage("ٹھیک ہے"),
@@ -120,6 +127,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("رازداری کی پالیسی"),
         "quit": MessageLookupByLibrary.simpleMessage("چھوڑو"),
         "rate": MessageLookupByLibrary.simpleMessage("ہمیں شرح"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
         "searchByGps":

@@ -132,6 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Which Mosque are you looking for ? (Name, City, Postal code...)"),
         "searchMosque":
             MessageLookupByLibrary.simpleMessage("Search for a Mosque"),
+        "sec": MessageLookupByLibrary.simpleMessage("Sec"),
         "selectMosqueId":
             MessageLookupByLibrary.simpleMessage("Please enter your Mosque ID"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
