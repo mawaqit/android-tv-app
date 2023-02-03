@@ -33,18 +33,16 @@ class StringManager {
   static const fontFamilyKufi = "kufi";
   static const fontFamilyArial = "arial";
   static const fontFamilyHelvetica = "helvetica";
-
-  static String getCountDownText(BuildContext context) {
-   final mosqueManager = context.read<MosqueManager>();
-   final nextSalahTime = mosqueManager.nextSalahAfter();
+///////////// Salah count down text in Time widget
+  static String getCountDownText(BuildContext context,Duration salahTime,String salahName) {
     return [
-      "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
-      if (nextSalahTime.inMinutes > 0)
-        "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
-      if (nextSalahTime.inMinutes == 0) "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+      "$salahName ${S.of(context).in1} ",
+      if (salahTime.inMinutes > 0)
+        "${salahTime.inHours.toString().padLeft(2, '0')}:${(salahTime.inMinutes % 60).toString().padLeft(2, '0')}",
+      if (salahTime.inMinutes == 0) "${(salahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
     ].join();
   }
-
+//////////// get font family
   static String? getFontFamilyByString(String value) {
     if (value.isArabic() || value.isUrdu()) {
       return fontFamilyKufi;

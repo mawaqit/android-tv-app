@@ -14,8 +14,12 @@ class SalahInWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.read<MosqueManager>();
-
-    String countDownText = StringManager.getCountDownText(context);
+    final nextSalahTime = mosqueManager.nextSalahAfter();
+    String countDownText = StringManager.getCountDownText(
+      context,
+      nextSalahTime,
+      mosqueManager.salahName(mosqueManager.nextSalahIndex()),
+    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,8 +44,7 @@ class SalahInWidget extends StatelessWidget {
                       fontSize: 2.8.vw,
                       // height: 2,
                       color: Colors.white,
-                      fontFamily:
-                          StringManager.getFontFamilyByString(countDownText),
+                      fontFamily: StringManager.getFontFamilyByString(countDownText),
                       shadows: kHomeTextShadow,
                     ),
                   )
@@ -52,8 +55,7 @@ class SalahInWidget extends StatelessWidget {
                       fontSize: 2.8.vw,
                       // height: 2,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(
-                          mosqueManager.getShurukInString(context)),
+                      fontFamily: StringManager.getFontFamilyByString(mosqueManager.getShurukInString(context)),
                       shadows: kHomeTextShadow,
                     ),
                   ),
