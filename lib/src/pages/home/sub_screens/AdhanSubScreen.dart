@@ -59,64 +59,63 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
 
     return MosqueBackgroundScreen(
         child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
           children: [
-            Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
-            Padding(
-              padding: EdgeInsets.only(top: isArabic ? 4 : 4.vh),
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: MosqueHeader(mosque: mosque),
+            ),
+            Expanded(
               child: Directionality(
                 textDirection: TextDirection.ltr,
-                child: Animate(
-                  onPlay: (controller) {
-                    controller.repeat(reverse: true);
-                  },
-                  effects: [FadeEffect(curve: Curves.fastLinearToSlowEaseIn, delay: 1.seconds, begin: 1, end: 0)],
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Icon(
-                        MawaqitIcons.icon_adhan,
-                        size: adhanIconSize,
-                        shadows: kHomeTextShadow,
-                        color: iconColor,
-                      ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 70.vw),
-                        child: FittedBox(
-                          child: Text(
-                            "${S.of(context).alAdhan}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.vh,
-                              fontFamily: StringManager.getFontFamilyByString(S.of(context).alAdhan),
-                              // height: 2,
-                              color: Colors.white,
-                              shadows: kHomeTextShadow,
+                child: Padding(
+                  padding: EdgeInsets.only(top: isArabic ? 4 : 4.vh),
+                  child: Animate(
+                    onPlay: (controller) {
+                      controller.repeat(reverse: true);
+                    },
+                    effects: [FadeEffect(curve: Curves.fastLinearToSlowEaseIn, delay: 1.seconds, begin: 1, end: 0)],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(
+                          MawaqitIcons.icon_adhan,
+                          size: adhanIconSize,
+                          shadows: kHomeTextShadow,
+                          color: iconColor,
+                        ),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: 70.vw),
+                          child: FittedBox(
+                            child: Text(
+                              "${S.of(context).alAdhan}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.vh,
+                                fontFamily: StringManager.getFontFamilyByString(S.of(context).alAdhan),
+                                // height: 2,
+                                color: Colors.white,
+                                shadows: kHomeTextShadow,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Icon(
-                        MawaqitIcons.icon_adhan,
-                        size: adhanIconSize,
-                        shadows: kHomeTextShadow,
-                        color: iconColor,
-                      ),
-                    ],
+                        Icon(
+                          MawaqitIcons.icon_adhan,
+                          size: adhanIconSize,
+                          shadows: kHomeTextShadow,
+                          color: iconColor,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: isArabic ? 5.5.vh : 12.vh, right: 1.vw),
+              padding: EdgeInsets.only(top: isArabic ? 5.5.vh : 12.vh, right: 1.vw,bottom: 3.vh),
               child: SalahTimesBar(),
             ),
           ],
-        ),
-        // Directionality(textDirection: TextDirection.ltr, child: Footer()),
-      ],
-    ));
+        ));
   }
 }
