@@ -20,7 +20,7 @@ class _OfflineWidgetState extends State<OfflineWidget> {
   checkIsOnline(MosqueManager mosqueManager) async {
     final value = await Api.checkTheInternetConnection();
 
-    setState(() => isOffline = !value);
+    if (mounted) setState(() => isOffline = !value);
   }
 
   @override

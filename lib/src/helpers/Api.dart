@@ -26,14 +26,7 @@ class Api {
   );
 
   static Future<void> init() async {
-    final options = CacheOptions(
-      store: HiveCacheStore(null),
-      policy: CachePolicy.refresh,
-    );
-
-    dio.interceptors.add(await ApiCacheInterceptor.open(HiveCacheStore(null)));
-    dio.interceptors.add(DioCacheInterceptor(options: options));
-    // dio.interceptors.add(DioCacheManager(CacheConfig()).interceptor);
+    dio.interceptors.add(ApiCacheInterceptor(HiveCacheStore(null)));
   }
 
   static Future<bool> kMosqueExistence(int id) {
@@ -45,7 +38,11 @@ class Api {
   static Future<bool> checkTheInternetConnection() {
     final url = 'https://www.google.com/';
 
-    return dio.get(url).timeout(Duration(seconds: 5)).then((value) => true).catchError((e) => false);
+    return dio
+        .get(url)
+        .timeout(Duration(seconds: 5))
+        .then((value) => true)
+        .catchError((e) => false);
   }
 
   /// re check the mosque if there are any updated data
@@ -65,7 +62,7 @@ class Api {
   /// re check the mosque config if there are any updated data
   static Stream<MosqueConfig> getMosqueConfigStream(String uuid) async* {
     yield await getMosqueConfig(uuid);
-    await for (var i in Stream.periodic(Duration(minutes: 5))) {
+    await for (var i in Stream.periodic(Duration(minutes: 1))) {
       yield await getMosqueConfig(uuid);
     }
   }
@@ -79,7 +76,7 @@ class Api {
   /// re check the mosque config if there are any updated data
   static Stream<Times> getMosqueTimesStream(String uuid) async* {
     yield await getMosqueTimes(uuid);
-    await for (var i in Stream.periodic(Duration(minutes: 5))) {
+    await for (var i in Stream.periodic(Duration(minutes: 1))) {
       yield await getMosqueTimes(uuid);
     }
   }
@@ -91,7 +88,8 @@ class Api {
   }
 
   static Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async {
-    final response = await dio.get('$kBaseUrlV2/mosque/search?word=$mosque&page=$page');
+    final response =
+        await dio.get('$kBaseUrlV2/mosque/search?word=$mosque&page=$page');
     if (response.statusCode == 200) {
       List<Mosque> mosques = [];
 
