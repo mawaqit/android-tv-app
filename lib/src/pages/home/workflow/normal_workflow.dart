@@ -45,14 +45,17 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
     final mosqueManager = context.read<MosqueManager>();
 
     if (mosqueManager.mosqueConfig?.wakeForFajrTime == true) {
-      var beforeFajrTime = mosqueManager.actualTimes()[0].subtract(kAdhanBeforeFajrDuration);
+      var beforeFajrTime =
+          mosqueManager.actualTimes()[0].subtract(kAdhanBeforeFajrDuration);
 
-      if (beforeFajrTime.isBefore(mosqueManager.mosqueDate())) beforeFajrTime = beforeFajrTime.add(Duration(days: 1));
+      if (beforeFajrTime.isBefore(mosqueManager.mosqueDate()))
+        beforeFajrTime = beforeFajrTime.add(Duration(days: 1));
 
       // print(beforeFajrTime.difference(mosqueManager.mosqueDate()));
 
       // print('register before fajr adhan in ${beforeFajrTime.difference(mosqueManager.mosqueDate())}');
-      beforeFajrFuture = Future.delayed(beforeFajrTime.difference(mosqueManager.mosqueDate()));
+      beforeFajrFuture =
+          Future.delayed(beforeFajrTime.difference(mosqueManager.mosqueDate()));
 
       beforeFajrFuture?.then((value) => showBeforeFajrAdhan());
     }
@@ -76,7 +79,8 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
 
     final mosqueManager = context.read<MosqueManager>();
 
-    nextSalahFuture = Future.delayed(mosqueManager.nextSalahAfter() - Duration(minutes: 5));
+    nextSalahFuture =
+        Future.delayed(mosqueManager.nextSalahAfter() - Duration(minutes: 5));
     nextSalahFuture?.then((value) => mosqueManager.startSalahWorkflow());
   }
 
@@ -115,9 +119,10 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig;
     if (mosqueConfig!.randomHadithEnabled) {
-       if (!mosqueManager.isDisableHadithBetweenSalah()||mosqueConfig.randomHadithIntervalDisabling!.isEmpty){
+      if (!mosqueManager.isDisableHadithBetweenSalah() ||
+          mosqueConfig.randomHadithIntervalDisabling!.isEmpty) {
         randomHadithHandler();
-       }
+      }
     }
     announcementHandler();
     nextSalahHandler();

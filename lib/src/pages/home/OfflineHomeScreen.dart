@@ -39,9 +39,11 @@ class OfflineHomeScreen extends StatelessWidget {
       case HomeActiveWorkflow.normal:
         return NormalWorkflowScreen();
       case HomeActiveWorkflow.salah:
-        return SalahWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
+        return SalahWorkflowScreen(
+            onDone: mosqueManager.backToNormalHomeScreen);
       case HomeActiveWorkflow.jumuaa:
-        return JumuaaWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
+        return JumuaaWorkflowScreen(
+            onDone: mosqueManager.backToNormalHomeScreen);
     }
   }
 
