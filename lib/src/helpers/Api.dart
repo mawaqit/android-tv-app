@@ -88,23 +88,21 @@ class Api {
   }
 
   static Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async {
-    final response =
-        await dio.get('$kBaseUrlV2/mosque/search?word=$mosque&page=$page');
-    if (response.statusCode == 200) {
-      List<Mosque> mosques = [];
+    final response = await dio.get(
+      '$kBaseUrlV2/mosque/search?word=$mosque&page=$page',
+    );
 
-      for (var item in response.data) {
-        try {
-          mosques.add(Mosque.fromMap(item));
-        } catch (e, stack) {
-          debugPrintStack(label: e.toString(), stackTrace: stack);
-        }
+    List<Mosque> mosques = [];
+
+    for (var item in response.data) {
+      try {
+        mosques.add(Mosque.fromMap(item));
+      } catch (e, stack) {
+        debugPrintStack(label: e.toString(), stackTrace: stack);
       }
-
-      return mosques;
-    } else {
-      throw Exception('Failed to fetch mosque');
     }
+
+    return mosques;
   }
 
   static Future<String> randomHadith({String language = 'ar'}) async {

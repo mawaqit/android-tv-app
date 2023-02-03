@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:mawaqit/src/models/flash.dart';
 
@@ -7,9 +6,10 @@ import 'announcement.dart';
 class Mosque {
   final int id;
   final String? uuid;
-  final String type ;
+  final String? type;
+
   final String name;
-  final String label;
+  final String? label;
   final String? email;
   final String? phone;
   final String? url;
@@ -228,7 +228,8 @@ class Mosque {
       childrenCourses: childrenCourses ?? this.childrenCourses,
       adultCourses: adultCourses ?? this.adultCourses,
       ramadanMeal: ramadanMeal ?? this.ramadanMeal,
-      handicapAccessibility: handicapAccessibility ?? this.handicapAccessibility,
+      handicapAccessibility:
+          handicapAccessibility ?? this.handicapAccessibility,
       ablutions: ablutions ?? this.ablutions,
       parking: parking ?? this.parking,
       otherInfo: otherInfo ?? this.otherInfo,
@@ -285,7 +286,7 @@ class Mosque {
       email: map['email'],
       phone: map['phone'],
       url: map['url'],
-      type: map["type"]==null?"MOSQUE":map['type'],
+      type: map["type"] == null ? "MOSQUE" : map['type'],
       image: map['image'],
       logo: map['logo'],
       interiorPicture: map['interiorPicture'],
