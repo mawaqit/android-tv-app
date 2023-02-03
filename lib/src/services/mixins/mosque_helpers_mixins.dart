@@ -164,12 +164,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   /// the duration until the next salah
   Duration nextSalahAfter() {
-    if (nextSalahIndex() == 0)
-      return actualTimes()[nextSalahIndex()]
-          .add(Duration(days: 1))
-          .difference(mosqueDate());
+    final duration =  actualTimes()[nextSalahIndex()].difference(mosqueDate());
 
-    return actualTimes()[nextSalahIndex()].difference(mosqueDate());
+    if(duration < Duration.zero) return duration + Duration(days: 1);
+    return duration;
   }
 
   /// the duration until the next salah
@@ -252,7 +250,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   List<String> get todayIqama => iqamasOfDay(mosqueDate());
 
-  List<String> get tomorrowIqama => iqamasOfDay(mosqueDate().add(Duration(days: 1)));
+  List<String> get tomorrowIqama =>
+      iqamasOfDay(mosqueDate().add(Duration(days: 1)));
 
   String? get jumuaaLiveUrl => null;
 
