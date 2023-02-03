@@ -41,8 +41,8 @@ class _FadeInOutWidgetState extends State<FadeInOutWidget> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        widget.first.animate(target: _showSecond ? 0 : 1).fadeIn().slideY(),
-        widget.second.animate(target: _showSecond ? 1 : 0).fadeIn().slideY(begin: 100),
+        widget.first.animate(target: _showSecond ? 0 : 1).fadeIn().fade(duration: 1.seconds),
+        widget.second.animate(target: _showSecond ? 1 : 0).fadeIn().fade(begin: 200,duration: 1.seconds),
       ],
     );
   }
