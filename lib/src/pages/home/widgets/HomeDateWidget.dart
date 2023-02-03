@@ -19,11 +19,9 @@ class HomeDateWidget extends StatelessWidget {
     final now = mosqueManager.mosqueDate();
     final lang = Localizations.localeOf(context).languageCode;
 
-    var hijriDate = HijriCalendar.fromDate(
-        now.add(Duration(days: mosqueManager.times!.hijriAdjustment)));
+    var hijriDate = HijriCalendar.fromDate(now.add(Duration(days: mosqueManager.times!.hijriAdjustment)));
 
-    bool isLunarDays =
-        hijriDate.hDay == 13 || hijriDate.hDay == 14 || hijriDate.hDay == 15;
+    bool isLunarDays = hijriDate.hDay == 13 || hijriDate.hDay == 14 || hijriDate.hDay == 15;
 
     if (lang == 'ar') {
       HijriCalendar.language = 'ar';
@@ -47,8 +45,7 @@ class HomeDateWidget extends StatelessWidget {
       DateFormat('yyyy', 'en').format(now),
     ].join(' ');
 
-    String activeDate =
-        lang == 'ar' || lang == 'fr' ? arabicFormat : defaultDateFormat;
+    String activeDate = lang == 'ar' || lang == 'fr' ? arabicFormat : defaultDateFormat;
 
     return FittedBox(
       fit: BoxFit.scaleDown,
@@ -58,7 +55,7 @@ class HomeDateWidget extends StatelessWidget {
           minHeight: 1,
         ),
         child: FadeInOutWidget(
-          duration: Duration(seconds: 6),
+          duration: Duration(seconds: 10),
           first: Text(
             activeDate,
             style: TextStyle(
@@ -69,7 +66,7 @@ class HomeDateWidget extends StatelessWidget {
               height: .8,
             ),
           ),
-          secondDuration: Duration(seconds: 4),
+          secondDuration: Duration(seconds: 10),
           second: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
