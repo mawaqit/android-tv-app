@@ -32,7 +32,12 @@ class WeatherWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            WeatherIcons.fromString(mosqueManager.weather!.icon),
+            WeatherIcons.fromStringWithDateNight(
+              mosqueManager.weather!.icon,
+
+              /// If it's after Maghrib, we show the night icon
+              mosqueManager.salahIndex < 3,
+            ),
             size: 3.vw,
             color: Colors.white,
             shadows: kAfterAdhanTextShadow,
