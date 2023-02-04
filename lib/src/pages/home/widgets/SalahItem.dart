@@ -41,14 +41,16 @@ class SalahItemWidget extends StatelessWidget {
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
     bool? isIqamaEnabled = mosqueConfig?.iqamaEnabled!;
-    bool? isIqamaMoreImportant = mosqueConfig!.iqamaMoreImportant! && isIqamaEnabled!;
+    bool? isIqamaMoreImportant =
+        mosqueConfig!.iqamaMoreImportant! && isIqamaEnabled!;
     final timeDate = time.toTimeOfDay()?.toDate();
     final iqamaDate = iqama?.toTimeOfDay()?.toDate();
     // print(isIqamaEnabled);
     final isArabic = context.read<AppLanguage>().isArabic();
 
     final is12period = mosqueConfig.timeDisplayFormat == "12";
-    final DateFormat dateTimeConverter = is12period ? DateFormat("hh:mm", "en-En") : DateFormat("HH:mm", "en");
+    final DateFormat dateTimeConverter =
+        is12period ? DateFormat("hh:mm", "en-En") : DateFormat("HH:mm", "en");
 
     return Container(
       width: 16.vw,
@@ -57,67 +59,72 @@ class SalahItemWidget extends StatelessWidget {
         color: active
             ? mosqueProvider.getColorTheme().withOpacity(.7)
             : removeBackground
-            ? null
-            : Colors.black.withOpacity(.70),
+                ? null
+                : Colors.black.withOpacity(.70),
       ),
       padding: isArabic
           ? EdgeInsets.only(bottom: 1.vh, right: 1.vw, left: 1.vw)
           : EdgeInsets.symmetric(vertical: 1.6.vh, horizontal: 1.vw),
       child: Directionality(
-        textDirection: isArabic?TextDirection.rtl:TextDirection.ltr,
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (title != null)
+            if (title != null && title!.trim().isNotEmpty)
               FittedBox(
                 child: Text(
                   maxLines: 1,
-                  title??"",
+                  title ?? "",
                   style: TextStyle(
                       fontSize: 3.vw,
                       shadows: kHomeTextShadow,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(title??"")),
+                      fontFamily:
+                          StringManager.getFontFamilyByString(title ?? "")),
                 ),
               ),
             SizedBox(height: isArabic ? 0.1.vh : 1.vh),
-            if (time.trim().isEmpty) Icon(Icons.dnd_forwardslash, size: 6.vw),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      timeDate == null ? time : dateTimeConverter.format(timeDate),
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontSize: isIqamaMoreImportant ? smallFont : bigFont,
-                        fontWeight: FontWeight.w700,
-                        shadows: kHomeTextShadow,
-                        color: Colors.white,
-                        // fontFamily: StringManager.getFontFamily(context),
+            if (time.trim().isEmpty)
+              Icon(Icons.dnd_forwardslash, size: 6.vw)
+            else
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        timeDate == null
+                            ? time
+                            : dateTimeConverter.format(timeDate),
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: isIqamaMoreImportant ? smallFont : bigFont,
+                          fontWeight: FontWeight.w700,
+                          shadows: kHomeTextShadow,
+                          color: Colors.white,
+                          // fontFamily: StringManager.getFontFamily(context),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                if (timeDate != null && is12period)
-                  SizedBox(
-                    // width: 2.vw,
-                    child: TimePeriodWidget(
-                      dateTime: timeDate,
-                      style: TextStyle(
-                        height: .9,
-                        letterSpacing: 9,
-                        fontSize: 1.6.vw,
-                        fontWeight: FontWeight.w300,
-                        shadows: kIqamaCountDownTextShadow,
-                        color: Colors.white,
+                  if (timeDate != null && is12period)
+                    SizedBox(
+                      // width: 2.vw,
+                      child: TimePeriodWidget(
+                        dateTime: timeDate,
+                        style: TextStyle(
+                          height: .9,
+                          letterSpacing: 9,
+                          fontSize: 1.6.vw,
+                          fontWeight: FontWeight.w300,
+                          shadows: kIqamaCountDownTextShadow,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
+                ],
+              ),
             if (iqama != null && isIqamaEnabled!)
               SizedBox(
                 height: isArabic ? 1.5.vh : 1.3.vw,
@@ -132,8 +139,9 @@ class SalahItemWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    iqamaDate == null ? iqama! : dateTimeConverter.format(iqamaDate),
-                    // '$iqama${iqama!.startsWith('+') ? "\'" : ""}',
+                    iqamaDate == null
+                        ? iqama!
+                        : dateTimeConverter.format(iqamaDate),
                     style: TextStyle(
                       fontSize: isIqamaMoreImportant ? bigFont : smallFont,
                       fontWeight: FontWeight.bold,
