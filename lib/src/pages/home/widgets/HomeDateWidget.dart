@@ -9,6 +9,8 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/weather_icons.dart';
+
 class HomeDateWidget extends StatelessWidget {
   const HomeDateWidget({Key? key}) : super(key: key);
 
@@ -45,7 +47,7 @@ class HomeDateWidget extends StatelessWidget {
           ),
           secondDuration: Duration(seconds: 10),
           second: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 hijriDate.formatMawaqitType(),
@@ -56,14 +58,14 @@ class HomeDateWidget extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 2.5.vw,
                   shadows: kHomeTextShadow,
-                  height: .8,
+                  height: .1,
                   fontFamily: StringManager.getFontFamily(context),
                 ),
               ),
               if (hijriDate.isInLunarDays)
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: .2.vw,
+                    horizontal: .5.vw,
                   ),
                   child: FaIcon(
                     FontAwesomeIcons.solidMoon,
