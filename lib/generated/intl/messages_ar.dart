@@ -55,6 +55,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تخصيص الخيار الخاص بك"),
         "darkMode": MessageLookupByLibrary.simpleMessage("المظهر الداكن"),
         "descLang": MessageLookupByLibrary.simpleMessage("اختر لغتك المفضّلة"),
+        "dhuAlhijjah": MessageLookupByLibrary.simpleMessage("ذو الحجة"),
+        "dhuAlqidah": MessageLookupByLibrary.simpleMessage("ذو القعدة"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "هل تعرف معرف التثبيت الخاص بك أو معرف المسجد الخاص بك؟"),
         "drawerDesc":
@@ -77,6 +79,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("دليل التثبيت"),
         "iqamaIn": MessageLookupByLibrary.simpleMessage("الاقامه بعد"),
         "isha": MessageLookupByLibrary.simpleMessage("العشاء"),
+        "jumadaAlakhirah": MessageLookupByLibrary.simpleMessage("جمادى الآخرة"),
+        "jumadaAlula": MessageLookupByLibrary.simpleMessage("جمادى الأولى"),
         "jumua": MessageLookupByLibrary.simpleMessage("الجمعة"),
         "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
             "\nعَنْ أَبِي هُرَيْرَةَ قَالَ قَالَ رَسُولُ اللَّهِ صَلَّى اللَّه عَلَيْهِ وَسَلَّمَ مَنْ تَوَضَّأَ فَأَحْسَنَ الْوُضُوءَ ثُمَّ أَتَى الْجُمُعَةَ فَاسْتَمَعَ وَأَنْصَتَ غُفِرَ لَهُ مَا بَيْنَهُ وَبَيْنَ الْجُمُعَةِ وَزِيَادَةُ ثَلاثَةِ أَيَّامٍ وَمَنْ مَسَّ الْحَصَى فَقَدْ لَغَا"),
@@ -110,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("لا توجد نتائج"),
         "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
             "Your mosque not found. it might be missing or removed from the server"),
+        "muharram": MessageLookupByLibrary.simpleMessage("محرم"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("نمط شريط التنقل"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("حالة الشبكة"),
@@ -124,10 +129,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "online": MessageLookupByLibrary.simpleMessage("متصل"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("سياسة الخصوصية"),
         "quit": MessageLookupByLibrary.simpleMessage("خروج"),
+        "rabiAlawwal": MessageLookupByLibrary.simpleMessage("ربيع الأول"),
+        "rabiAlthani": MessageLookupByLibrary.simpleMessage("ربيع الثاني"),
+        "rajab": MessageLookupByLibrary.simpleMessage("رجب"),
+        "ramadan": MessageLookupByLibrary.simpleMessage("رمضان"),
         "rate": MessageLookupByLibrary.simpleMessage("قم بتقييمنا"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption":
             MessageLookupByLibrary.simpleMessage("خيار الزر الأيمن"),
+        "safar": MessageLookupByLibrary.simpleMessage("صفر"),
         "searchByGps":
             MessageLookupByLibrary.simpleMessage("البحث عن طريق GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
@@ -137,7 +147,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("الرجاء إدخال معرف المسجد"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "علي سبيل المثال, جَرِّب 256، إنه معرف \'مسجد باريس\'"),
+        "shaban": MessageLookupByLibrary.simpleMessage("شعبان"),
         "share": MessageLookupByLibrary.simpleMessage("مشاركة"),
+        "shawwal": MessageLookupByLibrary.simpleMessage("شوال"),
         "shuruk": MessageLookupByLibrary.simpleMessage("الشروق"),
         "skype": MessageLookupByLibrary.simpleMessage("سكايب"),
         "slugError":
