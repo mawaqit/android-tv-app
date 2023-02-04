@@ -11,6 +11,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../../themes/UIShadows.dart';
+import '../widgets/FlashAnimation.dart';
 import '../widgets/SalahTimesBar.dart';
 import '../widgets/mosque_header.dart';
 
@@ -69,11 +70,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                 textDirection: TextDirection.ltr,
                 child: Padding(
                   padding: EdgeInsets.only(top: isArabic ? 4 : 4.vh),
-                  child: Animate(
-                    onPlay: (controller) {
-                      controller.repeat(reverse: true);
-                    },
-                    effects: [FadeEffect(curve: Curves.fastLinearToSlowEaseIn, delay: 1.seconds, begin: 1, end: 0)],
+                  child: FlashAnimation(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

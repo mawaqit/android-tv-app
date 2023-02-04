@@ -31,7 +31,7 @@ class AudioManager extends ChangeNotifier {
 
   void loadAndPlayIqamaBipVoice(MosqueConfig? mosqueConfig, {VoidCallback? onDone}) {
     if (mosqueConfig!.iqamaBip) {
-      adhanLink = "https://mawaqit.net/static/mp3/${mosqueConfig.adhanVoice!}.mp3";
+      adhanLink = "https://mawaqit.net/static/mp3/${mosqueConfig.adhanVoice??"bib"}.mp3";
       bip = Audio.loadFromRemoteUrl(
         bipLink,
         onComplete: () {
