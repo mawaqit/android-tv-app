@@ -4,14 +4,16 @@ class WeatherIcons extends IconData {
   const WeatherIcons(super.codePoint) : super(fontFamily: 'WeatherIcons');
 
   factory WeatherIcons.fromString(String value) {
-    return _values[value];
+
+    return _values[value]??_values["day-$value"]??_values["night-$value"]??day_sunny;
   }
 
   factory WeatherIcons.fromStringWithDateNight(
     String value, [
     bool isDay = true,
   ]) {
-    return _values['${isDay ? 'day' : 'night'}-$value'] ?? _values[value];
+    print (value);
+    return _values['${isDay ? 'day' : 'night'}-$value']?? WeatherIcons.fromString(value) ;
   }
 
   static const Map _values = {

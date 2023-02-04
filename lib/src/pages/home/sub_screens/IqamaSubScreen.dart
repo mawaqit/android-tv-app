@@ -40,14 +40,17 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
     final theme = Theme.of(context);
     final tr =S.of(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+              height:30.vh,
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 4.vw),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(15),
                 gradient: LinearGradient(
                   // transform: GradientRotation(pi / 2),
                   begin: Alignment(0, 0),
@@ -58,27 +61,14 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
                   ],
                 ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    tr.alIqama,
-                    style: theme.textTheme.displayMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      shadows: kAfterAdhanTextShadow,
-                      fontFamily: StringManager.getFontFamilyByString(tr.alIqama)
-                    ),
-                  ),
-                  Text(
-                    "الإقامة",
-                    style: theme.textTheme.displaySmall?.copyWith(
-                      color: Colors.white,
-                      fontFamily: StringManager.fontFamilyKufi,
-                      shadows: kAfterAdhanTextShadow,
-                    ),
-                  ),
-                ],
+              child: Text(
+                tr.alIqama,
+                style: theme.textTheme.displayMedium?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  shadows: kAfterAdhanTextShadow,
+                  fontFamily: StringManager.getFontFamilyByString(tr.alIqama)
+                ),
               ),
             ),
           ),
@@ -93,7 +83,9 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
             )),
         Text(
           tr.turnOfPhones,
+          textAlign: TextAlign.center,
           style: TextStyle(
+
             fontWeight: FontWeight.bold,
             fontSize: 4.vw,
             color: Colors.white,
