@@ -6,6 +6,7 @@ import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
+import 'package:mawaqit/src/pages/home/widgets/FlashAnimation.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
@@ -83,11 +84,13 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
           ),
         ),
         Expanded(
-            child: Stack(children: [
-              Transform.scale(scaleX: 1.01,scaleY: 1.02,child: Image.asset(R.ASSETS_ICON_NO_PHONE_PNG,color: Colors.black38,)),
-              Image.asset(R.ASSETS_ICON_NO_PHONE_PNG,color:Colors.white,),
+            child: FlashAnimation(
+              child: Stack(children: [
+                Transform.scale(scaleX: 1.01,scaleY: 1.02,child: Image.asset(R.ASSETS_ICON_NO_PHONE_PNG,color: Colors.black38,)),
+                Image.asset(R.ASSETS_ICON_NO_PHONE_PNG,color:Colors.white,),
 
-        ])),
+        ]),
+            )),
         Text(
           tr.turnOfPhones,
           style: TextStyle(
