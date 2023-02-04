@@ -1056,6 +1056,126 @@ class S {
       args: [],
     );
   }
+
+  /// `Muharram`
+  String get muharram {
+    return Intl.message(
+      'Muharram',
+      name: 'muharram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Safar`
+  String get safar {
+    return Intl.message(
+      'Safar',
+      name: 'safar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rabi' al-Awwal`
+  String get rabiAlawwal {
+    return Intl.message(
+      'Rabi\' al-Awwal',
+      name: 'rabiAlawwal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rabi' al-Thani`
+  String get rabiAlthani {
+    return Intl.message(
+      'Rabi\' al-Thani',
+      name: 'rabiAlthani',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jumada al-Ula`
+  String get jumadaAlula {
+    return Intl.message(
+      'Jumada al-Ula',
+      name: 'jumadaAlula',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jumada al-Akhirah`
+  String get jumadaAlakhirah {
+    return Intl.message(
+      'Jumada al-Akhirah',
+      name: 'jumadaAlakhirah',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rajab`
+  String get rajab {
+    return Intl.message(
+      'Rajab',
+      name: 'rajab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sha\ban`
+  String get shaban {
+    return Intl.message(
+      'Sha\ban',
+      name: 'shaban',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ramadan`
+  String get ramadan {
+    return Intl.message(
+      'Ramadan',
+      name: 'ramadan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shawwal`
+  String get shawwal {
+    return Intl.message(
+      'Shawwal',
+      name: 'shawwal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dhu al-Qi'dah`
+  String get dhuAlqidah {
+    return Intl.message(
+      'Dhu al-Qi\'dah',
+      name: 'dhuAlqidah',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dhu al-Hijjah`
+  String get dhuAlhijjah {
+    return Intl.message(
+      'Dhu al-Hijjah',
+      name: 'dhuAlhijjah',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

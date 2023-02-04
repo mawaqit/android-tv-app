@@ -118,5 +118,17 @@
   "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
   "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
   "error": "Error",
-  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue",
+  "muharram": "محرم",
+  "safar": "صفر",
+  "rabiAlawwal": "ربيع الأول",
+  "rabiAlthani": "ربيع الثاني",
+  "jumadaAlula": "جمادى الأولى",
+  "jumadaAlakhirah": "جمادى الآخرة",
+  "rajab": "رجب",
+  "shaban": "شعبان",
+  "ramadan": "رمضان",
+  "shawwal": "شوال",
+  "dhuAlqidah": "ذو القعدة",
+  "dhuAlhijjah": "ذو الحجة"
 }

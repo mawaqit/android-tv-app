@@ -56,6 +56,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
         "descLang": MessageLookupByLibrary.simpleMessage(
             "Please select your preferred language"),
+        "dhuAlhijjah": MessageLookupByLibrary.simpleMessage("Dhu al-Hijjah"),
+        "dhuAlqidah": MessageLookupByLibrary.simpleMessage("Dhu al-Qi\'dah"),
         "doYouKnowMosqueId": MessageLookupByLibrary.simpleMessage(
             "Do you know your installation ID or your Mosque ID?"),
         "drawerDesc": MessageLookupByLibrary.simpleMessage(
@@ -78,6 +80,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Installation Guide"),
         "iqamaIn": MessageLookupByLibrary.simpleMessage("Iqama in"),
         "isha": MessageLookupByLibrary.simpleMessage("Isha"),
+        "jumadaAlakhirah":
+            MessageLookupByLibrary.simpleMessage("Jumada al-Akhirah"),
+        "jumadaAlula": MessageLookupByLibrary.simpleMessage("Jumada al-Ula"),
         "jumua": MessageLookupByLibrary.simpleMessage("Jumua"),
         "jumuaaHadith": MessageLookupByLibrary.simpleMessage(
             "The Prophet (peace and blessings of Allah be upon him) said \"Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility\""),
@@ -109,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mosqueNoResults": MessageLookupByLibrary.simpleMessage("No results"),
         "mosqueNotFoundMessage": MessageLookupByLibrary.simpleMessage(
             "Your mosque not found. it might be missing or removed from the server"),
+        "muharram": MessageLookupByLibrary.simpleMessage("Muharram"),
         "navigationBarStyle":
             MessageLookupByLibrary.simpleMessage("Navigation bars style"),
         "networkStatus": MessageLookupByLibrary.simpleMessage("Network Status"),
@@ -123,10 +129,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "online": MessageLookupByLibrary.simpleMessage("Online"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
         "quit": MessageLookupByLibrary.simpleMessage("Quit"),
+        "rabiAlawwal": MessageLookupByLibrary.simpleMessage("Rabi\' al-Awwal"),
+        "rabiAlthani": MessageLookupByLibrary.simpleMessage("Rabi\' al-Thani"),
+        "rajab": MessageLookupByLibrary.simpleMessage("Rajab"),
+        "ramadan": MessageLookupByLibrary.simpleMessage("Ramadan"),
         "rate": MessageLookupByLibrary.simpleMessage("Rate Us"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "rightButtonOption": MessageLookupByLibrary.simpleMessage(
             "Radio Button Options (right)"),
+        "safar": MessageLookupByLibrary.simpleMessage("Safar"),
         "searchByGps": MessageLookupByLibrary.simpleMessage("Search by GPS"),
         "searchForMosque": MessageLookupByLibrary.simpleMessage(
             "Which Mosque are you looking for ? (Name, City, Postal code...)"),
@@ -137,7 +148,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please enter your Mosque ID"),
         "selectWithMosqueId": MessageLookupByLibrary.simpleMessage(
             "Try: 256, It\'s the ID of the \'Mosquée de Paris\'"),
+        "shaban": MessageLookupByLibrary.simpleMessage("Sha\ban"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
+        "shawwal": MessageLookupByLibrary.simpleMessage("Shawwal"),
         "shuruk": MessageLookupByLibrary.simpleMessage("Shuruk"),
         "skype": MessageLookupByLibrary.simpleMessage("Skype"),
         "slugError":
