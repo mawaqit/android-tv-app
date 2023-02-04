@@ -30,63 +30,69 @@ class MosqueHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           OfflineWidget(),
-          mosque.logo != null && mosqueConfig!.showLogo
-              ? CachedNetworkImage(
-                  imageUrl: mosque.logo!,
-                  width: 40,
-                  height: 40,
-                )
-              : SizedBox(),
-          // SizedBox(width: 10),
-          Container(
-              constraints: BoxConstraints(maxWidth: 70.vw),
-              child: FittedBox(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: StringManager.convertStringToList(
-                    mosqueConfig!.showCityInTitle
-                        ? mosque.name
-                        : mosque.name.contains("-")
-                            ? mosque.name.substring(0, mosque.name.lastIndexOf("-"))
-                            : mosque.name,
-                  ).map((e) {
-                    bool isArabicText =
-                        StringManager.arabicLetters.hasMatch(e) || StringManager.urduLetters.hasMatch(e);
-                    return Text(
-                      "$e ",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 4.vw,
-                          height: isArabicText ? 1.2 : 1,
-                          shadows: kIqamaCountDownTextShadow,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: isArabicText ? StringManager.fontFamilyKufi : null),
-                    );
-                  }).toList(),
-                ),
-              )
+          Row(
+            children: [
 
-              // Text(
-              //   mosque.name,
-              //   maxLines: 1,
-              //   style: TextStyle(
-              //     color: Colors.white,
-              //     fontSize: 4.vw,
-              //     height: 1,
-              //     shadows: kHomeTextShadow,
-              //     fontWeight: FontWeight.bold,
-              //     // fontFamily: StringManager.fontFamilyHelvetica
-              //   ),
-              // ),
-              ),
-          // SizedBox(width: 10),
-          mosque.logo != null && mosqueConfig.showLogo
-              ? CachedNetworkImage(
-                  imageUrl: mosque.logo!,
-                  width: 40,
-                  height: 40,
-                )
-              : SizedBox(),
+              mosque.logo != null && mosqueConfig!.showLogo
+                  ? CachedNetworkImage(
+                      imageUrl: mosque.logo!,
+                      width: 40,
+                      height: 40,
+                    )
+                  : SizedBox(),
+              // SizedBox(width: 10),
+              Container(
+                padding: EdgeInsets.only(left: 1.vw),
+                  constraints: BoxConstraints(maxWidth: 70.vw),
+                  child: FittedBox(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: StringManager.convertStringToList(
+                        mosqueConfig!.showCityInTitle
+                            ? mosque.name
+                            : mosque.name.contains("-")
+                                ? mosque.name.substring(0, mosque.name.lastIndexOf("-"))
+                                : mosque.name,
+                      ).map((e) {
+                        bool isArabicText =
+                            StringManager.arabicLetters.hasMatch(e) || StringManager.urduLetters.hasMatch(e);
+                        return Text(
+                          "$e ",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 4.vw,
+                              height: isArabicText ? 1.2 : 1,
+                              shadows: kIqamaCountDownTextShadow,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: isArabicText ? StringManager.fontFamilyKufi : null),
+                        );
+                      }).toList(),
+                    ),
+                  )
+
+                  // Text(
+                  //   mosque.name,
+                  //   maxLines: 1,
+                  //   style: TextStyle(
+                  //     color: Colors.white,
+                  //     fontSize: 4.vw,
+                  //     height: 1,
+                  //     shadows: kHomeTextShadow,
+                  //     fontWeight: FontWeight.bold,
+                  //     // fontFamily: StringManager.fontFamilyHelvetica
+                  //   ),
+                  // ),
+                  ),
+              // SizedBox(width: 10),
+              mosque.logo != null && mosqueConfig.showLogo
+                  ? CachedNetworkImage(
+                      imageUrl: mosque.logo!,
+                      width: 40,
+                      height: 40,
+                    )
+                  : SizedBox(),
+            ],
+          ),
           WeatherWidget(),
         ],
       ),
