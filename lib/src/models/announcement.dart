@@ -110,10 +110,10 @@ class Announcement {
   factory Announcement.fromMap(Map<String, dynamic> map) {
     return Announcement(
       id: map['id'],
-      title: map['title'],
+      title: map['title'] ?? '',
       content: map['content'],
-      isMobile: map['isMobile'],
-      isDesktop: map['isDesktop'],
+      isMobile: map['isMobile'] ?? false,
+      isDesktop: map['isDesktop'] ?? true,
       image: map['image'],
       video: map['video'],
       duration: map["duration"],

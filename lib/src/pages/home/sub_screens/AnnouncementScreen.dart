@@ -84,7 +84,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     return SizedBox();
   }
 
-  Widget textAnnouncement(String content, String title) {
+  Widget textAnnouncement(String content, String? title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
@@ -93,14 +93,14 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
           SizedBox(
             height: 2.vh,
           ),
-          AutoSizeText(title,
+          AutoSizeText(title??'',
               stepGranularity: 12,
               textAlign: TextAlign.center,
               style: TextStyle(
                   shadows: kAnnouncementTextShadow,
                   fontSize: 62,
                   fontWeight: FontWeight.bold,
-                  fontFamily: StringManager.getFontFamilyByString(title),
+                  fontFamily: StringManager.getFontFamilyByString(title??''),
                   color: Colors.amber,
                   letterSpacing: 1)),
           // content

@@ -6,7 +6,6 @@ class Flash {
   final String? endDate;
   final String? color;
 
-
 //<editor-fold desc="Data Methods">
 
   const Flash({
@@ -32,7 +31,11 @@ class Flash {
 
   @override
   String toString() {
-    return 'Flash{' + ' content: $content,' + ' orientation: $orientation,' + ' expire: $expire,' + '}';
+    return 'Flash{' +
+        ' content: $content,' +
+        ' orientation: $orientation,' +
+        ' expire: $expire,' +
+        '}';
   }
 
   Flash copyWith({
@@ -48,8 +51,8 @@ class Flash {
       orientation: orientation ?? this.orientation,
       expire: expire ?? this.expire,
       color: color ?? this.color,
-      startDate: startDate?? this.startDate,
-      endDate: endDate??this.endDate,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
     );
   }
 
@@ -58,7 +61,7 @@ class Flash {
       'content': this.content,
       'orientation': this.orientation,
       'expire': this.expire,
-      'startDate':this.startDate,
+      'startDate': this.startDate,
       'endDate': this.endDate,
       'color': this.color,
     };
@@ -66,13 +69,12 @@ class Flash {
 
   factory Flash.fromMap(Map<String, dynamic> map) {
     return Flash(
-      content: map['content'],
-      orientation: map['orientation'],
+      content: map['content'] ?? '',
+      orientation: map['orientation'] ?? 'ltr',
       expire: map['expire'] ?? 0,
       color: map['color'],
-        startDate: map['startDate'],
+      startDate: map['startDate'],
       endDate: map['endDate'],
-
     );
   }
 

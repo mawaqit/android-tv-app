@@ -12,10 +12,10 @@ class Times {
   final bool jumuaAsDuhr;
   final int imsakNbMinBeforeFajr;
   final String? shuruq;
+
   // final List<String> times;
   final List calendar;
   final List iqamaCalendar;
-
 
 //<editor-fold desc="Data Methods">
 
@@ -138,16 +138,15 @@ class Times {
       jumua2: map['jumua2'],
       aidPrayerTime: map['aidPrayerTime'],
       aidPrayerTime2: map['aidPrayerTime2'],
-      hijriAdjustment: map['hijriAdjustment'],
-      hijriDateForceTo30: map['hijriDateForceTo30'],
-      jumuaAsDuhr: map['jumuaAsDuhr'],
-      imsakNbMinBeforeFajr: map['imsakNbMinBeforeFajr'],
+      hijriAdjustment: map['hijriAdjustment'] ?? -1,
+      hijriDateForceTo30: map['hijriDateForceTo30'] ?? false,
+      jumuaAsDuhr: map['jumuaAsDuhr'] ?? false,
+      imsakNbMinBeforeFajr: map['imsakNbMinBeforeFajr']?? 0,
       shuruq: map['shuruq'],
       // times: List<String>.from(map['times']),
       calendar: map['calendar'],
       iqamaCalendar: map['iqamaCalendar'],
     );
-
   }
 
 //</editor-fold>
