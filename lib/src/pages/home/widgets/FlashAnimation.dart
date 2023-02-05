@@ -8,12 +8,14 @@ class FlashAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Animate(
-      onPlay: (controller) {
-        controller.repeat(reverse: true);
-      },
-      effects: [FadeEffect(curve: Curves.fastLinearToSlowEaseIn, delay: 1.seconds, begin: 1, end: 0)],
-      child: child,
+    return RepaintBoundary(
+      child: Animate(
+        onPlay: (controller) {
+          controller.repeat(reverse: true);
+        },
+        effects: [FadeEffect(curve: Curves.fastLinearToSlowEaseIn, delay: 1.seconds, begin: 1, end: 0)],
+        child: child,
+      ),
     );
   }
 }

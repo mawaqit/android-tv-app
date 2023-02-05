@@ -259,7 +259,6 @@ class MosqueConfig {
   }
 
   factory MosqueConfig.fromMap(Map<String, dynamic> map) {
-    debugPrint(map.toString(),wrapWidth: 500);
     return MosqueConfig(
       duaAfterPrayerShowTimes: List.from(map["duaAfterPrayerShowTimes"]),
       hijriDateEnabled: map['hijriDateEnabled'],
