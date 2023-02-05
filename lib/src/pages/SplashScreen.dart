@@ -96,6 +96,8 @@ class _SplashScreen extends State<Splash> {
       }
     } on DioError catch (e) {
       if (e.response == null) {
+        print('no internet connection');
+        print(e.requestOptions.uri);
         setState(() => error = ErrorState.noInternet);
 
         // mosque not found
@@ -154,19 +156,21 @@ class _SplashScreen extends State<Splash> {
               'assets/backgrounds/splash_screen_5.png',
               fit: BoxFit.cover,
             ),
-            Container(
-              width: double.infinity,
-              child: SplashScreen.callback(
-                isLoading: false,
-                onSuccess: (e) => _navigateToHome(),
-                onError: (error, stacktrace) {},
-                name: 'assets/animations/rive/mawaqit_logo_animation1.riv',
-                fit: BoxFit.cover,
-                startAnimation: 'idle',
-                loopAnimation: 'loading_light',
-                endAnimation: 'loaded_text_light',
-                width: 100,
-                height: 100,
+            RepaintBoundary(
+              child: Container(
+                width: double.infinity,
+                child: SplashScreen.callback(
+                  isLoading: false,
+                  onSuccess: (e) => _navigateToHome(),
+                  onError: (error, stacktrace) {},
+                  name: 'assets/animations/rive/mawaqit_logo_animation1.riv',
+                  fit: BoxFit.cover,
+                  startAnimation: 'idle',
+                  loopAnimation: 'loading_light',
+                  endAnimation: 'loaded_text_light',
+                  width: 100,
+                  height: 100,
+                ),
               ),
             ),
             Container(

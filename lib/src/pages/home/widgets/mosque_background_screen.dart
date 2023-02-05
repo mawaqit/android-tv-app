@@ -11,11 +11,16 @@ import 'package:provider/provider.dart';
 /// used to show the background of the mosque
 /// used with the sunscreens
 /// in case you need to show sub screen without the [OfflineHomeScreen]
-class MosqueBackgroundScreen extends StatelessWidget {
+class MosqueBackgroundScreen extends StatefulWidget {
   MosqueBackgroundScreen({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
 
+  @override
+  State<MosqueBackgroundScreen> createState() => _MosqueBackgroundScreenState();
+}
+
+class _MosqueBackgroundScreenState extends State<MosqueBackgroundScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -60,7 +65,7 @@ class MosqueBackgroundScreen extends StatelessWidget {
                       onError: (exception, stackTrace) {},
                     ),
                   ),
-            child: Container(child: child),
+            child: Container(child: widget.child),
           ),
         ),
       ),

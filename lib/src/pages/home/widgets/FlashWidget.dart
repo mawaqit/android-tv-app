@@ -19,25 +19,29 @@ class FlashWidget extends StatelessWidget {
     DateTime? endDate;
     if (startDate != null) startDate = DateTime.parse(mosque.flash!.startDate!);
     if (endDate != null) startDate = DateTime.parse(mosque.flash!.endDate!);
-    bool flashIsInDateTime = now.isAfter(startDate ?? now) && now.isBefore(endDate ?? now);
+    bool flashIsInDateTime =
+        now.isAfter(startDate ?? now) && now.isBefore(endDate ?? now);
     bool isNoDate = startDate == null || endDate == null;
-    return mosque.flash?.content.isEmpty != false || (!flashIsInDateTime && !isNoDate)
+    return mosque.flash?.content.isEmpty != false ||
+            (!flashIsInDateTime && !isNoDate)
 
         //todo get the message
         ? SizedBox()
-        : Marquee(
-            velocity:90,
-            decelerationCurve: Curves.linear,
-            accelerationCurve: Curves.linear,
-            text: mosque.flash?.content ?? '',
-            scrollAxis: Axis.horizontal,
-            blankSpace: 500,
-            style: TextStyle(
-              fontSize:3.4.vw,
-              fontWeight: FontWeight.bold,
-              wordSpacing: 3,
-              shadows: kHomeTextShadow,
-              color: HexColor(mosque.flash?.color ?? "#FFFFFF"),
+        : RepaintBoundary(
+            child: Marquee(
+              velocity: 90,
+              decelerationCurve: Curves.linear,
+              accelerationCurve: Curves.linear,
+              text: mosque.flash?.content ?? '',
+              scrollAxis: Axis.horizontal,
+              blankSpace: 500,
+              style: TextStyle(
+                fontSize: 3.4.vw,
+                fontWeight: FontWeight.bold,
+                wordSpacing: 3,
+                shadows: kHomeTextShadow,
+                color: HexColor(mosque.flash?.color ?? "#FFFFFF"),
+              ),
             ),
           );
   }

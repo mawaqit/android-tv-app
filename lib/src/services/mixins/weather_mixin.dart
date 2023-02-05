@@ -17,6 +17,8 @@ mixin WeatherMixin on ChangeNotifier {
         notifyListeners();
       }).catchError((e, stack) {
         debugPrintStack(stackTrace: stack, label: e.toString());
+        weather = null;
+        notifyListeners();
       });
   }
 
