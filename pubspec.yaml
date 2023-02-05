@@ -67,7 +67,7 @@ dependencies:
   uni_links: ^0.5.1
 
   # TOOLS
-  google_fonts: ^2.3.2
+  google_fonts: ^4.0.3
   package_info: ^2.0.2
   android_intent: ^2.0.2
   global_configuration: ^2.0.0-nullsafety.1
@@ -78,7 +78,7 @@ dependencies:
 
   # STATE MANAGEMENT
   provider: ^6.0.2
-  flutter_riverpod: ^1.0.4
+  flutter_riverpod: ^2.1.3
   path_provider: ^2.0.9
 
   animated_text_kit: ^4.2.2
@@ -91,7 +91,7 @@ dependencies:
 
   # MAP
   #location: ^4.3.0
-  geolocator: ^8.2.1
+  geolocator: ^9.0.2
   hijri: ^3.0.0
   arabic_numbers: ^1.0.0
   persian_number_utility: ^1.1.3
@@ -99,8 +99,8 @@ dependencies:
   #  webview_flutter: ^3.0.0
 
   rive_splash_screen: ^0.1.0
-  lottie: ^1.3.0
-  flutter_svg: ^1.0.3
+  lottie: ^2.2.0
+  flutter_svg: ^2.0.0+1
   introduction_screen: ^3.0.2
   dots_indicator: ^2.1.0
   sizer: ^2.0.15

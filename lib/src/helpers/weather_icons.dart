@@ -4,16 +4,18 @@ class WeatherIcons extends IconData {
   const WeatherIcons(super.codePoint) : super(fontFamily: 'WeatherIcons');
 
   factory WeatherIcons.fromString(String value) {
-
-    return _values[value]??_values["day-$value"]??_values["night-$value"]??day_sunny;
+    return _values[value] ??
+        _values["day-$value"] ??
+        _values["night-$value"] ??
+        day_sunny;
   }
 
   factory WeatherIcons.fromStringWithDateNight(
     String value, [
     bool isDay = true,
   ]) {
-    print (value);
-    return _values['${isDay ? 'day' : 'night'}-$value']?? WeatherIcons.fromString(value) ;
+    return _values['${isDay ? 'day' : 'night'}-$value'] ??
+        WeatherIcons.fromString(value);
   }
 
   static const Map _values = {
@@ -600,7 +602,6 @@ class WeatherIcons extends IconData {
     "wu-snow": wu_snow,
     "wu-sunny": wu_sunny,
     "wu-tstorms": wu_tstorms,
-    "wu-unknown": wu_unknown,
   };
 
   static const day_sunny = WeatherIcons(0xf00d);
@@ -1186,5 +1187,4 @@ class WeatherIcons extends IconData {
   static const wu_snow = WeatherIcons(0xf01b);
   static const wu_sunny = WeatherIcons(0xf00d);
   static const wu_tstorms = WeatherIcons(0xf01e);
-  static const wu_unknown = WeatherIcons(0xf00);
 }
