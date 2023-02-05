@@ -40,10 +40,13 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
     final adhanEndTime = currentSalahTime.add(mosqueManger.getAdhanDuration());
     final adhanDuaaEndTime = adhanEndTime.add(Duration(seconds: 35));
     final iqamaEndTime = currentIqamaTime.add(Duration(minutes: 1));
-    final salahTime = mosqueManger.mosqueConfig!.duaAfterPrayerShowTimes[currentSalah];
-    final salahEndTime = iqamaEndTime.add(Duration(minutes: int.tryParse(salahTime) ?? 0));
+    final salahTime =
+        mosqueManger.mosqueConfig!.duaAfterPrayerShowTimes[currentSalah];
+    final salahEndTime =
+        iqamaEndTime.add(Duration(minutes: int.tryParse(salahTime) ?? 0));
 
-    if (mosqueManger.mosqueConfig?.iqamaEnabled == false && now.isAfter(adhanDuaaEndTime)) {
+    if (mosqueManger.mosqueConfig?.iqamaEnabled == false &&
+        now.isAfter(adhanDuaaEndTime)) {
       widget.onDone();
     }
 
@@ -58,12 +61,15 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
     if (now.isAfter(adhanEndTime)) return onAdhanDone();
 
     return showAdhan(
-      mosqueManger.nextSalahAfter() > Duration(minutes: 5) ? Duration.zero : mosqueManger.nextSalahAfter(),
+      mosqueManger.nextSalahAfter() > Duration(minutes: 5)
+          ? Duration.zero
+          : mosqueManger.nextSalahAfter(),
     );
   }
 
   calculateCurrentSalah(MosqueManager mosqueManger) {
-    if (mosqueManger.nextSalahAfter() < Duration(minutes: 5)) return mosqueManger.nextSalahIndex();
+    if (mosqueManger.nextSalahAfter() < Duration(minutes: 5))
+      return mosqueManger.nextSalahIndex();
 
     return mosqueManger.salahIndex;
   }
@@ -80,20 +86,24 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
 
   onAfterAdhanDuaaDone() {
     final mosqueManager = context.read<MosqueManager>();
-    if (mosqueManager.mosqueConfig?.iqamaEnabled == false) return widget.onDone();
+    if (mosqueManager.mosqueConfig?.iqamaEnabled == false)
+      return widget.onDone();
 
     setState(() => state = SalahWorkflowScreens.iqamaaCountDown);
   }
 
-  onIqamaaCountDownDone() => setState(() => state = SalahWorkflowScreens.iqamaa);
+  onIqamaaCountDownDone() =>
+      setState(() => state = SalahWorkflowScreens.iqamaa);
 
   onIqamaaDone() {
     setState(() => state = SalahWorkflowScreens.salahTime);
 
-    Future.delayed(context.read<MosqueManager>().currentSalahDuration, onSalahTimeDoneDone);
+    Future.delayed(context.read<MosqueManager>().currentSalahDuration,
+        onSalahTimeDoneDone);
   }
 
-  onSalahTimeDoneDone() => setState(() => state = SalahWorkflowScreens.afterSalahAzkar);
+  onSalahTimeDoneDone() =>
+      setState(() => state = SalahWorkflowScreens.afterSalahAzkar);
 
   @override
   void initState() {
@@ -115,7 +125,7 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
       case SalahWorkflowScreens.iqamaa:
         return IqamaSubScreen(onDone: onIqamaaDone);
       case SalahWorkflowScreens.salahTime:
-        return NormalHomeSubScreen();
+        return Scaffold();
       case SalahWorkflowScreens.afterSalahAzkar:
         return AfterSalahAzkar(onDone: widget.onDone);
     }
