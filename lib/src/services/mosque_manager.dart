@@ -14,6 +14,7 @@ import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
 import 'mixins/audio_mixin.dart';
+import 'mixins/connectivity_mixin.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
@@ -22,7 +23,8 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(minutes: 2);
 
-class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, MosqueHelpersMixin {
+class MosqueManager extends ChangeNotifier
+    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -51,6 +53,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     await Api.init();
     await loadFromLocale();
     // subscribeToTime();
+    listenToConnectivity();
 
     notifyListeners();
   }
@@ -90,7 +93,11 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription?.cancel();
     _configSubscription?.cancel();
 
-    bool isDone() => times != null && mosqueConfig != null && mosque != null && !completer.isCompleted;
+    bool isDone() =>
+        times != null &&
+        mosqueConfig != null &&
+        mosque != null &&
+        !completer.isCompleted;
 
     /// if getting item returns an error
     onItemError(e, d) {}
@@ -102,7 +109,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
 
       if (isDone()) completer.complete();
     }, onError: (e, stack) {
-      if (mosque == null && !completer.isCompleted) completer.completeError(e, stack);
+      if (mosque == null && !completer.isCompleted)
+        completer.completeError(e, stack);
     });
 
     _timesSubscription = Api.getMosqueTimesStream(uuid).listen((event) {
@@ -111,7 +119,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
 
       if (isDone()) completer.complete();
     }, onError: (e, stack) {
-      if (times == null && !completer.isCompleted) completer.completeError(e, stack);
+      if (times == null && !completer.isCompleted)
+        completer.completeError(e, stack);
     });
 
     _configSubscription = Api.getMosqueConfigStream(uuid).listen((event) {
@@ -120,7 +129,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
 
       if (isDone()) completer.complete();
     }, onError: (e, stack) {
-      if (mosqueConfig == null && !completer.isCompleted) completer.completeError(e, stack);
+      if (mosqueConfig == null && !completer.isCompleted)
+        completer.completeError(e, stack);
     });
 
     mosqueUUID = uuid;
@@ -128,13 +138,16 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     return completer.future;
   }
 
-  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async => Api.searchMosques(mosque, page: page);
+  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async =>
+      Api.searchMosques(mosque, page: page);
 
 //todo handle page and get more
   Future<List<Mosque>> searchWithGps() async {
-    final position = await getCurrentLocation().catchError((e) => throw GpsError());
+    final position =
+        await getCurrentLocation().catchError((e) => throw GpsError());
 
-    final url = Uri.parse("$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
+    final url = Uri.parse(
+        "$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
     Map<String, String> requestHeaders = {
       // "Api-Access-Token": mawaqitApiToken,
     };
@@ -171,7 +184,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     //   speed: 0,
     //   speedAccuracy: 0,
     // );
-    var enabled = await GeolocatorPlatform.instance.isLocationServiceEnabled().timeout(Duration(seconds: 5));
+    var enabled = await GeolocatorPlatform.instance
+        .isLocationServiceEnabled()
+        .timeout(Duration(seconds: 5));
 
     if (!enabled) {
       enabled = await GeolocatorPlatform.instance.openLocationSettings();
@@ -179,7 +194,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     if (!enabled) throw GpsError();
 
     final permission = await GeolocatorPlatform.instance.requestPermission();
-    if (permission == LocationPermission.deniedForever || permission == LocationPermission.denied) throw GpsError();
+    if (permission == LocationPermission.deniedForever ||
+        permission == LocationPermission.denied) throw GpsError();
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }
