@@ -7,9 +7,11 @@ import 'package:provider/provider.dart';
 
 /// the bottom bar of 5 salah times
 class SalahTimesBar extends StatelessWidget {
-  const SalahTimesBar(
-      {Key? key, this.miniStyle = false, this.microStyle = false})
-      : super(key: key);
+  const SalahTimesBar({
+    Key? key,
+    this.miniStyle = false,
+    this.microStyle = false,
+  }) : super(key: key);
 
   final bool miniStyle;
   final bool microStyle;

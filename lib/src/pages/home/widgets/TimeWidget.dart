@@ -30,38 +30,35 @@ class HomeTimeWidget extends TimerRefreshWidget {
             color: Colors.black.withOpacity(.70),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  height: 25.vh,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(20),
-                    ),
-                    color: mosqueManager.getColorTheme().withOpacity(.7),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 25.vh,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(20),
                   ),
-                  padding:
-                      EdgeInsets.symmetric(vertical: 1.5.vw, horizontal: 5.vw),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      //clock timer
-                      CurrentTimeWidget(),
-                      // date time
-
-                      HomeDateWidget(),
-                    ],
-                  ),
+                  color: mosqueManager.getColorTheme().withOpacity(.7),
                 ),
-                Padding(
-                    padding: EdgeInsets.all(isArabicLang ? 0.1.vw : 2.vh),
-                    child: SalahInWidget()),
-              ],
-            ),
+                padding:
+                    EdgeInsets.symmetric(vertical: 1.5.vw, horizontal: 5.vw),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    //clock timer
+                    CurrentTimeWidget(),
+                    // date time
+
+                    HomeDateWidget(),
+                  ],
+                ),
+              ),
+              Padding(
+                  padding: EdgeInsets.all(isArabicLang ? 0.1.vw : 2.vh),
+                  child: SalahInWidget()),
+            ],
           ),
         ),
       ),
