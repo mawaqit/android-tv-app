@@ -20,52 +20,38 @@ class NormalHomeSubScreen extends StatelessWidget {
     final mosqueProvider = context.read<MosqueManager>();
     final mosque = mosqueProvider.mosque!;
     final mosqueConfig = mosqueProvider.mosqueConfig;
-    final isArabic = context.read<AppLanguage>().isArabic();
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          children: [
-            Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
-            Padding(
-              padding: EdgeInsets.only(top: 1.vh),
-              child: Directionality(
-                textDirection: TextDirection.ltr,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 2.vw, top: 1.5.vh),
-                      // :EdgeInsets.only(left: 2.vw,bottom: 6.vh),
-                      child: ShurukWidget(),
-                    ),
-                    HomeTimeWidget(),
-                    Padding(
-                      padding: isArabic
-                          ? EdgeInsets.only(right: 5.7.vw, top: 1.3.vh)
-                          : EdgeInsets.only(right: 5.7.vw, top: 2.vh),
-                      child: Center(
-                        child: SalahItemWidget(
-                          title: S.of(context).jumua,
-                          time: mosqueProvider.times!.jumua ?? "",
-                          iqama: mosqueProvider.times!.jumua2,
-                          active: mosqueProvider.nextSalahIndex() == 2 &&
-                              mosqueProvider.mosqueDate().weekday == DateTime.friday,
-                          removeBackground: true,
-                        ),
-                      ),
-                    ),
-                  ],
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: MosqueHeader(mosque: mosque),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 3.vw).copyWith(top: 1.5.vw),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ShurukWidget(),
+              HomeTimeWidget(),
+              Center(
+                child: SalahItemWidget(
+                  title: S.of(context).jumua,
+                  time: mosqueProvider.times!.jumua ?? "",
+                  iqama: mosqueProvider.times!.jumua2,
+                  active: mosqueProvider.nextSalahIndex() == 2 &&
+                      mosqueProvider.mosqueDate().weekday == DateTime.friday,
+                  removeBackground: true,
                 ),
               ),
-            ),
-            Padding(
-              padding: isArabic ? EdgeInsets.only(top: 7.3.vh, right: 1.vw) : EdgeInsets.only(top: 8.vh, right: 1.vw),
-              child: SalahTimesBar(),
-            ),
-          ],
+            ],
+          ),
         ),
-        Directionality(textDirection: TextDirection.ltr, child: Footer()),
+        Spacer(),
+        SalahTimesBar(),
+        Spacer(),
+        mosqueConfig!.footer == true ? Footer() : SizedBox(height: 2.vw),
       ],
     );
   }

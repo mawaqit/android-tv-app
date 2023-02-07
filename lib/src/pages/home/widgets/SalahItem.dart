@@ -65,113 +65,110 @@ class SalahItemWidget extends StatelessWidget {
       padding: isArabic
           ? EdgeInsets.only(bottom: 1.vh, right: 1.vw, left: 1.vw)
           : EdgeInsets.symmetric(vertical: 1.6.vh, horizontal: 1.vw),
-      child: Directionality(
-        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (title != null && title!.trim().isNotEmpty)
-              FittedBox(
-                child: Text(
-                  maxLines: 1,
-                  title ?? "",
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (title != null && title!.trim().isNotEmpty)
+            FittedBox(
+              child: Text(
+                maxLines: 1,
+                title ?? "",
+                style: TextStyle(
+                    fontSize: 3.vw,
+                    shadows: kHomeTextShadow,
+                    color: Colors.white,
+                    fontFamily:
+                        StringManager.getFontFamilyByString(title ?? "")),
+              ),
+            ),
+          SizedBox(height: isArabic ? 0.1.vh : 1.vh),
+          if (time.trim().isEmpty)
+            Icon(Icons.dnd_forwardslash, size: 6.vw)
+          else
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      timeDate == null
+                          ? time
+                          : dateTimeConverter.format(timeDate),
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: isIqamaMoreImportant ? smallFont : bigFont,
+                        fontWeight: FontWeight.w700,
+                        shadows: kHomeTextShadow,
+                        color: Colors.white,
+                        // fontFamily: StringManager.getFontFamily(context),
+                      ),
+                    ),
+                  ),
+                ),
+                if (timeDate != null && is12period)
+                  SizedBox(
+                    // width: 2.vw,
+                    child: TimePeriodWidget(
+                      dateTime: timeDate,
+                      style: TextStyle(
+                        height: .9,
+                        letterSpacing: 9,
+                        fontSize: 1.6.vw,
+                        fontWeight: FontWeight.w300,
+                        shadows: kIqamaCountDownTextShadow,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          if (iqama != null && isIqamaEnabled!)
+            SizedBox(
+              height: isArabic ? 1.5.vh : 1.3.vw,
+              width: double.infinity,
+              child: Divider(
+                thickness: 1,
+                color: withDivider ? Colors.white : Colors.transparent,
+              ),
+            ),
+          if (iqama != null && isIqamaEnabled!)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  iqamaDate == null
+                      ? iqama!
+                      : dateTimeConverter.format(iqamaDate),
                   style: TextStyle(
-                      fontSize: 3.vw,
-                      shadows: kHomeTextShadow,
-                      color: Colors.white,
-                      fontFamily:
-                          StringManager.getFontFamilyByString(title ?? "")),
-                ),
-              ),
-            SizedBox(height: isArabic ? 0.1.vh : 1.vh),
-            if (time.trim().isEmpty)
-              Icon(Icons.dnd_forwardslash, size: 6.vw)
-            else
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        timeDate == null
-                            ? time
-                            : dateTimeConverter.format(timeDate),
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: isIqamaMoreImportant ? smallFont : bigFont,
-                          fontWeight: FontWeight.w700,
-                          shadows: kHomeTextShadow,
-                          color: Colors.white,
-                          // fontFamily: StringManager.getFontFamily(context),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (timeDate != null && is12period)
-                    SizedBox(
-                      // width: 2.vw,
-                      child: TimePeriodWidget(
-                        dateTime: timeDate,
-                        style: TextStyle(
-                          height: .9,
-                          letterSpacing: 9,
-                          fontSize: 1.6.vw,
-                          fontWeight: FontWeight.w300,
-                          shadows: kIqamaCountDownTextShadow,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            if (iqama != null && isIqamaEnabled!)
-              SizedBox(
-                height: isArabic ? 1.5.vh : 1.3.vw,
-                width: double.infinity,
-                child: Divider(
-                  thickness: 1,
-                  color: withDivider ? Colors.white : Colors.transparent,
-                ),
-              ),
-            if (iqama != null && isIqamaEnabled!)
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    iqamaDate == null
-                        ? iqama!
-                        : dateTimeConverter.format(iqamaDate),
-                    style: TextStyle(
-                      fontSize: isIqamaMoreImportant ? bigFont : smallFont,
-                      fontWeight: FontWeight.bold,
-                      shadows: kHomeTextShadow,
-                      letterSpacing: 1,
-                      color: Colors.white,
+                    fontSize: isIqamaMoreImportant ? bigFont : smallFont,
+                    fontWeight: FontWeight.bold,
+                    shadows: kHomeTextShadow,
+                    letterSpacing: 1,
+                    color: Colors.white,
 
-                      // fontFamily: StringManager.getFontFamily(context)
-                    ),
+                    // fontFamily: StringManager.getFontFamily(context)
                   ),
-                  if (iqamaDate != null && is12period)
-                    SizedBox(
-                      width: 1.vw,
-                      child: TimePeriodWidget(
-                        dateTime: iqamaDate,
-                        style: TextStyle(
-                          height: .9,
-                          letterSpacing: 9,
-                          fontSize: 1.4.vw,
-                          fontWeight: FontWeight.w300,
-                          shadows: kIqamaCountDownTextShadow,
-                          // fontFamily: StringManager.getFontFamily(context),
-                          color: Colors.white,
-                        ),
+                ),
+                if (iqamaDate != null && is12period)
+                  SizedBox(
+                    width: 1.vw,
+                    child: TimePeriodWidget(
+                      dateTime: iqamaDate,
+                      style: TextStyle(
+                        height: .9,
+                        letterSpacing: 9,
+                        fontSize: 1.4.vw,
+                        fontWeight: FontWeight.w300,
+                        shadows: kIqamaCountDownTextShadow,
+                        // fontFamily: StringManager.getFontFamily(context),
+                        color: Colors.white,
                       ),
                     ),
-                ],
-              ),
-          ],
-        ),
+                  ),
+              ],
+            ),
+        ],
       ),
     );
   }
