@@ -34,20 +34,27 @@ class RandomHadithTest extends StatelessWidget {
           child: Container(
         padding: EdgeInsets.all(2.5.vw),
         child: Text(
-          style: TextStyle(fontSize: 62, color: Colors.white, shadows: kIqamaCountDownTextShadow),
+          style: TextStyle(
+              fontSize: 62,
+              color: Colors.white,
+              shadows: kIqamaCountDownTextShadow),
           "Random Hadith is Disabled",
         ),
       ));
     }
     if (mosqueManager.isDisableHadithBetweenSalah()) {
-      final twoSalahIndex = mosqueConfig.randomHadithIntervalDisabling!.split("-");
+      final twoSalahIndex =
+          mosqueConfig.randomHadithIntervalDisabling!.split("-");
       int firstIndex = int.parse(twoSalahIndex.first);
       int lastIndex = int.parse(twoSalahIndex.last);
       return Center(
           child: Container(
         padding: EdgeInsets.all(2.5.vw),
         child: Text(
-          style: TextStyle(fontSize: 62, color: Colors.white, shadows: kIqamaCountDownTextShadow),
+          style: TextStyle(
+              fontSize: 62,
+              color: Colors.white,
+              shadows: kIqamaCountDownTextShadow),
           "No Random Hadith between ${mosqueManager.salahName(firstIndex)} and ${mosqueManager.salahName(lastIndex)}",
         ),
       ));
@@ -79,7 +86,8 @@ class RandomHadithTest extends StatelessWidget {
                           fontSize: 100.vw,
                           fontWeight: FontWeight.bold,
                           shadows: kIqamaCountDownTextShadow,
-                          fontFamily: mosqueConfig.hadithLang!.contains("ar") || mosqueConfig.hadithLang!.contains("ur")
+                          fontFamily: mosqueConfig.hadithLang!.contains("ar") ||
+                                  mosqueConfig.hadithLang!.contains("ur")
                               ? StringManager.fontFamilyKufi
                               : null,
                           color: Colors.white,

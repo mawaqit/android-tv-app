@@ -83,38 +83,35 @@ class AboveSalahBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                     color: mosqueManager.getColorTheme().withOpacity(.7),
                   ),
-                  child: Directionality(
-                    textDirection: isArabic?TextDirection.rtl:TextDirection.ltr,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          textDirection: TextDirection.ltr,
-                          is12Hours ? DateFormat("hh:mm", "en").format(now) : DateFormat("HH:mm", "en").format(now),
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        textDirection: TextDirection.ltr,
+                        is12Hours ? DateFormat("hh:mm", "en").format(now) : DateFormat("HH:mm", "en").format(now),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            shadows: kHomeTextShadow,
+                            fontSize: isArabic ? 5.3.vh : 6.vh,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: isArabic?5:0,),
+                      if (is12Hours)
+                        SizedBox(
+                          width: 2.6.vw,
+                          child: TimePeriodWidget(
+                            dateTime: now,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               shadows: kHomeTextShadow,
-                              fontSize: isArabic ? 5.3.vh : 6.vh,
+                              letterSpacing: 1.vw,
+                              height: .9,
+                              fontSize: 1.2.vw,
                               color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(width: isArabic?5:0,),
-                        if (is12Hours)
-                          SizedBox(
-                            width: 2.6.vw,
-                            child: TimePeriodWidget(
-                              dateTime: now,
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                shadows: kHomeTextShadow,
-                                letterSpacing: 1.vw,
-                                height: .9,
-                                fontSize: 1.2.vw,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w300,
-                              ),
+                              fontWeight: FontWeight.w300,
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                 ),
               ],
