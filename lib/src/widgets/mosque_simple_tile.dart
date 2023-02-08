@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 
 class MosqueSimpleTile extends StatefulWidget {
@@ -63,9 +64,13 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
                       style: theme.textTheme.titleMedium,
                     ),
                     SizedBox(height: 2),
-                    Text(
-                      widget.mosque.localisation ?? '',
-                      style: theme.textTheme.bodySmall,
+                    SizedBox(
+                      width: 45.vw,
+                      child: Text(
+                        overflow: TextOverflow.ellipsis,
+                        widget.mosque.localisation ?? '',
+                        style: theme.textTheme.bodySmall,
+                      ),
                     ),
                   ],
                 )
