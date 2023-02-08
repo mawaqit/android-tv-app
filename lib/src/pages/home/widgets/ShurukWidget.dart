@@ -12,13 +12,12 @@ class ShurukWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueProvider = context.read<MosqueManager>();
 
-    return mosqueProvider.showImsak
+    return mosqueProvider.isShurukTime
         ? Center(
             child: SalahItemWidget(
-              title: S.of(context).imsak,
-              time: mosqueProvider.imsak,
-              removeBackground: true,
-              withDivider: false,
+              title: S.of(context).shuruk,
+              time: mosqueProvider.times!.shuruq ?? "",
+              active: true,
             ),
           )
         : mosqueProvider.showEid
@@ -34,11 +33,9 @@ class ShurukWidget extends StatelessWidget {
               )
             : Center(
                 child: SalahItemWidget(
-                  title: S.of(context).shuruk,
-                  time: mosqueProvider.times!.shuruq ?? "",
+                  title: S.of(context).imsak,
+                  time: mosqueProvider.imsak,
                   removeBackground: true,
-                  withDivider: false,
-                  active: mosqueProvider.activateShroukItem,
                 ),
               );
   }
