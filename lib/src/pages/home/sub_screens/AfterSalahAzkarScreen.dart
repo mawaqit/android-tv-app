@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
-
+import 'package:auto_size_text/auto_size_text.dart';
 import '../../../themes/UIShadows.dart';
 
 class AfterSalahAzkar extends StatefulWidget {
@@ -63,36 +64,29 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
             Text(
               "$azkarTitle ${isArabic ? '' : '(${S.of(context).alAthkar})'}",
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: Colors.white,
-                fontFamily: StringManager.fontFamilyKufi
-                  ,shadows: kAfterAdhanTextShadow
-                  ),
+                  color: Colors.white, fontFamily: StringManager.fontFamilyKufi, shadows: kAfterAdhanTextShadow),
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.center,
-
             ),
             FractionallySizedBox(
               widthFactor: .6,
               child: Divider(color: Colors.white),
             ),
             Expanded(
-              child: FittedBox(
-                alignment: Alignment.center,
-                fit: BoxFit.contain,
-                child: SizedBox(
-                  width: isArabic || translatedHadith.isEmpty ? screenWidth : screenWidth * 1.5,
-                  child: Text(
-                    azkarList[activeHadith],
-                    style: TextStyle(
-                      fontSize: 62,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 1.2.vw,vertical: 1.vh),
+                width: isArabic || translatedHadith.isEmpty ? screenWidth : screenWidth * 1.5,
+                child: AutoSizeText(
+                  azkarList[activeHadith],
+                  stepGranularity: 1,
+                  style: TextStyle(
+                      fontSize: 6.2.vw,
                       fontWeight: FontWeight.bold,
                       fontFamily: StringManager.getFontFamilyByString(azkarList[activeHadith]),
                       color: Colors.white,
-                        shadows: kIqamaCountDownTextShadow
-                    ),
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.center,
-                  ),
+                      shadows: kIqamaCountDownTextShadow),
+                  textDirection: TextDirection.rtl,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -102,14 +96,14 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                   fit: BoxFit.contain,
                   child: SizedBox(
                     width: isArabic ? screenWidth : screenWidth * 2,
-                    child: Text(
+                    child: AutoSizeText(
+                      stepGranularity: 1,
                       translatedHadith,
                       style: TextStyle(
-                        fontSize: 62,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                          shadows: kAfterAdhanTextShadow
-                      ),
+                          fontSize: 6.2.vw,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          shadows: kAfterAdhanTextShadow),
                       textAlign: TextAlign.center,
                     ),
                   ),
