@@ -4,6 +4,7 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
+import 'package:mawaqit/src/models/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
@@ -207,7 +208,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
 
-  HijriCalendar mosqueHijriDate() => HijriCalendar.fromDate(mosqueDate().add(
+  HijriCalendar mosqueHijriDate() => MawaqitHijriCalendar.fromDate(mosqueDate().add(
         Duration(
           days: times!.hijriAdjustment,
         ),
