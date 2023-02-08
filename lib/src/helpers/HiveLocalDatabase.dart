@@ -15,4 +15,11 @@ class HiveManager extends ChangeNotifier {
     boolBox.put("secondaryScreen", value);
     notifyListeners();
   }
+  bool isWebView() {
+    return boolBox.get("webView", defaultValue: false)!;
+  }
+  void putIsWebView (bool value){
+    boolBox.put("webView", value);
+    notifyListeners();
+  }
 }

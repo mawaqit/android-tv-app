@@ -6,6 +6,7 @@ import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/models/menu.dart';
 import 'package:mawaqit/src/models/page.dart';
@@ -35,6 +36,8 @@ class MawaqitDrawer extends StatelessWidget {
     final settings = Provider.of<SettingsManager>(context).settings;
     final themeProvider = Provider.of<ThemeNotifier>(context);
     final developerManager = context.watch<DeveloperManager>();
+    final hive = context.watch<HiveManager>();
+
     final theme = Theme.of(context);
 
     return Drawer(
@@ -167,6 +170,16 @@ class MawaqitDrawer extends StatelessWidget {
             child: Divider(height: 1, color: Colors.grey[400]),
           ),
           if (developerManager.developerModeEnabled) DrawerListDeveloper(),
+          SwitchListTile(
+            inactiveThumbColor: Theme.of(context).toggleButtonsTheme.disabledColor,
+            activeColor: Theme.of(context).toggleButtonsTheme.color,
+            secondary: Icon(Icons.online_prediction),
+            value: hive.isWebView(),
+            onChanged: (bool value) {
+              hive.putIsWebView(value);
+            },
+            title: Text("Web view"),
+          ),
           DrawerListTitle(
             icon: Icons.translate,
             text: S.of(context).languages,
