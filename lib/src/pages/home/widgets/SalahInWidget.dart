@@ -36,15 +36,15 @@ class SalahInWidget extends StatelessWidget {
             horizontal: 1.45.vw,
           ),
           child: FittedBox(
-            child: !mosqueManager.isShurukTime()
+            child: !mosqueManager.isShurukTime
                 ? Text(
                     countDownText,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 2.8.vw,
-                      // height: 2,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(countDownText),
+                      fontFamily:
+                          StringManager.getFontFamilyByString(countDownText),
                       shadows: kHomeTextShadow,
                     ),
                   )
@@ -55,7 +55,8 @@ class SalahInWidget extends StatelessWidget {
                       fontSize: 2.8.vw,
                       // height: 2,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(mosqueManager.getShurukInString(context)),
+                      fontFamily: StringManager.getFontFamilyByString(
+                          mosqueManager.getShurukInString(context)),
                       shadows: kHomeTextShadow,
                     ),
                   ),

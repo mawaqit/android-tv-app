@@ -71,16 +71,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   get salahIndex => (nextSalahIndex() - 1) % 5;
 
-  bool get activateShroukItem {
-    final shuruqTimeInMinutes = times?.shuruq?.toTimeOfDay()?.inMinutes;
-    final duhrTime = todayTimes[1].toTimeOfDay()?.inMinutes;
-    final nowInMinutes = mosqueTimeOfDay().inMinutes;
-    if (shuruqTimeInMinutes == null || duhrTime == null) return false;
-
-    return nowInMinutes >= shuruqTimeInMinutes && nowInMinutes <= duhrTime;
-  }
-
-  bool isShurukTime() {
+  bool get isShurukTime {
     final shrukDate = times?.shuruq?.toTimeOfDay()?.toDate(mosqueDate());
 
     if (shrukDate == null) return false;
@@ -201,8 +192,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() =>
-      !kDebugMode ? DateTime.now() : DateTime.now().add(Duration(hours: 2 , minutes: 56));
+  DateTime mosqueDate() => !kDebugMode
+      ? DateTime.now()
+      : DateTime.now().add(Duration(hours: 14, minutes: 56));
 
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
