@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
+import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
 import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
+
+import '../HomeScreen.dart';
 
 class OfflineHomeScreen extends StatelessWidget {
   OfflineHomeScreen({Key? key}) : super(key: key);
@@ -50,10 +53,11 @@ class OfflineHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
+    final hive = context.watch<HiveManager>();
 
     return WillPopScope(
       onWillPop: () async => await showClosingDialog(context) ?? false,
-      child: MosqueBackgroundScreen(child: activeWorkflow(mosqueProvider)),
+      child: MosqueBackgroundScreen(child: hive.isWebView()?HomeScreen():activeWorkflow(mosqueProvider)),
     );
   }
 }
