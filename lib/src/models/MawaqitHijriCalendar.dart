@@ -1,9 +1,9 @@
 import 'package:hijri/hijri_calendar.dart';
+import 'package:intl/intl.dart';
 import 'package:mawaqit/generated/l10n.dart';
 
 class MawaqitHijriCalendar extends HijriCalendar {
   MawaqitHijriCalendar.fromDate(DateTime now) : super.fromDate(now);
-
 
   /// +1 is the difference between the Backend calculation and the frontend calculation
   factory MawaqitHijriCalendar.fromDateWithAdjustments(
@@ -22,6 +22,7 @@ class MawaqitHijriCalendar extends HijriCalendar {
 
   String formatMawaqitType() {
     return [
+      if (wkDay != null) '${DateFormat('EEEE').format(DateTime.now())},',
       hDay.toString(),
       monthName(hMonth - 1),
       hYear.toString(),

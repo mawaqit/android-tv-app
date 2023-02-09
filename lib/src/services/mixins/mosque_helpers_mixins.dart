@@ -4,6 +4,7 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
+import 'package:mawaqit/src/models/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
@@ -71,16 +72,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   get salahIndex => (nextSalahIndex() - 1) % 5;
 
-  bool get activateShroukItem {
-    final shuruqTimeInMinutes = times?.shuruq?.toTimeOfDay()?.inMinutes;
-    final duhrTime = todayTimes[1].toTimeOfDay()?.inMinutes;
-    final nowInMinutes = mosqueTimeOfDay().inMinutes;
-    if (shuruqTimeInMinutes == null || duhrTime == null) return false;
-
-    return nowInMinutes >= shuruqTimeInMinutes && nowInMinutes <= duhrTime;
-  }
-
-  bool isShurukTime() {
+  bool get isShurukTime {
     final shrukDate = times?.shuruq?.toTimeOfDay()?.toDate(mosqueDate());
 
     if (shrukDate == null) return false;
@@ -207,7 +199,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
 
-  HijriCalendar mosqueHijriDate() => HijriCalendar.fromDate(mosqueDate().add(
+  HijriCalendar mosqueHijriDate() => MawaqitHijriCalendar.fromDate(mosqueDate().add(
         Duration(
           days: times!.hijriAdjustment,
         ),
