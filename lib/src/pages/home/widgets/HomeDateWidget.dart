@@ -41,7 +41,9 @@ class HomeDateWidget extends StatelessWidget {
               color: Colors.white,
               fontSize: 2.7.vw,
               shadows: kHomeTextShadow,
-              // letterSpacing: 1,
+              fontFamily: StringManager.getFontFamilyByString(
+                now.formatIntoMawaqitFormat(local: lang),
+              ),
               height: .8,
             ),
           ),
@@ -59,7 +61,9 @@ class HomeDateWidget extends StatelessWidget {
                   fontSize: 2.5.vw,
                   shadows: kHomeTextShadow,
                   height: .1,
-                  fontFamily: StringManager.getFontFamily(context),
+                  fontFamily: StringManager.getFontFamilyByString(
+                    hijriDate.formatMawaqitType(),
+                  ),
                 ),
               ),
               if (hijriDate.isInLunarDays)

@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 
 extension MawaqitDateUtils on DateTime {
   String formatIntoMawaqitFormat({
@@ -8,7 +9,7 @@ extension MawaqitDateUtils on DateTime {
         ? DateFormat('EEEE, dd MMMM, yyyy')
         : DateFormat('EEEE, MMMM dd, yyyy');
     formatter.useNativeDigits = false;
-    return formatter.format(this);
+    return formatter.format(this).capitalizeFirstOfEach();
   }
 
   ///
