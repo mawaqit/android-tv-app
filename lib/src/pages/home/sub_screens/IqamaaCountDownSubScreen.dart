@@ -47,8 +47,9 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
           children: [
             OfflineWidget(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 1.vw),
-              child: WeatherWidget(),
+              padding: EdgeInsets.symmetric(horizontal: 1.vw,vertical: 1.vh),
+              child: Directionality(textDirection: TextDirection.ltr,
+              child: WeatherWidget()),
             )
           ],
         ),
