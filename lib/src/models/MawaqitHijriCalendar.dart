@@ -1,6 +1,7 @@
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 
 class MawaqitHijriCalendar extends HijriCalendar {
   MawaqitHijriCalendar.fromDate(DateTime now) : super.fromDate(now);
@@ -26,7 +27,7 @@ class MawaqitHijriCalendar extends HijriCalendar {
       hDay.toString(),
       monthName(hMonth - 1),
       hYear.toString(),
-    ].join(' ');
+    ].join(' ').capitalizeFirstOfEach();
   }
 
   bool get isInLunarDays {
