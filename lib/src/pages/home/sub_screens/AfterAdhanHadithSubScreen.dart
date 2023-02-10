@@ -72,7 +72,6 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
             ),
             if (Localizations.localeOf(context).languageCode != 'ar') ...[
               AutoSizeText(
-
                 S.of(context).afterSalahHadithTitle,
                 stepGranularity: 1,
                 style: TextStyle(

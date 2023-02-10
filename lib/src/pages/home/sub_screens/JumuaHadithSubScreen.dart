@@ -26,10 +26,10 @@ class JumuaHadithSubScreen extends StatelessWidget {
         children: [
           SizedBox(height: 10,),
           Container(
-            child: Text(
+            child: AutoSizeText(
               jumuaTimeStartedAr,
               style: TextStyle(
-                fontSize: 4.vw,
+                fontSize: 6.2.vw,
                 fontWeight: FontWeight.bold,
                 fontFamily: StringManager.getFontFamilyByString(jumuaTimeStartedAr),
                 color: Colors.white,
@@ -43,10 +43,10 @@ class JumuaHadithSubScreen extends StatelessWidget {
               child: AutoSizeText(
                 jumuaHadith,
                 minFontSize: 24,
-                stepGranularity: 6,
+                stepGranularity: 1,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 6.vw,
+                  fontSize: 6.2.vw,
                   fontWeight: FontWeight.bold,
                   fontFamily: StringManager.fontFamilyKufi,
                   color: Colors.white,
