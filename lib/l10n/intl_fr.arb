@@ -74,13 +74,13 @@
   "asr": "Asr",
   "maghrib": "Maghrib",
   "isha": "Isha",
-  "afterSalahHadithTitle": "Après la salah Du`a",
+  "afterSalahHadithTitle": "Du`a après la salah",
   "afterSalahHadith": "Ô Allah, Maître de cet appel parfait et de la prière que l'on va accomplir, donne à Mohammed le pouvoir d'intercéder\n (le Jour du Jugement) et la place d'honneur [au Paradis], et ressuscite-le dans la position louable que Tu lui as promise",
   "alIqama": "Al Iqama",
-  "alAdhan": "Al adhan",
-  "turnOfPhones": "Veuillez tourner vos téléphones portables!",
-  "iqamaIn": "Iqama en",
-  "alAthkar": "Al-Athékar",
+  "alAdhan": "Al Adhan",
+  "turnOfPhones": "Veuillez éteindre ou mettre en mode silencieux vos téléphones portables",
+  "iqamaIn": "Al Iqama dans",
+  "alAthkar": "Al-Adhkar",
   "AlAthkar_0": "",
   "@AlAthkar_0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله \\nاللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
