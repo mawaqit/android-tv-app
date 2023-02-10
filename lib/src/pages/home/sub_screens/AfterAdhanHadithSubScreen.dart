@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -58,22 +59,25 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
             ),
             SizedBox(
               width: isArabic?110.vw:200.vw,
-              child: Text(
+              child: AutoSizeText(
+                stepGranularity: 1,
                 kHadithArabic,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 62,
+                    fontSize: 6.2.vw,
                     color: Colors.white,
                     shadows: kAfterAdhanTextShadow,
                     fontFamily: StringManager.fontFamilyKufi),
               ),
             ),
             if (Localizations.localeOf(context).languageCode != 'ar') ...[
-              Text(
+              AutoSizeText(
+
                 S.of(context).afterSalahHadithTitle,
+                stepGranularity: 1,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 62,
+                  fontSize: 6.2.vw,
                   color: Colors.white,
                   shadows: kIqamaCountDownTextShadow,
                 ),
