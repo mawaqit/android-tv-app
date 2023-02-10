@@ -171,8 +171,6 @@ class MawaqitDrawer extends StatelessWidget {
           ),
           if (developerManager.developerModeEnabled) DrawerListDeveloper(),
           SwitchListTile(
-            inactiveThumbColor: Theme.of(context).toggleButtonsTheme.disabledColor,
-            activeColor: Theme.of(context).toggleButtonsTheme.color,
             secondary: Icon(Icons.online_prediction),
             value: hive.isWebView(),
             onChanged: (bool value) {
