@@ -25,7 +25,7 @@ class MawaqitHijriCalendar extends HijriCalendar {
     return [
       if (wkDay != null) '${DateFormat('EEEE').format(DateTime.now())},',
       hDay.toString(),
-      monthName(hMonth - 1),
+      '${monthName(hMonth - 1)},',
       hYear.toString(),
     ].join(' ').capitalizeFirstOfEach();
   }

@@ -79,7 +79,12 @@ class MyApp extends StatelessWidget {
                 },
                 child: MaterialApp(
                   themeMode: theme.mode,
-                  // themeMode: ThemeMode.dark,
+                  localeResolutionCallback: (locale, supportedLocales) {
+                    if (locale?.languageCode.toLowerCase() == 'ba')
+                      return Locale('en');
+
+                    return locale;
+                  },
                   theme: theme.lightTheme,
                   darkTheme: theme.darkTheme,
                   locale: model.appLocal,
