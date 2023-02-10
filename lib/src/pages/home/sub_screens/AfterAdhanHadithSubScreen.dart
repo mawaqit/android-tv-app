@@ -69,6 +69,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
               ),
             ),
             if (Localizations.localeOf(context).languageCode != 'ar') ...[
+              SizedBox(height: 2.vh,),
               Text(
                 S.of(context).afterSalahHadithTitle,
                 style: TextStyle(
