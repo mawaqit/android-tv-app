@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
+import 'package:mawaqit/src/pages/developer/DeveloperScreen.dart';
 import 'package:provider/provider.dart';
 
 import 'AnnouncementTest.dart';
@@ -29,6 +30,19 @@ class DrawerListDeveloper extends StatelessWidget {
       primary: false,
       children: [
         DrawerListTitle(
+            icon: Icons.developer_mode_rounded,
+            text: "Developers home screen",
+            onTap: () async {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MosqueBackgroundScreen(child: DeveloperScreen()),
+                  ));
+            }),
+
+        DrawerListTitle(
             icon: Icons.home_filled,
             text: "Online home",
             onTap: () async {
@@ -36,7 +50,8 @@ class DrawerListDeveloper extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MosqueBackgroundScreen(child: HomeScreen()),
+                    builder: (context) =>
+                        MosqueBackgroundScreen(child: HomeScreen()),
                   ));
             }),
         /////////////// drawer test////////////////
