@@ -199,7 +199,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
 
-  HijriCalendar mosqueHijriDate() => MawaqitHijriCalendar.fromDate(mosqueDate().add(
+  HijriCalendar mosqueHijriDate() =>
+      MawaqitHijriCalendar.fromDate(mosqueDate().add(
         Duration(
           days: times!.hijriAdjustment,
         ),

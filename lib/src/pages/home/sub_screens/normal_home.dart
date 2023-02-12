@@ -40,7 +40,7 @@ class NormalHomeSubScreen extends StatelessWidget {
                   title: S.of(context).jumua,
                   time: mosqueProvider.jumuaTime ?? "",
                   iqama: mosqueProvider.times!.jumua2,
-                  active: mosqueProvider.nextSalahIndex() == 2 &&
+                  active: mosqueProvider.nextIqamaIndex() == 1 &&
                       mosqueProvider.mosqueDate().weekday == DateTime.friday,
                   removeBackground: true,
                 ),
