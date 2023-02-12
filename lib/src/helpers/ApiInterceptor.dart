@@ -27,6 +27,10 @@ class ApiCacheInterceptor extends DioCacheInterceptor {
 
   @override
   Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
+    /// use cache if the server returns 304 or no response
+    if (err.response?.statusCode != 304 && err.response != null)
+      return handler.next(err);
+
     final value = await store.get(getCacheKey(err.requestOptions));
 
     if (value != null)

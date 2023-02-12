@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/generated/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
+import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
+import 'package:mawaqit/src/pages/ErrorScreen.dart';
+import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
@@ -55,9 +58,20 @@ class OfflineHomeScreen extends StatelessWidget {
     final mosqueProvider = context.watch<MosqueManager>();
     final hive = context.watch<HiveManager>();
 
+    if (!mosqueProvider.loaded)
+      return ErrorScreen(
+        title: S.of(context).reset,
+        description: S.of(context).mosqueNotFoundMessage,
+        image: 'assets/img/icon_exit.png',
+        onTryAgain: () => AppRouter.push(MosqueSearchScreen()),
+        tryAgainText: S.of(context).changeMosque,
+      );
+
     return WillPopScope(
       onWillPop: () async => await showClosingDialog(context) ?? false,
-      child: MosqueBackgroundScreen(child: hive.isWebView()?HomeScreen():activeWorkflow(mosqueProvider)),
+      child: MosqueBackgroundScreen(
+          child:
+              hive.isWebView() ? HomeScreen() : activeWorkflow(mosqueProvider)),
     );
   }
 }

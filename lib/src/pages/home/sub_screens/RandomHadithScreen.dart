@@ -20,13 +20,12 @@ class RandomHadithScreen extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding:  EdgeInsets.only(top: 8.0),
+          padding: EdgeInsets.only(top: 8.0),
           child: AboveSalahBar(),
         ),
         Column(
-
           children: [
-           SizedBox(height: 9.vh,),
+            SizedBox(height: 9.vh),
             Expanded(
               child: FutureBuilder<String>(
                 future: Api.randomHadith(language: mosqueConfig!.hadithLang!),
@@ -35,16 +34,15 @@ class RandomHadithScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(20.0),
                     child: Center(
                       child: AutoSizeText(
-                        snapshot.data?.padRight(500) ?? '',
-                        stepGranularity: 12,
+                        snapshot.data ?? '',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 100.vw,
                           fontWeight: FontWeight.bold,
                           shadows: kIqamaCountDownTextShadow,
-                          fontFamily: mosqueConfig.hadithLang!.contains("ar") || mosqueConfig.hadithLang!.contains("ur")
-                              ? StringManager.fontFamilyKufi
-                              : null,
+                          fontFamily: StringManager.getFontFamilyByString(
+                            snapshot.data ?? '',
+                          ),
                           color: Colors.white,
                         ),
                       ),
@@ -54,7 +52,10 @@ class RandomHadithScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: .7.vh),
-            SalahTimesBar(miniStyle: true,microStyle: true,),
+            SalahTimesBar(
+              miniStyle: true,
+              microStyle: true,
+            ),
             SizedBox(height: 4.vh),
           ],
         ),
