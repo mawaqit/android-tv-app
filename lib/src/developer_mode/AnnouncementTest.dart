@@ -3,15 +3,8 @@ import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
-class AnnouncementTest extends StatefulWidget {
+class AnnouncementTest extends StatelessWidget {
   const AnnouncementTest({Key? key}) : super(key: key);
-
-  @override
-  State<AnnouncementTest> createState() => _AnnouncementTestState();
-}
-
-class _AnnouncementTestState extends State<AnnouncementTest> {
-  int activeIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +16,6 @@ class _AnnouncementTestState extends State<AnnouncementTest> {
       );
     }
 
-    return AnnouncementScreen(
-      key: ValueKey(activeIndex),
-      index: activeIndex,
-      onDone: () {
-        setState(() {
-          activeIndex++;
-        });
-      },
-    );
+    return AnnouncementScreen();
   }
 }
