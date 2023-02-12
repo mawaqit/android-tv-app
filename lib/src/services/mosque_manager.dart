@@ -109,8 +109,10 @@ class MosqueManager extends ChangeNotifier
 
       if (isDone()) completer.complete();
     }, onError: (e, stack) {
-      if (mosque == null && !completer.isCompleted)
-        completer.completeError(e, stack);
+      if (!completer.isCompleted) completer.completeError(e, stack);
+
+      mosque = null;
+      notifyListeners();
     });
 
     _timesSubscription = Api.getMosqueTimesStream(uuid).listen((event) {
@@ -119,8 +121,10 @@ class MosqueManager extends ChangeNotifier
 
       if (isDone()) completer.complete();
     }, onError: (e, stack) {
-      if (times == null && !completer.isCompleted)
-        completer.completeError(e, stack);
+      if (!completer.isCompleted) completer.completeError(e, stack);
+
+      times = null;
+      notifyListeners();
     });
 
     _configSubscription = Api.getMosqueConfigStream(uuid).listen((event) {
@@ -129,8 +133,10 @@ class MosqueManager extends ChangeNotifier
 
       if (isDone()) completer.complete();
     }, onError: (e, stack) {
-      if (mosqueConfig == null && !completer.isCompleted)
-        completer.completeError(e, stack);
+      if (!completer.isCompleted) completer.completeError(e, stack);
+
+      mosqueConfig = null;
+      notifyListeners();
     });
 
     mosqueUUID = uuid;
@@ -174,16 +180,6 @@ class MosqueManager extends ChangeNotifier
   }
 
   Future<Position> getCurrentLocation() async {
-    // return Position(
-    //   longitude: -1.3565692,
-    //   latitude: 34.8659187,
-    //   timestamp: null,
-    //   accuracy: 1,
-    //   altitude: 31.0,
-    //   heading: 0,
-    //   speed: 0,
-    //   speedAccuracy: 0,
-    // );
     var enabled = await GeolocatorPlatform.instance
         .isLocationServiceEnabled()
         .timeout(Duration(seconds: 5));
