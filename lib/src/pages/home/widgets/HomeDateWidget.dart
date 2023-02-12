@@ -35,6 +35,7 @@ class HomeDateWidget extends StatelessWidget {
         ),
         child: FadeInOutWidget(
           duration: Duration(seconds: 10),
+          disableSecond: mosqueManager.mosqueConfig!.hijriDateEnabled == false,
           first: Text(
             now.formatIntoMawaqitFormat(local: lang),
             style: TextStyle(
@@ -49,7 +50,7 @@ class HomeDateWidget extends StatelessWidget {
           ),
           secondDuration: Duration(seconds: 10),
           second: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 hijriDate.formatMawaqitType(),
@@ -60,7 +61,6 @@ class HomeDateWidget extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 2.5.vw,
                   shadows: kHomeTextShadow,
-                  height: .1,
                   fontFamily: StringManager.getFontFamilyByString(
                     hijriDate.formatMawaqitType(),
                   ),

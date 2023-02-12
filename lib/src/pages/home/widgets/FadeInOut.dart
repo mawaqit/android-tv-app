@@ -10,14 +10,14 @@ class FadeInOutWidget extends StatefulWidget {
     required this.duration,
     required this.second,
     this.secondDuration,
-    this.showSecond = false,
+    this.disableSecond = false,
   }) : super(key: key);
 
   final Widget first;
   final Duration duration;
   final Widget second;
   final Duration? secondDuration;
-  final bool showSecond;
+  final bool disableSecond;
 
   @override
   State<FadeInOutWidget> createState() => _FadeInOutWidgetState();
@@ -28,7 +28,6 @@ class _FadeInOutWidgetState extends State<FadeInOutWidget> {
 
   @override
   void initState() {
-    _showSecond = widget.showSecond;
     Future.delayed(widget.duration, showNextItem);
 
     print('FadeInOutWidget: initState()');
@@ -42,8 +41,14 @@ class _FadeInOutWidgetState extends State<FadeInOutWidget> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          widget.first.animate(target: _showSecond ? 0 : 1).fadeIn().fade(duration: 1.seconds),
-          widget.second.animate(target: _showSecond ? 1 : 0).fadeIn().fade(begin: 200,duration: 1.seconds),
+          widget.first
+              .animate(target: _showSecond ? 0 : 1)
+              .fadeIn()
+              .fade(duration: 1.seconds),
+          widget.second
+              .animate(target: _showSecond ? 1 : 0)
+              .fadeIn()
+              .fade(begin: 200, duration: 1.seconds),
         ],
       ),
     );
@@ -52,7 +57,7 @@ class _FadeInOutWidgetState extends State<FadeInOutWidget> {
   void showNextItem() {
     if (!mounted) return;
 
-    setState(() => _showSecond = !_showSecond);
+    setState(() => _showSecond = !_showSecond && !widget.disableSecond);
 
     final nextDuration = _showSecond
         ? widget.secondDuration ?? widget.duration
