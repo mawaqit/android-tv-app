@@ -30,7 +30,7 @@ class Footer extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .2.vw),
             width: double.infinity,
             color:
-                mosque?.flash?.content.isEmpty != false ? null : Colors.black38,
+                mosque?.flash?.content.isEmpty != false ? null : Colors.black.withOpacity(.3),
             child: SizedBox(
               height: 5.vw,
               child: Directionality(
