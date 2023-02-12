@@ -25,7 +25,6 @@ class NormalWorkflowScreen extends StatefulWidget {
 
 class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
   NormalWorkflowScreens state = NormalWorkflowScreens.normal;
-  int announcementIndex = 0;
 
   Future? nextSalahFuture;
   Future? beforeFajrFuture;
@@ -106,10 +105,7 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
 
     announcementsTimer = Timer.periodic(_AnnouncementRepeatDuration, (i) {
       if (mounted && state == NormalWorkflowScreens.normal) {
-        setState(() {
-          state = NormalWorkflowScreens.announcement;
-          announcementIndex = i.tick;
-        });
+        setState(() => state = NormalWorkflowScreens.announcement);
       }
     });
   }
@@ -147,10 +143,7 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
       case NormalWorkflowScreens.normal:
         return NormalHomeSubScreen();
       case NormalWorkflowScreens.announcement:
-        return AnnouncementScreen(
-          index: announcementIndex,
-          onDone: backToHome,
-        );
+        return AnnouncementScreen(onDone: backToHome);
       case NormalWorkflowScreens.randomHadith:
         return RandomHadithScreen();
     }

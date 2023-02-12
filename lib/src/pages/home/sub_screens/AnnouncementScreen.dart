@@ -12,15 +12,10 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../helpers/StringUtils.dart';
 import '../widgets/SalahTimesBar.dart';
 
+/// show all announcements in one after another
 class AnnouncementScreen extends StatefulWidget {
-  const AnnouncementScreen({
-    Key? key,
-    required this.index,
-    this.onDone,
-  }) : super(key: key);
+  const AnnouncementScreen({Key? key, this.onDone}) : super(key: key);
 
-  /// index can be any number between 0 -> infinity
-  final int index;
   final VoidCallback? onDone;
 
   @override
@@ -28,24 +23,34 @@ class AnnouncementScreen extends StatefulWidget {
 }
 
 class _AnnouncementScreenState extends State<AnnouncementScreen> {
-  late Announcement activeAnnouncement;
+  int index = -1;
+  Announcement? activeAnnouncement;
+
+  void nextAnnouncement() {
+    final allAnnouncements = context.read<MosqueManager>().activeAnnouncements;
+    index++;
+
+    if (index >= allAnnouncements.length) {
+      Future.delayed(Duration(milliseconds: 80), widget.onDone);
+      return;
+    }
+
+    setState(() {
+      activeAnnouncement = allAnnouncements[index];
+    });
+
+    if (activeAnnouncement!.video == null) {
+      Future.delayed(
+        Duration(seconds: activeAnnouncement!.duration ?? 30) *
+            kTestDurationFactor,
+        nextAnnouncement,
+      );
+    }
+  }
 
   @override
   void initState() {
-    final announcements = context.read<MosqueManager>().activeAnnouncements;
-
-    //todo test this
-    if (announcements.isEmpty) Future.delayed(Duration(milliseconds: 0), widget.onDone);
-
-    activeAnnouncement = announcements[widget.index % announcements.length];
-
-    if (activeAnnouncement.video == null) {
-      Future.delayed(
-        Duration(seconds: activeAnnouncement.duration ?? 30) * kTestDurationFactor,
-        widget.onDone,
-      );
-    }
-
+    nextAnnouncement();
     super.initState();
   }
 
@@ -73,12 +78,15 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   }
 
   Widget announcementWidgets() {
-    if (activeAnnouncement.content != null) {
-      return textAnnouncement(activeAnnouncement.content!, activeAnnouncement.title);
-    } else if (activeAnnouncement.image != null) {
-      return imageAnnouncement(activeAnnouncement.image!);
-    } else if (activeAnnouncement.video != null) {
-      return videoAnnouncement(activeAnnouncement.video!);
+    if (activeAnnouncement!.content != null) {
+      return textAnnouncement(
+        activeAnnouncement!.content!,
+        activeAnnouncement!.title,
+      );
+    } else if (activeAnnouncement!.image != null) {
+      return imageAnnouncement(activeAnnouncement!.image!);
+    } else if (activeAnnouncement!.video != null) {
+      return videoAnnouncement(activeAnnouncement!.video!);
     }
 
     return SizedBox();
@@ -93,14 +101,14 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
           SizedBox(
             height: 2.vh,
           ),
-          AutoSizeText(title??'',
+          AutoSizeText(title ?? '',
               stepGranularity: 12,
               textAlign: TextAlign.center,
               style: TextStyle(
                   shadows: kAnnouncementTextShadow,
                   fontSize: 62,
                   fontWeight: FontWeight.bold,
-                  fontFamily: StringManager.getFontFamilyByString(title??''),
+                  fontFamily: StringManager.getFontFamilyByString(title ?? ''),
                   color: Colors.amber,
                   letterSpacing: 1)),
           // content
@@ -148,7 +156,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     return Stack(
       children: [
         YoutubePlayer(
-          onEnded: (metaData) => widget.onDone?.call(),
+          onEnded: (metaData) => nextAnnouncement(),
           controller: _controller,
           showVideoProgressIndicator: true,
         ),
