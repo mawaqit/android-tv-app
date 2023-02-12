@@ -174,18 +174,28 @@ mixin MosqueHelpersMixin on ChangeNotifier {
                 10);
   }
 
+  /// after fajr show imsak for tomorrow
   String get imsak {
     try {
-      int minutes = int.parse(todayTimes.first.split(':').first) * 60 +
-          int.parse(todayTimes.first.split(':').last) -
-          times!.imsakNbMinBeforeFajr;
+      final now = mosqueDate();
+
+      String tomorrowFajr = todayTimes[0];
+
+      /// when we are bettween midnight and fajr show today imsak
+      /// otherwise show tomorrow imsak
+      if (now.isAfter(actualTimes()[0])) tomorrowFajr = tomorrowTimes[0];
+
+      print(tomorrowFajr);
+
+      int minutes =
+          tomorrowFajr.toTimeOfDay()!.inMinutes - times!.imsakNbMinBeforeFajr;
+      print(minutes);
 
       String _timeTwoDigit = timeTwoDigit(
         seconds: minutes % 60,
         minutes: minutes ~/ 60,
       );
       return _timeTwoDigit;
-      // return DateFormat('HH:mm').format(DateTime(200, 1, 1, minutes ~/ 60, minutes % 60));
     } catch (e, stack) {
       debugPrintStack(stackTrace: stack);
       return '';
@@ -199,7 +209,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
 
-  HijriCalendar mosqueHijriDate() => MawaqitHijriCalendar.fromDate(mosqueDate().add(
+  HijriCalendar mosqueHijriDate() =>
+      MawaqitHijriCalendar.fromDate(mosqueDate().add(
         Duration(
           days: times!.hijriAdjustment,
         ),
