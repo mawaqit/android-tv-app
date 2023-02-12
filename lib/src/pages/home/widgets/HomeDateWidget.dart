@@ -60,6 +60,7 @@ class HomeDateWidget extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 2.5.vw,
+                  height: .8,
                   shadows: kHomeTextShadow,
                   fontFamily: StringManager.getFontFamilyByString(
                     hijriDate.formatMawaqitType(),
