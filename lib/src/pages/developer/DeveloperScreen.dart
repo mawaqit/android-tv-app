@@ -14,6 +14,9 @@ import 'package:mawaqit/src/pages/home/sub_screens/JummuaLive.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/JumuaHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:provider/provider.dart';
 
 enum _ScreenState {
   // home normal subScreen
@@ -100,6 +103,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<MosqueManager>();
+
     return WillPopScope(
       onWillPop: () async {
         if (forcedScreen != null) {
@@ -157,6 +162,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   ),
                 ),
               ],
+            ),
+            SelectorOption(
+              title: 'Change theme mode',
+              onSelect: () => context.read<ThemeNotifier>().toggleMode(),
             ),
           ],
         ),

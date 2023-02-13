@@ -33,10 +33,9 @@ class _NumberInputScreenState extends State<NumberInputScreen> {
             (currentNumber! * 10) + int.parse(event.logicalKey.keyLabel);
       });
     } else if (event.logicalKey == LogicalKeyboardKey.backspace) {
-      setState(() {
-        currentNumber ??= 0;
-        currentNumber = (currentNumber! / 10).floor();
-      });
+      if (currentNumber == null || currentNumber == 0) return;
+
+      setState(() => currentNumber = (currentNumber! / 10).floor());
     } else if (event.logicalKey == LogicalKeyboardKey.enter) {
       submitNumber();
     } else {
@@ -83,6 +82,7 @@ class _NumberInputScreenState extends State<NumberInputScreen> {
 
   Widget numberWidget() {
     if (currentNumber == null) return const SizedBox();
+
     return Align(
       alignment: Alignment.topRight,
       child: Container(
@@ -95,7 +95,7 @@ class _NumberInputScreenState extends State<NumberInputScreen> {
         ),
         child: Text(
           currentNumber.toString(),
-          style: const TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
     );

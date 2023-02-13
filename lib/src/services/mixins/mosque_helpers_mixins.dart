@@ -185,11 +185,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       /// otherwise show tomorrow imsak
       if (now.isAfter(actualTimes()[0])) tomorrowFajr = tomorrowTimes[0];
 
-      print(tomorrowFajr);
-
       int minutes =
           tomorrowFajr.toTimeOfDay()!.inMinutes - times!.imsakNbMinBeforeFajr;
-      print(minutes);
 
       String _timeTwoDigit = timeTwoDigit(
         seconds: minutes % 60,
