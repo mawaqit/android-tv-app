@@ -14,7 +14,7 @@ class MosqueConfig {
   final int? jumuaTimeout;
   final bool randomHadithEnabled;
   final bool? blackScreenWhenPraying;
-  final bool? wakeForFajrTime;
+  final int? wakeForFajrTime;
   final bool? jumuaBlackScreenEnabled;
   final bool? temperatureEnabled;
   final String? temperatureUnit;
@@ -175,7 +175,7 @@ class MosqueConfig {
     int? jumuaTimeout,
     bool? randomHadithEnabled,
     bool? blackScreenWhenPraying,
-    bool? wakeForFajrTime,
+    int? wakeForFajrTime,
     bool? jumuaBlackScreenEnabled,
     bool? temperatureEnabled,
     String? temperatureUnit,

@@ -43,9 +43,10 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
     beforeFajrFuture?.ignore();
     final mosqueManager = context.read<MosqueManager>();
 
-    if (mosqueManager.mosqueConfig?.wakeForFajrTime == true) {
-      var beforeFajrTime =
-          mosqueManager.actualTimes()[0].subtract(kAdhanBeforeFajrDuration);
+    if (mosqueManager.mosqueConfig?.wakeForFajrTime != null) {
+      var beforeFajrTime = mosqueManager.actualTimes()[0].subtract(Duration(
+            minutes: mosqueManager.mosqueConfig!.wakeForFajrTime!,
+          ));
 
       if (beforeFajrTime.isBefore(mosqueManager.mosqueDate()))
         beforeFajrTime = beforeFajrTime.add(Duration(days: 1));
