@@ -7,25 +7,19 @@ class HomeLogoVersion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Image.asset(
-          'assets/img/logo/logo-mawaqit-2022-horizontal.png',
-          height: 3.8.vw,
-        ),
-        Positioned(
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Align(
-            alignment: Alignment(.5, 1.3),
+    return IntrinsicWidth(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            'assets/img/logo/logo-mawaqit-2022-horizontal.png',
+            height: 3.8.vw,
+          ),
+          Align(
+            heightFactor: .5,
+            alignment: Alignment(.5, 0),
             child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: .5.vw,
-                vertical: .4.vh,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .4.vh),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.vertical(
@@ -38,8 +32,8 @@ class HomeLogoVersion extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

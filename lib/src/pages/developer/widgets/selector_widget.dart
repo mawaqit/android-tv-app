@@ -72,13 +72,18 @@ class _SelectorWidgetState<T> extends State<SelectorWidget<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return NumberInputScreen(
       onNumberInput: handleValue,
       children: [
         Align(
           alignment: Alignment.topLeft,
           child: Container(
-            color: Colors.black.withOpacity(0.5),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.background.withOpacity(.3),
+              borderRadius: BorderRadius.circular(10),
+            ),
             padding: EdgeInsets.all(10),
             child: IntrinsicWidth(
               child: Column(
