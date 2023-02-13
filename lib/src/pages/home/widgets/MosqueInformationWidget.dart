@@ -11,18 +11,25 @@ class MosqueInformationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosque = context.read<MosqueManager>().mosque;
-    String phoneNumber = "${mosque?.phone!=null ?mosque!.phone:""} ";
-    String association = "${mosque?.association!=null ?mosque?.association:""} ";
+    String phoneNumber = "${mosque?.phone != null ? mosque!.phone : ""} ";
+    String association =
+        "${mosque?.association != null ? mosque?.association : ""} ";
     // String bank = "${mosque?.} ";
 
     return Padding(
-      padding:  EdgeInsets.symmetric(vertical: 2.5.vh),
-      child: Row(
+      padding: EdgeInsets.symmetric(vertical: 2.5.vh),
+       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(association),
+          Text(
+            association,
+            style: TextStyle(color: Colors.white),
+          ),
           mosque!.phone != null ? Icon(Icons.phone_iphone) : SizedBox(),
-          Text(phoneNumber ),
+          Text(
+            phoneNumber,
+            style: TextStyle(color: Colors.white),
+          ),
         ],
       ),
     );

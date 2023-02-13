@@ -118,4 +118,10 @@ class ThemeNotifier with ChangeNotifier {
     StorageManager.saveData('themeMode', 'light');
     notifyListeners();
   }
+
+  void toggleMode() async {
+    isLightTheme = !(isLightTheme ?? true);
+    StorageManager.saveData('themeMode', isLightTheme! ? 'light' : 'dark');
+    notifyListeners();
+  }
 }
