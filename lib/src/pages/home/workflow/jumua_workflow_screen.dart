@@ -40,7 +40,8 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
     if (now.isBefore(jumuaaEndTime)) {
       setState(() => state = JumuaaWorkflowScreens.jumuaaTime);
 
-      if (mosqueManager.jumuaaLiveUrl == null) Future.delayed(jumuaaEndTime.difference(now), onJumuaaEnd);
+      if (mosqueManager.jumuaaLiveUrl == null)
+        Future.delayed(jumuaaEndTime.difference(now), onJumuaaEnd);
     } else {
       /// show the azkar
       onSalahEnd();
@@ -76,8 +77,9 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
                 ? JummuaLive(onDone: onJumuaaEnd)
                 : JumuaHadithSubScreen();
       case JumuaaWorkflowScreens.jumuaaSalahTime:
-        /// todo add salah screen to be used on the homes
-        return isMosqueScreen ? Scaffold(backgroundColor: Colors.black) : NormalHomeSubScreen();
+        return mosqueManager.mosqueConfig!.jumuaBlackScreenEnabled == true
+            ? Scaffold(backgroundColor: Colors.black)
+            : NormalHomeSubScreen();
       case JumuaaWorkflowScreens.jumuaaAzkar:
         return AfterSalahAzkar(onDone: widget.onDone);
     }

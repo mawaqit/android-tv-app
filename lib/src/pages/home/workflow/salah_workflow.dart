@@ -113,6 +113,8 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final config = context.watch<MosqueManager>().mosqueConfig!;
+
     switch (state) {
       case SalahWorkflowScreens.normal:
         return NormalHomeSubScreen();
@@ -125,7 +127,9 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
       case SalahWorkflowScreens.iqamaa:
         return IqamaSubScreen(onDone: onIqamaaDone);
       case SalahWorkflowScreens.salahTime:
-        return Scaffold(backgroundColor: Colors.black);
+        return config.blackScreenWhenPraying == true
+            ? Scaffold(backgroundColor: Colors.black)
+            : NormalHomeSubScreen();
       case SalahWorkflowScreens.afterSalahAzkar:
         return AfterSalahAzkar(onDone: widget.onDone);
     }
