@@ -22,13 +22,16 @@ class IqamaSubScreen extends StatefulWidget {
 }
 
 class _IqamaSubScreenState extends State<IqamaSubScreen> {
+  AudioManager? audioManager;
+
   @override
   void initState() {
     if (context.read<MosqueManager>().mosqueConfig!.iqamaBip) {
-      context.read<AudioManager>().loadAndPlayIqamaBipVoice(
-            context.read<MosqueManager>().mosqueConfig,
-            onDone: widget.onDone,
-          );
+      audioManager = context.read<AudioManager>();
+      audioManager!.loadAndPlayIqamaBipVoice(
+        context.read<MosqueManager>().mosqueConfig,
+        onDone: widget.onDone,
+      );
     } else {
       Future.delayed(Duration(minutes: 1), widget.onDone);
     }
@@ -36,9 +39,15 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
   }
 
   @override
+  void dispose() {
+    audioManager?.stop();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tr =S.of(context);
+    final tr = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -46,7 +55,7 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: Container(
-              height:30.vh,
+              height: 30.vh,
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 4.vw),
               decoration: BoxDecoration(
@@ -64,28 +73,35 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
               child: Text(
                 tr.alIqama,
                 style: theme.textTheme.displayMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  shadows: kAfterAdhanTextShadow,
-                  fontFamily: StringManager.getFontFamilyByString(tr.alIqama)
-                ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    shadows: kAfterAdhanTextShadow,
+                    fontFamily:
+                        StringManager.getFontFamilyByString(tr.alIqama)),
               ),
             ),
           ),
         ),
         Expanded(
             child: FlashAnimation(
-              child: Stack(children: [
-                Transform.scale(scaleX: 1.01,scaleY: 1.02,child: Image.asset(R.ASSETS_ICON_NO_PHONE_PNG,color: Colors.black38,)),
-                Image.asset(R.ASSETS_ICON_NO_PHONE_PNG,color:Colors.white,),
-
-        ]),
-            )),
+          child: Stack(children: [
+            Transform.scale(
+                scaleX: 1.01,
+                scaleY: 1.02,
+                child: Image.asset(
+                  R.ASSETS_ICON_NO_PHONE_PNG,
+                  color: Colors.black38,
+                )),
+            Image.asset(
+              R.ASSETS_ICON_NO_PHONE_PNG,
+              color: Colors.white,
+            ),
+          ]),
+        )),
         Text(
           tr.turnOfPhones,
           textAlign: TextAlign.center,
           style: TextStyle(
-
             fontWeight: FontWeight.bold,
             fontSize: 4.vw,
             color: Colors.white,

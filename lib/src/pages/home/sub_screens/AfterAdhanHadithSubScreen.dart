@@ -24,17 +24,26 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
   final kHadithArabic =
       ' اللَّهمَّ ربَّ هذِهِ الدَّعوةِ التَّامَّةِ ، والصَّلاةِ القائمةِ ، آتِ سيِّدَنا مُحمَّدًا الوسيلةَ والفَضيلةَ ، وابعثهُ مقامًا مَحمودًا الَّذي وعدتَهُ، إنَّكَ لا تخلفُ الميعادَ.';
 
+  AudioManager? audioProvider;
+
   @override
   void initState() {
     final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
-    final audioProvider = context.read<AudioManager>();
+    audioProvider = context.read<AudioManager>();
     if (mosqueConfig!.duaAfterAzanEnabled!) {
-      audioProvider.loadAndPlayDuaAfterAdhanVoice(mosqueConfig, onDone: widget.onDone);
+      audioProvider!
+          .loadAndPlayDuaAfterAdhanVoice(mosqueConfig, onDone: widget.onDone);
     } else {
       widget.onDone?.call();
     }
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    audioProvider?.stop();
+    super.dispose();
   }
 
   @override
@@ -58,7 +67,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
                   fontFamily: StringManager.fontFamilyKufi),
             ),
             SizedBox(
-              width: isArabic?110.vw:200.vw,
+              width: isArabic ? 110.vw : 200.vw,
               child: AutoSizeText(
                 stepGranularity: 1,
                 kHadithArabic,
@@ -87,13 +96,12 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
                   S.of(context).afterSalahHadith,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontSize: 62,
-                      wordSpacing: 2,
-                      color: Colors.white,
-                      shadows: kIqamaCountDownTextShadow,
+                    fontSize: 62,
+                    wordSpacing: 2,
+                    color: Colors.white,
+                    shadows: kIqamaCountDownTextShadow,
                   ),
                 ),
-
               ),
               SizedBox(
                 height: 2.5.vh,

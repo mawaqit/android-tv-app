@@ -29,13 +29,15 @@ class AdhanSubScreen extends StatefulWidget {
 }
 
 class _AdhanSubScreenState extends State<AdhanSubScreen> {
+  AudioManager? audioManager;
+
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
     final salahIndex = mosqueManager.salahIndex;
     final mosqueConfig = mosqueManager.mosqueConfig;
     final isArabic = context.read<AppLanguage>().isArabic();
-    final audioProvider = context.read<AudioManager>();
+    audioManager = context.read<AudioManager>();
 
     /// if there are no adhan voice
     if (mosqueConfig?.adhanVoice == null) {
@@ -45,11 +47,17 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
 
     if (widget.forceAdhan ||
         mosqueConfig?.adhanEnabledByPrayer![salahIndex] == "1") {
-      audioProvider.loadAndPlayAdhanVoice(mosqueConfig, onDone: widget.onDone);
+      audioManager!.loadAndPlayAdhanVoice(mosqueConfig, onDone: widget.onDone);
     } else {
       Future.delayed(Duration(minutes: 2), widget.onDone);
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    audioManager?.stop();
+    super.dispose();
   }
 
   @override
