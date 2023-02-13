@@ -7,7 +7,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../generated/l10n.dart';
+import '../../../../i18n/l10n.dart';
 import '../../../helpers/StringUtils.dart';
 import '../../../widgets/TimePeriodWidget.dart';
 

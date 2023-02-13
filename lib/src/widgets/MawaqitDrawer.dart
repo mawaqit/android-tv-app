@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart' hide Page;
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:launch_review/launch_review.dart';
-import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';

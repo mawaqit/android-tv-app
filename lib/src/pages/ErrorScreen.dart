@@ -3,7 +3,7 @@ import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 
-import '../../generated/l10n.dart';
+import '../../i18n/l10n.dart';
 
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({

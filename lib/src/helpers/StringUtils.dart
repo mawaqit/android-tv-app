@@ -4,7 +4,7 @@ import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../generated/l10n.dart';
+import '../../i18n/l10n.dart';
 
 extension StringUtils on String {
   /// convert string to UpperCamelCaseFormat
