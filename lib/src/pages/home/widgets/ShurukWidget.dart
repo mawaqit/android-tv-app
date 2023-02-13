@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../generated/l10n.dart';
+import '../../../../i18n/l10n.dart';
 import '../../../services/mosque_manager.dart';
 import 'SalahItem.dart';
 

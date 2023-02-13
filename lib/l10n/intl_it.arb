@@ -39,6 +39,7 @@
   "changeMosque": "Cambia Moschea",
   "mosque": "Moschea",
   "in1": "dopo",
+  "sec": "Sec",
   "online": "Online",
   "enterMosqueId": "Inserisci ID Della Moschea : ",
   "mosqueId": "Moschea ID",
@@ -55,7 +56,7 @@
   "backendError": "Spiacenti, non siamo riusciti a connetterci al server.\nVerifica la connettività Internet o riprova più tardi.",
   "mosqueInput": "Input Della Moschea",
   "selectWithMosqueId": "Prova: 256, E 'l'ID della 'Mosquea e de Paris'",
-  "searchForMosque": "Quale moschea stai cercando? (Nomo, Città, Codice postale...)",
+  "searchForMosque": "Quale moschea stai cercando? (ID, Nomo, Città, Codice postale...)",
   "searchMosque": "Cerca una Moschea",
   "gpsError": "Impossibile accedere alla posizione corrente del dispositivo, controlla che il GPS del dispositivo sia abilitato",
   "mosqueNameError": "Inserisci il nome della Moschea",
@@ -79,44 +80,56 @@
   "alIqama": "Al Iqama",
   "alAdhan": "Al-Athan",
   "turnOfPhones": "Per favore spegnete il vostro cellulare!",
-  "iqamaIn": "Iqama nel",
+  "iqamaIn": "Iqama in",
   "alAthkar": "Al-Athkar",
-  "AlAthkar_0": "",
-  "@AlAthkar_0": {
-    "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله \\nاللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
+  "azkarList0": "",
+  "@azkarList0": {
+    "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "AlAthkar_1": "",
-  "@AlAthkar_1": {
-    "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة \\nلا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
+  "azkarList1": "",
+  "@azkarList1": {
+    "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
-  "AlAthkar_2": "",
-  "@AlAthkar_2": {
-    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ \\nقُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
+  "azkarList2": "",
+  "@azkarList2": {
+    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
   },
-  "AlAthkar_3": "",
-  "@AlAthkar_3": {
-    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ\\nقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
+  "azkarList3": "",
+  "@azkarList3": {
+    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
   },
-  "AlAthkar_4": "",
-  "@AlAthkar_4": {
-    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ\\n قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
+  "azkarList4": "",
+  "@azkarList4": {
+    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
   },
-  "AlAthkar_5": "",
-  "@AlAthkar_5": {
+  "azkarList5": "",
+  "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "AlAthkar_6": "",
-  "@AlAthkar_6": {
+  "azkarList6": "",
+  "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
   "jumuaaScreenTitle": "Jumuaa Time",
   "jumuaaHadith": "Il profeta Muhammad (pace e benedizione su di lui) disse\n Chiunque si faccia un bagno e presti la massima attenzione alla sua igiene personale, si ponga\n olio (nei capelli) o si profumi, quindi si diriga verso la preghiera senza forzare il suo cammino\n tra due persone (riunite nella moschea per la preghiera del venerdì), e preghi in accordo a quanto\n è stato scritto per lui e rimanga quieto mentre l’imam pronuncia il sermone, otterrà che tutti\n i peccati commessi in quel giorno fino al venerdì seguente siano perdonati",
   "shuruk": "Alba",
   "thisFeatureIsNotSupportedRightNow": "Siamo spiacenti, questa funzione (ricerca per ID Moschea) non è più supportata da MAWAQIT.",
-  "searchByGps": "Ricerca tramite GPS",
+  "searchByGps": "Cerca per GPS",
   "reset": "Reset",
-  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
-  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
-  "error": "Error",
-  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
+  "mosqueNotFoundMessage": "La moschea non è stata trovata. Potrebbe essere mancante o rimossa dal server",
+  "noInternetMessage": "sembra che tu non abbia accesso a Internet. Controlla il tuo internet e riprova",
+  "error": "Errore",
+  "mosqueErrorMessage": "Errore della moschea se sei amministratore della moschea contatta il nostro supporto per risolvere questo problema",
+  "muharram": "Muharram",
+  "safar": "Safar",
+  "rabiAlawwal": "Rabi' al-Awwal",
+  "rabiAlthani": "Rabi' al-Thani",
+  "jumadaAlula": "Jumada al-Ula",
+  "jumadaAlakhirah": "Jumada al-Akhirah",
+  "rajab": "Rajab",
+  "shaban": "Sha<unk> an",
+  "ramadan": "Ramadan",
+  "shawwal": "Shawwal",
+  "dhuAlqidah": "Dhu al-Qi'dah",
+  "dhuAlhijjah": "Dhu al-Hijjah"
 }

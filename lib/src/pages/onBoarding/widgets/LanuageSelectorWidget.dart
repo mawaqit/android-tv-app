@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -14,7 +14,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locales = S.delegate.supportedLocales;
+    final locales = S.supportedLocales;
     final appLanguage = Provider.of<AppLanguage>(context);
     final themeData = Theme.of(context);
 

@@ -38,7 +38,8 @@
   "snapchat": "Snapchat",
   "changeMosque": "Cambiar Mezquita",
   "mosque": "Mezquita",
-  "in1": "en",
+  "in1": "después",
+  "sec": "Seg",
   "online": "En línea",
   "enterMosqueId": "Introducir ID de Mezquita : ",
   "mosqueId": "Mezquita ID",
@@ -55,7 +56,7 @@
   "backendError": "Lo sentimos, no pudimos conectarnos al servidor.\nPor favor verifique la conectividad a Internet o inténtelo de nuevo más tarde.",
   "mosqueInput": "Entrada de Mezquita",
   "selectWithMosqueId": "Prueba: 256, Es el ID de la 'Mezquita de Paris'",
-  "searchForMosque": "¿Qué Mezquita estás buscando? (Nombre, Ciudad, Código Postal...)",
+  "searchForMosque": "¿Qué Mezquita estás buscando? (IDENTIFICACIÓN, Nombre, Ciudad, Código Postal...)",
   "searchMosque": "Buscar una Mezquita",
   "gpsError": "No se puede acceder a la ubicación actual del dispositivo, por favor comprueba que el GPS de tu dispositivo está activado",
   "mosqueNameError": "Introduzca el nombre de la Mezquita",
@@ -79,34 +80,34 @@
   "alIqama": "Al Iqama",
   "alAdhan": "Al adhan",
   "turnOfPhones": "Por favor, apague sus teléfonos móviles!",
-  "iqamaIn": "Al-Iqama en",
+  "iqamaIn": "Iqama en",
   "alAthkar": "Al-Athkar",
-  "AlAthkar_0": "",
-  "@AlAthkar_0": {
-    "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله \\nاللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
+  "azkarList0": "",
+  "@azkarList0": {
+    "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "AlAthkar_1": "",
-  "@AlAthkar_1": {
-    "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة \\nلا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
+  "azkarList1": "",
+  "@azkarList1": {
+    "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
-  "AlAthkar_2": "",
-  "@AlAthkar_2": {
-    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ \\nقُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
+  "azkarList2": "",
+  "@azkarList2": {
+    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
   },
-  "AlAthkar_3": "",
-  "@AlAthkar_3": {
-    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ\\nقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
+  "azkarList3": "",
+  "@azkarList3": {
+    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
   },
-  "AlAthkar_4": "",
-  "@AlAthkar_4": {
-    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ\\n قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
+  "azkarList4": "",
+  "@azkarList4": {
+    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
   },
-  "AlAthkar_5": "",
-  "@AlAthkar_5": {
+  "azkarList5": "",
+  "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "AlAthkar_6": "",
-  "@AlAthkar_6": {
+  "azkarList6": "",
+  "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
   "jumuaaScreenTitle": "Hora del viernes",
@@ -115,8 +116,20 @@
   "thisFeatureIsNotSupportedRightNow": "Lo sentimos, esta característica (búsqueda por la Mezquita de ID) ya no está soportada por MAWAQIT.",
   "searchByGps": "Buscar por GPS",
   "reset": "Reset",
-  "mosqueNotFoundMessage": "Your mosque not found. it might be missing or removed from the server",
-  "noInternetMessage": "it seems you have no internet access. checkout your internet and try again",
+  "mosqueNotFoundMessage": "Tu mezquita no se ha encontrado. Puede que falte o se haya eliminado del servidor",
+  "noInternetMessage": "parece que no tienes acceso a internet. Comprueba tu internet e inténtalo de nuevo",
   "error": "Error",
-  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue"
+  "mosqueErrorMessage": "Error de la mezquita si eres administrador de la mezquita ponte en contacto con nuestro soporte técnico para solucionar este problema",
+  "muharram": "Muharram",
+  "safar": "Cajero",
+  "rabiAlawwal": "Rabi ' al-Awwal",
+  "rabiAlthani": "Rabi ' al-Thani",
+  "jumadaAlula": "Jumada al-Ula",
+  "jumadaAlakhirah": "Jumada al-Akhirah",
+  "rajab": "Rajab",
+  "shaban": "Shaúl",
+  "ramadan": "Ramadán",
+  "shawwal": "Shawwal",
+  "dhuAlqidah": "Du al-Qi'dah",
+  "dhuAlhijjah": "El Hijyah"
 }

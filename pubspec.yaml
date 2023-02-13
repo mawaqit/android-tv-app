@@ -120,6 +120,8 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
 
+  generate: true
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -160,6 +162,3 @@ flutter:
     - family: WeatherIcons
       fonts:
         - asset: assets/fonts/weathericons-regular-webfont.ttf
-
-flutter_intl:
-  enabled: true

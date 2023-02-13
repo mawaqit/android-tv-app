@@ -8,7 +8,7 @@ import 'package:mawaqit/src/models/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
-import '../../../generated/l10n.dart';
+import '../../../i18n/l10n.dart';
 import '../../models/mosque.dart';
 import '../../models/mosqueConfig.dart';
 import '../../models/times.dart';

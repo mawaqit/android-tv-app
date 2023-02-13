@@ -3,7 +3,7 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../generated/l10n.dart';
+import '../../../../i18n/l10n.dart';
 import '../../../helpers/StringUtils.dart';
 import '../../../helpers/mawaqit_icons_icons.dart';
 import '../../../themes/UIShadows.dart';

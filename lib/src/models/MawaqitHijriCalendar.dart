@@ -1,6 +1,6 @@
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 
 class MawaqitHijriCalendar extends HijriCalendar {
