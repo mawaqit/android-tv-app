@@ -11,6 +11,7 @@ import '../models/weather.dart';
 
 const kBaseUrlV2 = 'https://mawaqit.net/api/2.0';
 const kBaseUrl = 'https://mawaqit.net/api/3.0';
+const kStaticFilesUrl = 'https://mawaqit.net/static';
 const token = 'ad283fb2-844b-40fe-967c-5cb593e9005e';
 
 class Api {
