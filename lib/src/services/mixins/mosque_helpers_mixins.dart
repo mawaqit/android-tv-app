@@ -122,6 +122,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
           todayIqama[i]
               .toTimeOfDay(
                 tryOffset: todayTimes[i].toTimeOfDay()!.toDate(mosqueDate()),
+                minimumMinutes: 3,
               )!
               .toDate(mosqueDate()),
       ];
@@ -200,8 +201,12 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() =>
-      !kDebugMode ? DateTime.now() : DateTime.now().add(Duration());
+  DateTime mosqueDate() => !kDebugMode
+      ? DateTime.now()
+      : DateTime.now().add(Duration(
+          hours: 12,
+          minutes: 30,
+        ));
 
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
