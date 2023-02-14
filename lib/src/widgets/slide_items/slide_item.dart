@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mawaqit/src/models/slider.dart';
 
@@ -17,8 +18,10 @@ class SlideItem extends StatelessWidget {
           height: MediaQuery.of(context).size.width,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(sliderList[index].imageUrl!))),
+            image: DecorationImage(
+              image: CachedNetworkImageProvider(sliderList[index].imageUrl!),
+            ),
+          ),
         ),
         SizedBox(
           height: 20.0,
