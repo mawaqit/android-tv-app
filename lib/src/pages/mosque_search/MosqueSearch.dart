@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/InputTypeSelector.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
 
 class MosqueSearch extends StatefulWidget {
   MosqueSearch({Key? key, this.onDone}) : super(key: key);
@@ -26,7 +27,7 @@ class _MosqueSearchState extends State<MosqueSearch> {
       child: Navigator(
         key: navKey,
         onGenerateRoute: (settings) => MaterialPageRoute(
-          builder: (context) => InputTypeSelector(onDone: widget.onDone),
+          builder: (context) => MosqueInputSearch(onDone: widget.onDone),
         ),
       ),
     );

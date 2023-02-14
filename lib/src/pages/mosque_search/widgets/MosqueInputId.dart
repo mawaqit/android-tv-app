@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -32,24 +32,27 @@ class _MosqueInputIdState extends State<MosqueInputId> {
       error = null;
       loading = true;
     });
-    final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
-    await mosqueManager.setMosqueId(mosqueId).then((value) {
-      setState(() => loading = false);
-
-      widget.onDone?.call();
-    }).catchError((e) {
-      if (e is InvalidMosqueId) {
-        setState(() {
-          loading = false;
-          error = S.of(context).mosqueIdIsNotValid(mosqueId);
-        });
-      } else {
-        setState(() {
-          loading = false;
-          error = S.of(context).backendError;
-        });
-      }
+    // final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
+    setState(() {
+      error = S.of(context).thisFeatureIsNotSupportedRightNow;
     });
+    // await mosqueManager.setMosqueId(mosqueId).then((value) {
+    //   setState(() => loading = false);
+    //
+    //   widget.onDone?.call();
+    // }).catchError((e) {
+    //   if (e is InvalidMosqueId) {
+    //     setState(() {
+    //       loading = false;
+    //       error = S.of(context).mosqueIdIsNotValid(mosqueId);
+    //     });
+    //   } else {
+    //     setState(() {
+    //       loading = false;
+    //       error = S.of(context).backendError;
+    //     });
+    //   }
+    // });
   }
 
   @override

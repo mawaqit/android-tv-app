@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
@@ -91,7 +91,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
 
   /// handle on mosque tile clicked
   void _selectMosque(Mosque mosque) {
-    context.read<MosqueManager>().setMosqueSlug(mosque.slug).then((value) {
+    context.read<MosqueManager>().setMosqueUUid(mosque.uuid.toString()).then((value) {
       widget.onDone?.call();
     }).catchError((e) {
       if (e is InvalidMosqueId) {
@@ -190,7 +190,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
           color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
         ),
         suffixIcon: IconButton(
-          tooltip: "Search by GPS",
+          tooltip: S.of(context).searchByGps,
           icon: Icon(Icons.gps_fixed),
           color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
           onPressed: () => _searchGps(1),

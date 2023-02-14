@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';

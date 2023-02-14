@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 
 class MosqueSimpleTile extends StatefulWidget {
@@ -51,7 +53,7 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(backgroundImage: NetworkImage(widget.mosque.image ?? ''), radius: 32),
+                  child: CircleAvatar(backgroundImage: CachedNetworkImageProvider(widget.mosque.image ?? ''), radius: 32),
                 ),
                 SizedBox(width: 8),
                 Column(
@@ -62,9 +64,13 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
                       style: theme.textTheme.titleMedium,
                     ),
                     SizedBox(height: 2),
-                    Text(
-                      widget.mosque.localisation ?? '',
-                      style: theme.textTheme.bodySmall,
+                    SizedBox(
+                      width: 45.vw,
+                      child: Text(
+                        overflow: TextOverflow.ellipsis,
+                        widget.mosque.localisation ?? '',
+                        style: theme.textTheme.bodySmall,
+                      ),
                     ),
                   ],
                 )

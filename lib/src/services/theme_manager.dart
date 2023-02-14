@@ -5,11 +5,40 @@ import './storage_manager.dart';
 class ThemeNotifier with ChangeNotifier {
   /// used getter to support hot restart in development
   ThemeData get darkTheme => ThemeData(
+        toggleButtonsTheme: ToggleButtonsThemeData(
+            disabledColor: Colors.white, color: Color(0xff490094)),
         brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
         primaryColor: Color(0xff490094),
         primaryColorDark: Color(0xff490094),
         primaryColorLight: Color(0xff490094),
+        switchTheme: SwitchThemeData(
+          overlayColor:
+              MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
+          thumbColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return Colors.deepPurple.shade100;
+            } else if (states.contains(MaterialState.focused)) {
+              return Color(0xffdbccea);
+            }
+            return Colors.white;
+          }),
+          trackColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return Colors.deepPurple;
+            } else if (states.contains(MaterialState.focused)) {
+              return Colors.grey;
+            }
+
+            return Colors.grey;
+          }),
+        ),
+        textTheme: ThemeData().textTheme.apply(
+              bodyColor: Colors.white,
+              displayColor: Colors.white,
+              decorationColor: Colors.white,
+              // fontFamily: '',
+            ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
             overlayColor: MaterialStateProperty.all(Color(0xff490094)),
@@ -34,6 +63,8 @@ class ThemeNotifier with ChangeNotifier {
 
   /// used getter to support hot restart in development
   ThemeData get lightTheme => ThemeData(
+        toggleButtonsTheme: ToggleButtonsThemeData(
+            disabledColor: Colors.white, color: Color(0xff490094)),
         primarySwatch: Colors.deepPurple,
         selectedRowColor: Color(0xff490094),
         cardColor: Color(0xff490094),
@@ -69,7 +100,7 @@ class ThemeNotifier with ChangeNotifier {
       if (themeMode == 'light') {
         isLightTheme = true;
       } else if (themeMode == 'dark') {
-        print('setting dark theme');
+        // print('setting dark theme');
         isLightTheme = false;
       }
       notifyListeners();
@@ -85,6 +116,12 @@ class ThemeNotifier with ChangeNotifier {
   void setLightMode() async {
     isLightTheme = true;
     StorageManager.saveData('themeMode', 'light');
+    notifyListeners();
+  }
+
+  void toggleMode() async {
+    isLightTheme = !(isLightTheme ?? true);
+    StorageManager.saveData('themeMode', isLightTheme! ? 'light' : 'dark');
     notifyListeners();
   }
 }

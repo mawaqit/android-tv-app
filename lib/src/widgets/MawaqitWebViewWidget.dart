@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
 //import 'package:location/location.dart' hide LocationAccuracy;
-import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/Loader.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/pages/OfflineScreen.dart';
@@ -202,7 +202,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                 if (Platform.isAndroid && ["intent"].contains(uri.scheme)) {
                   if (uri.toString().indexOf("maps") != -1) {
                     var link = uri.toString().substring(uri.toString().indexOf('?link=') + 6);
-                    print(link);
+                    // print(link);
                     AndroidIntent intent = AndroidIntent(action: 'action_view', data: link);
                     await intent.launch();
                   } else {
@@ -283,9 +283,11 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
 
   Widget buildErrorWidget() {
     return WillPopScope(
-      child: OfflineScreen(),
+      child: OfflineScreen(onPressedTryAgain:(){
+        webViewController?.reload();
+      } ),
       onWillPop: () async {
-        print('will pop ');
+        // print('will pop');
         if (await webViewController?.canGoBack() == true) {
           setState(() {
             hasError = false;
@@ -536,7 +538,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
   }
 
   Future<bool> goBack() async {
-    print(await webViewController!.canGoBack());
+    // print(await webViewController!.canGoBack());
 
     if (webViewController != null) {
       if (await webViewController!.canGoBack()) {

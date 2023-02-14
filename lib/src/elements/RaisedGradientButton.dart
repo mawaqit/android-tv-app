@@ -6,6 +6,7 @@ class RaisedGradientButton extends StatelessWidget {
   final double width;
   final double height;
   final Function? onPressed;
+  final bool? autoFocus;
 
   const RaisedGradientButton({
     Key? key,
@@ -14,16 +15,20 @@ class RaisedGradientButton extends StatelessWidget {
     this.width = double.infinity,
     this.height = 50.0,
     this.onPressed,
+    this.autoFocus,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double radius = 80;
     return Container(
       width: width,
       height: 50.0,
       decoration: BoxDecoration(
           gradient: gradient,
-          borderRadius: BorderRadius.all(Radius.circular(80.0)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(radius),
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey[500]!,
@@ -34,10 +39,15 @@ class RaisedGradientButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-            onTap: onPressed as void Function()?,
-            child: Center(
-              child: child,
-            )),
+          autofocus: autoFocus ?? false,
+          onTap: onPressed as void Function()?,
+          child: Center(
+            child: child,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(radius),
+          ),
+        ),
       ),
     );
   }

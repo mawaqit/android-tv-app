@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mawaqit/generated/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 class OnBoardingLanguageSelector extends StatelessWidget {
-  const OnBoardingLanguageSelector({Key? key, required this.onSelect}) : super(key: key);
+  const OnBoardingLanguageSelector({Key? key, required this.onSelect})
+      : super(key: key);
 
   final void Function() onSelect;
 
   @override
   Widget build(BuildContext context) {
-    final locales = S.delegate.supportedLocales;
+    final locales = S.supportedLocales;
     final appLanguage = Provider.of<AppLanguage>(context);
     final themeData = Theme.of(context);
 
     /// if the [langCode] is current used language
-    bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
+    bool isSelected(String langCode) =>
+        appLanguage.appLocal.languageCode == langCode;
 
     final sortedLocales = [
       Locale('ar'),
-      ...locales.where((element) => element.languageCode != 'ar').toList()
+      ...locales
+          .where((element) =>
+              element.languageCode != 'ar' && element.languageCode != 'ba')
+          .toList()
         ..sort(
-          (a, b) => appLanguage.languageName(a.languageCode).compareTo(appLanguage.languageName(b.languageCode)),
+          (a, b) => appLanguage
+              .languageName(a.languageCode)
+              .compareTo(appLanguage.languageName(b.languageCode)),
         ),
     ];
 
@@ -36,7 +43,9 @@ class OnBoardingLanguageSelector extends StatelessWidget {
           style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.w700,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark
+                ? null
+                : themeData.primaryColor,
           ),
         ),
         SizedBox(height: 8),
@@ -45,7 +54,9 @@ class OnBoardingLanguageSelector extends StatelessWidget {
           textAlign: TextAlign.center,
           style: GoogleFonts.inter(
             fontSize: 15,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark
+                ? null
+                : themeData.primaryColor,
           ),
         ),
         SizedBox(height: 20),
@@ -58,7 +69,8 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                 bottom: 5,
               ),
               itemCount: sortedLocales.length,
-              separatorBuilder: (BuildContext context, int index) => Divider(height: 1),
+              separatorBuilder: (BuildContext context, int index) =>
+                  Divider(height: 1),
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
                 return LanguageTile(
@@ -106,7 +118,9 @@ class _LanguageTileState extends State<LanguageTile> {
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
         child: Ink(
           decoration: BoxDecoration(
-            color: isFocused || widget.isSelected ? themeData.selectedRowColor : null,
+            color: isFocused || widget.isSelected
+                ? themeData.selectedRowColor
+                : null,
             borderRadius: BorderRadius.circular(10),
           ),
           child: InkWell(
@@ -114,7 +128,8 @@ class _LanguageTileState extends State<LanguageTile> {
             onFocusChange: (i) => setState(() => isFocused = i),
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueId);
+              appLanguage.changeLanguage(
+                  widget.locale, mosqueManager.mosqueUUID);
               widget.onSelect();
             },
             child: ListTile(
@@ -122,13 +137,16 @@ class _LanguageTileState extends State<LanguageTile> {
               textColor: isFocused || widget.isSelected ? Colors.white : null,
               leading: Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Image.asset('assets/img/flag/${widget.locale.languageCode}.png'),
+                child: Image.asset(
+                    'assets/img/flag/${widget.locale.languageCode}.png'),
               ),
               title: Text(
                 appLanguage.languageName(widget.locale.languageCode),
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
-              trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
+              trailing: widget.isSelected
+                  ? Icon(MawaqitIcons.icon_checked, color: Colors.white)
+                  : null,
             ),
           ),
         ),
