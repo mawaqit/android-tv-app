@@ -61,7 +61,6 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 gradient: LinearGradient(
-                  // transform: GradientRotation(pi / 2),
                   begin: Alignment(0, 0),
                   end: Alignment(0, 1),
                   colors: [
