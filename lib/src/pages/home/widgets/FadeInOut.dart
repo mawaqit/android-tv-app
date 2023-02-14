@@ -30,8 +30,6 @@ class _FadeInOutWidgetState extends State<FadeInOutWidget> {
   void initState() {
     Future.delayed(widget.duration, showNextItem);
 
-    print('FadeInOutWidget: initState()');
-
     super.initState();
   }
 

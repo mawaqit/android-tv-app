@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -62,7 +63,7 @@ class OfflineHomeScreen extends StatelessWidget {
       return ErrorScreen(
         title: S.of(context).reset,
         description: S.of(context).mosqueNotFoundMessage,
-        image: 'assets/img/icon_exit.png',
+        image: R.ASSETS_IMG_ICON_EXIT_PNG,
         onTryAgain: () => AppRouter.push(MosqueSearchScreen()),
         tryAgainText: S.of(context).changeMosque,
       );

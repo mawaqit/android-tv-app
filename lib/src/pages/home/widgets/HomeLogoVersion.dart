@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 
@@ -12,7 +13,7 @@ class HomeLogoVersion extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset(
-            'assets/img/logo/logo-mawaqit-2022-horizontal.png',
+            R.ASSETS_IMG_LOGO_LOGO_MAWAQIT_2022_HORIZONTAL_PNG,
             height: 3.8.vw,
           ),
           Align(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
 
@@ -15,7 +16,7 @@ class LanguageScreen extends StatelessWidget {
             flex: 4,
             child: Align(
               child: Lottie.asset(
-                'assets/animations/lottie/language.json',
+                R.ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON,
                 fit: BoxFit.contain,
               ),
               alignment: Alignment.center,

@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -124,7 +125,7 @@ class _SplashScreen extends State<Splash> {
         return ErrorScreen(
           title: S.of(context).reset,
           description: S.of(context).mosqueNotFoundMessage,
-          image: 'assets/img/icon_exit.png',
+          image: R.ASSETS_IMG_ICON_EXIT_PNG,
           onTryAgain: _changeMosque,
           tryAgainText: S.of(context).changeMosque,
         );
@@ -132,14 +133,14 @@ class _SplashScreen extends State<Splash> {
         return ErrorScreen(
           title: S.of(context).noInternet,
           description: S.of(context).noInternetMessage,
-          image: 'assets/img/wifi.png',
+          image: R.ASSETS_IMG_WIFI_PNG,
           onTryAgain: _navigateToHome,
         );
       case ErrorState.mosqueDataError:
         return ErrorScreen(
           title: S.of(context).error,
           description: S.of(context).mosqueErrorMessage,
-          image: 'assets/img/icon_exit.png',
+          image: R.ASSETS_IMG_ICON_EXIT_PNG,
           onTryAgain: _navigateToHome,
         );
       case null:
@@ -153,7 +154,7 @@ class _SplashScreen extends State<Splash> {
           fit: StackFit.expand,
           children: <Widget>[
             Image.asset(
-              'assets/backgrounds/splash_screen_5.png',
+              R.ASSETS_BACKGROUNDS_SPLASH_SCREEN_5_PNG,
               fit: BoxFit.cover,
             ),
             RepaintBoundary(
@@ -163,7 +164,7 @@ class _SplashScreen extends State<Splash> {
                   isLoading: false,
                   onSuccess: (e) => _navigateToHome(),
                   onError: (error, stacktrace) {},
-                  name: 'assets/animations/rive/mawaqit_logo_animation1.riv',
+                  name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
                   startAnimation: 'idle',
                   loopAnimation: 'loading_light',

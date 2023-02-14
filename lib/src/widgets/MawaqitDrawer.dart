@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart' hide Page;
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:launch_review/launch_review.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -58,7 +59,7 @@ class MawaqitDrawer extends StatelessWidget {
                           child: Container(
                             height: 70.0,
                             // child: Image.network(settings.logoHeaderUrl!),
-                            child: Image.asset('assets/img/logo/logo-mawaqit-2022-horizontal.png'),
+                            child: Image.asset(R.ASSETS_IMG_LOGO_MAWAQIT_LOGO_2022_CIRCLE_LIGHT_PURPLE_512PT_PNG),
                           ),
                         ),
                         ElevatedButton.icon(

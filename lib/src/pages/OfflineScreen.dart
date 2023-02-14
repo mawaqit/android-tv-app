@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
@@ -30,7 +31,7 @@ class _OfflineScreenState extends State<OfflineScreen> {
                   width: 100.0,
                   height: 100.0,
                   child: Image.asset(
-                    "assets/img/wifi.png",
+                    R.ASSETS_IMG_WIFI_PNG,
                     color: Colors.white70,
                     fit: BoxFit.contain,
                   )),
