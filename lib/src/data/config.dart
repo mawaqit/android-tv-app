@@ -1,13 +1,4 @@
-import 'package:flutter/material.dart';
-
 class Config {
-  /* Images Dir */
-  static const String imageDir = "assets/img";
-
-  /* Default Logo Application*/
-  static Image logo =
-      Image.asset("$imageDir/logo.png", height: 150, width: 150);
-
   static List<Map<String, String>> language = [
     {"value": "sq", "name": "Albanian", "subtitle": "Albanian"},
     {"value": "ar", "name": "Arabic", "subtitle": "العربية"},

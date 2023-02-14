@@ -44,6 +44,9 @@ class R {
   /// ![preview](file://E:\Projects\android-tv\assets\icon\add.png)
   static const String ASSETS_ICON_ADD_PNG = 'assets/icon/add.png';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\icon\adhan_icon.png)
+  static const String ASSETS_ICON_ADHAN_ICON_PNG = 'assets/icon/adhan_icon.png';
+
   /// ![preview](file://E:\Projects\android-tv\assets\icon\back.png)
   static const String ASSETS_ICON_BACK_PNG = 'assets/icon/back.png';
 
@@ -59,8 +62,14 @@ class R {
   /// ![preview](file://E:\Projects\android-tv\assets\icon\close.png)
   static const String ASSETS_ICON_CLOSE_PNG = 'assets/icon/close.png';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\icon\iqama_icon.png)
+  static const String ASSETS_ICON_IQAMA_ICON_PNG = 'assets/icon/iqama_icon.png';
+
   /// ![preview](file://E:\Projects\android-tv\assets\icon\messages.png)
   static const String ASSETS_ICON_MESSAGES_PNG = 'assets/icon/messages.png';
+
+  /// ![preview](file://E:\Projects\android-tv\assets\icon\no-phone.png)
+  static const String ASSETS_ICON_NO_PHONE_PNG = 'assets/icon/no-phone.png';
 
   /// ![preview](file://E:\Projects\android-tv\assets\icon\notification.png)
   static const String ASSETS_ICON_NOTIFICATION_PNG =
@@ -71,6 +80,9 @@ class R {
 
   /// ![preview](file://E:\Projects\android-tv\assets\icon\profile.png)
   static const String ASSETS_ICON_PROFILE_PNG = 'assets/icon/profile.png';
+
+  /// ![preview](file://E:\Projects\android-tv\assets\icon\salah_icon.png)
+  static const String ASSETS_ICON_SALAH_ICON_PNG = 'assets/icon/salah_icon.png';
 
   /// ![preview](file://E:\Projects\android-tv\assets\icon\sale.png)
   static const String ASSETS_ICON_SALE_PNG = 'assets/icon/sale.png';
