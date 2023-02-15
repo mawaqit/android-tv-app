@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
+import 'package:mawaqit/src/helpers/repaint_boundires.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
@@ -35,7 +37,8 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
 
     if (mosqueManager.mosqueConfig?.iqamaFullScreenCountdown == false)
       return FutureBuilder(
-        future: Future.delayed(nextIqamaTime.difference(mosqueManager.mosqueDate()), onDone),
+        future: Future.delayed(
+            nextIqamaTime.difference(mosqueManager.mosqueDate()), onDone),
         builder: (context, snapshot) => NormalHomeSubScreen(),
       );
 
@@ -47,9 +50,9 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
           children: [
             OfflineWidget(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 1.vw,vertical: 1.vh),
-              child: Directionality(textDirection: TextDirection.ltr,
-              child: WeatherWidget()),
+              padding: EdgeInsets.symmetric(horizontal: 1.vw, vertical: 1.vh),
+              child: Directionality(
+                  textDirection: TextDirection.ltr, child: WeatherWidget()),
             )
           ],
         ),
@@ -64,12 +67,13 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   shadows: kIqamaCountDownTextShadow,
                   fontFamily: StringManager.getFontFamilyByString(tr.iqamaIn)),
-            ),
+            ).animate().slide(delay: .5.seconds).fade().addRepaintBoundary(),
             Expanded(
               child: StreamBuilder(
                   stream: Stream.periodic(Duration(seconds: 1)),
                   builder: (context, snapshot) {
-                    final remaining = nextIqamaTime.difference(mosqueManager.mosqueDate());
+                    final remaining =
+                        nextIqamaTime.difference(mosqueManager.mosqueDate());
                     if (remaining <= Duration.zero) {
                       Future.delayed(Duration(milliseconds: 80), onDone);
                     }
@@ -88,7 +92,10 @@ class IqamaaCountDownSubScreen extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         shadows: kIqamaCountDownTextShadow,
                       ),
-                    );
+                    )
+                        .animate()
+                        .fadeIn(delay: .7.seconds, duration: 2.seconds)
+                        .addRepaintBoundary();
                   }),
             ),
             SalahTimesBar(miniStyle: true),

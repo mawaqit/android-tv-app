@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/repaint_boundires.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/ShurukWidget.dart';
@@ -13,7 +15,7 @@ import 'package:provider/provider.dart';
 import '../widgets/footer.dart';
 
 class NormalHomeSubScreen extends StatelessWidget {
-  const NormalHomeSubScreen({Key? key}) : super(key: key);
+  NormalHomeSubScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +35,19 @@ class NormalHomeSubScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ShurukWidget(),
-              HomeTimeWidget(),
-              Center(
-                child: SalahItemWidget(
-                  title: S.of(context).jumua,
-                  time: mosqueProvider.jumuaTime ?? "",
-                  iqama: mosqueProvider.times!.jumua2,
-                  active: mosqueProvider.nextIqamaIndex() == 1 &&
-                      mosqueProvider.mosqueDate().weekday == DateTime.friday,
-                  removeBackground: true,
-                ),
-              ),
+              ShurukWidget().animate().slideX().fadeIn().addRepaintBoundary(),
+              HomeTimeWidget()
+                  .animate()
+                  .slideY(delay: Duration(milliseconds: 500))
+                  .fadeIn().addRepaintBoundary(),
+              SalahItemWidget(
+                title: S.of(context).jumua,
+                time: mosqueProvider.jumuaTime ?? "",
+                iqama: mosqueProvider.times!.jumua2,
+                active: mosqueProvider.nextIqamaIndex() == 1 &&
+                    mosqueProvider.mosqueDate().weekday == DateTime.friday,
+                removeBackground: true,
+              ).animate().slideX(begin: 1).fadeIn().addRepaintBoundary(),
             ],
           ),
         ),

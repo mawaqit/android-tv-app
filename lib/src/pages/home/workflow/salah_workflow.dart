@@ -109,6 +109,13 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
       setState(() => state = SalahWorkflowScreens.afterSalahAzkar);
 
   @override
+  void setState(VoidCallback fn) {
+    if (!mounted) return;
+
+    super.setState(fn);
+  }
+
+  @override
   void initState() {
     calcFirstScreen();
     super.initState();
