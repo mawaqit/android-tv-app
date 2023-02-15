@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
+import 'package:mawaqit/src/helpers/repaint_boundires.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -104,13 +106,14 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                   shadows: kAfterAdhanTextShadow),
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.center,
-            ),
+            ).animate().slide().fade().addRepaintBoundary(),
             FractionallySizedBox(
               widthFactor: .6,
               child: Divider(color: Colors.white),
             ),
             Expanded(
               child: Container(
+                key: ValueKey(activeHadith),
                 padding:
                     EdgeInsets.symmetric(horizontal: 1.2.vw, vertical: 1.vh),
                 width: isArabic || translatedHadith.isEmpty
@@ -128,7 +131,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                   ),
                   textDirection: TextDirection.rtl,
                   textAlign: TextAlign.center,
-                ),
+                ).animate().fadeIn(delay: .3.seconds).addRepaintBoundary(),
               ),
             ),
             if (!isArabic && translatedHadith.isNotEmpty)

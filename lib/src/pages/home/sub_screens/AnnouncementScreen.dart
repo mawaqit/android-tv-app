@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/repaint_boundires.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
@@ -14,7 +16,7 @@ import '../widgets/SalahTimesBar.dart';
 
 /// show all announcements in one after another
 class AnnouncementScreen extends StatefulWidget {
-  const AnnouncementScreen({Key? key, this.onDone}) : super(key: key);
+  AnnouncementScreen({Key? key, this.onDone}) : super(key: key);
 
   final VoidCallback? onDone;
 
@@ -27,6 +29,8 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   Announcement? activeAnnouncement;
 
   void nextAnnouncement() {
+    if (!mounted) return;
+
     final allAnnouncements = context.read<MosqueManager>().activeAnnouncements;
     index++;
 
@@ -94,39 +98,40 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   Widget textAnnouncement(String content, String? title) {
     return Padding(
+      key: ValueKey("$content $title"),
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
         children: [
           // title
-          SizedBox(
-            height: 2.vh,
-          ),
-          AutoSizeText(title ?? '',
-              stepGranularity: 12,
+          SizedBox(height: 2.vh),
+          Text(
+            title ?? '',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              shadows: kAnnouncementTextShadow,
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
+              fontFamily: StringManager.getFontFamilyByString(title ?? ''),
+              color: Colors.amber,
+              letterSpacing: 1,
+            ),
+          ).animate().slide().addRepaintBoundary(),
+          // content
+          SizedBox(height: 3.vh),
+          Expanded(
+            child: AutoSizeText(
+              content,
+              stepGranularity: 1,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  shadows: kAnnouncementTextShadow,
-                  fontSize: 62,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: StringManager.getFontFamilyByString(title ?? ''),
-                  color: Colors.amber,
-                  letterSpacing: 1)),
-          // content
-          SizedBox(
-            height: 3.vh,
-          ),
-          Expanded(
-            child: AutoSizeText(content,
-                stepGranularity: 1,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  shadows: kAnnouncementTextShadow,
-                  fontSize: 62,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: StringManager.getFontFamilyByString(content),
-                  color: Colors.white,
-                  letterSpacing: 1,
-                )),
+                shadows: kAnnouncementTextShadow,
+                fontSize: 62,
+                fontWeight: FontWeight.bold,
+                fontFamily: StringManager.getFontFamilyByString(content),
+                color: Colors.white,
+                letterSpacing: 1,
+              ),
+            ).animate().fade(delay: 500.milliseconds).addRepaintBoundary(),
           ),
           SizedBox(
             height: 15.vh,
@@ -140,7 +145,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     return CachedNetworkImage(
       imageUrl: image,
       fit: BoxFit.cover,
-    );
+    ).animate().slideX().addRepaintBoundary();
   }
 
   Widget videoAnnouncement(String video) {

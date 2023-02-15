@@ -17,7 +17,6 @@ import '../pages/home/sub_screens/JumuaHadithSubScreen.dart';
 import '../pages/home/sub_screens/RandomHadithScreen.dart';
 import '../pages/home/sub_screens/normal_home.dart';
 import '../pages/home/widgets/mosque_background_screen.dart';
-import 'RandomHadithTest.dart';
 
 class DrawerListDeveloper extends StatelessWidget {
   const DrawerListDeveloper({Key? key}) : super(key: key);
@@ -112,7 +111,7 @@ class DrawerListDeveloper extends StatelessWidget {
           icon: Icons.message_outlined,
           text: " Random Hadith ",
           onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
-            child: RandomHadithTest(),
+            child: RandomHadithScreen(),
           )),
         ),
         DrawerListTitle(
