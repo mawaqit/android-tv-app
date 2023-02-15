@@ -5,6 +5,8 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
+
 import '../../../services/audio_manager.dart';
 import '../../../services/mosque_manager.dart';
 import '../../../themes/UIShadows.dart';
@@ -19,10 +21,7 @@ class AfterAdhanSubScreen extends StatefulWidget {
 }
 
 class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
-  final kTitleArabic = 'دعاء ما بعد الأذان';
-
-  final kHadithArabic =
-      ' اللَّهمَّ ربَّ هذِهِ الدَّعوةِ التَّامَّةِ ، والصَّلاةِ القائمةِ ، آتِ سيِّدَنا مُحمَّدًا الوسيلةَ والفَضيلةَ ، وابعثهُ مقامًا مَحمودًا الَّذي وعدتَهُ، إنَّكَ لا تخلفُ الميعادَ.';
+  final arTranslation = AppLocalizationsAr();
 
   AudioManager? audioProvider;
 
@@ -50,65 +49,60 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
   Widget build(BuildContext context) {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              kTitleArabic,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 62,
-                  color: Colors.white,
-                  shadows: kAfterAdhanTextShadow,
-                  fontFamily: StringManager.fontFamilyKufi),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            arTranslation.afterSalahHadithTitle,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 5.vw,
+              color: Colors.white,
+              shadows: kAfterAdhanTextShadow,
+              fontFamily: StringManager.fontFamilyKufi,
             ),
-            SizedBox(
-              width: isArabic ? 110.vw : 200.vw,
-              child: AutoSizeText(
-                stepGranularity: 1,
-                kHadithArabic,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 6.2.vw,
-                    color: Colors.white,
-                    shadows: kAfterAdhanTextShadow,
-                    fontFamily: StringManager.fontFamilyKufi),
+          ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: AutoSizeText(
+              arTranslation.afterSalahHadith.replaceAll('\n', ''),
+              textAlign: TextAlign.center,
+              stepGranularity: .5,
+              style: TextStyle(
+                fontSize: 6.2.vw,
+                color: Colors.white,
+                shadows: kAfterAdhanTextShadow,
+                fontFamily: StringManager.fontFamilyKufi,
               ),
             ),
-            if (Localizations.localeOf(context).languageCode != 'ar') ...[
-              AutoSizeText(
-                S.of(context).afterSalahHadithTitle,
-                stepGranularity: 1,
+          ),
+          if (!isArabic) ...[
+            Text(
+              S.of(context).afterSalahHadithTitle,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 5.vw,
+                color: Colors.white,
+                shadows: kIqamaCountDownTextShadow,
+              ),
+            ),
+            Flexible(
+              fit: FlexFit.loose,
+              child: AutoSizeText(
+                S.of(context).afterSalahHadith,
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 6.2.vw,
+                  fontSize: 62,
+                  wordSpacing: 2,
                   color: Colors.white,
                   shadows: kIqamaCountDownTextShadow,
                 ),
               ),
-              SizedBox(
-                width: 200.vw,
-                child: Text(
-                  S.of(context).afterSalahHadith,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 62,
-                    wordSpacing: 2,
-                    color: Colors.white,
-                    shadows: kIqamaCountDownTextShadow,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 2.5.vh,
-              )
-            ]
-          ],
-        ),
+            ),
+          ]
+        ],
       ),
     );
   }
