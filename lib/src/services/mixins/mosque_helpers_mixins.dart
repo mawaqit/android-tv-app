@@ -204,7 +204,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   DateTime mosqueDate() => !kDebugMode
       ? DateTime.now()
       : DateTime.now().add(Duration(
-          hours: 12,
+          days: 4,
+          hours: 6,
           minutes: 30,
         ));
 

@@ -48,7 +48,10 @@ class SalahTimesBar extends StatelessWidget {
             title: miniStyle ? null : tr.duhr,
             time: todayTimes[1],
             iqama: microStyle ? null : todayIqama[1],
-            active: nextActiveIqama == 1,
+            active: nextActiveIqama == 1 &&
+                (mosqueProvider.mosqueDate().weekday != DateTime.friday ||
+                    mosqueProvider.jumuaTime == null ||
+                    !mosqueProvider.typeIsMosque),
             withDivider: false,
           ),
           SalahItemWidget(
