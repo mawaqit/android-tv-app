@@ -36,6 +36,9 @@ class FlashWidget extends StatelessWidget {
               text: mosque.flash?.content ?? '',
               scrollAxis: Axis.horizontal,
               blankSpace: 500,
+              textDirection: mosque.flash?.orientation == 'rtl'
+                  ? TextDirection.rtl
+                  : TextDirection.ltr,
               style: TextStyle(
                 height: 1,
                 fontSize: 3.4.vw,
