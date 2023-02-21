@@ -114,6 +114,8 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    print(widget.path);
     final settings = Provider.of<SettingsManager>(context).settings;
 
     return Focus(
