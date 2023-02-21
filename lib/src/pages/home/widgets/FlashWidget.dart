@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/HexColor.dart';
@@ -36,11 +37,15 @@ class FlashWidget extends StatelessWidget {
               scrollAxis: Axis.horizontal,
               blankSpace: 500,
               style: TextStyle(
+                height: 1,
                 fontSize: 3.4.vw,
                 fontWeight: FontWeight.bold,
                 wordSpacing: 3,
                 shadows: kHomeTextShadow,
                 color: HexColor(mosque.flash?.color ?? "#FFFFFF"),
+                fontFamily: StringManager.getFontFamilyByString(
+                  mosque.flash?.content ?? '',
+                ),
               ),
             ),
           );
