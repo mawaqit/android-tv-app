@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -8,6 +9,7 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/models/menu.dart';
 import 'package:mawaqit/src/models/page.dart';
@@ -55,29 +57,31 @@ class MawaqitDrawer extends StatelessWidget {
                   children: <Widget>[
                     Row(
                       children: [
-                        Expanded(
-                          child: Container(
-                            height: 70.0,
-                            // child: Image.network(settings.logoHeaderUrl!),
-                            child: Image.asset(R.ASSETS_IMG_LOGO_MAWAQIT_LOGO_2022_CIRCLE_LIGHT_PURPLE_512PT_PNG),
-                          ),
+                        SvgPicture.asset(
+                          R.ASSETS_SVG_MAWAQIT_LOGO_LIGHT_SVG,
+                          height: 7.vh,
+                          // width: 10,
                         ),
+                        Spacer(),
                         ElevatedButton.icon(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.resolveWith((states) {
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.focused)) {
                                 return theme.primaryColorDark;
                               }
                               return Colors.white;
                             }),
                             elevation: MaterialStateProperty.all(0),
-                            overlayColor: MaterialStateProperty.all(Colors.transparent),
+                            overlayColor:
+                                MaterialStateProperty.all(Colors.transparent),
                             //     foregroundColor: MaterialStateProperty.resolveWith((states) {
                             //   if (states.contains(MaterialState.focused)) {
                             //     return Colors.white;
                             //   }
                             // })
-                            foregroundColor: MaterialStateProperty.resolveWith((states) {
+                            foregroundColor:
+                                MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.focused)) {
                                 return Colors.white;
                               }
@@ -88,7 +92,9 @@ class MawaqitDrawer extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0)),
                           ),
                           onPressed: () => exit(0),
                           icon: Container(
@@ -158,7 +164,8 @@ class MawaqitDrawer extends StatelessWidget {
               text: S.of(context).home,
               onTap: () async {
                 if (settings.tabNavigationEnable == "1") {
-                  AppRouter.popAndPush(WebScreen(settings.url), name: 'HomeScreen');
+                  AppRouter.popAndPush(WebScreen(settings.url),
+                      name: 'HomeScreen');
                 } else {
                   Navigator.pop(context);
 
@@ -191,7 +198,9 @@ class MawaqitDrawer extends StatelessWidget {
           ),
           DrawerListTitle(
               icon: Icons.brightness_medium,
-              text: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
+              text: theme.brightness == Brightness.light
+                  ? S.of(context).darkMode
+                  : S.of(context).lightMode,
               onTap: () {
                 if (theme.brightness == Brightness.light) {
                   themeProvider.setDarkMode();
@@ -259,8 +268,10 @@ class MawaqitDrawer extends StatelessWidget {
           .map((Page page) => DrawerListTitle(
                 forceThemeColor: true,
                 iconUrl: page.iconUrl,
-                text: Intl.message(page.title ?? '', name: page.title?.toCamelCase),
-                onTap: () => AppRouter.popAndPush(PageScreen(page), name: page.title),
+                text: Intl.message(page.title ?? '',
+                    name: page.title?.toCamelCase),
+                onTap: () =>
+                    AppRouter.popAndPush(PageScreen(page), name: page.title),
               ))
           .toList(),
     );
@@ -268,6 +279,8 @@ class MawaqitDrawer extends StatelessWidget {
 
   _shareApp(BuildContext context, String? text, String share) {
     final RenderBox box = context.findRenderObject() as RenderBox;
-    Share.share(share, subject: text, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    Share.share(share,
+        subject: text,
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }

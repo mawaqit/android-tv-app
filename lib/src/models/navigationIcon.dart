@@ -28,7 +28,7 @@ class NavigationIcon {
 
   NavigationIcon.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    icon = json['icon'];
+    icon = json['svg'];
     title = json['title'];
     value = json['value'];
     type = json['type'];
@@ -44,7 +44,7 @@ class NavigationIcon {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['icon'] = this.icon;
+    data['svg'] = this.icon;
     data['title'] = this.title;
     data['value'] = this.value;
     data['type'] = this.type;

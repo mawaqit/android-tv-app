@@ -35,9 +35,6 @@ class R {
   /// ![preview](file://E:\Projects\android-tv\assets\cfg\settings.json)
   static const String ASSETS_CFG_SETTINGS_JSON = 'assets/cfg/settings.json';
 
-  /// ![preview](file://E:\Projects\android-tv\assets\icon\no-phone.png)
-  static const String ASSETS_ICON_NO_PHONE_PNG = 'assets/icon/no-phone.png';
-
   /// ![preview](file://E:\Projects\android-tv\assets\img\flag\ar.png)
   static const String ASSETS_IMG_FLAG_AR_PNG = 'assets/img/flag/ar.png';
 
@@ -89,18 +86,20 @@ class R {
   /// ![preview](file://E:\Projects\android-tv\assets\img\icon_exit.png)
   static const String ASSETS_IMG_ICON_EXIT_PNG = 'assets/img/icon_exit.png';
 
-  /// ![preview](file://E:\Projects\android-tv\assets\img\logo\logo-mawaqit-2022-horizontal.png)
-  static const String ASSETS_IMG_LOGO_LOGO_MAWAQIT_2022_HORIZONTAL_PNG =
-      'assets/img/logo/logo-mawaqit-2022-horizontal.png';
-
-  /// ![preview](file://E:\Projects\android-tv\assets\img\logo\mawaqit-logo-2022-circle-light-purple-512pt.png)
-  static const String
-      ASSETS_IMG_LOGO_MAWAQIT_LOGO_2022_CIRCLE_LIGHT_PURPLE_512PT_PNG =
-      'assets/img/logo/mawaqit-logo-2022-circle-light-purple-512pt.png';
-
-  /// ![preview](file://E:\Projects\android-tv\assets\img\wifi.png)
-  static const String ASSETS_IMG_WIFI_PNG = 'assets/img/wifi.png';
-
   /// ![preview](file://E:\Projects\android-tv\assets\scripts\clean.js)
   static const String ASSETS_SCRIPTS_CLEAN_JS = 'assets/scripts/clean.js';
+
+  /// ![preview](file://E:\Projects\android-tv\assets\svg\mawaqit-logo-text-light.svg)
+  static const String ASSETS_SVG_MAWAQIT_LOGO_TEXT_LIGHT_SVG =
+      'assets/svg/mawaqit-logo-text-light.svg';
+
+  /// ![preview](file://E:\Projects\android-tv\assets\svg\mawaqit_logo_light.svg)
+  static const String ASSETS_SVG_MAWAQIT_LOGO_LIGHT_SVG =
+      'assets/svg/mawaqit_logo_light.svg';
+
+  /// ![preview](file://E:\Projects\android-tv\assets\svg\no-phone.svg)
+  static const String ASSETS_SVG_NO_PHONE_SVG = 'assets/svg/no-phone.svg';
+
+  /// ![preview](file://E:\Projects\android-tv\assets\svg\no-wi-fi.svg)
+  static const String ASSETS_SVG_NO_WI_FI_SVG = 'assets/svg/no-wi-fi.svg';
 }

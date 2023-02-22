@@ -1,11 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
-import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/pages/home/widgets/FlashAnimation.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -84,22 +82,7 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
         ),
         Expanded(
           child: FlashAnimation(
-            child: Stack(
-              children: [
-                Transform.scale(
-                  scaleX: 1.01,
-                  scaleY: 1.02,
-                  child: Image.asset(
-                    R.ASSETS_ICON_NO_PHONE_PNG,
-                    color: Colors.black38,
-                  ),
-                ),
-                Image.asset(
-                  R.ASSETS_ICON_NO_PHONE_PNG,
-                  color: Colors.white,
-                ),
-              ],
-            ),
+            child: SvgPicture.asset(R.ASSETS_SVG_NO_PHONE_SVG),
           ),
         ),
         Text(

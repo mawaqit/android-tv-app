@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mawaqit/const/resource.dart';
-import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
 import 'package:mawaqit/src/helpers/HttpOverrides.dart';
@@ -133,7 +133,7 @@ class _SplashScreen extends State<Splash> {
         return ErrorScreen(
           title: S.of(context).noInternet,
           description: S.of(context).noInternetMessage,
-          image: R.ASSETS_IMG_WIFI_PNG,
+          image: R.ASSETS_SVG_NO_WI_FI_SVG,
           onTryAgain: _navigateToHome,
         );
       case ErrorState.mosqueDataError:
