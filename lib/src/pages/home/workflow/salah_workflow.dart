@@ -89,6 +89,9 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
     if (mosqueManager.mosqueConfig?.iqamaEnabled == false)
       return widget.onDone();
 
+    if (mosqueManager.nextIqamaaAfter() > Duration(minutes: 30))
+      return widget.onDone();
+
     setState(() => state = SalahWorkflowScreens.iqamaaCountDown);
   }
 
@@ -104,6 +107,13 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
 
   onSalahTimeDoneDone() =>
       setState(() => state = SalahWorkflowScreens.afterSalahAzkar);
+
+  @override
+  void setState(VoidCallback fn) {
+    if (!mounted) return;
+
+    super.setState(fn);
+  }
 
   @override
   void initState() {

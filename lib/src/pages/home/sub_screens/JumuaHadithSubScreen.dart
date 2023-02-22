@@ -1,12 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/repaint_boundires.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/StringUtils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 
 class JumuaHadithSubScreen extends StatelessWidget {
   const JumuaHadithSubScreen({Key? key, this.onDone}) : super(key: key);
@@ -17,66 +20,55 @@ class JumuaHadithSubScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-    final tr =S.of(context);
+    final tr = S.of(context);
     final jumuaTimeStartedAr = tr.jumuaaScreenTitle;
-    final jumuaHadith =
-        'عَنْ أَبِي هُرَيْرَةَ قَالَ قَالَ رَسُولُ اللَّهِ صَلَّى اللَّه عَلَيْهِ وَسَلَّمَ مَنْ تَوَضَّأَ فَأَحْسَنَ الْوُضُوءَ ثُمَّ أَتَى الْجُمُعَةَ فَاسْتَمَعَ وَأَنْصَتَ غُفِرَ لَهُ مَا بَيْنَهُ وَبَيْنَ الْجُمُعَةِ وَزِيَادَةُ ثَلاثَةِ أَيَّامٍ وَمَنْ مَسَّ الْحَصَى فَقَدْ لَغَا';
+    final jumuaArHadith = AppLocalizationsAr().jumuaaHadith;
+
     if (mosqueConfig!.jumuaDhikrReminderEnabled!) {
       return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           Container(
-            child: AutoSizeText(
+            child: Text(
               jumuaTimeStartedAr,
               style: TextStyle(
-                fontSize: 6.2.vw,
-                fontWeight: FontWeight.bold,
-                fontFamily: StringManager.getFontFamilyByString(jumuaTimeStartedAr),
-                color: Colors.white,
-                shadows: kAfterAdhanTextShadow
-              ),
-            ),
+                  fontSize: 6.2.vw,
+                  fontWeight: FontWeight.bold,
+                  fontFamily:
+                      StringManager.getFontFamilyByString(jumuaTimeStartedAr),
+                  color: Colors.white,
+                  shadows: kAfterAdhanTextShadow),
+            ).animate().slideY().fade().addRepaintBoundary().addRepaintBoundary(),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: AutoSizeText(
-                jumuaHadith,
-                minFontSize: 24,
-                stepGranularity: 1,
-                textAlign: TextAlign.center,
-                style: TextStyle(
+          Flexible(
+            fit: FlexFit.loose,
+            child: AutoSizeText(
+              jumuaArHadith,
+              textAlign: TextAlign.center,
+              style: TextStyle(
                   fontSize: 6.2.vw,
                   fontWeight: FontWeight.bold,
                   fontFamily: StringManager.fontFamilyKufi,
                   color: Colors.white,
-                    shadows: kAfterAdhanTextShadow
-
-                ),
-              ),
-            ),
+                  shadows: kAfterAdhanTextShadow),
+            ).animate().slideX(delay: .2.seconds).fade().addRepaintBoundary(),
           ),
           if (!isArabic)
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: AutoSizeText(
-                  tr.jumuaaHadith,
-                  minFontSize: 24,
-                  stepGranularity: 12,
-
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
+            Flexible(
+              fit: FlexFit.loose,
+              child: AutoSizeText(
+                tr.jumuaaHadith,
+                textAlign: TextAlign.center,
+                style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     fontSize: 3.vw,
-                    fontFamily: StringManager.getFontFamilyByString(tr.jumuaaHadith),
-                      shadows: kAfterAdhanTextShadow
-
-                  ),
-                ),
+                    fontFamily:
+                        StringManager.getFontFamilyByString(tr.jumuaaHadith),
+                    shadows: kAfterAdhanTextShadow),
               ),
-            ),
+            ).animate().slideY(begin: 1, delay: .5.seconds).fade().addRepaintBoundary(),
           SizedBox(height: 20),
         ],
       );

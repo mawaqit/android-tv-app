@@ -1,9 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
+import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
+import 'package:mawaqit/src/helpers/repaint_boundires.dart';
 import 'package:mawaqit/src/pages/home/widgets/FlashAnimation.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -59,7 +64,6 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 gradient: LinearGradient(
-                  // transform: GradientRotation(pi / 2),
                   begin: Alignment(0, 0),
                   end: Alignment(0, 1),
                   colors: [
@@ -77,13 +81,13 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
                     fontFamily:
                         StringManager.getFontFamilyByString(tr.alIqama)),
               ),
-            ),
+            ).animate().slide(begin: Offset(0, -1)).fade().addRepaintBoundary(),
           ),
         ),
         Expanded(
           child: FlashAnimation(
             child: SvgPicture.asset(R.ASSETS_SVG_NO_PHONE_SVG),
-          ),
+          ).animate().scale(delay: .2.seconds).addRepaintBoundary(),,
         ),
         Text(
           tr.turnOfPhones,
@@ -95,7 +99,7 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
             fontFamily: StringManager.getFontFamilyByString(tr.turnOfPhones),
             shadows: kAfterAdhanTextShadow,
           ),
-        ),
+        ).animate().slide(begin: Offset(0, 1)).fade().addRepaintBoundary(),
         SizedBox(height: 50),
       ],
     );

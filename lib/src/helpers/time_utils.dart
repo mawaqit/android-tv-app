@@ -1,14 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 extension StringTimeUtils on String {
   /// expect value of xx:xx with
   /// incase of [tryOffset] handle also the relative timing in minutes like +5
-  TimeOfDay? toTimeOfDay({DateTime? tryOffset}) {
+  TimeOfDay? toTimeOfDay({DateTime? tryOffset, minimumMinutes = 0}) {
     try {
       final String hour = this.split(":").first;
-      final String minute = this.replaceFirst(hour , "").replaceFirst(":", "");
-
+      final String minute = this.replaceFirst(hour, "").replaceFirst(":", "");
 
       // final date = DateFormat('HH:mm').parse(trim());
 
@@ -16,7 +16,17 @@ extension StringTimeUtils on String {
     } on FormatException catch (e, stack) {
       if (tryOffset != null) {
         final value = int.tryParse(this);
-        if (value != null) return TimeOfDay.fromDateTime(tryOffset.add(Duration(minutes: value)));
+        if (value != null)
+          return TimeOfDay.fromDateTime(
+            tryOffset.add(
+              Duration(
+                minutes: max(
+                  value,
+                  minimumMinutes,
+                ),
+              ),
+            ),
+          );
       }
 
       // debugPrintStack(label: 'Failed to format $this $tryOffset', stackTrace: stack);
@@ -28,7 +38,8 @@ extension StringTimeUtils on String {
   /// expect value of +2 with date
   TimeOfDay? toTimeOffset(String time) {
     try {
-      return TimeOfDay.fromDateTime(time.toTimeOfDay()!.toDate().add(Duration(minutes: int.parse(this))));
+      return TimeOfDay.fromDateTime(
+          time.toTimeOfDay()!.toDate().add(Duration(minutes: int.parse(this))));
     } on FormatException catch (e) {}
 
     return null;
@@ -80,9 +91,8 @@ extension TimeUtils on TimeOfDay {
   }
 }
 
-String timeTwoDigit({required int seconds ,required int minutes}){
-
-  String twoDigitSecond = "${seconds.toString().padLeft(2,"0")}";
-  String twoDigitMinute= "${minutes.toString().padLeft(2,"0")}";
+String timeTwoDigit({required int seconds, required int minutes}) {
+  String twoDigitSecond = "${seconds.toString().padLeft(2, "0")}";
+  String twoDigitMinute = "${minutes.toString().padLeft(2, "0")}";
   return "$twoDigitMinute:$twoDigitSecond";
 }

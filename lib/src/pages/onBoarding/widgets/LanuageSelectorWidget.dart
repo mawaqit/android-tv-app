@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
@@ -47,7 +48,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                 ? null
                 : themeData.primaryColor,
           ),
-        ),
+        ).animate().slideY().fade(),
         SizedBox(height: 8),
         Text(
           S.of(context).descLang,
@@ -58,7 +59,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                 ? null
                 : themeData.primaryColor,
           ),
-        ),
+        ).animate().slideX(begin: .5).fade(),
         SizedBox(height: 20),
         Expanded(
           child: Container(
@@ -70,14 +71,17 @@ class OnBoardingLanguageSelector extends StatelessWidget {
               ),
               itemCount: sortedLocales.length,
               separatorBuilder: (BuildContext context, int index) =>
-                  Divider(height: 1),
+                  Divider(height: 1).animate().fade(delay: .7.seconds),
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
                 return LanguageTile(
                   onSelect: onSelect,
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),
-                );
+                )
+                    .animate(delay: 110.milliseconds * index)
+                    .moveX(begin: 200)
+                    .fade();
               },
             ),
           ),

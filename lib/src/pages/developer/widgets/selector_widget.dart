@@ -1,6 +1,7 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mawaqit/src/helpers/repaint_boundires.dart';
 import 'package:mawaqit/src/pages/developer/widgets/number_input_widget.dart';
 
 class SelectorOption<T> {
@@ -108,10 +109,13 @@ class _SelectorWidgetState<T> extends State<SelectorWidget<T>> {
                 ],
               ),
             ),
-          ).animate().slideY(
+          )
+              .animate()
+              .slideY(
                 begin: -1,
                 duration: Duration(milliseconds: 500),
-              ),
+              )
+              .addRepaintBoundary(),
         ),
       ],
     );

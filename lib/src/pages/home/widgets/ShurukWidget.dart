@@ -17,7 +17,7 @@ class ShurukWidget extends StatelessWidget {
             child: SalahItemWidget(
               title: S.of(context).shuruk,
               time: mosqueProvider.times!.shuruq ?? "",
-              active: true,
+              removeBackground: true,
             ),
           )
         : mosqueProvider.showEid

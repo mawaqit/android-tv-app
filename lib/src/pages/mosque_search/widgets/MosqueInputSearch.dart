@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/models/mosque.dart';
@@ -17,6 +18,7 @@ class MosqueInputSearch extends StatefulWidget {
 
 class _MosqueInputSearchState extends State<MosqueInputSearch> {
   final inputController = TextEditingController();
+  final scrollController = ScrollController();
 
   List<Mosque> results = [];
   bool loading = false;
@@ -24,6 +26,14 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
   String? error;
 
   void Function()? loadMore;
+
+  void scrollToTheEndOfTheList() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: 200.milliseconds,
+      curve: Curves.ease,
+    );
+  }
 
   void _searchMosque(String mosque, int page) async {
     if (loading) return;
@@ -84,14 +94,18 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
       setState(() {
         loading = false;
 
-        error = e is GpsError ? S.of(context).gpsError : S.of(context).backendError;
+        error =
+            e is GpsError ? S.of(context).gpsError : S.of(context).backendError;
       });
     });
   }
 
   /// handle on mosque tile clicked
   void _selectMosque(Mosque mosque) {
-    context.read<MosqueManager>().setMosqueUUid(mosque.uuid.toString()).then((value) {
+    context
+        .read<MosqueManager>()
+        .setMosqueUUid(mosque.uuid.toString())
+        .then((value) {
       widget.onDone?.call();
     }).catchError((e) {
       if (e is InvalidMosqueId) {
@@ -111,16 +125,18 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    int index = 0;
 
     return Material(
       child: FocusTraversalGroup(
         policy: OrderedTraversalPolicy(),
-        child: Align(
+        child: Align( 
           alignment: Alignment(0, -.3),
           child: ListView(
+            controller: scrollController,
             physics: BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(vertical: 80, horizontal: 10),
-            shrinkWrap: true,
+            cacheExtent: 99999,
             children: [
               Text(
                 S.of(context).searchMosque,
@@ -128,17 +144,19 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
                 style: TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.w700,
-                  color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+                  color: theme.brightness == Brightness.dark
+                      ? null
+                      : theme.primaryColor,
                 ),
-              ),
+              ).animate().slideY(begin: -1 ).fade(),
               SizedBox(height: 20),
-              searchField(theme),
+              searchField(theme).animate().slideX(begin: 1,delay: 200.milliseconds).fadeIn(),
               SizedBox(height: 20),
-              for (var mosque in results)
+              for (var i = 0; i < results.length; i++)
                 MosqueSimpleTile(
-                  mosque: mosque,
-                  onTap: () => _selectMosque(mosque),
-                ),
+                  mosque: results[i],
+                  onTap: () => _selectMosque(results[i]),
+                ).animate().slideX(delay: 70.milliseconds * (i % 5)).fade(),
               // to allow user to scroll to the end of lis
               FocusableActionDetector(
                 onFocusChange: (i) {
@@ -146,6 +164,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
                   if (noMore) return;
 
                   loadMore?.call();
+                  scrollToTheEndOfTheList();
                 },
                 child: Center(
                   child: SizedBox(
@@ -154,7 +173,8 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
                       builder: (context) {
                         if (loading) return CircularProgressIndicator();
 
-                        if (noMore && results.isEmpty) return Text(S.of(context).mosqueNoResults);
+                        if (noMore && results.isEmpty)
+                          return Text(S.of(context).mosqueNoResults);
                         if (noMore) return Text(S.of(context).mosqueNoMore);
 
                         return SizedBox();
@@ -177,7 +197,8 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
         color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
       ),
       onFieldSubmitted: (val) => _searchMosque(val, 1),
-      cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+      cursorColor:
+          theme.brightness == Brightness.dark ? null : theme.primaryColor,
       autofocus: true,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
@@ -187,12 +208,16 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
         hintText: S.of(context).searchForMosque,
         hintStyle: TextStyle(
           fontWeight: FontWeight.normal,
-          color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
+          color: theme.brightness == Brightness.dark
+              ? null
+              : theme.primaryColor.withOpacity(0.4),
         ),
         suffixIcon: IconButton(
           tooltip: S.of(context).searchByGps,
           icon: Icon(Icons.gps_fixed),
-          color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
+          color: theme.brightness == Brightness.dark
+              ? Colors.white70
+              : theme.primaryColor,
           onPressed: () => _searchGps(1),
         ),
         focusedBorder: OutlineInputBorder(
