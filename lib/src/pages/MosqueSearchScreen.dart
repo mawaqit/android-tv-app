@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
 
 class MosqueSearchScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class MosqueSearchScreen extends StatelessWidget {
             flex: 4,
             child: Center(
               child: Lottie.asset(
-                'assets/animations/lottie/search.json',
+                R.ASSETS_ANIMATIONS_LOTTIE_SEARCH_JSON,
                 fit: BoxFit.contain,
               ),
             ),

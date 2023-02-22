@@ -139,8 +139,7 @@ flutter:
     - assets/backgrounds/
     - assets/animations/rive/
     - assets/animations/lottie/
-    - assets/img/logo/
-    - assets/icon/
+    - assets/svg/
 
 
   fonts:

@@ -176,11 +176,8 @@ class _HorizontalList extends State<HorizontalList> {
                                   borderRadius: BorderRadius.circular(12.0),
                                   image: new DecorationImage(
                                     image: image_,
-                                    //image: new NetworkImage('${image_}'),
-                                    //image: new ExactAssetImage('assets/images/navigation_center.png') ,
-                                    fit: BoxFit.fill,
-                                    //colorFilter: new ColorFilter.mode(Colors.white.withOpacity( settings == text ? 1.0 : 0.1 ), BlendMode.dstATop),
-                                  ),
+                                      fit: BoxFit.fill,
+                                      ),
                                 ),
                                 alignment: AlignmentDirectional.topCenter,
                                 child: Row(

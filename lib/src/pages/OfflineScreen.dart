@@ -1,14 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 
-
 class OfflineScreen extends StatefulWidget {
   final VoidCallback onPressedTryAgain;
-  const OfflineScreen({Key? key, required this.onPressedTryAgain}) : super(key: key);
+
+  const OfflineScreen({Key? key, required this.onPressedTryAgain})
+      : super(key: key);
 
   @override
   State<OfflineScreen> createState() => _OfflineScreenState();
@@ -27,16 +30,20 @@ class _OfflineScreenState extends State<OfflineScreen> {
             children: <Widget>[
               Spacer(),
               Container(
-                  width: 100.0,
-                  height: 100.0,
-                  child: Image.asset(
-                    "assets/img/wifi.png",
-                    color: Colors.white70,
-                    fit: BoxFit.contain,
-                  )),
+                width: 100.0,
+                height: 100.0,
+                child: SvgPicture.asset(
+                  R.ASSETS_SVG_NO_WI_FI_SVG,
+                  // color: Colors.white70,
+                  fit: BoxFit.contain,
+                ),
+              ),
               Text(
                 S.of(context).whoops,
-                style: TextStyle(color: Colors.white70, fontSize: 40.0, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold),
               ),
               Text(
                 S.of(context).noInternet,
@@ -44,7 +51,6 @@ class _OfflineScreenState extends State<OfflineScreen> {
               ),
               SizedBox(height: 20),
               RaisedGradientButton(
-
                 child: Text(
                   S.of(context).tryAgain,
                   style: TextStyle(

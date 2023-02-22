@@ -2,6 +2,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
 import 'package:mawaqit/src/services/developer_manager.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,8 @@ class AboutScreen extends StatelessWidget {
             context.read<DeveloperManager>().enableDeveloperOptions();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text("You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية"),
+                content: Text(
+                    "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية"),
               ),
             );
             tapCount = 0;
@@ -41,7 +43,7 @@ class AboutScreen extends StatelessWidget {
                 flex: 4,
                 child: Align(
                   child: Lottie.asset(
-                    'assets/animations/lottie/welcome.json',
+                    R.ASSETS_ANIMATIONS_LOTTIE_WELCOME_JSON,
                     fit: BoxFit.contain,
                   ),
                   alignment: Alignment.center,

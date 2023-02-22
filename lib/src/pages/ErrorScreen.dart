@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
@@ -32,17 +33,26 @@ class ErrorScreen extends StatelessWidget {
           children: <Widget>[
             Spacer(),
             Container(
-                width: 100.0,
-                height: 100.0,
-                child: Image.asset(
-                  image,
-                  color: Colors.white70,
-                  fit: BoxFit.contain,
-                )),
+              width: 100.0,
+              height: 100.0,
+              child: image.endsWith('.svg')
+                  ? SvgPicture.asset(
+                      image,
+                      fit: BoxFit.contain,
+                    )
+                  : Image.asset(
+                      image,
+                      color: Colors.white70,
+                      fit: BoxFit.contain,
+                    ),
+            ),
             SizedBox(height: 10),
             Text(
               title,
-              style: TextStyle(color: Colors.white70, fontSize: 40.0, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold),
             ),
             Text(
               description,
@@ -60,11 +70,12 @@ class ErrorScreen extends StatelessWidget {
                 ),
               ),
               width: 250,
-              gradient: LinearGradient(colors: <Color>[HexColor("#391e61"), HexColor("#490094")]),
+              gradient: LinearGradient(
+                  colors: <Color>[HexColor("#391e61"), HexColor("#490094")]),
               onPressed: onTryAgain,
             ),
             Spacer(),
-            Opacity(child: VersionWidget(),opacity: .3),
+            Opacity(child: VersionWidget(), opacity: .3),
             SizedBox(height: 10),
           ],
         ),

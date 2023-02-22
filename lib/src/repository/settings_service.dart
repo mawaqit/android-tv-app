@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/settings.dart';
 
@@ -61,7 +62,7 @@ class SettingsService {
   }
 
   Future<Settings?> getLocalSettings() async {
-    final data = await rootBundle.loadString('assets/cfg/settings.json');
+    final data = await rootBundle.loadString(R.ASSETS_CFG_SETTINGS_JSON);
 
     final settings = jsonDecode(data);
     return Settings.fromJson(settings);

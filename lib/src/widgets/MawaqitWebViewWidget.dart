@@ -9,6 +9,7 @@ import 'package:flutter/material.dart' hide Page;
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mawaqit/const/resource.dart';
 //import 'package:location/location.dart' hide LocationAccuracy;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/Loader.dart';
@@ -232,7 +233,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                 Future.delayed(const Duration(milliseconds: 500), () => _geolocationAlertFix());
                 if (widget.clean) {
                   await webViewController!.injectJavascriptFileFromAsset(
-                    assetFilePath: 'assets/scripts/clean.js',
+                    assetFilePath: R.ASSETS_SCRIPTS_CLEAN_JS,
                   );
                 }
                 this.setState(() => isLoading = false);

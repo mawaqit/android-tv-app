@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -84,21 +85,10 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
           ),
         ),
         Expanded(
-            child: FlashAnimation(
-          child: Stack(children: [
-            Transform.scale(
-                scaleX: 1.01,
-                scaleY: 1.02,
-                child: Image.asset(
-                  R.ASSETS_ICON_NO_PHONE_PNG,
-                  color: Colors.black38,
-                )),
-            Image.asset(
-              R.ASSETS_ICON_NO_PHONE_PNG,
-              color: Colors.white,
-            ),
-          ]).animate().scale(delay: .2.seconds).addRepaintBoundary(),
-        )),
+          child: FlashAnimation(
+            child: SvgPicture.asset(R.ASSETS_SVG_NO_PHONE_SVG),
+          ).animate().scale(delay: .2.seconds).addRepaintBoundary(),
+        ),
         Text(
           tr.turnOfPhones,
           textAlign: TextAlign.center,
