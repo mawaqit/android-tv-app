@@ -87,7 +87,7 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
         Expanded(
           child: FlashAnimation(
             child: SvgPicture.asset(R.ASSETS_SVG_NO_PHONE_SVG),
-          ).animate().scale(delay: .2.seconds).addRepaintBoundary(),,
+          ).animate().scale(delay: .2.seconds).addRepaintBoundary(),
         ),
         Text(
           tr.turnOfPhones,
