@@ -21,7 +21,7 @@ final mawaqitApi = "https://mawaqit.net/api/2.0";
 const kAfterAdhanHadithDuration = Duration(minutes: 1);
 const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
-const kAzkarDuration = const Duration(minutes: 2);
+const kAzkarDuration = const Duration(seconds: 140);
 
 class MosqueManager extends ChangeNotifier
     with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
