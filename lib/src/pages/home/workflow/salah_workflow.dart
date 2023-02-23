@@ -89,6 +89,7 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
     if (mosqueManager.mosqueConfig?.iqamaEnabled == false)
       return widget.onDone();
 
+    /// in case the user entered after the iqamaa
     if (mosqueManager.nextIqamaaAfter() > Duration(minutes: 30))
       return widget.onDone();
 

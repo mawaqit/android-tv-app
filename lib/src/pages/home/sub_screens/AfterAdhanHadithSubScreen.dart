@@ -1,11 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:provider/provider.dart';
-
-import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 
 import '../../../services/audio_manager.dart';
 import '../../../services/mosque_manager.dart';
@@ -22,16 +21,24 @@ class AfterAdhanSubScreen extends StatefulWidget {
 
 class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
   final arTranslation = AppLocalizationsAr();
+  final minimumDelay = Future.delayed(Duration(seconds: 20));
 
   AudioManager? audioProvider;
+
+  closeAfterAdhanScreen() async {
+    await minimumDelay;
+    widget.onDone?.call();
+  }
 
   @override
   void initState() {
     final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
     audioProvider = context.read<AudioManager>();
     if (mosqueConfig!.duaAfterAzanEnabled!) {
-      audioProvider!
-          .loadAndPlayDuaAfterAdhanVoice(mosqueConfig, onDone: widget.onDone);
+      audioProvider!.loadAndPlayDuaAfterAdhanVoice(
+        mosqueConfig,
+        onDone: closeAfterAdhanScreen,
+      );
     } else {
       widget.onDone?.call();
     }
