@@ -72,6 +72,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   get salahIndex => (nextSalahIndex() - 1) % 5;
 
+  bool get isImsakEnabled {
+    return times!.imsakNbMinBeforeFajr > 0;
+  }
+
   bool get isShurukTime {
     final shrukDate = times?.shuruq?.toTimeOfDay()?.toDate(mosqueDate());
 
@@ -88,15 +92,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
         .difference(mosqueDate());
     return StringManager.getCountDownText(
         context, shurukTime, S.of(context).shuruk);
-  }
-
-  /// show imsak between midnight and fajr
-  bool get showImsak {
-    final now = mosqueDate();
-    final midnight = DateUtils.dateOnly(now);
-    final fajrDate = actualTimes()[0];
-
-    return now.isAfter(midnight) && now.isBefore(fajrDate);
   }
 
   bool get typeIsMosque {
