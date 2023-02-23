@@ -33,7 +33,7 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
     final now = mosqueManager.mosqueDate();
     final jumuaaTimeout = mosqueManager.mosqueConfig?.jumuaTimeout ?? 30;
 
-    final jumuaaTime = mosqueManager.jumuaTime!.toTimeOfDay()!.toDate();
+    final jumuaaTime = mosqueManager.jumuaTime!.toTimeOfDay()!.toDate(now);
     final jumuaaEndTime = jumuaaTime.add(Duration(minutes: jumuaaTimeout));
 
     /// if we are before the jumuaa ends

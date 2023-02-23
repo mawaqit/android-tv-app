@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
@@ -49,7 +50,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   startSalahWorkflow() {
-    if (nextSalahIndex() == 1 && mosqueDate().weekday == DateTime.friday) {
+    if (nextIqamaIndex() == 1 && mosqueDate().weekday == DateTime.friday) {
       workflow = HomeActiveWorkflow.jumuaa;
     } else {
       workflow = HomeActiveWorkflow.salah;
@@ -201,13 +202,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() => !kDebugMode
-      ? DateTime.now()
-      : DateTime.now().add(Duration(
-          days: 4,
-          hours: 6,
-          minutes: 30,
-        ));
+  DateTime mosqueDate() =>
+      !kDebugMode ? DateTime.now() : DateTime.now().add(Duration());
 
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
@@ -226,16 +222,38 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return now.isAfter(isha);
   }
 
-  timesOfDay(DateTime date) {
+  List<String> salahBarTimes() {
+    if (useTomorrowTimes) {
+      return timesOfDay(
+        mosqueDate().add(1.days),
+        forceActualDuhr: true,
+      );
+    } else {
+      return timesOfDay(mosqueDate(), forceActualDuhr: true);
+    }
+  }
+
+  /// @Param [forceActualDuhr] force to use actual duhr time instead of jumua time during the friday
+  List<String> timesOfDay(DateTime date, {bool forceActualDuhr = false}) {
     List<String> t =
-        times!.calendar[date.month - 1][date.day.toString()].cast<String>();
+        List.from(times!.calendar[date.month - 1][date.day.toString()]);
 
     if (t.length >= 6) t.removeAt(1);
     if (t.length > 5) t = t.sublist(0, 5);
 
+    if (date.weekday == DateTime.friday &&
+        typeIsMosque &&
+        times!.jumua != null &&
+        times!.jumuaAsDuhr == false &&
+        forceActualDuhr == false) {
+      t[1] = times!.jumua!;
+    }
+
     return t;
   }
 
+  /// will return the salah times of the day
+  /// this will modify the duhr time to jumua time if it's mosque and friday
   List<String> get todayTimes => timesOfDay(mosqueDate());
 
   List<String> get tomorrowTimes =>
@@ -267,7 +285,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// we are in jumuaa workflow time
   bool jumuaaWorkflowTime() {
     final now = mosqueDate();
-    final jumuaaStartTime = jumuaTime?.toTimeOfDay()?.toDate();
+    final jumuaaStartTime = jumuaTime?.toTimeOfDay()?.toDate(now);
     final jumuaaEndTime = jumuaaStartTime?.add(
       Duration(minutes: mosqueConfig?.jumuaTimeout ?? 30) + kAzkarDuration,
     );
@@ -297,11 +315,18 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       Duration(minutes: int.tryParse(salahDuration) ?? 0) + kAzkarDuration,
     );
 
-    if (nextSalahAfter() < Duration(minutes: 5)) return true;
+    /// skip salah workflow in jumuaa duhr
+    if (typeIsMosque && now.weekday == DateTime.friday && nextSalahIndex() == 1)
+      return false;
+
+    if (nextSalahAfter() < Duration(minutes: 5)) {
+      return true;
+    }
 
     /// we are in time between salah and iqama
     if (nextSalahIndex() != nextIqamaIndex()) return true;
 
+    /// we are in time between iqama end and azkar start
     if (now.isBefore(salahAndAzkarEndTime) && now.isAfter(lastIqamaTime))
       return true;
 
