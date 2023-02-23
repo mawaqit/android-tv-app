@@ -24,9 +24,7 @@ class SalahTimesBar extends StatelessWidget {
 
     final nextActiveIqama = mosqueProvider.nextIqamaIndex();
 
-    final todayTimes = mosqueProvider.useTomorrowTimes
-        ? mosqueProvider.tomorrowTimes
-        : mosqueProvider.todayTimes;
+    final todayTimes = mosqueProvider.salahBarTimes() ;
 
     final todayIqama = mosqueProvider.useTomorrowTimes
         ? mosqueProvider.tomorrowIqama

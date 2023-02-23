@@ -33,7 +33,7 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
     final now = mosqueManager.mosqueDate();
     final jumuaaTimeout = mosqueManager.mosqueConfig?.jumuaTimeout ?? 30;
 
-    final jumuaaTime = mosqueManager.jumuaTime!.toTimeOfDay()!.toDate();
+    final jumuaaTime = mosqueManager.jumuaTime!.toTimeOfDay()!.toDate(now);
     final jumuaaEndTime = jumuaaTime.add(Duration(minutes: jumuaaTimeout));
 
     /// if we are before the jumuaa ends
@@ -67,17 +67,24 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
     final hive = context.watch<HiveManager>();
+    final config = mosqueManager.mosqueConfig!;
+
     bool isMosqueScreen = !hive.isSecondaryScreen();
 
     switch (state) {
-      case JumuaaWorkflowScreens.jumuaaTime:
-        return isMosqueScreen
-            ? JumuaHadithSubScreen()
-            : mosqueManager.jumuaaLiveUrl != null
-                ? JummuaLive(onDone: onJumuaaEnd)
-                : JumuaHadithSubScreen();
+      case JumuaaWorkflowScreens.jumuaaTime: 
+        if (mosqueManager.jumuaaLiveUrl != null && !isMosqueScreen)
+          return JummuaLive(onDone: onJumuaaEnd);
+
+        if (config.jumuaDhikrReminderEnabled == true)
+          return JumuaHadithSubScreen();
+
+        if (config.jumuaBlackScreenEnabled == true)
+          return Material(color: Colors.black);
+
+        return NormalHomeSubScreen();
       case JumuaaWorkflowScreens.jumuaaSalahTime:
-        return mosqueManager.mosqueConfig!.jumuaBlackScreenEnabled == true
+        return config.blackScreenWhenPraying == true
             ? Scaffold(backgroundColor: Colors.black)
             : NormalHomeSubScreen();
       case JumuaaWorkflowScreens.jumuaaAzkar:

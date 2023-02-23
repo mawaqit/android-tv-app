@@ -20,8 +20,8 @@ class AudioManager extends ChangeNotifier {
     policy: CachePolicy.forceCache,
   );
 
-  late final dio = Dio()
-    ..interceptors.add(DioCacheInterceptor(options: option));
+  late final dio = Dio();
+    // ..interceptors.add(DioCacheInterceptor(options: option));
 
   void loadAndPlayAdhanVoice(
     MosqueConfig? mosqueConfig, {
@@ -74,6 +74,7 @@ class AudioManager extends ChangeNotifier {
   }
 
   Future<ByteData> getFile(String url, {bool enableCache = true}) async {
+    print(url);
     final file = await dio.get<List<int>>(
       url,
       options: Options(responseType: ResponseType.bytes),

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
@@ -26,8 +26,10 @@ class Api {
     ),
   );
 
+  static final cacheStore = HiveCacheStore(null);
+
   static Future<void> init() async {
-    dio.interceptors.add(ApiCacheInterceptor(HiveCacheStore(null)));
+    dio.interceptors.add(ApiCacheInterceptor(cacheStore));
   }
 
   static Future<bool> kMosqueExistence(int id) {
@@ -107,10 +109,31 @@ class Api {
   }
 
   static Future<String> randomHadith({String language = 'ar'}) async {
-    final response = await dio.get(
-      '$kBaseUrlV2/hadith/random',
+    final request = RequestOptions(
+      path: '/hadith/random',
+      baseUrl: kBaseUrlV2,
       queryParameters: {'lang': language},
     );
+
+    final cachedValue = await cacheStore.get(
+      CacheOptions.defaultCacheKeyBuilder(request),
+    );
+
+    if (cachedValue != null) {
+      if (DateUtils.isSameDay(cachedValue.requestDate, DateTime.now())) {
+        return cachedValue.toResponse(request).data['text'];
+      } else {
+        cacheStore.delete(CacheOptions.defaultCacheKeyBuilder(request));
+      }
+    }
+
+    final response = await dio.fetch(request);
+
+    cacheStore.set(await CacheResponse.fromResponse(
+      key: CacheOptions.defaultCacheKeyBuilder(request),
+      options: CacheOptions(store: cacheStore),
+      response: response,
+    ));
 
     return response.data['text'];
   }

@@ -6,7 +6,6 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
-import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -45,8 +44,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
     if (activeAnnouncement!.video == null) {
       Future.delayed(
-        Duration(seconds: activeAnnouncement!.duration ?? 30) *
-            kTestDurationFactor,
+        Duration(seconds: activeAnnouncement!.duration ?? 30),
         nextAnnouncement,
       );
     }

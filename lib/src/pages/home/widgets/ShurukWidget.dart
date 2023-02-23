@@ -12,31 +12,29 @@ class ShurukWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueProvider = context.read<MosqueManager>();
 
-    return mosqueProvider.isShurukTime
-        ? Center(
-            child: SalahItemWidget(
-              title: S.of(context).shuruk,
-              time: mosqueProvider.times!.shuruq ?? "",
-              removeBackground: true,
-            ),
-          )
-        : mosqueProvider.showEid
-            ? Center(
-                child: SalahItemWidget(
-                  title: "Salat El Eid",
-                  iqama: mosqueProvider.times!.aidPrayerTime2,
-                  time: mosqueProvider.times!.aidPrayerTime ?? "",
-                  removeBackground: false,
-                  withDivider: mosqueProvider.times!.aidPrayerTime2 != null,
-                  active: true,
-                ),
-              )
-            : Center(
-                child: SalahItemWidget(
-                  title: S.of(context).imsak,
-                  time: mosqueProvider.imsak,
-                  removeBackground: true,
-                ),
-              );
+    if (mosqueProvider.showEid) {
+      return SalahItemWidget(
+        title: "Salat El Eid",
+        iqama: mosqueProvider.times!.aidPrayerTime2,
+        time: mosqueProvider.times!.aidPrayerTime ?? "",
+        removeBackground: false,
+        withDivider: mosqueProvider.times!.aidPrayerTime2 != null,
+        active: true,
+      );
+    }
+
+    if (!mosqueProvider.isShurukTime && mosqueProvider.isImsakEnabled) {
+      return SalahItemWidget(
+        title: S.of(context).imsak,
+        time: mosqueProvider.imsak,
+        removeBackground: true,
+      );
+    }
+
+    return SalahItemWidget(
+      title: S.of(context).shuruk,
+      time: mosqueProvider.times!.shuruq ?? "",
+      removeBackground: true,
+    );
   }
 }

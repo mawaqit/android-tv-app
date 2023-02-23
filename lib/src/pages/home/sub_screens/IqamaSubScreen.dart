@@ -1,8 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -26,6 +24,12 @@ class IqamaSubScreen extends StatefulWidget {
 
 class _IqamaSubScreenState extends State<IqamaSubScreen> {
   AudioManager? audioManager;
+  final minimumDelay = Future.delayed(Duration(minutes: 1));
+
+  closeIqamaScreen() async {
+    await minimumDelay;
+    widget.onDone?.call();
+  }
 
   @override
   void initState() {
@@ -33,10 +37,10 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
       audioManager = context.read<AudioManager>();
       audioManager!.loadAndPlayIqamaBipVoice(
         context.read<MosqueManager>().mosqueConfig,
-        onDone: widget.onDone,
+        onDone: closeIqamaScreen,
       );
     } else {
-      Future.delayed(Duration(minutes: 1), widget.onDone);
+      closeIqamaScreen();
     }
     super.initState();
   }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../i18n/l10n.dart';
 import '../../../helpers/StringUtils.dart';
 import '../../../helpers/mawaqit_icons_icons.dart';
 import '../../../themes/UIShadows.dart';
@@ -15,10 +15,20 @@ class SalahInWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueManager = context.read<MosqueManager>();
     final nextSalahTime = mosqueManager.nextSalahAfter();
+
+    var nextSalahIndex = mosqueManager.nextSalahIndex();
+    var nextSalahName = mosqueManager.salahName(nextSalahIndex);
+
+    if (nextSalahIndex == 1 &&
+        mosqueManager.mosqueDate().weekday == DateTime.friday &&
+        mosqueManager.typeIsMosque) {
+      nextSalahName = S.of(context).jumua;
+    }
+
     String countDownText = StringManager.getCountDownText(
       context,
       nextSalahTime,
-      mosqueManager.salahName(mosqueManager.nextSalahIndex()),
+      nextSalahName,
     );
 
     return Row(
