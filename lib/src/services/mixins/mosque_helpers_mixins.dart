@@ -14,9 +14,6 @@ import '../../models/mosque.dart';
 import '../../models/mosqueConfig.dart';
 import '../../models/times.dart';
 
-/// used to speed up the work flows in
-const kTestDurationFactor = kDebugMode ? 1 / 10 : 1;
-
 mixin MosqueHelpersMixin on ChangeNotifier {
   abstract Mosque? mosque;
   abstract Times? times;
@@ -306,8 +303,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     final lastIqamaIndex = (nextIqamaIndex() - 1) % 5;
     var lastIqamaTime = actualIqamaTimes()[lastIqamaIndex];
     if (lastIqamaTime.isAfter(now))
-      lastIqamaTime =
-          lastIqamaTime.subtract(Duration(days: 1) * kTestDurationFactor);
+      lastIqamaTime = lastIqamaTime.subtract(Duration(days: 1));
 
     final salahDuration = mosqueConfig!.duaAfterPrayerShowTimes[lastIqamaIndex];
     final salahAndAzkarEndTime = lastIqamaTime.add(
