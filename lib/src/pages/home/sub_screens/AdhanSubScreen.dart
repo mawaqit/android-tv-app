@@ -50,12 +50,13 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
 
     /// if there are no adhan voice
     if (mosqueConfig?.adhanVoice == null) {
-      Future.delayed(Duration(minutes: 2), widget.onDone);
+      closeAdhanScreen();
       return super.initState();
     }
 
-    if (widget.forceAdhan ||
-        mosqueConfig?.adhanEnabledByPrayer![salahIndex] == "1") {
+    if ((widget.forceAdhan ||
+            mosqueConfig?.adhanEnabledByPrayer![salahIndex] == "1") &&
+        !mosqueManager.typeIsMosque) {
       audioManager!.loadAndPlayAdhanVoice(
         mosqueConfig,
         onDone: closeAdhanScreen,
