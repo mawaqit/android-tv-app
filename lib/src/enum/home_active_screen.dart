@@ -45,6 +45,8 @@ enum SalahWorkflowScreens {
   normal,
   adhan,
   afterAdhanDuaa,
+  /// this will be shown after the [adhan] and [afterAdhanDuaa] and before the [iqamaaCountDown]
+  duaaBetweenAdhanAndIqamaa,
   iqamaaCountDown,
   iqamaa,
   salahTime,

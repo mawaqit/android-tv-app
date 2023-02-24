@@ -8,6 +8,7 @@ import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AdhanSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterSalahAzkarScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/DuaaBetweenAdhanAndIqama.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/JummuaLive.dart';
@@ -29,6 +30,7 @@ enum _ScreenState {
   afterAdhanDuaaScreen,
   iqamaaCountDownScreen,
   iqamaaScreen,
+  duaaBetweenAdhanAndIqamaaScreen,
   afterSalahAzkarScreen,
 
   // jumuaa subScreen
@@ -49,6 +51,8 @@ enum _ScreenState {
         return 'Adhan Screen';
       case _ScreenState.afterAdhanDuaaScreen:
         return 'After Adhan Duaa Screen';
+      case _ScreenState.duaaBetweenAdhanAndIqamaaScreen:
+        return 'Duaa Between Adhan And Iqamaa Screen';
       case _ScreenState.iqamaaCountDownScreen:
         return 'Iqamaa Count Down Screen';
       case _ScreenState.iqamaaScreen:
@@ -96,6 +100,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         return JumuaHadithSubScreen();
       case _ScreenState.jumuaaLiveScreen:
         return JummuaLive();
+      case _ScreenState.duaaBetweenAdhanAndIqamaaScreen:
+        return DuaaBetweenAdhanAndIqamaaScreen();
       default:
         return null;
     }

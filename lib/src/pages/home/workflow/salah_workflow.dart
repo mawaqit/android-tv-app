@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AdhanSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterSalahAzkarScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/DuaaBetweenAdhanAndIqama.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
@@ -93,8 +95,19 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
     if (mosqueManager.nextIqamaaAfter() > Duration(minutes: 30))
       return widget.onDone();
 
-    setState(() => state = SalahWorkflowScreens.iqamaaCountDown);
+    /// if there are more than 2 minutes before the iqamaa
+    /// show the duaa between adhan and iqamaa
+    if (mosqueManager.nextIqamaaAfter() > 30.seconds) {
+      return setState(
+        () => state = SalahWorkflowScreens.duaaBetweenAdhanAndIqamaa,
+      );
+    } else {
+      setState(() => state = SalahWorkflowScreens.iqamaaCountDown);
+    }
   }
+
+  onDuaaBetweenAdhanAndIqamaaDone() =>
+      setState(() => state = SalahWorkflowScreens.iqamaaCountDown);
 
   onIqamaaCountDownDone() =>
       setState(() => state = SalahWorkflowScreens.iqamaa);
@@ -137,6 +150,10 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
         return IqamaaCountDownSubScreen(onDone: onIqamaaCountDownDone);
       case SalahWorkflowScreens.iqamaa:
         return IqamaSubScreen(onDone: onIqamaaDone);
+      case SalahWorkflowScreens.duaaBetweenAdhanAndIqamaa:
+        return DuaaBetweenAdhanAndIqamaaScreen(
+          onDone: onDuaaBetweenAdhanAndIqamaaDone,
+        );
       case SalahWorkflowScreens.salahTime:
         return config.blackScreenWhenPraying == true
             ? Scaffold(backgroundColor: Colors.black)
