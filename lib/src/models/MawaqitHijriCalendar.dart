@@ -22,8 +22,10 @@ class MawaqitHijriCalendar extends HijriCalendar {
   }
 
   String formatMawaqitType() {
+    final dayFormatter = DateFormat('EEEE', S.current.localeName);
+
     return [
-      if (wkDay != null) '${DateFormat('EEEE').format(DateTime.now())},',
+      if (wkDay != null) '${dayFormatter.format(DateTime.now())},',
       hDay.toString(),
       '${monthName(hMonth - 1)},',
       hYear.toString(),

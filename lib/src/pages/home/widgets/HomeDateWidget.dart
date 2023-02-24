@@ -9,8 +9,6 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
-import '../../../helpers/weather_icons.dart';
-
 class HomeDateWidget extends StatelessWidget {
   const HomeDateWidget({Key? key}) : super(key: key);
 

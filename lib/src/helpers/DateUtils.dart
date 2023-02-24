@@ -6,8 +6,8 @@ extension MawaqitDateUtils on DateTime {
     String local = 'en',
   }) {
     var formatter = local == 'ar' || local == 'fr'
-        ? DateFormat('EEEE, dd MMMM, yyyy')
-        : DateFormat('EEEE, MMMM dd, yyyy');
+        ? DateFormat('EEEE, dd MMMM, yyyy' , local)
+        : DateFormat('EEEE, MMMM dd, yyyy' , local);
     formatter.useNativeDigits = false;
     return formatter.format(this).capitalizeFirstOfEach();
   }
