@@ -59,6 +59,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
       audioManager!.loadAndPlayAdhanVoice(
         mosqueConfig,
         onDone: closeAdhanScreen,
+        useFajrAdhan: mosqueManager.salahIndex == 0,
       );
     } else {
       closeAdhanScreen();

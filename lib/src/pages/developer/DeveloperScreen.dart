@@ -14,6 +14,7 @@ import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart
 import 'package:mawaqit/src/pages/home/sub_screens/JummuaLive.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/JumuaHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/fajr_wake_up_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -32,6 +33,7 @@ enum _ScreenState {
   iqamaaScreen,
   duaaBetweenAdhanAndIqamaaScreen,
   afterSalahAzkarScreen,
+  fajrWakeUpScreen,
 
   // jumuaa subScreen
   jumuaaLiveScreen,
@@ -59,6 +61,8 @@ enum _ScreenState {
         return 'Iqamaa Screen';
       case _ScreenState.jumuaaLiveScreen:
         return 'Jumuaa Live Screen';
+      case _ScreenState.fajrWakeUpScreen:
+        return 'Fajr Wake Up Screen';
       case _ScreenState.afterSalahAzkarScreen:
         return 'After Salah Azkar Screen';
     }
@@ -102,6 +106,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         return JummuaLive();
       case _ScreenState.duaaBetweenAdhanAndIqamaaScreen:
         return DuaaBetweenAdhanAndIqamaaScreen();
+      case _ScreenState.fajrWakeUpScreen:
+        return FajrWakeUpSubScreen();
       default:
         return null;
     }

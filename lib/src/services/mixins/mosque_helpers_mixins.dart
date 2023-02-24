@@ -203,8 +203,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   DateTime mosqueDate() => !kDebugMode
       ? DateTime.now()
       : DateTime.now().add(Duration(
-          hours: 16,
-          minutes: 30,
+          hours: 4,
+          minutes: 48,
         ));
 
   /// used to test time

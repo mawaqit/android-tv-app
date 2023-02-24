@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-import 'package:mawaqit/src/pages/home/sub_screens/AdhanSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/fajr_wake_up_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -66,8 +66,7 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
     if (!mounted) return;
 
     AppRouter.push(MosqueBackgroundScreen(
-      child: AdhanSubScreen(
-        forceAdhan: true,
+      child: FajrWakeUpSubScreen(
         onDone: () => Navigator.pop(context),
       ),
     ));
