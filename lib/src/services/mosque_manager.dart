@@ -109,6 +109,7 @@ class MosqueManager extends ChangeNotifier
 
       if (isDone()) completer.complete();
     }, onError: (e, stack) {
+      debugPrintStack(stackTrace: stack, label: e.toString());
       if (!completer.isCompleted) completer.completeError(e, stack);
 
       mosque = null;
@@ -121,6 +122,7 @@ class MosqueManager extends ChangeNotifier
 
       if (isDone()) completer.complete();
     }, onError: (e, stack) {
+      debugPrintStack(stackTrace: stack, label: e.toString());
       if (!completer.isCompleted) completer.completeError(e, stack);
 
       times = null;
@@ -133,6 +135,7 @@ class MosqueManager extends ChangeNotifier
 
       if (isDone()) completer.complete();
     }, onError: (e, stack) {
+      debugPrintStack(stackTrace: stack, label: e.toString());
       if (!completer.isCompleted) completer.completeError(e, stack);
 
       mosqueConfig = null;

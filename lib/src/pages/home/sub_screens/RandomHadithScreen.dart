@@ -12,13 +12,29 @@ import 'package:provider/provider.dart';
 import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
 
-class RandomHadithScreen extends StatelessWidget {
+class RandomHadithScreen extends StatefulWidget {
   const RandomHadithScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<RandomHadithScreen> createState() => _RandomHadithScreenState();
+}
+
+class _RandomHadithScreenState extends State<RandomHadithScreen> {
+  String? hadith;
+
+  @override
+  void initState() {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig;
+
+    Api.randomHadith(language: mosqueConfig!.hadithLang!)
+        .then((value) => setState(() => hadith = value));
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -26,32 +42,26 @@ class RandomHadithScreen extends StatelessWidget {
           child: AboveSalahBar(),
         ),
         Expanded(
-          child: FutureBuilder<String>(
-            future: Api.randomHadith(language: mosqueConfig!.hadithLang!),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return SizedBox.shrink();
-
-              return RepaintBoundary(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Center(
-                    child: AutoSizeText(
-                      snapshot.data ?? '',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 100.vw,
-                        fontWeight: FontWeight.bold,
-                        shadows: kIqamaCountDownTextShadow,
-                        fontFamily: StringManager.getFontFamilyByString(
-                          snapshot.data ?? '',
-                        ),
-                        color: Colors.white,
-                      ),
-                    ),
+          child: RepaintBoundary(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: AutoSizeText(
+                hadith ?? '',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 100.vw,
+                  fontWeight: FontWeight.bold,
+                  shadows: kIqamaCountDownTextShadow,
+                  fontFamily: StringManager.getFontFamilyByString(
+                    hadith ?? '',
                   ),
-                ).animate().fadeIn(delay: .5.seconds).addRepaintBoundary(),
-              );
-            },
+                  color: Colors.white,
+                ),
+              ),
+            )
+                .animate(target: hadith == null ? 0 : 1)
+                .fadeIn()
+                .addRepaintBoundary(),
           ),
         ),
         SalahTimesBar(

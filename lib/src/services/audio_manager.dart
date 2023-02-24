@@ -2,7 +2,6 @@ import 'package:audiofileplayer/audiofileplayer.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
@@ -21,14 +20,20 @@ class AudioManager extends ChangeNotifier {
   );
 
   late final dio = Dio();
-    // ..interceptors.add(DioCacheInterceptor(options: option));
+
+  // ..interceptors.add(DioCacheInterceptor(options: option));
 
   void loadAndPlayAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
+    bool useFajrAdhan = false,
   }) {
     if (mosqueConfig!.adhanVoice?.isNotEmpty ?? false) {
       adhanLink = "$kStaticFilesUrl/mp3/${mosqueConfig.adhanVoice!}.mp3";
+    }
+
+    if (useFajrAdhan) {
+      adhanLink = adhanLink.replaceAll('.mp3', '-fajr.mp3');
     }
 
     loadAndPlay(url: adhanLink, onDone: onDone);

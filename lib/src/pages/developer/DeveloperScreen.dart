@@ -8,11 +8,13 @@ import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AdhanSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterSalahAzkarScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/DuaaBetweenAdhanAndIqama.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/JummuaLive.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/JumuaHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/fajr_wake_up_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -29,7 +31,9 @@ enum _ScreenState {
   afterAdhanDuaaScreen,
   iqamaaCountDownScreen,
   iqamaaScreen,
+  duaaBetweenAdhanAndIqamaaScreen,
   afterSalahAzkarScreen,
+  fajrWakeUpScreen,
 
   // jumuaa subScreen
   jumuaaLiveScreen,
@@ -49,12 +53,16 @@ enum _ScreenState {
         return 'Adhan Screen';
       case _ScreenState.afterAdhanDuaaScreen:
         return 'After Adhan Duaa Screen';
+      case _ScreenState.duaaBetweenAdhanAndIqamaaScreen:
+        return 'Duaa Between Adhan And Iqamaa Screen';
       case _ScreenState.iqamaaCountDownScreen:
         return 'Iqamaa Count Down Screen';
       case _ScreenState.iqamaaScreen:
         return 'Iqamaa Screen';
       case _ScreenState.jumuaaLiveScreen:
         return 'Jumuaa Live Screen';
+      case _ScreenState.fajrWakeUpScreen:
+        return 'Fajr Wake Up Screen';
       case _ScreenState.afterSalahAzkarScreen:
         return 'After Salah Azkar Screen';
     }
@@ -96,6 +104,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         return JumuaHadithSubScreen();
       case _ScreenState.jumuaaLiveScreen:
         return JummuaLive();
+      case _ScreenState.duaaBetweenAdhanAndIqamaaScreen:
+        return DuaaBetweenAdhanAndIqamaaScreen();
+      case _ScreenState.fajrWakeUpScreen:
+        return FajrWakeUpSubScreen();
       default:
         return null;
     }

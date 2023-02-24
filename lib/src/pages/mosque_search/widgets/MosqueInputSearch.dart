@@ -130,7 +130,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
     return Material(
       child: FocusTraversalGroup(
         policy: OrderedTraversalPolicy(),
-        child: Align( 
+        child: Align(
           alignment: Alignment(0, -.3),
           child: ListView(
             controller: scrollController,
@@ -148,9 +148,12 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
                       ? null
                       : theme.primaryColor,
                 ),
-              ).animate().slideY(begin: -1 ).fade(),
+              ).animate().slideY(begin: -1).fade(),
               SizedBox(height: 20),
-              searchField(theme).animate().slideX(begin: 1,delay: 200.milliseconds).fadeIn(),
+              searchField(theme)
+                  .animate()
+                  .slideX(begin: 1, delay: 200.milliseconds)
+                  .fadeIn(),
               SizedBox(height: 20),
               for (var i = 0; i < results.length; i++)
                 MosqueSimpleTile(
@@ -212,14 +215,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
               ? null
               : theme.primaryColor.withOpacity(0.4),
         ),
-        suffixIcon: IconButton(
-          tooltip: S.of(context).searchByGps,
-          icon: Icon(Icons.gps_fixed),
-          color: theme.brightness == Brightness.dark
-              ? Colors.white70
-              : theme.primaryColor,
-          onPressed: () => _searchGps(1),
-        ),
+        suffixIcon: Icon(Icons.search_rounded),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide(width: 0),

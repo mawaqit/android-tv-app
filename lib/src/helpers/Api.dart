@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
@@ -109,31 +108,10 @@ class Api {
   }
 
   static Future<String> randomHadith({String language = 'ar'}) async {
-    final request = RequestOptions(
-      path: '/hadith/random',
-      baseUrl: kBaseUrlV2,
+    final response = await dio.get(
+      '$kBaseUrlV2/hadith/random',
       queryParameters: {'lang': language},
     );
-
-    final cachedValue = await cacheStore.get(
-      CacheOptions.defaultCacheKeyBuilder(request),
-    );
-
-    if (cachedValue != null) {
-      if (DateUtils.isSameDay(cachedValue.requestDate, DateTime.now())) {
-        return cachedValue.toResponse(request).data['text'];
-      } else {
-        cacheStore.delete(CacheOptions.defaultCacheKeyBuilder(request));
-      }
-    }
-
-    final response = await dio.fetch(request);
-
-    cacheStore.set(await CacheResponse.fromResponse(
-      key: CacheOptions.defaultCacheKeyBuilder(request),
-      options: CacheOptions(store: cacheStore),
-      response: response,
-    ));
 
     return response.data['text'];
   }

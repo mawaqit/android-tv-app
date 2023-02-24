@@ -54,12 +54,12 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
       return super.initState();
     }
 
-    if ((widget.forceAdhan ||
-            mosqueConfig?.adhanEnabledByPrayer![salahIndex] == "1") &&
+    if ((widget.forceAdhan || mosqueManager.salahVoiceEnable()) &&
         !mosqueManager.typeIsMosque) {
       audioManager!.loadAndPlayAdhanVoice(
         mosqueConfig,
         onDone: closeAdhanScreen,
+        useFajrAdhan: mosqueManager.salahIndex == 0,
       );
     } else {
       closeAdhanScreen();

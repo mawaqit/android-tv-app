@@ -68,7 +68,13 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return false;
   }
 
-  get salahIndex => (nextSalahIndex() - 1) % 5;
+  bool salahVoiceEnable([int? salahIndex]) {
+    salahIndex ??= this.salahIndex;
+
+    return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1';
+  }
+
+  int get salahIndex => (nextSalahIndex() - 1) % 5;
 
   bool get isImsakEnabled {
     return times!.imsakNbMinBeforeFajr > 0;
@@ -197,8 +203,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   DateTime mosqueDate() => !kDebugMode
       ? DateTime.now()
       : DateTime.now().add(Duration(
-          hours: 0,
-          minutes: 53,
+          hours: 4,
+          minutes: 48,
         ));
 
   /// used to test time

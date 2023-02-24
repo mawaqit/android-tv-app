@@ -32,9 +32,10 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
 
   @override
   void initState() {
-    final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
+    final mosqueManager = context.read<MosqueManager>();
+    final mosqueConfig = mosqueManager.mosqueConfig!;
     audioProvider = context.read<AudioManager>();
-    if (mosqueConfig!.duaAfterAzanEnabled!) {
+    if (mosqueConfig.duaAfterAzanEnabled! && mosqueManager.salahVoiceEnable()) {
       audioProvider!.loadAndPlayDuaAfterAdhanVoice(
         mosqueConfig,
         onDone: closeAfterAdhanScreen,
@@ -62,7 +63,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            arTranslation.afterSalahHadithTitle,
+            arTranslation.afterAdhanHadithTitle,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 5.vw,
@@ -87,7 +88,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
           ),
           if (!isArabic) ...[
             Text(
-              S.of(context).afterSalahHadithTitle,
+              S.of(context).afterAdhanHadithTitle,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 5.vw,
