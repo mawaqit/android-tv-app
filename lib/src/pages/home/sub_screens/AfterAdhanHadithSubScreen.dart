@@ -63,7 +63,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            arTranslation.afterSalahHadithTitle,
+            arTranslation.afterAdhanHadithTitle,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 5.vw,
@@ -88,7 +88,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
           ),
           if (!isArabic) ...[
             Text(
-              S.of(context).afterSalahHadithTitle,
+              S.of(context).afterAdhanHadithTitle,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 5.vw,
