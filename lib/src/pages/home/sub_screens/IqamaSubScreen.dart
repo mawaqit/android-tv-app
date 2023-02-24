@@ -5,7 +5,6 @@ import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
-import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/FlashAnimation.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
@@ -33,10 +32,13 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
 
   @override
   void initState() {
-    if (context.read<MosqueManager>().mosqueConfig!.iqamaBip) {
+    final mosqueManager = context.read<MosqueManager>();
+    final mosqueConfig = mosqueManager.mosqueConfig!;
+
+    if (mosqueConfig.iqamaBip) {
       audioManager = context.read<AudioManager>();
       audioManager!.loadAndPlayIqamaBipVoice(
-        context.read<MosqueManager>().mosqueConfig,
+        mosqueManager.mosqueConfig,
         onDone: closeIqamaScreen,
       );
     } else {

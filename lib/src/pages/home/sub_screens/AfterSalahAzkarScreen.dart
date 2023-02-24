@@ -72,8 +72,9 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
 
   @override
   void initState() {
-    if (context.read<MosqueManager>().mosqueConfig?.duaAfterPrayerEnabled ==
-        false)
+    final mosqueManager = context.read<MosqueManager>();
+
+    if (mosqueManager.mosqueConfig?.duaAfterPrayerEnabled == false)
       Future.delayed(Duration(milliseconds: 80), widget.onDone);
     else
       Future.delayed(kAzkarDuration, widget.onDone);
