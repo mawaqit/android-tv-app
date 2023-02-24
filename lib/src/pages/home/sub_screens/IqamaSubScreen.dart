@@ -23,7 +23,7 @@ class IqamaSubScreen extends StatefulWidget {
 
 class _IqamaSubScreenState extends State<IqamaSubScreen> {
   AudioManager? audioManager;
-  final minimumDelay = Future.delayed(Duration(minutes: 1));
+  late final minimumDelay;
 
   closeIqamaScreen() async {
     await minimumDelay;
@@ -34,6 +34,10 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig!;
+
+    minimumDelay = Future.delayed(
+      Duration(seconds: mosqueConfig.iqamaDisplayTime ?? 30),
+    );
 
     if (mosqueConfig.iqamaBip) {
       audioManager = context.read<AudioManager>();
