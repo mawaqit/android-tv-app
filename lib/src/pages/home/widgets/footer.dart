@@ -63,7 +63,9 @@ class Footer extends StatelessWidget {
             Expanded(
               child: mosque?.flash != null
                   ? FlashWidget()
-                  : MosqueInformationWidget(),
+                  : mosqueManager.mosqueConfig?.footer == true
+                      ? MosqueInformationWidget()
+                      : SizedBox(),
             ),
             HomeLogoVersion(),
           ],
