@@ -32,7 +32,7 @@ class AudioManager extends ChangeNotifier {
       adhanLink = "$kStaticFilesUrl/mp3/${mosqueConfig.adhanVoice!}.mp3";
     }
 
-    if (useFajrAdhan) {
+    if (useFajrAdhan && !adhanLink.contains('bib')) {
       adhanLink = adhanLink.replaceAll('.mp3', '-fajr.mp3');
     }
 
