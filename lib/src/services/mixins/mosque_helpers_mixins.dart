@@ -71,7 +71,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   bool salahVoiceEnable([int? salahIndex]) {
     salahIndex ??= this.salahIndex;
 
-    return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1';
+    return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1' &&
+        !typeIsMosque;
   }
 
   int get salahIndex => (nextSalahIndex() - 1) % 5;
