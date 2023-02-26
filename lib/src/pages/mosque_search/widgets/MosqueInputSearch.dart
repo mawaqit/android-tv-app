@@ -215,7 +215,11 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
               ? null
               : theme.primaryColor.withOpacity(0.4),
         ),
-        suffixIcon: Icon(Icons.search_rounded),
+        suffixIcon: InkWell(
+          borderRadius: BorderRadius.circular(30),
+          onTap: () => _searchMosque(inputController.text, 0),
+          child: Icon(Icons.search_rounded),
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide(width: 0),
