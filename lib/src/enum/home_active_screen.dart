@@ -29,6 +29,9 @@ enum HomeActiveWorkflow {
 }
 
 enum JumuaaWorkflowScreens {
+  /// show the normal screen 5 minutes before the jumuaa time
+  /// without any interruption from [announcements, random hadith]
+  normal ,
   /// during the jumuaa hadith
   jumuaaTime,
 

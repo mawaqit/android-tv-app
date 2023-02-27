@@ -31,10 +31,18 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
   calculateScreen() {
     final mosqueManager = context.read<MosqueManager>();
     final now = mosqueManager.mosqueDate();
+
     final jumuaaTimeout = mosqueManager.mosqueConfig?.jumuaTimeout ?? 30;
 
     final jumuaaTime = mosqueManager.jumuaTime!.toTimeOfDay()!.toDate(now);
     final jumuaaEndTime = jumuaaTime.add(Duration(minutes: jumuaaTimeout));
+
+    // we are in the 5 min time before the Jumuaa
+    if (now.isBefore(jumuaaTime)) {
+      setState(() => state = JumuaaWorkflowScreens.normal);
+
+      Future.delayed(jumuaaTime.difference(now), onJumuaaEnd);
+    }
 
     /// if we are before the jumuaa ends
     if (now.isBefore(jumuaaEndTime)) {
@@ -72,7 +80,9 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
     bool isMosqueScreen = !hive.isSecondaryScreen();
 
     switch (state) {
-      case JumuaaWorkflowScreens.jumuaaTime: 
+      case JumuaaWorkflowScreens.normal:
+        return NormalHomeSubScreen();
+      case JumuaaWorkflowScreens.jumuaaTime:
         if (mosqueManager.jumuaaLiveUrl != null && !isMosqueScreen)
           return JummuaLive(onDone: onJumuaaEnd);
 
