@@ -58,6 +58,7 @@ class Api {
   static Future<Mosque> getMosque(String id) async {
     final response = await dio.get('/mosque/$id/info');
 
+    print(response.data);
     return Mosque.fromMap(response.data);
   }
 
@@ -87,6 +88,12 @@ class Api {
     final response = await dio.get('/mosque/$id/times');
 
     return Times.fromMap(response.data);
+  }
+
+  static Future<Mosque> searchMosqueWithId(String mosqueId) async {
+    final response = await dio.get('/mosque/$mosqueId');
+
+    return Mosque.fromMap(response.data);
   }
 
   static Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async {

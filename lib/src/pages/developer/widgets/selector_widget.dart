@@ -111,10 +111,7 @@ class _SelectorWidgetState<T> extends State<SelectorWidget<T>> {
             ),
           )
               .animate()
-              .slideY(
-                begin: -1,
-                duration: Duration(milliseconds: 500),
-              )
+              .slideY(begin: -1, duration: Duration(milliseconds: 500))
               .addRepaintBoundary(),
         ),
       ],

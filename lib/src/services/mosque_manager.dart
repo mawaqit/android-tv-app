@@ -147,6 +147,8 @@ class MosqueManager extends ChangeNotifier
     return completer.future;
   }
 
+  Future<Mosque> searchMosqueWithId(String mosqueId) => Api.searchMosqueWithId(mosqueId);
+
   Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async =>
       Api.searchMosques(mosque, page: page);
 

@@ -70,36 +70,6 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
             }));
   }
 
-  void _searchGps(int page) async {
-    if (loading) return;
-    loadMore = () => _searchGps(page + 1);
-
-    inputController.text = '';
-    setState(() {
-      error = null;
-      loading = true;
-    });
-    final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
-    await mosqueManager.searchWithGps().then((value) {
-      setState(() {
-        loading = false;
-
-        if (page == 1) results = [];
-
-        results = [...results, ...value];
-
-        noMore = results.isEmpty;
-      });
-    }).catchError((e) {
-      setState(() {
-        loading = false;
-
-        error =
-            e is GpsError ? S.of(context).gpsError : S.of(context).backendError;
-      });
-    });
-  }
-
   /// handle on mosque tile clicked
   void _selectMosque(Mosque mosque) {
     context
