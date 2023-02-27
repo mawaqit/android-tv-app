@@ -68,11 +68,11 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return false;
   }
 
-  bool salahVoiceEnable([int? salahIndex]) {
+  bool adhanVoiceEnable([int? salahIndex]) {
     salahIndex ??= this.salahIndex;
 
     return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1' &&
-        !typeIsMosque;
+        (mosqueConfig?.adhanVoice?.isNotEmpty ?? false);
   }
 
   int get salahIndex => (nextSalahIndex() - 1) % 5;
