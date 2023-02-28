@@ -71,7 +71,7 @@ class OfflineHomeScreen extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => await showClosingDialog(context) ?? false,
       child: MosqueBackgroundScreen(
-          key: ValueKey(mosqueProvider.mosque?.id),
+          key: ValueKey(mosqueProvider.mosque?.uuid),
           child:
               hive.isWebView() ? HomeScreen() : activeWorkflow(mosqueProvider)),
     );

@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -35,11 +36,15 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig!;
     audioProvider = context.read<AudioManager>();
-    if (mosqueConfig.duaAfterAzanEnabled! && mosqueManager.salahVoiceEnable()) {
-      audioProvider!.loadAndPlayDuaAfterAdhanVoice(
-        mosqueConfig,
-        onDone: closeAfterAdhanScreen,
-      );
+    if (mosqueConfig.duaAfterAzanEnabled!) {
+      if (mosqueManager.adhanVoiceEnable() && !mosqueManager.typeIsMosque) {
+        audioProvider!.loadAndPlayDuaAfterAdhanVoice(
+          mosqueConfig,
+          onDone: closeAfterAdhanScreen,
+        );
+      } else {
+        Future.delayed(30.seconds, widget.onDone);
+      }
     } else {
       widget.onDone?.call();
     }

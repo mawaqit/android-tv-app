@@ -27,7 +27,7 @@ class _MosqueSearchState extends State<MosqueSearch> {
       child: Navigator(
         key: navKey,
         onGenerateRoute: (settings) => MaterialPageRoute(
-          builder: (context) => MosqueInputSearch(onDone: widget.onDone),
+          builder: (context) => InputTypeSelector(onDone: widget.onDone),
         ),
       ),
     );

@@ -70,36 +70,6 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
             }));
   }
 
-  void _searchGps(int page) async {
-    if (loading) return;
-    loadMore = () => _searchGps(page + 1);
-
-    inputController.text = '';
-    setState(() {
-      error = null;
-      loading = true;
-    });
-    final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
-    await mosqueManager.searchWithGps().then((value) {
-      setState(() {
-        loading = false;
-
-        if (page == 1) results = [];
-
-        results = [...results, ...value];
-
-        noMore = results.isEmpty;
-      });
-    }).catchError((e) {
-      setState(() {
-        loading = false;
-
-        error =
-            e is GpsError ? S.of(context).gpsError : S.of(context).backendError;
-      });
-    });
-  }
-
   /// handle on mosque tile clicked
   void _selectMosque(Mosque mosque) {
     context
@@ -215,7 +185,11 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
               ? null
               : theme.primaryColor.withOpacity(0.4),
         ),
-        suffixIcon: Icon(Icons.search_rounded),
+        suffixIcon: InkWell(
+          borderRadius: BorderRadius.circular(30),
+          onTap: () => _searchMosque(inputController.text, 0),
+          child: Icon(Icons.search_rounded),
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide(width: 0),

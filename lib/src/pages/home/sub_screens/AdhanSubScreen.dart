@@ -43,19 +43,10 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
-    final salahIndex = mosqueManager.salahIndex;
     final mosqueConfig = mosqueManager.mosqueConfig;
-    final isArabic = context.read<AppLanguage>().isArabic();
     audioManager = context.read<AudioManager>();
 
-    /// if there are no adhan voice
-    if (mosqueConfig?.adhanVoice == null) {
-      closeAdhanScreen();
-      return super.initState();
-    }
-
-    if ((widget.forceAdhan || mosqueManager.salahVoiceEnable()) &&
-        !mosqueManager.typeIsMosque) {
+    if (widget.forceAdhan || mosqueManager.adhanVoiceEnable()) {
       audioManager!.loadAndPlayAdhanVoice(
         mosqueConfig,
         onDone: closeAdhanScreen,

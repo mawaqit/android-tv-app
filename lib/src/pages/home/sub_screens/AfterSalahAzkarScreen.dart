@@ -29,6 +29,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
   final arabicLocal = AppLocalizationsAr();
 
   String arabicItem(int index) {
+    index %= 7;
     switch (index) {
       case 0:
         return arabicLocal.azkarList0;
@@ -50,6 +51,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
   }
 
   String translatedItem(int index) {
+    index %= 7;
     switch (index) {
       case 0:
         return S.of(context).azkarList0;
@@ -79,9 +81,9 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
     else
       Future.delayed(kAzkarDuration, widget.onDone);
 
-    Stream.periodic(Duration(seconds: 7), (x) => x).listen((event) {
+    Stream.periodic(Duration(seconds: 20), (x) => x).listen((event) {
       if (!mounted) return;
-      setState(() => activeHadith = event % 7);
+      setState(() => activeHadith++);
     });
     super.initState();
   }

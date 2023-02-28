@@ -88,7 +88,9 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
     randomHadithTimer?.cancel();
 
     randomHadithTimer = Timer.periodic(_HadithRepeatDuration, (i) {
-      if (mounted && state == NormalWorkflowScreens.normal) {
+      if (mounted &&
+          state == NormalWorkflowScreens.normal &&
+          context.read<MosqueManager>().isOnline) {
         setState(() {
           state = NormalWorkflowScreens.randomHadith;
         });
