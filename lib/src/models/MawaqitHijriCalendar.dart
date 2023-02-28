@@ -13,7 +13,7 @@ class MawaqitHijriCalendar extends HijriCalendar {
     bool force30Days = false,
   }) {
     var hijri = MawaqitHijriCalendar.fromDate(
-      date.add(Duration(days: adjustment + 1)),
+      date.add(Duration(days: adjustment)),
     );
 
     if (force30Days) hijri.hDay = 30;
