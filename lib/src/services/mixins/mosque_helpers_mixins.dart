@@ -47,7 +47,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   startSalahWorkflow() {
-    if (nextIqamaIndex() == 1 && mosqueDate().weekday == DateTime.friday) {
+    if (nextIqamaIndex() == 1 &&
+        mosqueDate().weekday == DateTime.friday &&
+        typeIsMosque) {
       workflow = HomeActiveWorkflow.jumuaa;
     } else {
       workflow = HomeActiveWorkflow.salah;
@@ -204,8 +206,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   DateTime mosqueDate() => !kDebugMode
       ? DateTime.now()
       : DateTime.now().add(Duration(
-          hours: 4,
-          minutes: 48,
+          days: 3,
+          hours: 13,
+          minutes: 10 + 10,
         ));
 
   /// used to test time
