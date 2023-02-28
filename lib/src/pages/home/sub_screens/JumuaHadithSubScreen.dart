@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
@@ -9,7 +10,6 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/StringUtils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 
 class JumuaHadithSubScreen extends StatelessWidget {
   const JumuaHadithSubScreen({Key? key, this.onDone}) : super(key: key);
@@ -39,7 +39,11 @@ class JumuaHadithSubScreen extends StatelessWidget {
                       StringManager.getFontFamilyByString(jumuaTimeStartedAr),
                   color: Colors.white,
                   shadows: kAfterAdhanTextShadow),
-            ).animate().slideY().fade().addRepaintBoundary().addRepaintBoundary(),
+            )
+                .animate()
+                .slideY()
+                .fade()
+                .addRepaintBoundary(),
           ),
           Flexible(
             fit: FlexFit.loose,
@@ -67,8 +71,12 @@ class JumuaHadithSubScreen extends StatelessWidget {
                     fontFamily:
                         StringManager.getFontFamilyByString(tr.jumuaaHadith),
                     shadows: kAfterAdhanTextShadow),
-              ),
-            ).animate().slideY(begin: 1, delay: .5.seconds).fade().addRepaintBoundary(),
+              )
+                  .animate()
+                  .slideY(begin: 1, delay: .5.seconds)
+                  .fade()
+                  .addRepaintBoundary(),
+            ),
           SizedBox(height: 20),
         ],
       );
