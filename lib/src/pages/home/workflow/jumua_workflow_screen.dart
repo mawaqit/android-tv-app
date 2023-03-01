@@ -19,7 +19,7 @@ class JumuaaWorkflowScreen extends StatefulWidget {
 }
 
 class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
-  JumuaaWorkflowScreens state = JumuaaWorkflowScreens.jumuaaTime;
+  JumuaaWorkflowScreens state = JumuaaWorkflowScreens.normal;
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
     super.initState();
   }
 
-  /// handle if you opend this screen before or during the jumuaa
+  /// handle if you opened this screen before or during the jumuaa
   calculateScreen() {
     final mosqueManager = context.read<MosqueManager>();
     final now = mosqueManager.mosqueDate();
@@ -39,13 +39,11 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
 
     // we are in the 5 min time before the Jumuaa
     if (now.isBefore(jumuaaTime)) {
-      setState(() => state = JumuaaWorkflowScreens.normal);
+      Future.delayed(jumuaaTime.difference(now), onJumuaaStart);
 
-      Future.delayed(jumuaaTime.difference(now), onJumuaaEnd);
-    }
-
-    /// if we are before the jumuaa ends
-    if (now.isBefore(jumuaaEndTime)) {
+      Future.delayed(jumuaaEndTime.difference(now), onJumuaaEnd);
+    } else if (now.isBefore(jumuaaEndTime)) {
+      /// if we are before the jumuaa ends
       setState(() => state = JumuaaWorkflowScreens.jumuaaTime);
 
       if (mosqueManager.jumuaaLiveUrl == null)
@@ -54,6 +52,10 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
       /// show the azkar
       onSalahEnd();
     }
+  }
+
+  onJumuaaStart() {
+    setState(() => state = JumuaaWorkflowScreens.jumuaaTime);
   }
 
   ///
@@ -86,11 +88,11 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
         if (mosqueManager.jumuaaLiveUrl != null && !isMosqueScreen)
           return JummuaLive(onDone: onJumuaaEnd);
 
-        if (config.jumuaDhikrReminderEnabled == true)
-          return JumuaHadithSubScreen();
-
         if (config.jumuaBlackScreenEnabled == true)
           return Material(color: Colors.black);
+
+        if (config.jumuaDhikrReminderEnabled == true)
+          return JumuaHadithSubScreen();
 
         return NormalHomeSubScreen();
       case JumuaaWorkflowScreens.jumuaaSalahTime:
