@@ -5,6 +5,8 @@ import '../../../../i18n/l10n.dart';
 import '../../../services/mosque_manager.dart';
 import 'SalahItem.dart';
 
+/// this widget is responsible for showing the
+/// (shuruk time, jumuaa time, or eid time)
 class ShurukWidget extends StatelessWidget {
   const ShurukWidget({Key? key}) : super(key: key);
 
@@ -14,7 +16,7 @@ class ShurukWidget extends StatelessWidget {
 
     if (mosqueProvider.showEid) {
       return SalahItemWidget(
-        title: "Salat El Eid",
+        title: S.of(context).salatElEid,
         iqama: mosqueProvider.times!.aidPrayerTime2,
         time: mosqueProvider.times!.aidPrayerTime ?? "",
         removeBackground: false,

@@ -38,11 +38,14 @@ class NormalHomeSubScreen extends StatelessWidget {
               HomeTimeWidget()
                   .animate()
                   .slideY(delay: Duration(milliseconds: 500))
-                  .fadeIn().addRepaintBoundary(),
+                  .fadeIn()
+                  .addRepaintBoundary(),
               SalahItemWidget(
                 title: S.of(context).jumua,
                 time: mosqueProvider.jumuaTime ?? "",
-                iqama: mosqueProvider.times!.jumua2,
+                iqama: mosqueProvider.mosqueConfig?.iqamaEnabled ?? true
+                    ? mosqueProvider.times!.jumua2
+                    : null,
                 active: mosqueProvider.nextIqamaIndex() == 1 &&
                     mosqueProvider.mosqueDate().weekday == DateTime.friday,
                 removeBackground: true,
