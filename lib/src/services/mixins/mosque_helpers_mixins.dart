@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:hijri/hijri_calendar.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
@@ -214,12 +213,12 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
 
-  HijriCalendar mosqueHijriDate() =>
-      MawaqitHijriCalendar.fromDate(mosqueDate().add(
-        Duration(
-          days: times!.hijriAdjustment,
-        ),
-      ));
+  MawaqitHijriCalendar mosqueHijriDate() =>
+      MawaqitHijriCalendar.fromDateWithAdjustments(
+        mosqueDate(),
+        force30Days: times!.hijriDateForceTo30,
+        adjustment: times!.hijriAdjustment,
+      );
 
   bool get useTomorrowTimes {
     final now = mosqueDate();

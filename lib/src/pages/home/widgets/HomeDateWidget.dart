@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mawaqit/src/helpers/DateUtils.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
-import 'package:mawaqit/src/models/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/pages/home/widgets/FadeInOut.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
@@ -18,11 +17,7 @@ class HomeDateWidget extends StatelessWidget {
     final now = mosqueManager.mosqueDate();
     final lang = Localizations.localeOf(context).languageCode;
 
-    var hijriDate = MawaqitHijriCalendar.fromDateWithAdjustments(
-      now,
-      force30Days: mosqueManager.times!.hijriDateForceTo30,
-      adjustment: mosqueManager.times!.hijriAdjustment,
-    );
+    var hijriDate = mosqueManager.mosqueHijriDate();
 
     return FittedBox(
       fit: BoxFit.scaleDown,
