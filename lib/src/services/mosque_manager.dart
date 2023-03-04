@@ -10,6 +10,7 @@ import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
+import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
@@ -129,7 +130,8 @@ class MosqueManager extends ChangeNotifier
       notifyListeners();
     });
 
-    _configSubscription = Api.getMosqueConfigStream(uuid).listen((event) {
+    _configSubscription = Api.getMosqueConfigStream(uuid).listen((event) async {
+      await AudioManager().precacheVoices(event).catchError((e) {});
       mosqueConfig = event;
       notifyListeners();
 
@@ -147,7 +149,8 @@ class MosqueManager extends ChangeNotifier
     return completer.future;
   }
 
-  Future<Mosque> searchMosqueWithId(String mosqueId) => Api.searchMosqueWithId(mosqueId);
+  Future<Mosque> searchMosqueWithId(String mosqueId) =>
+      Api.searchMosqueWithId(mosqueId);
 
   Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async =>
       Api.searchMosques(mosque, page: page);

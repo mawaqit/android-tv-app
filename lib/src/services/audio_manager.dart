@@ -7,7 +7,6 @@ import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 
 class AudioManager extends ChangeNotifier {
-  String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
   String bipLink = "$kStaticFilesUrl/mp3/bip.mp3";
   String duaAfterAdhanLink = "$kStaticFilesUrl/mp3/duaa-after-adhan.mp3";
 
@@ -16,27 +15,35 @@ class AudioManager extends ChangeNotifier {
   final option = CacheOptions(
     store: HiveCacheStore(null),
     priority: CachePriority.high,
-    policy: CachePolicy.forceCache,
+    policy: CachePolicy.request,
   );
 
-  late final dio = Dio();
+  late final dio = Dio()
+    ..interceptors.add(DioCacheInterceptor(options: option));
 
-  // ..interceptors.add(DioCacheInterceptor(options: option));
+  String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
+    String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
+
+    if (mosqueConfig!.adhanVoice?.isNotEmpty ?? false) {
+      adhanLink = "$kStaticFilesUrl/mp3/${mosqueConfig.adhanVoice!}.mp3";
+    }
+
+    if (useFajrAdhan && !adhanLink.contains('bip')) {
+      adhanLink = adhanLink.replaceAll('.mp3', '-fajr.mp3');
+    }
+
+    return adhanLink;
+  }
 
   void loadAndPlayAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
     bool useFajrAdhan = false,
   }) {
-    if (mosqueConfig!.adhanVoice?.isNotEmpty ?? false) {
-      adhanLink = "$kStaticFilesUrl/mp3/${mosqueConfig.adhanVoice!}.mp3";
-    }
-
-    if (useFajrAdhan && !adhanLink.contains('bib')) {
-      adhanLink = adhanLink.replaceAll('.mp3', '-fajr.mp3');
-    }
-
-    loadAndPlay(url: adhanLink, onDone: onDone);
+    loadAndPlay(
+      url: adhanLink(mosqueConfig, useFajrAdhan: useFajrAdhan),
+      onDone: onDone,
+    );
   }
 
   void loadAndPlayIqamaBipVoice(
@@ -78,8 +85,15 @@ class AudioManager extends ChangeNotifier {
     player?.dispose();
   }
 
+  /// this method will precache all the audio files for this mosque
+  Future<void> precacheVoices(MosqueConfig config) async {
+    await getFile(adhanLink(config));
+    await getFile(adhanLink(config, useFajrAdhan: true));
+    await getFile(bipLink);
+    await getFile(duaAfterAdhanLink);
+  }
+
   Future<ByteData> getFile(String url, {bool enableCache = true}) async {
-    print(url);
     final file = await dio.get<List<int>>(
       url,
       options: Options(responseType: ResponseType.bytes),
