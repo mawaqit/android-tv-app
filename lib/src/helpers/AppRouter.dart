@@ -45,8 +45,6 @@ class AppRouter {
       );
 
   static get _pageTransitionAnimation {
-    return Directionality.of(navigationKey.currentContext!) == TextDirection.ltr
-        ? PageTransitionType.leftToRight
-        : PageTransitionType.rightToLeft;
+    return PageTransitionType.fade;
   }
 }
