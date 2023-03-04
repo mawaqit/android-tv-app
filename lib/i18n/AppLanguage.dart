@@ -8,10 +8,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppLanguage extends ChangeNotifier {
   Locale _appLocale = Locale('en', '');
 
-  String? languageName(String languageCode) =>
-      Config.isoLang[languageCode]?['nativeName'];
+  String languageName(String languageCode) =>
+      Config.language.firstWhere(
+          (element) => element['value'] == languageCode)['subtitle'] ??
+      '';
 
-  String? get currentLanguageName => languageName(_appLocale.languageCode);
+  String get currentLanguageName => languageName(_appLocale.languageCode);
 
   Locale get appLocal => _appLocale;
 
@@ -34,9 +36,8 @@ class AppLanguage extends ChangeNotifier {
     }
 
     AnalyticsWrapper.changeLanguage(
-      oldLanguage:
-          languageName(_appLocale.languageCode) ?? _appLocale.languageCode,
-      language: languageName(type.languageCode) ?? type.languageCode,
+      oldLanguage: languageName(_appLocale.languageCode),
+      language: languageName(type.languageCode),
       mosqueId: mosqueId,
     );
 
