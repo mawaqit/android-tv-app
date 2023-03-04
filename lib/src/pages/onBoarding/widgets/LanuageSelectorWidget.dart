@@ -1,8 +1,9 @@
+import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
@@ -30,9 +31,9 @@ class OnBoardingLanguageSelector extends StatelessWidget {
               element.languageCode != 'ar' && element.languageCode != 'ba')
           .toList()
         ..sort(
-          (a, b) => appLanguage
-              .languageName(a.languageCode)
-              .compareTo(appLanguage.languageName(b.languageCode)),
+          (a, b) => (appLanguage.languageName(a.languageCode) ?? a.languageCode)
+              .compareTo(
+                  appLanguage.languageName(b.languageCode) ?? b.languageCode),
         ),
     ];
 
@@ -78,10 +79,10 @@ class OnBoardingLanguageSelector extends StatelessWidget {
                   onSelect: onSelect,
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),
-                )
-                    .animate(delay: 110.milliseconds * index)
-                    .moveX(begin: 200)
-                    .fade();
+                );
+                // .animate(delay: 110.milliseconds * index)
+                // .moveX(begin: 200)
+                // .fade();
               },
             ),
           ),
@@ -141,11 +142,23 @@ class _LanguageTileState extends State<LanguageTile> {
               textColor: isFocused || widget.isSelected ? Colors.white : null,
               leading: Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Image.asset(
-                    'assets/img/flag/${widget.locale.languageCode}.png'),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Image.asset(
+                    'assets/img/flag/${widget.locale.languageCode}.png',
+                    errorBuilder: (context, error, stackTrace) {
+                      return Flag.fromString(
+                        widget.locale.languageCode,
+                        fit: BoxFit.cover,
+                        borderRadius: 300,
+                      );
+                    },
+                  ),
+                ),
               ),
               title: Text(
-                appLanguage.languageName(widget.locale.languageCode),
+                appLanguage.languageName(widget.locale.languageCode) ??
+                    widget.locale.languageCode,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               trailing: widget.isSelected
