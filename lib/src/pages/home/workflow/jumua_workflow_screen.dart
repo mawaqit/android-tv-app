@@ -96,9 +96,7 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
 
         return NormalHomeSubScreen();
       case JumuaaWorkflowScreens.jumuaaSalahTime:
-        return config.blackScreenWhenPraying == true
-            ? Scaffold(backgroundColor: Colors.black)
-            : NormalHomeSubScreen();
+        return NormalHomeSubScreen();
       case JumuaaWorkflowScreens.jumuaaAzkar:
         return AfterSalahAzkar(onDone: widget.onDone);
     }
