@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -33,7 +31,7 @@ class OfflineHomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 16),
           new TextButton(
-            onPressed: () => exit(0),
+            onPressed: () => Navigator.of(context).pop(true),
             child: new Text(S.of(context).ok),
           ),
         ],
@@ -69,11 +67,18 @@ class OfflineHomeScreen extends StatelessWidget {
       );
 
     return WillPopScope(
-      onWillPop: () async => await showClosingDialog(context) ?? false,
+      onWillPop: () async {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+          return false;
+        }
+ 
+        return await showClosingDialog(context) ?? false;
+      },
       child: MosqueBackgroundScreen(
-          key: ValueKey(mosqueProvider.mosque?.uuid),
-          child:
-              hive.isWebView() ? HomeScreen() : activeWorkflow(mosqueProvider)),
+        key: ValueKey(mosqueProvider.mosque?.uuid),
+        child: hive.isWebView() ? HomeScreen() : activeWorkflow(mosqueProvider),
+      ),
     );
   }
 }

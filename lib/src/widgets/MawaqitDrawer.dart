@@ -31,7 +31,6 @@ import '../developer_mode/DrawerListTest.dart';
 class MawaqitDrawer extends StatelessWidget {
   const MawaqitDrawer({Key? key, required this.goHome}) : super(key: key);
 
-  // final GlobalKey<MawaqitWebViewWidgetState> webViewKey;
   final VoidCallback goHome;
 
   @override
@@ -60,7 +59,6 @@ class MawaqitDrawer extends StatelessWidget {
                         SvgPicture.asset(
                           R.ASSETS_SVG_MAWAQIT_LOGO_LIGHT_SVG,
                           height: 7.vh,
-                          // width: 10,
                         ),
                         Spacer(),
                         ElevatedButton.icon(
@@ -75,11 +73,6 @@ class MawaqitDrawer extends StatelessWidget {
                             elevation: MaterialStateProperty.all(0),
                             overlayColor:
                                 MaterialStateProperty.all(Colors.transparent),
-                            //     foregroundColor: MaterialStateProperty.resolveWith((states) {
-                            //   if (states.contains(MaterialState.focused)) {
-                            //     return Colors.white;
-                            //   }
-                            // })
                             foregroundColor:
                                 MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.focused)) {
