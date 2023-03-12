@@ -4,7 +4,6 @@ import 'package:mawaqit/src/pages/HomeScreen.dart';
 import 'package:mawaqit/src/pages/developer/DeveloperScreen.dart';
 import 'package:provider/provider.dart';
 
-import 'AnnouncementTest.dart';
 import '../elements/DrawerListTitle.dart';
 import '../helpers/AppRouter.dart';
 import '../pages/home/sub_screens/AdhanSubScreen.dart';
@@ -17,6 +16,7 @@ import '../pages/home/sub_screens/JumuaHadithSubScreen.dart';
 import '../pages/home/sub_screens/RandomHadithScreen.dart';
 import '../pages/home/sub_screens/normal_home.dart';
 import '../pages/home/widgets/mosque_background_screen.dart';
+import 'AnnouncementTest.dart';
 
 class DrawerListDeveloper extends StatelessWidget {
   const DrawerListDeveloper({Key? key}) : super(key: key);

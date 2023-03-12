@@ -20,7 +20,6 @@ class NormalHomeSubScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueProvider = context.read<MosqueManager>();
     final mosque = mosqueProvider.mosque!;
-    final mosqueConfig = mosqueProvider.mosqueConfig;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,9 +52,7 @@ class NormalHomeSubScreen extends StatelessWidget {
             ],
           ),
         ),
-        Spacer(),
         SalahTimesBar(),
-        Spacer(),
         Footer(),
       ],
     );

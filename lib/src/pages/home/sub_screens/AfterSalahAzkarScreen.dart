@@ -52,6 +52,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
 
   String translatedItem(int index) {
     index %= 7;
+
     switch (index) {
       case 0:
         return S.of(context).azkarList0;

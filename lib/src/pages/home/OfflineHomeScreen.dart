@@ -6,6 +6,7 @@ import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
 import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
+import 'package:mawaqit/src/pages/home/widgets/WorkFlowWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
@@ -72,7 +73,7 @@ class OfflineHomeScreen extends StatelessWidget {
           Navigator.pop(context);
           return false;
         }
- 
+
         return await showClosingDialog(context) ?? false;
       },
       child: MosqueBackgroundScreen(

@@ -31,12 +31,9 @@ class AdhanSubScreen extends StatefulWidget {
 
 class _AdhanSubScreenState extends State<AdhanSubScreen> {
   AudioManager? audioManager;
-  Future minimumDelay = Future.delayed(2.minutes);
 
   /// if mosque using Beb sound we will wait for minutes delay
   closeAdhanScreen() async {
-    await minimumDelay;
-
     widget.onDone?.call();
   }
 

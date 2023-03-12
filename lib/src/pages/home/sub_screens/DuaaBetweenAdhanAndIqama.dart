@@ -27,8 +27,12 @@ class _DuaaBetweenAdhanAndIqamaaScreenState
   @override
   void initState() {
     final manager = context.read<MosqueManager>();
+    final nextIqamaa = manager.nextIqamaaAfter();
 
-    if (manager.mosqueConfig!.duaAfterAzanEnabled!)
+    bool skipDuaa = nextIqamaa < Duration(seconds: 30) ||
+        nextIqamaa > Duration(minutes: 30);
+
+    if (manager.mosqueConfig!.duaAfterAzanEnabled! && !skipDuaa)
       Future.delayed(30.seconds, widget.onDone);
     else
       Future.delayed(80.milliseconds, widget.onDone);
