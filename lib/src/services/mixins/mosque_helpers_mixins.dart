@@ -123,7 +123,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
           todayIqama[i]
               .toTimeOfDay(
                 tryOffset: todayTimes[i].toTimeOfDay()!.toDate(mosqueDate()),
-                minimumMinutes: 3,
+                // minimumMinutes: 3,
               )!
               .toDate(mosqueDate()),
       ];
@@ -163,8 +163,12 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// the duration until the next salah
-  Duration nextIqamaaAfter() =>
-      actualIqamaTimes()[nextIqamaIndex()].difference(mosqueDate());
+  Duration nextIqamaaAfter() {
+    final value = actualIqamaTimes()[nextIqamaIndex()].difference(mosqueDate());
+
+    if (value < Duration.zero) return value + Duration(days: 1);
+    return value;
+  }
 
   /// return actual salah duration
   Duration get currentSalahDuration {
@@ -205,9 +209,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   DateTime mosqueDate() => !kDebugMode
       ? DateTime.now()
       : DateTime.now().add(Duration(
-          days: 3,
-          hours: 13,
-          minutes: 10 + 10,
+          hours: 19,
+          minutes: -19-6,
         ));
 
   /// used to test time
