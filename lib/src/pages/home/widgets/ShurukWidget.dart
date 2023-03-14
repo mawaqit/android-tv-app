@@ -17,9 +17,7 @@ class ShurukWidget extends StatelessWidget {
     if (mosqueProvider.showEid) {
       return SalahItemWidget(
         title: S.of(context).salatElEid,
-        iqama: mosqueProvider.mosqueConfig?.iqamaEnabled ?? true
-            ? mosqueProvider.times!.aidPrayerTime2
-            : null,
+        iqama: mosqueProvider.times!.aidPrayerTime2,
         time: mosqueProvider.times!.aidPrayerTime ?? "",
         removeBackground: false,
         withDivider: mosqueProvider.times!.aidPrayerTime2 != null,

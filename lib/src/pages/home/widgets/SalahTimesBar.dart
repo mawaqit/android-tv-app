@@ -24,7 +24,7 @@ class SalahTimesBar extends StatelessWidget {
 
     final nextActiveIqama = mosqueProvider.nextIqamaIndex();
 
-    final todayTimes = mosqueProvider.salahBarTimes() ;
+    final todayTimes = mosqueProvider.salahBarTimes();
 
     final todayIqama = mosqueProvider.useTomorrowTimes
         ? mosqueProvider.tomorrowIqama
@@ -47,6 +47,7 @@ class SalahTimesBar extends StatelessWidget {
               iqama: microStyle ? null : todayIqama[0],
               active: nextActiveIqama == 0,
               withDivider: false,
+              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
             )
                 .animate()
                 .fadeIn(duration: duration)
@@ -61,6 +62,7 @@ class SalahTimesBar extends StatelessWidget {
                       mosqueProvider.jumuaTime == null ||
                       !mosqueProvider.typeIsMosque),
               withDivider: false,
+              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
             )
                 .animate(delay: step)
                 .fadeIn(duration: duration)
@@ -71,6 +73,7 @@ class SalahTimesBar extends StatelessWidget {
               iqama: microStyle ? null : todayIqama[2],
               active: nextActiveIqama == 2,
               withDivider: false,
+              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
             )
                 .animate(delay: step * 2)
                 .fadeIn(duration: duration)
@@ -81,6 +84,7 @@ class SalahTimesBar extends StatelessWidget {
               iqama: microStyle ? null : todayIqama[3],
               active: nextActiveIqama == 3,
               withDivider: false,
+              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
             )
                 .animate(delay: step * 3)
                 .fadeIn(duration: duration)
@@ -91,6 +95,7 @@ class SalahTimesBar extends StatelessWidget {
               iqama: microStyle ? null : todayIqama[4],
               active: nextActiveIqama == 4,
               withDivider: false,
+              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
             )
                 .animate(delay: step * 4)
                 .fadeIn(duration: duration)

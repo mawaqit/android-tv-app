@@ -20,7 +20,6 @@ class NormalHomeSubScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueProvider = context.read<MosqueManager>();
     final mosque = mosqueProvider.mosque!;
-    final mosqueConfig = mosqueProvider.mosqueConfig;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,9 +42,7 @@ class NormalHomeSubScreen extends StatelessWidget {
               SalahItemWidget(
                 title: S.of(context).jumua,
                 time: mosqueProvider.jumuaTime ?? "",
-                iqama: mosqueProvider.mosqueConfig?.iqamaEnabled ?? true
-                    ? mosqueProvider.times!.jumua2
-                    : null,
+                iqama: mosqueProvider.times!.jumua2,
                 active: mosqueProvider.nextIqamaIndex() == 1 &&
                     mosqueProvider.mosqueDate().weekday == DateTime.friday,
                 removeBackground: true,
