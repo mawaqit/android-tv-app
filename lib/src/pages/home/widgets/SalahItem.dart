@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/i18n/AppLanguage.dart';
@@ -22,6 +21,7 @@ class SalahItemWidget extends StatelessWidget {
     this.active = false,
     this.removeBackground = false,
     this.withDivider = true,
+    this.showIqama = true,
   }) : super(key: key);
 
   final String? title;
@@ -32,6 +32,7 @@ class SalahItemWidget extends StatelessWidget {
   final bool withDivider;
   final bool active;
   final bool removeBackground;
+  final bool showIqama;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +41,7 @@ class SalahItemWidget extends StatelessWidget {
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
-    bool? isIqamaEnabled = mosqueConfig?.iqamaEnabled!;
-    bool? isIqamaMoreImportant =
-        mosqueConfig!.iqamaMoreImportant! && isIqamaEnabled!;
+    bool? isIqamaMoreImportant = mosqueConfig!.iqamaMoreImportant! && showIqama;
     final timeDate = time.toTimeOfDay()?.toDate(mosqueProvider.mosqueDate());
     final iqamaDate = iqama?.toTimeOfDay()?.toDate(mosqueProvider.mosqueDate());
     // print(isIqamaEnabled);
@@ -123,7 +122,7 @@ class SalahItemWidget extends StatelessWidget {
                   ),
               ],
             ),
-          if (iqama != null && isIqamaEnabled!)
+          if (iqama != null && showIqama)
             SizedBox(
               height: isArabic ? 1.5.vh : 1.3.vw,
               width: double.infinity,
@@ -132,7 +131,7 @@ class SalahItemWidget extends StatelessWidget {
                 color: withDivider ? Colors.white : Colors.transparent,
               ),
             ),
-          if (iqama != null && isIqamaEnabled!)
+          if (iqama != null && showIqama)
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
