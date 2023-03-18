@@ -19,7 +19,7 @@ class WeatherWidget extends StatelessWidget {
     final temperatureUnit = mosqueConfig?.temperatureUnit;
     final temperatureEnable = mosqueConfig?.temperatureEnabled;
 
-    if (temperature == null || !temperatureEnable!)
+    if (temperature == null || !temperatureEnable! || !mosqueManager.isOnline)
       return SizedBox(
         width: 10.vw,
         height: 3.vw,
