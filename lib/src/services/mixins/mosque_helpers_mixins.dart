@@ -175,9 +175,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     if (mosqueConfig == null) return Duration.zero;
 
     return Duration(
-        minutes:
-            int.tryParse(mosqueConfig!.duaAfterPrayerShowTimes[salahIndex]) ??
-                10);
+      minutes:
+          int.tryParse(mosqueConfig!.duaAfterPrayerShowTimes[salahIndex]) ?? 10,
+    );
   }
 
   /// after fajr show imsak for tomorrow
@@ -209,8 +209,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   DateTime mosqueDate() => !kDebugMode
       ? DateTime.now()
       : DateTime.now().add(Duration(
-          hours: 19,
-          minutes: -19-6,
+          minutes: -20,
         ));
 
   /// used to test time

@@ -64,7 +64,7 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
         WorkFlowItem(
           builder: (context, next) => AdhanSubScreen(onDone: next),
           skip: now.isAfter(adhanEndTime),
-          minimumDuration: 2.minutes,
+          minimumDuration: 90.seconds,
         ),
         WorkFlowItem(
           builder: (context, next) => AfterAdhanSubScreen(onDone: next),
@@ -76,7 +76,6 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
             onDone: next,
           ),
           disabled: mosqueConfig.duaAfterAzanEnabled == false,
-          duration: 30.seconds,
           skip: true,
         ),
         WorkFlowItem(
@@ -85,7 +84,8 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
           disabled: mosqueManger.mosqueConfig?.iqamaEnabled == false,
         ),
         WorkFlowItem(
-          builder: (context, next) => IqamaSubScreen(onDone: next),
+          builder: (context, next) => IqamaSubScreen(),
+          duration: Duration(seconds: mosqueConfig.iqamaDisplayTime ?? 30),
           skip: now.isAfter(iqamaEndTime),
           disabled: mosqueManger.mosqueConfig?.iqamaEnabled == false,
         ),
