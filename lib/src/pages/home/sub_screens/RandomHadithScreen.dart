@@ -35,6 +35,7 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mosqueManager = context.watch<MosqueManager>();
     return Column(
       children: [
         Padding(
@@ -48,6 +49,9 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
               child: AutoSizeText(
                 hadith ?? '',
                 textAlign: TextAlign.center,
+                textDirection: StringManager.getTextDirectionOfLocal(
+                  Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
+                ),
                 style: TextStyle(
                   fontSize: 100.vw,
                   fontWeight: FontWeight.bold,

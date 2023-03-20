@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/i18n/AppLanguage.dart';
-import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../i18n/l10n.dart';
@@ -33,6 +32,23 @@ class StringManager {
   static const fontFamilyKufi = "kufi";
   static const fontFamilyArial = "arial";
   static const fontFamilyHelvetica = "helvetica";
+
+  static const rtlLanguages = const [
+    'ar',
+    'he',
+    'fa',
+    'ur',
+    'arc',
+    'az',
+    'dv',
+    'ckb'
+  ];
+
+  static TextDirection getTextDirectionOfLocal(Locale locale) {
+    return rtlLanguages.contains(locale.languageCode)
+        ? TextDirection.rtl
+        : TextDirection.ltr;
+  }
 
 ///////////// Salah count down text in Time widget
   static String getCountDownText(
