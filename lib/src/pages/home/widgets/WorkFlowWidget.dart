@@ -59,17 +59,17 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
       if (workflowItem.skip) continue;
 
       _currentItemIndex = i - 1;
-      nextPage();
+      nextPage(_currentItemIndex);
       return;
     }
   }
 
   /// this function is called when the current item is done
   /// if the next page is fired from the child widget this widget should be ignored
-  nextPage() async {
-    print('running next page $_currentItemIndex');
+  ///  [_currentItemIndex] is the current active index when this function is called
+  nextPage(int _currentItemIndex) async {
+    if (_currentItemIndex != this._currentItemIndex) return;
     delayedNextPageFuture?.ignore();
-    print('running next page $_currentItemIndex');
 
     if (_currentItemIndex >= widget.workFlowItems.length - 1) {
       widget.onDone?.call();
@@ -77,16 +77,16 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
     }
     if (minimumDurationFuture != null) await minimumDurationFuture;
 
-    setState(() => _currentItemIndex++);
+    setState(() => this._currentItemIndex = _currentItemIndex + 1);
 
-    if (activeItem().disabled) return nextPage();
+    if (activeItem().disabled) return nextPage(this._currentItemIndex);
 
     if (activeItem().minimumDuration != null)
       minimumDurationFuture = Future.delayed(activeItem().minimumDuration!);
 
     if (activeItem().duration != null) {
       delayedNextPageFuture = Future.delayed(activeItem().duration!);
-      delayedNextPageFuture?.then((_) => nextPage());
+      delayedNextPageFuture?.then((_) => nextPage(this._currentItemIndex));
     }
   }
 
@@ -99,6 +99,6 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
   @override
   Widget build(BuildContext context) {
     if (_currentItemIndex < 0) return Container();
-    return activeItem().builder(context, nextPage);
+    return activeItem().builder(context, () => nextPage(_currentItemIndex));
   }
 }

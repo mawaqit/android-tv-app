@@ -209,7 +209,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   DateTime mosqueDate() => !kDebugMode
       ? DateTime.now()
       : DateTime.now().add(Duration(
-          minutes: -20,
+          minutes: -30,
         ));
 
   /// used to test time
@@ -287,6 +287,16 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// if jumua as duhr return jumua
   String? get jumuaTime {
     return times!.jumuaAsDuhr ? todayTimes[1] : times!.jumua;
+  }
+
+  /// if the iqama is less than 2min
+  bool isShortIqamaDuration(int salahIndex) {
+    final iqamaa = iqamasOfDay(mosqueDate());
+
+    final currentIqamaa = iqamaa[salahIndex];
+    final currentIqamaDuration = int.tryParse(currentIqamaa) ?? 5;
+
+    return currentIqamaDuration <= 2;
   }
 
   /// we are in jumuaa workflow time

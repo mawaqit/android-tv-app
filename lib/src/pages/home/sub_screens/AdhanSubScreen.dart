@@ -34,7 +34,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
 
   /// if mosque using Beb sound we will wait for minutes delay
   closeAdhanScreen() async {
-    widget.onDone?.call();
+    if (mounted) widget.onDone?.call();
   }
 
   @override
@@ -42,6 +42,11 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig;
     audioManager = context.read<AudioManager>();
+
+    if (mosqueManager.isShortIqamaDuration(mosqueManager.salahIndex)) {
+      /// this will close this screen after 90 seconds
+      closeAdhanScreen();
+    }
 
     if (widget.forceAdhan || mosqueManager.adhanVoiceEnable()) {
       audioManager!.loadAndPlayAdhanVoice(
