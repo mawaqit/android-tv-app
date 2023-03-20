@@ -6,6 +6,9 @@ class WorkFlowItem {
   /// this this item on the initial start of the workflow
   /// this used to calculate the first item to show in the workflow
   final bool skip;
+
+  /// this is the duration of the item
+  /// if you have this item make sure you don't use [builder] to call [next]
   final Duration? duration;
   final bool disabled;
 
@@ -44,9 +47,11 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
   Future? minimumDurationFuture;
   int _currentItemIndex = 0;
 
-  WorkFlowItem activeItem() {
-    return widget.workFlowItems[_currentItemIndex];
-  }
+  /// this used to ignore the automatic next page call
+  /// if user called it manually from the builder child widget
+  Future? delayedNextPageFuture;
+
+  WorkFlowItem activeItem() => widget.workFlowItems[_currentItemIndex];
 
   getInitialItem() {
     for (var i = 0; i < widget.workFlowItems.length; i++) {
@@ -54,30 +59,35 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
       if (workflowItem.skip) continue;
 
       _currentItemIndex = i - 1;
-      nextPage();
+      nextPage(_currentItemIndex);
       return;
     }
   }
 
-  nextPage() async {
+  /// this function is called when the current item is done
+  /// if the next page is fired from the child widget this widget should be ignored
+  ///  [_currentItemIndex] is the current active index when this function is called
+  nextPage(int _currentItemIndex) async {
+    if (_currentItemIndex != this._currentItemIndex) return;
+    delayedNextPageFuture?.ignore();
+
     if (_currentItemIndex >= widget.workFlowItems.length - 1) {
       widget.onDone?.call();
       return;
     }
-
-    _currentItemIndex++;
-
-    if (activeItem().disabled) return nextPage();
-
     if (minimumDurationFuture != null) await minimumDurationFuture;
 
-    setState(() {
-      if (activeItem().minimumDuration != null)
-        minimumDurationFuture = Future.delayed(activeItem().minimumDuration!);
-    });
+    setState(() => this._currentItemIndex = _currentItemIndex + 1);
 
-    if (activeItem().duration != null)
-      Future.delayed(activeItem().duration!, nextPage);
+    if (activeItem().disabled) return nextPage(this._currentItemIndex);
+
+    if (activeItem().minimumDuration != null)
+      minimumDurationFuture = Future.delayed(activeItem().minimumDuration!);
+
+    if (activeItem().duration != null) {
+      delayedNextPageFuture = Future.delayed(activeItem().duration!);
+      delayedNextPageFuture?.then((_) => nextPage(this._currentItemIndex));
+    }
   }
 
   @override
@@ -89,6 +99,6 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
   @override
   Widget build(BuildContext context) {
     if (_currentItemIndex < 0) return Container();
-    return activeItem().builder(context, nextPage);
+    return activeItem().builder(context, () => nextPage(_currentItemIndex));
   }
 }

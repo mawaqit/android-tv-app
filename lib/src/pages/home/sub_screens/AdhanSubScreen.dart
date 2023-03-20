@@ -34,7 +34,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
 
   /// if mosque using Beb sound we will wait for minutes delay
   closeAdhanScreen() async {
-    widget.onDone?.call();
+    if (mounted) widget.onDone?.call();
   }
 
   @override
@@ -42,6 +42,11 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig;
     audioManager = context.read<AudioManager>();
+
+    if (mosqueManager.isShortIqamaDuration(mosqueManager.salahIndex)) {
+      /// this will close this screen after 90 seconds
+      closeAdhanScreen();
+    }
 
     if (widget.forceAdhan || mosqueManager.adhanVoiceEnable()) {
       audioManager!.loadAndPlayAdhanVoice(
@@ -70,60 +75,61 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final isArabic = context.read<AppLanguage>().isArabic();
 
     return MosqueBackgroundScreen(
-        child: Column(
-      children: [
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: MosqueHeader(mosque: mosque),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(top: isArabic ? 4 : 4.vh),
-            child: FlashAnimation(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Icon(
-                    MawaqitIcons.icon_adhan,
-                    size: adhanIconSize,
-                    shadows: kHomeTextShadow,
-                    color: iconColor,
-                  ).animate().slideX(begin: -2).addRepaintBoundary(),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 70.vw),
-                    child: FittedBox(
-                      child: Text(
-                        "${S.of(context).alAdhan}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.vh,
-                          fontFamily: StringManager.getFontFamilyByString(
-                              S.of(context).alAdhan),
-                          // height: 2,
-                          color: Colors.white,
-                          shadows: kHomeTextShadow,
+      child: Column(
+        children: [
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: MosqueHeader(mosque: mosque),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(top: isArabic ? 4 : 4.vh),
+              child: FlashAnimation(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      MawaqitIcons.icon_adhan,
+                      size: adhanIconSize,
+                      shadows: kHomeTextShadow,
+                      color: iconColor,
+                    ).animate().slideX(begin: -2).addRepaintBoundary(),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 70.vw),
+                      child: FittedBox(
+                        child: Text(
+                          "${S.of(context).alAdhan}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.vh,
+                            fontFamily: StringManager.getFontFamilyByString(
+                                S.of(context).alAdhan),
+                            // height: 2,
+                            color: Colors.white,
+                            shadows: kHomeTextShadow,
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                      .animate()
-                      .slideY(begin: -1, delay: .5.seconds)
-                      .fadeIn()
-                      .addRepaintBoundary(),
-                  Icon(
-                    MawaqitIcons.icon_adhan,
-                    size: adhanIconSize,
-                    shadows: kHomeTextShadow,
-                    color: iconColor,
-                  ).animate().slideX(begin: 2).addRepaintBoundary(),
-                ],
+                    )
+                        .animate()
+                        .slideY(begin: -1, delay: .5.seconds)
+                        .fadeIn()
+                        .addRepaintBoundary(),
+                    Icon(
+                      MawaqitIcons.icon_adhan,
+                      size: adhanIconSize,
+                      shadows: kHomeTextShadow,
+                      color: iconColor,
+                    ).animate().slideX(begin: 2).addRepaintBoundary(),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        SalahTimesBar(),
-        SizedBox(height: 2.vw),
-      ],
-    ));
+          SalahTimesBar(),
+          SizedBox(height: 2.vw),
+        ],
+      ),
+    );
   }
 }
