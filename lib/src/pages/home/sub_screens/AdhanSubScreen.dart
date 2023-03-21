@@ -17,8 +17,7 @@ import '../widgets/SalahTimesBar.dart';
 import '../widgets/mosque_header.dart';
 
 class AdhanSubScreen extends StatefulWidget {
-  const AdhanSubScreen({Key? key, this.onDone, this.forceAdhan = false})
-      : super(key: key);
+  const AdhanSubScreen({Key? key, this.onDone, this.forceAdhan = false}) : super(key: key);
 
   final VoidCallback? onDone;
 
@@ -102,19 +101,14 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.vh,
-                            fontFamily: StringManager.getFontFamilyByString(
-                                S.of(context).alAdhan),
+                            fontFamily: StringManager.getFontFamilyByString(S.of(context).alAdhan),
                             // height: 2,
                             color: Colors.white,
                             shadows: kHomeTextShadow,
                           ),
                         ),
                       ),
-                    )
-                        .animate()
-                        .slideY(begin: -1, delay: .5.seconds)
-                        .fadeIn()
-                        .addRepaintBoundary(),
+                    ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
                     Icon(
                       MawaqitIcons.icon_adhan,
                       size: adhanIconSize,
@@ -126,7 +120,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
               ),
             ),
           ),
-          SalahTimesBar(),
+          SalahTimesBar(activeItem: mosqueProvider.salahIndex),
           SizedBox(height: 2.vw),
         ],
       ),
