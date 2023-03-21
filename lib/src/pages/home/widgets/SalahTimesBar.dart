@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
@@ -13,24 +12,27 @@ class SalahTimesBar extends StatelessWidget {
     Key? key,
     this.miniStyle = false,
     this.microStyle = false,
+    this.activeItem,
   }) : super(key: key);
 
+  /// if true will hide salah name
   final bool miniStyle;
+
+  /// if true will hide iqama time
   final bool microStyle;
+
+  /// force to highlight salah item
+  final int? activeItem;
 
   @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
 
-    final nextActiveIqama = mosqueProvider.nextIqamaIndex();
+    final nextActiveIqama = activeItem ?? mosqueProvider.nextIqamaIndex();
 
     final todayTimes = mosqueProvider.salahBarTimes();
 
-    final todayIqama = mosqueProvider.useTomorrowTimes
-        ? mosqueProvider.tomorrowIqama
-        : mosqueProvider.todayIqama;
-
-    final tr = S.of(context);
+    final todayIqama = mosqueProvider.useTomorrowTimes ? mosqueProvider.tomorrowIqama : mosqueProvider.todayIqama;
 
     final step = Duration(milliseconds: 100);
     final duration = Duration(milliseconds: 300);
@@ -41,65 +43,19 @@ class SalahTimesBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SalahItemWidget(
-              title: miniStyle ? null : tr.fajr,
-              time: todayTimes[0],
-              iqama: microStyle ? null : todayIqama[0],
-              active: nextActiveIqama == 0,
-              withDivider: false,
-              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-            )
-                .animate()
-                .fadeIn(duration: duration)
-                .slideY(begin: 1, duration: duration)
-                .addRepaintBoundary(),
-            SalahItemWidget(
-              title: miniStyle ? null : tr.duhr,
-              time: todayTimes[1],
-              iqama: microStyle ? null : todayIqama[1],
-              active: nextActiveIqama == 1 &&
-                  (mosqueProvider.mosqueDate().weekday != DateTime.friday ||
-                      mosqueProvider.jumuaTime == null ||
-                      !mosqueProvider.typeIsMosque),
-              withDivider: false,
-              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-            )
-                .animate(delay: step)
-                .fadeIn(duration: duration)
-                .slideY(begin: 1, duration: duration),
-            SalahItemWidget(
-              title: miniStyle ? null : tr.asr,
-              time: todayTimes[2],
-              iqama: microStyle ? null : todayIqama[2],
-              active: nextActiveIqama == 2,
-              withDivider: false,
-              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-            )
-                .animate(delay: step * 2)
-                .fadeIn(duration: duration)
-                .slideY(begin: 1, duration: duration),
-            SalahItemWidget(
-              title: miniStyle ? null : tr.maghrib,
-              time: todayTimes[3],
-              iqama: microStyle ? null : todayIqama[3],
-              active: nextActiveIqama == 3,
-              withDivider: false,
-              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-            )
-                .animate(delay: step * 3)
-                .fadeIn(duration: duration)
-                .slideY(begin: 1, duration: duration),
-            SalahItemWidget(
-              title: miniStyle ? null : tr.isha,
-              time: todayTimes[4],
-              iqama: microStyle ? null : todayIqama[4],
-              active: nextActiveIqama == 4,
-              withDivider: false,
-              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-            )
-                .animate(delay: step * 4)
-                .fadeIn(duration: duration)
-                .slideY(begin: 1, duration: duration),
+            for (var i = 0; i < 5; i++)
+              SalahItemWidget(
+                title: miniStyle ? null : mosqueProvider.salahName(i),
+                time: todayTimes[i],
+                iqama: microStyle ? null : todayIqama[i],
+                active: nextActiveIqama == i,
+                withDivider: false,
+                showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
+              )
+                  .animate(delay: step * i)
+                  .fadeIn(duration: duration)
+                  .slideY(begin: 1, duration: duration)
+                  .addRepaintBoundary(),
           ],
         ),
       ),
