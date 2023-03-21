@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -63,18 +62,15 @@ class MawaqitDrawer extends StatelessWidget {
                         Spacer(),
                         ElevatedButton.icon(
                           style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith((states) {
+                            backgroundColor: MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.focused)) {
                                 return theme.primaryColorDark;
                               }
                               return Colors.white;
                             }),
                             elevation: MaterialStateProperty.all(0),
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.transparent),
-                            foregroundColor:
-                                MaterialStateProperty.resolveWith((states) {
+                            overlayColor: MaterialStateProperty.all(Colors.transparent),
+                            foregroundColor: MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.focused)) {
                                 return Colors.white;
                               }
@@ -85,9 +81,7 @@ class MawaqitDrawer extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 0)),
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
                           ),
                           onPressed: () => exit(0),
                           icon: Container(
@@ -157,8 +151,7 @@ class MawaqitDrawer extends StatelessWidget {
               text: S.of(context).home,
               onTap: () async {
                 if (settings.tabNavigationEnable == "1") {
-                  AppRouter.popAndPush(WebScreen(settings.url),
-                      name: 'HomeScreen');
+                  AppRouter.popAndPush(WebScreen(settings.url), name: 'HomeScreen');
                 } else {
                   Navigator.pop(context);
 
@@ -177,7 +170,7 @@ class MawaqitDrawer extends StatelessWidget {
             onChanged: (bool value) {
               hive.putIsWebView(value);
             },
-            title: Text("Web view"),
+            title: Text(S.of(context).webView),
           ),
           DrawerListTitle(
             icon: Icons.translate,
@@ -191,9 +184,7 @@ class MawaqitDrawer extends StatelessWidget {
           ),
           DrawerListTitle(
               icon: Icons.brightness_medium,
-              text: theme.brightness == Brightness.light
-                  ? S.of(context).darkMode
-                  : S.of(context).lightMode,
+              text: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
               onTap: () {
                 if (theme.brightness == Brightness.light) {
                   themeProvider.setDarkMode();
@@ -256,24 +247,26 @@ class MawaqitDrawer extends StatelessWidget {
   }
 
   Widget _renderPageDrawer(List<Page> pages, context) {
-    return new Column(
+    final translations = {
+      "privacyPolicy": S.of(context).privacyPolicy,
+      "networkStatus": S.of(context).networkStatus,
+      "termsOfService": S.of(context).termsOfService,
+      "installationGuide": S.of(context).installationGuide,
+    };
+
+    return Column(
       children: pages
           .map((Page page) => DrawerListTitle(
-                forceThemeColor: true,
-                iconUrl: page.iconUrl,
-                text: Intl.message(page.title ?? '',
-                    name: page.title?.toCamelCase),
-                onTap: () =>
-                    AppRouter.popAndPush(PageScreen(page), name: page.title),
-              ))
+              forceThemeColor: true,
+              iconUrl: page.iconUrl,
+              text: translations[page.title!.toCamelCase] ?? page.title,
+              onTap: () => AppRouter.popAndPush(PageScreen(page), name: page.title)))
           .toList(),
     );
   }
 
   _shareApp(BuildContext context, String? text, String share) {
     final RenderBox box = context.findRenderObject() as RenderBox;
-    Share.share(share,
-        subject: text,
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    Share.share(share, subject: text, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }
