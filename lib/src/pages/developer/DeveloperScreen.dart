@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/developer_mode/AnnouncementTest.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/pages/LanguageScreen.dart';
@@ -42,29 +43,29 @@ enum _ScreenState {
   String get readableName {
     switch (this) {
       case _ScreenState.jumuaaScreen:
-        return 'Jumuaa Azkar Screen';
+        return S.current.jumuaaLive;
       case _ScreenState.normalScreen:
-        return 'Normal Screen';
+        return S.current.normalScreen;
       case _ScreenState.announcementScreen:
-        return 'Announcement Screen';
+        return S.current.announcement;
       case _ScreenState.randomHadithScreen:
-        return 'Random Hadith Screen';
+        return S.current.randomHadith;
       case _ScreenState.adhanScreen:
-        return 'Adhan Screen';
+        return S.current.alAdhan;
       case _ScreenState.afterAdhanDuaaScreen:
-        return 'After Adhan Duaa Screen';
+        return S.current.afterAdhanHadith;
       case _ScreenState.duaaBetweenAdhanAndIqamaaScreen:
-        return 'Duaa Between Adhan And Iqamaa Screen';
+        return S.current.duaaBetweenSalahAndAdhan;
       case _ScreenState.iqamaaCountDownScreen:
-        return 'Iqamaa Count Down Screen';
+        return S.current.duaaRemainder;
       case _ScreenState.iqamaaScreen:
-        return 'Iqamaa Screen';
+        return S.current.iqamaa;
       case _ScreenState.jumuaaLiveScreen:
-        return 'Jumuaa Live Screen';
+        return S.current.jumuaaLive;
       case _ScreenState.fajrWakeUpScreen:
-        return 'Fajr Wake Up Screen';
+        return S.current.fajrWakeUp;
       case _ScreenState.afterSalahAzkarScreen:
-        return 'After Salah Azkar Screen';
+        return S.current.afterSalahAzkar;
     }
   }
 }
@@ -150,21 +151,20 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 40),
         child: SelectorWidget(
-          title: 'Tap',
           options: [
             SelectorOption(
-              title: 'Change language',
+              title: S.of(context).changeLanguage,
               onSelect: () => AppRouter.push(LanguageScreen()),
             ),
             SelectorOption(
-              title: 'Change mosque',
+              title: S.of(context).changeMosque,
               onSelect: () => AppRouter.push(MosqueSearchScreen()),
             ),
             SelectorOption(
-              title: "Force screen",
+              title: S.of(context).forceScreen,
               subOptions: [
                 SelectorOption(
-                  title: 'Clear',
+                  title: S.of(context).clear,
                   onSelect: () => setState(() => forcedScreen = null),
                 ),
                 ..._ScreenState.values.map(
@@ -176,7 +176,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               ],
             ),
             SelectorOption(
-              title: 'Change theme mode',
+              title: S.of(context).changeTheme,
               onSelect: () => context.read<ThemeNotifier>().toggleMode(),
             ),
           ],
