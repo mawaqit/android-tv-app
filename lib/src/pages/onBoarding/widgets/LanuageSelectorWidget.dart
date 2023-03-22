@@ -30,11 +30,10 @@ class OnBoardingLanguageSelector extends StatelessWidget {
           .where((element) =>
               element.languageCode != 'ar' && element.languageCode != 'ba')
           .toList()
-        ..sort(
-          (a, b) => (appLanguage.languageName(a.languageCode) ?? a.languageCode)
-              .compareTo(
-                  appLanguage.languageName(b.languageCode) ?? b.languageCode),
-        ),
+        ..sort((a, b) => appLanguage
+            .languageName(a.languageCode)
+            .toLowerCase()
+            .compareTo(appLanguage.languageName(b.languageCode).toLowerCase())),
     ];
 
     return Column(
@@ -157,8 +156,7 @@ class _LanguageTileState extends State<LanguageTile> {
                 ),
               ),
               title: Text(
-                appLanguage.languageName(widget.locale.languageCode) ??
-                    widget.locale.languageCode,
+                appLanguage.languageName(widget.locale.languageCode),
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               trailing: widget.isSelected
