@@ -20,7 +20,7 @@
   "in1": "بعد",
   "sec": "ثواني",
   "online": "متصل",
-  "missingMosqueId": "المخزن مفقود #ID أو MOSQUE #ID",
+  "missingMosqueId": "معرف المسجد مفقود (MAWAQIT #ID أو MOSQUE #ID)",
   "mosqueIdIsNotValid": "عذراً، {mosqueId} ليس معرف مسجد صحيح",
   "selectMosqueId": "الرجاء إدخال معرف المسجد",
   "mawaqitWelcome": "مرحباً بك في مواقيت",
