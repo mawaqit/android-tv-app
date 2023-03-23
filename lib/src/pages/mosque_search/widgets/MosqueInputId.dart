@@ -40,7 +40,6 @@ class _MosqueInputIdState extends State<MosqueInputId> {
 
     await mosqueManager.searchMosqueWithId(mosqueId).then((value) {
       setState(() {
-        print(value.uuid);
         searchOutput = value;
         loading = false;
       });
@@ -83,7 +82,8 @@ class _MosqueInputIdState extends State<MosqueInputId> {
             buildInputWidget(context, theme),
             if (searchOutput != null)
               MosqueSimpleTile(
-                // key: ValueKey(searchOutput!.uuid),
+                key: ValueKey(searchOutput!.uuid),
+                autoFocus: true,
                 mosque: searchOutput!,
                 onTap: () {
                   context
