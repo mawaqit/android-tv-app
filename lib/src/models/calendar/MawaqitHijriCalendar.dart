@@ -3,37 +3,31 @@ import 'package:intl/intl.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 
-class MawaqitHijriCalendar extends HijriCalendar {
-  MawaqitHijriCalendar.fromDate(DateTime now) : super.fromDate(now);
+import 'kuwaiti_calendar.dart';
+
+class MawaqitHijriCalendar extends KuwaitiCalendar {
+  MawaqitHijriCalendar.fromDate(DateTime now) : super.fromDatetime(now);
 
   /// +1 is the difference between the Backend calculation and the frontend calculation
-  factory MawaqitHijriCalendar.fromDateWithAdjustments(
+  MawaqitHijriCalendar.fromDateWithAdjustments(
     DateTime date, {
     int adjustment = 0,
     bool force30Days = false,
-  }) {
-    var hijri = MawaqitHijriCalendar.fromDate(
-      date.add(Duration(days: adjustment)),
-    );
-
-    if (force30Days) hijri.hDay = 30;
-
-    return hijri;
-  }
+  }) : super.fromDatetime(date, dayShift: adjustment, force30: force30Days);
 
   String formatMawaqitType() {
     final dayFormatter = DateFormat('EEEE', S.current.localeName);
 
     return [
-      if (wkDay != null) '${dayFormatter.format(DateTime.now())},',
-      hDay.toString(),
-      '${monthName(hMonth - 1)},',
-      hYear.toString(),
+      '${dayFormatter.format(DateTime.now())},',
+      islamicDate.toString(),
+      '${monthName(islamicMonth)},',
+      islamicYear.toString(),
     ].join(' ').capitalizeFirstOfEach();
   }
 
   bool get isInLunarDays {
-    return [13, 14, 15].contains(hDay);
+    return [13, 14, 15].contains(day);
   }
 
   String monthName(int month) {

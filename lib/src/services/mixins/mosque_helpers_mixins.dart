@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
-import 'package:mawaqit/src/models/MawaqitHijriCalendar.dart';
+import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
@@ -105,12 +105,13 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   bool get showEid {
-    if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) {
+    if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null)
       return false;
-    }
-    return (((mosqueHijriDate().hMonth == 9 && mosqueHijriDate().hDay >= 23) ||
-            (mosqueHijriDate().hMonth == 10 && mosqueHijriDate().hDay == 1)) ||
-        (mosqueHijriDate().hMonth == 12 && mosqueHijriDate().hDay < 11));
+
+    final date = mosqueHijriDate();
+    return (((date.islamicMonth == 9 && date.islamicDate! >= 23) ||
+            (date.islamicMonth == 10 && date.islamicDate! == 1)) ||
+        (date.islamicMonth == 12 && date.islamicDate! < 11));
   }
 
   /// get today salah prayer times as a list of times
