@@ -43,7 +43,6 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
     return Theme(
       data: theme,
       child: Focus(
-        autofocus: widget.autoFocus ?? false,
         focusNode: widget.focusNode,
         onFocusChange: (i) {
           widget.onFocusChange?.call(i);
@@ -56,6 +55,7 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
           color: isFocused ? Theme.of(context).focusColor : null,
           clipBehavior: Clip.antiAlias,
           child: InkWell(
+            autofocus: widget.autoFocus ?? false,
             focusColor:
                 isFocused ? Theme.of(context).focusColor : Colors.transparent,
             onTap: widget.onTap,
