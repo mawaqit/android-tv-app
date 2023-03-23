@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 
@@ -24,13 +25,17 @@ class OnBoardingMawaqitAboutWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          Text(
-            S.of(context).mawaqitDesc,
-            style: TextStyle(
-              fontSize: 19,
-              color: themeData.brightness == Brightness.dark
-                  ? Colors.white60
-                  : themeData.primaryColor,
+          Flexible(
+            fit: FlexFit.loose,
+            child: AutoSizeText(
+              S.of(context).mawaqitDesc,
+              stepGranularity: 1,
+              style: TextStyle(
+                fontSize: 19,
+                color: themeData.brightness == Brightness.dark
+                    ? Colors.white60
+                    : themeData.primaryColor,
+              ),
             ),
           ),
         ],
