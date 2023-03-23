@@ -1,3 +1,4 @@
+import 'package:flag/flag.dart';
 import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -139,22 +140,7 @@ class _LanguageTileState extends State<LanguageTile> {
             child: ListTile(
               dense: true,
               textColor: isFocused || widget.isSelected ? Colors.white : null,
-              leading: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Image.asset(
-                    'assets/img/flag/${widget.locale.languageCode}.png',
-                    errorBuilder: (context, error, stackTrace) {
-                      return Flag.fromString(
-                        widget.locale.languageCode,
-                        fit: BoxFit.cover,
-                        borderRadius: 300,
-                      );
-                    },
-                  ),
-                ),
-              ),
+              leading: flagIcon(widget.locale.languageCode),
               title: Text(
                 appLanguage.languageName(widget.locale.languageCode),
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
@@ -165,6 +151,29 @@ class _LanguageTileState extends State<LanguageTile> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget flagIcon(String languageCode, {double size = 40}) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(300),
+        // color: Colors.white,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.asset(
+        'assets/img/flag/${widget.locale.languageCode}.png',
+        fit: BoxFit.fill,
+        width: size,
+        height: size,
+        errorBuilder: (context, error, stackTrace) {
+          return Flag.fromString(
+            widget.locale.languageCode,
+            fit: BoxFit.cover,
+            borderRadius: 300,
+          );
+        },
       ),
     );
   }
