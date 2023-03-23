@@ -95,7 +95,6 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    int index = 0;
 
     return Material(
       child: FocusTraversalGroup(
@@ -127,6 +126,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
               SizedBox(height: 20),
               for (var i = 0; i < results.length; i++)
                 MosqueSimpleTile(
+                  autoFocus: i == 0,
                   mosque: results[i],
                   onTap: () => _selectMosque(results[i]),
                 ).animate().slideX(delay: 70.milliseconds * (i % 5)).fade(),
