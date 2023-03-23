@@ -11,6 +11,7 @@ import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart'
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/mawaqit_circle_button_widget.dart';
+import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen();
@@ -21,7 +22,6 @@ class OnBoardingScreen extends StatefulWidget {
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final sharedPref = SharedPref();
-  final _nextButtonFocusNode = FocusNode();
 
   int currentScreen = 0;
 
@@ -51,7 +51,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         onKey: (FocusNode node, RawKeyEvent event) {
           // print(event.logicalKey);
 
-          if (event.isKeyPressed(LogicalKeyboardKey.select) || event.isKeyPressed(LogicalKeyboardKey.enter)) {
+          if (event.isKeyPressed(LogicalKeyboardKey.select) ||
+              event.isKeyPressed(LogicalKeyboardKey.enter)) {
             setState(() => currentScreen++);
             return KeyEventResult.handled;
           }
@@ -102,12 +103,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           ),
           bottomNavigationBar: Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            height: 80,
+            // height: 80,
             child: Row(
               children: [
                 VersionWidget(
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.color
+                        ?.withOpacity(.5),
                   ),
                 ),
                 Spacer(flex: 2),
@@ -117,19 +122,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   decorator: DotsDecorator(
                     size: const Size.square(9.0),
                     activeSize: const Size(21.0, 9.0),
-                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                    activeShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
                     spacing: EdgeInsets.all(3),
                   ),
                 ),
                 Spacer(),
                 if (currentScreen != 2)
-                  MawaqitCircleButton(
-                    icon: Localizations.localeOf(context).languageCode == 'ar'
-                        ? MawaqitIcons.icon_arrow_left
-                        : MawaqitIcons.icon_arrow_right,
-                    focusNode: _nextButtonFocusNode,
-                    color: Theme.of(context).primaryColor,
-                    size: 21,
+                  MawaqitIconButton(
+                    icon: Icons.arrow_forward_rounded,
+                    label: 'Next',
                     onPressed: () => setState(() => currentScreen++),
                   ),
               ],

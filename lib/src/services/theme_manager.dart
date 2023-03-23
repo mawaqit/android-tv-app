@@ -6,7 +6,9 @@ class ThemeNotifier with ChangeNotifier {
   /// used getter to support hot restart in development
   ThemeData get darkTheme => ThemeData(
         toggleButtonsTheme: ToggleButtonsThemeData(
-            disabledColor: Colors.white, color: Color(0xff490094)),
+          disabledColor: Colors.white,
+          color: Color(0xff490094),
+        ),
         brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
         primaryColor: Color(0xff490094),
@@ -77,10 +79,9 @@ class ThemeNotifier with ChangeNotifier {
             ),
           ),
         ),
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.deepPurple,
-          backgroundColor: Colors.white,
-          cardColor: Color(0xff490094),
+        colorScheme: ColorScheme.light(
+          primary: Color(0xff490094),
+          onPrimary: Colors.white,
         ),
         focusColor: Color(0xff490094),
       );
