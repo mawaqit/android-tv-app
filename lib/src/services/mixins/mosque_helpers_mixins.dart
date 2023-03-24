@@ -272,9 +272,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
             [mosqueDate().day.toString()]
         .cast<String>();
 
-    if (mosqueDate().weekday == DateTime.friday) {
-      todayIqama[1] = "+${mosqueConfig!.jumuaTimeout.toString()}";
-    }
     return todayIqama;
   }
 
