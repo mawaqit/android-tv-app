@@ -29,18 +29,16 @@ class HadithWidget extends StatelessWidget {
         if (title != null)
           Text(
             title!,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  color: Colors.white,
-                  fontFamily: StringManager.fontFamilyKufi,
-                  shadows: kAfterAdhanTextShadow,
-                ),
+            style: TextStyle(
+                fontSize: 6.2.vw,
+                fontWeight: FontWeight.bold,
+                fontFamily:
+                    StringManager.getFontFamilyByString(title!),
+                color: Colors.white,
+                shadows: kAfterAdhanTextShadow),
             textDirection: TextDirection.rtl,
             textAlign: TextAlign.center,
           ).animate().slide().fade().addRepaintBoundary(),
-        FractionallySizedBox(
-          widthFactor: .6,
-          child: Divider(color: Colors.white),
-        ),
         if (arabicText != null)
           Flexible(
             fit: FlexFit.loose,
