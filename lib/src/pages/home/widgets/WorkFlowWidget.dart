@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class WorkFlowItem {
   final Widget Function(BuildContext context, VoidCallback next) builder;
@@ -72,7 +73,9 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
     delayedNextPageFuture?.ignore();
 
     if (_currentItemIndex >= widget.workFlowItems.length - 1) {
-      widget.onDone?.call();
+      /// we adding this delay to make sure flutter called the build function
+      /// if flutter didn't called the build any navigation login inside the [ContinuesWorkFlowWidget.onDone] will be ignored
+      Future.delayed(80.milliseconds, widget.onDone?.call);
       return;
     }
     if (minimumDurationFuture != null) await minimumDurationFuture;
@@ -98,7 +101,7 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_currentItemIndex < 0) return Container();
+    if (_currentItemIndex < 0) return Container(color: Colors.black);
     return activeItem().builder(context, () => nextPage(_currentItemIndex));
   }
 }
