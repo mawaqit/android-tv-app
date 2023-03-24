@@ -109,9 +109,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       return false;
 
     final date = mosqueHijriDate();
-    return (((date.islamicMonth == 9 && date.islamicDate! >= 23) ||
-            (date.islamicMonth == 10 && date.islamicDate! == 1)) ||
-        (date.islamicMonth == 12 && date.islamicDate! < 11));
+    return (date.islamicMonth == 8 && date.islamicDate >= 23) ||
+        (date.islamicMonth == 9 && date.islamicDate == 1) ||
+        (date.islamicMonth == 11 && date.islamicDate < 11 && date.islamicDate >= 3);
   }
 
   /// get today salah prayer times as a list of times
