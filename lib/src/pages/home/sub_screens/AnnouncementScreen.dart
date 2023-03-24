@@ -123,7 +123,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 shadows: kAnnouncementTextShadow,
-                fontSize: 62,
+                fontSize: 8.vw,
                 fontWeight: FontWeight.bold,
                 fontFamily: StringManager.getFontFamilyByString(content),
                 color: Colors.white,
@@ -143,6 +143,8 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     return CachedNetworkImage(
       imageUrl: image,
       fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
     ).animate().slideX().addRepaintBoundary();
   }
 
@@ -156,14 +158,14 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
         mute: true,
       ),
     );
-    return Stack(
-      children: [
-        YoutubePlayer(
-          onEnded: (metaData) => nextAnnouncement(),
-          controller: _controller,
-          showVideoProgressIndicator: true,
-        ),
-      ],
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      child: YoutubePlayer(
+        onEnded: (metaData) => nextAnnouncement(),
+        controller: _controller,
+        showVideoProgressIndicator: true,
+      ),
     );
   }
 
