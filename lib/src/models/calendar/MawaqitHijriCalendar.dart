@@ -27,7 +27,7 @@ class MawaqitHijriCalendar extends KuwaitiCalendar {
   }
 
   bool get isInLunarDays {
-    return [13, 14, 15].contains(day);
+    return [13, 14, 15].contains(islamicDate);
   }
 
   String monthName(int month) {
