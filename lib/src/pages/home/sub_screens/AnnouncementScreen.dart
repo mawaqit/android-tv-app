@@ -150,22 +150,26 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   Widget videoAnnouncement(String video) {
     late YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(
-        video,
-      )!,
-      flags: YoutubePlayerFlags(
-        autoPlay: true,
-        mute: true,
-      ),
+      initialVideoId: YoutubePlayer.convertUrlToId(video)!,
+      flags: YoutubePlayerFlags(autoPlay: true, mute: true),
     );
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: YoutubePlayer(
-        onEnded: (metaData) => nextAnnouncement(),
-        controller: _controller,
-        showVideoProgressIndicator: true,
-      ),
+    return FutureBuilder(
+      future: Future.delayed(20.seconds),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          /// if the video is not loaded in 20 seconds, go to the next announcement
+          if (_controller.value.isReady == false) nextAnnouncement();
+        }
+        return Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: YoutubePlayer(
+            onEnded: (metaData) => nextAnnouncement(),
+            controller: _controller,
+            showVideoProgressIndicator: true,
+          ),
+        );
+      },
     );
   }
 

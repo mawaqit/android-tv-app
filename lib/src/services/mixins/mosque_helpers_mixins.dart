@@ -20,6 +20,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   abstract HomeActiveWorkflow workflow;
 
+  /// this will be set from the [NetworkConnectivity] mixin
+  /// because we use in the [activeAnnouncements] getter
+  bool get isOnline;
+
   salahName(int index) => [
         S.current.fajr,
         S.current.duhr,
@@ -111,7 +115,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     final date = mosqueHijriDate();
     return (date.islamicMonth == 8 && date.islamicDate >= 23) ||
         (date.islamicMonth == 9 && date.islamicDate == 1) ||
-        (date.islamicMonth == 11 && date.islamicDate < 11 && date.islamicDate >= 3);
+        (date.islamicMonth == 11 &&
+            date.islamicDate < 11 &&
+            date.islamicDate >= 3);
   }
 
   /// get today salah prayer times as a list of times
@@ -358,7 +364,13 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       final inTime = now.isAfter(startDate ?? DateTime(2000)) &&
           now.isBefore(endDate ?? DateTime(3000));
 
-      return (element.video == null || !typeIsMosque) && inTime;
+      /// on offline mode we don't show videos
+      if (element.video != null && !isOnline) return false;
+
+      /// on mosque screen we don't show videos
+      if (element.video != null && typeIsMosque) return false;
+
+      return inTime;
     }).toList();
   }
 }
