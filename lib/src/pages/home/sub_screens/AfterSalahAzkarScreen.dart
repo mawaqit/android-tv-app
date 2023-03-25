@@ -8,6 +8,7 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
+import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -97,67 +98,10 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
     final translatedHadith = translatedItem(activeHadith);
     final arabicHadith = arabicItem(activeHadith);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          "$azkarTitle ${isArabic ? '' : '(${S.of(context).alAthkar})'}",
-          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              color: Colors.white,
-              fontFamily: StringManager.fontFamilyKufi,
-              shadows: kAfterAdhanTextShadow),
-          textDirection: TextDirection.rtl,
-          textAlign: TextAlign.center,
-        ).animate().slide().fade().addRepaintBoundary(),
-        FractionallySizedBox(
-          widthFactor: .6,
-          child: Divider(color: Colors.white),
-        ),
-        Expanded(
-          child: Container(
-            key: ValueKey(activeHadith),
-            padding: EdgeInsets.symmetric(horizontal: 1.2.vw, vertical: 1.vh),
-            width: isArabic || translatedHadith.isEmpty
-                ? screenWidth
-                : screenWidth * 1.5,
-            child: AutoSizeText(
-              arabicHadith,
-              style: TextStyle(
-                fontSize: 6.2.vw,
-                fontWeight: FontWeight.bold,
-                fontFamily: StringManager.getFontFamilyByString(arabicHadith),
-                color: Colors.white,
-                shadows: kIqamaCountDownTextShadow,
-              ),
-              textDirection: TextDirection.rtl,
-              textAlign: TextAlign.center,
-            ).animate().fadeIn(delay: .3.seconds).addRepaintBoundary(),
-          ),
-        ),
-        if (!isArabic && translatedHadith.isNotEmpty)
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: SizedBox(
-                width: isArabic ? screenWidth : screenWidth * 2,
-                child: AutoSizeText(
-                  stepGranularity: 1,
-                  translatedHadith,
-                  style: TextStyle(
-                    fontSize: 6.2.vw,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    shadows: kAfterAdhanTextShadow,
-                    fontFamily: StringManager.getFontFamilyByString(
-                      translatedHadith,
-                    ),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ),
-      ],
+    return HadithWidget(
+      title: azkarTitle,
+      arabicText: arabicHadith,
+      translatedText: translatedHadith,
     );
   }
 }

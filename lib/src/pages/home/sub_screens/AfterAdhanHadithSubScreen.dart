@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
+import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/audio_manager.dart';
@@ -60,63 +61,11 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            arTranslation.afterAdhanHadithTitle,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 5.vw,
-              color: Colors.white,
-              shadows: kAfterAdhanTextShadow,
-              fontFamily: StringManager.fontFamilyKufi,
-            ),
-          ),
-          Flexible(
-            fit: FlexFit.loose,
-            child: AutoSizeText(
-              arTranslation.afterSalahHadith.replaceAll('\n', ''),
-              textAlign: TextAlign.center,
-              stepGranularity: .5,
-              style: TextStyle(
-                fontSize: 6.2.vw,
-                color: Colors.white,
-                shadows: kAfterAdhanTextShadow,
-                fontFamily: StringManager.fontFamilyKufi,
-              ),
-            ),
-          ),
-          if (!isArabic) ...[
-            Text(
-              S.of(context).afterAdhanHadithTitle,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 5.vw,
-                color: Colors.white,
-                shadows: kIqamaCountDownTextShadow,
-              ),
-            ),
-            Flexible(
-              fit: FlexFit.loose,
-              child: AutoSizeText(
-                S.of(context).afterSalahHadith,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 62,
-                  wordSpacing: 2,
-                  color: Colors.white,
-                  shadows: kIqamaCountDownTextShadow,
-                ),
-              ),
-            ),
-          ]
-        ],
-      ),
+    return HadithWidget(
+      title: arTranslation.afterAdhanHadithTitle,
+      arabicText: arTranslation.afterSalahHadith,
+      translatedTitle: S.of(context).afterAdhanHadithTitle,
+      translatedText: S.of(context).afterSalahHadith,
     );
   }
 }
