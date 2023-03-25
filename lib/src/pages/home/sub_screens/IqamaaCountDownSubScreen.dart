@@ -46,7 +46,6 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
     super.initState();
   }
 
-
   @override
   void dispose() {
     _streamSubscription?.cancel();
@@ -73,7 +72,9 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 1.vw, vertical: 1.vh),
               child: Directionality(
-                  textDirection: TextDirection.ltr, child: WeatherWidget()),
+                textDirection: TextDirection.ltr,
+                child: WeatherWidget(),
+              ),
             )
           ],
         ),
@@ -84,6 +85,7 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
               color: Colors.white,
               fontWeight: FontWeight.bold,
               shadows: kIqamaCountDownTextShadow,
+              height: 1,
               fontFamily: StringManager.getFontFamilyByString(tr.iqamaIn)),
         ).animate().slide(delay: .5.seconds).fade().addRepaintBoundary(),
         Expanded(

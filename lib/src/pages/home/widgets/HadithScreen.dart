@@ -14,12 +14,24 @@ class HadithWidget extends StatelessWidget {
     this.arabicText,
     this.translatedTitle,
     this.translatedText,
+    this.textDirection,
   }) : super(key: key);
 
+  /// The main title of the screen
   final String? title;
+
+  /// arabic text of the hadith screen
   final String? arabicText;
+
+  /// translated title of the hadith
   final String? translatedTitle;
+
+  /// translated text of the hadith
   final String? translatedText;
+
+  /// force the text direction of the translated text
+  /// used for random hadith because hadith language is not the same as the app language
+  final TextDirection? textDirection;
 
   @override
   Widget build(BuildContext context) {
@@ -27,69 +39,73 @@ class HadithWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         if (title != null)
-          Text(
+          titleText(
             title!,
-            style: TextStyle(
-                fontSize: 6.2.vw,
-                fontWeight: FontWeight.bold,
-                fontFamily:
-                    StringManager.getFontFamilyByString(title!),
-                color: Colors.white,
-                shadows: kAfterAdhanTextShadow),
             textDirection: TextDirection.rtl,
-            textAlign: TextAlign.center,
-          ).animate().slide().fade().addRepaintBoundary(),
+          ),
         if (arabicText != null)
-          Flexible(
-            fit: FlexFit.loose,
-            child: AutoSizeText(
-              arabicText!,
-              style: TextStyle(
-                fontSize: 6.2.vw,
-                fontWeight: FontWeight.bold,
-                fontFamily: StringManager.getFontFamilyByString(arabicText!),
-                color: Colors.white,
-                shadows: kIqamaCountDownTextShadow,
-              ),
-              textDirection: TextDirection.rtl,
-              textAlign: TextAlign.center,
-            ).animate().fadeIn(delay: .3.seconds).addRepaintBoundary(),
+          contentText(
+            arabicText!,
+            textDirection: TextDirection.rtl,
+            delay: .1.seconds,
           ),
         if (translatedTitle != null && translatedTitle != title)
-          Text(
+          titleText(
             translatedTitle!,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  color: Colors.white,
-                  shadows: kAfterAdhanTextShadow,
-                  fontFamily: StringManager.getFontFamilyByString(
-                    translatedTitle!,
-                  ),
-                ),
-            textDirection: TextDirection.rtl,
-            textAlign: TextAlign.center,
-          ).animate().slideY(begin: 1).fade().addRepaintBoundary(),
+            textDirection: textDirection,
+            delay: .2.seconds,
+          ),
         if (translatedText != null && translatedText != arabicText)
-          Flexible(
-            fit: FlexFit.loose,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: AutoSizeText(
-                stepGranularity: 1,
-                translatedText!,
-                style: TextStyle(
-                  fontSize: 6.2.vw,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  shadows: kAfterAdhanTextShadow,
-                  fontFamily: StringManager.getFontFamilyByString(
-                    translatedText!,
-                  ),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ).animate().fadeIn(delay: .5.seconds).addRepaintBoundary(),
+          contentText(
+            translatedText!,
+            textDirection: textDirection,
+            delay: .3.seconds,
           ),
       ],
+    );
+  }
+
+  Widget titleText(
+    String text, {
+    TextDirection? textDirection,
+    Duration? delay,
+  }) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 6.2.vw,
+        fontWeight: FontWeight.bold,
+        fontFamily: StringManager.getFontFamilyByString(text),
+        color: Colors.white,
+        shadows: kAfterAdhanTextShadow,
+      ),
+      textAlign: TextAlign.center,
+      textDirection: textDirection,
+    ).animate(delay: delay).slide().fade().addRepaintBoundary();
+  }
+
+  Widget contentText(
+    String text, {
+    TextDirection? textDirection,
+    Duration? delay,
+  }) {
+    return Flexible(
+      fit: FlexFit.loose,
+      child: Padding(
+        key: ValueKey(text),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: AutoSizeText(
+          text,
+          style: TextStyle(
+            fontSize: 6.2.vw,
+            fontFamily: StringManager.getFontFamilyByString(text),
+            color: Colors.white,
+            shadows: kIqamaCountDownTextShadow,
+          ),
+          textAlign: TextAlign.center,
+          textDirection: textDirection,
+        ).animate().fadeIn(delay: delay).addRepaintBoundary(),
+      ),
     );
   }
 }
