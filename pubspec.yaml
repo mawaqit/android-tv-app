@@ -63,7 +63,7 @@ dependencies:
 
   # TOOLS
   google_fonts: ^4.0.3
-  package_info: ^2.0.2
+  package_info_plus: ^3.0.3
   android_intent_plus: ^3.1.6
   global_configuration: ^2.0.0-nullsafety.1
   wakelock: ^0.6.2
