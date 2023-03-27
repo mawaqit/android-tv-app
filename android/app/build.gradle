@@ -44,7 +44,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 33
     ndkVersion "25.2.9519653"
 
     sourceSets {
@@ -54,7 +54,7 @@ android {
     defaultConfig {
         applicationId "com.kanout.mawaqit"
         minSdkVersion 19
-        targetSdkVersion 34
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         // FIREBASE PACKAGES
