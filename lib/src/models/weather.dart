@@ -25,7 +25,11 @@ class Weather {
 
   @override
   String toString() {
-    return 'Weather{' + ' temperature: $temperature,' + ' feeling: $feeling,' + ' icon: $icon,' + '}';
+    return 'Weather{' +
+        ' temperature: $temperature,' +
+        ' feeling: $feeling,' +
+        ' icon: $icon,' +
+        '}';
   }
 
   Weather copyWith({
