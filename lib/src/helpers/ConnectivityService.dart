@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 
 class ConnectivityService {

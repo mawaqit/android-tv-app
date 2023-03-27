@@ -1,5 +1,4 @@
-import 'package:flag/flag.dart';
-import 'package:flag/flag_widget.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -168,11 +167,8 @@ class _LanguageTileState extends State<LanguageTile> {
         width: size,
         height: size,
         errorBuilder: (context, error, stackTrace) {
-          return Flag.fromString(
-            widget.locale.languageCode,
-            fit: BoxFit.cover,
-            borderRadius: 300,
-          );
+          FirebaseCrashlytics.instance.recordError(error, stackTrace);
+          return SizedBox();
         },
       ),
     );
