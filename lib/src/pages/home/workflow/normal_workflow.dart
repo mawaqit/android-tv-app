@@ -48,14 +48,12 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
             minutes: mosqueManager.mosqueConfig!.wakeForFajrTime!,
           ));
 
-      if (beforeFajrTime.isBefore(mosqueManager.mosqueDate()))
-        beforeFajrTime = beforeFajrTime.add(Duration(days: 1));
+      if (beforeFajrTime.isBefore(mosqueManager.mosqueDate())) beforeFajrTime = beforeFajrTime.add(Duration(days: 1));
 
       // print(beforeFajrTime.difference(mosqueManager.mosqueDate()));
 
       // print('register before fajr adhan in ${beforeFajrTime.difference(mosqueManager.mosqueDate())}');
-      beforeFajrFuture =
-          Future.delayed(beforeFajrTime.difference(mosqueManager.mosqueDate()));
+      beforeFajrFuture = Future.delayed(beforeFajrTime.difference(mosqueManager.mosqueDate()));
 
       beforeFajrFuture?.then((value) => showBeforeFajrAdhan());
     }
@@ -78,22 +76,29 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
 
     final mosqueManager = context.read<MosqueManager>();
 
-    nextSalahFuture =
-        Future.delayed(mosqueManager.nextSalahAfter() - Duration(minutes: 5));
+    nextSalahFuture = Future.delayed(mosqueManager.nextSalahAfter() - Duration(minutes: 5));
     nextSalahFuture?.then((value) => mosqueManager.startSalahWorkflow());
   }
 
   /// show hadith each 4min
   void randomHadithHandler() {
+    final mosqueManager = context.read<MosqueManager>();
     randomHadithTimer?.cancel();
 
     randomHadithTimer = Timer.periodic(_HadithRepeatDuration, (i) {
-      if (mounted &&
-          state == NormalWorkflowScreens.normal &&
-          context.read<MosqueManager>().isOnline) {
-        setState(() {
-          state = NormalWorkflowScreens.randomHadith;
-        });
+      /// show hadith only if its enabled and the mosque is online
+      /// and the user is in the normal home screen
+      /// and the mosque is not in disable hadith between salah mode
+      final conditions = [
+        mounted,
+        state == NormalWorkflowScreens.normal,
+        mosqueManager.isOnline,
+        !mosqueManager.isDisableHadithBetweenSalah(),
+        mosqueManager.mosqueConfig!.randomHadithEnabled,
+      ];
+
+      if (conditions.every((element) => element)) {
+        setState(() => state = NormalWorkflowScreens.randomHadith);
       }
 
       /// back to normal home after 1 min
@@ -116,12 +121,11 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig;
-    if (mosqueConfig!.randomHadithEnabled) {
-      if (!mosqueManager.isDisableHadithBetweenSalah() ||
-          mosqueConfig.randomHadithIntervalDisabling!.isEmpty) {
-        randomHadithHandler();
-      }
-    }
+    // if (mosqueConfig!.randomHadithEnabled) {
+    //   if (!mosqueManager.isDisableHadithBetweenSalah() || mosqueConfig.randomHadithIntervalDisabling!.isEmpty) {
+    //   }
+    // }
+    randomHadithHandler();
     announcementHandler();
     nextSalahHandler();
     beforeFajrWakeupHandler();
