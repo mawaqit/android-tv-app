@@ -18,8 +18,6 @@
   <uses-feature android:name="android.hardware.microphone" android:required="false"/>
   <uses-feature android:name="android.hardware.sensor" android:required="false"/>
 
-  <uses-feature android:name="android.software.leanback" android:required="false" />
-
   <application
     android:banner="@mipmap/banner"
     android:icon="@mipmap/ic_launcher"
