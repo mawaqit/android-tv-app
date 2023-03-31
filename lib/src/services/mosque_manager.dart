@@ -25,7 +25,7 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 const kAzkarDuration = const Duration(seconds: 140);
 
 class MosqueManager extends ChangeNotifier
-    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
+    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity, MainScreenMixin {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
