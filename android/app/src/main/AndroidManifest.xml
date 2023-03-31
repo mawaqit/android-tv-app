@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.mawaqit.androidtv">
+  package="com.kanout.mawaqit">
 
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
   <uses-permission android:name="android.permission.INTERNET" />
@@ -18,7 +18,7 @@
   <uses-feature android:name="android.hardware.microphone" android:required="false"/>
   <uses-feature android:name="android.hardware.sensor" android:required="false"/>
 
-  <uses-feature android:name="android.software.leanback" android:required="false" />
+  <uses-feature android:name="android.software.leanback" android:required="true" />
 
   <application
     android:banner="@mipmap/banner"
