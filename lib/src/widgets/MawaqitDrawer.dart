@@ -19,6 +19,7 @@ import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
 import 'package:mawaqit/src/services/developer_manager.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
@@ -38,6 +39,7 @@ class MawaqitDrawer extends StatelessWidget {
     final themeProvider = Provider.of<ThemeNotifier>(context);
     final developerManager = context.watch<DeveloperManager>();
     final hive = context.watch<HiveManager>();
+    final mosqueManager = context.watch<MosqueManager>();
 
     final theme = Theme.of(context);
 
@@ -62,18 +64,15 @@ class MawaqitDrawer extends StatelessWidget {
                         Spacer(),
                         ElevatedButton.icon(
                           style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith((states) {
+                            backgroundColor: MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.focused)) {
                                 return theme.primaryColorDark;
                               }
                               return Colors.white;
                             }),
                             elevation: MaterialStateProperty.all(0),
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.transparent),
-                            foregroundColor:
-                                MaterialStateProperty.resolveWith((states) {
+                            overlayColor: MaterialStateProperty.all(Colors.transparent),
+                            foregroundColor: MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.focused)) {
                                 return Colors.white;
                               }
@@ -84,9 +83,7 @@ class MawaqitDrawer extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 0)),
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
                           ),
                           onPressed: () => exit(0),
                           icon: Container(
@@ -156,8 +153,7 @@ class MawaqitDrawer extends StatelessWidget {
               text: S.of(context).home,
               onTap: () async {
                 if (settings.tabNavigationEnable == "1") {
-                  AppRouter.popAndPush(WebScreen(settings.url),
-                      name: 'HomeScreen');
+                  AppRouter.popAndPush(WebScreen(settings.url), name: 'HomeScreen');
                 } else {
                   Navigator.pop(context);
 
@@ -190,9 +186,7 @@ class MawaqitDrawer extends StatelessWidget {
           ),
           DrawerListTitle(
               icon: Icons.brightness_medium,
-              text: theme.brightness == Brightness.light
-                  ? S.of(context).darkMode
-                  : S.of(context).lightMode,
+              text: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
               onTap: () {
                 if (theme.brightness == Brightness.light) {
                   themeProvider.setDarkMode();
@@ -200,6 +194,13 @@ class MawaqitDrawer extends StatelessWidget {
                   themeProvider.setLightMode();
                 }
               }),
+          if (mosqueManager.typeIsMosque)
+            SwitchListTile(
+              secondary: Icon(Icons.home),
+              title: Text(S.of(context).mainScreen),
+              value: mosqueManager.isMainScreen,
+              onChanged: (value) => mosqueManager.isMainScreen = value,
+            ),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: Divider(height: 1, color: Colors.grey[400]),
@@ -268,16 +269,13 @@ class MawaqitDrawer extends StatelessWidget {
               forceThemeColor: true,
               iconUrl: page.iconUrl,
               text: translations[page.title!.toCamelCase] ?? page.title,
-              onTap: () =>
-                  AppRouter.popAndPush(PageScreen(page), name: page.title)))
+              onTap: () => AppRouter.popAndPush(PageScreen(page), name: page.title)))
           .toList(),
     );
   }
 
   _shareApp(BuildContext context, String? text, String share) {
     final RenderBox box = context.findRenderObject() as RenderBox;
-    Share.share(share,
-        subject: text,
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    Share.share(share, subject: text, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }

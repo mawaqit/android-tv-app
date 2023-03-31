@@ -11,6 +11,7 @@ import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
+import 'package:mawaqit/src/services/mixins/main_screen_mixin.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
