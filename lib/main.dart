@@ -20,6 +20,7 @@ import 'package:mawaqit/src/services/developer_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => DeveloperManager()),
         ChangeNotifierProvider(create: (context) => HiveManager()),
+        ChangeNotifierProvider(create: (context) => UserPreferencesManager()),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {

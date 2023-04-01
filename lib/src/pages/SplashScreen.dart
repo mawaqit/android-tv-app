@@ -50,12 +50,10 @@ class _SplashScreen extends State<Splash> {
       DeviceOrientation.landscapeLeft,
     ]);
 
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(!kDebugMode);
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
     HttpOverrides.global = MyHttpOverrides();
-    FocusManager.instance.highlightStrategy =
-        FocusHighlightStrategy.alwaysTraditional;
+    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
 
     // hide status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);

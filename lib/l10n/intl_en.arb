@@ -134,6 +134,9 @@
   "mainScreen": "Main screen",
   "secondaryScreen": "Secondary screen",
   "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "Announcement only mode",
+  "normalMode": "Normal mode",
+  "announcementOnlyModeEXPLINATION": "Mosque will display simplified version of the app, only announcements screen with salah times will be displayed",
   "duaaElEftarText": "",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
