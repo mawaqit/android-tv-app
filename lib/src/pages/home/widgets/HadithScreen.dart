@@ -38,24 +38,24 @@ class HadithWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (title != null)
+        if (title != null && title != '')
           titleText(
             title!,
             textDirection: TextDirection.rtl,
           ),
-        if (arabicText != null)
+        if (arabicText != null && arabicText != '')
           contentText(
             arabicText!,
             textDirection: TextDirection.rtl,
             delay: .1.seconds,
           ),
-        if (translatedTitle != null && translatedTitle != title)
+        if (translatedTitle != null && translatedTitle != title && translatedTitle != '')
           titleText(
             translatedTitle!,
             textDirection: textDirection,
             delay: .2.seconds,
           ),
-        if (translatedText != null && translatedText != arabicText)
+        if (translatedText != null && translatedText != arabicText && translatedText != '')
           contentText(
             translatedText!,
             textDirection: textDirection,
@@ -97,7 +97,7 @@ class HadithWidget extends StatelessWidget {
         child: AutoSizeText(
           text,
           style: TextStyle(
-            fontSize: 6.2.vw,
+            fontSize: 600,
             fontFamily: StringManager.getFontFamilyByString(text),
             color: Colors.white,
             shadows: kIqamaCountDownTextShadow,
