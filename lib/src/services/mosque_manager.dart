@@ -11,6 +11,7 @@ import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
+import 'package:mawaqit/src/services/mixins/main_screen_mixin.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
@@ -25,7 +26,7 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 const kAzkarDuration = const Duration(seconds: 140);
 
 class MosqueManager extends ChangeNotifier
-    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
+    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity, MainScreenMixin {
   final sharedPref = SharedPref();
 
   // String? mosqueId;

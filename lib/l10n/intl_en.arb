@@ -127,5 +127,15 @@
   "changeLanguage": "Change language",
   "forceScreen": "Force screen",
   "clear": "Clear",
-  "changeTheme": "Change Theme"
+  "changeTheme": "Change Theme",
+  "next": "Next",
+  "mainScreenOrSecondaryScreen": "Main screen or secondary screen?",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Is this is your main mosque screen \n main screen will have a little different behavior. so we don't distract praying people",
+  "mainScreen": "Main screen",
+  "secondaryScreen": "Secondary screen"
+  "duaaElEftar": "Duaa El Eftar",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  }
 }

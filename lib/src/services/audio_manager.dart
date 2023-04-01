@@ -18,8 +18,7 @@ class AudioManager extends ChangeNotifier {
     policy: CachePolicy.request,
   );
 
-  late final dio = Dio()
-    ..interceptors.add(DioCacheInterceptor(options: option));
+  late final dio = Dio()..interceptors.add(DioCacheInterceptor(options: option));
 
   String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
@@ -57,6 +56,19 @@ class AudioManager extends ChangeNotifier {
     VoidCallback? onDone,
   }) =>
       loadAndPlay(url: duaAfterAdhanLink, onDone: onDone);
+
+  Future<void> loadAssetsAndPlay(String assets, {VoidCallback? onDone}) async {
+    if (player != null) stop();
+
+    player = Audio.load(
+      assets,
+      onComplete: () {
+        stop();
+        onDone?.call();
+      },
+      onError: (message) => onDone?.call(),
+    )..play();
+  }
 
   Future<void> loadAndPlay({
     required String url,
