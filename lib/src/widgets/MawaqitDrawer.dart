@@ -22,6 +22,7 @@ import 'package:mawaqit/src/services/developer_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -40,6 +41,7 @@ class MawaqitDrawer extends StatelessWidget {
     final developerManager = context.watch<DeveloperManager>();
     final hive = context.watch<HiveManager>();
     final mosqueManager = context.watch<MosqueManager>();
+    final userPrefs = context.watch<UserPreferencesManager>();
 
     final theme = Theme.of(context);
 
@@ -194,13 +196,23 @@ class MawaqitDrawer extends StatelessWidget {
                   themeProvider.setLightMode();
                 }
               }),
-          if (mosqueManager.typeIsMosque)
+          if (mosqueManager.typeIsMosque) ...[
             SwitchListTile(
               secondary: Icon(Icons.home),
               title: Text(S.of(context).mainScreen),
               value: mosqueManager.isMainScreen,
               onChanged: (value) => mosqueManager.isMainScreen = value,
             ),
+            SwitchListTile(
+              secondary: Icon(Icons.alarm),
+              title: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(S.of(context).announcementOnlyMode),
+              ),
+              value: userPrefs.announcementsOnly,
+              onChanged: (value) => userPrefs.announcementsOnly = value,
+            ),
+          ],
           Padding(
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: Divider(height: 1, color: Colors.grey[400]),
