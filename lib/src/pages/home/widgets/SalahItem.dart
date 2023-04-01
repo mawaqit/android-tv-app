@@ -48,8 +48,7 @@ class SalahItemWidget extends StatelessWidget {
     final isArabic = context.read<AppLanguage>().isArabic();
 
     final is12period = mosqueConfig.timeDisplayFormat == "12";
-    final DateFormat dateTimeConverter =
-        is12period ? DateFormat("hh:mm", "en-En") : DateFormat("HH:mm", "en");
+    final DateFormat dateTimeConverter = is12period ? DateFormat("hh:mm", "en-En") : DateFormat("HH:mm", "en");
 
     return Container(
       width: 16.vw,
@@ -76,8 +75,7 @@ class SalahItemWidget extends StatelessWidget {
                     fontSize: 3.vw,
                     shadows: kHomeTextShadow,
                     color: Colors.white,
-                    fontFamily:
-                        StringManager.getFontFamilyByString(title ?? "")),
+                    fontFamily: StringManager.getFontFamilyByString(title ?? "")),
               ),
             ),
           SizedBox(height: isArabic ? 0.1.vh : 1.vh),
@@ -91,9 +89,7 @@ class SalahItemWidget extends StatelessWidget {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      timeDate == null
-                          ? time
-                          : dateTimeConverter.format(timeDate),
+                      timeDate == null ? time : dateTimeConverter.format(timeDate),
                       maxLines: 1,
                       style: TextStyle(
                         fontSize: isIqamaMoreImportant ? smallFont : bigFont,
@@ -106,18 +102,15 @@ class SalahItemWidget extends StatelessWidget {
                   ),
                 ),
                 if (timeDate != null && is12period)
-                  SizedBox(
-                    // width: 2.vw,
-                    child: TimePeriodWidget(
-                      dateTime: timeDate,
-                      style: TextStyle(
-                        height: .9,
-                        letterSpacing: 9,
-                        fontSize: 1.6.vw,
-                        fontWeight: FontWeight.w300,
-                        shadows: kIqamaCountDownTextShadow,
-                        color: Colors.white,
-                      ),
+                  TimePeriodWidget(
+                    dateTime: timeDate,
+                    style: TextStyle(
+                      height: .9,
+                      letterSpacing: 9,
+                      fontSize: 1.6.vw,
+                      fontWeight: FontWeight.w300,
+                      shadows: kIqamaCountDownTextShadow,
+                      color: Colors.white,
                     ),
                   ),
               ],
@@ -136,9 +129,7 @@ class SalahItemWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  iqamaDate == null
-                      ? iqama!
-                      : dateTimeConverter.format(iqamaDate),
+                  iqamaDate == null ? iqama! : dateTimeConverter.format(iqamaDate),
                   style: TextStyle(
                     fontSize: isIqamaMoreImportant ? bigFont : smallFont,
                     fontWeight: FontWeight.bold,
@@ -150,19 +141,16 @@ class SalahItemWidget extends StatelessWidget {
                   ),
                 ),
                 if (iqamaDate != null && is12period)
-                  SizedBox(
-                    width: 1.vw,
-                    child: TimePeriodWidget(
-                      dateTime: iqamaDate,
-                      style: TextStyle(
-                        height: .9,
-                        letterSpacing: 9,
-                        fontSize: 1.4.vw,
-                        fontWeight: FontWeight.w300,
-                        shadows: kIqamaCountDownTextShadow,
-                        // fontFamily: StringManager.getFontFamily(context),
-                        color: Colors.white,
-                      ),
+                  TimePeriodWidget(
+                    dateTime: iqamaDate,
+                    style: TextStyle(
+                      height: .9,
+                      letterSpacing: 9,
+                      fontSize: 1.4.vw,
+                      fontWeight: FontWeight.w300,
+                      shadows: kIqamaCountDownTextShadow,
+                      // fontFamily: StringManager.getFontFamily(context),
+                      color: Colors.white,
                     ),
                   ),
               ],
