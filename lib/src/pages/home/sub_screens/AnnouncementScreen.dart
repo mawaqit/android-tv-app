@@ -6,6 +6,7 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
+import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -35,11 +36,10 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
     if (index >= allAnnouncements.length) {
       Future.delayed(Duration(milliseconds: 80), widget.onDone);
-      return;
     }
 
     setState(() {
-      activeAnnouncement = allAnnouncements[index];
+      activeAnnouncement = allAnnouncements[index % allAnnouncements.length];
     });
 
     if (activeAnnouncement!.video == null) {
@@ -66,6 +66,13 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
       alignment: Alignment.bottomCenter,
       children: [
         announcementWidgets(),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 1.vh),
+            child: AboveSalahBar(),
+          ),
+        ),
         IgnorePointer(
           child: Padding(
             padding: EdgeInsets.only(bottom: 1.5.vh),
@@ -101,7 +108,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
       child: Column(
         children: [
           // title
-          SizedBox(height: 2.vh),
+          SizedBox(height: 10.vh),
           Text(
             title ?? '',
             textAlign: TextAlign.center,
