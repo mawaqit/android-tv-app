@@ -130,6 +130,7 @@ flutter:
     - assets/animations/rive/
     - assets/animations/lottie/
     - assets/svg/
+    - assets/voices/
 
 
   fonts:
