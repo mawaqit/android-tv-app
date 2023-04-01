@@ -52,7 +52,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.kanout.mawaqit"
+        applicationId "com.mawaqit.androidtv"
         minSdkVersion 19
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()

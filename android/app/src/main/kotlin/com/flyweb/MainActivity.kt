@@ -1,4 +1,4 @@
-package com.kanout.mawaqit
+package com.mawaqit.androidtv
 
 import io.flutter.embedding.android.FlutterActivity
 
