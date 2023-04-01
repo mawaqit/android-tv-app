@@ -11,7 +11,6 @@ import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
-import 'package:mawaqit/src/services/mixins/main_screen_mixin.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
@@ -25,8 +24,7 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(seconds: 140);
 
-class MosqueManager extends ChangeNotifier
-    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity, MainScreenMixin {
+class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -95,11 +93,7 @@ class MosqueManager extends ChangeNotifier
     _timesSubscription?.cancel();
     _configSubscription?.cancel();
 
-    bool isDone() =>
-        times != null &&
-        mosqueConfig != null &&
-        mosque != null &&
-        !completer.isCompleted;
+    bool isDone() => times != null && mosqueConfig != null && mosque != null && !completer.isCompleted;
 
     /// if getting item returns an error
     onItemError(e, d) {}
@@ -150,19 +144,15 @@ class MosqueManager extends ChangeNotifier
     return completer.future;
   }
 
-  Future<Mosque> searchMosqueWithId(String mosqueId) =>
-      Api.searchMosqueWithId(mosqueId);
+  Future<Mosque> searchMosqueWithId(String mosqueId) => Api.searchMosqueWithId(mosqueId);
 
-  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async =>
-      Api.searchMosques(mosque, page: page);
+  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async => Api.searchMosques(mosque, page: page);
 
 //todo handle page and get more
   Future<List<Mosque>> searchWithGps() async {
-    final position =
-        await getCurrentLocation().catchError((e) => throw GpsError());
+    final position = await getCurrentLocation().catchError((e) => throw GpsError());
 
-    final url = Uri.parse(
-        "$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
+    final url = Uri.parse("$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
     Map<String, String> requestHeaders = {
       // "Api-Access-Token": mawaqitApiToken,
     };
@@ -189,9 +179,7 @@ class MosqueManager extends ChangeNotifier
   }
 
   Future<Position> getCurrentLocation() async {
-    var enabled = await GeolocatorPlatform.instance
-        .isLocationServiceEnabled()
-        .timeout(Duration(seconds: 5));
+    var enabled = await GeolocatorPlatform.instance.isLocationServiceEnabled().timeout(Duration(seconds: 5));
 
     if (!enabled) {
       enabled = await GeolocatorPlatform.instance.openLocationSettings();
@@ -199,8 +187,7 @@ class MosqueManager extends ChangeNotifier
     if (!enabled) throw GpsError();
 
     final permission = await GeolocatorPlatform.instance.requestPermission();
-    if (permission == LocationPermission.deniedForever ||
-        permission == LocationPermission.denied) throw GpsError();
+    if (permission == LocationPermission.deniedForever || permission == LocationPermission.denied) throw GpsError();
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }

@@ -3,7 +3,7 @@ import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
+
 import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
@@ -70,7 +70,6 @@ class OfflineHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
-    final hive = context.watch<HiveManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
     if (!mosqueProvider.loaded)
@@ -95,7 +94,7 @@ class OfflineHomeScreen extends StatelessWidget {
         key: ValueKey(mosqueProvider.mosque?.uuid),
         child: activeHomeScreen(
           mosqueProvider,
-          hive.isWebView(),
+          userPrefs.webViewMode,
           userPrefs.announcementsOnly,
         ),
       ),

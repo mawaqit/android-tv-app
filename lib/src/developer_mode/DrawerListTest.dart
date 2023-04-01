@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
 import 'package:mawaqit/src/pages/developer/DeveloperScreen.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +23,6 @@ class DrawerListDeveloper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hive = context.watch<HiveManager>();
     return ListView(
       shrinkWrap: true,
       primary: false,
@@ -126,14 +124,6 @@ class DrawerListDeveloper extends StatelessWidget {
           onTap: () => AppRouter.popAndPush(
             JummuaLive(),
           ),
-        ),
-        SwitchListTile(
-          secondary: Icon(Icons.tv),
-          value: hive.isSecondaryScreen(),
-          onChanged: (bool value) {
-            hive.putIsSecondaryScreen(value);
-          },
-          title: Text(S.of(context).showSecondaryScreen),
         ),
 
         Divider(

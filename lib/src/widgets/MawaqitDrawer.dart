@@ -7,7 +7,6 @@ import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/models/menu.dart';
@@ -37,7 +36,6 @@ class MawaqitDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsManager>(context).settings;
     final themeProvider = Provider.of<ThemeNotifier>(context);
-    final hive = context.watch<HiveManager>();
     final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
@@ -168,10 +166,8 @@ class MawaqitDrawer extends StatelessWidget {
           if (userPrefs.developerModeEnabled) DrawerListDeveloper(),
           SwitchListTile(
             secondary: Icon(Icons.online_prediction),
-            value: hive.isWebView(),
-            onChanged: (bool value) {
-              hive.putIsWebView(value);
-            },
+            value: userPrefs.webViewMode,
+            onChanged: (bool value) => userPrefs.webViewMode = value,
             title: Text(S.of(context).webView),
           ),
           DrawerListTitle(
@@ -197,9 +193,9 @@ class MawaqitDrawer extends StatelessWidget {
           if (mosqueManager.typeIsMosque) ...[
             SwitchListTile(
               secondary: Icon(Icons.home),
-              title: Text(S.of(context).mainScreen),
-              value: mosqueManager.isMainScreen,
-              onChanged: (value) => mosqueManager.isMainScreen = value,
+              title: Text(S.of(context).secondaryScreen),
+              value: userPrefs.isSecondaryScreen,
+              onChanged: (value) => userPrefs.isSecondaryScreen = value,
             ),
             SwitchListTile(
               secondary: Icon(Icons.alarm),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../../helpers/HiveLocalDatabase.dart';
 import '../../../services/mosque_manager.dart';
 
 class JummuaLive extends StatefulWidget {
@@ -22,8 +22,8 @@ class _JummuaLiveState extends State<JummuaLive> {
     // if (mosqueProvider.mosque == null || mosqueProvider.times == null) return SizedBox();
     //
     // final mosque = mosqueProvider.mosque!;
-    final hive = context.watch<HiveManager>();
-    if (!hive.isSecondaryScreen() || mosqueProvider.typeIsMosque) {
+    final userPrefs = context.watch<UserPreferencesManager>();
+    if (!userPrefs.isSecondaryScreen || mosqueProvider.typeIsMosque) {
       return Scaffold(
         backgroundColor: Colors.black,
       );

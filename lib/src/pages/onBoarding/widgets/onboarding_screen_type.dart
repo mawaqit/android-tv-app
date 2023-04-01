@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../i18n/l10n.dart';
@@ -10,8 +11,8 @@ class OnBoardingScreenType extends StatelessWidget {
 
   final VoidCallback? onDone;
 
-  setMainScree(BuildContext context, bool mainScreen) {
-    context.read<MosqueManager>().isMainScreen = mainScreen;
+  setMainScree(BuildContext context, bool secondaryScreen) {
+    context.read<UserPreferencesManager>().isSecondaryScreen = secondaryScreen;
     onDone?.call();
   }
 
@@ -36,12 +37,12 @@ class OnBoardingScreenType extends StatelessWidget {
           ),
           SizedBox(height: 40),
           OutlinedButton(
-            onPressed: () => setMainScree(context, true),
+            onPressed: () => setMainScree(context, false),
             child: Text(S.of(context).mainScreen),
             autofocus: true,
           ),
           OutlinedButton(
-            onPressed: () => setMainScree(context, false),
+            onPressed: () => setMainScree(context, true),
             child: Text(S.of(context).secondaryScreen),
           ),
         ],

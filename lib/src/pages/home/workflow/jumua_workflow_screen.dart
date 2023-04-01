@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
-import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterSalahAzkarScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/JummuaLive.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/JumuaHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 /// show the back screen during the jumuaa
@@ -46,8 +46,7 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
       /// if we are before the jumuaa ends
       setState(() => state = JumuaaWorkflowScreens.jumuaaTime);
 
-      if (mosqueManager.jumuaaLiveUrl == null)
-        Future.delayed(jumuaaEndTime.difference(now), onJumuaaEnd);
+      if (mosqueManager.jumuaaLiveUrl == null) Future.delayed(jumuaaEndTime.difference(now), onJumuaaEnd);
     } else {
       /// show the azkar
       onSalahEnd();
@@ -76,23 +75,20 @@ class _JumuaaWorkflowScreenState extends State<JumuaaWorkflowScreen> {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
-    final hive = context.watch<HiveManager>();
+    final userPrefs = context.watch<UserPreferencesManager>();
     final config = mosqueManager.mosqueConfig!;
 
-    bool isMosqueScreen = !hive.isSecondaryScreen();
+    bool isMosqueScreen = !userPrefs.isSecondaryScreen;
 
     switch (state) {
       case JumuaaWorkflowScreens.normal:
         return NormalHomeSubScreen();
       case JumuaaWorkflowScreens.jumuaaTime:
-        if (mosqueManager.jumuaaLiveUrl != null && !isMosqueScreen)
-          return JummuaLive(onDone: onJumuaaEnd);
+        if (mosqueManager.jumuaaLiveUrl != null && !isMosqueScreen) return JummuaLive(onDone: onJumuaaEnd);
 
-        if (config.jumuaBlackScreenEnabled == true)
-          return Material(color: Colors.black);
+        if (config.jumuaBlackScreenEnabled == true) return Material(color: Colors.black);
 
-        if (config.jumuaDhikrReminderEnabled == true)
-          return JumuaHadithSubScreen();
+        if (config.jumuaDhikrReminderEnabled == true) return JumuaHadithSubScreen();
 
         return NormalHomeSubScreen();
       case JumuaaWorkflowScreens.jumuaaSalahTime:
