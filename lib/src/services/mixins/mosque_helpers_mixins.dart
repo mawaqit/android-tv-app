@@ -60,14 +60,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   bool isDisableHadithBetweenSalah() {
-    if (mosqueConfig?.randomHadithIntervalDisabling != null) {
-      if (mosqueConfig!.randomHadithIntervalDisabling!.isNotEmpty) {
-        final twoSalahIndex = mosqueConfig?.randomHadithIntervalDisabling!.split("-");
-        int firstSalahIndex = int.parse(twoSalahIndex!.first);
-        return salahIndex == firstSalahIndex;
-      }
-    }
-    return false;
+    final disableTime = mosqueConfig?.randomHadithIntervalDisabling ?? '';
+    final disabledHadithPeriod = int.tryParse(disableTime.split('-').first);
+
+    return disabledHadithPeriod == salahIndex;
   }
 
   bool adhanVoiceEnable([int? salahIndex]) {
@@ -198,7 +194,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() => !kDebugMode ? DateTime.now() : DateTime.now().add(Duration(minutes: 33));
+  DateTime mosqueDate() => !kDebugMode ? DateTime.now() : DateTime.now().add(Duration());
 
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
