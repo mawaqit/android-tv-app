@@ -132,7 +132,7 @@
   "mainScreenOrSecondaryScreen": "Main screen or secondary screen?",
   "mainScreenOrSecondaryScreenEXPLINATION": "Is this is your main mosque screen \n main screen will have a little different behavior. so we don't distract praying people",
   "mainScreen": "Main screen",
-  "secondaryScreen": "Secondary screen"
+  "secondaryScreen": "Secondary screen",
   "duaaElEftar": "Duaa El Eftar",
   "duaaElEftarText": "",
   "@duaaElEftarText": {
