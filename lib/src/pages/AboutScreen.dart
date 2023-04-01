@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
-import 'package:mawaqit/src/services/developer_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -18,11 +18,11 @@ class AboutScreen extends StatelessWidget {
         SingleActivator(LogicalKeyboardKey.arrowDown): () {
           tapCount++;
           if (tapCount >= 7) {
-            context.read<DeveloperManager>().enableDeveloperOptions();
+            context.read<UserPreferencesManager>().developerModeEnabled = true;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                    "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية"),
+                content:
+                    Text("You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية"),
               ),
             );
             tapCount = 0;

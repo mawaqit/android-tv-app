@@ -18,7 +18,6 @@ import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
-import 'package:mawaqit/src/services/developer_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -38,7 +37,6 @@ class MawaqitDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsManager>(context).settings;
     final themeProvider = Provider.of<ThemeNotifier>(context);
-    final developerManager = context.watch<DeveloperManager>();
     final hive = context.watch<HiveManager>();
     final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
@@ -167,7 +165,7 @@ class MawaqitDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: Divider(height: 1, color: Colors.grey[400]),
           ),
-          if (developerManager.developerModeEnabled) DrawerListDeveloper(),
+          if (userPrefs.developerModeEnabled) DrawerListDeveloper(),
           SwitchListTile(
             secondary: Icon(Icons.online_prediction),
             value: hive.isWebView(),
