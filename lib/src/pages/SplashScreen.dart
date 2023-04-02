@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -43,6 +44,7 @@ class _SplashScreen extends State<Splash> {
     await GlobalConfiguration().loadFromAsset("configuration");
     Wakelock.enable().catchError((e) {});
 
+    Hive.initFlutter();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
