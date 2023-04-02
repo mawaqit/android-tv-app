@@ -8,6 +8,7 @@ import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mode.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
@@ -80,6 +81,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'search',
       widget: OnBoardingScreenType(onDone: nextPage),
+      enableNextButton: false,
+      skip: () => !context.read<MosqueManager>().typeIsMosque,
+    ),
+
+    /// Allow user to select between regular mode or announcement mode
+    OnBoardingItem(
+      animation: 'search',
+      widget: OnBoardingAnnouncementScreens(onDone: nextPage),
       enableNextButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),

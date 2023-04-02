@@ -7,7 +7,6 @@ import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/models/menu.dart';
@@ -18,10 +17,10 @@ import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
-import 'package:mawaqit/src/services/developer_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -37,9 +36,8 @@ class MawaqitDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsManager>(context).settings;
     final themeProvider = Provider.of<ThemeNotifier>(context);
-    final developerManager = context.watch<DeveloperManager>();
-    final hive = context.watch<HiveManager>();
     final mosqueManager = context.watch<MosqueManager>();
+    final userPrefs = context.watch<UserPreferencesManager>();
 
     final theme = Theme.of(context);
 
@@ -165,13 +163,11 @@ class MawaqitDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: Divider(height: 1, color: Colors.grey[400]),
           ),
-          if (developerManager.developerModeEnabled) DrawerListDeveloper(),
+          if (userPrefs.developerModeEnabled) DrawerListDeveloper(),
           SwitchListTile(
             secondary: Icon(Icons.online_prediction),
-            value: hive.isWebView(),
-            onChanged: (bool value) {
-              hive.putIsWebView(value);
-            },
+            value: userPrefs.webViewMode,
+            onChanged: (bool value) => userPrefs.webViewMode = value,
             title: Text(S.of(context).webView),
           ),
           DrawerListTitle(
@@ -194,13 +190,23 @@ class MawaqitDrawer extends StatelessWidget {
                   themeProvider.setLightMode();
                 }
               }),
-          if (mosqueManager.typeIsMosque)
+          if (mosqueManager.typeIsMosque) ...[
             SwitchListTile(
               secondary: Icon(Icons.home),
-              title: Text(S.of(context).mainScreen),
-              value: mosqueManager.isMainScreen,
-              onChanged: (value) => mosqueManager.isMainScreen = value,
+              title: Text(S.of(context).secondaryScreen),
+              value: userPrefs.isSecondaryScreen,
+              onChanged: (value) => userPrefs.isSecondaryScreen = value,
             ),
+            SwitchListTile(
+              secondary: Icon(Icons.alarm),
+              title: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(S.of(context).announcementOnlyMode),
+              ),
+              value: userPrefs.announcementsOnly,
+              onChanged: (value) => userPrefs.announcementsOnly = value,
+            ),
+          ],
           Padding(
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: Divider(height: 1, color: Colors.grey[400]),

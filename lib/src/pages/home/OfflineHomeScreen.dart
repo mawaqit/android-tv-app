@@ -3,15 +3,16 @@ import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-import 'package:mawaqit/src/helpers/HiveLocalDatabase.dart';
+
 import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
-import 'package:mawaqit/src/pages/home/widgets/WorkFlowWidget.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
 import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../HomeScreen.dart';
@@ -45,18 +46,31 @@ class OfflineHomeScreen extends StatelessWidget {
       case HomeActiveWorkflow.normal:
         return NormalWorkflowScreen();
       case HomeActiveWorkflow.salah:
-        return SalahWorkflowScreen(
-            onDone: mosqueManager.backToNormalHomeScreen);
+        return SalahWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
       case HomeActiveWorkflow.jumuaa:
-        return JumuaaWorkflowScreen(
-            onDone: mosqueManager.backToNormalHomeScreen);
+        return JumuaaWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
     }
+  }
+
+  /// show online home if enabled
+  /// show announcement mode if enabled
+  /// show offline home if enabled
+  Widget activeHomeScreen(
+    MosqueManager mosqueManager,
+    bool onlineMode,
+    bool announcementMode,
+  ) {
+    if (onlineMode) return HomeScreen();
+
+    if (announcementMode) return AnnouncementScreen();
+
+    return activeWorkflow(mosqueManager);
   }
 
   @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
-    final hive = context.watch<HiveManager>();
+    final userPrefs = context.watch<UserPreferencesManager>();
 
     if (!mosqueProvider.loaded)
       return ErrorScreen(
@@ -78,7 +92,11 @@ class OfflineHomeScreen extends StatelessWidget {
       },
       child: MosqueBackgroundScreen(
         key: ValueKey(mosqueProvider.mosque?.uuid),
-        child: hive.isWebView() ? HomeScreen() : activeWorkflow(mosqueProvider),
+        child: activeHomeScreen(
+          mosqueProvider,
+          userPrefs.webViewMode,
+          userPrefs.announcementsOnly,
+        ),
       ),
     );
   }
