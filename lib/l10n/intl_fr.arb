@@ -127,5 +127,18 @@
   "changeLanguage": "Changer de langue",
   "forceScreen": "Forcer l'écran",
   "clear": "Réinitialiser",
-  "changeTheme": "Changer de thème"
+  "changeTheme": "Changer de thème",
+  "next": "Suivant",
+  "mainScreenOrSecondaryScreen": "Écran principal ou secondaire ?",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Est-ce que c'est votre principal écran de mosquée \n de l'écran principal aura un comportement un peu différent. Nous ne distraire pas les gens de prier",
+  "mainScreen": "Écran principal",
+  "secondaryScreen": "Écran secondaire",
+  "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "Mode d'annonce uniquement",
+  "normalMode": "Mode Normal",
+  "announcementOnlyModeEXPLINATION": "La mosquée affichera la version simplifiée de l'application, seules les annonces avec les heures de salah seront affichées",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  }
 }
