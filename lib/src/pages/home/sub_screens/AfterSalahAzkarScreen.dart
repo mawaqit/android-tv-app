@@ -8,7 +8,9 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
+import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
+import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -98,10 +100,21 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
     final translatedHadith = translatedItem(activeHadith);
     final arabicHadith = arabicItem(activeHadith);
 
-    return HadithWidget(
-      title: azkarTitle,
-      arabicText: arabicHadith,
-      translatedText: translatedHadith,
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        AboveSalahBar(),
+        Expanded(
+          child: HadithWidget(
+            title: azkarTitle,
+            arabicText: arabicHadith,
+            translatedText: translatedHadith,
+            mainAxisAlignment: MainAxisAlignment.start,
+          ),
+        ),
+        SalahTimesBar(miniStyle: true, microStyle: true),
+        SizedBox(height: 10),
+      ],
     );
   }
 }
