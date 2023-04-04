@@ -80,10 +80,6 @@ android {
     release {
       signingConfig signingConfigs.release
 
-      ndk{
-        abiFilters 'armeabi-v7a'
-      }
-
 
       flavorDimensions "app-type"
 
