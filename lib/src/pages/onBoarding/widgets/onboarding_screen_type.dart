@@ -41,10 +41,13 @@ class OnBoardingScreenType extends StatelessWidget {
             child: Text(S.of(context).mainScreen),
             autofocus: true,
           ),
+          Text(S.of(context).mainScreenExplanation),
+          SizedBox(height: 20),
           OutlinedButton(
             onPressed: () => setMainScree(context, true),
             child: Text(S.of(context).secondaryScreen),
           ),
+          Text(S.of(context).secondaryScreenExplanation),
         ],
       ),
     );

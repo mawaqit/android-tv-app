@@ -140,5 +140,9 @@
   "duaaElEftarText": "",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
-  }
+  },
+  "secondaryScreenExplanation": "Secondary mosque room. this screen made for the secondary screen in the women room or any other room except the main mosque room. this screen will has slightly different behavior than the main screen. this screen will show the jumuaa live stream during jumuaa if there are any.",
+  "mainScreenExplanation": "Main mosque room. this screen made for the main screen in the mosque. this screen will show the jumuaa live stream during jumuaa if there are any.",
+  "normalModeExplanation": "App will show the normal screen with the salah times and the announcements. all the invocations will be triggered according to the mosque configurations on the backend server.",
+  "announcementOnlyModeExplanation": "App will show only the announcements screen with the salah times. this is useful for the mosques that want to use this as a secondary screen to show the announcements and salah times only."
 }
