@@ -16,6 +16,7 @@ class AboveSalahBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S.of(context);
     final size = MediaQuery.of(context).size;
     final mosqueManager = context.watch<MosqueManager>();
     final is12Hours = mosqueManager.mosqueConfig?.timeDisplayFormat == "12";

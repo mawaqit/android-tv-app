@@ -9,6 +9,7 @@ import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
+import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/models/menu.dart';
 import 'package:mawaqit/src/models/page.dart';
 import 'package:mawaqit/src/models/settings.dart';
@@ -176,7 +177,7 @@ class MawaqitDrawer extends StatelessWidget {
             onTap: () => AppRouter.popAndPush(LanguageScreen()),
           ),
           DrawerListTitle(
-            icon: Icons.museum_outlined,
+            icon: MawaqitIcons.icon_mosque,
             text: S.of(context).changeMosque,
             onTap: () => AppRouter.popAndPush(MosqueSearchScreen()),
           ),
@@ -192,13 +193,13 @@ class MawaqitDrawer extends StatelessWidget {
               }),
           if (mosqueManager.typeIsMosque) ...[
             SwitchListTile(
-              secondary: Icon(Icons.home),
+              secondary: Icon(Icons.monitor),
               title: Text(S.of(context).secondaryScreen),
               value: userPrefs.isSecondaryScreen,
               onChanged: (value) => userPrefs.isSecondaryScreen = value,
             ),
             SwitchListTile(
-              secondary: Icon(Icons.alarm),
+              secondary: Icon(Icons.notifications),
               title: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(S.of(context).announcementOnlyMode),

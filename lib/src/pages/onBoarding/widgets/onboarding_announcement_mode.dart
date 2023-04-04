@@ -39,10 +39,13 @@ class OnBoardingAnnouncementScreens extends StatelessWidget {
             child: Text(S.of(context).normalMode),
             autofocus: true,
           ),
+          Text(S.of(context).normalModeExplanation),
+          SizedBox(height: 20),
           OutlinedButton(
             onPressed: () => setAnnouncementMode(context, true),
             child: Text(S.of(context).announcementOnlyMode),
           ),
+          Text(S.of(context).announcementOnlyModeExplanation),
         ],
       ),
     );
