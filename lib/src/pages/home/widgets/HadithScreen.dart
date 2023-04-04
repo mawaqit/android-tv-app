@@ -8,13 +8,14 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 
 /// this screen made to show of the hadith screen
 class HadithWidget extends StatelessWidget {
-  const HadithWidget({
+  HadithWidget({
     Key? key,
     this.title,
     this.arabicText,
     this.translatedTitle,
     this.translatedText,
     this.textDirection,
+    this.mainAxisAlignment = MainAxisAlignment.center,
   }) : super(key: key);
 
   /// The main title of the screen
@@ -33,10 +34,13 @@ class HadithWidget extends StatelessWidget {
   /// used for random hadith because hadith language is not the same as the app language
   final TextDirection? textDirection;
 
+  /// alignment of the item along the main axis
+  final MainAxisAlignment mainAxisAlignment;
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: mainAxisAlignment,
       children: [
         if (title != null && title != '')
           titleText(
