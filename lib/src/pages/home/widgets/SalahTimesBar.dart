@@ -32,13 +32,11 @@ class SalahTimesBar extends StatelessWidget {
 
     final todayTimes = mosqueProvider.salahBarTimes();
 
-    final todayIqama = mosqueProvider.useTomorrowTimes
-        ? mosqueProvider.tomorrowIqama
-        : mosqueProvider.todayIqama;
+    final todayIqama = mosqueProvider.useTomorrowTimes ? mosqueProvider.tomorrowIqama : mosqueProvider.todayIqama;
 
-    bool duhrHighlightDisable =
-        mosqueProvider.mosqueDate().weekday == DateTime.friday &&
-            mosqueProvider.typeIsMosque;
+    bool duhrHighlightDisable = mosqueProvider.mosqueDate().weekday == DateTime.friday && mosqueProvider.typeIsMosque;
+
+    print('duhrHighlightDisable: $activeItem $nextActiveIqama');
 
     final step = Duration(milliseconds: 100);
     final duration = Duration(milliseconds: 300);
@@ -54,9 +52,7 @@ class SalahTimesBar extends StatelessWidget {
                 title: miniStyle ? null : mosqueProvider.salahName(i),
                 time: todayTimes[i],
                 iqama: microStyle ? null : todayIqama[i],
-                active: i == 1
-                    ? nextActiveIqama == i && !duhrHighlightDisable
-                    : nextActiveIqama == i,
+                active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
                 withDivider: false,
                 showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
               )
