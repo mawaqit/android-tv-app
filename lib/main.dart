@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
 import 'package:mawaqit/i18n/AppLanguage.dart';
@@ -21,25 +22,20 @@ import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sizer/sizer.dart';
 
+const key = 'https://5cfba6c6f6374d4abcac5a22f8adff61@o1075739.ingest.sentry.io/4504947427901440';
+
 Future<void> main() async {
-  runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    // Sizer
+  WidgetsFlutterBinding.ensureInitialized();
 
-    await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    Isolate.current.addErrorListener(RawReceivePort((pair) async {
-      final List<dynamic> errorAndStacktrace = pair;
-      await FirebaseCrashlytics.instance.recordError(
-        errorAndStacktrace.first,
-        errorAndStacktrace.last,
-      );
-    }).sendPort);
-    return runApp(ProviderScope(child: MyApp()));
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
+  await Sentry.init(
+    (options) => options.dsn = key,
+    appRunner: () => runApp(ProviderScope(child: MyApp())),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -35,6 +35,9 @@ dependencies:
   firebase_analytics: ^10.1.6
   firebase_crashlytics: ^3.0.17
 
+  # monitoring
+  sentry_flutter: ^7.4.0
+
   # STORAGE
   shared_preferences: ^2.0.20
   hive_flutter: ^1.1.0
