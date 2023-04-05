@@ -37,8 +37,7 @@ class AboveSalahBar extends StatelessWidget {
             "${mosqueManager.salahName(mosqueManager.nextSalahIndex())} ${S.of(context).in1} ",
             if (nextSalahTime.inMinutes > 0)
               "${nextSalahTime.inHours.toString().padLeft(2, '0')}:${(nextSalahTime.inMinutes % 60).toString().padLeft(2, '0')}",
-            if (nextSalahTime.inMinutes == 0)
-              "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
+            if (nextSalahTime.inMinutes == 0) "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
           ].join();
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: (size.width - 5 * kSalahItemWidgetWidth) / 8, vertical: 5),
@@ -49,37 +48,25 @@ class AboveSalahBar extends StatelessWidget {
                   clipBehavior: Clip.hardEdge,
                   height: 9.vh,
                   alignment: Alignment.center,
-                  padding: isArabic
-                      ? EdgeInsets.symmetric(
-                    horizontal: 3.vh,
-                  )
-                      : EdgeInsets.symmetric(
-                    horizontal: 2.5.vw,
-                  ),
+                  padding: isArabic ? EdgeInsets.symmetric(horizontal: 3.vh) : EdgeInsets.symmetric(horizontal: 2.5.vw),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: mosqueManager.getColorTheme().withOpacity(.7),
                   ),
                   child: Text(
-                    countDownText,
+                    mosqueManager.isShurukTime ? mosqueManager.getShurukInString(context) : countDownText,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      shadows: kHomeTextShadow,
-                      fontSize: isArabic ? 5.3.vh : 6.vh,
-                      fontFamily: StringManager.getFontFamilyByString(countDownText),
-                    ),
+                          color: Colors.white,
+                          shadows: kHomeTextShadow,
+                          fontSize: isArabic ? 5.3.vh : 6.vh,
+                          fontFamily: StringManager.getFontFamilyByString(countDownText),
+                        ),
                   ),
                 ),
                 Container(
                   height: 9.vh,
                   alignment: Alignment.center,
-                  padding: isArabic
-                      ? EdgeInsets.symmetric(
-                    horizontal: 3.vh,
-                  )
-                      : EdgeInsets.symmetric(
-                    horizontal: 2.5.vw,
-                  ),
+                  padding: isArabic ? EdgeInsets.symmetric(horizontal: 3.vh) : EdgeInsets.symmetric(horizontal: 2.5.vw),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: mosqueManager.getColorTheme().withOpacity(.7),
@@ -96,20 +83,20 @@ class AboveSalahBar extends StatelessWidget {
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(width: isArabic?5:0,),
+                      SizedBox(width: isArabic ? 5 : 0),
                       if (is12Hours)
                         SizedBox(
                           width: 2.6.vw,
                           child: TimePeriodWidget(
                             dateTime: now,
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              shadows: kHomeTextShadow,
-                              letterSpacing: 1.vw,
-                              height: .9,
-                              fontSize: 1.2.vw,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w300,
-                            ),
+                                  shadows: kHomeTextShadow,
+                                  letterSpacing: 1.vw,
+                                  height: .9,
+                                  fontSize: 1.2.vw,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w300,
+                                ),
                           ),
                         ),
                     ],
