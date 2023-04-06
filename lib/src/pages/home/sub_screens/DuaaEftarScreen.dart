@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
+import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 
@@ -18,7 +21,9 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
   @override
   void initState() {
     audioManager = context.read<AudioManager>();
-    audioManager.loadAssetsAndPlay('assets/voices/duaa_iftar.mp3');
+    final mosqueManager = context.read<MosqueManager>();
+
+    if (!mosqueManager.typeIsMosque) audioManager.loadAssetsAndPlay('assets/voices/duaa_iftar.mp3');
 
     super.initState();
   }
@@ -33,10 +38,20 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
   Widget build(BuildContext context) {
     final arabic = AppLocalizationsAr();
 
-    return HadithWidget(
-      title: arabic.duaaElEftar,
-      arabicText: arabic.duaaElEftarText,
-      translatedText: S.of(context).duaaElEftarText,
+    return Column(
+      children: [
+        AboveSalahBar(),
+        Expanded(
+          child: HadithWidget(
+            title: arabic.duaaElEftar,
+            arabicText: arabic.duaaElEftarText,
+            translatedText: S.of(context).duaaElEftarText,
+            mainAxisAlignment: MainAxisAlignment.start,
+          ),
+        ),
+        SalahTimesBar(miniStyle: true, microStyle: true),
+        SizedBox(height: 10),
+      ],
     );
   }
 }

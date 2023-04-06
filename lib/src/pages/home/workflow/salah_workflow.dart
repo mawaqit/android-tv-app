@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterSalahAzkarScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/DuaaEftarScreen.dart';
@@ -9,11 +10,12 @@ import 'package:mawaqit/src/pages/home/sub_screens/DuaaBetweenAdhanAndIqama.dart
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
+import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../sub_screens/AdhanSubScreen.dart';
-import '../widgets/WorkFlowWidget.dart';
+import '../widgets/workflows/WorkFlowWidget.dart';
 
 /// handling the logic form 5min before adhan -> the last of after salah azkar
 class SalahWorkflowScreen extends StatefulWidget {
@@ -36,6 +38,29 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
     return mosqueManger.salahIndex;
   }
 
+  Widget beforeSalahTime(
+    MosqueManager mosqueManger,
+    int currentSalah,
+    MawaqitHijriCalendar hijri,
+  ) {
+    final currentSalahTime = mosqueManger.actualTimes()[currentSalah];
+    return RepeatingWorkFlowWidget(
+      child: NormalHomeSubScreen(),
+      items: [
+        /// duaa alsayem in ramadan
+        RepeatingWorkflowItem(
+          builder: (context, next) => DuaaEftarScreen(),
+          duration: 90.seconds,
+          dateTime: currentSalahTime.add(-2.minutes),
+          showInitial: () => mosqueManger.nextSalahAfter() < 2.minutes,
+
+          /// show only in ramadan and magrib salah
+          disabled: currentSalah != 3 || hijri.islamicMonth != 8,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mosqueManger = context.watch<MosqueManager>();
@@ -56,29 +81,14 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
       Duration(minutes: int.tryParse(salahTime) ?? 0),
     );
 
-    /// duaaAlsaym is only for magrib salah in Ramadan month
-    final duaaAlsayemDuration = currentSalah == 3 && hijri.islamicMonth == 8 ? 2.minutes : 0.minutes;
-
     return ContinuesWorkFlowWidget(
       onDone: widget.onDone,
       workFlowItems: [
+        /// before the adhan time
         WorkFlowItem(
-          builder: (context, next) => NormalHomeSubScreen(),
-
-          /// take [duaaAlsayemDuration] to show off duaa alsayem before the adhan
-          duration: mosqueManger.nextSalahAfter() - duaaAlsayemDuration,
-          skip: mosqueManger.nextSalahAfter() > Duration(minutes: 5) ||
-              mosqueManger.nextSalahAfter() < duaaAlsayemDuration,
-        ),
-        WorkFlowItem(
-          builder: (context, next) => DuaaEftarScreen(),
-
-          /// the duration is the minimum between the remaining time to the next salah and the duaa alsayem duration
-          /// if the user open the screen during this time he will not waite until it end
-          /// it will be forced to end in the adhan time
-          duration: min(duaaAlsayemDuration.inMilliseconds, mosqueManger.nextSalahAfter().inMilliseconds).milliseconds,
-          skip: mosqueManger.nextSalahAfter() > duaaAlsayemDuration,
-          disabled: currentSalah != 3 || mosqueManger.mosqueHijriDate().islamicMonth != 8,
+          duration: mosqueManger.nextSalahAfter(),
+          skip: mosqueManger.nextSalahAfter() > Duration(minutes: 5),
+          builder: (context, next) => beforeSalahTime(mosqueManger, currentSalah, hijri),
         ),
         WorkFlowItem(
           builder: (context, next) => AdhanSubScreen(onDone: next),
