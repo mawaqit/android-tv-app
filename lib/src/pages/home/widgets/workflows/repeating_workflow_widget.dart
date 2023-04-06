@@ -38,7 +38,7 @@ class RepeatingWorkflowItem {
   RepeatingWorkflowItem({
     required this.builder,
     this.disabled = false,
-    this.forceStart = true,
+    this.forceStart = false,
     this.dateTime,
     this.repeatingDuration,
     this.minimumDuration,
