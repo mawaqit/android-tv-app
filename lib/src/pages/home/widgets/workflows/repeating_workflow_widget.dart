@@ -7,6 +7,11 @@ class RepeatingWorkflowItem {
   /// if not set will use the initState time
   final DateTime? dateTime;
 
+  /// this item ending time
+  /// if set the item will be in that time
+  /// this can be used instead of [duration] in case need to in specific time
+  final DateTime? endTime;
+
   /// if set the item will be repeated every [repeatingDuration]
   /// starting count for duration after item done
   final Duration? repeatingDuration;
@@ -39,6 +44,7 @@ class RepeatingWorkflowItem {
     required this.builder,
     this.disabled = false,
     this.forceStart = false,
+    this.endTime,
     this.dateTime,
     this.repeatingDuration,
     this.minimumDuration,
@@ -106,8 +112,14 @@ class _RepeatingWorkFlowWidgetState extends State<RepeatingWorkFlowWidget> {
     /// set the minimum duration if set
     minimumDurationFuture = item.minimumDuration != null ? Future.delayed(item.minimumDuration!) : null;
 
-    /// if the item has duration
-    if (item.duration != null) Future.delayed(item.duration!, () => onItemDone(itemIndex));
+    if (nextEndTimeDuration(item) != null) {
+      /// if the item has end time
+
+      Future.delayed(nextEndTimeDuration(item)!, () => onItemDone(itemIndex));
+    } else if (item.duration != null) {
+      /// if the item has duration
+      Future.delayed(item.duration!, () => onItemDone(itemIndex));
+    }
   }
 
   /// called when the item is done from the item builder or after the duration
@@ -168,6 +180,22 @@ class _RepeatingWorkFlowWidgetState extends State<RepeatingWorkFlowWidget> {
     while (true) {
       final nextTime = time.add(item.repeatingDuration! * index);
       if (nextTime.isAfter(now)) return nextTime;
+      index++;
+    }
+  }
+
+  /// return the next end time for this item
+  Duration? nextEndTimeDuration(RepeatingWorkflowItem item) {
+    final now = mosqueManager.mosqueDate();
+    final time = item.endTime;
+
+    if (time == null) return null;
+    if (item.repeatingDuration == null) return time.isBefore(now) ? null : time.difference(now);
+
+    int index = 0;
+    while (true) {
+      final nextTime = time.add(item.repeatingDuration! * index);
+      if (nextTime.isAfter(now)) return nextTime.difference(now);
       index++;
     }
   }

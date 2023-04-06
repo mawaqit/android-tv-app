@@ -64,6 +64,7 @@ class AudioManager extends ChangeNotifier {
       assets,
       onComplete: () {
         stop();
+
         onDone?.call();
       },
       onError: (message) => onDone?.call(),

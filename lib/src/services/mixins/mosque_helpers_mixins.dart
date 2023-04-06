@@ -95,6 +95,13 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return mosque?.type == "MOSQUE";
   }
 
+  /// return true if today is the eid first day
+  bool get isEidFirstDay {
+    final hijri = mosqueHijriDate();
+
+    return (hijri.islamicMonth == 9 && hijri.islamicDate == 1) || (hijri.islamicMonth == 11 && hijri.islamicDate == 11);
+  }
+
   bool get showEid {
     if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) return false;
 
@@ -194,9 +201,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() => !kDebugMode
-      ? DateTime.now()
-      : DateTime.now().add(Duration());
+  DateTime mosqueDate() => !kDebugMode ? DateTime.now() : DateTime.now().add(Duration());
 
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
