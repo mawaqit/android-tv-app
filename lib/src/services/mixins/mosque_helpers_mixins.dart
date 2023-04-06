@@ -99,7 +99,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   bool get isEidFirstDay {
     final hijri = mosqueHijriDate();
 
-    return (hijri.islamicMonth == 9 && hijri.islamicDate == 1) || (hijri.islamicMonth == 11 && hijri.islamicDate == 11);
+    return (hijri.islamicMonth == 9 && hijri.islamicDate == 1) || (hijri.islamicMonth == 11 && hijri.islamicDate == 10);
   }
 
   bool get showEid {
