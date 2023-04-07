@@ -144,5 +144,8 @@
   "secondaryScreenExplanation": "Secondary mosque room. this screen made for the secondary screen in the women room or any other room except the main mosque room. this screen will has slightly different behavior than the main screen. this screen will show the jumuaa live stream during jumuaa if there are any.",
   "mainScreenExplanation": "Main mosque room. this screen made for the main screen in the mosque. this screen will show the jumuaa live stream during jumuaa if there are any.",
   "normalModeExplanation": "App will show the normal screen with the salah times and the announcements. all the invocations will be triggered according to the mosque configurations on the backend server.",
-  "announcementOnlyModeExplanation": "App will show only the announcements screen with the salah times. this is useful for the mosques that want to use this as a secondary screen to show the announcements and salah times only."
+  "announcementOnlyModeExplanation": "App will show only the announcements screen with the salah times. this is useful for the mosques that want to use this as a secondary screen to show the announcements and salah times only.",
+  "settings": "Settings",
+  "applicationModes": "Application Modes",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis" : "If you are facing issues with the app, try to enable this option"
 }

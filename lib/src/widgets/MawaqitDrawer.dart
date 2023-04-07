@@ -27,6 +27,7 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../developer_mode/DrawerListTest.dart';
+import '../pages/SettingScreen.dart';
 
 class MawaqitDrawer extends StatelessWidget {
   const MawaqitDrawer({Key? key, required this.goHome}) : super(key: key);
@@ -160,37 +161,13 @@ class MawaqitDrawer extends StatelessWidget {
                 }
               }),
           _renderMenuDrawer(settings, context),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            child: Divider(height: 1, color: Colors.grey[400]),
+          DrawerListTitle(
+            icon: Icons.settings,
+            text: S.of(context).settings,
+            onTap: () => AppRouter.popAndPush(SettingScreen()),
           ),
           if (userPrefs.developerModeEnabled) DrawerListDeveloper(),
-          SwitchListTile(
-            secondary: Icon(Icons.online_prediction),
-            value: userPrefs.webViewMode,
-            onChanged: (bool value) => userPrefs.webViewMode = value,
-            title: Text(S.of(context).webView),
-          ),
-          DrawerListTitle(
-            icon: Icons.translate,
-            text: S.of(context).languages,
-            onTap: () => AppRouter.popAndPush(LanguageScreen()),
-          ),
-          DrawerListTitle(
-            icon: MawaqitIcons.icon_mosque,
-            text: S.of(context).changeMosque,
-            onTap: () => AppRouter.popAndPush(MosqueSearchScreen()),
-          ),
-          DrawerListTitle(
-              icon: Icons.brightness_medium,
-              text: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
-              onTap: () {
-                if (theme.brightness == Brightness.light) {
-                  themeProvider.setDarkMode();
-                } else {
-                  themeProvider.setLightMode();
-                }
-              }),
+
           if (mosqueManager.typeIsMosque) ...[
             SwitchListTile(
               secondary: Icon(Icons.monitor),
