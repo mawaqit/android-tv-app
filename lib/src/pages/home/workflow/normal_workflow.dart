@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/fajr_wake_up_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/takberat_aleid_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
+import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -24,51 +28,7 @@ class NormalWorkflowScreen extends StatefulWidget {
 }
 
 class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
-  NormalWorkflowScreens state = NormalWorkflowScreens.normal;
-
   Future? nextSalahFuture;
-  Future? beforeFajrFuture;
-  Timer? randomHadithTimer;
-  Timer? announcementsTimer;
-
-  void backToHome() {
-    if (mounted) {
-      setState(() {
-        state = NormalWorkflowScreens.normal;
-      });
-    }
-  }
-
-  beforeFajrWakeupHandler() {
-    beforeFajrFuture?.ignore();
-    final mosqueManager = context.read<MosqueManager>();
-
-    if (mosqueManager.mosqueConfig?.wakeForFajrTime != null) {
-      var beforeFajrTime = mosqueManager.actualTimes()[0].subtract(Duration(
-            minutes: mosqueManager.mosqueConfig!.wakeForFajrTime!,
-          ));
-
-      if (beforeFajrTime.isBefore(mosqueManager.mosqueDate())) beforeFajrTime = beforeFajrTime.add(Duration(days: 1));
-
-      // print(beforeFajrTime.difference(mosqueManager.mosqueDate()));
-
-      // print('register before fajr adhan in ${beforeFajrTime.difference(mosqueManager.mosqueDate())}');
-      beforeFajrFuture = Future.delayed(beforeFajrTime.difference(mosqueManager.mosqueDate()));
-
-      beforeFajrFuture?.then((value) => showBeforeFajrAdhan());
-    }
-  }
-
-  /// show the wakeup adhan before fajr
-  showBeforeFajrAdhan() {
-    if (!mounted) return;
-
-    AppRouter.push(MosqueBackgroundScreen(
-      child: FajrWakeUpSubScreen(
-        onDone: () => Navigator.pop(context),
-      ),
-    ));
-  }
 
   /// this function will trigger the next salah workflow
   nextSalahHandler() {
@@ -80,78 +40,72 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
     nextSalahFuture?.then((value) => mosqueManager.startSalahWorkflow());
   }
 
-  /// show hadith each 4min
-  void randomHadithHandler() {
-    final mosqueManager = context.read<MosqueManager>();
-    randomHadithTimer?.cancel();
-
-    randomHadithTimer = Timer.periodic(_HadithRepeatDuration, (i) {
-      /// show hadith only if its enabled and the mosque is online
-      /// and the user is in the normal home screen
-      /// and the mosque is not in disable hadith between salah mode
-      final conditions = [
-        mounted,
-        state == NormalWorkflowScreens.normal,
-        mosqueManager.isOnline,
-        !mosqueManager.isDisableHadithBetweenSalah(),
-        mosqueManager.mosqueConfig!.randomHadithEnabled,
-      ];
-
-      if (conditions.every((element) => element)) {
-        setState(() => state = NormalWorkflowScreens.randomHadith);
-      }
-
-      /// back to normal home after 1 min
-      Future.delayed(_HadithDuration, backToHome);
-    });
-  }
-
-  /// show new announcement each 8 min
-  void announcementHandler() {
-    announcementsTimer?.cancel();
-
-    announcementsTimer = Timer.periodic(_AnnouncementRepeatDuration, (i) {
-      if (mounted && state == NormalWorkflowScreens.normal) {
-        setState(() => state = NormalWorkflowScreens.announcement);
-      }
-    });
-  }
-
   @override
   void initState() {
-    final mosqueManager = context.read<MosqueManager>();
-    final mosqueConfig = mosqueManager.mosqueConfig;
-    // if (mosqueConfig!.randomHadithEnabled) {
-    //   if (!mosqueManager.isDisableHadithBetweenSalah() || mosqueConfig.randomHadithIntervalDisabling!.isEmpty) {
-    //   }
-    // }
-    randomHadithHandler();
-    announcementHandler();
     nextSalahHandler();
-    beforeFajrWakeupHandler();
 
     super.initState();
   }
 
   @override
   void dispose() {
-    randomHadithTimer?.cancel();
-    announcementsTimer?.cancel();
     nextSalahFuture?.ignore();
-    beforeFajrFuture?.ignore();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    switch (state) {
-      case NormalWorkflowScreens.normal:
-        return NormalHomeSubScreen();
-      case NormalWorkflowScreens.announcement:
-        return AnnouncementScreen(onDone: backToHome);
-      case NormalWorkflowScreens.randomHadith:
-        return RandomHadithScreen();
-    }
+    final mosqueManager = context.watch<MosqueManager>();
+
+    return RepeatingWorkFlowWidget(
+      child: NormalHomeSubScreen(),
+      items: [
+        /// announcement screen
+        RepeatingWorkflowItem(
+          builder: (context, next) => AnnouncementScreen(onDone: next),
+          repeatingDuration: _AnnouncementRepeatDuration,
+        ),
+
+        /// random hadith screen
+        RepeatingWorkflowItem(
+          builder: (context, next) => RandomHadithScreen(),
+          repeatingDuration: _HadithRepeatDuration,
+          disabled: !mosqueManager.isOnline ||
+              mosqueManager.isDisableHadithBetweenSalah() ||
+              !mosqueManager.mosqueConfig!.randomHadithEnabled,
+          duration: _HadithDuration,
+        ),
+
+        /// before fajr wakeup adhan
+        RepeatingWorkflowItem(
+          builder: (context, next) => FajrWakeUpSubScreen(onDone: next),
+          dateTime: mosqueManager.actualTimes()[0].subtract(
+                Duration(minutes: mosqueManager.mosqueConfig!.wakeForFajrTime ?? 0),
+              ),
+          repeatingDuration: Duration(days: 1),
+          disabled: mosqueManager.mosqueConfig!.wakeForFajrTime == null,
+
+          /// this item will discard any active item and show on the screen
+          forceStart: true,
+        ),
+
+        /// Takberat al eid screen
+        RepeatingWorkflowItem(
+          builder: (context, next) => TakberatAleidScreen(),
+          dateTime: mosqueManager.actualTimes()[0].add(1.hours),
+          endTime: mosqueManager.actualTimes()[0].add(3.hours),
+          disabled: !mosqueManager.isEidFirstDay,
+          forceStart: true,
+          showInitial: () {
+            final now = mosqueManager.mosqueDate();
+
+            final differece = now.difference(mosqueManager.actualTimes()[0]);
+
+            return differece > 1.hours && differece < 3.hours;
+          },
+        ),
+      ],
+    );
   }
 }
