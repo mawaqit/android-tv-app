@@ -37,7 +37,6 @@ class MawaqitDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsManager>(context).settings;
-    final themeProvider = Provider.of<ThemeNotifier>(context);
     final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
@@ -167,24 +166,6 @@ class MawaqitDrawer extends StatelessWidget {
             onTap: () => AppRouter.popAndPush(SettingScreen()),
           ),
           if (userPrefs.developerModeEnabled) DrawerListDeveloper(),
-
-          if (mosqueManager.typeIsMosque) ...[
-            SwitchListTile(
-              secondary: Icon(Icons.monitor),
-              title: Text(S.of(context).secondaryScreen),
-              value: userPrefs.isSecondaryScreen,
-              onChanged: (value) => userPrefs.isSecondaryScreen = value,
-            ),
-            SwitchListTile(
-              secondary: Icon(Icons.notifications),
-              title: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(S.of(context).announcementOnlyMode),
-              ),
-              value: userPrefs.announcementsOnly,
-              onChanged: (value) => userPrefs.announcementsOnly = value,
-            ),
-          ],
           Padding(
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: Divider(height: 1, color: Colors.grey[400]),
