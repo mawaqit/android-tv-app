@@ -1,6 +1,5 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
@@ -10,6 +9,7 @@ import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart'
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mode.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/onboarding_service.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +45,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   int currentScreen = 0;
 
   onDone() {
-    sharedPref.save('boarding', 'true');
+    context.read<OnBoardingManager>().onBoardingDone();
+
     AppRouter.pushReplacement(OfflineHomeScreen());
   }
 
@@ -65,7 +66,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late final onBoardingItems = [
     OnBoardingItem(
       animation: 'language',
-      widget: OnBoardingLanguageSelector(onSelect: nextPage),
+      widget: OnBoardingLanguageSelector(
+        onSelect: nextPage,
+        launchTutorial: true,
+      ),
     ),
     OnBoardingItem(
       animation: 'welcome',

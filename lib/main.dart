@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
 import 'package:mawaqit/i18n/AppLanguage.dart';
@@ -18,6 +15,7 @@ import 'package:mawaqit/src/helpers/ConnectivityService.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/onboarding_service.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -49,6 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SettingsManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
+        ChangeNotifierProvider(create: (context) => OnBoardingManager()),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {

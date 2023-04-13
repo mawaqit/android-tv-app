@@ -21,6 +21,7 @@ import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/onboarding_service.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
@@ -74,21 +75,18 @@ class _SplashScreen extends State<Splash> {
     return settingsManage.settings;
   }
 
-  Future<bool> loadBoarding() async {
-    var res = await sharedPref.read("boarding");
-    return res == null;
-  }
-
   /// navigates to first screen
   void _navigateToHome() async {
     try {
+      final onBoardingManager = context.read<OnBoardingManager>();
+
       await initApplicationUI();
       var settings = await _initSettings();
-      var goBoarding = await loadBoarding();
+      await onBoardingManager.init();
       var mosqueManager = context.read<MosqueManager>();
       bool hasNoMosque = mosqueManager.mosqueUUID == null;
 
-      if (hasNoMosque || goBoarding && settings.boarding == "1") {
+      if (hasNoMosque || onBoardingManager.firstOnBoarding && settings.boarding == "1") {
         AppRouter.pushReplacement(OnBoardingScreen());
       } else {
         AppRouter.pushReplacement(OfflineHomeScreen());
