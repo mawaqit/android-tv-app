@@ -57,11 +57,11 @@
   "turnOfPhones": "Veuillez mettre vos téléphones en mode silencieux",
   "iqamaIn": "Iqama dans",
   "alAthkar": "Al Adhkar",
-  "azkarList0": "",
+  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah Allahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram Allahumma A`inni `ala dhikrika wa chukrika wa husni `ibadatik",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Subhan Allah wal hamdu lillah wallahu akbar (33 fois) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +81,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima `ate, wa la yanefa`u dhal djaddi mineka eldjad",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -129,16 +129,22 @@
   "clear": "Réinitialiser",
   "changeTheme": "Changer de thème",
   "next": "Suivant",
-  "mainScreenOrSecondaryScreen": "Écran principal ou secondaire ?",
-  "mainScreenOrSecondaryScreenEXPLINATION": "Est-ce que c'est votre principal écran de mosquée \n de l'écran principal aura un comportement un peu différent. Nous ne distraire pas les gens de prier",
+  "mainScreenOrSecondaryScreen": "Emplacement de l'écran",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Souhaitez-vous installer cet écran dans la salle de prière principale (salle de prière des hommes) ?",
   "mainScreen": "Écran principal",
   "secondaryScreen": "Écran secondaire",
   "duaaElEftar": "Duaa El Eftar",
-  "announcementOnlyMode": "Mode d'annonce uniquement",
+  "announcementOnlyMode": "Mode annonces",
   "normalMode": "Mode Normal",
-  "announcementOnlyModeEXPLINATION": "La mosquée affichera la version simplifiée de l'application, seules les annonces avec les heures de salah seront affichées",
+  "announcementOnlyModeEXPLINATION": "Choisissez si votre écran affichera des annonces en permanence, ce qui peut être utile si vous installez l'écran à l'entrée par exemple.",
   "duaaElEftarText": "",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
-  }
+  },
+  "secondaryScreenExplanation": "Pour une salle de prière secondaire (salle des femmes ou un autre étage par exemple), cet écran affichera la joumoua en direct.",
+  "mainScreenExplanation": "Pour la salle principale de la mosquée, cet écran n'affichera pas la diffusion en direct de la joumouaa",
+  "normalModeExplanation": "Affiche l'écran normal avec les heures de prière et les annonces.",
+  "announcementOnlyModeExplanation": "Les annonces seront affichées en permanence",
+  "eidMubarak": "Aïd Moubarak",
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
 }
