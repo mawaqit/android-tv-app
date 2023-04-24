@@ -22,6 +22,7 @@ class SalahItemWidget extends StatelessWidget {
     this.removeBackground = false,
     this.withDivider = true,
     this.showIqama = true,
+    this.isIqamaMoreImportant = false,
   }) : super(key: key);
 
   final String? title;
@@ -34,6 +35,9 @@ class SalahItemWidget extends StatelessWidget {
   final bool removeBackground;
   final bool showIqama;
 
+  /// make iqama larger than the time
+  final bool isIqamaMoreImportant;
+
   @override
   Widget build(BuildContext context) {
     double bigFont = 4.5.vw;
@@ -41,13 +45,12 @@ class SalahItemWidget extends StatelessWidget {
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
-    bool? isIqamaMoreImportant = mosqueConfig!.iqamaMoreImportant! && showIqama;
     final timeDate = time.toTimeOfDay()?.toDate(mosqueProvider.mosqueDate());
     final iqamaDate = iqama?.toTimeOfDay()?.toDate(mosqueProvider.mosqueDate());
     // print(isIqamaEnabled);
     final isArabic = context.read<AppLanguage>().isArabic();
 
-    final is12period = mosqueConfig.timeDisplayFormat == "12";
+    final is12period = mosqueConfig?.timeDisplayFormat == "12";
     final DateFormat dateTimeConverter = is12period ? DateFormat("hh:mm", "en-En") : DateFormat("HH:mm", "en");
 
     return Container(

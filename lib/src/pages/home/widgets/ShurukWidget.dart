@@ -30,6 +30,7 @@ class ShurukWidget extends StatelessWidget {
         title: S.of(context).imsak,
         time: mosqueProvider.imsak,
         removeBackground: true,
+        isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
       );
     }
 
@@ -37,6 +38,7 @@ class ShurukWidget extends StatelessWidget {
       title: S.of(context).shuruk,
       time: mosqueProvider.times!.shuruq ?? "",
       removeBackground: true,
+      isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
     );
   }
 }
