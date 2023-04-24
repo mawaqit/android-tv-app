@@ -35,6 +35,8 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   int index = -1;
   Announcement? activeAnnouncement;
 
+  YoutubePlayerController? _controller;
+
   void nextAnnouncement() {
     if (!mounted) return;
 
@@ -54,6 +56,16 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
         Duration(seconds: activeAnnouncement!.duration ?? 30),
         nextAnnouncement,
       );
+    } else {
+      _controller = YoutubePlayerController(
+        initialVideoId: YoutubePlayer.convertUrlToId(activeAnnouncement!.video!)!,
+        flags: YoutubePlayerFlags(autoPlay: true, mute: true),
+      );
+
+      /// if announcement didn't started playing after 20 seconds skip it
+      Future.delayed(20.seconds, () {
+        if (_controller?.value.isReady == false) nextAnnouncement();
+      });
     }
   }
 
@@ -163,27 +175,16 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   }
 
   Widget videoAnnouncement(String video) {
-    late YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(video)!,
-      flags: YoutubePlayerFlags(autoPlay: true, mute: true),
-    );
-    return FutureBuilder(
-      future: Future.delayed(20.seconds),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          /// if the video is not loaded in 20 seconds, go to the next announcement
-          if (_controller.value.isReady == false) nextAnnouncement();
-        }
-        return Container(
-          width: double.infinity,
-          height: double.infinity,
-          child: YoutubePlayer(
-            onEnded: (metaData) => nextAnnouncement(),
-            controller: _controller,
-            showVideoProgressIndicator: true,
-          ),
-        );
-      },
+    if (_controller == null) return SizedBox();
+
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      child: YoutubePlayer(
+        onEnded: (metaData) => nextAnnouncement(),
+        controller: _controller!,
+        showVideoProgressIndicator: true,
+      ),
     );
   }
 
