@@ -9,7 +9,9 @@ class RepeatingWorkflowItem {
 
   /// this item ending time
   /// if set the item will be in that time
-  /// this can be used instead of [duration] in case need to in specific time
+  /// this can be used instead of [duration] in case need to in specific time the item will be forced to end in that time
+  /// - in case of [duration] if item start after the [dateTime] it will end in [startTime] + [duration]
+  /// - in case of [endTime] if item start after the [dateTime] it will end in [endTime]
   final DateTime? endTime;
 
   /// if set the item will be repeated every [repeatingDuration]
@@ -55,7 +57,6 @@ class RepeatingWorkflowItem {
 
 /// handle workflows that its item isn't shown one after another
 /// TODO: This will be used in the future to handle the active workflow
-/// TODO: this will be used to handle the normal workflow transitions
 class RepeatingWorkFlowWidget extends StatefulWidget {
   const RepeatingWorkFlowWidget({Key? key, this.child, this.items = const []}) : super(key: key);
 
@@ -100,6 +101,10 @@ class _RepeatingWorkFlowWidgetState extends State<RepeatingWorkFlowWidget> {
 
   /// active item with index
   startItem(int itemIndex) {
+    /// if widget is removed from the tree
+    /// no need for this
+    if (!mounted) return;
+
     final item = widget.items[itemIndex];
 
     if (item.disabled) return;
@@ -125,7 +130,10 @@ class _RepeatingWorkFlowWidgetState extends State<RepeatingWorkFlowWidget> {
   /// called when the item is done from the item builder or after the duration
   /// if the [itemIndex] isn't equal to the [activeItem] will do nothing
   onItemDone(int itemIndex) async {
-    print('onItemDone: $itemIndex');
+    /// if widget is removed from the tree
+    /// no need for this
+    if (!mounted) return;
+
     if (itemIndex != activeItem) return;
 
     if (minimumDurationFuture != null) await minimumDurationFuture;
