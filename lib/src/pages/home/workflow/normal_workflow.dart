@@ -63,7 +63,10 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
       items: [
         /// announcement screen
         RepeatingWorkflowItem(
-          builder: (context, next) => AnnouncementScreen(onDone: next),
+          builder: (context, next) => AnnouncementScreen(
+            onDone: next,
+            enableVideos: !mosqueManager.typeIsMosque,
+          ),
           repeatingDuration: _AnnouncementRepeatDuration,
         ),
 

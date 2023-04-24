@@ -16,9 +16,16 @@ import '../widgets/SalahTimesBar.dart';
 
 /// show all announcements in one after another
 class AnnouncementScreen extends StatefulWidget {
-  AnnouncementScreen({Key? key, this.onDone}) : super(key: key);
+  AnnouncementScreen({
+    Key? key,
+    this.onDone,
+    this.enableVideos = true,
+  }) : super(key: key);
 
   final VoidCallback? onDone;
+
+  /// used to disable videos on mosques
+  final bool enableVideos;
 
   @override
   State<AnnouncementScreen> createState() => _AnnouncementScreenState();
@@ -31,7 +38,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   void nextAnnouncement() {
     if (!mounted) return;
 
-    final allAnnouncements = context.read<MosqueManager>().activeAnnouncements;
+    final allAnnouncements = context.read<MosqueManager>().activeAnnouncements(widget.enableVideos);
     index++;
 
     if (index >= allAnnouncements.length) {
@@ -58,7 +65,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final announcements = context.read<MosqueManager>().activeAnnouncements;
+    final announcements = context.read<MosqueManager>().activeAnnouncements(widget.enableVideos);
 
     if (announcements.isEmpty) return NormalHomeSubScreen();
 
