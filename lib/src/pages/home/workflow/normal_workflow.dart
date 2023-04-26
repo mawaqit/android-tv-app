@@ -13,6 +13,7 @@ import 'package:mawaqit/src/pages/home/sub_screens/takberat_aleid_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 const _HadithDuration = Duration(seconds: 90);
@@ -57,6 +58,7 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
+    final userPrefs = context.watch<UserPreferencesManager>();
 
     return RepeatingWorkFlowWidget(
       child: NormalHomeSubScreen(),
@@ -65,7 +67,7 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
         RepeatingWorkflowItem(
           builder: (context, next) => AnnouncementScreen(
             onDone: next,
-            enableVideos: !mosqueManager.typeIsMosque,
+            enableVideos: !mosqueManager.typeIsMosque || userPrefs.isSecondaryScreen,
           ),
           repeatingDuration: _AnnouncementRepeatDuration,
         ),
