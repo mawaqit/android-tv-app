@@ -40,7 +40,8 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   void nextAnnouncement() {
     if (!mounted) return;
 
-    final allAnnouncements = context.read<MosqueManager>().activeAnnouncements(widget.enableVideos);
+    final mosqueManager = context.read<MosqueManager>();
+    final allAnnouncements = mosqueManager.activeAnnouncements(widget.enableVideos);
     index++;
 
     if (index >= allAnnouncements.length) {
@@ -59,7 +60,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     } else {
       _controller = YoutubePlayerController(
         initialVideoId: YoutubePlayer.convertUrlToId(activeAnnouncement!.video!)!,
-        flags: YoutubePlayerFlags(autoPlay: true, mute: true),
+        flags: YoutubePlayerFlags(autoPlay: true, mute: mosqueManager.typeIsMosque),
       );
 
       /// if announcement didn't started playing after 20 seconds skip it
