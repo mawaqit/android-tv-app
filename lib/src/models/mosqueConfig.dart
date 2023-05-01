@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:mawaqit/main.dart';
 
 class MosqueConfig {
   final List<String> duaAfterPrayerShowTimes;

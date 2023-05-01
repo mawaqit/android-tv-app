@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mawaqit/main.dart';
+import 'package:mawaqit/src/pages/home/widgets/FadeInOut.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../i18n/l10n.dart';
@@ -25,6 +28,22 @@ class ShurukWidget extends StatelessWidget {
       );
     }
 
+    if (mosqueProvider.mosque!.countryCode == 'TR') {
+      return FadeInOutWidget(
+        duration: 15.seconds,
+        first: SalahItemWidget(
+          title: S.of(context).imsak,
+          time: mosqueProvider.imsak,
+          removeBackground: true,
+        ),
+        second: SalahItemWidget(
+          title: S.of(context).shuruk,
+          time: mosqueProvider.getShurukTimeString() ?? "",
+          removeBackground: true,
+        ),
+      );
+    }
+
     if (!mosqueProvider.isShurukTime && mosqueProvider.isImsakEnabled) {
       return SalahItemWidget(
         title: S.of(context).imsak,
@@ -35,7 +54,7 @@ class ShurukWidget extends StatelessWidget {
 
     return SalahItemWidget(
       title: S.of(context).shuruk,
-      time: mosqueProvider.times!.shuruq ?? "",
+      time: mosqueProvider.getShurukTimeString() ?? "",
       removeBackground: true,
     );
   }

@@ -91,6 +91,16 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return StringManager.getCountDownText(context, shurukTime, S.of(context).shuruk);
   }
 
+  String? getShurukTimeString([DateTime? date]) {
+    date ??= mosqueDate();
+
+    final t = List.from(times!.calendar[date.month - 1][date.day.toString()]);
+
+    if (t.length == 5) return times!.shuruq;
+
+    return t[1];
+  }
+
   bool get typeIsMosque {
     return mosque?.type == "MOSQUE";
   }
