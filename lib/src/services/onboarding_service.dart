@@ -16,7 +16,7 @@ class OnBoardingManager extends ChangeNotifier {
 
   Future<void> onBoardingDone() async {
     firstOnBoarding = false;
-    await SharedPref().setDynamic(kOnBoardingKey, false);
+    await SharedPref().setDynamic(kOnBoardingKey, 'false');
     notifyListeners();
   }
 }
