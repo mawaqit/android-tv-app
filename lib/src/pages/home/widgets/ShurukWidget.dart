@@ -38,7 +38,7 @@ class ShurukWidget extends StatelessWidget {
         ),
         second: SalahItemWidget(
           title: S.of(context).shuruk,
-          time: mosqueProvider.times!.shuruq ?? "",
+          time: mosqueProvider.getShurukTimeString() ?? "",
           removeBackground: true,
         ),
       );
@@ -54,7 +54,7 @@ class ShurukWidget extends StatelessWidget {
 
     return SalahItemWidget(
       title: S.of(context).shuruk,
-      time: mosqueProvider.times!.shuruq ?? "",
+      time: mosqueProvider.getShurukTimeString() ?? "",
       removeBackground: true,
     );
   }
