@@ -35,8 +35,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   int index = -1;
   Announcement? activeAnnouncement;
 
-  YoutubePlayerController? _controller;
-
   void nextAnnouncement() {
     if (!mounted) return;
 
@@ -57,16 +55,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
         Duration(seconds: activeAnnouncement!.duration ?? 30),
         nextAnnouncement,
       );
-    } else {
-      _controller = YoutubePlayerController(
-        initialVideoId: YoutubePlayer.convertUrlToId(activeAnnouncement!.video!)!,
-        flags: YoutubePlayerFlags(autoPlay: true, mute: mosqueManager.typeIsMosque),
-      );
-
-      /// if announcement didn't started playing after 20 seconds skip it
-      Future.delayed(20.seconds, () {
-        if (_controller?.value.isReady == false) nextAnnouncement();
-      });
     }
   }
 
@@ -108,20 +96,32 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   Widget announcementWidgets() {
     if (activeAnnouncement!.content != null) {
-      return textAnnouncement(
-        activeAnnouncement!.content!,
-        activeAnnouncement!.title,
+      return _TextAnnouncement(
+        content: activeAnnouncement!.content!,
+        title: activeAnnouncement!.title,
       );
     } else if (activeAnnouncement!.image != null) {
-      return imageAnnouncement(activeAnnouncement!.image!);
+      return _ImageAnnouncement(image: activeAnnouncement!.image!);
     } else if (activeAnnouncement!.video != null) {
-      return videoAnnouncement(activeAnnouncement!.video!);
+      return _VideoAnnouncement(
+        key: ValueKey(activeAnnouncement!.video),
+        url: activeAnnouncement!.video!,
+        onEnded: nextAnnouncement,
+      );
     }
 
     return SizedBox();
   }
+}
 
-  Widget textAnnouncement(String content, String? title) {
+class _TextAnnouncement extends StatelessWidget {
+  const _TextAnnouncement({Key? key, required this.title, required this.content}) : super(key: key);
+
+  final String title;
+  final String content;
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       key: ValueKey("$content $title"),
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -166,29 +166,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     );
   }
 
-  Widget imageAnnouncement(String image) {
-    return CachedNetworkImage(
-      imageUrl: image,
-      fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
-    ).animate().slideX().addRepaintBoundary();
-  }
-
-  Widget videoAnnouncement(String video) {
-    if (_controller == null) return SizedBox();
-
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: YoutubePlayer(
-        onEnded: (metaData) => nextAnnouncement(),
-        controller: _controller!,
-        showVideoProgressIndicator: true,
-      ),
-    );
-  }
-
   get kAnnouncementTextShadow => [
         Shadow(
           offset: Offset(0, 9),
@@ -196,4 +173,77 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
           color: Colors.black54,
         ),
       ];
+}
+
+class _ImageAnnouncement extends StatelessWidget {
+  const _ImageAnnouncement({Key? key, required this.image}) : super(key: key);
+
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return CachedNetworkImage(
+      imageUrl: image,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+    ).animate().slideX().addRepaintBoundary();
+  }
+}
+
+class _VideoAnnouncement extends StatefulWidget {
+  const _VideoAnnouncement({
+    Key? key,
+    required this.url,
+    this.onEnded,
+  }) : super(key: key);
+
+  final String url;
+  final VoidCallback? onEnded;
+
+  @override
+  State<_VideoAnnouncement> createState() => _VideoAnnouncementState();
+}
+
+class _VideoAnnouncementState extends State<_VideoAnnouncement> {
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    final mosqueManager = context.read<MosqueManager>();
+
+    _controller = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(widget.url)!,
+      flags: YoutubePlayerFlags(
+        autoPlay: true,
+        mute: mosqueManager.typeIsMosque,
+        useHybridComposition: false,
+        hideControls: true,
+      ),
+    );
+
+    /// if announcement didn't started playing after 20 seconds skip it
+    Future.delayed(20.seconds, () {
+      if (_controller.value.isReady == false) widget.onEnded?.call();
+    });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        onEnded: (metaData) => widget.onEnded?.call(),
+      ),
+    );
+  }
 }
