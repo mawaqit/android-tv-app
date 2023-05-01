@@ -327,9 +327,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return false;
   }
 
-  /// remove videos in case of mosque screen
-  /// todo check for primary/secondary screen
-  List<Announcement> get activeAnnouncements {
+  List<Announcement> activeAnnouncements(bool enableVideos) {
     return mosque!.announcements.where((element) {
       final startDate = DateTime.tryParse(element.startDate ?? '');
       final endDate = DateTime.tryParse(element.endDate ?? '');
@@ -340,8 +338,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       /// on offline mode we don't show videos
       if (element.video != null && !isOnline) return false;
 
-      /// on mosque screen we don't show videos
-      if (element.video != null && typeIsMosque) return false;
+      /// on mosque screen we don't show videos in certain conditions
+      if (element.video != null && !enableVideos) return false;
 
       return inTime;
     }).toList();

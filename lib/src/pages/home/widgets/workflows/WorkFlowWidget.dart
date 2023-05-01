@@ -40,8 +40,7 @@ class ContinuesWorkFlowWidget extends StatefulWidget {
   final void Function()? onDone;
 
   @override
-  State<ContinuesWorkFlowWidget> createState() =>
-      _ContinuesWorkFlowWidgetState();
+  State<ContinuesWorkFlowWidget> createState() => _ContinuesWorkFlowWidgetState();
 }
 
 class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
@@ -72,6 +71,10 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
     if (_currentItemIndex != this._currentItemIndex) return;
     delayedNextPageFuture?.ignore();
 
+    /// if the widget removed from the tree
+    /// no need for [nextPage]
+    if (!mounted) return;
+
     if (_currentItemIndex >= widget.workFlowItems.length - 1) {
       /// we adding this delay to make sure flutter called the build function
       /// if flutter didn't called the build any navigation login inside the [ContinuesWorkFlowWidget.onDone] will be ignored
@@ -84,8 +87,7 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
 
     if (activeItem().disabled) return nextPage(this._currentItemIndex);
 
-    if (activeItem().minimumDuration != null)
-      minimumDurationFuture = Future.delayed(activeItem().minimumDuration!);
+    if (activeItem().minimumDuration != null) minimumDurationFuture = Future.delayed(activeItem().minimumDuration!);
 
     if (activeItem().duration != null) {
       delayedNextPageFuture = Future.delayed(activeItem().duration!);

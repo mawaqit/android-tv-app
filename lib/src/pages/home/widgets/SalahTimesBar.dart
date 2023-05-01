@@ -55,6 +55,7 @@ class SalahTimesBar extends StatelessWidget {
                 active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
                 withDivider: false,
                 showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
+                isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
               )
                   .animate(delay: step * i)
                   .fadeIn(duration: duration)
