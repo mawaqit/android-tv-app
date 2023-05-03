@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
@@ -86,6 +89,12 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     }
   }
 
+  /// this method responsible for
+  /// - fetching mosque, times, config
+  /// - request audio manager to precache voices
+  /// - request mawaqit cache to precache images after first load
+  /// - handle errors of response
+  /// It will return a future that will be completed when all data is fetched and cached
   Future<void> fetchMosque(String uuid) async {
     final completer = Completer();
 
@@ -96,48 +105,45 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     bool isDone() => times != null && mosqueConfig != null && mosque != null && !completer.isCompleted;
 
     /// if getting item returns an error
-    onItemError(e, d) {}
+    onItemError(e, stack) {
+      logger.e(e, '', stack);
+      if (!completer.isCompleted) completer.completeError(e, stack);
+
+      mosque = null;
+      notifyListeners();
+    }
+
+    /// cache date before complete the [completer]
+    completeFuture() async {
+      await Future.wait([
+        AudioManager().precacheVoices(mosqueConfig!),
+        preCacheImages(),
+      ]).catchError((e) {});
+
+      if (!completer.isCompleted) completer.complete();
+    }
 
     _mosqueSubscription = Api.getMosqueStream(uuid).listen((event) {
       mosque = event;
       loadWeather(mosque!);
       notifyListeners();
 
-      if (isDone()) completer.complete();
-    }, onError: (e, stack) {
-      debugPrintStack(stackTrace: stack, label: e.toString());
-      if (!completer.isCompleted) completer.completeError(e, stack);
-
-      mosque = null;
-      notifyListeners();
-    });
+      if (isDone()) completeFuture();
+    }, onError: onItemError);
 
     _timesSubscription = Api.getMosqueTimesStream(uuid).listen((event) {
       times = event;
       notifyListeners();
 
-      if (isDone()) completer.complete();
-    }, onError: (e, stack) {
-      debugPrintStack(stackTrace: stack, label: e.toString());
-      if (!completer.isCompleted) completer.completeError(e, stack);
-
-      times = null;
-      notifyListeners();
-    });
+      if (isDone()) completeFuture();
+    }, onError: onItemError);
 
     _configSubscription = Api.getMosqueConfigStream(uuid).listen((event) async {
-      await AudioManager().precacheVoices(event).catchError((e) {});
       mosqueConfig = event;
       notifyListeners();
 
-      if (isDone()) completer.complete();
-    }, onError: (e, stack) {
-      debugPrintStack(stackTrace: stack, label: e.toString());
-      if (!completer.isCompleted) completer.completeError(e, stack);
-
-      mosqueConfig = null;
-      notifyListeners();
-    });
+      if (isDone()) completeFuture();
+    }, onError: onItemError);
 
     mosqueUUID = uuid;
 
@@ -190,6 +196,30 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     if (permission == LocationPermission.deniedForever || permission == LocationPermission.denied) throw GpsError();
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
+  }
+
+  /// handle pre caching for images
+  /// Qr, mosque image, mosque logo, announcement image
+  Future<void> preCacheImages() async {
+    logger.i('pre cache images');
+    final now = DateTime.now();
+    final images = [
+      mosque?.image,
+      mosque?.logo,
+      mosque?.interiorPicture,
+      mosque?.exteriorPicture,
+      "https://mawaqit.net/bundles/app/prayer-times/img/background/${mosqueConfig?.backgroundMotif ?? 5}.jpg",
+      'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
+      ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
+    ].where((e) => e != null).cast<String>();
+
+    logger.i(images.length);
+
+    /// some images isn't existing anymore so we will ignore errors
+    final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
+    await Future.wait(futures);
+
+    logger.i('pre cache images done in ${DateTime.now().difference(now).inMilliseconds} ms');
   }
 }
 

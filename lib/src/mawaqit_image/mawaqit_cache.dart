@@ -3,12 +3,15 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:mawaqit/main.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class MawaqitImageCache {
+  static String? cacheDirectory;
+
+  static Directory getTemporaryDirectory() => Directory.systemTemp;
+
   static Future<String> urlToKey(String url) async {
-    final cacheDirectory = await getTemporaryDirectory();
+    final cacheDirectory = getTemporaryDirectory();
     final key = const Uuid().v5(Uuid.NAMESPACE_URL, url);
 
     return '${cacheDirectory.path}/image.cache/$key';
@@ -25,7 +28,7 @@ class MawaqitImageCache {
 
   static Future<void> clearAll() async {
     try {
-      final cacheDirectory = await getTemporaryDirectory();
+      final cacheDirectory = getTemporaryDirectory();
       await cacheDirectory.delete(recursive: true);
     } catch (e, stack) {
       logger.e('error', e, stack);
@@ -37,6 +40,13 @@ class MawaqitImageCache {
     final file = Directory(path);
 
     file.deleteSync(recursive: true);
+  }
+
+  static Future<bool> isImageCached(String url) async {
+    final path = await urlToKey(url);
+    final file = File(path);
+
+    return await file.exists();
   }
 
   static Future<Uint8List?> _getLocaleImage(String url) async {
@@ -65,6 +75,16 @@ class MawaqitImageCache {
     return response.data!;
   }
 
+  /// cached image directly without reading it from the hard disk
+  /// to gain more performance than [getImage]
+  static Future<void> cacheImage(String url) async {
+    if (await isImageCached(url)) return;
+
+    await _getUrlImage(url);
+  }
+
+  /// get image from cache if exist or from the network
+  /// cache the image if not exist
   static Future<Uint8List> getImage(String url) async {
     final localeImage = await _getLocaleImage(url);
 
