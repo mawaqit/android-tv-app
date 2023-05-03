@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
 import 'package:mawaqit/src/models/slider.dart';
 
 class SlideItem extends StatelessWidget {
@@ -19,7 +19,7 @@ class SlideItem extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: CachedNetworkImageProvider(sliderList[index].imageUrl!),
+              image: MawaqitNetworkImageProvider(sliderList[index].imageUrl!),
             ),
           ),
         ),
