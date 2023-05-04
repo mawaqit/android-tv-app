@@ -10,6 +10,7 @@ import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mode.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
 import 'package:provider/provider.dart';
@@ -106,6 +107,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     final activePage = onBoardingItems[currentScreen];
+    final userPrefs = context.watch<UserPreferencesManager>();
 
     return WillPopScope(
       onWillPop: () async {
@@ -116,7 +118,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       },
       child: SafeArea(
         child: Scaffold(
-          body: Row(
+          body: Flex(
+            direction: userPrefs.calculatedOrientation == Orientation.portrait ? Axis.vertical : Axis.horizontal,
             children: [
               Expanded(
                 flex: 4,
