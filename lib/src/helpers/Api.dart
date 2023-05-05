@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
 
-const kBaseUrlV2 = 'https://mawaqit.net/api/2.0';
-const kBaseUrl = 'https://mawaqit.net/api/3.0';
+const kBaseUrl = 'https://mawaqit.net/api';
+const kStagingUrl = 'https://staging.mawaqit.net/api';
 const kStaticFilesUrl = 'https://mawaqit.net/static';
 const token = 'ad283fb2-844b-40fe-967c-5cb593e9005e';
 
@@ -31,6 +32,15 @@ class Api {
     dio.interceptors.add(ApiCacheInterceptor(cacheStore));
   }
 
+  /// only change the base url
+  /// the local value should be saved using UserPreferences
+  static useStagingApi([bool staging = true]) {
+    if (staging)
+      dio.options.baseUrl = kStagingUrl;
+    else
+      dio.options.baseUrl = kBaseUrl;
+  }
+
   static Future<bool> kMosqueExistence(int id) {
     var url = 'https://mawaqit.net/en/id/$id?view=desktop';
 
@@ -40,11 +50,7 @@ class Api {
   static Future<bool> checkTheInternetConnection() {
     final url = 'https://www.google.com/';
 
-    return dio
-        .get(url)
-        .timeout(Duration(seconds: 5))
-        .then((value) => true)
-        .catchError((e) => false);
+    return dio.get(url).timeout(Duration(seconds: 5)).then((value) => true).catchError((e) => false);
   }
 
   /// re check the mosque if there are any updated data
@@ -56,7 +62,7 @@ class Api {
   }
 
   static Future<Mosque> getMosque(String id) async {
-    final response = await dio.get('/mosque/$id/info');
+    final response = await dio.get('/3.0/mosque/$id/info');
 
     return Mosque.fromMap(response.data);
   }
@@ -70,7 +76,7 @@ class Api {
   }
 
   static Future<MosqueConfig> getMosqueConfig(String id) async {
-    final response = await dio.get('/mosque/$id/config');
+    final response = await dio.get('/3.0/mosque/$id/config');
 
     return MosqueConfig.fromMap(response.data);
   }
@@ -84,20 +90,20 @@ class Api {
   }
 
   static Future<Times> getMosqueTimes(String id) async {
-    final response = await dio.get('/mosque/$id/times');
+    final response = await dio.get('/3.0/mosque/$id/times');
 
     return Times.fromMap(response.data);
   }
 
   static Future<Mosque> searchMosqueWithId(String mosqueId) async {
-    final response = await dio.get('/mosque/$mosqueId');
+    final response = await dio.get('/3.0/mosque/$mosqueId');
 
     return Mosque.fromMap(response.data);
   }
 
   static Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async {
     final response = await dio.get(
-      '$kBaseUrlV2/mosque/search?word=$mosque&page=$page',
+      '/2.0/mosque/search?word=$mosque&page=$page',
     );
 
     List<Mosque> mosques = [];
@@ -115,7 +121,7 @@ class Api {
 
   static Future<String> randomHadith({String language = 'ar'}) async {
     final response = await dio.get(
-      '$kBaseUrlV2/hadith/random',
+      '/v2.0/hadith/random',
       queryParameters: {'lang': language},
     );
 
@@ -123,7 +129,7 @@ class Api {
   }
 
   static Future<dynamic> getWeather(String mosqueUUID) async {
-    final response = await dio.get('$kBaseUrlV2/mosque/$mosqueUUID/weather');
+    final response = await dio.get('v2.0/mosque/$mosqueUUID/weather');
 
     return Weather.fromMap(response.data);
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
 import 'package:mawaqit/src/pages/developer/DeveloperScreen.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../elements/DrawerListTitle.dart';
@@ -23,6 +24,8 @@ class DrawerListDeveloper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userPreferencesManager = Provider.of<UserPreferencesManager>(context);
+
     return ListView(
       shrinkWrap: true,
       primary: false,
@@ -126,6 +129,11 @@ class DrawerListDeveloper extends StatelessWidget {
           ),
         ),
 
+        SwitchListTile(
+          value: userPreferencesManager.forceStaging,
+          onChanged: (value) => userPreferencesManager.forceStaging = value,
+          title: Text(S.of(context).forceStaging),
+        ),
         Divider(
           color: Colors.grey,
         ),

@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/Api.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -6,11 +8,18 @@ const _announcementsStoreKey = 'UserPreferencesManager.AnnouncementsOnly';
 const _developerModeKey = 'UserPreferencesManager.developer.mode.enabled';
 const _secondaryScreenKey = 'UserPreferencesManager.secondary.screen.enabled';
 const _webViewModeKey = 'UserPreferencesManager.webView.mode.enabled';
+const _forceStagingKey = 'UserPreferencesManager.api.settings.staging';
 
 /// this manager responsible for managing user preferences
 class UserPreferencesManager extends ChangeNotifier {
   UserPreferencesManager() {
-    SharedPreferences.getInstance().then((value) => _sharedPref = value);
+    _init();
+  }
+
+  Future<void> _init() async {
+    _sharedPref = await SharedPreferences.getInstance();
+
+    Api.useStagingApi(forceStaging);
   }
 
   late SharedPreferences _sharedPref;
@@ -40,6 +49,17 @@ class UserPreferencesManager extends ChangeNotifier {
 
   set webViewMode(bool value) {
     _sharedPref.setBool(_webViewModeKey, value);
+    notifyListeners();
+  }
+
+  bool get forceStaging => _sharedPref.getBool(_forceStagingKey) ?? false;
+
+  /// this method is used to force staging api
+  /// if value is null, it will be [false]
+  set forceStaging(bool value) {
+    Api.useStagingApi(value);
+
+    _sharedPref.setBool(_forceStagingKey, value);
     notifyListeners();
   }
 }

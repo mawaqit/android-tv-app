@@ -21,7 +21,7 @@ class RaisedGradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double radius = 80;
-    return Container(
+    return Ink(
       width: width,
       height: 50.0,
       decoration: BoxDecoration(
@@ -39,11 +39,10 @@ class RaisedGradientButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
+          focusColor: Colors.white.withOpacity(.5),
           autofocus: autoFocus ?? false,
           onTap: onPressed as void Function()?,
-          child: Center(
-            child: child,
-          ),
+          child: Center(child: child),
           borderRadius: BorderRadius.all(
             Radius.circular(radius),
           ),
