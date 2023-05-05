@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
