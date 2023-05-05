@@ -75,7 +75,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   int get salahIndex => (nextSalahIndex() - 1) % 5;
 
   bool get isImsakEnabled {
-    return times!.imsakNbMinBeforeFajr > 0;
+    return times!.imsakNbMinBeforeFajr != null;
   }
 
   bool get isShurukTime {
@@ -197,7 +197,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       /// otherwise show tomorrow imsak
       if (now.isAfter(actualTimes()[0])) tomorrowFajr = tomorrowTimes[0];
 
-      int minutes = tomorrowFajr.toTimeOfDay()!.inMinutes - times!.imsakNbMinBeforeFajr;
+      int minutes = tomorrowFajr.toTimeOfDay()!.inMinutes - (times!.imsakNbMinBeforeFajr ?? 0);
 
       String _timeTwoDigit = timeTwoDigit(
         seconds: minutes % 60,
