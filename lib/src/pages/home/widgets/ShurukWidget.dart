@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../i18n/l10n.dart';
 import '../../../services/mosque_manager.dart';
-import 'SalahItem.dart';
+import 'salah_items/SalahItem.dart';
 
 /// this widget is responsible for showing the
 /// (shuruk time, jumuaa time, or eid time)

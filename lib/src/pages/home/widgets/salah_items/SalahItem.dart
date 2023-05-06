@@ -6,9 +6,9 @@ import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
-import '../../../helpers/StringUtils.dart';
-import '../../../services/mosque_manager.dart';
-import '../../../widgets/TimePeriodWidget.dart';
+import '../../../../helpers/StringUtils.dart';
+import '../../../../services/mosque_manager.dart';
+import '../../../../widgets/TimePeriodWidget.dart';
 
 const kSalahItemWidgetWidth = 135.0;
 

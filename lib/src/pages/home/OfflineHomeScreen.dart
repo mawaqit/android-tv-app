@@ -4,6 +4,7 @@ import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 
 import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
@@ -72,6 +73,7 @@ class OfflineHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RelativeSizes.instance.size = MediaQuery.of(context).size;
     final mosqueProvider = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
