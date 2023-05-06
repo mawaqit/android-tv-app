@@ -13,7 +13,12 @@ import 'MosqueInformationWidget.dart';
 const kFooterQrLink = 'https://mawaqit.net/static/images/store-qrcode.png?4.89.2';
 
 class Footer extends StatelessWidget {
-  const Footer({Key? key}) : super(key: key);
+  const Footer({
+    Key? key,
+    this.hideMessage = false,
+  }) : super(key: key);
+
+  final bool hideMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +65,15 @@ class Footer extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
-              child: mosque?.flash != null
-                  ? FlashWidget()
-                  : mosqueManager.mosqueConfig?.footer == true
-                      ? MosqueInformationWidget()
-                      : SizedBox(),
-            ),
+            hideMessage
+                ? Spacer()
+                : Expanded(
+                    child: mosque?.flash != null
+                        ? FlashWidget()
+                        : mosqueManager.mosqueConfig?.footer == true
+                            ? MosqueInformationWidget()
+                            : SizedBox(),
+                  ),
             HomeLogoVersion(),
           ],
         ),

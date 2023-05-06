@@ -12,6 +12,7 @@ import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mod
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
+import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
 import 'package:provider/provider.dart';
 
@@ -118,18 +119,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       },
       child: SafeArea(
         child: Scaffold(
-          body: Flex(
-            direction: userPrefs.calculatedOrientation == Orientation.portrait ? Axis.vertical : Axis.horizontal,
-            children: [
-              Expanded(
-                flex: 4,
-                child: _buildImage(activePage.animation),
-              ),
-              Expanded(
-                flex: 6,
-                child: activePage.widget ?? SizedBox(),
-              ),
-            ],
+          body: ScreenWithAnimationWidget(
+            animation: activePage.animation,
+            child: activePage.widget ?? SizedBox(),
           ),
           bottomNavigationBar: Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -164,16 +156,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildImage(String assetName) {
-    return Align(
-      child: Lottie.asset(
-        'assets/animations/lottie/$assetName.json',
-        fit: BoxFit.contain,
-      ),
-      alignment: Alignment.center,
     );
   }
 }

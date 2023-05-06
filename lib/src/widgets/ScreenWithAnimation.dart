@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:provider/provider.dart';
 
 /// this widget is used to show a screen with a lottie animation on the left side
 class ScreenWithAnimationWidget extends StatelessWidget {
@@ -17,9 +19,12 @@ class ScreenWithAnimationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userPrefs = context.watch<UserPreferencesManager>();
+
     return Scaffold(
       body: SafeArea(
-        child: Row(
+        child: Flex(
+          direction: userPrefs.calculatedOrientation == Orientation.portrait ? Axis.vertical : Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(

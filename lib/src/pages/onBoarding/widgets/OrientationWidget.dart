@@ -15,58 +15,60 @@ class OnBoardingOrientationWidget extends StatelessWidget {
 
     final tr = S.of(context);
 
-    return FractionallySizedBox(
-      widthFactor: .75,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            tr.orientation,
-            style: theme.textTheme.headlineMedium,
-            textAlign: TextAlign.center,
-          ),
-          Text(tr.selectYourMawaqitTvAppOrientation, style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
-          SizedBox(height: 50),
-          OutlinedButton(
-            onFocusChange: (value) {
-              if (value) userPrefs.orientationLandscape = null;
-            },
-            onPressed: onSelect,
-            child: Text(tr.deviceDefault),
-            autofocus: userPrefs.orientationLandscape == null,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Text(tr.deviceDefaultBTNDescription, textAlign: TextAlign.center),
-          ),
-          SizedBox(height: 20),
-          OutlinedButton(
-            onFocusChange: (value) {
-              if (value) userPrefs.orientationLandscape = true;
-            },
-            onPressed: onSelect,
-            child: Text(tr.landscape),
-            autofocus: userPrefs.orientationLandscape == true,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Text(tr.landscapeBTNDescription, textAlign: TextAlign.center),
-          ),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: OutlinedButton(
+    return Material(
+      child: FractionallySizedBox(
+        widthFactor: .75,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              tr.orientation,
+              style: theme.textTheme.headlineMedium,
+              textAlign: TextAlign.center,
+            ),
+            Text(tr.selectYourMawaqitTvAppOrientation, style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
+            SizedBox(height: 50),
+            OutlinedButton(
               onFocusChange: (value) {
-                if (value) userPrefs.orientationLandscape = false;
+                if (value) userPrefs.orientationLandscape = null;
               },
               onPressed: onSelect,
-              child: Text(tr.portrait),
-              autofocus: userPrefs.orientationLandscape == false,
+              child: Text(tr.deviceDefault),
+              autofocus: userPrefs.orientationLandscape == null,
             ),
-          ),
-          Text(tr.portraitBTNDescription, textAlign: TextAlign.center),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(tr.deviceDefaultBTNDescription, textAlign: TextAlign.center),
+            ),
+            SizedBox(height: 20),
+            OutlinedButton(
+              onFocusChange: (value) {
+                if (value) userPrefs.orientationLandscape = true;
+              },
+              onPressed: onSelect,
+              child: Text(tr.landscape),
+              autofocus: userPrefs.orientationLandscape == true,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(tr.landscapeBTNDescription, textAlign: TextAlign.center),
+            ),
+            SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: OutlinedButton(
+                onFocusChange: (value) {
+                  if (value) userPrefs.orientationLandscape = false;
+                },
+                onPressed: onSelect,
+                child: Text(tr.portrait),
+                autofocus: userPrefs.orientationLandscape == false,
+              ),
+            ),
+            Text(tr.portraitBTNDescription, textAlign: TextAlign.center),
+          ],
+        ),
       ),
     );
   }

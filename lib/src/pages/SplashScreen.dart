@@ -74,7 +74,6 @@ class _SplashScreen extends State<Splash> {
   Future<bool> loadBoarding() async {
     var res = await sharedPref.read("boarding");
 
-    return true;
     return res == null;
   }
 
