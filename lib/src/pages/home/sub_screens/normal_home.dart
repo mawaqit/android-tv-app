@@ -91,11 +91,12 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
         ),
         Column(
           children: [
-            Container(
-              color: Colors.black26,
-              height: 5.vh,
-              child: FlashWidget(),
-            ),
+            if (mosque.flash != null)
+              Container(
+                color: Colors.black26,
+                height: 5.vh,
+                child: FlashWidget(),
+              ),
             Footer(hideMessage: true),
           ],
         ),
