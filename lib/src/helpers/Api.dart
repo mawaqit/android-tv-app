@@ -11,7 +11,7 @@ import '../models/weather.dart';
 const kBaseUrl = 'https://mawaqit.net/api';
 const kStagingUrl = 'https://staging.mawaqit.net/api';
 const kStaticFilesUrl = 'https://mawaqit.net/static';
-const token = 'ad283fb2-844b-40fe-967c-5cb593e9005e';
+const token = String.fromEnvironment('mawaqit.api.key');
 
 class Api {
   static final dio = Dio(
