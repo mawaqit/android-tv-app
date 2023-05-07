@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class RelativeSizes {
@@ -18,4 +20,8 @@ extension RelativePixels on num {
   double get vw => RelativeSizes.instance._size.width / 100 * this;
 
   double get vh => RelativeSizes.instance._size.height / 100 * this;
+
+  /// return the smallest between vw and vh
+  /// should be used for item size that should be the same in both orientations
+  double get vr => min(vw, vh);
 }
