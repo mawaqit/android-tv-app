@@ -76,6 +76,7 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
             )
           ],
         ),
+        Spacer(),
         Text(
           tr.iqamaIn,
           style: TextStyle(
@@ -86,32 +87,31 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
               height: 1,
               fontFamily: StringManager.getFontFamilyByString(tr.iqamaIn)),
         ).animate().slide(delay: .5.seconds).fade().addRepaintBoundary(),
-        Expanded(
-          child: StreamBuilder(
-              stream: Stream.periodic(Duration(seconds: 1)),
-              builder: (context, snapshot) {
-                final remaining = nextIqama;
-                if (remaining <= Duration.zero) {
-                  Future.delayed(Duration(milliseconds: 80), widget.onDone);
-                }
+        StreamBuilder(
+            stream: Stream.periodic(Duration(seconds: 1)),
+            builder: (context, snapshot) {
+              final remaining = nextIqama;
+              if (remaining <= Duration.zero) {
+                Future.delayed(Duration(milliseconds: 80), widget.onDone);
+              }
 
-                int seconds = remaining.inSeconds % 60;
-                int minutes = remaining.inMinutes;
-                String _timeTwoDigit = timeTwoDigit(
-                  seconds: seconds,
-                  minutes: minutes,
-                );
-                return Text(
-                  _timeTwoDigit,
-                  style: TextStyle(
-                    fontSize: 25.vw,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    shadows: kIqamaCountDownTextShadow,
-                  ),
-                ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
-              }),
-        ),
+              int seconds = remaining.inSeconds % 60;
+              int minutes = remaining.inMinutes;
+              String _timeTwoDigit = timeTwoDigit(
+                seconds: seconds,
+                minutes: minutes,
+              );
+              return Text(
+                _timeTwoDigit,
+                style: TextStyle(
+                  fontSize: 25.vw,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  shadows: kIqamaCountDownTextShadow,
+                ),
+              ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
+            }),
+        Spacer(),
         ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 10),
       ],
