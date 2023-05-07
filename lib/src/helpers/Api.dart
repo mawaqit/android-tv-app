@@ -120,7 +120,7 @@ class Api {
 
   static Future<String> randomHadith({String language = 'ar'}) async {
     final response = await dio.get(
-      '/v2.0/hadith/random',
+      '/2.0/hadith/random',
       queryParameters: {'lang': language},
     );
 
@@ -128,7 +128,7 @@ class Api {
   }
 
   static Future<dynamic> getWeather(String mosqueUUID) async {
-    final response = await dio.get('v2.0/mosque/$mosqueUUID/weather');
+    final response = await dio.get('/2.0/mosque/$mosqueUUID/weather');
 
     return Weather.fromMap(response.data);
   }
