@@ -7,6 +7,7 @@ import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
@@ -120,7 +121,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
               ),
             ),
           ),
-          SalahTimesBar(activeItem: mosqueProvider.salahIndex),
+          ResponsiveMiniSalahBarWidget(activeItem: mosqueProvider.salahIndex),
           SizedBox(height: 2.vw),
         ],
       ),

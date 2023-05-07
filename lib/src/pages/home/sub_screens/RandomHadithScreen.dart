@@ -1,13 +1,9 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
-import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
-import 'package:mawaqit/src/themes/UIShadows.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/StringUtils.dart';
@@ -28,8 +24,7 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig;
 
-    Api.randomHadith(language: mosqueConfig!.hadithLang!)
-        .then((value) => setState(() => hadith = value));
+    Api.randomHadith(language: mosqueConfig!.hadithLang!).then((value) => setState(() => hadith = value));
 
     super.initState();
   }
@@ -52,10 +47,7 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
             ),
           ),
         ),
-        SalahTimesBar(
-          miniStyle: true,
-          microStyle: true,
-        ),
+        ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 4.vh),
       ],
     );

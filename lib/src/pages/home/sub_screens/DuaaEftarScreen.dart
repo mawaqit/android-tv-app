@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
-import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 
 class DuaaEftarScreen extends StatefulWidget {
   const DuaaEftarScreen({Key? key}) : super(key: key);
@@ -49,7 +49,7 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
           ),
         ),
-        SalahTimesBar(miniStyle: true, microStyle: true),
+        ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 10),
       ],
     );
