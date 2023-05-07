@@ -57,10 +57,7 @@ class AnnouncementScreen extends StatelessWidget {
         IgnorePointer(
           child: Padding(
             padding: EdgeInsets.only(bottom: 1.5.vh),
-            child: SalahTimesBar(
-              miniStyle: true,
-              microStyle: true,
-            ),
+            child: ResponsiveMiniSalahBarWidget()
           ),
         )
       ],

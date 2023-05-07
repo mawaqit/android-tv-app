@@ -19,6 +19,7 @@ class HorizontalSalahItem extends StatelessWidget {
     this.withDivider = true,
     this.showIqama = true,
     this.isIqamaMoreImportant = false,
+    this.margin,
   }) : super(key: key);
 
   final String? title;
@@ -34,6 +35,8 @@ class HorizontalSalahItem extends StatelessWidget {
   /// make iqama larger than the time
   final bool isIqamaMoreImportant;
 
+  final EdgeInsetsGeometry? margin;
+
   @override
   Widget build(BuildContext context) {
     double bigFont = 6.0.vw;
@@ -45,7 +48,7 @@ class HorizontalSalahItem extends StatelessWidget {
     final is24period = mosqueConfig?.timeDisplayFormat != "12";
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5.vw),
+      margin: margin ?? EdgeInsets.symmetric(horizontal: 5.vw),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(3.vw),
         color: active
@@ -73,7 +76,9 @@ class HorizontalSalahItem extends StatelessWidget {
               ),
             ),
           Expanded(
-            child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.center,
               child: TimeWidget.fromString(
                 show24hFormat: is24period,
                 time: time,
@@ -87,10 +92,10 @@ class HorizontalSalahItem extends StatelessWidget {
             ),
           ),
 
-          Expanded(
-            child: iqama == null
-                ? Container()
-                : Center(
+          iqama == null
+              ? Container()
+              : Expanded(
+                  child: Center(
                     child: IqamaTimeWidget(
                       time: iqama!,
                       show24hFormat: is24period,
@@ -102,7 +107,7 @@ class HorizontalSalahItem extends StatelessWidget {
                       ),
                     ),
                   ),
-          ),
+                ),
 
           // if (time.trim().isEmpty)
           //   Icon(Icons.dnd_forwardslash, size: 6.vw)
