@@ -6,7 +6,6 @@ import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/FlashAnimation.dart';
-import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
@@ -51,41 +50,40 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(top: 4.vh),
+              padding: EdgeInsets.symmetric(horizontal: 2.vw),
               child: FlashAnimation(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: 15.vh,
+                      size: 15.vw,
                       shadows: kHomeTextShadow,
                       color: Colors.white,
                     ).animate().slideX(begin: -2).addRepaintBoundary(),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 70.vw),
-                      child: FittedBox(
-                        child: Text(
-                          S.of(context).salatKhayrMinaNawm,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.vh,
-                            fontFamily: StringManager.getFontFamilyByString(
-                                S.of(context).alAdhan),
-                            // height: 2,
-                            color: Colors.white,
-                            shadows: kHomeTextShadow,
-                          ),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: FittedBox(
+                          child: Text(
+                            S.of(context).salatKhayrMinaNawm,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.vw,
+                              fontFamily: StringManager.getFontFamilyByString(S.of(context).alAdhan),
+                              // height: 2,
+                              color: Colors.white,
+                              shadows: kHomeTextShadow,
+                            ),
+                          ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
                         ),
                       ),
-                    )
-                        .animate()
-                        .slideY(begin: -1, delay: .5.seconds)
-                        .fadeIn()
-                        .addRepaintBoundary(),
+                    ),
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: 15.vh,
+                      size: 15.vw,
                       shadows: kHomeTextShadow,
                       color: Colors.white,
                     ).animate().slideX(begin: 2).addRepaintBoundary(),
