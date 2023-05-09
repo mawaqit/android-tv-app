@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_cache.dart';
@@ -8,7 +9,12 @@ class MawaqitNetworkImageProvider extends ImageProvider<NetworkImage> implements
   /// Creates an object that fetches the image at the given URL.
   ///
   /// The arguments [url] and [scale] must not be null.
-  const MawaqitNetworkImageProvider(this.url, {this.scale = 1.0, this.headers});
+  const MawaqitNetworkImageProvider(
+    this.url, {
+    this.scale = 1.0,
+    this.headers,
+    this.onError,
+  });
 
   @override
   final String url;
@@ -18,6 +24,8 @@ class MawaqitNetworkImageProvider extends ImageProvider<NetworkImage> implements
 
   @override
   final Map<String, String>? headers;
+
+  final VoidCallback? onError;
 
   @override
   Future<NetworkImage> obtainKey(ImageConfiguration configuration) {
@@ -52,6 +60,7 @@ class MawaqitNetworkImageProvider extends ImageProvider<NetworkImage> implements
 
       return decode(buffer);
     } catch (e, stack) {
+      onError?.call();
       scheduleMicrotask(() {
         PaintingBinding.instance.imageCache.evict(key);
       });
