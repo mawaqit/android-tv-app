@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -201,7 +200,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   /// handle pre caching for images
   /// Qr, mosque image, mosque logo, announcement image
   Future<void> preCacheImages() async {
-    logger.i('pre cache images');
     final now = DateTime.now();
     final images = [
       mosque?.image,
@@ -213,13 +211,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
     ].where((e) => e != null).cast<String>();
 
-    logger.i(images.length);
-
     /// some images isn't existing anymore so we will ignore errors
     final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
     await Future.wait(futures);
-
-    logger.i('pre cache images done in ${DateTime.now().difference(now).inMilliseconds} ms');
   }
 }
 
