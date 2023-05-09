@@ -11,6 +11,8 @@
   "tryAgain": "Try Again",
   "closeApp": "Close app",
   "quit": "Quit",
+  "forceStaging": "Force Staging",
+  "disableStaging": "Disable Staging",
   "sureCloseApp": "Are you sure you want to quit the application?",
   "ok": "OK",
   "cancel": "CANCEL",

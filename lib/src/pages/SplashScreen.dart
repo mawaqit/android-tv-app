@@ -11,6 +11,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 
 import 'package:mawaqit/src/helpers/HttpOverrides.dart';
