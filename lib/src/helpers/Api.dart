@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
@@ -8,17 +9,13 @@ import 'package:mawaqit/src/models/times.dart';
 import '../models/mosque.dart';
 import '../models/weather.dart';
 
-const kBaseUrl = 'https://mawaqit.net/api';
-const kStagingUrl = 'https://staging.mawaqit.net/api';
-const kStaticFilesUrl = 'https://mawaqit.net/static';
-const token = String.fromEnvironment('mawaqit.api.key');
 
 class Api {
   static final dio = Dio(
     BaseOptions(
       baseUrl: kBaseUrl,
       headers: {
-        'Api-Access-Token': token,
+        'Api-Access-Token': kApiToken,
         'accept': 'application/json',
         'mawaqit-device': 'android-tv',
       },
