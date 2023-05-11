@@ -1,6 +1,5 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
@@ -137,7 +136,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 Spacer(flex: 2),
                 DotsIndicator(
                   dotsCount: onBoardingItems.length,
-                  position: currentScreen.toDouble(),
+                  position: currentScreen,
                   decorator: DotsDecorator(
                     size: const Size.square(9.0),
                     activeSize: const Size(21.0, 9.0),
