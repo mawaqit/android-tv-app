@@ -9,14 +9,14 @@ class ThemeNotifier with ChangeNotifier {
           disabledColor: Colors.white,
           color: Color(0xff490094),
         ),
+        cardColor: Color(0xff161b22),
         brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
         primaryColor: Color(0xff490094),
         primaryColorDark: Color(0xff490094),
         primaryColorLight: Color(0xff490094),
         switchTheme: SwitchThemeData(
-          overlayColor:
-              MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
+          overlayColor: MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
           thumbColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.selected)) {
               return Colors.deepPurple.shade100;
@@ -65,11 +65,10 @@ class ThemeNotifier with ChangeNotifier {
 
   /// used getter to support hot restart in development
   ThemeData get lightTheme => ThemeData(
-        toggleButtonsTheme: ToggleButtonsThemeData(
-            disabledColor: Colors.white, color: Color(0xff490094)),
+        toggleButtonsTheme: ToggleButtonsThemeData(disabledColor: Colors.white, color: Color(0xff490094)),
         primarySwatch: Colors.deepPurple,
-        selectedRowColor: Color(0xff490094),
-        cardColor: Color(0xff490094),
+        // selectedRowColor: Color(0xff490094),
+        // cardColor: Color(0xff490094),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
@@ -79,11 +78,11 @@ class ThemeNotifier with ChangeNotifier {
             ),
           ),
         ),
-        colorScheme: ColorScheme.light(
-          primary: Color(0xff490094),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color(0xff490094),
           onPrimary: Colors.white,
         ),
-        focusColor: Color(0xff490094),
+        focusColor: Color(0xff9243E0),
       );
 
   bool? isLightTheme;
