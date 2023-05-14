@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
 import 'package:logger/logger.dart';
@@ -16,8 +13,6 @@ import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/ConnectivityService.dart';
-import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -34,6 +29,8 @@ Future<void> main() async {
   await Sentry.init(
     (options) => options.dsn = kSentryDns,
     appRunner: () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
       await Firebase.initializeApp();
       runApp(ProviderScope(child: MyApp()));
     },
