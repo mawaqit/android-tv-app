@@ -34,8 +34,6 @@ Future<void> main() async {
   await Sentry.init(
     (options) => options.dsn = kSentryDns,
     appRunner: () async {
-      WidgetsFlutterBinding.ensureInitialized();
-
       await Firebase.initializeApp();
       runApp(ProviderScope(child: MyApp()));
     },
