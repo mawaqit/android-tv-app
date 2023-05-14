@@ -65,7 +65,8 @@ class UserPreferencesManager extends ChangeNotifier {
 
   /// return true if the screen orientation is horizontal
   /// null will use the default orientation
-  bool? get orientationLandscape => _sharedPref.getBool(_screenOrientation);
+  bool? get orientationLandscape =>
+      _sharedPref.getBool(_screenOrientation) ?? RelativeSizes.instance.orientation == Orientation.landscape;
 
   /// set the screen orientation
   /// null will use the default orientation based on the device
