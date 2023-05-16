@@ -49,36 +49,6 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Expanded(
-        //   child: FittedBox(
-        //     fit: BoxFit.scaleDown,
-        //     child: Container(
-        //       height: 30.vh,
-        //       alignment: Alignment.center,
-        //       padding: EdgeInsets.symmetric(horizontal: 4.vw),
-        //       decoration: BoxDecoration(
-        //         borderRadius: BorderRadius.circular(15),
-        //         gradient: LinearGradient(
-        //           begin: Alignment(0, 0),
-        //           end: Alignment(0, 1),
-        //           colors: [
-        //             theme.primaryColor,
-        //             theme.primaryColor.withOpacity(0),
-        //           ],
-        //         ),
-        //       ),
-        //       child: Text(
-        //         tr.alIqama,
-        //         style: theme.textTheme.displayMedium?.copyWith(
-        //             color: Colors.white,
-        //             fontWeight: FontWeight.w500,
-        //             shadows: kAfterAdhanTextShadow,
-        //             fontFamily:
-        //                 StringManager.getFontFamilyByString(tr.alIqama)),
-        //       ),
-        //     ).animate().slide(begin: Offset(0, -1)).fade().addRepaintBoundary(),
-        //   ),
-        // ),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Text(
@@ -97,6 +67,7 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
             child: SvgPicture.asset(R.ASSETS_SVG_NO_PHONE_SVG),
           ).animate().scale(delay: .2.seconds).addRepaintBoundary(),
         ),
+        SizedBox(height: 15),
         Text(
           tr.turnOfPhones,
           textAlign: TextAlign.center,
@@ -108,7 +79,7 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
             shadows: kAfterAdhanTextShadow,
           ),
         ).animate().slide(begin: Offset(0, 1)).fade().addRepaintBoundary(),
-        SizedBox(height: 50),
+        SizedBox(height: 30),
       ],
     );
   }
