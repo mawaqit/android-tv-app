@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
 import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -22,8 +23,6 @@ import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sizer/sizer.dart';
 
-const key = 'https://5cfba6c6f6374d4abcac5a22f8adff61@o1075739.ingest.sentry.io/4504947427901440';
-
 final logger = Logger();
 
 Future<void> main() async {
@@ -32,7 +31,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   await Sentry.init(
-    (options) => options.dsn = key,
+    (options) => options.dsn = kSentryDns,
     appRunner: () => runApp(ProviderScope(child: MyApp())),
   );
 }

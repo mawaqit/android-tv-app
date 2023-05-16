@@ -203,6 +203,7 @@ class _VideoAnnouncementState extends State<_VideoAnnouncement> {
         mute: mosqueManager.typeIsMosque,
         useHybridComposition: false,
         hideControls: true,
+        forceHD: true,
       ),
     );
 
