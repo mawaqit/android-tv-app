@@ -26,13 +26,14 @@ import 'package:sizer/sizer.dart';
 final logger = Logger();
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp();
-
   await Sentry.init(
     (options) => options.dsn = kSentryDns,
-    appRunner: () => runApp(ProviderScope(child: MyApp())),
+    appRunner: () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      await Firebase.initializeApp();
+      runApp(ProviderScope(child: MyApp()));
+    },
   );
 }
 
