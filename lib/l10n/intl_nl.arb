@@ -11,6 +11,8 @@
   "tryAgain": "Probeer opnieuw",
   "closeApp": "App sluiten",
   "quit": "Sluiten",
+  "forceStaging": "Force Staging",
+  "disableStaging": "Staging uitschakelen",
   "sureCloseApp": "Weet u zeker dat u de toepassing wilt afsluiten?",
   "ok": "OK",
   "cancel": "Annuleren",
@@ -57,11 +59,11 @@
   "turnOfPhones": "Zet uw telefoon in de stille modus",
   "iqamaIn": "Iqama in",
   "alAthkar": "Al-Atkar",
-  "azkarList0": "",
+  "azkarList0": "Ik zoek vergeving bij Allah, ik zoek vergeving bij Allah, ik zoek vergeving bij Allah. O Allah, U bent vrede en van U komt vrede. Gezegend bent U, O Bezitter van majesteit en eer. O Allah, help mij om U te herinneren, U te bedanken en U op de beste manier te aanbidden",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Glorieus is Allah, en alle lof is voor Allah, en Allah is de grootste, (33 keer). Er is geen god dan Allah, Hij is de Enige zonder enige partner. Hij heeft alle macht en alle lof komt Hem toe, en Hij is almachtig over alles",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +83,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "Er is geen god dan Allah, Hij is Enig zonder enige partner. Aan Hem behoort de heerschappij en alle lof, en Hij is almachtig over alles. O Allah, er is niemand die kan tegenhouden wat U geeft en er is niemand die kan geven wat U tegenhoudt. En de rijkdom van deze wereld kan ons niet helpen zonder Uw hulp",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -127,5 +129,24 @@
   "changeLanguage": "Taal wijzigen",
   "forceScreen": "Forceerscherm",
   "clear": "Duidelijk",
-  "changeTheme": "Thema wijzigen"
+  "changeTheme": "Thema wijzigen",
+  "next": "Volgende",
+  "mainScreenOrSecondaryScreen": "Schermlocatie",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Wil je dit scherm installeren in de hoofdgebedsruimte (mannen gebedsruimte) ?",
+  "mainScreen": "Hoofdscherm",
+  "secondaryScreen": "Secundair scherm",
+  "duaaElEftar": "Het smeekgebed bij het verbreken van het vasten",
+  "announcementOnlyMode": "Mededelingen modus",
+  "normalMode": "Normale modus ",
+  "announcementOnlyModeEXPLINATION": "Kies of je scherm de mededelingen de hele tijd zal weergeven. Dit kan handig zijn als je het scherm bijvoorbeeld bij de ingang installeert.",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "Voor een secundaire gebedsruimte (vrouwenruimte of een andere verdieping bijvoorbeeld), zal dit scherm de live-streaming van de Vrijdaggebed tonen",
+  "mainScreenExplanation": "Voor de hoofdgebedsruimte zal dit scherm de live-streaming van de Vrijdaggebed niet weergeven",
+  "normalModeExplanation": "Zal het normale scherm weergeven met de gebedstijden en de mededelingen.",
+  "announcementOnlyModeExplanation": "Zal de mededelingen de hele tijd weergeven",
+  "eidMubarak": "Eid Mubarak",
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
 }
