@@ -11,6 +11,8 @@
   "tryAgain": "Réessayez",
   "closeApp": "Fermer l'application",
   "quit": "Quitter",
+  "forceStaging": "Passer en préprod",
+  "disableStaging": "Passer sur la prod",
   "sureCloseApp": "Voulez-vous vraiment quitter l'application ?",
   "ok": "OK",
   "cancel": "ANNULER",

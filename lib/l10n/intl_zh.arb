@@ -11,6 +11,8 @@
   "tryAgain": "再试一次",
   "closeApp": "关闭应用程序",
   "quit": "辞职",
+  "forceStaging": "力量分期",
+  "disableStaging": "禁用分期付款",
   "sureCloseApp": "你确定要退出申请吗？",
   "ok": "认可",
   "cancel": "取消",
@@ -57,11 +59,11 @@
   "turnOfPhones": "请将您的手机调至静音模式",
   "iqamaIn": "Iqama在",
   "alAthkar": "Al-Athkar",
-  "azkarList0": "",
+  "azkarList0": "阿拉善哉，阿拉善哉，阿拉善哉，阿拉善哉，阿拉善哉，阿拉善哉。",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Subhan Allah wal hamdu lillah wallahu akbar（33次） La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +83,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima`ate, wa la yanefa`u dhal djaddi mineka eldjad",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -127,5 +129,24 @@
   "changeLanguage": "改变语言",
   "forceScreen": "力量屏幕",
   "clear": "清楚",
-  "changeTheme": "改变主题"
+  "changeTheme": "改变主题",
+  "next": "下一页",
+  "mainScreenOrSecondaryScreen": "屏幕位置",
+  "mainScreenOrSecondaryScreenEXPLINATION": "你想在主祈祷室（男祈祷室）安装这个屏幕吗？",
+  "mainScreen": "主屏幕",
+  "secondaryScreen": "二级屏幕",
+  "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "公告模式",
+  "normalMode": "正常模式 ",
+  "announcementOnlyModeEXPLINATION": "选择你的屏幕是否会一直显示公告，如果你把屏幕安装在入口处，这可能很有用，例如。",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "对于一个次要的祈祷室（例如，妇女室或其他楼层），这个屏幕将显示jumua的现场直播",
+  "mainScreenExplanation": "对于主要的清真寺房间，这个屏幕将不显示jumua直播。",
+  "normalModeExplanation": "将显示正常的祈祷时间和公告的屏幕。",
+  "announcementOnlyModeExplanation": "将显示所有时间的公告",
+  "eidMubarak": "开斋节",
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
 }

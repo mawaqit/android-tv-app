@@ -11,6 +11,8 @@
   "tryAgain": "Prøv igen",
   "closeApp": "Luk appen",
   "quit": "Afslut",
+  "forceStaging": "Styrke stabling",
+  "disableStaging": "Deaktivere staging",
   "sureCloseApp": "Er du sikker på, at du vil afslutte programmet?",
   "ok": "OK",
   "cancel": "ANNULLER",
@@ -57,11 +59,11 @@
   "turnOfPhones": "Sæt venligst jeres telefoner i lydløs tilstand",
   "iqamaIn": "Iqama i",
   "alAthkar": "Al-Athkar",
-  "azkarList0": "",
+  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah Allahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram Allahumma A`inni `ala dhikrika wa chukrika wa husni `ibadatik",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Subhan Allah wal hamdu lillah wallahu akbar (33 gange) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +83,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima `ate, wa la yanefa`u dhal djaddi mineka eldjad",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -127,5 +129,24 @@
   "changeLanguage": "Skift sprog",
   "forceScreen": "Skærm forcere",
   "clear": "Klar",
-  "changeTheme": "Ændre tema"
+  "changeTheme": "Ændre tema",
+  "next": "Næste",
+  "mainScreenOrSecondaryScreen": "Skærmens placering",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Ønsker du at installere denne skærm i det primære bederum (mændenes bederum) ?",
+  "mainScreen": "Hovedskærm",
+  "secondaryScreen": "Sekundær skærm",
+  "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "Meddelelsestilstand",
+  "normalMode": "Normal tilstand ",
+  "announcementOnlyModeEXPLINATION": "Vælg, om din skærm skal vise meddelelser hele tiden, hvilket kan være nyttigt, hvis du f.eks. installerer skærmen ved indgangen.",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "For et sekundært bederum (f.eks. et kvinderum eller en anden etage) vil denne skærm vise jumua live-streaming",
+  "mainScreenExplanation": "I moskéens hovedrum viser denne skærm ikke jumua-live-streaming",
+  "normalModeExplanation": "Viser den normale skærm med bedetider og meddelelser.",
+  "announcementOnlyModeExplanation": "Vil vise meddelelser hele tiden",
+  "eidMubarak": "Eid Mubarak",
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
 }

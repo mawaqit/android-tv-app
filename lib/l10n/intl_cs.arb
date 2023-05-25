@@ -11,6 +11,8 @@
   "tryAgain": "Zkuste to znovu",
   "closeApp": "Zavřít aplikaci",
   "quit": "Ukončit",
+  "forceStaging": "Stupňování síly",
+  "disableStaging": "Zakázat etapizaci",
   "sureCloseApp": "Jste si jisti, že chcete aplikaci ukončit?",
   "ok": "OK",
   "cancel": "CANCEL",
@@ -57,11 +59,11 @@
   "turnOfPhones": "Přepněte prosím své telefony do tichého režimu",
   "iqamaIn": "Iqama v",
   "alAthkar": "Al-Athkar",
-  "azkarList0": "",
+  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah Allahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram Allahumma A`inni `ala dhikrika wa chukrika wa husni `ibadatik",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Subhan Allah wal hamdu lillah wallahu akbar (33 krát) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +83,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima `ate, wa la yanefa`u dhal djaddi mineka eldjad",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -127,5 +129,24 @@
   "changeLanguage": "Změna jazyka",
   "forceScreen": "Obrazovka Force",
   "clear": "Přehledně",
-  "changeTheme": "Změna tématu"
+  "changeTheme": "Změna tématu",
+  "next": "Další",
+  "mainScreenOrSecondaryScreen": "Umístění obrazovky",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Chcete tuto obrazovku instalovat do hlavní modlitebny (modlitebna pro muže) ?",
+  "mainScreen": "Hlavní obrazovka",
+  "secondaryScreen": "Sekundární obrazovka",
+  "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "Režim oznámení",
+  "normalMode": "Normální režim ",
+  "announcementOnlyModeEXPLINATION": "Zvolte, zda se na obrazovce budou neustále zobrazovat oznámení, což může být užitečné, pokud obrazovku instalujete například u vchodu.",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "V případě sekundární modlitebny (například v místnosti pro ženy nebo v jiném patře) se na této obrazovce zobrazí přímý přenos jumuy.",
+  "mainScreenExplanation": "V případě hlavní místnosti mešity se na této obrazovce nezobrazuje přímý přenos jumuy.",
+  "normalModeExplanation": "Zobrazí se normální obrazovka s časy modliteb a oznámeními.",
+  "announcementOnlyModeExplanation": "Zobrazí oznámení po celou dobu",
+  "eidMubarak": "Eid Mubarak",
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
 }
