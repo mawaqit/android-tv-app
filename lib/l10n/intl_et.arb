@@ -11,8 +11,8 @@
   "tryAgain": "Proovi uuesti",
   "closeApp": "Sulge rakendus",
   "quit": "Lõpeta",
-  "forceStaging": "Jõudude lavastamine",
-  "disableStaging": "Disable Staging",
+  "forceStaging": "Üleminek lavastamisele",
+  "disableStaging": "Üleminek tootmisele",
   "sureCloseApp": "Kas olete kindel, et soovite rakendusest loobuda?",
   "ok": "OK",
   "cancel": "CANCEL",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa Count Down",
   "afterAdhanHadith": "Pärast Adhan Hadith",
   "afterSalahAzkar": "Pärast Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Juhuslik Hadith",
   "announcement": "Teated",
   "jumuaaLive": "Jumuaa [Otseülekanne]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "Näitab tavalist ekraani koos palveaegade ja teadaannetega.",
   "announcementOnlyModeExplanation": "Näitab teateid kogu aeg",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Seaded",
+  "applicationModes": "Rakendusrežiimid",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Kui teil tekib probleem rakenduse aktiivse selle valikuga"
 }
