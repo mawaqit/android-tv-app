@@ -52,7 +52,7 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Text(
-            tr.iqama,
+            tr.iqamaa,
             style: theme.textTheme.displayMedium?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w700,
