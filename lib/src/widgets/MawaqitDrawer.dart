@@ -170,13 +170,6 @@ class MawaqitDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: Divider(height: 1, color: Colors.grey[400]),
           ),
-          // _renderPageDrawer(settings.pages!, context),
-          // settings.pages!.length != 0
-          //     ? Padding(
-          //         padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-          //         child: Divider(height: 1, color: Colors.grey[400]),
-          //       )
-          //     : Container(height: 0),
           DrawerListTitle(
             icon: Icons.info,
             text: S.of(context).about,
