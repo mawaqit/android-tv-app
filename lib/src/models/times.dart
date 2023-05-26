@@ -10,7 +10,7 @@ class Times {
   final int hijriAdjustment;
   final bool hijriDateForceTo30;
   final bool jumuaAsDuhr;
-  final int? imsakNbMinBeforeFajr;
+  final int imsakNbMinBeforeFajr;
   final String? shuruq;
 
   // final List<String> times;
@@ -141,7 +141,7 @@ class Times {
       hijriAdjustment: map['hijriAdjustment'] ?? -1,
       hijriDateForceTo30: map['hijriDateForceTo30'] ?? false,
       jumuaAsDuhr: map['jumuaAsDuhr'] ?? false,
-      imsakNbMinBeforeFajr: map['imsakNbMinBeforeFajr'],
+      imsakNbMinBeforeFajr: map['imsakNbMinBeforeFajr'] ?? 0,
       shuruq: map['shuruq'],
       // times: List<String>.from(map['times']),
       calendar: map['calendar'],
