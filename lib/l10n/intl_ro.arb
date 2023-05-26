@@ -11,6 +11,8 @@
   "tryAgain": "Încearcă din nou",
   "closeApp": "Închideți aplicația",
   "quit": "Renunță la",
+  "forceStaging": "Treceți la etapizare",
+  "disableStaging": "Trecerea la producție",
   "sureCloseApp": "Sunteți sigur că doriți să părăsiți aplicația?",
   "ok": "OK",
   "cancel": "CANCELARE",
@@ -57,11 +59,11 @@
   "turnOfPhones": "Vă rugăm să vă puneți telefoanele în modul silențios",
   "iqamaIn": "Iqama în",
   "alAthkar": "Al-Athkar",
-  "azkarList0": "",
+  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah Allahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram Allahumma A`inni `ala dhikrika wa chukrika wa husni `ibadatik",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Subhan Allah wal hamdu lillah wallahu akbar (33 de ori) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +83,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima `ate, wa la yanefa`u dhal djaddi mineka eldjad",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -116,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa Numărătoarea inversă",
   "afterAdhanHadith": "După Adhan Hadith",
   "afterSalahAzkar": "După Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Hadith aleatoriu",
   "announcement": "Anunțuri",
   "jumuaaLive": "Jumuaa [Live Streaming]",
@@ -127,5 +129,27 @@
   "changeLanguage": "Schimbați limba",
   "forceScreen": "Ecran de forță",
   "clear": "Clar",
-  "changeTheme": "Schimbă tema"
+  "changeTheme": "Schimbă tema",
+  "next": "Următorul",
+  "mainScreenOrSecondaryScreen": "Locația ecranului",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Doriți să instalați acest ecran în sala de rugăciune principală (sala de rugăciune pentru bărbați) ?",
+  "mainScreen": "Ecranul principal",
+  "secondaryScreen": "Ecran secundar",
+  "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "Modul anunțuri",
+  "normalMode": "Mod normal ",
+  "announcementOnlyModeEXPLINATION": "Alegeți dacă ecranul dvs. va afișa anunțuri tot timpul, acest lucru poate fi util dacă instalați ecranul la intrare, de exemplu.",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "Pentru o sală de rugăciune secundară (de exemplu, camera femeilor sau un alt etaj), acest ecran va afișa transmisia în direct a jumua.",
+  "mainScreenExplanation": "Pentru sala moscheii principale, acest ecran nu va afișa transmisia în direct a jumua.",
+  "normalModeExplanation": "Se va afișa ecranul normal cu orele de rugăciune și anunțurile.",
+  "announcementOnlyModeExplanation": "Va arăta anunțuri tot timpul",
+  "eidMubarak": "Eid Mubarak",
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Setări",
+  "applicationModes": "Moduri de aplicare",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Dacă întâmpinați o problemă cu aplicația activă această opțiune"
 }
