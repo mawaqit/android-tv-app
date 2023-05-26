@@ -11,8 +11,8 @@
   "tryAgain": "Tekrar Deneyin",
   "closeApp": "Uygulamayı kapat",
   "quit": "Çıkış",
-  "forceStaging": "Başlangıç ​kuvveti",
-  "disableStaging": "Hazırlamayı devre dışı bırak",
+  "forceStaging": "Evrelemeye geç",
+  "disableStaging": "Üretime geçiş",
   "sureCloseApp": "Uygulamadan çıkmak istediğinizden emin misiniz?",
   "ok": "TAMAM",
   "cancel": "İPTAL",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "İkamet için kalan süre",
   "afterAdhanHadith": "Ezandan Sonra Dua",
   "afterSalahAzkar": "Namazdan sonra dua ve tesbih",
-  "iqamaa": "İkamet",
+  "iqama": "Iqama",
   "randomHadith": "Rastgele bir Zikir",
   "announcement": "Duyurular",
   "jumuaaLive": "Cuma namazı [Canlı Yayın]",
@@ -139,7 +139,7 @@
   "announcementOnlyMode": "Reklamlar modu",
   "normalMode": "Normal mod",
   "announcementOnlyModeEXPLINATION": "Ekranınızın her zaman duyuruları gösterip göstermeyeceğini seçin, örneğin ekranı girişe kurarsanız bu yararlı olabilir.",
-  "duaaElEftarText": "",
+  "duaaElEftarText": "\"Allahümme leke sumtu ve bike âmentü ve aleyke tevekkeltü ve alâ rızkıke eftartü ve savme'l-Ğadi min şehri Ramazane neveytü, feğfirlî mâ kaddemtü ve mâ ahhartü.\"",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
@@ -148,5 +148,8 @@
   "normalModeExplanation": "Namaz vakitleri ve duyurular ile normal ekranı gösterecektir.",
   "announcementOnlyModeExplanation": "Duyuruları her zaman gösterecek",
   "eidMubarak": "Bayram mübarek olsun",
-  "takbeerAleidText": "Allâhü ekber Allâhü ekber lâ ilâhe illallâhü vallâhü ekber Allâhü ekber ve lillâhi'l-hamd"
+  "takbeerAleidText": "Allâhü ekber Allâhü ekber lâ ilâhe illallâhü vallâhü ekber Allâhü ekber ve lillâhi'l-hamd",
+  "settings": "Ayarlar",
+  "applicationModes": "Uygulama modları",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Uygulamayla ilgili bir sorunla karşılaşıyorsanız bu seçeneği etkinleştirin"
 }
