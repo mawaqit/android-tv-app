@@ -11,8 +11,8 @@
   "tryAgain": "Probeer opnieuw",
   "closeApp": "App sluiten",
   "quit": "Sluiten",
-  "forceStaging": "Force Staging",
-  "disableStaging": "Staging uitschakelen",
+  "forceStaging": "Overschakelen naar staging",
+  "disableStaging": "Overschakelen naar productie",
   "sureCloseApp": "Weet u zeker dat u de toepassing wilt afsluiten?",
   "ok": "OK",
   "cancel": "Annuleren",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa aftellen",
   "afterAdhanHadith": "Na Adhan Hadith",
   "afterSalahAzkar": "Na Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Willekeurige hadith",
   "announcement": "Aankondigingen",
   "jumuaaLive": "Jumuaa [Live Streaming]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "Zal het normale scherm weergeven met de gebedstijden en de mededelingen.",
   "announcementOnlyModeExplanation": "Zal de mededelingen de hele tijd weergeven",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Instellingen",
+  "applicationModes": "Toepassingsmodi",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Als u een probleem ondervindt met de app activeert u deze optie"
 }
