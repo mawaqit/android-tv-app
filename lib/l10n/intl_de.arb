@@ -11,8 +11,8 @@
   "tryAgain": "nochmal versuchen",
   "closeApp": "App. schließen",
   "quit": "Beenden",
-  "forceStaging": "Staging erzwingen",
-  "disableStaging": "Staging deaktivieren",
+  "forceStaging": "Zum Staging wechseln",
+  "disableStaging": "Zur Produktion wechseln",
   "sureCloseApp": "Möchten Sie die App. wirklich beenden?",
   "ok": "Ok",
   "cancel": "Abbrechen",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa Count Down",
   "afterAdhanHadith": "Nach dem Adhan Hadith",
   "afterSalahAzkar": "Nach Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Zufälliger Hadith",
   "announcement": "Ankündigungen",
   "jumuaaLive": "Jumuaa [Live-Streaming]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "zeigt den Normal-Bildschirm mit den Gebetszeiten und den Ankündigungen.",
   "announcementOnlyModeExplanation": "Ankündigungen werden ständig angezeigt",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Einstellungen",
+  "applicationModes": "Anwendungsmodi",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Wenn Sie ein Problem mit der App haben, aktivieren Sie diese Option"
 }

@@ -11,6 +11,8 @@
   "tryAgain": "Prøv igjen",
   "closeApp": "Lukk app",
   "quit": "Avslutt",
+  "forceStaging": "Bytt til testmiljø",
+  "disableStaging": "Bytt til produksjon",
   "sureCloseApp": "Er du sikker på at du vil avslutte programmet?",
   "ok": "Ok",
   "cancel": "AVBRYT",
@@ -116,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa teller ned",
   "afterAdhanHadith": "Etter Adhan Hadith",
   "afterSalahAzkar": "Etter Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Tilfeldig Hadith",
   "announcement": "Kunngjøringer",
   "jumuaaLive": "Jumuaa [Live Streaming]",
@@ -146,5 +148,8 @@
   "normalModeExplanation": "Vil vise skjermen med bønn tid og kunngjøringer.",
   "announcementOnlyModeExplanation": "Vil vise kunngjøringer hele tiden",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Innstillinger",
+  "applicationModes": "Applikasjons moduser",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Dersom du møter et problem med appen aktiv dette alternativet"
 }

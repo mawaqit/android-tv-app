@@ -11,8 +11,8 @@
   "tryAgain": "Réessayez",
   "closeApp": "Fermer l'application",
   "quit": "Quitter",
-  "forceStaging": "Passer en préprod",
-  "disableStaging": "Passer sur la prod",
+  "forceStaging": "Passer en préproduction",
+  "disableStaging": "Passer en production",
   "sureCloseApp": "Voulez-vous vraiment quitter l'application ?",
   "ok": "OK",
   "cancel": "ANNULER",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Compte à rebours Iqamaa",
   "afterAdhanHadith": "Hadith Après l'Adhan",
   "afterSalahAzkar": "Invocations après la prière",
-  "iqamaa": "iQamaa",
+  "iqama": "Iqama",
   "randomHadith": "Hadiths au hasard",
   "announcement": "Annonces",
   "jumuaaLive": "Live [Diffusion en Direct]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "Affiche l'écran normal avec les heures de prière et les annonces.",
   "announcementOnlyModeExplanation": "Les annonces seront affichées en permanence",
   "eidMubarak": "Aïd Moubarak",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Paramètres",
+  "applicationModes": "Modes d'application",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Si vous rencontrez un problème avec l'application, activez cette option."
 }

@@ -11,6 +11,8 @@
   "tryAgain": "再挑戦",
   "closeApp": "アプリを閉じる",
   "quit": "やめる",
+  "forceStaging": "ステージングに切り替える",
+  "disableStaging": "生産への切り替え",
   "sureCloseApp": "本当にアプリケーションを終了しますか？",
   "ok": "よっしゃー",
   "cancel": "CANCEL",
@@ -57,11 +59,11 @@
   "turnOfPhones": "携帯電話をサイレントモードにしてください",
   "iqamaIn": "のイーカマ",
   "alAthkar": "アルアトカール",
-  "azkarList0": "",
+  "azkarList0": "アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ、アッラーに捧ぐ",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Subhan Allah wal hamdu lillah wallahu akbar (33 times) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +83,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima `ate, wa la yanefa`u dhal djaddi mineka eldjad",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -116,7 +118,7 @@
   "iqamaaCountDown": "イクアマアカウントダウン",
   "afterAdhanHadith": "アダン後 ハディース",
   "afterSalahAzkar": "サラー・アズカールのその後",
-  "iqamaa": "イカマア",
+  "iqama": "イーカマ",
   "randomHadith": "ランダムハディット",
   "announcement": "お知らせ",
   "jumuaaLive": "ジュムアア【ライブ配信】のご案内",
@@ -127,5 +129,27 @@
   "changeLanguage": "言語を変更する",
   "forceScreen": "フォーススクリーン",
   "clear": "クリア",
-  "changeTheme": "テーマ変更"
+  "changeTheme": "テーマ変更",
+  "next": "次のページ",
+  "mainScreenOrSecondaryScreen": "画面位置",
+  "mainScreenOrSecondaryScreenEXPLINATION": "このスクリーンをメイン祈祷室（男性用祈祷室）に設置したいですか？",
+  "mainScreen": "メイン画面",
+  "secondaryScreen": "二次スクリーン",
+  "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "アナウンスメントモード",
+  "normalMode": "ノーマルモード ",
+  "announcementOnlyModeEXPLINATION": "スクリーンに常時アナウンスを表示するかどうかを選択します。例えば、エントランスにスクリーンを設置する場合に便利です。",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "第二礼拝室（女子トイレや別フロアなど）の場合、この画面でジュムアライブ配信が行われます。",
+  "mainScreenExplanation": "メインモスクの部屋の場合、この画面ではジュムアのライブストリーミングは表示されない",
+  "normalModeExplanation": "祈りの時間やお知らせが表示される通常の画面が表示されます。",
+  "announcementOnlyModeExplanation": "ずっとお知らせを表示します",
+  "eidMubarak": "イードムバラク",
+  "takbeerAleidText": "アッラーフ・アクバル、アッラーフ・アクバル、ラ・イラハ・イラ・アッラー、アッラーフ・アクバル、ワ・リッラーヒ・アル・ハムド",
+  "settings": "設定方法",
+  "applicationModes": "アプリケーションモード",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "アプリで問題が発生した場合は、このオプションをアクティブにしてください。"
 }

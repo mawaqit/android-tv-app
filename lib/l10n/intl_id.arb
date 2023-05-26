@@ -11,6 +11,8 @@
   "tryAgain": "Coba Lagi",
   "closeApp": "Tutup aplikasi",
   "quit": "Keluar",
+  "forceStaging": "Beralih ke pementasan",
+  "disableStaging": "Beralih ke produksi",
   "sureCloseApp": "Apakah anda yakin ingin keluar dari aplikasi?",
   "ok": "OK",
   "cancel": "Batal",
@@ -57,11 +59,11 @@
   "turnOfPhones": "Harap setel ponsel Anda ke Mode Senyap",
   "iqamaIn": "Iqomah dalam",
   "alAthkar": "Zikir",
-  "azkarList0": "",
+  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah Allahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram Allahumma A`inni `ala dzikrika wa chukrika wa husni `ibadatik",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Subhanallah wal hamdu lillah wallahu akbar (33 kali) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +83,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima `ate, wa la yanefa`u dhal djaddi mineka eldjad",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -116,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa Hitung Mundur",
   "afterAdhanHadith": "Setelah Adzan Hadis",
   "afterSalahAzkar": "Setelah Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Hadis Acak",
   "announcement": "Pengumuman",
   "jumuaaLive": "Jum'at [Live Streaming]",
@@ -127,5 +129,27 @@
   "changeLanguage": "Mengubah bahasa",
   "forceScreen": "Layar paksa",
   "clear": "Jelas",
-  "changeTheme": "Ubah Tema"
+  "changeTheme": "Ubah Tema",
+  "next": "Berikutnya",
+  "mainScreenOrSecondaryScreen": "Lokasi layar",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Apakah Anda ingin memasang layar ini di ruang salat utama (ruang salat pria)?",
+  "mainScreen": "Layar utama",
+  "secondaryScreen": "Layar sekunder",
+  "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "Mode pengumuman",
+  "normalMode": "Mode normal ",
+  "announcementOnlyModeEXPLINATION": "Pilih apakah layar Anda akan menampilkan pengumuman sepanjang waktu, ini dapat berguna jika Anda memasang layar di pintu masuk misalnya.",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "Untuk ruang salat sekunder (ruang wanita atau lantai lain misalnya), layar ini akan menampilkan siaran langsung jumatan",
+  "mainScreenExplanation": "Untuk ruang masjid utama, layar ini tidak akan menampilkan siaran langsung jumatan",
+  "normalModeExplanation": "Akan menampilkan layar normal dengan waktu sholat dan pengumuman.",
+  "announcementOnlyModeExplanation": "Akan menampilkan pengumuman sepanjang waktu",
+  "eidMubarak": "Idul Fitri",
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Pengaturan",
+  "applicationModes": "Mode aplikasi",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Jika Anda mengalami masalah dengan aplikasi yang mengaktifkan opsi ini"
 }

@@ -11,6 +11,8 @@
   "tryAgain": "Prova di nuovo",
   "closeApp": "Chiudi app",
   "quit": "Uscire",
+  "forceStaging": "Passa alla messa in scena",
+  "disableStaging": "Passare alla produzione",
   "sureCloseApp": "Sei sicuro di che voler uscire dall'applicazione?",
   "ok": "OK",
   "cancel": "Annullare",
@@ -57,11 +59,11 @@
   "turnOfPhones": "La preghiamo di mettere i suoi telefoni in modalità silenziosa",
   "iqamaIn": "Iqama in",
   "alAthkar": "Al-Athkar",
-  "azkarList0": "",
+  "azkarList0": "Chiedo perdono a Dio, chiedo perdono a Dio, chiedo perdono a Dio. Grazie e adorarti bene",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Subhan Allah wal hamdu lillah wallahu akbar (33 volte) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +83,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima `ate, wa la yanefa`u dhal djaddi mineka eldjad",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -116,7 +118,7 @@
   "iqamaaCountDown": "Conto alla rovescia di Iqamaa",
   "afterAdhanHadith": "Dopo l'Adhan Hadith",
   "afterSalahAzkar": "Dopo Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Hadith a caso",
   "announcement": "Annunci",
   "jumuaaLive": "Jumuaa [Streaming in diretta]",
@@ -127,5 +129,27 @@
   "changeLanguage": "Cambiare la lingua",
   "forceScreen": "Schermo di forza",
   "clear": "Libero",
-  "changeTheme": "Cambia tema"
+  "changeTheme": "Cambia tema",
+  "next": "Avanti",
+  "mainScreenOrSecondaryScreen": "Posizione dello schermo",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Vuoi installare questa schermata nella sala di preghiera principale (stanza di preghiera degli uomini) ?",
+  "mainScreen": "Schermo principale",
+  "secondaryScreen": "Schermo secondario",
+  "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "Annunci",
+  "normalMode": "Modalità Normale",
+  "announcementOnlyModeEXPLINATION": "Scelga se il suo schermo visualizzerà gli annunci per tutto il tempo, questo può essere utile se installa lo schermo all'ingresso, ad esempio.",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "Per una sala di preghiera secondaria (sala delle donne o un altro piano, per esempio), questa schermata mostrerà la jumua in live-streaming",
+  "mainScreenExplanation": "Per la sala della moschea principale, questa schermata non mostrerà il live-streaming della jumua.",
+  "normalModeExplanation": "Mostrerà la schermata normale con gli orari di preghiera e gli annunci.",
+  "announcementOnlyModeExplanation": "Mostrerà gli annunci in ogni momento",
+  "eidMubarak": "Eid Mubarak",
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Impostazioni",
+  "applicationModes": "Modalità di applicazione",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Se riscontra un problema con l'applicazione attivi questa opzione"
 }

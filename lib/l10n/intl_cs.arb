@@ -11,8 +11,8 @@
   "tryAgain": "Zkuste to znovu",
   "closeApp": "Zavřít aplikaci",
   "quit": "Ukončit",
-  "forceStaging": "Stupňování síly",
-  "disableStaging": "Zakázat etapizaci",
+  "forceStaging": "Přepnutí na etapizaci",
+  "disableStaging": "Přechod na výrobu",
   "sureCloseApp": "Jste si jisti, že chcete aplikaci ukončit?",
   "ok": "OK",
   "cancel": "CANCEL",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Počet Iqamaa dolů",
   "afterAdhanHadith": "Po hadísu Adhán",
   "afterSalahAzkar": "Po Salahovi Azkarovi",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Náhodný hadís",
   "announcement": "Oznámení",
   "jumuaaLive": "Jumuaa [Přímý přenos]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "Zobrazí se normální obrazovka s časy modliteb a oznámeními.",
   "announcementOnlyModeExplanation": "Zobrazí oznámení po celou dobu",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Nastavení",
+  "applicationModes": "Režimy použití",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Pokud se setkáte s problémem s aktivní aplikací."
 }
