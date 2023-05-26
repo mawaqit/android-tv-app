@@ -11,6 +11,8 @@
   "tryAgain": "Försök igen",
   "closeApp": "Stäng appen",
   "quit": "Sluta med",
+  "forceStaging": "Växla till staging",
+  "disableStaging": "Övergång till produktion",
   "sureCloseApp": "Är du säker på att du vill avsluta programmet?",
   "ok": "OK",
   "cancel": "CANCEL",
@@ -57,11 +59,11 @@
   "turnOfPhones": "Vänligen sätt era telefoner i tyst läge",
   "iqamaIn": "Iqama i",
   "alAthkar": "Al-Athkar",
-  "azkarList0": "",
+  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah Allahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram Allahumma A`inni `ala dhikrika wa chukrika wa husni `ibadatik",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Subhan Allah wal hamdu lillah wallahu akbar (33 gånger) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -81,7 +83,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima `ate, wa la yanefa`u dhal djaddi mineka eldjad",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -116,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa räknar ner",
   "afterAdhanHadith": "Efter Adhan Hadith",
   "afterSalahAzkar": "Efter Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Slumpmässig Hadith",
   "announcement": "Meddelanden",
   "jumuaaLive": "Jumuaa [Livestreaming]",
@@ -127,5 +129,27 @@
   "changeLanguage": "Ändra språk",
   "forceScreen": "Tvångsskärmen",
   "clear": "Klart",
-  "changeTheme": "Ändra tema"
+  "changeTheme": "Ändra tema",
+  "next": "Nästa",
+  "mainScreenOrSecondaryScreen": "Skärmens placering",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Vill du installera den här skärmen i huvudbönrummet (böneutrymmet för män)?",
+  "mainScreen": "Huvudskärmen",
+  "secondaryScreen": "Sekundär skärm",
+  "duaaElEftar": "Duaa El Eftar",
+  "announcementOnlyMode": "Läge för meddelanden",
+  "normalMode": "Normalt läge ",
+  "announcementOnlyModeEXPLINATION": "Välj om skärmen ska visa meddelanden hela tiden, detta kan vara användbart om du installerar skärmen vid ingången till exempel.",
+  "duaaElEftarText": "",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "För ett sekundärt bönerum (t.ex. ett kvinnorum eller en annan våning) visas jumua live-streaming på denna skärm.",
+  "mainScreenExplanation": "I moskéns huvudrum visas inte jumua-streamingen live på denna skärm.",
+  "normalModeExplanation": "Visar den normala skärmen med bönetider och meddelanden.",
+  "announcementOnlyModeExplanation": "Kommer att visa meddelanden hela tiden",
+  "eidMubarak": "Eid Mubarak",
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Inställningar",
+  "applicationModes": "Tillämpningssätt",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Om du stöter på problem med appen, aktivera detta alternativ"
 }
