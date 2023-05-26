@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa Count Down",
   "afterAdhanHadith": "After Adhan Hadith",
   "afterSalahAzkar": "After Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Random Hadith",
   "announcement": "Announcements",
   "jumuaaLive": "Jumuaa [Live Streaming]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "Will show the normal screen with the prayer times and the announcements.",
   "announcementOnlyModeExplanation": "Will show announcements all time",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Settings",
+  "applicationModes": "Application modes",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "If you are encountering an issue with the app active this option"
 }
