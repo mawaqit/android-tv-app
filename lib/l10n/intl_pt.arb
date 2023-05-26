@@ -11,6 +11,8 @@
   "tryAgain": "Tente novamente",
   "closeApp": "Fechar aplicação",
   "quit": "Sair",
+  "forceStaging": "Mudar para a fase de preparação",
+  "disableStaging": "Passagem à produção",
   "sureCloseApp": "Tem a certeza que pretende sair da aplicação?",
   "ok": "OK",
   "cancel": "CANCELAR",
@@ -116,7 +118,7 @@
   "iqamaaCountDown": "Jamaat contagem decrescente",
   "afterAdhanHadith": "Hadith depois de Azán",
   "afterSalahAzkar": "Zikr depois da oração",
-  "iqamaa": "Iqamah",
+  "iqama": "Iqama",
   "randomHadith": "Hadith aleatório",
   "announcement": "Anúncios",
   "jumuaaLive": "Jumu'ah [Live Streaming]",
@@ -146,5 +148,8 @@
   "normalModeExplanation": "O modo normal irá mostrar os horários das orações e os anúncios.",
   "announcementOnlyModeExplanation": "Irá mostrar apenas anúncios o tempo todo",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allah é grande, Allah é grande, Allah é grande, ninguém mais é digno da adoração exceto Allah, Allah é grande, Allah é grande, e louvores para Allah"
+  "takbeerAleidText": "Allah é grande, Allah é grande, Allah é grande, ninguém mais é digno da adoração exceto Allah, Allah é grande, Allah é grande, e louvores para Allah",
+  "settings": "Definições",
+  "applicationModes": "Modos de aplicação",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Se estiver a encontrar um problema com a aplicação, active esta opção"
 }
