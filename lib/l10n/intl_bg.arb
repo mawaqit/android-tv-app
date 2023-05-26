@@ -11,8 +11,8 @@
   "tryAgain": "Опитайте отново",
   "closeApp": "Затваряне на приложението",
   "quit": "Напуснете",
-  "forceStaging": "Поставяне на сила",
-  "disableStaging": "Деактивиране на постановка",
+  "forceStaging": "Преминаване към постановка",
+  "disableStaging": "Преминаване към производство",
   "sureCloseApp": "Сигурни ли сте, че искате да прекратите приложението?",
   "ok": "ОК",
   "cancel": "ОТМЕНЯНЕ",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Отчитане на Iqamaa",
   "afterAdhanHadith": "След Адхан Хадис",
   "afterSalahAzkar": "След Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Случаен хадис",
   "announcement": "Обявления",
   "jumuaaLive": "Jumuaa [стрийминг на живо]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "Ще се покаже нормалният екран с времето за молитва и съобщенията.",
   "announcementOnlyModeExplanation": "Ще показва съобщения през цялото време",
   "eidMubarak": "Ид Мубарак",
-  "takbeerAleidText": "Аллаху Акбар, Аллаху Акбар, Аллаху Акбар, Аллаху Акбар, ла илаха ила Аллах, Аллаху Акбар, Аллаху Акбар, Аллаху Акбар, уа лилахи ал-хамд"
+  "takbeerAleidText": "Аллаху Акбар, Аллаху Акбар, Аллаху Акбар, Аллаху Акбар, ла илаха ила Аллах, Аллаху Акбар, Аллаху Акбар, Аллаху Акбар, уа лилахи ал-хамд",
+  "settings": "Настройки",
+  "applicationModes": "Режими на приложение",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Ако срещнете проблем с приложението, активната опция"
 }
