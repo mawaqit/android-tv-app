@@ -11,8 +11,8 @@
   "tryAgain": "再试一次",
   "closeApp": "关闭应用程序",
   "quit": "辞职",
-  "forceStaging": "力量分期",
-  "disableStaging": "禁用分期付款",
+  "forceStaging": "切换到分期付款",
+  "disableStaging": "转为生产",
   "sureCloseApp": "你确定要退出申请吗？",
   "ok": "认可",
   "cancel": "取消",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa倒计时",
   "afterAdhanHadith": "阿丹圣训后",
   "afterSalahAzkar": "在萨拉赫-阿兹卡尔之后",
-  "iqamaa": "Iqamaa",
+  "iqama": "身份证号：Iqama",
   "randomHadith": "随机圣训",
   "announcement": "公告",
   "jumuaaLive": "Jumuaa [现场直播]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "将显示正常的祈祷时间和公告的屏幕。",
   "announcementOnlyModeExplanation": "将显示所有时间的公告",
   "eidMubarak": "开斋节",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "设置",
+  "applicationModes": "应用模式",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "如果你遇到了应用程序的问题，可以选择这个选项。"
 }
