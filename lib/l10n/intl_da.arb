@@ -11,8 +11,8 @@
   "tryAgain": "Prøv igen",
   "closeApp": "Luk appen",
   "quit": "Afslut",
-  "forceStaging": "Styrke stabling",
-  "disableStaging": "Deaktivere staging",
+  "forceStaging": "Skift til mellemstadie",
+  "disableStaging": "Skift til produktion",
   "sureCloseApp": "Er du sikker på, at du vil afslutte programmet?",
   "ok": "OK",
   "cancel": "ANNULLER",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Iqamaa tæller ned",
   "afterAdhanHadith": "Efter Adhan Hadith",
   "afterSalahAzkar": "Efter Salah Azkar",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Tilfældig Hadith",
   "announcement": "Meddelelser",
   "jumuaaLive": "Jumuaa [Live Streaming]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "Viser den normale skærm med bedetider og meddelelser.",
   "announcementOnlyModeExplanation": "Vil vise meddelelser hele tiden",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Indstillinger",
+  "applicationModes": "Anvendelsesmetoder",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Hvis du støder på et problem med appen, skal du aktivere denne mulighed"
 }
