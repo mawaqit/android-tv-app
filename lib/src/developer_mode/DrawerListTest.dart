@@ -95,7 +95,7 @@ class DrawerListDeveloper extends StatelessWidget {
         ),
         DrawerListTitle(
           icon: Icons.mic_external_on,
-          text: S.of(context).iqamaa,
+          text: S.of(context).iqama,
           onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
             child: IqamaSubScreen(),
           )),

@@ -63,7 +63,7 @@ enum _ScreenState {
       case _ScreenState.iqamaaCountDownScreen:
         return S.current.duaaRemainder;
       case _ScreenState.iqamaaScreen:
-        return S.current.iqamaa;
+        return S.current.iqama;
       case _ScreenState.jumuaaLiveScreen:
         return S.current.jumuaaLive;
       case _ScreenState.fajrWakeUpScreen:
