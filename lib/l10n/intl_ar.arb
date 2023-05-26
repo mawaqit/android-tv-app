@@ -11,8 +11,8 @@
   "tryAgain": "حاول مرة اخرى",
   "closeApp": "إغلاق التطبيق",
   "quit": "خروج",
-  "forceStaging": "التشغيل المرحلي",
-  "disableStaging": "تعطيل التشغيل المرحلي",
+  "forceStaging": "الانتقال الى ستاجينج",
+  "disableStaging": "الانتقال الى برودكشن ",
   "sureCloseApp": "هل أنت متأكد من أنك تريد الخروج من التطبيق؟",
   "ok": "موافق",
   "cancel": "إلغاء",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "العد التنازلي لإقاما",
   "afterAdhanHadith": "دعاء ما بعد الأذان",
   "afterSalahAzkar": "أذكار ما بعد الصلاة",
-  "iqamaa": "الإقامة",
+  "iqama": "الإقامة",
   "randomHadith": "دعاء",
   "announcement": "الإعلانات",
   "jumuaaLive": "البث المباشر",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "ستظهر الشاشة العادية مع أوقات الصلاة والإعلانات.",
   "announcementOnlyModeExplanation": "ستظهر الإعلانات طوال الوقت",
   "eidMubarak": "عيد مبارك",
-  "takbeerAleidText": "الله أكبر الله أكبر الله أكبر و لا إله إلا الله، الله أكبر الله أكبر الله أكبر و لله الحمد"
+  "takbeerAleidText": "الله أكبر الله أكبر الله أكبر و لا إله إلا الله، الله أكبر الله أكبر الله أكبر و لله الحمد",
+  "settings": "الإعدادات",
+  "applicationModes": "أوضاع التطبيق",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "إذا كنت تواجه مشكلة مع التطبيق نشط هذا الخيار"
 }
