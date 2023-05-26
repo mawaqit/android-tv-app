@@ -11,8 +11,8 @@
   "tryAgain": "Yritä uudelleen",
   "closeApp": "Sulje sovellus",
   "quit": "Lopeta",
-  "forceStaging": "Voima Staging",
-  "disableStaging": "Poista Staging käytöstä",
+  "forceStaging": "Vaihda lavastukseen",
+  "disableStaging": "Siirtyminen tuotantoon",
   "sureCloseApp": "Haluatko varmasti lopettaa sovelluksen?",
   "ok": "OK",
   "cancel": "CANCEL",
@@ -118,7 +118,7 @@
   "iqamaaCountDown": "Iqamaan Määrä Alas",
   "afterAdhanHadith": "Adhanin jälkeen Hadith",
   "afterSalahAzkar": "Salah Azkarin jälkeen",
-  "iqamaa": "Iqamaa",
+  "iqama": "Iqama",
   "randomHadith": "Satunnainen Hadith",
   "announcement": "Ilmoitukset",
   "jumuaaLive": "Jumuaa [Suora lähetys]",
@@ -148,5 +148,8 @@
   "normalModeExplanation": "Näyttää normaalin näytön, jossa on rukousajat ja ilmoitukset.",
   "announcementOnlyModeExplanation": "Näyttää ilmoitukset koko ajan",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd"
+  "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
+  "settings": "Asetukset",
+  "applicationModes": "Sovellustavat",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Jos sinulla on ongelmia sovelluksen kanssa, tämä vaihtoehto on aktiivinen."
 }
