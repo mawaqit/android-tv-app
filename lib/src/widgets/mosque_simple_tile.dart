@@ -14,7 +14,7 @@ class MosqueSimpleTile extends StatefulWidget {
   }) : super(key: key);
 
   final Mosque mosque;
-  final void Function()? onTap;
+  final Future<void> Function()? onTap;
   final void Function(bool i)? onFocusChange;
   final FocusNode? focusNode;
   final bool? autoFocus;
@@ -26,18 +26,15 @@ class MosqueSimpleTile extends StatefulWidget {
 class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
   bool isFocused = false;
 
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
     theme = theme.copyWith(
-      textTheme: isFocused
-          ? theme.textTheme
-              .apply(bodyColor: Colors.white, displayColor: Colors.white)
-          : null,
-      cardColor: theme.brightness == Brightness.dark
-          ? Colors.black45
-          : theme.primaryColor.withOpacity(.12),
+      textTheme: isFocused ? theme.textTheme.apply(bodyColor: Colors.white, displayColor: Colors.white) : null,
+      cardColor: theme.brightness == Brightness.dark ? Colors.black45 : theme.primaryColor.withOpacity(.12),
     );
 
     return Theme(
@@ -50,23 +47,32 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
         },
         child: Card(
           elevation: 0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100000)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000)),
           color: isFocused ? Theme.of(context).focusColor : null,
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             autofocus: widget.autoFocus ?? false,
-            focusColor:
-                isFocused ? Theme.of(context).focusColor : Colors.transparent,
-            onTap: widget.onTap,
+            focusColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
+            onTap: () async {
+              if (loading || widget.onTap == null) return;
+
+              try {
+                setState(() => loading = true);
+                await widget.onTap?.call();
+                setState(() => loading = false);
+              } catch (e) {
+                setState(() => loading = false);
+                rethrow;
+              }
+            },
             child: Row(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CircleAvatar(
-                      backgroundImage:
-                          CachedNetworkImageProvider(widget.mosque.image ?? ''),
-                      radius: 32),
+                    backgroundImage: CachedNetworkImageProvider(widget.mosque.image ?? ''),
+                    radius: 32,
+                  ),
                 ),
                 SizedBox(width: 8),
                 Column(
@@ -86,17 +92,11 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
                       ),
                     ),
                   ],
-                )
+                ),
+                Spacer(),
+                if (loading) Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: CircularProgressIndicator()),
               ],
             ),
-            // child: ListTile(
-            //   contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-            //   textColor: isFocused ? Colors.white : null,
-            //   onTap: widget.onTap,
-            //   leading: CircleAvatar(backgroundImage: NetworkImage(widget.mosque.image ?? '')),
-            //   title: Text(widget.mosque.label ?? widget.mosque.name),
-            //   subtitle: Text(widget.mosque.localisation ?? ''),
-            // ),
           ),
         ),
       ),
