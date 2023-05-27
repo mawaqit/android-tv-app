@@ -12,6 +12,7 @@ import 'package:mawaqit/src/mawaqit_image/mawaqit_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
+import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
@@ -200,14 +201,13 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   /// handle pre caching for images
   /// Qr, mosque image, mosque logo, announcement image
   Future<void> preCacheImages() async {
-    final now = DateTime.now();
     final images = [
       mosque?.image,
       mosque?.logo,
       mosque?.interiorPicture,
       mosque?.exteriorPicture,
-      "https://mawaqit.net/bundles/app/prayer-times/img/background/${mosqueConfig?.backgroundMotif ?? 5}.jpg",
-      'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
+      mosqueConfig?.motifUrl,
+      kFooterQrLink,
       ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
     ].where((e) => e != null).cast<String>();
 

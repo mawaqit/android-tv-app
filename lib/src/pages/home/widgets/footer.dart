@@ -10,6 +10,8 @@ import 'FlashWidget.dart';
 import 'HomeLogoVersion.dart';
 import 'MosqueInformationWidget.dart';
 
+const kFooterQrLink = 'https://mawaqit.net/static/images/store-qrcode.png?4.89.2';
+
 class Footer extends StatelessWidget {
   const Footer({Key? key}) : super(key: key);
 
@@ -48,7 +50,7 @@ class Footer extends StatelessWidget {
                   Expanded(
                     child: FittedBox(
                       child: MawaqitNetworkImage(
-                        imageUrl: 'https://mawaqit.net/static/images/store-qrcode.png?4.89.2',
+                        imageUrl: kFooterQrLink,
                         errorBuilder: (context, url, error) => SizedBox(),
                         width: 4.3.vw,
                         height: 4.3.vw,
