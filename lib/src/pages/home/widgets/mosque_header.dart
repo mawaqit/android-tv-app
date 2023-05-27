@@ -1,7 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_cache.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_network_image.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/offline_widget.dart';
@@ -32,9 +33,8 @@ class MosqueHeader extends StatelessWidget {
           OfflineWidget(),
           Row(
             children: [
-
               mosque.logo != null && mosqueConfig!.showLogo
-                  ? CachedNetworkImage(
+                  ? MawaqitNetworkImage(
                       imageUrl: mosque.logo!,
                       width: 40,
                       height: 40,
@@ -42,7 +42,7 @@ class MosqueHeader extends StatelessWidget {
                   : SizedBox(),
               // SizedBox(width: 10),
               Container(
-                padding: EdgeInsets.only(left: 1.vw),
+                  padding: EdgeInsets.only(left: 1.vw),
                   constraints: BoxConstraints(maxWidth: 70.vw),
                   child: FittedBox(
                     child: Row(
@@ -85,7 +85,7 @@ class MosqueHeader extends StatelessWidget {
                   ),
               // SizedBox(width: 10),
               mosque.logo != null && mosqueConfig.showLogo
-                  ? CachedNetworkImage(
+                  ? MawaqitNetworkImage(
                       imageUrl: mosque.logo!,
                       width: 40,
                       height: 40,

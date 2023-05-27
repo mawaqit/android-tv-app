@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_network_image.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
@@ -182,7 +182,7 @@ class _ImageAnnouncement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
+    return MawaqitNetworkImage(
       imageUrl: image,
       fit: BoxFit.cover,
       width: double.infinity,

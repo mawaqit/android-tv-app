@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/src/helpers/StringUtils.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_network_image.dart';
 
 class DrawerListTitle extends StatefulWidget {
   final String? iconUrl;
@@ -75,7 +75,7 @@ class _DrawerListTitle extends State<DrawerListTitle> {
 
   Widget _renderIcon(String? iconUrl, IconData icon, Color? color) {
     return iconUrl != null && iconUrl != ""
-        ? CachedNetworkImage(
+        ? MawaqitNetworkImage(
             imageUrl: iconUrl,
             width: 20,
             height: 20,

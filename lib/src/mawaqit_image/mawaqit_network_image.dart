@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
 
 class MawaqitNetworkImage extends Image {
   MawaqitNetworkImage({
+    required String imageUrl,
     super.alignment,
     super.repeat,
     super.matchTextDirection = false,
@@ -21,5 +23,5 @@ class MawaqitNetworkImage extends Image {
     super.isAntiAlias = false,
     super.key,
     super.opacity,
-  }) : super(image: null);
+  }) : super(image: MawaqitNetworkImageProvider(imageUrl));
 }
