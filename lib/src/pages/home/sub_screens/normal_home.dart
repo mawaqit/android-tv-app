@@ -4,12 +4,11 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/FlashWidget.dart';
-import 'package:mawaqit/src/pages/home/widgets/orientation_widget.dart';
-import 'package:mawaqit/src/pages/home/widgets/salah_items/SalahItem.dart';
-import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/ShurukWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/TimeWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
+import 'package:mawaqit/src/pages/home/widgets/orientation_widget.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/SalahItem.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
@@ -68,6 +67,7 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
           textDirection: TextDirection.ltr,
           child: MosqueHeader(mosque: mosque),
         ),
+        Spacer(),
         HomeTimeWidget().animate().slideY(delay: Duration(milliseconds: 500)).fadeIn().addRepaintBoundary(),
         Column(
           children: [
@@ -89,6 +89,7 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
             ),
           ],
         ),
+        Spacer(),
         Column(
           children: [
             if (mosque.flash != null)

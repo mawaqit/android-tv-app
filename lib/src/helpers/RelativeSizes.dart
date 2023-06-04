@@ -24,4 +24,8 @@ extension RelativePixels on num {
   /// return the smallest between vw and vh
   /// should be used for item size that should be the same in both orientations
   double get vr => min(vw, vh);
+
+  /// Viewport width rotatable (return the biggest between vw and vh)
+  /// return the biggest between vw and vh
+  double get vwr => max(vw, vh);
 }
