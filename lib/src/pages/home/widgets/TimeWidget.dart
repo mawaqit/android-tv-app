@@ -25,20 +25,19 @@ class HomeTimeWidget extends TimerRefreshWidget {
         padding: EdgeInsets.symmetric(horizontal: 1.25.vw),
         child: Container(
           clipBehavior: Clip.antiAlias,
-          width: 40.vw,
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(.5),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
                   color: mosqueManager.getColorTheme().withOpacity(.7),
-                  backgroundBlendMode: BlendMode.screen, 
+                  backgroundBlendMode: BlendMode.screen,
                 ),
                 padding: EdgeInsets.symmetric(vertical: 2.5.vw, horizontal: 5.vw),
                 child: Column(
