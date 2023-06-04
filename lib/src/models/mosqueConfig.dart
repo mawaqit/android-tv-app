@@ -32,6 +32,8 @@ class MosqueConfig {
   final bool? iqamaFullScreenCountdown;
   final String? theme;
 
+  String get motifUrl => 'https://mawaqit.net/bundles/app/prayer-times/img/background/${backgroundMotif ?? 5}.jpg';
+
 //<editor-fold desc="Data Methods">
 
   const MosqueConfig({
@@ -194,7 +196,7 @@ class MosqueConfig {
     String? theme,
   }) {
     return MosqueConfig(
-      duaAfterPrayerShowTimes: duaAfterPrayerShowTimes??this.duaAfterPrayerShowTimes,
+      duaAfterPrayerShowTimes: duaAfterPrayerShowTimes ?? this.duaAfterPrayerShowTimes,
       hijriDateEnabled: hijriDateEnabled ?? this.hijriDateEnabled,
       duaAfterAzanEnabled: duaAfterAzanEnabled ?? this.duaAfterAzanEnabled,
       duaAfterPrayerEnabled: duaAfterPrayerEnabled ?? this.duaAfterPrayerEnabled,

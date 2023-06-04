@@ -36,8 +36,6 @@ class SalahTimesBar extends StatelessWidget {
 
     bool duhrHighlightDisable = mosqueProvider.mosqueDate().weekday == DateTime.friday && mosqueProvider.typeIsMosque;
 
-    print('duhrHighlightDisable: $activeItem $nextActiveIqama');
-
     final step = Duration(milliseconds: 100);
     final duration = Duration(milliseconds: 300);
 
