@@ -39,7 +39,6 @@ class ThemeNotifier with ChangeNotifier {
               bodyColor: Colors.white,
               displayColor: Colors.white,
               decorationColor: Colors.white,
-              // fontFamily: '',
             ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(

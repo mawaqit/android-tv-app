@@ -30,7 +30,7 @@ class TimePeriodWidget extends StatelessWidget {
       value,
       style: (style ?? defaultStyle).apply(
         fontFamily: StringManager.getFontFamilyByString(value),
-        fontSizeFactor: isArabic ? .7 : .4,
+        fontSizeFactor: isArabic ? 1.2 : 1,
       ),
     );
   }
