@@ -31,19 +31,6 @@ class OnBoardingOrientationWidget extends StatelessWidget {
             SizedBox(height: 50),
             OutlinedButton(
               onFocusChange: (value) {
-                if (value) userPrefs.orientationLandscape = null;
-              },
-              onPressed: onSelect,
-              child: Text(tr.deviceDefault),
-              autofocus: userPrefs.orientationLandscape == null,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(tr.deviceDefaultBTNDescription, textAlign: TextAlign.center),
-            ),
-            SizedBox(height: 20),
-            OutlinedButton(
-              onFocusChange: (value) {
                 if (value) userPrefs.orientationLandscape = true;
               },
               onPressed: onSelect,
