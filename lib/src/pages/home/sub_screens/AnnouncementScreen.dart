@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../helpers/StringUtils.dart';
-import '../widgets/SalahTimesBar.dart';
 
 /// show all announcements in one after another
 class AnnouncementScreen extends StatelessWidget {
@@ -55,10 +54,7 @@ class AnnouncementScreen extends StatelessWidget {
           ),
         ),
         IgnorePointer(
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 1.5.vh),
-            child: ResponsiveMiniSalahBarWidget()
-          ),
+          child: Padding(padding: EdgeInsets.only(bottom: 1.5.vh), child: ResponsiveMiniSalahBarWidget()),
         )
       ],
     );
