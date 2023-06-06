@@ -5,11 +5,9 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 class ApiCacheInterceptor extends DioCacheInterceptor {
   final CacheStore store;
 
-  ApiCacheInterceptor(this.store)
-      : super(options: CacheOptions(store: store, policy: CachePolicy.refresh));
+  ApiCacheInterceptor(this.store) : super(options: CacheOptions(store: store, policy: CachePolicy.refresh));
 
-  String getCacheKey(RequestOptions options) =>
-      CacheOptions.defaultCacheKeyBuilder(options);
+  String getCacheKey(RequestOptions options) => CacheOptions.defaultCacheKeyBuilder(options);
 
   @override
   Future<void> onRequest(
@@ -17,7 +15,7 @@ class ApiCacheInterceptor extends DioCacheInterceptor {
     RequestInterceptorHandler handler,
   ) async {
     await store.get(getCacheKey(options)).then((value) {
-      if (value != null) {
+      if (value != null && options.extra['disableCache'] != true) {
         options.headers['If-Modified-Since'] = value.lastModified;
       }
     });
@@ -32,7 +30,7 @@ class ApiCacheInterceptor extends DioCacheInterceptor {
 
     final value = await store.get(getCacheKey(err.requestOptions));
 
-    if (value != null)
+    if (value != null && err.requestOptions.extra['disableCache'] != true)
       return handler.resolve(value.toResponse(err.requestOptions));
 
     return handler.next(err);
