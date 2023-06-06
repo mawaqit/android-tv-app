@@ -83,7 +83,6 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
             title: azkarTitle,
             arabicText: arabicHadith,
             translatedText: translatedHadith,
-            mainAxisAlignment: MainAxisAlignment.start,
           ),
         ),
         ResponsiveMiniSalahBarWidget(),
