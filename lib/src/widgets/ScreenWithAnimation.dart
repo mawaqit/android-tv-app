@@ -33,7 +33,7 @@ class ScreenWithAnimationWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Lottie.asset(
-                    'assets/animations/lottie/$animation.json',
+                    animation.contains('assets/') ? animation : 'assets/animations/lottie/$animation.json',
                     fit: BoxFit.contain,
                   ),
                 ),
