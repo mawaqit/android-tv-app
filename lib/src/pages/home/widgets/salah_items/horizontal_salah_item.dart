@@ -91,7 +91,6 @@ class HorizontalSalahItem extends StatelessWidget {
               ),
             ),
           ),
-
           iqama == null
               ? Container()
               : Expanded(
@@ -108,83 +107,6 @@ class HorizontalSalahItem extends StatelessWidget {
                     ),
                   ),
                 ),
-
-          // if (time.trim().isEmpty)
-          //   Icon(Icons.dnd_forwardslash, size: 6.vw)
-          // else
-          //   Row(
-          //     mainAxisSize: MainAxisSize.min,
-          //     children: [
-          //       Expanded(
-          //         child: FittedBox(
-          //           fit: BoxFit.scaleDown,
-          //           child: Text(
-          //             timeDate == null ? time : dateTimeConverter.format(timeDate),
-          //             maxLines: 1,
-          //             style: TextStyle(
-          //               fontSize: isIqamaMoreImportant ? smallFont : bigFont,
-          //               fontWeight: FontWeight.w700,
-          //               shadows: kHomeTextShadow,
-          //               color: Colors.white,
-          //               // fontFamily: StringManager.getFontFamily(context),
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //       if (timeDate != null && is12period)
-          //         TimePeriodWidget(
-          //           dateTime: timeDate,
-          //           style: TextStyle(
-          //             height: .9,
-          //             letterSpacing: 9,
-          //             fontSize: 1.6.vw,
-          //             fontWeight: FontWeight.w300,
-          //             shadows: kIqamaCountDownTextShadow,
-          //             color: Colors.white,
-          //           ),
-          //         ),
-          //     ],
-          //   ),
-          // if (iqama != null && showIqama)
-          //   SizedBox(
-          //     height: isArabic ? 1.5.vh : 1.3.vw,
-          //     width: double.infinity,
-          //     child: Divider(
-          //       thickness: 1,
-          //       color: withDivider ? Colors.white : Colors.transparent,
-          //     ),
-          //   ),
-          // if (iqama != null && showIqama)
-          //   Row(
-          //     mainAxisSize: MainAxisSize.min,
-          //     children: [
-          //       Text(
-          //         iqamaDate == null ? iqama! : dateTimeConverter.format(iqamaDate),
-          //         style: TextStyle(
-          //           fontSize: isIqamaMoreImportant ? bigFont : smallFont,
-          //           fontWeight: FontWeight.bold,
-          //           shadows: kHomeTextShadow,
-          //           letterSpacing: 1,
-          //           color: Colors.white,
-          //
-          //           // fontFamily: StringManager.getFontFamily(context)
-          //         ),
-          //       ),
-          //       if (iqamaDate != null && is12period)
-          //         TimePeriodWidget(
-          //           dateTime: iqamaDate,
-          //           style: TextStyle(
-          //             height: .9,
-          //             letterSpacing: 9,
-          //             fontSize: 1.4.vw,
-          //             fontWeight: FontWeight.w300,
-          //             shadows: kIqamaCountDownTextShadow,
-          //             // fontFamily: StringManager.getFontFamily(context),
-          //             color: Colors.white,
-          //           ),
-          //         ),
-          //     ],
-          //   ),
         ],
       ),
     );

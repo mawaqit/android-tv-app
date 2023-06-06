@@ -22,7 +22,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
 
     return RepaintBoundary(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 1.25.vw),
+        padding: EdgeInsets.symmetric(horizontal: 1.vwr),
         child: Container(
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
