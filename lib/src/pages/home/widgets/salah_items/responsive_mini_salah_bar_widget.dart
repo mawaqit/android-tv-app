@@ -90,7 +90,9 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
           ),
           Row(
             children: [
+              Spacer(),
               Expanded(
+                flex: 2,
                 child: HorizontalSalahItem(
                   margin: EdgeInsets.all(1.vw),
                   title: mosqueProvider.salahName(3),
@@ -106,8 +108,8 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
                     .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
                     .addRepaintBoundary(),
               ),
-              Spacer(),
               Expanded(
+                flex: 2,
                 child: HorizontalSalahItem(
                   margin: EdgeInsets.all(1.vw),
                   title: mosqueProvider.salahName(4),
@@ -123,6 +125,7 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
                     .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
                     .addRepaintBoundary(),
               ),
+              Spacer(),
             ],
           ),
         ],
