@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/widgets/TimePeriodWidget.dart';
 
@@ -58,10 +58,10 @@ class TimeWidget extends StatelessWidget {
           "${time!.hourOfPeriod.toString().padLeft(2, '0')}:${time!.minute.toString().padLeft(2, '0')}",
           style: style,
         ),
-        SizedBox(width: 2),
+        SizedBox(width: 1.vw),
         TimePeriodWidget(
           dateTime: time!.toDate(),
-          style: amPmStyle,
+          style: amPmStyle ?? style?.apply(color: Colors.grey.shade300),
         ),
       ],
     );

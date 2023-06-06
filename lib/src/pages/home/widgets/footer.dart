@@ -26,7 +26,7 @@ class Footer extends StatelessWidget {
     final mosque = mosqueManager.mosque;
 
     return Container(
-      height: 10.vh,
+      height: 10.vr,
       color: mosque?.flash?.content.isEmpty != false ? null : Colors.black.withOpacity(.3),
       padding: EdgeInsets.symmetric(horizontal: .3.vw, vertical: .5.vw),
       child: Directionality(
