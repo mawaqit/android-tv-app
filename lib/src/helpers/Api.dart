@@ -9,7 +9,6 @@ import 'package:mawaqit/src/models/times.dart';
 import '../models/mosque.dart';
 import '../models/weather.dart';
 
-
 class Api {
   static final dio = Dio(
     BaseOptions(
@@ -46,7 +45,11 @@ class Api {
   static Future<bool> checkTheInternetConnection() {
     final url = 'https://www.google.com/';
 
-    return dio.get(url).timeout(Duration(seconds: 5)).then((value) => true).catchError((e) => false);
+    return dio
+        .get(url, options: Options(extra: {'disableCache': true}))
+        .timeout(Duration(seconds: 5))
+        .then((value) => true)
+        .catchError((e) => false);
   }
 
   /// re check the mosque if there are any updated data
@@ -125,7 +128,10 @@ class Api {
   }
 
   static Future<dynamic> getWeather(String mosqueUUID) async {
-    final response = await dio.get('/2.0/mosque/$mosqueUUID/weather');
+    final response = await dio.get(
+      '/2.0/mosque/$mosqueUUID/weather',
+      options: Options(extra: {'disableCache': true}),
+    );
 
     return Weather.fromMap(response.data);
   }
