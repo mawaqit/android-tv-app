@@ -4,8 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
-import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/models/announcement.dart';
+import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
 import '../../../i18n/l10n.dart';
