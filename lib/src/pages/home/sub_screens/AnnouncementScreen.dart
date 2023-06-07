@@ -1,12 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
+import 'package:mawaqit/src/pages/home/widgets/workflows/WorkFlowWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -15,7 +16,7 @@ import '../../../helpers/StringUtils.dart';
 import '../widgets/SalahTimesBar.dart';
 
 /// show all announcements in one after another
-class AnnouncementScreen extends StatefulWidget {
+class AnnouncementScreen extends StatelessWidget {
   AnnouncementScreen({
     Key? key,
     this.onDone,
@@ -28,52 +29,24 @@ class AnnouncementScreen extends StatefulWidget {
   final bool enableVideos;
 
   @override
-  State<AnnouncementScreen> createState() => _AnnouncementScreenState();
-}
-
-class _AnnouncementScreenState extends State<AnnouncementScreen> {
-  int index = -1;
-  Announcement? activeAnnouncement;
-
-  void nextAnnouncement() {
-    if (!mounted) return;
-
-    final mosqueManager = context.read<MosqueManager>();
-    final allAnnouncements = mosqueManager.activeAnnouncements(widget.enableVideos);
-    index++;
-
-    if (index >= allAnnouncements.length) {
-      Future.delayed(Duration(milliseconds: 80), widget.onDone);
-    }
-
-    setState(() {
-      activeAnnouncement = allAnnouncements[index % allAnnouncements.length];
-    });
-
-    if (activeAnnouncement!.video == null) {
-      Future.delayed(
-        Duration(seconds: activeAnnouncement!.duration ?? 30),
-        nextAnnouncement,
-      );
-    }
-  }
-
-  @override
-  void initState() {
-    nextAnnouncement();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final announcements = context.read<MosqueManager>().activeAnnouncements(widget.enableVideos);
+    final announcements = context.read<MosqueManager>().activeAnnouncements(enableVideos);
 
     if (announcements.isEmpty) return NormalHomeSubScreen();
 
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
-        announcementWidgets(),
+        ContinuesWorkFlowWidget(
+          onDone: onDone,
+          workFlowItems: announcements
+              .map((e) => WorkFlowItem(
+                    builder: (context, next) => announcementWidgets(e, nextAnnouncement: next),
+                    duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
+                  ))
+              .toList(),
+        ),
+        // announcementWidgets(),
         Align(
           alignment: Alignment.topCenter,
           child: Padding(
@@ -94,18 +67,22 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     );
   }
 
-  Widget announcementWidgets() {
-    if (activeAnnouncement!.content != null) {
+  /// return the widget of the announcement based on its type
+  Widget announcementWidgets(Announcement activeAnnouncement, {VoidCallback? nextAnnouncement}) {
+    if (activeAnnouncement.content != null) {
       return _TextAnnouncement(
-        content: activeAnnouncement!.content!,
-        title: activeAnnouncement!.title,
+        content: activeAnnouncement.content!,
+        title: activeAnnouncement.title,
       );
-    } else if (activeAnnouncement!.image != null) {
-      return _ImageAnnouncement(image: activeAnnouncement!.image!);
-    } else if (activeAnnouncement!.video != null) {
+    } else if (activeAnnouncement.image != null) {
+      return _ImageAnnouncement(
+        image: activeAnnouncement.image!,
+        onError: nextAnnouncement,
+      );
+    } else if (activeAnnouncement.video != null) {
       return _VideoAnnouncement(
-        key: ValueKey(activeAnnouncement!.video),
-        url: activeAnnouncement!.video!,
+        key: ValueKey(activeAnnouncement.video),
+        url: activeAnnouncement.video!,
         onEnded: nextAnnouncement,
       );
     }
@@ -176,14 +153,21 @@ class _TextAnnouncement extends StatelessWidget {
 }
 
 class _ImageAnnouncement extends StatelessWidget {
-  const _ImageAnnouncement({Key? key, required this.image}) : super(key: key);
+  const _ImageAnnouncement({
+    Key? key,
+    required this.image,
+    this.onError,
+  }) : super(key: key);
 
   final String image;
 
+  /// used to skip to the next announcement if the image failed to load
+  final VoidCallback? onError;
+
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: image,
+    return Image(
+      image: MawaqitNetworkImageProvider(image, onError: onError),
       fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,

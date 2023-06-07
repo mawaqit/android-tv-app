@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_network_image.dart';
 
 class SocialItem extends StatelessWidget {
   final String? iconUrl;
@@ -32,7 +32,7 @@ class SocialItem extends StatelessWidget {
   Widget _renderIcon(String? iconUrl, IconData icon) {
     return Container(
       child: iconUrl != null && iconUrl != ""
-          ? CachedNetworkImage(
+          ? MawaqitNetworkImage(
               imageUrl: iconUrl,
               width: 20,
               height: 20,
