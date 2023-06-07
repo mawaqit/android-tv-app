@@ -265,7 +265,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   List<String> get tomorrowTimes => timesOfDay(mosqueDate().add(Duration(days: 1)));
 
   List<String> iqamasOfDay(DateTime date) {
-    final todayIqama = times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
+    final todayIqama = times!.iqamaCalendar[date.month - 1][date.day.toString()].cast<String>();
 
     return todayIqama;
   }
