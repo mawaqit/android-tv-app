@@ -14,7 +14,7 @@ class MosqueSimpleTile extends StatefulWidget {
   }) : super(key: key);
 
   final Mosque mosque;
-  final void Function()? onTap;
+  final Future<void> Function()? onTap;
   final void Function(bool i)? onFocusChange;
   final FocusNode? focusNode;
   final bool? autoFocus;
@@ -25,6 +25,8 @@ class MosqueSimpleTile extends StatefulWidget {
 
 class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
   bool isFocused = false;
+
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,18 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
           child: InkWell(
             autofocus: widget.autoFocus ?? false,
             focusColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
-            onTap: widget.onTap,
+            onTap: () async {
+              if (loading || widget.onTap == null) return;
+
+              try {
+                setState(() => loading = true);
+                await widget.onTap?.call();
+                setState(() => loading = false);
+              } catch (e) {
+                setState(() => loading = false);
+                rethrow;
+              }
+            },
             child: Row(
               children: [
                 Padding(
@@ -81,17 +94,11 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
                       ),
                     ),
                   ],
-                )
+                ),
+                Spacer(),
+                if (loading) Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: CircularProgressIndicator()),
               ],
             ),
-            // child: ListTile(
-            //   contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-            //   textColor: isFocused ? Colors.white : null,
-            //   onTap: widget.onTap,
-            //   leading: CircleAvatar(backgroundImage: NetworkImage(widget.mosque.image ?? '')),
-            //   title: Text(widget.mosque.label ?? widget.mosque.name),
-            //   subtitle: Text(widget.mosque.localisation ?? ''),
-            // ),
           ),
         ),
       ),

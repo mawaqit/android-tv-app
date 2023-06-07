@@ -86,7 +86,7 @@ class _MosqueInputIdState extends State<MosqueInputId> {
                 autoFocus: true,
                 mosque: searchOutput!,
                 onTap: () {
-                  context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) {
+                  return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) {
                     widget.onDone?.call();
                   }).catchError((e) {
                     if (e is InvalidMosqueId) {
