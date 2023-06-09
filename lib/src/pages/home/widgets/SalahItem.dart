@@ -131,16 +131,21 @@ class SalahItemWidget extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  iqamaDate == null ? iqama! : dateTimeConverter.format(iqamaDate),
-                  style: TextStyle(
-                    fontSize: isIqamaMoreImportant ? bigFont : smallFont,
-                    fontWeight: FontWeight.bold,
-                    shadows: kHomeTextShadow,
-                    letterSpacing: 1,
-                    color: Colors.white,
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      iqamaDate == null ? iqama! : dateTimeConverter.format(iqamaDate),
+                      style: TextStyle(
+                        fontSize: isIqamaMoreImportant ? bigFont : smallFont,
+                        fontWeight: FontWeight.bold,
+                        shadows: kHomeTextShadow,
+                        letterSpacing: 1,
+                        color: Colors.white,
 
-                    // fontFamily: StringManager.getFontFamily(context)
+                        // fontFamily: StringManager.getFontFamily(context)
+                      ),
+                    ),
                   ),
                 ),
                 if (iqamaDate != null && is12period)
