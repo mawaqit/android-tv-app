@@ -10,6 +10,8 @@ class RelativeSizes {
   set size(Size size) {
     _size = size;
   }
+
+  Orientation get orientation => _size.width >= _size.height ? Orientation.landscape : Orientation.portrait;
 }
 
 extension RelativePixels on num {
