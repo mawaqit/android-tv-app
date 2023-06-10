@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../helpers/StringUtils.dart';
+import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 
 /// show all announcements in one after another
 class AnnouncementScreen extends StatelessWidget {
