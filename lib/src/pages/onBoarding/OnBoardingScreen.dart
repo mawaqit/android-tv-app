@@ -7,6 +7,7 @@ import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mode.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
@@ -62,6 +63,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   }
 
   late final onBoardingItems = [
+    OnBoardingItem(
+      animation: 'welcome',
+      widget: OnBoardingOrientationWidget(onSelect: nextPage),
+    ),
     OnBoardingItem(
       animation: 'language',
       widget: OnBoardingLanguageSelector(onSelect: nextPage),
