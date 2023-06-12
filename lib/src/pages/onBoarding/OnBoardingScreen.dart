@@ -1,6 +1,5 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
@@ -51,7 +50,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     AppRouter.pushReplacement(OfflineHomeScreen());
   }
 
-
   nextPage(int nextScreen) {
     while (true) {
       /// this is the last screen
@@ -69,16 +67,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   late final onBoardingItems = [
     OnBoardingItem(
-      animation: 'welcome',
-      widget: OnBoardingOrientationWidget(onSelect: () => nextPage(1)),
-    ),
-    OnBoardingItem(
       animation: 'language',
-      widget: OnBoardingLanguageSelector(onSelect: () =>nextPage(2)),
+      widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
     ),
     OnBoardingItem(
       animation: 'welcome',
-      widget: OnBoardingMawaqitAboutWidget(onNext: () =>nextPage(3)),
+      widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
+    ),
+    OnBoardingItem(
+      animation: 'welcome',
+      widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(3)),
     ),
     OnBoardingItem(
       animation: 'search',
@@ -89,7 +87,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     /// main screen or secondary screen (if user has already selected a mosque)
     OnBoardingItem(
       animation: 'search',
-      widget: OnBoardingScreenType(onDone:()=> nextPage(5)),
+      widget: OnBoardingScreenType(onDone: () => nextPage(5)),
       enableNextButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
@@ -97,7 +95,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     /// Allow user to select between regular mode or announcement mode
     OnBoardingItem(
       animation: 'search',
-      widget: OnBoardingAnnouncementScreens(onDone:()=> nextPage(6)),
+      widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
       enableNextButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
