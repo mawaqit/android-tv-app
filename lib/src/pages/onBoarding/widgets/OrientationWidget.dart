@@ -33,9 +33,12 @@ class OnBoardingOrientationWidget extends StatelessWidget {
               onFocusChange: (value) {
                 if (value) userPrefs.orientationLandscape = true;
               },
-              onPressed: onSelect,
+              onPressed: () {
+                userPrefs.orientationLandscape = true;
+                onSelect?.call();
+              },
               child: Text(tr.landscape),
-              autofocus: userPrefs.orientationLandscape == true,
+              autofocus: userPrefs.calculatedOrientation == Orientation.landscape,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -48,9 +51,12 @@ class OnBoardingOrientationWidget extends StatelessWidget {
                 onFocusChange: (value) {
                   if (value) userPrefs.orientationLandscape = false;
                 },
-                onPressed: onSelect,
+                onPressed: () {
+                  userPrefs.orientationLandscape = false;
+                  onSelect?.call();
+                },
                 child: Text(tr.portrait),
-                autofocus: userPrefs.orientationLandscape == false,
+                autofocus: userPrefs.calculatedOrientation == Orientation.portrait,
               ),
             ),
             Text(tr.portraitBTNDescription, textAlign: TextAlign.center),

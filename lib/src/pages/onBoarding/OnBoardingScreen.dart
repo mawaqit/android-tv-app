@@ -51,14 +51,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     AppRouter.pushReplacement(OfflineHomeScreen());
   }
 
-  nextPage() {
+
+  nextPage(int nextScreen) {
     while (true) {
       /// this is the last screen
-      if (currentScreen == onBoardingItems.length - 1) return onDone();
+      if (nextScreen >= onBoardingItems.length) return onDone();
 
-      currentScreen++;
+      currentScreen = nextScreen;
       // if false or null, don't skip this screen
       if (onBoardingItems[currentScreen].skip?.call() != true) break;
+
+      nextScreen++;
     }
 
     setState(() {});
@@ -67,26 +70,26 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late final onBoardingItems = [
     OnBoardingItem(
       animation: 'welcome',
-      widget: OnBoardingOrientationWidget(onSelect: nextPage),
+      widget: OnBoardingOrientationWidget(onSelect: () => nextPage(1)),
     ),
     OnBoardingItem(
       animation: 'language',
-      widget: OnBoardingLanguageSelector(onSelect: nextPage),
+      widget: OnBoardingLanguageSelector(onSelect: () =>nextPage(2)),
     ),
     OnBoardingItem(
       animation: 'welcome',
-      widget: OnBoardingMawaqitAboutWidget(onNext: nextPage),
+      widget: OnBoardingMawaqitAboutWidget(onNext: () =>nextPage(3)),
     ),
     OnBoardingItem(
       animation: 'search',
-      widget: MosqueSearch(onDone: nextPage),
+      widget: MosqueSearch(onDone: () => nextPage(4)),
       enableNextButton: false,
     ),
 
     /// main screen or secondary screen (if user has already selected a mosque)
     OnBoardingItem(
       animation: 'search',
-      widget: OnBoardingScreenType(onDone: nextPage),
+      widget: OnBoardingScreenType(onDone:()=> nextPage(5)),
       enableNextButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
@@ -94,7 +97,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     /// Allow user to select between regular mode or announcement mode
     OnBoardingItem(
       animation: 'search',
-      widget: OnBoardingAnnouncementScreens(onDone: nextPage),
+      widget: OnBoardingAnnouncementScreens(onDone:()=> nextPage(6)),
       enableNextButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
@@ -149,7 +152,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   MawaqitIconButton(
                     icon: Icons.arrow_forward_rounded,
                     label: S.of(context).next,
-                    onPressed: nextPage,
+                    onPressed: () => nextPage(currentScreen + 1),
                   ),
               ],
             ),

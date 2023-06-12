@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../helpers/StringUtils.dart';
-import '../widgets/SalahTimesBar.dart';
+import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 
 /// show all announcements in one after another
 class AnnouncementScreen extends StatelessWidget {
@@ -55,13 +55,7 @@ class AnnouncementScreen extends StatelessWidget {
           ),
         ),
         IgnorePointer(
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 1.5.vh),
-            child: SalahTimesBar(
-              miniStyle: true,
-              microStyle: true,
-            ),
-          ),
+          child: Padding(padding: EdgeInsets.only(bottom: 1.5.vh), child: ResponsiveMiniSalahBarWidget()),
         )
       ],
     );
@@ -168,7 +162,7 @@ class _ImageAnnouncement extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image(
       image: MawaqitNetworkImageProvider(image, onError: onError),
-      fit: BoxFit.cover,
+      fit: BoxFit.fitWidth,
       width: double.infinity,
       height: double.infinity,
     ).animate().slideX().addRepaintBoundary();
