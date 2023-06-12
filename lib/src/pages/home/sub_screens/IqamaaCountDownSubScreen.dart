@@ -7,9 +7,9 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
-import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/offline_widget.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +22,7 @@ class IqamaaCountDownSubScreen extends StatefulWidget {
   final VoidCallback? onDone;
 
   @override
-  State<IqamaaCountDownSubScreen> createState() =>
-      _IqamaaCountDownSubScreenState();
+  State<IqamaaCountDownSubScreen> createState() => _IqamaaCountDownSubScreenState();
 }
 
 class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
@@ -59,8 +58,7 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
 
     final tr = S.of(context);
 
-    if (mosqueManager.mosqueConfig?.iqamaFullScreenCountdown == false)
-      return NormalHomeSubScreen();
+    if (mosqueManager.mosqueConfig?.iqamaFullScreenCountdown == false) return NormalHomeSubScreen();
 
     return Column(
       children: [
@@ -111,13 +109,10 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
                     fontWeight: FontWeight.w500,
                     shadows: kIqamaCountDownTextShadow,
                   ),
-                )
-                    .animate()
-                    .fadeIn(delay: .7.seconds, duration: 2.seconds)
-                    .addRepaintBoundary();
+                ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
               }),
         ),
-        SalahTimesBar(miniStyle: true),
+        ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 10),
       ],
     );

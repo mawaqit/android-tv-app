@@ -9,6 +9,7 @@ import 'package:mawaqit/src/pages/home/widgets/FlashAnimation.dart';
 import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
@@ -93,7 +94,7 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
               ),
             ),
           ),
-          SalahTimesBar(),
+          ResponsiveMiniSalahBarWidget(),
           SizedBox(height: 2.vw),
         ],
       ),

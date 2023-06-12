@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
-import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +56,7 @@ class _TakberatAleidScreenState extends State<TakberatAleidScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
             ),
           ),
-          SalahTimesBar(microStyle: true, miniStyle: true),
+          ResponsiveMiniSalahBarWidget(),
         ],
       ),
     );
