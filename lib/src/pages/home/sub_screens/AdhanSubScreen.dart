@@ -69,7 +69,6 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
   Widget build(BuildContext context) {
     final mosqueProvider = context.read<MosqueManager>();
     final mosque = mosqueProvider.mosque!;
-    double adhanIconSize = 15.vw;
     final iconColor = Colors.white;
     final isArabic = context.read<AppLanguage>().isArabic();
 
@@ -89,7 +88,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                   children: [
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: adhanIconSize,
+                      size: 15.vw,
                       shadows: kHomeTextShadow,
                       color: iconColor,
                     ).animate().slideX(begin: -2).addRepaintBoundary(),
@@ -99,7 +98,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                           "${S.of(context).alAdhan}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 10.vw,
+                            fontSize: 15.vw,
                             fontFamily: StringManager.getFontFamilyByString(S.of(context).alAdhan),
                             // height: 2,
                             color: Colors.white,
@@ -110,7 +109,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                     ),
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: adhanIconSize,
+                      size: 15.vw,
                       shadows: kHomeTextShadow,
                       color: iconColor,
                     ).animate().slideX(begin: 2).addRepaintBoundary(),

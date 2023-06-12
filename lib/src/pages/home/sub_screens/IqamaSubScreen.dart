@@ -64,7 +64,10 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
         ),
         Expanded(
           child: FlashAnimation(
-            child: SvgPicture.asset(R.ASSETS_SVG_NO_PHONE_SVG),
+            child: SvgPicture.asset(
+              R.ASSETS_SVG_NO_PHONE_SVG,
+              width: 50.vr,
+            ),
           ).animate().scale(delay: .2.seconds).addRepaintBoundary(),
         ),
         SizedBox(height: 15),

@@ -1,20 +1,3 @@
-@Deprecated('replace with [HomeActiveWorkflow]')
-enum HomeActiveScreen {
-  normal,
-  adhan,
-  afterAdhanHadith,
-  iqamaaCountDown,
-  iqamaa,
-  randomHadith,
-  jumuaaHadith,
-  jumuaaLiveScreen,
-  salahDurationBlackScreen,
-  afterSalahAzkar,
-  announcementScreen,
-
-  /// todo add other screens
-}
-
 ///
 enum HomeActiveWorkflow {
   /// normal times screen, announcements, random hadith
@@ -31,7 +14,8 @@ enum HomeActiveWorkflow {
 enum JumuaaWorkflowScreens {
   /// show the normal screen 5 minutes before the jumuaa time
   /// without any interruption from [announcements, random hadith]
-  normal ,
+  normal,
+
   /// during the jumuaa hadith
   jumuaaTime,
 
@@ -43,15 +27,3 @@ enum JumuaaWorkflowScreens {
 }
 
 enum NormalWorkflowScreens { normal, announcement, randomHadith }
-
-enum SalahWorkflowScreens {
-  normal,
-  adhan,
-  afterAdhanDuaa,
-  /// this will be shown after the [adhan] and [afterAdhanDuaa] and before the [iqamaaCountDown]
-  duaaBetweenAdhanAndIqamaa,
-  iqamaaCountDown,
-  iqamaa,
-  salahTime,
-  afterSalahAzkar,
-}

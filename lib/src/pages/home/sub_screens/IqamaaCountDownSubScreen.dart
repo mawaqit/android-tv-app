@@ -80,7 +80,7 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
         Text(
           tr.iqamaIn,
           style: TextStyle(
-              fontSize: 7.vw,
+              fontSize: 7.vwr,
               color: Colors.white,
               fontWeight: FontWeight.bold,
               shadows: kIqamaCountDownTextShadow,
