@@ -218,10 +218,12 @@ class _VideoAnnouncementState extends State<_VideoAnnouncement> {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: YoutubePlayer(
-        controller: _controller,
-        showVideoProgressIndicator: true,
-        onEnded: (metaData) => widget.onEnded?.call(),
+      child: Center(
+        child: YoutubePlayer(
+          controller: _controller,
+          showVideoProgressIndicator: true,
+          onEnded: (metaData) => widget.onEnded?.call(),
+        ),
       ),
     );
   }
