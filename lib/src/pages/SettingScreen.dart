@@ -62,6 +62,7 @@ class SettingScreen extends StatelessWidget {
                     title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
                     icon: Icon(Icons.brightness_4, size: 35),
                     onChanged: (value) => themeManager.toggleMode(),
+                    value: themeManager.isLightTheme ?? false,
                   ),
                   _SettingItem(
                     title: S.of(context).orientation,
