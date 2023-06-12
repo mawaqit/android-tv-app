@@ -50,17 +50,18 @@ class SettingScreen extends StatelessWidget {
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
                     onTap: () => AppRouter.push(MosqueSearchScreen()),
                   ),
-                  _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
-                    icon: Icon(Icons.brightness_4, size: 35),
-                    onChanged: (value) => themeManager.toggleMode(),
-                  ),
+                  SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
                   Text(
                     S.of(context).applicationModes,
                     style: theme.textTheme.headlineSmall,
                     textAlign: TextAlign.center,
+                  ),
+                  _SettingSwitchItem(
+                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
+                    icon: Icon(Icons.brightness_4, size: 35),
+                    onChanged: (value) => themeManager.toggleMode(),
                   ),
                   _SettingItem(
                     title: S.of(context).orientation,
