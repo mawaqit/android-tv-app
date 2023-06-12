@@ -36,7 +36,7 @@ class WeatherWidget extends StatelessWidget {
             /// If it's after Maghrib, we show the night icon
             mosqueManager.salahIndex < 3,
           ),
-          size: 3.vw,
+          size: 3.vwr,
           color: Colors.white,
           shadows: kAfterAdhanTextShadow,
         ),
@@ -44,7 +44,7 @@ class WeatherWidget extends StatelessWidget {
         Text(
           "$temperature",
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontSize: 3.vw,
+              fontSize: 3.vwr,
               fontWeight: FontWeight.w700,
               color: HexColor(mosqueManager.getColorFeeling()),
               shadows: kHomeTextShadow),
@@ -55,7 +55,7 @@ class WeatherWidget extends StatelessWidget {
               fontWeight: FontWeight.w700,
               height: 1,
               color: HexColor(mosqueManager.getColorFeeling()),
-              fontSize: 2.4.vw,
+              fontSize: 2.4.vwr,
               shadows: kHomeTextShadow),
         ),
       ],

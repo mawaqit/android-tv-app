@@ -22,17 +22,17 @@ class OfflineWidget extends StatelessWidget {
         children: [
           SizedBox(width: 1.vw),
           CircleAvatar(
-            radius: .6.vw,
+            radius: .6.vwr,
             backgroundColor:
                 mosqueManager.isOnline ? Colors.green : Colors.red[700],
           ),
-          SizedBox(width: .4.vw),
+          SizedBox(width: .4.vwr),
           Text(
             mosqueManager.isOnline ? tr.online : tr.offline,
             style: TextStyle(
               color: Colors.white,
               shadows: kHomeTextShadow,
-              fontSize: 1.5.vw,
+              fontSize: 1.5.vwr,
               height: 1.1,
               fontWeight: FontWeight.w400,
               fontFamily: StringManager.getFontFamilyByString(tr.online),

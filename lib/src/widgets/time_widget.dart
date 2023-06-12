@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/widgets/TimePeriodWidget.dart';
-import 'package:provider/provider.dart';
 
 /// this widget should be used the show times in the app
 class TimeWidget extends StatelessWidget {
@@ -14,6 +12,7 @@ class TimeWidget extends StatelessWidget {
     this.style,
     required this.show24hFormat,
     this.amPmStyle,
+    this.fallbackString,
   });
 
   /// show time for a specific time using [DateTime]
@@ -23,7 +22,8 @@ class TimeWidget extends StatelessWidget {
     this.style,
     required this.show24hFormat,
     this.amPmStyle,
-  }) : time = TimeOfDay.fromDateTime(dateTime);
+  })  : time = TimeOfDay.fromDateTime(dateTime),
+        fallbackString = null;
 
   /// show time for a specific time using string
   TimeWidget.fromString({
@@ -32,9 +32,11 @@ class TimeWidget extends StatelessWidget {
     required this.show24hFormat,
     this.amPmStyle,
     required String time,
-  }) : time = time.toTimeOfDay();
+  })  : time = time.toTimeOfDay(),
+        fallbackString = time;
 
   final TimeOfDay? time;
+  final String? fallbackString;
 
   final TextStyle? style;
 
@@ -43,13 +45,11 @@ class TimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLanguage = context.watch<AppLanguage>();
-
-    if (time == null) return Text('');
+    if (time == null) return Text(fallbackString ?? '');
 
     if (show24hFormat) {
       return Text(
-        time!.format(context),
+        "${time!.hour.toString().padLeft(2, '0')}:${time!.minute.toString().padLeft(2, '0')}",
         style: style,
       );
     }

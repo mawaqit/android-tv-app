@@ -71,6 +71,7 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
         Column(
           children: [
             ResponsiveSalahBarWidget(),
+            SizedBox(height: 2.vwr),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,

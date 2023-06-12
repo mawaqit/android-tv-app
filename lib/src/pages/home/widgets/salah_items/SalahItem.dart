@@ -4,11 +4,11 @@ import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
+import 'package:mawaqit/src/widgets/time_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../helpers/StringUtils.dart';
 import '../../../../services/mosque_manager.dart';
-import '../../../../widgets/TimePeriodWidget.dart';
 
 const kSalahItemWidgetWidth = 135.0;
 
@@ -40,8 +40,8 @@ class SalahItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bigFont = 4.5.vw;
-    double smallFont = 3.6.vw;
+    double bigFont = 4.5.vwr;
+    double smallFont = 3.6.vwr;
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
@@ -54,9 +54,9 @@ class SalahItemWidget extends StatelessWidget {
     final DateFormat dateTimeConverter = is12period ? DateFormat("hh:mm", "en-En") : DateFormat("HH:mm", "en");
 
     return Container(
-      width: 16.vw,
+      width: 16.vwr,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2.vw),
+        borderRadius: BorderRadius.circular(2.vwr),
         color: active
             ? mosqueProvider.getColorTheme().withOpacity(.5)
             : removeBackground
@@ -75,7 +75,7 @@ class SalahItemWidget extends StatelessWidget {
                 maxLines: 1,
                 title ?? "",
                 style: TextStyle(
-                    fontSize: 3.vw,
+                    fontSize: 3.vwr,
                     shadows: kHomeTextShadow,
                     color: Colors.white,
                     fontFamily: StringManager.getFontFamilyByString(title ?? "")),
@@ -83,43 +83,25 @@ class SalahItemWidget extends StatelessWidget {
             ),
           SizedBox(height: isArabic ? 0.1.vh : 1.vh),
           if (time.trim().isEmpty)
-            Icon(Icons.dnd_forwardslash, size: 6.vw)
+            Icon(Icons.dnd_forwardslash, size: 6.vwr)
           else
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      timeDate == null ? time : dateTimeConverter.format(timeDate),
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontSize: isIqamaMoreImportant ? smallFont : bigFont,
-                        fontWeight: FontWeight.w700,
-                        shadows: kHomeTextShadow,
-                        color: Colors.white,
-                        // fontFamily: StringManager.getFontFamily(context),
-                      ),
-                    ),
-                  ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: TimeWidget.fromString(
+                show24hFormat: !is12period,
+                time: time,
+                style: TextStyle(
+                  fontSize: isIqamaMoreImportant ? smallFont : bigFont,
+                  fontWeight: FontWeight.w700,
+                  shadows: kHomeTextShadow,
+                  color: Colors.white,
+                  // fontFamily: StringManager.getFontFamily(context),
                 ),
-                if (timeDate != null && is12period)
-                  TimePeriodWidget(
-                    dateTime: timeDate,
-                    style: TextStyle(
-                      height: .9,
-                      letterSpacing: 9,
-                      fontSize: 1.6.vw,
-                      fontWeight: FontWeight.w500,
-                      shadows: kIqamaCountDownTextShadow,
-                    ),
-                  ),
-              ],
+              ),
             ),
           if (iqama != null && showIqama)
             SizedBox(
-              height: isArabic ? 1.5.vh : 1.3.vw,
+              height: isArabic ? 1.5.vh : 1.3.vwr,
               width: double.infinity,
               child: Divider(
                 thickness: 1,
@@ -127,40 +109,19 @@ class SalahItemWidget extends StatelessWidget {
               ),
             ),
           if (iqama != null && showIqama)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      iqamaDate == null ? iqama! : dateTimeConverter.format(iqamaDate),
-                      style: TextStyle(
-                        fontSize: isIqamaMoreImportant ? bigFont : smallFont,
-                        fontWeight: FontWeight.bold,
-                        shadows: kHomeTextShadow,
-                        letterSpacing: 1,
-                        color: Colors.white,
-
-                        // fontFamily: StringManager.getFontFamily(context)
-                      ),
-                    ),
-                  ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: TimeWidget.fromString(
+                show24hFormat: !is12period,
+                time: iqama!,
+                style: TextStyle(
+                  fontSize: isIqamaMoreImportant ? bigFont : smallFont,
+                  fontWeight: FontWeight.bold,
+                  shadows: kHomeTextShadow,
+                  letterSpacing: 1,
+                  color: Colors.white,
                 ),
-                if (iqamaDate != null && is12period)
-                  TimePeriodWidget(
-                    dateTime: iqamaDate,
-                    style: TextStyle(
-                      height: .9,
-                      letterSpacing: 9,
-                      fontSize: 1.4.vw,
-                      fontWeight: FontWeight.w300,
-                      shadows: kIqamaCountDownTextShadow,
-                      // fontFamily: StringManager.getFontFamily(context),
-                      color: Colors.white,
-                    ),
-                  ),
-              ],
+              ),
             ),
         ],
       ),
