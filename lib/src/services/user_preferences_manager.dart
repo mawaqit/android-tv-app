@@ -79,6 +79,10 @@ class UserPreferencesManager extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleOrientation(){
+    orientationLandscape = !orientationLandscape!;
+  }
+
   /// calculate the orientation based on the user preferences and screen size
   Orientation get calculatedOrientation {
     switch (orientationLandscape) {

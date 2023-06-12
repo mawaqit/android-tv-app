@@ -20,6 +20,7 @@ import 'package:mawaqit/src/pages/home/sub_screens/fajr_wake_up_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 enum _ScreenState {
@@ -184,6 +185,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
             SelectorOption(
               title: S.of(context).changeTheme,
               onSelect: () => context.read<ThemeNotifier>().toggleMode(),
+            ),
+            SelectorOption(
+              title: "Toggle orientation",
+              onSelect: () => context.read<UserPreferencesManager>().toggleOrientation(),
             ),
           ],
         ),

@@ -23,7 +23,7 @@ class CurrentTimeWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            DateFormat("${is12hourFormat ? "hh:mm" : "HH:mm"}", 'en').format(now),
+            DateFormat("${is12hourFormat ? "hh:mm" : "HH:mm"}").format(now),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 8.vwr,
@@ -54,7 +54,7 @@ class CurrentTimeWidget extends StatelessWidget {
                     constraints: BoxConstraints(maxWidth: 8.vwr),
                     child: FittedBox(
                       child: Text(
-                        '${DateFormat('a').format(now)}',
+                        '${DateFormat('a', Localizations.localeOf(context).languageCode).format(now)}',
                         style: TextStyle(
                           color: Colors.white54,
                           fontWeight: FontWeight.bold,

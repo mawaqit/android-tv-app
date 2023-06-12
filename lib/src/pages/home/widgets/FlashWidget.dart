@@ -20,34 +20,33 @@ class FlashWidget extends StatelessWidget {
     DateTime? endDate;
     if (startDate != null) startDate = DateTime.parse(mosque.flash!.startDate!);
     if (endDate != null) startDate = DateTime.parse(mosque.flash!.endDate!);
-    bool flashIsInDateTime =
-        now.isAfter(startDate ?? now) && now.isBefore(endDate ?? now);
+    bool flashIsInDateTime = now.isAfter(startDate ?? now) && now.isBefore(endDate ?? now);
     bool isNoDate = startDate == null || endDate == null;
-    return mosque.flash?.content.isEmpty != false ||
-            (!flashIsInDateTime && !isNoDate)
+
+    return mosque.flash?.content.isEmpty != false || (!flashIsInDateTime && !isNoDate)
 
         //todo get the message
         ? SizedBox()
         : RepaintBoundary(
-            child: Marquee(
-              velocity: 90,
-              decelerationCurve: Curves.linear,
-              accelerationCurve: Curves.linear,
-              text: mosque.flash?.content ?? '',
-              scrollAxis: Axis.horizontal,
-              blankSpace: 500,
-              textDirection: mosque.flash?.orientation == 'rtl'
-                  ? TextDirection.rtl
-                  : TextDirection.ltr,
-              style: TextStyle(
-                height: 1,
-                fontSize: 3.4.vw,
-                fontWeight: FontWeight.bold,
-                wordSpacing: 3,
-                shadows: kHomeTextShadow,
-                color: HexColor(mosque.flash?.color ?? "#FFFFFF"),
-                fontFamily: StringManager.getFontFamilyByString(
-                  mosque.flash?.content ?? '',
+            child: Directionality(
+              textDirection: mosque.flash?.orientation == 'rtl' ? TextDirection.rtl : TextDirection.ltr,
+              child: Marquee(
+                velocity: 90,
+                decelerationCurve: Curves.linear,
+                accelerationCurve: Curves.linear,
+                text: mosque.flash?.content ?? '',
+                scrollAxis: Axis.horizontal,
+                blankSpace: 500,
+                style: TextStyle(
+                  height: 1,
+                  fontSize: 3.4.vw,
+                  fontWeight: FontWeight.bold,
+                  wordSpacing: 3,
+                  shadows: kHomeTextShadow,
+                  color: HexColor(mosque.flash?.color ?? "#FFFFFF"),
+                  fontFamily: StringManager.getFontFamilyByString(
+                    mosque.flash?.content ?? '',
+                  ),
                 ),
               ),
             ),
