@@ -45,7 +45,7 @@ class TimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (time == null) return Text(fallbackString ?? '');
+    if (time == null) return Text(fallbackString ?? '', style: style);
 
     if (show24hFormat) {
       return Text(

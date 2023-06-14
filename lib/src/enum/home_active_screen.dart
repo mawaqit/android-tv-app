@@ -25,5 +25,3 @@ enum JumuaaWorkflowScreens {
   /// after jumuaa pray
   jumuaaAzkar
 }
-
-enum NormalWorkflowScreens { normal, announcement, randomHadith }
