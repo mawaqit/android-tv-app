@@ -224,9 +224,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   bool get useTomorrowTimes {
     final now = mosqueDate();
-    final isha = actualTimes()[4];
+    final [fajr, ..._, isha] = actualTimes();
 
-    return now.isAfter(isha);
+    /// isha might be after midnight so we need to check if it's after fajr
+    return now.isAfter(isha) && isha.isAfter(fajr);
   }
 
   List<String> salahBarTimes() {
