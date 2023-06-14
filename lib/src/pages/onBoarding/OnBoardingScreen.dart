@@ -1,15 +1,17 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mode.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
+import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
 import 'package:provider/provider.dart';
 
@@ -48,14 +50,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     AppRouter.pushReplacement(OfflineHomeScreen());
   }
 
-  nextPage() {
+  nextPage(int nextScreen) {
     while (true) {
       /// this is the last screen
-      if (currentScreen == onBoardingItems.length - 1) return onDone();
+      if (nextScreen >= onBoardingItems.length) return onDone();
 
-      currentScreen++;
+      currentScreen = nextScreen;
       // if false or null, don't skip this screen
       if (onBoardingItems[currentScreen].skip?.call() != true) break;
+
+      nextScreen++;
     }
 
     setState(() {});
@@ -64,22 +68,26 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late final onBoardingItems = [
     OnBoardingItem(
       animation: 'language',
-      widget: OnBoardingLanguageSelector(onSelect: nextPage),
+      widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
     ),
     OnBoardingItem(
       animation: 'welcome',
-      widget: OnBoardingMawaqitAboutWidget(onNext: nextPage),
+      widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
+    ),
+    OnBoardingItem(
+      animation: 'welcome',
+      widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(3)),
     ),
     OnBoardingItem(
       animation: 'search',
-      widget: MosqueSearch(onDone: nextPage),
+      widget: MosqueSearch(onDone: () => nextPage(4)),
       enableNextButton: false,
     ),
 
     /// main screen or secondary screen (if user has already selected a mosque)
     OnBoardingItem(
       animation: 'search',
-      widget: OnBoardingScreenType(onDone: nextPage),
+      widget: OnBoardingScreenType(onDone: () => nextPage(5)),
       enableNextButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
@@ -87,7 +95,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     /// Allow user to select between regular mode or announcement mode
     OnBoardingItem(
       animation: 'search',
-      widget: OnBoardingAnnouncementScreens(onDone: nextPage),
+      widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
       enableNextButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
@@ -101,6 +109,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     final activePage = onBoardingItems[currentScreen];
+    final userPrefs = context.watch<UserPreferencesManager>();
 
     return WillPopScope(
       onWillPop: () async {
@@ -111,17 +120,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       },
       child: SafeArea(
         child: Scaffold(
-          body: Row(
-            children: [
-              Expanded(
-                flex: 4,
-                child: _buildImage(activePage.animation),
-              ),
-              Expanded(
-                flex: 6,
-                child: activePage.widget ?? SizedBox(),
-              ),
-            ],
+          body: ScreenWithAnimationWidget(
+            animation: activePage.animation,
+            child: activePage.widget ?? SizedBox(),
           ),
           bottomNavigationBar: Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -149,23 +150,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   MawaqitIconButton(
                     icon: Icons.arrow_forward_rounded,
                     label: S.of(context).next,
-                    onPressed: nextPage,
+                    onPressed: () => nextPage(currentScreen + 1),
                   ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildImage(String assetName) {
-    return Align(
-      child: Lottie.asset(
-        'assets/animations/lottie/$assetName.json',
-        fit: BoxFit.contain,
-      ),
-      alignment: Alignment.center,
     );
   }
 }

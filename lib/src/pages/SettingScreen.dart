@@ -4,6 +4,7 @@ import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -49,17 +50,30 @@ class SettingScreen extends StatelessWidget {
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
                     onTap: () => AppRouter.push(MosqueSearchScreen()),
                   ),
-                  _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
-                    icon: Icon(Icons.brightness_4, size: 35),
-                    onChanged: (value) => themeManager.toggleMode(),
-                  ),
+                  SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
                   Text(
                     S.of(context).applicationModes,
                     style: theme.textTheme.headlineSmall,
                     textAlign: TextAlign.center,
+                  ),
+                  _SettingSwitchItem(
+                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
+                    icon: Icon(Icons.brightness_4, size: 35),
+                    onChanged: (value) => themeManager.toggleMode(),
+                    value: themeManager.isLightTheme ?? false,
+                  ),
+                  _SettingItem(
+                    title: S.of(context).orientation,
+                    subtitle: S.of(context).selectYourMawaqitTvAppOrientation,
+                    icon: Icon(Icons.portrait, size: 35),
+                    onTap: () => AppRouter.push(ScreenWithAnimationWidget(
+                      animation: 'welcome',
+                      child: OnBoardingOrientationWidget(
+                        onSelect: () => Navigator.pop(context),
+                      ),
+                    )),
                   ),
                   _SettingSwitchItem(
                     title: S.of(context).webView,

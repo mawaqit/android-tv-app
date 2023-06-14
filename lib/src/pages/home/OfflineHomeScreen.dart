@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
-import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
-import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
 import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
@@ -72,6 +69,7 @@ class OfflineHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RelativeSizes.instance.size = MediaQuery.of(context).size;
     final mosqueProvider = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
@@ -95,10 +93,13 @@ class OfflineHomeScreen extends StatelessWidget {
       },
       child: MosqueBackgroundScreen(
         key: ValueKey(mosqueProvider.mosque?.uuid),
-        child: activeHomeScreen(
-          mosqueProvider,
-          userPrefs.webViewMode,
-          userPrefs.announcementsOnly,
+        child: SafeArea(
+          bottom: true,
+          child: activeHomeScreen(
+            mosqueProvider,
+            userPrefs.webViewMode,
+            userPrefs.announcementsOnly,
+          ),
         ),
       ),
     );

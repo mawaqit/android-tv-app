@@ -7,9 +7,9 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
-import 'package:mawaqit/src/pages/home/widgets/SalahTimesBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/offline_widget.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +22,7 @@ class IqamaaCountDownSubScreen extends StatefulWidget {
   final VoidCallback? onDone;
 
   @override
-  State<IqamaaCountDownSubScreen> createState() =>
-      _IqamaaCountDownSubScreenState();
+  State<IqamaaCountDownSubScreen> createState() => _IqamaaCountDownSubScreenState();
 }
 
 class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
@@ -59,8 +58,7 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
 
     final tr = S.of(context);
 
-    if (mosqueManager.mosqueConfig?.iqamaFullScreenCountdown == false)
-      return NormalHomeSubScreen();
+    if (mosqueManager.mosqueConfig?.iqamaFullScreenCountdown == false) return NormalHomeSubScreen();
 
     return Column(
       children: [
@@ -78,46 +76,43 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
             )
           ],
         ),
+        Spacer(),
         Text(
           tr.iqamaIn,
           style: TextStyle(
-              fontSize: 7.vw,
+              fontSize: 7.vwr,
               color: Colors.white,
               fontWeight: FontWeight.bold,
               shadows: kIqamaCountDownTextShadow,
               height: 1,
               fontFamily: StringManager.getFontFamilyByString(tr.iqamaIn)),
         ).animate().slide(delay: .5.seconds).fade().addRepaintBoundary(),
-        Expanded(
-          child: StreamBuilder(
-              stream: Stream.periodic(Duration(seconds: 1)),
-              builder: (context, snapshot) {
-                final remaining = nextIqama;
-                if (remaining <= Duration.zero) {
-                  Future.delayed(Duration(milliseconds: 80), widget.onDone);
-                }
+        StreamBuilder(
+            stream: Stream.periodic(Duration(seconds: 1)),
+            builder: (context, snapshot) {
+              final remaining = nextIqama;
+              if (remaining <= Duration.zero) {
+                Future.delayed(Duration(milliseconds: 80), widget.onDone);
+              }
 
-                int seconds = remaining.inSeconds % 60;
-                int minutes = remaining.inMinutes;
-                String _timeTwoDigit = timeTwoDigit(
-                  seconds: seconds,
-                  minutes: minutes,
-                );
-                return Text(
-                  _timeTwoDigit,
-                  style: TextStyle(
-                    fontSize: 25.vw,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    shadows: kIqamaCountDownTextShadow,
-                  ),
-                )
-                    .animate()
-                    .fadeIn(delay: .7.seconds, duration: 2.seconds)
-                    .addRepaintBoundary();
-              }),
-        ),
-        SalahTimesBar(miniStyle: true),
+              int seconds = remaining.inSeconds % 60;
+              int minutes = remaining.inMinutes;
+              String _timeTwoDigit = timeTwoDigit(
+                seconds: seconds,
+                minutes: minutes,
+              );
+              return Text(
+                _timeTwoDigit,
+                style: TextStyle(
+                  fontSize: 25.vw,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  shadows: kIqamaCountDownTextShadow,
+                ),
+              ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
+            }),
+        Spacer(),
+        ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 10),
       ],
     );

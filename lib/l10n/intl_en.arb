@@ -147,9 +147,17 @@
   "mainScreenExplanation": "For the main mosque room, this screen will not show the jumua live-streaming",
   "normalModeExplanation": "Will show the normal screen with the prayer times and the announcements.",
   "announcementOnlyModeExplanation": "Will show announcements all time",
+  "orientation": "Orientation",
+  "selectYourMawaqitTvAppOrientation": "Select your mawaqit tv app orientation",
+  "deviceDefault": "Device Default",
+  "deviceDefaultBTNDescription": "Mawaqit will auto select the default orientation based on the screen orientation",
+  "portrait": "Portrait",
+  "portraitBTNDescription": "For vertical orientation recommended for mosque with small space",
+  "landscape": "Landscape",
+  "landscapeBTNDescription": "For Horizontal orientation. The main layout for mawaqit tv app and recommended one for most mosques",
   "eidMubarak": "Eid Mubarak",
   "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
-  "settings": "Settings",
-  "applicationModes": "Application modes",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "If you are encountering an issue with the app active this option"
-}
+   "settings": "Settings",
+  "applicationModes": "Application Modes",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "If you are facing issues with the app, try to enable this option"
+ }

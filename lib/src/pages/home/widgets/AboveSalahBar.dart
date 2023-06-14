@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/pages/home/widgets/SalahItem.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
@@ -40,15 +39,13 @@ class AboveSalahBar extends StatelessWidget {
             if (nextSalahTime.inMinutes == 0) "${(nextSalahTime.inSeconds % 60).toString().padLeft(2, '0')} Sec",
           ].join();
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: (size.width - 5 * kSalahItemWidgetWidth) / 8, vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: 3.vw, vertical: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   clipBehavior: Clip.hardEdge,
-                  height: 9.vh,
-                  alignment: Alignment.center,
-                  padding: isArabic ? EdgeInsets.symmetric(horizontal: 3.vh) : EdgeInsets.symmetric(horizontal: 2.5.vw),
+                  padding: isArabic ? EdgeInsets.symmetric(horizontal: 3.vw) : EdgeInsets.symmetric(horizontal: 2.5.vw),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: mosqueManager.getColorTheme().withOpacity(.7),
@@ -58,15 +55,13 @@ class AboveSalahBar extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.white,
                           shadows: kHomeTextShadow,
-                          fontSize: isArabic ? 5.3.vh : 6.vh,
+                          fontSize: isArabic ? 5.3.vr : 6.vr,
                           fontFamily: StringManager.getFontFamilyByString(countDownText),
                         ),
                   ),
                 ),
                 Container(
-                  height: 9.vh,
-                  alignment: Alignment.center,
-                  padding: isArabic ? EdgeInsets.symmetric(horizontal: 3.vh) : EdgeInsets.symmetric(horizontal: 2.5.vw),
+                  padding: isArabic ? EdgeInsets.symmetric(horizontal: 3.vw) : EdgeInsets.symmetric(horizontal: 2.5.vw),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: mosqueManager.getColorTheme().withOpacity(.7),
@@ -79,23 +74,22 @@ class AboveSalahBar extends StatelessWidget {
                         is12Hours ? DateFormat("hh:mm", "en").format(now) : DateFormat("HH:mm", "en").format(now),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             shadows: kHomeTextShadow,
-                            fontSize: isArabic ? 5.3.vh : 6.vh,
+                            fontSize: isArabic ? 5.3.vr : 6.vr,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
                       SizedBox(width: isArabic ? 5 : 0),
                       if (is12Hours)
                         SizedBox(
-                          width: 2.6.vw,
+                          width: 2.6.vr,
                           child: TimePeriodWidget(
                             dateTime: now,
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   shadows: kHomeTextShadow,
-                                  letterSpacing: 1.vw,
+                                  letterSpacing: 1.vr,
                                   height: .9,
-                                  fontSize: 1.2.vw,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w500,
                                 ),
                           ),
                         ),

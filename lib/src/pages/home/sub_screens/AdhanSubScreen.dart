@@ -7,13 +7,13 @@ import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../../themes/UIShadows.dart';
 import '../widgets/FlashAnimation.dart';
-import '../widgets/SalahTimesBar.dart';
 import '../widgets/mosque_header.dart';
 
 class AdhanSubScreen extends StatefulWidget {
@@ -69,7 +69,6 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
   Widget build(BuildContext context) {
     final mosqueProvider = context.read<MosqueManager>();
     final mosque = mosqueProvider.mosque!;
-    double adhanIconSize = 15.vh;
     final iconColor = Colors.white;
     final isArabic = context.read<AppLanguage>().isArabic();
 
@@ -89,29 +88,28 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                   children: [
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: adhanIconSize,
+                      size: 15.vw,
                       shadows: kHomeTextShadow,
                       color: iconColor,
                     ).animate().slideX(begin: -2).addRepaintBoundary(),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 70.vw),
+                    Flexible(
                       child: FittedBox(
                         child: Text(
                           "${S.of(context).alAdhan}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20.vh,
+                            fontSize: 15.vw,
                             fontFamily: StringManager.getFontFamilyByString(S.of(context).alAdhan),
                             // height: 2,
                             color: Colors.white,
                             shadows: kHomeTextShadow,
                           ),
-                        ),
+                        ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
                       ),
-                    ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
+                    ),
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: adhanIconSize,
+                      size: 15.vw,
                       shadows: kHomeTextShadow,
                       color: iconColor,
                     ).animate().slideX(begin: 2).addRepaintBoundary(),
@@ -120,7 +118,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
               ),
             ),
           ),
-          SalahTimesBar(activeItem: mosqueProvider.salahIndex),
+          ResponsiveMiniSalahBarWidget(activeItem: mosqueProvider.salahIndex),
           SizedBox(height: 2.vw),
         ],
       ),

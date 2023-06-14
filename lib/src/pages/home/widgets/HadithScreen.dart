@@ -95,20 +95,23 @@ class HadithWidget extends StatelessWidget {
   }) {
     return Flexible(
       fit: FlexFit.loose,
-      child: Padding(
-        key: ValueKey(text),
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: AutoSizeText(
-          text,
-          style: TextStyle(
-            fontSize: 600,
-            fontFamily: StringManager.getFontFamilyByString(text),
-            color: Colors.white,
-            shadows: kIqamaCountDownTextShadow,
-          ),
-          textAlign: TextAlign.center,
-          textDirection: textDirection,
-        ).animate().fadeIn(delay: delay).addRepaintBoundary(),
+      child: Container(
+        constraints: BoxConstraints(maxHeight: 50.vh),
+        child: Padding(
+          key: ValueKey(text),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: AutoSizeText(
+            text,
+            style: TextStyle(
+              fontSize: 600,
+              fontFamily: StringManager.getFontFamilyByString(text),
+              color: Colors.white,
+              shadows: kIqamaCountDownTextShadow,
+            ),
+            textAlign: TextAlign.center,
+            textDirection: textDirection,
+          ).animate().fadeIn(delay: delay).addRepaintBoundary(),
+        ),
       ),
     );
   }

@@ -22,43 +22,37 @@ class HomeTimeWidget extends TimerRefreshWidget {
 
     return RepaintBoundary(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 1.25.vw),
+        padding: EdgeInsets.symmetric(horizontal: 1.vwr),
         child: Container(
           clipBehavior: Clip.antiAlias,
-          width: 40.vw,
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(.5),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                height: 25.vh,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(20),
-                  ),
+                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
                   color: mosqueManager.getColorTheme().withOpacity(.7),
-                   backgroundBlendMode: BlendMode.screen,
+                  backgroundBlendMode: BlendMode.screen,
                 ),
-                padding:
-                    EdgeInsets.symmetric(vertical: 1.5.vw, horizontal: 5.vw),
+                padding: EdgeInsets.symmetric(vertical: 2.5.vw, horizontal: 5.vw),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     //clock timer
                     CurrentTimeWidget(),
-                    // date time
 
+                    // date time
                     HomeDateWidget(),
                   ],
                 ),
               ),
-              Padding(
-                  padding: EdgeInsets.all(isArabicLang ? 0.1.vw : 2.vh),
-                  child: SalahInWidget()),
+              Padding(padding: EdgeInsets.all(isArabicLang ? 0.1.vw : 2.vh), child: SalahInWidget()),
             ],
           ),
         ),
