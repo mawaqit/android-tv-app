@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 
-const tunisMonthNames = [
+const _maghrebMonthNames = [
   'جانفي',
   'فيفري',
   'مارس',
@@ -16,14 +16,19 @@ const tunisMonthNames = [
   'ديسمبر'
 ];
 
+const _maghrebMonthsLocales = [
+  'AR_TN',
+  'AR_DZ',
+];
+
 extension MawaqitDateUtils on DateTime {
   String formatIntoMawaqitFormat({String local = 'en'}) {
     var formatter = local == 'ar' || local == 'fr'
         ? DateFormat('EEEE, dd MMMM, yyyy', local)
         : DateFormat('EEEE, MMMM dd, yyyy', local);
 
-    if (local.toUpperCase() == 'AR_TN' || local.toUpperCase() == 'DZ') {
-      formatter.dateSymbols.MONTHS = tunisMonthNames;
+    if (_maghrebMonthsLocales.contains(local.toUpperCase())) {
+      formatter.dateSymbols.MONTHS = _maghrebMonthNames;
     }
 
     formatter.useNativeDigits = false;
