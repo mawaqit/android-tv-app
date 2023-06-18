@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +21,7 @@ class UserPreferencesManager extends ChangeNotifier {
     _sharedPref = await SharedPreferences.getInstance();
 
     Api.useStagingApi(forceStaging);
+    forceOrientation();
   }
 
   late SharedPreferences _sharedPref;
@@ -63,9 +65,11 @@ class UserPreferencesManager extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// orientation section  ///
+
   /// return true if the screen orientation is horizontal
   /// null will use the default orientation
-  bool? get orientationLandscape =>
+  bool get orientationLandscape =>
       _sharedPref.getBool(_screenOrientation) ?? RelativeSizes.instance.orientation == Orientation.landscape;
 
   /// set the screen orientation
@@ -76,11 +80,27 @@ class UserPreferencesManager extends ChangeNotifier {
     } else {
       _sharedPref.setBool(_screenOrientation, value);
     }
+    forceOrientation();
     notifyListeners();
   }
 
-  void toggleOrientation(){
-    orientationLandscape = !orientationLandscape!;
+  void forceOrientation() {
+    switch (orientationLandscape) {
+      case true:
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]);
+      case false:
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+    }
+  }
+
+  void toggleOrientation() {
+    orientationLandscape = !orientationLandscape;
   }
 
   /// calculate the orientation based on the user preferences and screen size
