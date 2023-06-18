@@ -9,7 +9,6 @@ workflows:
       branch_patterns:
         - pattern: main
       cancel_previous_builds: true
-    instance_type: linux
     environment:
       flutter: release
       vars:
