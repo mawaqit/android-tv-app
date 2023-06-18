@@ -51,7 +51,7 @@ workflows:
       - build/**/outputs/**/mapping.txt
       # for the non leanback flavor build
       - build/app/outputs/bundle/noleanbackRelease/app-noleanback-release.aab
-      - build\app\outputs\flutter-apk\app-noleanback-release.apk
+      - build/app/outputs/flutter-apk/app-noleanback-release.apk
       - flutter_drive.log
     publishing:
       google_play:
