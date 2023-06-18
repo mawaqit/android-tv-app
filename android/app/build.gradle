@@ -86,22 +86,7 @@ android {
 
   buildTypes {
     release {
-      signingConfig signingConfigs.release
-
-
-      flavorDimensions "app-type"
-
-      productFlavors {
-        leanback {
-          dimension "app-type"
-          applicationId "com.kanout.mawaqit"
-        }
-
-        noLeanback {
-          dimension "app-type"
-          applicationId "com.mawaqit.androidtv"
-        }
-      }
+      signingConfig signingConfigs.debug
     }
   }
 
