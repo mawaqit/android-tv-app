@@ -38,9 +38,20 @@ workflows:
             --build-number=$BUILD_NUMBER \
             --flavor noLeanback \
             --dart-define mawaqit.api.key=ad283fb2-844b-40fe-967c-5cb593e9005e
+      - name: Build APK with Flutter
+        script: |
+          BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          flutter build apk --release \
+            --build-name=$VERSION \
+            --build-number=$BUILD_NUMBER \
+            --flavor noLeanback \
+            --dart-define mawaqit.api.key=ad283fb2-844b-40fe-967c-5cb593e9005e
     artifacts:
       - build/app/outputs/bundle/release/app-release.aab
       - build/**/outputs/**/mapping.txt
+      # for the non leanback flavor build
+      - build/app/outputs/bundle/noleanbackRelease/app-noleanback-release.aab
+      - build\app\outputs\flutter-apk\app-noleanback-release.apk
       - flutter_drive.log
     publishing:
       google_play:
