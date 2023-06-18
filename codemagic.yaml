@@ -1,0 +1,49 @@
+workflows:
+  android-tv:
+    name: Building and deploying android TV application
+    triggering:
+      events:
+        - push
+        - pull_request
+        - tag
+      branch_patterns:
+        - pattern: main
+      cancel_previous_builds: true
+    instance_type: linux
+    environment:
+      flutter: release
+      vars:
+        PACKAGE_NAME: "com.mawaqit.androidtv"
+        GOOGLE_PLAY_TRACK: internal
+      android_signing:
+        - Mawaqit Mobile App + Android TV Android keystore
+      groups:
+        - google_credentials
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.gradle/caches
+    scripts:
+      - name: Retrieve version
+        script: |
+          VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])\+.*/\1/p')
+          echo "App version: $VERSION"
+      - name: Install dependencies
+        script: flutter pub get
+      - name: Build AAB with Flutter
+        script: |
+          BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          echo "Build Number: $BUILD_NUMBER"
+          flutter build appbundle --release \
+            --build-name=$VERSION \
+            --build-number=$BUILD_NUMBER \
+            --flavor noLeanback \
+            --dart-define mawaqit.api.key=ad283fb2-844b-40fe-967c-5cb593e9005e
+    artifacts:
+      - build/app/outputs/bundle/release/app-release.aab
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: $GOOGLE_PLAY_TRACK
