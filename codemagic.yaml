@@ -10,7 +10,7 @@ workflows:
         - pattern: main
       cancel_previous_builds: true
     environment:
-      flutter: release
+      flutter: stable
       vars:
         PACKAGE_NAME: "com.mawaqit.androidtv"
         GOOGLE_PLAY_TRACK: internal
