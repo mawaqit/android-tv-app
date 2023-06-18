@@ -16,6 +16,7 @@ workflows:
         - Mawaqit Mobile App + Android TV Android keystore
       groups:
         - google_credentials
+        - aws_credentials
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -47,6 +48,11 @@ workflows:
           mkdir build/artifacts;
           cp build/app/outputs/bundle/release/app-release.aab build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab
           cp build/app/outputs/flutter-apk/app-release.apk build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+
+      - name: Upload to AWS S3 bucket
+        script: |
+          aws s3 build/app/outputs/flutter-apk/app-release.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+          aws s3 build/app/outputs/flutter-apk/app-release.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
 
     artifacts:
       - build/artifacts/***
