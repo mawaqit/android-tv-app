@@ -3,8 +3,6 @@ workflows:
     name: Building and deploying android TV application
     triggering:
       events:
-        - push
-        - pull_request
         - tag
       branch_patterns:
         - pattern: main
