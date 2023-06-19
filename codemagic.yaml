@@ -28,7 +28,8 @@ workflows:
     scripts:
       - name: Retrieve version
         script: |
-          VERSION=$(cat "pubspec.yaml" | grep '[0-9]*\.[0-9]*\.[0-9].*-tv+[0-9]*' -o)
+          brew install ack
+          VERSION=$(cat "pubspec.yaml" | ack '(?<=version: ).*)' -o)
           echo "App version: $VERSION"
       - name: Install dependencies
         script: |
@@ -55,10 +56,10 @@ workflows:
           cp build/app/outputs/bundle/release/app-release.aab build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab
           cp build/app/outputs/flutter-apk/app-release.apk build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
 
-#      - name: Upload to AWS S3 bucket
-#        script: |
-#          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
-#          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
+      #      - name: Upload to AWS S3 bucket
+      #        script: |
+      #          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
+      #          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
       - name: Publish Github release
         script: |
           if [ -z ${CM_TAG} ]; then
