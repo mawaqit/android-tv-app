@@ -6,6 +6,9 @@ workflows:
         - tag
       branch_patterns:
         - pattern: main|codemagic-yaml-implementation
+          include: true
+          source: true
+
       cancel_previous_builds: true
     environment:
       flutter: stable
