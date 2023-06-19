@@ -5,7 +5,7 @@ workflows:
       events:
         - tag
       branch_patterns:
-        - pattern: main
+        - pattern: main|codemagic-yaml-implementation
       cancel_previous_builds: true
     environment:
       flutter: stable
@@ -17,6 +17,7 @@ workflows:
       groups:
         - google_credentials
         - aws_credentials
+        - GITHUB
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -53,6 +54,17 @@ workflows:
         script: |
           aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
           aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
+      - name: Publish Github release
+        script: |
+          if [ -z ${CM_TAG} ]; then
+           echo "Not a tag build, will not publish GitHub release"
+           exit 0
+          fi
+
+          gh release create "${CM_TAG}" \
+           --title "MAWAQIT For TV ${CM_TAG}" \
+           --notes-file changelog.md \
+           build/artifacts/*
 
     artifacts:
       - build/artifacts/*
