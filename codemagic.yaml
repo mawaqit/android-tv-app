@@ -24,7 +24,7 @@ workflows:
     scripts:
       - name: Retrieve version
         script: |
-          VERSION=$(cat "pubspec.yaml" | grep -Po '\d*\.*\d*\.*\d*\.*-tv\+\d*\.*')
+          VERSION=$(cat "pubspec.yaml" | grep '\d*\.*\d*\.*\d*\.*-tv\+\d*\.*') --perl-regexp --only-matching
           echo "App version: $VERSION"
       - name: Install dependencies
         script: flutter pub get
@@ -51,8 +51,8 @@ workflows:
 
       - name: Upload to AWS S3 bucket
         script: |
-          aws s3 sync build/app/outputs/flutter-apk/app-release.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
-          aws s3 sync build/app/outputs/flutter-apk/app-release.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
+          aws s3 sync build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
+          aws s3 sync build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
 
     artifacts:
       - build/artifacts/*
