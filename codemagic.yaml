@@ -16,7 +16,7 @@ workflows:
         - Mawaqit Mobile App + Android TV Android keystore
       groups:
         - google_credentials
-        - AWS
+        - aws_credentials
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -43,7 +43,7 @@ workflows:
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
             --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
-      - name: Rename Build artifact
+      - name: Copy artifacts
         script: |
           mkdir build/artifacts;
           cp build/app/outputs/bundle/release/app-release.aab build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab
@@ -55,10 +55,10 @@ workflows:
           aws s3 sync build/app/outputs/flutter-apk/app-release.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
 
     artifacts:
-      - build/artifacts/***
+      - build/artifacts/*
       - build/**/outputs/**/mapping.txt
       - flutter_drive.log
-    publishing:
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: $GOOGLE_PLAY_TRACK
+#    publishing:
+#      google_play:
+#        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+#        track: $GOOGLE_PLAY_TRACK
