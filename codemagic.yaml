@@ -64,6 +64,7 @@ workflows:
            exit 0
           fi
 
+          gh changelog new --next-version v1.2.0
           gh release create "${CM_TAG}" \
            --title "MAWAQIT For TV ${CM_TAG}" \
            --notes-file changelog.md \
