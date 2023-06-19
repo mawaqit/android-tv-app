@@ -16,7 +16,7 @@ workflows:
         - Mawaqit Mobile App + Android TV Android keystore
       groups:
         - google_credentials
-        - aws_credentials
+        - AWS
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
