@@ -31,7 +31,10 @@ workflows:
           VERSION=$(cat "pubspec.yaml" | grep '[0-9]*\.[0-9]*\.[0-9].*-tv+[0-9]*' -o)
           echo "App version: $VERSION"
       - name: Install dependencies
-        script: flutter pub get
+        script: |
+          flutter pub get
+          gh extension install chelnak/gh-changelog
+
       - name: Build AAB with Flutter
         script: |
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
