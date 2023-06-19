@@ -56,10 +56,12 @@ workflows:
           cp build/app/outputs/bundle/release/app-release.aab build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab
           cp build/app/outputs/flutter-apk/app-release.apk build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
 
-      - name: Upload to AWS S3 bucket
-        script: |
-          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
-          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
+#      - name: Upload to AWS S3 bucket
+#        script: |
+#          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
+#          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
+      - name: Generate Github changelog
+        script:  gh changelog new --next-version ${CM_TAG}
       - name: Publish Github release
         script: |
           if [ -z ${CM_TAG} ]; then
@@ -67,7 +69,6 @@ workflows:
            exit 0
           fi
 
-          gh changelog new --next-version v1.2.0
           gh release create "${CM_TAG}" \
            --title "MAWAQIT For TV ${CM_TAG}" \
            --notes-file changelog.md \
