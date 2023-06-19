@@ -62,7 +62,6 @@ workflows:
       - name: Upload to AWS S3 bucket
         script: |
           aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
-          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
 
       - name: Publish Github release
         script: |
