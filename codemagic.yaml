@@ -33,7 +33,6 @@ workflows:
       - name: Install dependencies
         script: |
           flutter pub get
-          gh extension install chelnak/gh-changelog
 
       - name: Build AAB with Flutter
         script: |
@@ -60,8 +59,6 @@ workflows:
 #        script: |
 #          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
 #          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/MAWAQIT-For-TV-latest.apk
-      - name: Generate Github changelog
-        script:  gh changelog new --next-version ${CM_TAG}
       - name: Publish Github release
         script: |
           if [ -z ${CM_TAG} ]; then
@@ -71,7 +68,6 @@ workflows:
 
           gh release create "${CM_TAG}" \
            --title "MAWAQIT For TV ${CM_TAG}" \
-           --notes-file changelog.md \
            build/artifacts/*
 
     artifacts:
