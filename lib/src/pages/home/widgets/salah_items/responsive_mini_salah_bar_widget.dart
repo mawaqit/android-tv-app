@@ -4,7 +4,6 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/orientation_widget.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/SalahItem.dart';
-import 'package:mawaqit/src/pages/home/widgets/salah_items/horizontal_salah_item.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/mini_horizontal_salah_item.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
@@ -102,15 +101,10 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
               ),
               Expanded(
                 flex: 2,
-                child: HorizontalSalahItem(
-                  margin: EdgeInsets.all(1.vw),
+                child: MiniHorizontalSalahItem(
                   title: mosqueProvider.salahName(4),
                   time: todayTimes[4],
                   active: nextActiveIqama == 4,
-                  withDivider: false,
-                  removeBackground: false,
-                  showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-                  isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
                 )
                     .animate(delay: _step * 4)
                     .fadeIn(duration: _duration)
