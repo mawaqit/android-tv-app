@@ -71,17 +71,20 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
           ).animate().scale(delay: .2.seconds).addRepaintBoundary(),
         ),
         SizedBox(height: 15),
-        Text(
-          tr.turnOfPhones,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 4.vw,
-            color: Colors.white,
-            fontFamily: StringManager.getFontFamilyByString(tr.turnOfPhones),
-            shadows: kAfterAdhanTextShadow,
-          ),
-        ).animate().slide(begin: Offset(0, 1)).fade().addRepaintBoundary(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 2.vw, vertical: 2.vw),
+          child: Text(
+            tr.turnOfPhones,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 4.vwr,
+              color: Colors.white,
+              fontFamily: StringManager.getFontFamilyByString(tr.turnOfPhones),
+              shadows: kAfterAdhanTextShadow,
+            ),
+          ).animate().slide(begin: Offset(0, 1)).fade().addRepaintBoundary(),
+        ),
         SizedBox(height: 30),
       ],
     );

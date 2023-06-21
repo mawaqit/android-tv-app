@@ -67,6 +67,7 @@ class ResponsiveSalahBarWidget extends StatelessOrientationWidget {
 
     return Column(
       children: [
+        SizedBox(height: 2.vh ),
         for (var i = 0; i < 5; i++)
           HorizontalSalahItem(
             title: mosqueProvider.salahName(i),

@@ -4,7 +4,7 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/orientation_widget.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/SalahItem.dart';
-import 'package:mawaqit/src/pages/home/widgets/salah_items/horizontal_salah_item.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/mini_horizontal_salah_item.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -66,20 +66,16 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // top three salah item (fajr, duhr, asr)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               for (var i = 0; i < 3; i++)
                 Expanded(
-                  child: HorizontalSalahItem(
-                    margin: EdgeInsets.all(1.vw),
+                  child: MiniHorizontalSalahItem(
                     title: mosqueProvider.salahName(i),
                     time: todayTimes[i],
                     active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
-                    withDivider: false,
-                    removeBackground: false,
-                    showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-                    isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
                   )
                       .animate(delay: _step * i)
                       .fadeIn(duration: _duration)
@@ -93,15 +89,10 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
               Spacer(),
               Expanded(
                 flex: 2,
-                child: HorizontalSalahItem(
-                  margin: EdgeInsets.all(1.vw),
+                child: MiniHorizontalSalahItem(
                   title: mosqueProvider.salahName(3),
                   time: todayTimes[3],
                   active: nextActiveIqama == 3,
-                  withDivider: false,
-                  removeBackground: false,
-                  showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-                  isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
                 )
                     .animate(delay: _step * 3)
                     .fadeIn(duration: _duration)
@@ -110,15 +101,10 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
               ),
               Expanded(
                 flex: 2,
-                child: HorizontalSalahItem(
-                  margin: EdgeInsets.all(1.vw),
+                child: MiniHorizontalSalahItem(
                   title: mosqueProvider.salahName(4),
                   time: todayTimes[4],
                   active: nextActiveIqama == 4,
-                  withDivider: false,
-                  removeBackground: false,
-                  showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-                  isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
                 )
                     .animate(delay: _step * 4)
                     .fadeIn(duration: _duration)

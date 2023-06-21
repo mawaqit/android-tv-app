@@ -61,7 +61,7 @@ class MosqueHeader extends StatelessWidget {
                               "$e ",
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 4.vw,
+                                  fontSize: 4.vwr,
                                   height: isArabicText ? 1.2 : 1,
                                   shadows: kIqamaCountDownTextShadow,
                                   fontWeight: FontWeight.bold,

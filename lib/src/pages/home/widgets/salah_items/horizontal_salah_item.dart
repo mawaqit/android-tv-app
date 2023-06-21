@@ -39,8 +39,8 @@ class HorizontalSalahItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bigFont = 6.0.vw;
-    double smallFont = 3.6.vw;
+    double bigFont = 4.5.vwr;
+    double smallFont = 3.6.vwr;
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
@@ -59,6 +59,7 @@ class HorizontalSalahItem extends StatelessWidget {
       ),
       padding: EdgeInsets.symmetric(vertical: 1.vh, horizontal: 1.vw),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (title != null && title!.trim().isNotEmpty)
             Expanded(
@@ -67,7 +68,7 @@ class HorizontalSalahItem extends StatelessWidget {
                   maxLines: 1,
                   title ?? "",
                   style: TextStyle(
-                    fontSize: 4.vw,
+                    fontSize: 4.vwr,
                     shadows: kHomeTextShadow,
                     color: Colors.white,
                     fontFamily: StringManager.getFontFamilyByString(title ?? ""),
