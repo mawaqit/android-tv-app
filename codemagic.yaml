@@ -5,7 +5,7 @@ workflows:
       events:
         - tag
       branch_patterns:
-        - pattern: main
+        - pattern: main|codemagic-yaml-implementation
           include: true
           source: true
 
@@ -29,7 +29,7 @@ workflows:
       - name: Retrieve version
         script: |
           brew install ack
-          VERSION=$(cat "pubspec.yaml" | ack '(?<=version: ).*)' -o)
+          VERSION=$(cat "pubspec.yaml" | sed -nE  's/version:.*([0-9]+\.[0-9]+\.[0-9])-tv\+.*/\1/p')
           echo "App version: $VERSION"
 
       - name: Install dependencies
