@@ -5,7 +5,7 @@ workflows:
       events:
         - tag
       branch_patterns:
-        - pattern: main|codemagic-yaml-implementation
+        - pattern: main
           include: true
           source: true
 
