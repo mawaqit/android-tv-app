@@ -80,16 +80,14 @@ workflows:
         script: |
           aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
 
-      - name: Publish Github release
+      - name: Upload apk to the Github release
         script: |
           if [ -z ${CM_TAG} ]; then
-           echo "Not a tag build, will not publish GitHub release"
+           echo "Not a tag build, will not upload apk"
            exit 0
           fi
-          
-          gh release create "${CM_TAG}" \
-           --title "MAWAQIT For TV ${CM_TAG}" \
-           build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+
+          gh release upload "${CM_TAG}" build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
 
     artifacts:
       - build/artifacts/*
