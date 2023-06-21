@@ -16,7 +16,10 @@ class HadithWidget extends StatelessWidget {
     this.translatedText,
     this.textDirection,
     this.mainAxisAlignment = MainAxisAlignment.center,
+    this.padding,
   }) : super(key: key);
+
+  final EdgeInsetsGeometry? padding;
 
   /// The main title of the screen
   final String? title;
@@ -39,33 +42,36 @@ class HadithWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: mainAxisAlignment,
-      children: [
-        if (title != null && title != '')
-          titleText(
-            title!,
-            textDirection: TextDirection.rtl,
-          ),
-        if (arabicText != null && arabicText != '')
-          contentText(
-            arabicText!,
-            textDirection: TextDirection.rtl,
-            delay: .1.seconds,
-          ),
-        if (translatedTitle != null && translatedTitle != title && translatedTitle != '')
-          titleText(
-            translatedTitle!,
-            textDirection: textDirection,
-            delay: .2.seconds,
-          ),
-        if (translatedText != null && translatedText != arabicText && translatedText != '')
-          contentText(
-            translatedText!,
-            textDirection: textDirection,
-            delay: .3.seconds,
-          ),
-      ],
+    return Padding(
+      padding: padding ?? EdgeInsets.all(2.vwr),
+      child: Column(
+        mainAxisAlignment: mainAxisAlignment,
+        children: [
+          if (title != null && title != '')
+            titleText(
+              title!,
+              textDirection: TextDirection.rtl,
+            ),
+          if (arabicText != null && arabicText != '')
+            contentText(
+              arabicText!,
+              textDirection: TextDirection.rtl,
+              delay: .1.seconds,
+            ),
+          if (translatedTitle != null && translatedTitle != title && translatedTitle != '')
+            titleText(
+              translatedTitle!,
+              textDirection: textDirection,
+              delay: .2.seconds,
+            ),
+          if (translatedText != null && translatedText != arabicText && translatedText != '')
+            contentText(
+              translatedText!,
+              textDirection: textDirection,
+              delay: .3.seconds,
+            ),
+        ],
+      ),
     );
   }
 

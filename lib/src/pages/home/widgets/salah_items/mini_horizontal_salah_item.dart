@@ -36,33 +36,39 @@ class MiniHorizontalSalahItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(1.vw),
       padding: EdgeInsets.all(1.vw),
+      width: double.infinity,
+      height: 5.vwr,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2.vw),
         color: active ? mosqueProvider.getColorTheme().withOpacity(.5) : Colors.black.withOpacity(.5),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 4.vwr,
-              shadows: kHomeTextShadow,
-              color: Colors.white,
-              fontFamily: StringManager.getFontFamilyByString(title ?? ""),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 4.vwr,
+                shadows: kHomeTextShadow,
+                color: Colors.white,
+                fontFamily: StringManager.getFontFamilyByString(title ?? ""),
+              ),
             ),
-          ),
-          SizedBox(width: 3.vw),
-          TimeWidget.fromString(
-            show24hFormat: is24period,
-            time: time,
-            style: TextStyle(
-              fontSize: isIqamaMoreImportant ? smallFont : bigFont,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+            SizedBox(width: 3.vw),
+            TimeWidget.fromString(
+              show24hFormat: is24period,
+              time: time,
+              style: TextStyle(
+                fontSize: isIqamaMoreImportant ? smallFont : bigFont,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
