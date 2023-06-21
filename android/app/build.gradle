@@ -63,10 +63,18 @@ android {
 
   signingConfigs {
     release {
-      keyAlias keystoreProperties != null ? keystoreProperties['keyAlias'] : null
-      keyPassword keystoreProperties != null ? keystoreProperties['keyPassword'] : null
-      storePassword keystoreProperties != null ? keystoreProperties['storePassword'] : null
-      storeFile keystoreProperties != null && keystoreProperties['storeFile'] != null ? file(keystoreProperties['storeFile']) : null
+      if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+        storeFile file(System.getenv()["CM_KEYSTORE_PATH"])
+        storePassword System.getenv()["CM_KEYSTORE_PASSWORD"]
+        keyAlias System.getenv()["CM_KEY_ALIAS"]
+        keyPassword System.getenv()["CM_KEY_PASSWORD"]
+      } else {
+        keyAlias keystoreProperties['keyAlias']
+        keyPassword keystoreProperties['keyPassword']
+        storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+        storePassword keystoreProperties['storePassword']
+      }
+
     }
 //        debug {
 //            storeFile file(storeFile_)
@@ -79,21 +87,6 @@ android {
   buildTypes {
     release {
       signingConfig signingConfigs.release
-
-
-      flavorDimensions "app-type"
-
-      productFlavors {
-        leanback {
-          dimension "app-type"
-          applicationId "com.kanout.mawaqit"
-        }
-
-        noLeanback {
-          dimension "app-type"
-          applicationId "com.mawaqit.androidtv"
-        }
-      }
     }
   }
 
