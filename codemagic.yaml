@@ -29,14 +29,14 @@ workflows:
       - name: Retrieve version
         script: |
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])-tv\+.*/\1/p')
-          echo 'App version: $VERSION'
+          echo "App version: $VERSION"
       - name: Test version
         script: |
           echo $VERSION
-          echo '$VERSION'
+          echo "$VERSION"
           if [ -z ${VERSION} ]; then
            echo "Version is empty, will not build"
-           exit 0
+           exit 1
           fi
       - name: Install dependencies
         script: |
