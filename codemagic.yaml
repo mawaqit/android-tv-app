@@ -89,7 +89,7 @@ workflows:
           
           gh release create "${CM_TAG}" \
            --title "MAWAQIT For TV ${CM_TAG}" \
-           build/artifacts/*
+           build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
 
     artifacts:
       - build/artifacts/*
