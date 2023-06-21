@@ -59,6 +59,7 @@ class HorizontalSalahItem extends StatelessWidget {
       ),
       padding: EdgeInsets.symmetric(vertical: 1.vh, horizontal: 1.vw),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (title != null && title!.trim().isNotEmpty)
             Expanded(

@@ -129,9 +129,7 @@ class _TextAnnouncement extends StatelessWidget {
               ),
             ).animate().fade(delay: 500.milliseconds).addRepaintBoundary(),
           ),
-          SizedBox(
-            height: 15.vh,
-          ),
+          SizedBox(height: 20.vh),
         ],
       ),
     );
