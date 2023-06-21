@@ -30,7 +30,7 @@ class HomeLogoVersion extends StatelessWidget {
                 ),
               ),
               child: VersionWidget(
-                style: TextStyle(color: Colors.white, fontSize: 1.vw),
+                style: TextStyle(color: Colors.white, fontSize: 1.vwr),
               ),
             ),
           ),

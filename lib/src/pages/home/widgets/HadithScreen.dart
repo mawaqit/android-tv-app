@@ -77,7 +77,7 @@ class HadithWidget extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        fontSize: 6.2.vw,
+        fontSize: 6.2.vwr,
         fontWeight: FontWeight.bold,
         fontFamily: StringManager.getFontFamilyByString(text),
         color: Colors.white,

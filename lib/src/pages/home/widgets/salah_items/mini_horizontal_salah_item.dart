@@ -46,7 +46,7 @@ class MiniHorizontalSalahItem extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 4.vw,
+              fontSize: 4.vwr,
               shadows: kHomeTextShadow,
               color: Colors.white,
               fontFamily: StringManager.getFontFamilyByString(title ?? ""),

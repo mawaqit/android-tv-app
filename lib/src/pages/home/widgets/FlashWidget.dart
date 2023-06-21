@@ -39,7 +39,7 @@ class FlashWidget extends StatelessWidget {
                 blankSpace: 500,
                 style: TextStyle(
                   height: 1,
-                  fontSize: 3.4.vw,
+                  fontSize: 3.4.vwr,
                   fontWeight: FontWeight.bold,
                   wordSpacing: 3,
                   shadows: kHomeTextShadow,

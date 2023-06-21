@@ -121,7 +121,7 @@ class _TextAnnouncement extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 shadows: kAnnouncementTextShadow,
-                fontSize: 8.vw,
+                fontSize: 8.vwr,
                 fontWeight: FontWeight.bold,
                 fontFamily: StringManager.getFontFamilyByString(content),
                 color: Colors.white,
