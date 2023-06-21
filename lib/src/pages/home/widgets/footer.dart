@@ -57,8 +57,8 @@ class Footer extends StatelessWidget {
                       child: MawaqitNetworkImage(
                         imageUrl: kFooterQrLink,
                         errorBuilder: (context, url, error) => SizedBox(),
-                        width: 4.3.vw,
-                        height: 4.3.vw,
+                        width: 4.3.vwr,
+                        height: 4.3.vwr,
                       ),
                     ),
                   ),

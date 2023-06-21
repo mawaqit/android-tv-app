@@ -15,13 +15,13 @@ class HomeLogoVersion extends StatelessWidget {
         children: [
           SvgPicture.asset(
             R.ASSETS_SVG_MAWAQIT_LOGO_TEXT_LIGHT_SVG,
-            height: 3.8.vw,
+            height: 3.8.vwr,
           ),
           Align(
             heightFactor: .5,
             alignment: Alignment(.5, 0),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: .5.vw, vertical: .4.vh),
+              padding: EdgeInsets.symmetric(horizontal: .5.vwr, vertical: .4.vh),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.vertical(
