@@ -1,9 +1,7 @@
 # MAWAQIT Smart Display [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
 Smart Mosque Display for Android compatible TVs, BOXes, and Tablets.
 
-<a href="https://wiki.mawaqit.net/">![Mawaqit](assets/img/logo/logo-mawaqit-2022-horizontal.png "Mawaqit logo")</a> <a href="https://opensource.org/"><img src="https://user-images.githubusercontent.com/33727630/152268395-25a1f2e8-92a7-4690-9f85-857fd9936d93.png" height="170" /></a>
-
-<img src="https://i0.wp.com/beta.mawaqit.net/wp-content/uploads/2023/02/a1e3e-tv_screen-right.png" width="500"/>
+<a href="https://opensource.org/"><img src="https://user-images.githubusercontent.com/33727630/152268395-25a1f2e8-92a7-4690-9f85-857fd9936d93.png" height="170" /></a>
 
 
 Mosque Admins and users at home are free to use this our Smart Mosque Display to get the accurate prayer times and useful Mosque information.
