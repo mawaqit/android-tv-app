@@ -32,6 +32,7 @@ workflows:
           echo "App version: $VERSION"
       - name: Test version
         script: |
+          echo "App version: $VERSION"
           echo $VERSION
           echo "$VERSION"
           if [ -z ${VERSION} ]; then
