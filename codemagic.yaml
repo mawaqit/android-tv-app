@@ -41,11 +41,13 @@ workflows:
       - name: Test version
         script: |
           echo "App version: $VERSION"
+          echo "BUILD NUMBER: $BUILD_NUMBER"
+
           if [ -z ${VERSION} ]; then
            echo "Version is empty, will not build"
            exit 1
           fi
-          if [ -z ${$BUILD_NUMBER} ]; then
+          if [ -z ${BUILD_NUMBER} ]; then
            echo "BUILD NUMBER is empty, will not build"
            exit 1
           fi
