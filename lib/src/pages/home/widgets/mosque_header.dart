@@ -35,7 +35,12 @@ class MosqueHeader extends StatelessOrientationWidget {
                 mosque.logo != null && mosqueConfig!.showLogo
                     ? Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: MawaqitNetworkImage(imageUrl: mosque.logo!, width: 40, height: 40),
+                        child: MawaqitNetworkImage(
+                          imageUrl: mosque.logo!,
+                          width: 40,
+                          height: 40,
+                          errorBuilder: (context, error, stackTrace) => SizedBox(),
+                        ),
                       )
                     : SizedBox(),
                 // SizedBox(width: 10),
@@ -69,6 +74,7 @@ class MosqueHeader extends StatelessOrientationWidget {
                           imageUrl: mosque.logo!,
                           width: 40,
                           height: 40,
+                          errorBuilder: (context, error, stackTrace) => SizedBox(),
                         ),
                       )
                     : SizedBox(),
