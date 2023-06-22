@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_network_image.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
@@ -55,8 +54,6 @@ class MosqueHeader extends StatelessOrientationWidget {
                           height: 1.2,
                           shadows: kIqamaCountDownTextShadow,
                           fontWeight: FontWeight.bold,
-                          fontFamily: StringManager.fontFamilyHelvetica,
-                          fontFamilyFallback: [StringManager.fontFamilyKufi],
                           // fontFamily: StringManager.fontFamilyKufi,
                         ),
                       ),
@@ -124,9 +121,6 @@ class MosqueHeader extends StatelessOrientationWidget {
                         height: 1.2,
                         shadows: kIqamaCountDownTextShadow,
                         fontWeight: FontWeight.bold,
-                        fontFamily: StringManager.fontFamilyHelvetica,
-                        fontFamilyFallback: [StringManager.fontFamilyKufi],
-                        // fontFamily: StringManager.fontFamilyKufi,
                       ),
                     ),
                   ),

@@ -5,7 +5,6 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:mawaqit/src/widgets/time_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../helpers/StringUtils.dart';
 import '../../../../services/mosque_manager.dart';
 
 class SalahItemWidget extends StatelessWidget {
@@ -69,10 +68,10 @@ class SalahItemWidget extends StatelessWidget {
                 maxLines: 1,
                 title ?? "",
                 style: TextStyle(
-                    fontSize: titleFont,
-                    shadows: kHomeTextShadow,
-                    color: Colors.white,
-                    fontFamily: StringManager.getFontFamilyByString(title ?? "")),
+                  fontSize: titleFont,
+                  shadows: kHomeTextShadow,
+                  color: Colors.white,
+                ),
               ),
             ),
           SizedBox(height: isArabic ? 0.1.vh : 1.vh),

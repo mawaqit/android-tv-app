@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/FlashAnimation.dart';
@@ -94,7 +93,6 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15.vw,
-                          fontFamily: StringManager.getFontFamilyByString(S.of(context).alAdhan),
                           height: .001,
                           color: Colors.white,
                           shadows: kHomeTextShadow,

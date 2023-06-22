@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:mawaqit/src/widgets/iqama_time_widget.dart';
@@ -72,7 +71,6 @@ class HorizontalSalahItem extends StatelessWidget {
                     fontSize: titleFont,
                     shadows: kHomeTextShadow,
                     color: Colors.white,
-                    fontFamily: StringManager.getFontFamilyByString(title ?? ""),
                   ),
                 ),
               ),

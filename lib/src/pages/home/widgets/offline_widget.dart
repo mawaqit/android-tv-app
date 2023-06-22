@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +21,7 @@ class OfflineWidget extends StatelessWidget {
           SizedBox(width: 1.vw),
           CircleAvatar(
             radius: .6.vwr,
-            backgroundColor:
-                mosqueManager.isOnline ? Colors.green : Colors.red[700],
+            backgroundColor: mosqueManager.isOnline ? Colors.green : Colors.red[700],
           ),
           SizedBox(width: .4.vwr),
           Text(
@@ -35,7 +32,6 @@ class OfflineWidget extends StatelessWidget {
               fontSize: 1.5.vwr,
               height: 1.1,
               fontWeight: FontWeight.w400,
-              fontFamily: StringManager.getFontFamilyByString(tr.online),
             ),
           ),
         ],

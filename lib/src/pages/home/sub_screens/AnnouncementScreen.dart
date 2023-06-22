@@ -12,7 +12,6 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../../helpers/StringUtils.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 
 /// show all announcements in one after another
@@ -107,7 +106,6 @@ class _TextAnnouncement extends StatelessWidget {
               shadows: kAnnouncementTextShadow,
               fontSize: 50,
               fontWeight: FontWeight.bold,
-              fontFamily: StringManager.getFontFamilyByString(title ?? ''),
               color: Colors.amber,
               letterSpacing: 1,
             ),
@@ -123,7 +121,6 @@ class _TextAnnouncement extends StatelessWidget {
                 shadows: kAnnouncementTextShadow,
                 fontSize: 8.vwr,
                 fontWeight: FontWeight.bold,
-                fontFamily: StringManager.getFontFamilyByString(content),
                 color: Colors.white,
                 letterSpacing: 1,
               ),

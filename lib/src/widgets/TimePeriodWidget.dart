@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/i18n/AppLanguage.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:provider/provider.dart';
 
 class TimePeriodWidget extends StatelessWidget {
@@ -28,10 +27,7 @@ class TimePeriodWidget extends StatelessWidget {
     return Text(
       maxLines: 2,
       value,
-      style: (style ?? defaultStyle).apply(
-        fontFamily: StringManager.getFontFamilyByString(value),
-        fontSizeFactor: isArabic ? 1.2 : 1,
-      ),
+      style: (style ?? defaultStyle).apply(fontSizeFactor: isArabic ? 1.2 : 1),
     );
   }
 }

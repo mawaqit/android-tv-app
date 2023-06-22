@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
@@ -80,12 +79,12 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
         Text(
           tr.iqamaIn,
           style: TextStyle(
-              fontSize: 7.vwr,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              shadows: kIqamaCountDownTextShadow,
-              height: 1,
-              fontFamily: StringManager.getFontFamilyByString(tr.iqamaIn)),
+            fontSize: 7.vwr,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: kIqamaCountDownTextShadow,
+            height: 1,
+          ),
         ).animate().slide(delay: .5.seconds).fade().addRepaintBoundary(),
         StreamBuilder(
             stream: Stream.periodic(Duration(seconds: 1)),

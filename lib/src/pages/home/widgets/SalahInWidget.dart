@@ -51,7 +51,6 @@ class SalahInWidget extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 2.8.vwr,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(countDownText),
                       shadows: kHomeTextShadow,
                     ),
                   )
@@ -60,9 +59,7 @@ class SalahInWidget extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 2.8.vwr,
-                      // height: 2,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(mosqueManager.getShurukInString(context)),
                       shadows: kHomeTextShadow,
                     ),
                   ),

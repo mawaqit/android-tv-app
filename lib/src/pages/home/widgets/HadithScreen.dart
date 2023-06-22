@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 
@@ -85,7 +84,6 @@ class HadithWidget extends StatelessWidget {
       style: TextStyle(
         fontSize: 6.2.vwr,
         fontWeight: FontWeight.bold,
-        fontFamily: StringManager.getFontFamilyByString(text),
         color: Colors.white,
         shadows: kAfterAdhanTextShadow,
       ),
@@ -110,7 +108,6 @@ class HadithWidget extends StatelessWidget {
             text,
             style: TextStyle(
               fontSize: 600,
-              fontFamily: StringManager.getFontFamilyByString(text),
               color: Colors.white,
               shadows: kIqamaCountDownTextShadow,
             ),

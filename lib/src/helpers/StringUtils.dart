@@ -33,36 +33,24 @@ class StringManager {
   static const fontFamilyArial = "arial";
   static const fontFamilyHelvetica = "helvetica";
 
-  static const rtlLanguages = const [
-    'ar',
-    'he',
-    'fa',
-    'ur',
-    'arc',
-    'az',
-    'dv',
-    'ckb'
-  ];
+  static const rtlLanguages = const ['ar', 'he', 'fa', 'ur', 'arc', 'az', 'dv', 'ckb'];
 
   static TextDirection getTextDirectionOfLocal(Locale locale) {
-    return rtlLanguages.contains(locale.languageCode)
-        ? TextDirection.rtl
-        : TextDirection.ltr;
+    return rtlLanguages.contains(locale.languageCode) ? TextDirection.rtl : TextDirection.ltr;
   }
 
 ///////////// Salah count down text in Time widget
-  static String getCountDownText(
-      BuildContext context, Duration salahTime, String salahName) {
+  static String getCountDownText(BuildContext context, Duration salahTime, String salahName) {
     return [
       "$salahName ${S.of(context).in1} ",
       if (salahTime.inMinutes > 0)
         "${salahTime.inHours.toString().padLeft(2, '0')}:${(salahTime.inMinutes % 60).toString().padLeft(2, '0')}",
-      if (salahTime.inMinutes == 0)
-        "${(salahTime.inSeconds % 60).toString().padLeft(2, '0')} ${S.of(context).sec}",
+      if (salahTime.inMinutes == 0) "${(salahTime.inSeconds % 60).toString().padLeft(2, '0')} ${S.of(context).sec}",
     ].join();
   }
 
 //////////// get font family
+  @deprecated
   static String? getFontFamilyByString(String value) {
     if (value.isArabic() || value.isUrdu()) {
       return fontFamilyKufi;
@@ -70,8 +58,7 @@ class StringManager {
     return null;
   }
 
-  @Deprecated(
-      'user [StringManager.getFontFamilyByString] or anyString.isArabic')
+  @Deprecated('user [StringManager.getFontFamilyByString] or anyString.isArabic')
   static String? getFontFamily(BuildContext context) {
     String langCode = "${context.read<AppLanguage>().appLocal}";
     if (langCode == "ar" || langCode == "ur") {
@@ -81,19 +68,15 @@ class StringManager {
   }
 
   /// return list
+  @deprecated
   static List convertStringToList(String text) {
     List<String> list = List.from(text.split(RegExp(r"\s+")));
 
     List<int> arabicIndexes = [];
-    arabicIndexes = list
-        .asMap()
-        .entries
-        .where((entry) => arabicLetters.hasMatch(entry.value))
-        .map((entry) => entry.key)
-        .toList();
+    arabicIndexes =
+        list.asMap().entries.where((entry) => arabicLetters.hasMatch(entry.value)).map((entry) => entry.key).toList();
     if (arabicIndexes.isEmpty) return list;
-    List<String> sublist =
-        list.sublist(arabicIndexes.first, arabicIndexes.last + 1);
+    List<String> sublist = list.sublist(arabicIndexes.first, arabicIndexes.last + 1);
 // Reverse the sublist
     sublist = sublist.reversed.toList();
 // Replace the original sublist with the reversed sublist

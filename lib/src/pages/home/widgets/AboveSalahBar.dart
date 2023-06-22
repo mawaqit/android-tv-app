@@ -7,7 +7,6 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../i18n/l10n.dart';
-import '../../../helpers/StringUtils.dart';
 import '../../../widgets/TimePeriodWidget.dart';
 
 class AboveSalahBar extends StatelessWidget {
@@ -56,7 +55,6 @@ class AboveSalahBar extends StatelessWidget {
                           color: Colors.white,
                           shadows: kHomeTextShadow,
                           fontSize: isArabic ? 5.3.vr : 6.vr,
-                          fontFamily: StringManager.getFontFamilyByString(countDownText),
                         ),
                   ),
                 ),

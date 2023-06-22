@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:provider/provider.dart';
 import 'package:text_scroll/text_scroll.dart';
 
@@ -43,9 +42,6 @@ class FlashWidget extends StatelessWidget {
                   wordSpacing: 3,
                   shadows: kHomeTextShadow,
                   color: HexColor(mosque.flash?.color ?? "#FFFFFF"),
-                  fontFamily: StringManager.getFontFamilyByString(
-                    mosque.flash?.content ?? '',
-                  ),
                 ),
               ),
             ),
