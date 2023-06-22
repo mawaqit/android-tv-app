@@ -77,25 +77,26 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
                   ),
                 ),
                 SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.mosque.label ?? widget.mosque.name,
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    SizedBox(height: 2),
-                    SizedBox(
-                      width: 45.vw,
-                      child: Text(
-                        overflow: TextOverflow.ellipsis,
-                        widget.mosque.localisation ?? '',
-                        style: theme.textTheme.bodySmall,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.mosque.label ?? widget.mosque.name,
+                        style: theme.textTheme.titleMedium,
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 2),
+                      SizedBox(
+                        width: 45.vw,
+                        child: Text(
+                          overflow: TextOverflow.ellipsis,
+                          widget.mosque.localisation ?? '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Spacer(),
                 if (loading) Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: CircularProgressIndicator()),
               ],
             ),
