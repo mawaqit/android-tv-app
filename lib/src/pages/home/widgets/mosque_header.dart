@@ -48,8 +48,8 @@ class MosqueHeader extends StatelessOrientationWidget {
                   child: Container(
                     padding: EdgeInsets.only(left: 1.vw),
                     child: StatefulBuilder(
+                      key: ValueKey(mosque.name.hashCode ^ SizerUtil.orientation.hashCode),
                       builder: (context, setState) => TextScroll(
-                        key: ValueKey(mosque.name.hashCode ^ SizerUtil.orientation.hashCode),
                         mosque.name,
                         intervalSpaces: 10,
                         pauseBetween: 3.seconds,
