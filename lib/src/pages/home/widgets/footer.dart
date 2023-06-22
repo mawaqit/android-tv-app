@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_network_image.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +43,7 @@ class Footer extends StatelessWidget {
                       "ID ${mosque?.id}",
                       textDirection: TextDirection.ltr,
                       style: TextStyle(
-                        fontSize: .8.vw,
+                        fontSize: .8.vwr,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         shadows: kAfterAdhanTextShadow,

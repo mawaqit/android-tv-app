@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:marquee/marquee.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:provider/provider.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 import '../../../helpers/HexColor.dart';
 import '../../../services/mosque_manager.dart';
@@ -28,15 +28,14 @@ class FlashWidget extends StatelessWidget {
         //todo get the message
         ? SizedBox()
         : RepaintBoundary(
-            child: Directionality(
-              textDirection: mosque.flash?.orientation == 'rtl' ? TextDirection.rtl : TextDirection.ltr,
-              child: Marquee(
-                velocity: 90,
-                decelerationCurve: Curves.linear,
-                accelerationCurve: Curves.linear,
-                text: mosque.flash?.content ?? '',
-                scrollAxis: Axis.horizontal,
-                blankSpace: 500,
+            child: StatefulBuilder(
+              builder: (context, setState) => TextScroll(
+                textDirection: mosque.flash?.orientation == 'rtl' ? TextDirection.rtl : TextDirection.ltr,
+                mosque.flash?.content ?? '',
+                intervalSpaces: 20,
+                velocity: Velocity(pixelsPerSecond: Offset(90, 0)),
+                delayBefore: Duration(seconds: 4),
+                pauseBetween: Duration(seconds: 2),
                 style: TextStyle(
                   height: 1,
                   fontSize: 3.4.vwr,

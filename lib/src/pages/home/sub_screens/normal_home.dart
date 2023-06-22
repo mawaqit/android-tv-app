@@ -90,6 +90,7 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
               Container(
                 color: Colors.black26,
                 height: 5.vh,
+                alignment: Alignment.center,
                 child: FlashWidget(),
               ),
             Footer(hideMessage: true),
