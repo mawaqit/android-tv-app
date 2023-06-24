@@ -24,6 +24,7 @@ workflows:
         - google_credentials
         - aws_credentials
         - GITHUB
+        - APP
 
     cache:
       cache_paths:
@@ -56,10 +57,12 @@ workflows:
         script: |
           flutter pub get
 
-      - name: Run flutter tests
+      - name: Run flutter Unit tests
         script: |
           mkdir -p test-results
-          flutter test --machine > test-results/flutter.json
+          flutter test  --machine \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY \
+          | tee .\test-results.txt
 
       - name: Build AAB with Flutter
         script: |
