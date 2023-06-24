@@ -56,6 +56,11 @@ workflows:
         script: |
           flutter pub get
 
+      - name: Run flutter tests
+        script: |
+          mkdir -p test-results
+          flutter test --machine > test-results/flutter.json
+
       - name: Build AAB with Flutter
         script: |
           flutter build appbundle --release \
@@ -93,6 +98,7 @@ workflows:
       - build/artifacts/*
       - build/**/outputs/**/mapping.txt
       - flutter_drive.log
+      - test-results/*
 
     publishing:
       google_play:
