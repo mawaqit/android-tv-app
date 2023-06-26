@@ -101,8 +101,6 @@ dependencies:
 
   #  media
   youtube_player_flutter: ^8.1.2
-  youtube_player_iframe: ^4.0.4
-  youtube_player_iframe_plus: ^2.3.2
   youtube_explode_dart: ^1.12.4
   audiofileplayer: ^2.1.1
 
