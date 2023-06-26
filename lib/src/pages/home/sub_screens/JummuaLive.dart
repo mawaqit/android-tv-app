@@ -1,55 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/JumuaHadithSubScreen.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:mawaqit/src/widgets/mawaqit_youtube_palyer.dart';
 import 'package:provider/provider.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../services/mosque_manager.dart';
 
 class JummuaLive extends StatefulWidget {
-  const JummuaLive({Key? key, this.onDone}) : super(key: key);
+  const JummuaLive({
+    Key? key,
+    this.onDone,
+    this.duration = 30,
+  }) : super(key: key);
 
   final VoidCallback? onDone;
+  final int duration;
 
   @override
   State<JummuaLive> createState() => _JummuaLiveState();
 }
 
 class _JummuaLiveState extends State<JummuaLive> {
+  bool showHadith = false;
+
   @override
-  Widget build(BuildContext context) {
-    final mosqueProvider = context.read<MosqueManager>();
-    //
-    // if (mosqueProvider.mosque == null || mosqueProvider.times == null) return SizedBox();
-    //
-    // final mosque = mosqueProvider.mosque!;
-    final userPrefs = context.watch<UserPreferencesManager>();
-    if (!userPrefs.isSecondaryScreen || mosqueProvider.typeIsMosque) {
-      return Scaffold(
-        backgroundColor: Colors.black,
-      );
-    }
-    return liveStream("https://www.youtube.com/watch?v=NP-hZRXIrYs");
+  void initState() {
+    showHadith = context.read<MosqueManager>().mosque?.streamUrl == null;
+
+    super.initState();
   }
 
-  Widget liveStream(String video) {
-    late YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(
-        video,
-      )!,
-      flags: YoutubePlayerFlags(
-        showLiveFullscreenButton: false,
-        isLive: true,
-        hideControls: true,
-        autoPlay: true,
+  @override
+  Widget build(BuildContext context) {
+    final mosqueManager = context.read<MosqueManager>();
+    final userPrefs = context.watch<UserPreferencesManager>();
 
-        /// todo if type is mosque live is mute
-        //mute: isMosque?false:true
-      ),
-    );
-    return YoutubePlayer(
-      controller: _controller,
-      showVideoProgressIndicator: true,
-      onEnded: (metaData) => widget.onDone?.call(),
+    if (showHadith) return JumuaHadithSubScreen(onDone: widget.onDone);
+
+    if (!userPrefs.isSecondaryScreen && mosqueManager.typeIsMosque) {
+      return Scaffold(backgroundColor: Colors.black);
+    }
+
+    return MawaqitYoutubePlayer(
+      channelId: mosqueManager.mosque!.streamUrl!,
+      onDone: widget.onDone,
+      muted: mosqueManager.typeIsMosque,
+      onNotFound: () => setState(() => showHadith = true),
     );
   }
 }

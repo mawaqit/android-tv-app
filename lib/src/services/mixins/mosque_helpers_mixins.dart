@@ -211,7 +211,12 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() => !kDebugMode ? DateTime.now() : DateTime.now().add(Duration());
+  DateTime mosqueDate() => !kDebugMode
+      ? DateTime.now()
+      : DateTime.now().add(Duration(
+          days: 3,
+          hours: 3,
+        ));
 
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
@@ -274,8 +279,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   List<String> get todayIqama => iqamasOfDay(mosqueDate());
 
   List<String> get tomorrowIqama => iqamasOfDay(mosqueDate().add(Duration(days: 1)));
-
-  String? get jumuaaLiveUrl => null;
 
   /// if jumua as duhr return jumua
   String? get jumuaTime {
