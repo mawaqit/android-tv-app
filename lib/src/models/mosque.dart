@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:mawaqit/src/models/flash.dart';
 
 import 'announcement.dart';
@@ -38,6 +37,8 @@ class Mosque {
   final Flash? flash;
   final List<Announcement> announcements;
 
+  final String? streamUrl;
+
 //<editor-fold desc="Data Methods">
 
   const Mosque({
@@ -73,6 +74,7 @@ class Mosque {
     required this.announcements,
     required this.interiorPicture,
     required this.exteriorPicture,
+    required this.streamUrl,
   });
 
   @override
@@ -136,148 +138,7 @@ class Mosque {
       flash.hashCode ^
       announcements.hashCode;
 
-  @override
-  String toString() {
-    return 'Mosque{' +
-        ' id: $id,' +
-        ' uuid: $uuid,' +
-        ' name: $name,' +
-        ' email: $email,' +
-        ' phone: $phone,' +
-        ' url: $url,' +
-        ' image: $image,' +
-        ' site: $site,' +
-        ' association: $association,' +
-        ' localisation: $localisation,' +
-        ' longitude: $longitude,' +
-        ' latitude: $latitude,' +
-        ' closed: $closed,' +
-        ' womenSpace: $womenSpace,' +
-        ' janazaPrayer: $janazaPrayer,' +
-        ' aidPrayer: $aidPrayer,' +
-        ' childrenCourses: $childrenCourses,' +
-        ' adultCourses: $adultCourses,' +
-        ' ramadanMeal: $ramadanMeal,' +
-        ' handicapAccessibility: $handicapAccessibility,' +
-        ' ablutions: $ablutions,' +
-        ' parking: $parking,' +
-        ' otherInfo: $otherInfo,' +
-        ' flashMessage: $flashMessage,' +
-        ' flash: $flash,' +
-        ' announcements: $announcements,' +
-        '}';
-  }
-
-  Mosque copyWith({
-    int? id,
-    String? uuid,
-    String? name,
-    String? label,
-    String? type,
-    String? email,
-    String? phone,
-    String? url,
-    String? image,
-    String? interiorPicture,
-    String? exteriorPicture,
-    String? logo,
-    String? countryCode,
-    String? site,
-    String? association,
-    String? localisation,
-    num? longitude,
-    num? latitude,
-    String? closed,
-    bool? womenSpace,
-    bool? janazaPrayer,
-    bool? aidPrayer,
-    bool? childrenCourses,
-    bool? adultCourses,
-    bool? ramadanMeal,
-    bool? handicapAccessibility,
-    bool? ablutions,
-    bool? parking,
-    String? otherInfo,
-    String? flashMessage,
-    Flash? flash,
-    List<Announcement>? announcements,
-  }) {
-    return Mosque(
-      id: id ?? this.id,
-      uuid: uuid ?? this.uuid,
-      name: name ?? this.name,
-      type: name ?? this.type,
-      label: label ?? this.label,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
-      url: url ?? this.url,
-      image: image ?? this.image,
-      interiorPicture: interiorPicture ?? this.interiorPicture,
-      exteriorPicture: exteriorPicture ?? this.exteriorPicture,
-      logo: logo ?? this.logo,
-      countryCode: countryCode ?? this.countryCode,
-      site: site ?? this.site,
-      association: association ?? this.association,
-      localisation: localisation ?? this.localisation,
-      longitude: longitude ?? this.longitude,
-      latitude: latitude ?? this.latitude,
-      closed: closed ?? this.closed,
-      womenSpace: womenSpace ?? this.womenSpace,
-      janazaPrayer: janazaPrayer ?? this.janazaPrayer,
-      aidPrayer: aidPrayer ?? this.aidPrayer,
-      childrenCourses: childrenCourses ?? this.childrenCourses,
-      adultCourses: adultCourses ?? this.adultCourses,
-      ramadanMeal: ramadanMeal ?? this.ramadanMeal,
-      handicapAccessibility:
-          handicapAccessibility ?? this.handicapAccessibility,
-      ablutions: ablutions ?? this.ablutions,
-      parking: parking ?? this.parking,
-      otherInfo: otherInfo ?? this.otherInfo,
-      flashMessage: flashMessage ?? this.flashMessage,
-      flash: flash ?? this.flash,
-      announcements: announcements ?? this.announcements,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': this.id,
-      'uuid': this.uuid,
-      'name': this.name,
-      'email': this.email,
-      'phone': this.phone,
-      'url': this.url,
-      'type': this.type,
-      'image': this.image,
-      'label': this.label,
-      'logo': this.logo,
-      'interiorPicture': this.interiorPicture,
-      'exteriorPicture': this.exteriorPicture,
-      'countryCode': this.countryCode,
-      'site': this.site,
-      'association': this.association,
-      'localisation': this.localisation,
-      'longitude': this.longitude,
-      'latitude': this.latitude,
-      'closed': this.closed,
-      'womenSpace': this.womenSpace,
-      'janazaPrayer': this.janazaPrayer,
-      'aidPrayer': this.aidPrayer,
-      'childrenCourses': this.childrenCourses,
-      'adultCourses': this.adultCourses,
-      'ramadanMeal': this.ramadanMeal,
-      'handicapAccessibility': this.handicapAccessibility,
-      'ablutions': this.ablutions,
-      'parking': this.parking,
-      'otherInfo': this.otherInfo,
-      'flashMessage': this.flashMessage,
-      'flash': this.flash,
-      'announcements': this.announcements,
-    };
-  }
-
   factory Mosque.fromMap(Map<String, dynamic> map) {
-    // debugPrint(map.toString(),wrapWidth: 500);
     return Mosque(
       id: map['id'] ?? -1,
       uuid: map['uuid'],
@@ -311,6 +172,7 @@ class Mosque {
       flashMessage: map['flashMessage'],
       flash: map['flash'] == null ? null : Flash.fromMap(map['flash']),
       announcements: Announcement.fromList(map['announcements']),
+      streamUrl: map['streamUrl'] == '' ? null : map['streamUrl'],
     );
   }
 
