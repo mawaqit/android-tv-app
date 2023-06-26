@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:mawaqit/src/widgets/iqama_time_widget.dart';
@@ -39,8 +38,9 @@ class HorizontalSalahItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bigFont = 4.5.vwr;
-    double smallFont = 3.6.vwr;
+    double titleFont = 3.vwr;
+    double bigFont = 3.5.vwr;
+    double smallFont = 2.6.vwr;
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
@@ -68,10 +68,9 @@ class HorizontalSalahItem extends StatelessWidget {
                   maxLines: 1,
                   title ?? "",
                   style: TextStyle(
-                    fontSize: 4.vwr,
+                    fontSize: titleFont,
                     shadows: kHomeTextShadow,
                     color: Colors.white,
-                    fontFamily: StringManager.getFontFamilyByString(title ?? ""),
                   ),
                 ),
               ),

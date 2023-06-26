@@ -28,10 +28,7 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: MosqueHeader(mosque: mosque),
-        ),
+        Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 3.vw).copyWith(top: 1.5.vw),
           child: Row(
@@ -62,10 +59,7 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
 
     return Column(
       children: [
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: MosqueHeader(mosque: mosque),
-        ),
+        Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
         Spacer(flex: 2),
         HomeTimeWidget().animate().slideY(delay: Duration(milliseconds: 500)).fadeIn().addRepaintBoundary(),
         Column(
@@ -96,6 +90,7 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
               Container(
                 color: Colors.black26,
                 height: 5.vh,
+                alignment: Alignment.center,
                 child: FlashWidget(),
               ),
             Footer(hideMessage: true),

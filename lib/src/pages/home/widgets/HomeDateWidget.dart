@@ -38,7 +38,6 @@ class HomeDateWidget extends StatelessWidget {
               color: Colors.white,
               fontSize: 2.7.vwr,
               shadows: kHomeTextShadow,
-              fontFamily: StringManager.getFontFamilyByString(georgianDate),
               height: .8,
             ),
           ),
@@ -54,7 +53,6 @@ class HomeDateWidget extends StatelessWidget {
                   fontSize: 2.5.vwr,
                   height: .8,
                   shadows: kHomeTextShadow,
-                  fontFamily: StringManager.getFontFamilyByString(hijriDateFormatted),
                 ),
               ),
               if (hijriDate.isInLunarDays)

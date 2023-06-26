@@ -80,7 +80,7 @@ dependencies:
 
   auto_size_text: ^3.0.0
   flutter_animate: ^4.1.1+1
-  marquee: ^2.2.3
+  text_scroll: ^0.2.0
 
   easy_debounce: ^2.0.3
 

@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:mawaqit/src/widgets/time_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../helpers/StringUtils.dart';
 import '../../../../services/mosque_manager.dart';
-
-const kSalahItemWidgetWidth = 135.0;
 
 class SalahItemWidget extends StatelessWidget {
   SalahItemWidget({
@@ -40,23 +35,21 @@ class SalahItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bigFont = 4.5.vwr;
-    double smallFont = 3.6.vwr;
+    double titleFont = 3.vw;
+    double bigFont = 4.5.vw;
+    double smallFont = 3.6.vw;
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
-    final timeDate = time.toTimeOfDay()?.toDate(mosqueProvider.mosqueDate());
-    final iqamaDate = iqama?.toTimeOfDay()?.toDate(mosqueProvider.mosqueDate());
     // print(isIqamaEnabled);
     final isArabic = context.read<AppLanguage>().isArabic();
 
     final is12period = mosqueConfig?.timeDisplayFormat == "12";
-    final DateFormat dateTimeConverter = is12period ? DateFormat("hh:mm", "en-En") : DateFormat("HH:mm", "en");
 
     return Container(
-      width: 16.vwr,
+      width: 16.vw,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2.vwr),
+        borderRadius: BorderRadius.circular(2.vw),
         color: active
             ? mosqueProvider.getColorTheme().withOpacity(.5)
             : removeBackground
@@ -75,15 +68,15 @@ class SalahItemWidget extends StatelessWidget {
                 maxLines: 1,
                 title ?? "",
                 style: TextStyle(
-                    fontSize: 3.vwr,
-                    shadows: kHomeTextShadow,
-                    color: Colors.white,
-                    fontFamily: StringManager.getFontFamilyByString(title ?? "")),
+                  fontSize: titleFont,
+                  shadows: kHomeTextShadow,
+                  color: Colors.white,
+                ),
               ),
             ),
           SizedBox(height: isArabic ? 0.1.vh : 1.vh),
           if (time.trim().isEmpty)
-            Icon(Icons.dnd_forwardslash, size: 6.vwr)
+            Icon(Icons.dnd_forwardslash, size: 6.vw)
           else
             FittedBox(
               fit: BoxFit.scaleDown,
@@ -101,7 +94,7 @@ class SalahItemWidget extends StatelessWidget {
             ),
           if (iqama != null && showIqama)
             SizedBox(
-              height: isArabic ? 1.5.vh : 1.3.vwr,
+              height: isArabic ? 1.5.vh : 1.3.vw,
               width: double.infinity,
               child: Divider(
                 thickness: 1,
