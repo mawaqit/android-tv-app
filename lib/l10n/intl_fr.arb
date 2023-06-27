@@ -147,9 +147,17 @@
   "mainScreenExplanation": "Pour la salle principale de la mosquée, cet écran n'affichera pas la diffusion en direct de la joumouaa",
   "normalModeExplanation": "Affiche l'écran normal avec les heures de prière et les annonces.",
   "announcementOnlyModeExplanation": "Les annonces seront affichées en permanence",
+  "orientation": "Orientation",
+  "selectYourMawaqitTvAppOrientation": "Sélectionnez l'orientation de l'application MAWAQIT",
+  "deviceDefault": "Par défaut",
+  "deviceDefaultBTNDescription": "Mawaqit sélectionne automatiquement l'orientation par défaut en fonction de l'orientation de l'écran.",
+  "portrait": "Portrait",
+  "portraitBTNDescription": "Pour l'orientation verticale, recommandée si l'endroit ou vous installez l'écran est étroit.",
+  "landscape": "Paysage",
+  "landscapeBTNDescription": "Pour l'orientation horizontale. La disposition principale de l'application MAWAQIT TV et celle recommandée pour la plupart des mosquées.",
   "eidMubarak": "Aïd Moubarak",
   "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
   "settings": "Paramètres",
   "applicationModes": "Modes d'application",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Si vous rencontrez un problème avec l'application, activez cette option."
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Si vous rencontrez des problèmes avec l'application, essayez d'activer cette option."
 }
