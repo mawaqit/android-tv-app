@@ -58,10 +58,12 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
     final mosque = mosqueProvider.mosque!;
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
-        Spacer(flex: 2),
-        HomeTimeWidget().animate().slideY(delay: Duration(milliseconds: 500)).fadeIn().addRepaintBoundary(),
+        Flexible(
+          child: HomeTimeWidget().animate().slideY(delay: Duration(milliseconds: 500)).fadeIn().addRepaintBoundary(),
+        ),
         Column(
           children: [
             ResponsiveSalahBarWidget(),
@@ -83,7 +85,6 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
             ),
           ],
         ),
-        Spacer(),
         Column(
           children: [
             if (mosque.flash != null)
