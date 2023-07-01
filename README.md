@@ -6,7 +6,7 @@ Smart Mosque Display for Android compatible TVs, BOXes, and Tablets.
 
 Mosque Admins and users at home are free to use this our Smart Mosque Display to get the accurate prayer times and useful Mosque information.
 
-It can be used in replacement of the RaspberryPi version. But please note that this first version is ONLINE only, and needs a Wifi/4G/5G/Ethernet to function properly.
+This app is a replacement of the Raspberry Pi version. with all supported features. connect to your mosque and feel free to use it for up to a full year with no internet connection. 
 
 MAWAQIT is a nonprofit organization, and a proud member of the Open source community. We provide the Muslim community with great and beautiful tools, 100% free and without any Ads (or user tracking). Find more about us <a href="https://wiki.mawaqit.net/">on our WIKI page</a> and on our <a href="https://mawaqit.net/">Official Website</a>. 
 
@@ -14,7 +14,7 @@ Transparency has always been among our core values. We value transparency, and w
 
 ___
 ### OPEN SOURCE INITIATIVE
-MAWAQIT is a proud member of the Open Source Initiative (OSI). We create, promote, encourage the use of open source software.
+MAWAQIT is a proud member of the Open Source Initiative (OSI). We create, promote, and encourage the use of open-source software.
 ___
 ## COPYRIGHT
 <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/mawaqit/android-tv">MAWAQIT Smart Display</a> © 2022 by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://mawaqit.net">MAWAQIT</a> is licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Attribution-NonCommercial-ShareAlike 4.0 International</a>
