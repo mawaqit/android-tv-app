@@ -33,8 +33,6 @@ class FlashWidget extends StatelessWidget {
                 mosque.flash?.content ?? '',
                 intervalSpaces: 20,
                 velocity: Velocity(pixelsPerSecond: Offset(90, 0)),
-                delayBefore: Duration(seconds: 4),
-                pauseBetween: Duration(seconds: 2),
                 style: TextStyle(
                   height: 1,
                   fontSize: 3.4.vwr,
