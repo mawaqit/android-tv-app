@@ -53,6 +53,7 @@ class MiniHorizontalSalahItem extends StatelessWidget {
                 fontSize: 3.vwr,
                 shadows: kHomeTextShadow,
                 color: Colors.white,
+                height: 1,
               ),
             ),
             SizedBox(width: 3.vw),
