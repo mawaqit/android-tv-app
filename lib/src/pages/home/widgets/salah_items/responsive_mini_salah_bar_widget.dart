@@ -100,18 +100,6 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
                       .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
                       .addRepaintBoundary(),
                 ),
-              // Flexible(
-              //   flex: 2,
-              //   child: MiniHorizontalSalahItem(
-              //     title: mosqueProvider.salahName(4),
-              //     time: todayTimes[4],
-              //     active: nextActiveIqama == 4,
-              //   )
-              //       .animate(delay: _step * 4)
-              //       .fadeIn(duration: _duration)
-              //       .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
-              //       .addRepaintBoundary(),
-              // ),
             ],
           ),
         ],

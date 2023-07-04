@@ -72,35 +72,6 @@ class AboveSalahBar extends StatelessWidget {
                         ),
                   ),
                 ),
-                // child: Row(
-                //   mainAxisSize: MainAxisSize.min,
-                //   children: [
-                //     Text(
-                //       textDirection: TextDirection.ltr,
-                //       is12Hours ? DateFormat("hh:mm", "en").format(now) : DateFormat("HH:mm", "en").format(now),
-                //       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                //           shadows: kHomeTextShadow,
-                //           fontSize: isArabic ? 5.3.vr : 6.vr,
-                //           color: Colors.white,
-                //           fontWeight: FontWeight.bold),
-                //     ),
-                //     SizedBox(width: isArabic ? 5 : 0),
-                //     if (is12Hours)
-                //       SizedBox(
-                //         width: 2.6.vr,
-                //         child: TimePeriodWidget(
-                //           dateTime: now,
-                //           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                //                 shadows: kHomeTextShadow,
-                //                 letterSpacing: 1.vr,
-                //                 height: .9,
-                //                 color: Colors.white,
-                //                 fontWeight: FontWeight.w500,
-                //               ),
-                //         ),
-                //       ),
-                //   ],
-                // ),
               ],
             ),
           );

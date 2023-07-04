@@ -68,7 +68,7 @@ class TimeWidget extends StatelessWidget {
         SizedBox(width: 1.vw),
         TimePeriodWidget(
           dateTime: time!.toDate(),
-          style: amPmStyle ?? style?.apply(color: Colors.grey.shade300, fontSizeFactor: isArabicLang ? .5 : 0.5),
+          style: amPmStyle ?? style?.apply(color: Colors.grey.shade300, fontSizeFactor: 0.5),
         ),
       ],
     );
