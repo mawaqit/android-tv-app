@@ -23,8 +23,8 @@ class MiniHorizontalSalahItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bigFont = 6.0.vw;
-    double smallFont = 3.6.vw;
+    double bigFont = 5.0.vw;
+    double smallFont = 4.6.vw;
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
@@ -35,7 +35,6 @@ class MiniHorizontalSalahItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(1.vw),
       padding: EdgeInsets.all(1.vw),
-      width: double.infinity,
       height: 5.vwr,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2.vw),
@@ -45,14 +44,16 @@ class MiniHorizontalSalahItem extends StatelessWidget {
         fit: BoxFit.scaleDown,
         alignment: Alignment.center,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               title,
               style: TextStyle(
-                fontSize: 4.vwr,
+                fontSize: 3.vwr,
                 shadows: kHomeTextShadow,
                 color: Colors.white,
+                height: 1,
               ),
             ),
             SizedBox(width: 3.vw),

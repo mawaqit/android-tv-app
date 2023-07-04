@@ -35,9 +35,9 @@ class SalahItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double titleFont = 3.vw;
-    double bigFont = 4.5.vw;
-    double smallFont = 3.6.vw;
+    double titleFont = 3.vwr;
+    double bigFont = 4.5.vwr;
+    double smallFont = 3.6.vwr;
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
@@ -47,7 +47,7 @@ class SalahItemWidget extends StatelessWidget {
     final is12period = mosqueConfig?.timeDisplayFormat == "12";
 
     return Container(
-      width: 16.vw,
+      width: 16.vwr,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2.vw),
         color: active
@@ -57,8 +57,8 @@ class SalahItemWidget extends StatelessWidget {
                 : Colors.black.withOpacity(.5),
       ),
       padding: isArabic
-          ? EdgeInsets.only(bottom: 1.vh, right: 1.vw, left: 1.vw)
-          : EdgeInsets.symmetric(vertical: 1.6.vh, horizontal: 1.vw),
+          ? EdgeInsets.only(bottom: 1.vr, right: 1.vwr, left: 1.vwr)
+          : EdgeInsets.symmetric(vertical: 1.6.vr, horizontal: 1.vwr),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -71,12 +71,13 @@ class SalahItemWidget extends StatelessWidget {
                   fontSize: titleFont,
                   shadows: kHomeTextShadow,
                   color: Colors.white,
+                  height: 1.5,
                 ),
               ),
             ),
-          SizedBox(height: isArabic ? 0.1.vh : 1.vh),
+          SizedBox(height: isArabic ? 0.1.vr : 1.vr),
           if (time.trim().isEmpty)
-            Icon(Icons.dnd_forwardslash, size: 6.vw)
+            Icon(Icons.dnd_forwardslash, size: 6.vwr)
           else
             FittedBox(
               fit: BoxFit.scaleDown,
@@ -94,7 +95,7 @@ class SalahItemWidget extends StatelessWidget {
             ),
           if (iqama != null && showIqama)
             SizedBox(
-              height: isArabic ? 1.5.vh : 1.3.vw,
+              height: isArabic ? 1.5.vr : 1.3.vwr,
               width: double.infinity,
               child: Divider(
                 thickness: 1,
