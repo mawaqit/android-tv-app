@@ -1,12 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterSalahAzkarScreen.dart';
-import 'package:mawaqit/src/pages/home/sub_screens/DuaaEftarScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/DuaaBetweenAdhanAndIqama.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/DuaaEftarScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
@@ -87,7 +85,7 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
         /// before the adhan time
         WorkFlowItem(
           duration: mosqueManger.nextSalahAfter(),
-          skip: mosqueManger.nextSalahAfter() > Duration(minutes: 5),
+          skip: mosqueManger.nextSalahAfter() > Duration(minutes: 10),
           builder: (context, next) => beforeSalahTime(mosqueManger, currentSalah, hijri),
         ),
         WorkFlowItem(
