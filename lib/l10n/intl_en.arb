@@ -157,7 +157,7 @@
   "landscapeBTNDescription": "For Horizontal orientation. The main layout for mawaqit tv app and recommended one for most mosques",
   "eidMubarak": "Eid Mubarak",
   "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
-   "settings": "Settings",
+  "settings": "Settings",
   "applicationModes": "Application Modes",
   "ifYouAreFacingAnIssueWithTheAppActivateThis": "If you are facing issues with the app, try to enable this option"
- }
+}
