@@ -85,7 +85,7 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
         /// before the adhan time
         WorkFlowItem(
           duration: mosqueManger.nextSalahAfter(),
-          skip: mosqueManger.nextSalahAfter() > Duration(minutes: 10),
+          skip: mosqueManger.nextSalahAfter() > Duration(minutes: 6),
           builder: (context, next) => beforeSalahTime(mosqueManger, currentSalah, hijri),
         ),
         WorkFlowItem(

@@ -163,9 +163,15 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   /// the duration until the next salah
   Duration nextSalahAfter() {
-    final duration = actualTimes()[nextSalahIndex()].difference(mosqueDate());
+    final now = mosqueDate();
+    final duration = actualTimes()[nextSalahIndex()].difference(now);
 
-    if (duration < Duration.zero) return duration + Duration(days: 1);
+    /// next salah is tomorrow fajr
+    if (duration < Duration.zero) {
+      final tomorrowFajr = tomorrowTimes[0].toTimeOfDay()!.toDate(now.add(Duration(days: 1)));
+
+      return tomorrowFajr.difference(now);
+    }
     return duration;
   }
 
