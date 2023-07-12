@@ -11,6 +11,7 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
+import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/ConnectivityService.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SettingsManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
+        StreamProvider(create: (context) => Api.updateUserStatusStream(), initialData: 0, lazy: false),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {

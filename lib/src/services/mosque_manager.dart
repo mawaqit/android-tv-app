@@ -68,6 +68,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       calculateActiveWorkflow();
 
       _saveToLocale();
+
       // print("mosque url${mosque?.url}");
     } catch (e, stack) {
       debugPrintStack(stackTrace: stack);
@@ -78,6 +79,11 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     // await sharedPref.save('mosqueId', mosqueId);
     await sharedPref.save('mosqueUUId', mosqueUUID);
     // sharedPref.save('mosqueSlug', mosqueSlug);
+  }
+
+  static Future<String?> loadLocalUUID() async {
+    final sharedPref = SharedPref();
+    return await sharedPref.read('mosqueUUId');
   }
 
   Future<void> loadFromLocale() async {
