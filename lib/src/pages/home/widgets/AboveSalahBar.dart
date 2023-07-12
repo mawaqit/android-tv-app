@@ -30,16 +30,14 @@ class AboveSalahBar extends StatelessWidget {
           ].join();
 
           return Container(
-            height: 8.vwr,
-            padding: EdgeInsets.symmetric(horizontal: 3.vwr, vertical: 1.vwr),
+            padding: EdgeInsets.symmetric(horizontal: 2.vwr),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   clipBehavior: Clip.hardEdge,
                   alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 3.vw, vertical: 1.vw),
+                  padding: EdgeInsets.symmetric(horizontal: 2.vw, vertical: .5.vwr),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: mosqueManager.getColorTheme().withOpacity(.7),
@@ -55,7 +53,7 @@ class AboveSalahBar extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 3.vw, vertical: 1.vw),
+                  padding: EdgeInsets.symmetric(horizontal: 2.vw, vertical: .5.vwr),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: mosqueManager.getColorTheme().withOpacity(.7),
@@ -63,13 +61,10 @@ class AboveSalahBar extends StatelessWidget {
                   child: TimeWidget.fromDate(
                     dateTime: now,
                     show24hFormat: !is12Hours,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          shadows: kHomeTextShadow,
-                          fontSize: 6.vr,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          // height: 1,
-                        ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(shadows: kHomeTextShadow, fontSize: 6.vr, color: Colors.white),
                   ),
                 ),
               ],

@@ -56,9 +56,7 @@ class SalahItemWidget extends StatelessWidget {
                 ? null
                 : Colors.black.withOpacity(.5),
       ),
-      padding: isArabic
-          ? EdgeInsets.only(bottom: 1.vr, right: 1.vwr, left: 1.vwr)
-          : EdgeInsets.symmetric(vertical: 1.6.vr, horizontal: 1.vwr),
+      padding: EdgeInsets.symmetric(vertical: 1.6.vr, horizontal: 1.vwr),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -75,12 +73,12 @@ class SalahItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-          SizedBox(height: isArabic ? 0.1.vr : 1.vr),
+          SizedBox(height: 1.vr),
           if (time.trim().isEmpty)
             Icon(Icons.dnd_forwardslash, size: 6.vwr)
           else
             FittedBox(
-              fit: BoxFit.scaleDown,
+              fit: BoxFit.fitHeight,
               child: TimeWidget.fromString(
                 show24hFormat: !is12period,
                 time: time,
