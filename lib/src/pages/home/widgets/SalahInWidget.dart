@@ -19,9 +19,7 @@ class SalahInWidget extends StatelessWidget {
     var nextSalahIndex = mosqueManager.nextSalahIndex();
     var nextSalahName = mosqueManager.salahName(nextSalahIndex);
 
-    if (nextSalahIndex == 1 &&
-        mosqueManager.mosqueDate().weekday == DateTime.friday &&
-        mosqueManager.typeIsMosque) {
+    if (nextSalahIndex == 1 && mosqueManager.mosqueDate().weekday == DateTime.friday && mosqueManager.typeIsMosque) {
       nextSalahName = S.of(context).jumua;
     }
 
@@ -33,17 +31,17 @@ class SalahInWidget extends StatelessWidget {
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           MawaqitIcons.icon_adhan,
           color: Colors.white,
-          size: 2.3.vw,
+          size: 2.3.vwr,
         ),
         Container(
-          constraints: BoxConstraints(maxWidth: 30.vw),
+          constraints: BoxConstraints(maxWidth: 30.vwr),
           padding: EdgeInsets.symmetric(
-            horizontal: 1.45.vw,
+            horizontal: 1.45.vwr,
           ),
           child: FittedBox(
             child: !mosqueManager.isShurukTime
@@ -51,10 +49,8 @@ class SalahInWidget extends StatelessWidget {
                     countDownText,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 2.8.vw,
+                      fontSize: 2.8.vwr,
                       color: Colors.white,
-                      fontFamily:
-                          StringManager.getFontFamilyByString(countDownText),
                       shadows: kHomeTextShadow,
                     ),
                   )
@@ -62,21 +58,14 @@ class SalahInWidget extends StatelessWidget {
                     mosqueManager.getShurukInString(context),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 2.8.vw,
-                      // height: 2,
+                      fontSize: 2.8.vwr,
                       color: Colors.white,
-                      fontFamily: StringManager.getFontFamilyByString(
-                          mosqueManager.getShurukInString(context)),
                       shadows: kHomeTextShadow,
                     ),
                   ),
           ),
         ),
-        Icon(
-          MawaqitIcons.icon_adhan,
-          color: Colors.white,
-          size: 2.3.vw,
-        ),
+        Icon(MawaqitIcons.icon_adhan, color: Colors.white, size: 2.3.vwr),
       ],
     );
   }

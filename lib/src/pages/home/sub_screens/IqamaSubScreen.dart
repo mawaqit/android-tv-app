@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/FlashAnimation.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
@@ -57,28 +56,32 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
               color: Colors.white,
               fontWeight: FontWeight.w700,
               shadows: kAfterAdhanTextShadow,
-              fontFamily: StringManager.getFontFamilyByString(tr.alIqama),
             ),
             textAlign: TextAlign.center,
           ).animate().slide(begin: Offset(0, -1)).fade().addRepaintBoundary(),
         ),
         Expanded(
           child: FlashAnimation(
-            child: SvgPicture.asset(R.ASSETS_SVG_NO_PHONE_SVG),
+            child: SvgPicture.asset(
+              R.ASSETS_SVG_NO_PHONE_SVG,
+              width: 50.vr,
+            ),
           ).animate().scale(delay: .2.seconds).addRepaintBoundary(),
         ),
         SizedBox(height: 15),
-        Text(
-          tr.turnOfPhones,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 4.vw,
-            color: Colors.white,
-            fontFamily: StringManager.getFontFamilyByString(tr.turnOfPhones),
-            shadows: kAfterAdhanTextShadow,
-          ),
-        ).animate().slide(begin: Offset(0, 1)).fade().addRepaintBoundary(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 2.vw, vertical: 2.vw),
+          child: Text(
+            tr.turnOfPhones,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 4.vwr,
+              color: Colors.white,
+              shadows: kAfterAdhanTextShadow,
+            ),
+          ).animate().slide(begin: Offset(0, 1)).fade().addRepaintBoundary(),
+        ),
         SizedBox(height: 30),
       ],
     );

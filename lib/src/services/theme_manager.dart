@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/StringUtils.dart';
 
 import './storage_manager.dart';
 
@@ -35,12 +36,10 @@ class ThemeNotifier with ChangeNotifier {
             return Colors.grey;
           }),
         ),
-        textTheme: ThemeData().textTheme.apply(
-              bodyColor: Colors.white,
-              displayColor: Colors.white,
-              decorationColor: Colors.white,
-              // fontFamily: '',
-            ),
+        textTheme: Typography.material2014().white.apply(
+          fontFamily: StringManager.fontFamilyHelvetica,
+          fontFamilyFallback: [StringManager.fontFamilyKufi],
+        ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
             overlayColor: MaterialStateProperty.all(Color(0xff490094)),

@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mawaqit/main.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:provider/provider.dart';
+
+typedef DebugData = ({
+  DateTime? startDate,
+  DateTime? endDate,
+  Duration? duration,
+});
 
 class WorkFlowItem {
   final Widget Function(BuildContext context, VoidCallback next) builder;
@@ -13,6 +22,10 @@ class WorkFlowItem {
   final Duration? duration;
   final bool disabled;
 
+  /// this is the duration of the item
+  /// for debug purposes only
+  final Duration? debugDuration;
+
   /// this is the minimum duration of the item
   /// if the item calls [next] before the minimum duration
   /// the item will wait for the minimum duration to finish
@@ -23,6 +36,7 @@ class WorkFlowItem {
     this.skip = false,
     this.duration,
     this.minimumDuration,
+    this.debugDuration,
     this.disabled = false,
   });
 }
@@ -34,10 +48,14 @@ class ContinuesWorkFlowWidget extends StatefulWidget {
     super.key,
     required this.workFlowItems,
     this.onDone,
+    this.debug = false,
   });
 
   final List<WorkFlowItem> workFlowItems;
   final void Function()? onDone;
+
+  /// print each item specification in the console
+  final bool debug;
 
   @override
   State<ContinuesWorkFlowWidget> createState() => _ContinuesWorkFlowWidgetState();
@@ -46,10 +64,6 @@ class ContinuesWorkFlowWidget extends StatefulWidget {
 class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
   Future? minimumDurationFuture;
   int _currentItemIndex = 0;
-
-  /// this used to ignore the automatic next page call
-  /// if user called it manually from the builder child widget
-  Future? delayedNextPageFuture;
 
   WorkFlowItem activeItem() => widget.workFlowItems[_currentItemIndex];
 
@@ -69,7 +83,6 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
   ///  [_currentItemIndex] is the current active index when this function is called
   nextPage(int _currentItemIndex) async {
     if (_currentItemIndex != this._currentItemIndex) return;
-    delayedNextPageFuture?.ignore();
 
     /// if the widget removed from the tree
     /// no need for [nextPage]
@@ -90,20 +103,57 @@ class _ContinuesWorkFlowWidgetState extends State<ContinuesWorkFlowWidget> {
     if (activeItem().minimumDuration != null) minimumDurationFuture = Future.delayed(activeItem().minimumDuration!);
 
     if (activeItem().duration != null) {
-      delayedNextPageFuture = Future.delayed(activeItem().duration!);
-      delayedNextPageFuture?.then((_) => nextPage(this._currentItemIndex));
+      Future.delayed(activeItem().duration!).then((value) {
+        if (_currentItemIndex + 1 == this._currentItemIndex) nextPage(this._currentItemIndex);
+      });
     }
+  }
+
+  ///
+  void debugPrintItem() {
+    var lastItemEndTime = context.read<MosqueManager>().mosqueDate();
+
+    final items = widget.workFlowItems.map((workflowItem) {
+      if (workflowItem.skip) {
+        DebugData d = (
+          startDate: lastItemEndTime,
+          endDate: lastItemEndTime,
+          duration: Duration(seconds: 0),
+        );
+
+        return d;
+      }
+
+      //
+      DebugData d = (
+        startDate: lastItemEndTime,
+        endDate: lastItemEndTime = lastItemEndTime.add(
+          workflowItem.duration ?? workflowItem.debugDuration ?? Duration.zero,
+        ),
+        duration: workflowItem.duration ?? workflowItem.debugDuration ?? Duration.zero,
+      );
+      return d;
+    });
+
+    logger.d({
+      'active-index': _currentItemIndex,
+      'current-time': context.read<MosqueManager>().mosqueDate(),
+      'items': items.toList(),
+    });
   }
 
   @override
   void initState() {
     getInitialItem();
+    if (widget.debug) debugPrintItem();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var _itemIndex = _currentItemIndex;
     if (_currentItemIndex < 0) return Container(color: Colors.black);
-    return activeItem().builder(context, () => nextPage(_currentItemIndex));
+
+    return activeItem().builder(context, () => nextPage(_itemIndex));
   }
 }

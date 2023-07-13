@@ -12,8 +12,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../../helpers/StringUtils.dart';
-import '../widgets/SalahTimesBar.dart';
+import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 
 /// show all announcements in one after another
 class AnnouncementScreen extends StatelessWidget {
@@ -55,13 +54,7 @@ class AnnouncementScreen extends StatelessWidget {
           ),
         ),
         IgnorePointer(
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 1.5.vh),
-            child: SalahTimesBar(
-              miniStyle: true,
-              microStyle: true,
-            ),
-          ),
+          child: Padding(padding: EdgeInsets.only(bottom: 1.5.vh), child: ResponsiveMiniSalahBarWidget()),
         )
       ],
     );
@@ -113,7 +106,6 @@ class _TextAnnouncement extends StatelessWidget {
               shadows: kAnnouncementTextShadow,
               fontSize: 50,
               fontWeight: FontWeight.bold,
-              fontFamily: StringManager.getFontFamilyByString(title ?? ''),
               color: Colors.amber,
               letterSpacing: 1,
             ),
@@ -127,17 +119,14 @@ class _TextAnnouncement extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 shadows: kAnnouncementTextShadow,
-                fontSize: 8.vw,
+                fontSize: 8.vwr,
                 fontWeight: FontWeight.bold,
-                fontFamily: StringManager.getFontFamilyByString(content),
                 color: Colors.white,
                 letterSpacing: 1,
               ),
             ).animate().fade(delay: 500.milliseconds).addRepaintBoundary(),
           ),
-          SizedBox(
-            height: 15.vh,
-          ),
+          SizedBox(height: 20.vh),
         ],
       ),
     );
@@ -168,7 +157,7 @@ class _ImageAnnouncement extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image(
       image: MawaqitNetworkImageProvider(image, onError: onError),
-      fit: BoxFit.cover,
+      fit: BoxFit.fitWidth,
       width: double.infinity,
       height: double.infinity,
     ).animate().slideX().addRepaintBoundary();
@@ -224,10 +213,12 @@ class _VideoAnnouncementState extends State<_VideoAnnouncement> {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: YoutubePlayer(
-        controller: _controller,
-        showVideoProgressIndicator: true,
-        onEnded: (metaData) => widget.onEnded?.call(),
+      child: Center(
+        child: YoutubePlayer(
+          controller: _controller,
+          showVideoProgressIndicator: true,
+          onEnded: (metaData) => widget.onEnded?.call(),
+        ),
       ),
     );
   }

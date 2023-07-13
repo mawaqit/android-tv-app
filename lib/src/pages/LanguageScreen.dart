@@ -1,33 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/LanuageSelectorWidget.dart';
+import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          Expanded(
-            flex: 4,
-            child: Align(
-              child: Lottie.asset(
-                R.ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON,
-                fit: BoxFit.contain,
-              ),
-              alignment: Alignment.center,
-            ),
-          ),
-          Expanded(
-            flex: 6,
-            child: OnBoardingLanguageSelector(onSelect: AppRouter.pop),
-          ),
-        ],
-      ),
+    return ScreenWithAnimationWidget(
+      animation: R.ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON,
+      child: OnBoardingLanguageSelector(onSelect: AppRouter.pop),
     );
   }
 // AppBar _renderAppBar(context) {

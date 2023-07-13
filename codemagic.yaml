@@ -1,0 +1,112 @@
+workflows:
+  android-tv:
+    name: Building and deploying android TV application
+    triggering:
+      events:
+        - tag
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+
+      cancel_previous_builds: true
+
+    environment:
+      flutter: stable
+      vars:
+        PACKAGE_NAME: "com.mawaqit.androidtv"
+        GOOGLE_PLAY_TRACK: internal
+
+      android_signing:
+        - Mawaqit Mobile App + Android TV Android keystore
+
+      groups:
+        - google_credentials
+        - aws_credentials
+        - GITHUB
+        - APP
+
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.gradle/caches
+
+    scripts:
+      - name: Retrieve version
+        script: |
+          VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])-tv\+.*/\1/p')
+          BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          echo "VERSION=$VERSION" >> $CM_ENV
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
+
+      - name: Test version
+        script: |
+          echo "App version: $VERSION"
+          echo "BUILD NUMBER: $BUILD_NUMBER"
+
+          if [ -z ${VERSION} ]; then
+           echo "Version is empty, will not build"
+           exit 1
+          fi
+          if [ -z ${BUILD_NUMBER} ]; then
+           echo "BUILD NUMBER is empty, will not build"
+           exit 1
+          fi
+
+      - name: Install dependencies
+        script: |
+          flutter pub get
+
+      - name: Run flutter Unit tests
+        script: |
+          mkdir -p test-results
+          flutter test  \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY  \
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+          > test-results/results.json
+
+      - name: Build AAB with Flutter
+        script: |
+          flutter build appbundle --release \
+            --build-name=$VERSION \
+            --build-number=$BUILD_NUMBER \
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
+
+      - name: Build APK with Flutter
+        script: |
+          flutter build apk --release \
+            --build-name=$VERSION \
+            --build-number=$BUILD_NUMBER \
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
+
+      - name: Copy artifacts
+        script: |
+          mkdir build/artifacts;
+          cp build/app/outputs/bundle/release/app-release.aab build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab
+          cp build/app/outputs/flutter-apk/app-release.apk build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+
+      - name: Upload to AWS S3 bucket
+        script: |
+          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/apk/
+
+      - name: Upload apk to the Github release
+        script: |
+          if [ -z ${CM_TAG} ]; then
+           echo "Not a tag build, will not upload apk"
+           exit 0
+          fi
+
+          gh release upload "${CM_TAG}" build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+
+    artifacts:
+      - build/artifacts/*
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+      - test-results/*
+
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: $GOOGLE_PLAY_TRACK

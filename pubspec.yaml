@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-version: 1.6.1-tv+247
+version: 1.7.0-tv+238
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -80,7 +80,7 @@ dependencies:
 
   auto_size_text: ^3.0.0
   flutter_animate: ^4.1.1+1
-  marquee: ^2.2.3
+  text_scroll: ^0.2.0
 
   easy_debounce: ^2.0.3
 
@@ -101,6 +101,7 @@ dependencies:
 
   #  media
   youtube_player_flutter: ^8.1.2
+  youtube_explode_dart: ^1.12.4
   audiofileplayer: ^2.1.1
 
 dev_dependencies:
@@ -148,7 +149,7 @@ flutter:
         - asset: assets/fonts/original-hafs.ttf
     - family: kufi
       fonts:
-        - asset: assets/fonts/kufi-normal.ttf
+        - asset: assets/fonts/NotoKufiArabic-VariableFont_wght.ttf
     - family: arial
       fonts:
         - asset: assets/fonts/ARIAL.TTF

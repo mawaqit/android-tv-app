@@ -18,6 +18,9 @@ class HomeDateWidget extends StatelessWidget {
     final lang = Localizations.localeOf(context).languageCode;
 
     var hijriDate = mosqueManager.mosqueHijriDate();
+    var hijriDateFormatted = hijriDate.formatMawaqitType();
+
+    final georgianDate = now.formatIntoMawaqitFormat(local: '${lang}_${mosqueManager.mosque?.countryCode}');
 
     return FittedBox(
       fit: BoxFit.scaleDown,
@@ -30,14 +33,11 @@ class HomeDateWidget extends StatelessWidget {
           duration: Duration(seconds: 10),
           disableSecond: mosqueManager.mosqueConfig!.hijriDateEnabled == false,
           first: Text(
-            now.formatIntoMawaqitFormat(local: lang),
+            georgianDate,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 2.7.vw,
+              fontSize: 2.7.vwr,
               shadows: kHomeTextShadow,
-              fontFamily: StringManager.getFontFamilyByString(
-                now.formatIntoMawaqitFormat(local: lang),
-              ),
               height: .8,
             ),
           ),
@@ -46,28 +46,23 @@ class HomeDateWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                hijriDate.formatMawaqitType(),
-                textDirection: hijriDate.formatMawaqitType().isArabic()
-                    ? TextDirection.rtl
-                    : TextDirection.ltr,
+                hijriDateFormatted,
+                textDirection: hijriDateFormatted.isArabic() ? TextDirection.rtl : TextDirection.ltr,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 2.5.vw,
+                  fontSize: 2.5.vwr,
                   height: .8,
                   shadows: kHomeTextShadow,
-                  fontFamily: StringManager.getFontFamilyByString(
-                    hijriDate.formatMawaqitType(),
-                  ),
                 ),
               ),
               if (hijriDate.isInLunarDays)
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: .5.vw,
+                    horizontal: .5.vwr,
                   ),
                   child: FaIcon(
                     FontAwesomeIcons.solidMoon,
-                    size: 1.8.vw,
+                    size: 1.8.vwr,
                   ),
                 ),
             ],

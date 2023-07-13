@@ -20,59 +20,10 @@ import 'package:mawaqit/src/pages/home/sub_screens/fajr_wake_up_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
-enum _ScreenState {
-  // home normal subScreen
-  normalScreen,
-  announcementScreen,
-  randomHadithScreen,
-
-  // Adhan subScreens
-  adhanScreen,
-  afterAdhanDuaaScreen,
-  iqamaaCountDownScreen,
-  iqamaaScreen,
-  duaaBetweenAdhanAndIqamaaScreen,
-  afterSalahAzkarScreen,
-  fajrWakeUpScreen,
-  duaaEftarScreen,
-
-  // jumuaa subScreen
-  jumuaaLiveScreen,
-  jumuaaScreen;
-
-  String get readableName {
-    switch (this) {
-      case _ScreenState.jumuaaScreen:
-        return S.current.jumuaaLive;
-      case _ScreenState.normalScreen:
-        return S.current.normalScreen;
-      case _ScreenState.announcementScreen:
-        return S.current.announcement;
-      case _ScreenState.randomHadithScreen:
-        return S.current.randomHadith;
-      case _ScreenState.adhanScreen:
-        return S.current.alAdhan;
-      case _ScreenState.afterAdhanDuaaScreen:
-        return S.current.afterAdhanHadith;
-      case _ScreenState.duaaBetweenAdhanAndIqamaaScreen:
-        return S.current.duaaBetweenSalahAndAdhan;
-      case _ScreenState.duaaEftarScreen:
-        return S.current.duaaElEftar;
-      case _ScreenState.iqamaaCountDownScreen:
-        return S.current.duaaRemainder;
-      case _ScreenState.iqamaaScreen:
-        return S.current.iqama;
-      case _ScreenState.jumuaaLiveScreen:
-        return S.current.jumuaaLive;
-      case _ScreenState.fajrWakeUpScreen:
-        return S.current.fajrWakeUp;
-      case _ScreenState.afterSalahAzkarScreen:
-        return S.current.afterSalahAzkar;
-    }
-  }
-}
+typedef ForcedScreen = ({WidgetBuilder builder, String name});
 
 /// this screen made to speed up the development process
 /// user can force to use specific screen
@@ -85,40 +36,23 @@ class DeveloperScreen extends StatefulWidget {
 }
 
 class _DeveloperScreenState extends State<DeveloperScreen> {
-  _ScreenState? forcedScreen;
+  ForcedScreen? forcedScreen;
 
-  Widget? get subScreen {
-    switch (forcedScreen) {
-      case _ScreenState.normalScreen:
-        return NormalHomeSubScreen();
-      case _ScreenState.announcementScreen:
-        return AnnouncementTest();
-      case _ScreenState.randomHadithScreen:
-        return RandomHadithScreen();
-      case _ScreenState.adhanScreen:
-        return AdhanSubScreen();
-      case _ScreenState.afterAdhanDuaaScreen:
-        return AfterAdhanSubScreen();
-      case _ScreenState.iqamaaCountDownScreen:
-        return IqamaaCountDownSubScreen();
-      case _ScreenState.iqamaaScreen:
-        return IqamaSubScreen();
-      case _ScreenState.afterSalahAzkarScreen:
-        return AfterSalahAzkar();
-      case _ScreenState.jumuaaScreen:
-        return JumuaHadithSubScreen();
-      case _ScreenState.jumuaaLiveScreen:
-        return JummuaLive();
-      case _ScreenState.duaaBetweenAdhanAndIqamaaScreen:
-        return DuaaBetweenAdhanAndIqamaaScreen();
-      case _ScreenState.fajrWakeUpScreen:
-        return FajrWakeUpSubScreen();
-      case _ScreenState.duaaEftarScreen:
-        return DuaaEftarScreen();
-      default:
-        return null;
-    }
-  }
+  List<ForcedScreen> get screens => [
+        (builder: (context) => NormalHomeSubScreen(), name: S.current.normalScreen),
+        (builder: (context) => AnnouncementTest(), name: S.current.announcement),
+        (builder: (context) => RandomHadithScreen(), name: S.current.randomHadith),
+        (builder: (context) => AdhanSubScreen(), name: S.current.alAdhan),
+        (builder: (context) => AfterAdhanSubScreen(), name: S.current.afterAdhanHadith),
+        (builder: (context) => DuaaBetweenAdhanAndIqamaaScreen(), name: S.current.duaaRemainder),
+        (builder: (context) => IqamaaCountDownSubScreen(), name: S.current.iqamaaCountDown),
+        (builder: (context) => IqamaSubScreen(), name: S.current.iqama),
+        (builder: (context) => AfterSalahAzkar(), name: S.current.afterSalahAzkar),
+        (builder: (context) => JumuaHadithSubScreen(), name: S.current.jumua),
+        (builder: (context) => JummuaLive(), name: S.current.jumuaaLive),
+        (builder: (context) => FajrWakeUpSubScreen(), name: S.current.fajrWakeUp),
+        (builder: (context) => DuaaEftarScreen(), name: S.current.duaaElEftar),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -138,13 +72,13 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
           Container(
             width: double.infinity,
             height: double.infinity,
-            child: subScreen ?? OfflineHomeScreen(),
+            child: forcedScreen?.builder(context) ?? OfflineHomeScreen(),
           ),
           menuSelector(),
           if (forcedScreen != null)
             Align(
               alignment: Alignment.topCenter,
-              child: Text(forcedScreen!.readableName),
+              child: Text(forcedScreen!.name),
             ),
         ],
       ),
@@ -173,9 +107,9 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   title: S.of(context).clear,
                   onSelect: () => setState(() => forcedScreen = null),
                 ),
-                ..._ScreenState.values.map(
+                ...screens.map(
                   (e) => SelectorOption(
-                    title: e.readableName,
+                    title: e.name,
                     onSelect: () => setState(() => forcedScreen = e),
                   ),
                 ),
@@ -184,6 +118,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
             SelectorOption(
               title: S.of(context).changeTheme,
               onSelect: () => context.read<ThemeNotifier>().toggleMode(),
+            ),
+            SelectorOption(
+              title: "Toggle orientation",
+              onSelect: () => context.read<UserPreferencesManager>().toggleOrientation(),
             ),
           ],
         ),

@@ -46,10 +46,6 @@ class _SplashScreen extends State<Splash> {
     Wakelock.enable().catchError((e) {});
 
     Hive.initFlutter();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
 
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
@@ -77,6 +73,7 @@ class _SplashScreen extends State<Splash> {
 
   Future<bool> loadBoarding() async {
     var res = await sharedPref.read("boarding");
+
     return res == null;
   }
 

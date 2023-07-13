@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_network_image.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,12 @@ import 'MosqueInformationWidget.dart';
 const kFooterQrLink = 'https://mawaqit.net/static/images/store-qrcode.png?4.89.2';
 
 class Footer extends StatelessWidget {
-  const Footer({Key? key}) : super(key: key);
+  const Footer({
+    Key? key,
+    this.hideMessage = false,
+  }) : super(key: key);
+
+  final bool hideMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +25,7 @@ class Footer extends StatelessWidget {
     final mosque = mosqueManager.mosque;
 
     return Container(
-      height: 10.vh,
+      height: 10.vr,
       color: mosque?.flash?.content.isEmpty != false ? null : Colors.black.withOpacity(.3),
       padding: EdgeInsets.symmetric(horizontal: .3.vw, vertical: .5.vw),
       child: Directionality(
@@ -39,7 +43,7 @@ class Footer extends StatelessWidget {
                       "ID ${mosque?.id}",
                       textDirection: TextDirection.ltr,
                       style: TextStyle(
-                        fontSize: .8.vw,
+                        fontSize: .8.vwr,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         shadows: kAfterAdhanTextShadow,
@@ -52,21 +56,23 @@ class Footer extends StatelessWidget {
                       child: MawaqitNetworkImage(
                         imageUrl: kFooterQrLink,
                         errorBuilder: (context, url, error) => SizedBox(),
-                        width: 4.3.vw,
-                        height: 4.3.vw,
+                        width: 4.3.vwr,
+                        height: 4.3.vwr,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            Expanded(
-              child: mosque?.flash != null
-                  ? FlashWidget()
-                  : mosqueManager.mosqueConfig?.footer == true
-                      ? MosqueInformationWidget()
-                      : SizedBox(),
-            ),
+            hideMessage
+                ? Spacer()
+                : Expanded(
+                    child: mosque?.flash != null
+                        ? FlashWidget()
+                        : mosqueManager.mosqueConfig?.footer == true
+                            ? MosqueInformationWidget()
+                            : SizedBox(),
+                  ),
             HomeLogoVersion(),
           ],
         ),

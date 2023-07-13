@@ -4,8 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
-import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/models/announcement.dart';
+import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
 import '../../../i18n/l10n.dart';
@@ -217,7 +217,12 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() => !kDebugMode ? DateTime.now() : DateTime.now().add(Duration());
+  DateTime mosqueDate() => !kDebugMode
+      ? DateTime.now()
+      : DateTime.now().add(Duration(
+          days: 3,
+          hours: 3,
+        ));
 
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
@@ -230,9 +235,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   bool get useTomorrowTimes {
     final now = mosqueDate();
-    final isha = actualTimes()[4];
+    final [fajr, ..._, isha] = actualTimes();
 
-    return now.isAfter(isha);
+    /// isha might be after midnight so we need to check if it's after fajr
+    return now.isAfter(isha) && isha.isAfter(fajr);
   }
 
   List<String> salahBarTimes() {
@@ -271,7 +277,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   List<String> get tomorrowTimes => timesOfDay(mosqueDate().add(Duration(days: 1)));
 
   List<String> iqamasOfDay(DateTime date) {
-    final todayIqama = times!.iqamaCalendar[mosqueDate().month - 1][mosqueDate().day.toString()].cast<String>();
+    final todayIqama = times!.iqamaCalendar[date.month - 1][date.day.toString()].cast<String>();
 
     return todayIqama;
   }
@@ -279,8 +285,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   List<String> get todayIqama => iqamasOfDay(mosqueDate());
 
   List<String> get tomorrowIqama => iqamasOfDay(mosqueDate().add(Duration(days: 1)));
-
-  String? get jumuaaLiveUrl => null;
 
   /// if jumua as duhr return jumua
   String? get jumuaTime {

@@ -46,6 +46,7 @@ class OnBoardingMawaqitAboutWidget extends StatelessWidget {
               child: AutoSizeText(
                 S.of(context).mawaqitDesc,
                 stepGranularity: 1,
+                textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 19,
                   color: themeData.brightness == Brightness.dark ? Colors.white60 : themeData.primaryColor,
