@@ -64,6 +64,7 @@ class MyApp extends StatelessWidget {
               builder: (context, theme, _) => Shortcuts(
                 shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
                 child: MaterialApp(
+                  title: kAppName,
                   themeMode: theme.mode,
                   localeResolutionCallback: (locale, supportedLocales) {
                     if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
