@@ -145,7 +145,7 @@ class Api {
   }
 
   static Stream<void> updateUserStatusStream() async* {
-    await for (var i in generateStream(Duration(seconds: 15))) {
+    await for (var i in generateStream(Duration(minutes: 4))) {
       await updateUserStatus();
       yield i;
     }
