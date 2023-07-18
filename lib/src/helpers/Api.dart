@@ -163,17 +163,20 @@ class Api {
 
     final data = {
       'device-id': await UniqueIdentifier.serial,
-      'brand': hardware.brand,
-      'model': hardware.model,
-      'android-version': hardware.version.release,
-      'app-version': softWare.version,
+      'box_brand': hardware.brand,
+      'box_model': hardware.model,
+      'android_version': hardware.version.release,
+      'app_version': softWare.version,
       'language': language,
-      'is-landscape': userPreferencesManager.orientationLandscape,
-      'is-secondary-screen': userPreferencesManager.isSecondaryScreen,
-      'is-web-view': userPreferencesManager.webViewMode,
-      'is-announcement-mode': userPreferencesManager.announcementsOnly,
+      'is_landscape': userPreferencesManager.orientationLandscape,
+      'is_secondary_screen': userPreferencesManager.isSecondaryScreen,
+      'is_web_view': userPreferencesManager.webViewMode,
+      'is_announcement_mode': userPreferencesManager.announcementsOnly,
     };
 
-    logger.d(data);
+    await dio
+        .post('/3.0/mosque/$uuid/androidtv-life-status', data: data)
+        .then((value) => logger.d(value))
+        .catchError((e) => logger.d((e as DioError).requestOptions.uri));
   }
 }
