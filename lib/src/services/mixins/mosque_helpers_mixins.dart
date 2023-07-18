@@ -93,6 +93,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   String? getShurukTimeString([DateTime? date]) {
     date ??= mosqueDate();
+    if (useTomorrowTimes) date = date.add(Duration(days: 1));
 
     final t = List.from(times!.calendar[date.month - 1][date.day.toString()]);
 
