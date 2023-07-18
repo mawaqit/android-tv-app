@@ -36,7 +36,6 @@ class AboveSalahBar extends StatelessWidget {
               children: [
                 Container(
                   clipBehavior: Clip.hardEdge,
-                  alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 2.vw, vertical: .5.vwr),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
