@@ -1,16 +1,12 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mawaqit/src/enum/home_active_screen.dart';
-import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/fajr_wake_up_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/takberat_aleid_screen.dart';
-import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -74,11 +70,9 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
 
         /// random hadith screen
         RepeatingWorkflowItem(
-          builder: (context, next) => RandomHadithScreen(),
+          builder: (context, next) => RandomHadithScreen(onDone: next),
           repeatingDuration: _HadithRepeatDuration,
-          disabled: !mosqueManager.isOnline ||
-              mosqueManager.isDisableHadithBetweenSalah() ||
-              !mosqueManager.mosqueConfig!.randomHadithEnabled,
+          disabled: mosqueManager.isDisableHadithBetweenSalah() || !mosqueManager.mosqueConfig!.randomHadithEnabled,
           duration: _HadithDuration,
         ),
 

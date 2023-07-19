@@ -10,7 +10,9 @@ import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
 
 class RandomHadithScreen extends StatefulWidget {
-  const RandomHadithScreen({Key? key}) : super(key: key);
+  const RandomHadithScreen({Key? key, this.onDone}) : super(key: key);
+
+  final VoidCallback? onDone;
 
   @override
   State<RandomHadithScreen> createState() => _RandomHadithScreenState();
@@ -24,7 +26,15 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig;
 
-    Api.randomHadith(language: mosqueConfig!.hadithLang!).then((value) => setState(() => hadith = value));
+    if (mosqueManager.isOnline) {
+      Api.randomHadith(language: mosqueConfig!.hadithLang!)
+          .then((value) => setState(() => hadith = value))
+          .catchError((e) => widget.onDone?.call());
+    } else {
+      Api.randomHadithCached(language: mosqueConfig!.hadithLang!)
+          .then((value) => setState(() => hadith = value))
+          .catchError((e) => widget.onDone?.call());
+    }
 
     super.initState();
   }
