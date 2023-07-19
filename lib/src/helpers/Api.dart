@@ -163,15 +163,15 @@ class Api {
 
     final data = {
       'device-id': await UniqueIdentifier.serial,
-      'box_brand': hardware.brand,
-      'box_model': hardware.model,
-      'android_version': hardware.version.release,
-      'app_version': softWare.version,
+      'brand': hardware.brand,
+      'model': hardware.model,
+      'android-version': hardware.version.release,
+      'app-version': softWare.version,
       'language': language,
-      'is_landscape': userPreferencesManager.orientationLandscape,
-      'is_secondary_screen': userPreferencesManager.isSecondaryScreen,
-      'is_web_view': userPreferencesManager.webViewMode,
-      'is_announcement_mode': userPreferencesManager.announcementsOnly,
+      'landscape': userPreferencesManager.orientationLandscape,
+      'secondary-screen': userPreferencesManager.isSecondaryScreen,
+      'legacy-web-app': userPreferencesManager.webViewMode,
+      'announcement-mode': userPreferencesManager.announcementsOnly,
     };
 
     await dio
