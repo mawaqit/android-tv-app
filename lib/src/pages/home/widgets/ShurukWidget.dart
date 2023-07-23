@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/pages/home/widgets/FadeInOut.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../i18n/l10n.dart';
@@ -16,8 +16,9 @@ class ShurukWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.read<MosqueManager>();
+    final userPrefs = context.read<UserPreferencesManager>();
 
-    if (mosqueProvider.showEid) {
+    if (mosqueProvider.showEid(userPrefs.hijriAdjustments)) {
       return SalahItemWidget(
         title: S.of(context).salatElEid,
         iqama: mosqueProvider.times!.aidPrayerTime2,

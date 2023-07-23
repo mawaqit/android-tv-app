@@ -107,16 +107,16 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// return true if today is the eid first day
-  bool get isEidFirstDay {
-    final hijri = mosqueHijriDate();
+  bool isEidFirstDay(int? hijriAdjustment) {
+    final hijri = mosqueHijriDate(hijriAdjustment);
 
     return (hijri.islamicMonth == 9 && hijri.islamicDate == 1) || (hijri.islamicMonth == 11 && hijri.islamicDate == 10);
   }
 
-  bool get showEid {
+  bool showEid(int? hijriAdjustment) {
     if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) return false;
 
-    final date = mosqueHijriDate();
+    final date = mosqueHijriDate(hijriAdjustment);
     return (date.islamicMonth == 8 && date.islamicDate >= 23) ||
         (date.islamicMonth == 9 && date.islamicDate == 1) ||
         (date.islamicMonth == 11 && date.islamicDate < 11 && date.islamicDate >= 3);
@@ -228,10 +228,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
 
-  MawaqitHijriCalendar mosqueHijriDate() => MawaqitHijriCalendar.fromDateWithAdjustments(
+  MawaqitHijriCalendar mosqueHijriDate(int? forceAdjustment) => MawaqitHijriCalendar.fromDateWithAdjustments(
         mosqueDate(),
         force30Days: times!.hijriDateForceTo30,
-        adjustment: times!.hijriAdjustment,
+        adjustment: forceAdjustment ?? times!.hijriAdjustment,
       );
 
   bool get useTomorrowTimes {

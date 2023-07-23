@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
+import 'package:mawaqit/src/pages/HijriAdjustmentsScreen.dart';
 import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
@@ -49,6 +50,12 @@ class SettingScreen extends StatelessWidget {
                     subtitle: S.of(context).searchMosque,
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
                     onTap: () => AppRouter.push(MosqueSearchScreen()),
+                  ),
+                  _SettingItem(
+                    title: S.of(context).hijriAdjustments,
+                    subtitle: S.of(context).hijriAdjustmentsDescription,
+                    icon: Icon(MawaqitIcons.icon_mosque, size: 35),
+                    onTap: () => AppRouter.push(HijriAdjustmentsScreen()),
                   ),
                   SizedBox(height: 30),
                   Divider(),

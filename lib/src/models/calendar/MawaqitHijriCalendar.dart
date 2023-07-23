@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 
@@ -15,8 +14,6 @@ class MawaqitHijriCalendar extends KuwaitiCalendar {
   }) : super.fromDatetime(date, dayShift: adjustment, force30: force30Days);
 
   String formatMawaqitType() {
-    final dayFormatter = DateFormat('EEEE', S.current.localeName);
-
     return [
       islamicDate.toString(),
       '${monthName(islamicMonth)},',
