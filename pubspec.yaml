@@ -69,6 +69,7 @@ dependencies:
   # TOOLS
   google_fonts: ^4.0.4
   package_info_plus: ^3.0.3
+  device_info_plus: ^9.0.2
   android_intent_plus: ^4.0.0
   global_configuration: ^2.0.0-nullsafety.1
   wakelock: ^0.6.2
@@ -104,6 +105,7 @@ dependencies:
   youtube_player_flutter: ^8.1.2
   youtube_explode_dart: ^1.12.4
   audiofileplayer: ^2.1.1
+  unique_identifier: ^0.3.0
 
 dev_dependencies:
   flutter_test:
@@ -114,6 +116,9 @@ dev_dependencies:
   dependency_validator:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+dependency_overrides:
+  win32: ^5.0.5
 
 # The following section is specific to Flutter.
 flutter:

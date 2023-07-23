@@ -14,10 +14,10 @@ const _screenOrientation = 'UserPreferencesManager.screen.orientation';
 /// this manager responsible for managing user preferences
 class UserPreferencesManager extends ChangeNotifier {
   UserPreferencesManager() {
-    _init();
+    init();
   }
 
-  Future<void> _init() async {
+  Future<void> init() async {
     _sharedPref = await SharedPreferences.getInstance();
 
     Api.useStagingApi(forceStaging);

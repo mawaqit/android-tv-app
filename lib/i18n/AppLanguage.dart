@@ -22,7 +22,7 @@ class AppLanguage extends ChangeNotifier {
   Future<void> fetchLocale() async {
     var prefs = await SharedPreferences.getInstance();
     if (prefs.getString('language_code') == null) {
-      _appLocale = Locale('${GlobalConfiguration().getValue('defaultLanguage')}', '');
+      _appLocale = Locale(GlobalConfiguration().getValue('defaultLanguage'), '');
       notifyListeners();
       return null;
     }

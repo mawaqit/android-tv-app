@@ -5,22 +5,19 @@ import 'package:flutter_svg/svg.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
-import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/models/menu.dart';
 import 'package:mawaqit/src/models/page.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/AboutScreen.dart';
-import 'package:mawaqit/src/pages/LanguageScreen.dart';
-import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
@@ -184,10 +181,7 @@ class MawaqitDrawer extends StatelessWidget {
           DrawerListTitle(
             icon: Icons.star,
             text: S.of(context).rate,
-            onTap: () => LaunchReview.launch(
-              androidAppId: settings.androidId,
-              iOSAppId: settings.iosId,
-            ),
+            onTap: () => LaunchReview.launch(androidAppId: kAppId),
           ),
           SizedBox(height: 20),
         ],

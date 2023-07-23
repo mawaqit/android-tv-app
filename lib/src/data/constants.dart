@@ -1,5 +1,8 @@
 /// this file will has all the constant values of the app
 
+const kAppName = 'MAWAQIT for TV';
+const kAppId = 'com.mawaqit.androidtv';
+
 const kBaseUrl = 'https://mawaqit.net/api';
 const kStagingUrl = 'https://staging.mawaqit.net/api';
 const kStaticFilesUrl = 'https://mawaqit.net/static';
