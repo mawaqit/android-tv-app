@@ -5,6 +5,7 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/pages/home/widgets/FadeInOut.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
@@ -14,10 +15,11 @@ class HomeDateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
+    final userPrefs = context.watch<UserPreferencesManager>();
     final now = mosqueManager.mosqueDate();
     final lang = Localizations.localeOf(context).languageCode;
 
-    var hijriDate = mosqueManager.mosqueHijriDate();
+    var hijriDate = mosqueManager.mosqueHijriDate(userPrefs.hijriAdjustments);
     var hijriDateFormatted = hijriDate.formatMawaqitType();
 
     final georgianDate = now.formatIntoMawaqitFormat(local: '${lang}_${mosqueManager.mosque?.countryCode}');

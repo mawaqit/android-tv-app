@@ -10,6 +10,7 @@ import 'package:mawaqit/src/pages/home/sub_screens/IqamaaCountDownSubScreen.dart
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../sub_screens/AdhanSubScreen.dart';
@@ -63,8 +64,9 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
   Widget build(BuildContext context) {
     final mosqueManger = context.watch<MosqueManager>();
     final mosqueConfig = mosqueManger.mosqueConfig!;
+    final userPrefs = context.watch<UserPreferencesManager>();
 
-    final hijri = mosqueManger.mosqueHijriDate();
+    final hijri = mosqueManger.mosqueHijriDate(userPrefs.hijriAdjustments);
 
     final currentSalah = calculateCurrentSalah(mosqueManger);
     final now = mosqueManger.mosqueDate();

@@ -10,6 +10,7 @@ const _secondaryScreenKey = 'UserPreferencesManager.secondary.screen.enabled';
 const _webViewModeKey = 'UserPreferencesManager.webView.mode.enabled';
 const _forceStagingKey = 'UserPreferencesManager.api.settings.staging';
 const _screenOrientation = 'UserPreferencesManager.screen.orientation';
+const _hijriAdjustments = 'UserPreferencesManager.hijriAdjustments';
 
 /// this manager responsible for managing user preferences
 class UserPreferencesManager extends ChangeNotifier {
@@ -113,5 +114,16 @@ class UserPreferencesManager extends ChangeNotifier {
       default:
         return RelativeSizes.instance.orientation;
     }
+  }
+
+  int? get hijriAdjustments => _sharedPref.getInt(_hijriAdjustments);
+
+  set hijriAdjustments(int? value) {
+    if (value == null) {
+      _sharedPref.remove(_hijriAdjustments);
+    } else {
+      _sharedPref.setInt(_hijriAdjustments, value);
+    }
+    notifyListeners();
   }
 }

@@ -1,16 +1,12 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mawaqit/src/enum/home_active_screen.dart';
-import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/fajr_wake_up_screen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/takberat_aleid_screen.dart';
-import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -100,7 +96,7 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
           builder: (context, next) => TakberatAleidScreen(),
           dateTime: mosqueManager.actualTimes()[0].add(1.hours),
           endTime: mosqueManager.actualTimes()[0].add(3.hours),
-          disabled: !mosqueManager.isEidFirstDay,
+          disabled: !mosqueManager.isEidFirstDay(userPrefs.hijriAdjustments),
           forceStart: true,
           showInitial: () {
             final now = mosqueManager.mosqueDate();
