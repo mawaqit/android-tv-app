@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
@@ -124,6 +125,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       await Future.wait([
         AudioManager().precacheVoices(mosqueConfig!),
         preCacheImages(),
+        preCacheHadith(),
       ]).catchError((e) {});
 
       if (!completer.isCompleted) completer.complete();
@@ -220,6 +222,12 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     /// some images isn't existing anymore so we will ignore errors
     final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
     await Future.wait(futures);
+  }
+
+  /// pre cache the random hadith file to be used in the hadith widget
+  Future<void> preCacheHadith() async {
+    final language = await AppLanguage.getCountryCode();
+    await Api.randomHadithCached(language: language ?? 'ar');
   }
 }
 

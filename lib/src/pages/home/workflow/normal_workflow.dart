@@ -70,11 +70,9 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
 
         /// random hadith screen
         RepeatingWorkflowItem(
-          builder: (context, next) => RandomHadithScreen(),
+          builder: (context, next) => RandomHadithScreen(onDone: next),
           repeatingDuration: _HadithRepeatDuration,
-          disabled: !mosqueManager.isOnline ||
-              mosqueManager.isDisableHadithBetweenSalah() ||
-              !mosqueManager.mosqueConfig!.randomHadithEnabled,
+          disabled: mosqueManager.isDisableHadithBetweenSalah() || !mosqueManager.mosqueConfig!.randomHadithEnabled,
           duration: _HadithDuration,
         ),
 
