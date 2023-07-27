@@ -159,5 +159,9 @@
   "takbeerAleidText": "الله أكبر الله أكبر الله أكبر و لا إله إلا الله، الله أكبر الله أكبر الله أكبر و لله الحمد",
   "settings": "الإعدادات",
   "applicationModes": "أنماط التطبيق",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "إذا كنت تواجه مشاكل مع التطبيق، حاول تمكين هذا الخيار"
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "إذا كنت تواجه مشاكل مع التطبيق، حاول تمكين هذا الخيار",
+  "hijriAdjustments": "تعديلات التاريخ الهجري",
+  "hijriAdjustmentsDescription": "ضبط التاريخ الهجري محليا في جهازك. هذا لن يؤثر على إعدادات المسجد على الإنترنت",
+  "backoffice_default": "الإعدادات الافتراضية للمكتب الخلفية",
+  "recommended": "مستحسن"
 }

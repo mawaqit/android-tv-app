@@ -159,5 +159,9 @@
   "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
   "settings": "Paramètres",
   "applicationModes": "Modes d'application",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Si vous rencontrez des problèmes avec l'application, essayez d'activer cette option."
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Si vous rencontrez des problèmes avec l'application, essayez d'activer cette option.",
+  "hijriAdjustments": "Ajustement local de la date hijri",
+  "hijriAdjustmentsDescription": "Ajuster la date de hijri localement dans votre appareil. Cela n'affectera pas les paramètres de la mosquée en ligne",
+  "backoffice_default": "Valeurs par défaut du backoffice",
+  "recommended": "Recommandé"
 }
