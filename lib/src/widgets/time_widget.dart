@@ -47,7 +47,6 @@ class TimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArabicLang = context.read<AppLanguage>().isArabic();
     if (time == null) return Text(fallbackString ?? '', style: style);
 
     if (show24hFormat) {
