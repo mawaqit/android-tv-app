@@ -107,6 +107,10 @@ dependencies:
   youtube_explode_dart: ^1.12.4
   audiofileplayer: ^2.1.1
   unique_identifier: ^0.3.0
+  google_api_availability: ^5.0.0
+  app_version_update: ^3.1.0
+  in_app_update: ^4.1.4
+  flutter_app_update: ^3.0.2
 
 dev_dependencies:
   flutter_test:

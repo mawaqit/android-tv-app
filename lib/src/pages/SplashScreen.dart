@@ -11,9 +11,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
-
 import 'package:mawaqit/src/helpers/HttpOverrides.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
@@ -23,6 +21,7 @@ import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/services/update_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
@@ -80,6 +79,7 @@ class _SplashScreen extends State<Splash> {
   /// navigates to first screen
   void _navigateToHome() async {
     try {
+      await UpdateManager.init();
       await initApplicationUI();
       var settings = await _initSettings();
       var goBoarding = await loadBoarding();

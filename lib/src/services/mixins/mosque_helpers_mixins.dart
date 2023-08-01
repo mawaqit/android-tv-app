@@ -218,12 +218,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() => !kDebugMode
-      ? DateTime.now()
-      : DateTime.now().add(Duration(
-          days: 3,
-          hours: 3,
-        ));
+  DateTime mosqueDate() => !kDebugMode ? DateTime.now() : DateTime.now().add(Duration(days: 2, hours: 12, minutes: 15));
 
   /// used to test time
   TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
