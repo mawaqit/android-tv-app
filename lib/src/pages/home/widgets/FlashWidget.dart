@@ -1,48 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/models/mosque.dart';
 import 'package:provider/provider.dart';
-import 'package:text_scroll/text_scroll.dart';
-
 import '../../../helpers/HexColor.dart';
 import '../../../services/mosque_manager.dart';
 import '../../../themes/UIShadows.dart';
 
-class FlashWidget extends StatelessWidget {
+class FlashWidget extends StatefulWidget {
   const FlashWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<FlashWidget> createState() => _FlashWidgetState();
+}
+
+class _FlashWidgetState extends State<FlashWidget> {
+  var enabled = true;
+  late final Mosque mosque;
+
+  @override
+  void initState() {
     final mosqueProvider = context.read<MosqueManager>();
-    final mosque = mosqueProvider.mosque!;
-    final now = DateTime.now();
-    DateTime? startDate;
-    DateTime? endDate;
-    if (startDate != null) startDate = DateTime.parse(mosque.flash!.startDate!);
-    if (endDate != null) startDate = DateTime.parse(mosque.flash!.endDate!);
-    bool flashIsInDateTime = now.isAfter(startDate ?? now) && now.isBefore(endDate ?? now);
-    bool isNoDate = startDate == null || endDate == null;
+    mosque = mosqueProvider.mosque!;
 
-    return mosque.flash?.content.isEmpty != false || (!flashIsInDateTime && !isNoDate)
+    final startDate = DateTime.tryParse(mosque.flash?.startDate ?? 'x');
+    final endDate = DateTime.tryParse(mosque.flash?.endDate ?? 'x');
 
-        //todo get the message
-        ? SizedBox()
-        : RepaintBoundary(
-            child: StatefulBuilder(
-              builder: (context, setState) => TextScroll(
-                textDirection: mosque.flash?.orientation == 'rtl' ? TextDirection.rtl : TextDirection.ltr,
-                mosque.flash?.content ?? '',
-                intervalSpaces: 20,
-                velocity: Velocity(pixelsPerSecond: Offset(90, 0)),
-                style: TextStyle(
-                  height: 1,
-                  fontSize: 3.4.vwr,
-                  fontWeight: FontWeight.bold,
-                  wordSpacing: 3,
-                  shadows: kHomeTextShadow,
-                  color: HexColor(mosque.flash?.color ?? "#FFFFFF"),
-                ),
-              ),
-            ),
-          );
+    if (startDate != null && endDate != null) {
+      final now = DateTime.now();
+      enabled = now.isAfter(startDate) && now.isBefore(endDate);
+    }
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!enabled) return SizedBox();
+
+    return RepaintBoundary(
+      child: Marquee(
+        key: ValueKey(mosque.flash?.content),
+        textDirection: mosque.flash?.orientation == 'rtl'
+            ? TextDirection.rtl
+            : TextDirection.ltr,
+        text: mosque.flash?.content ?? '',
+        velocity: 90,
+        blankSpace: 400,
+        style: TextStyle(
+          height: 1,
+          fontSize: 3.4.vwr,
+          fontWeight: FontWeight.bold,
+          wordSpacing: 3,
+          shadows: kHomeTextShadow,
+          color: HexColor(mosque.flash?.color ?? "#FFFFFF"),
+        ),
+      ),
+    );
   }
 }
