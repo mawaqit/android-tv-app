@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -13,8 +12,7 @@ class VersionWidget extends StatelessWidget {
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) => Text(
-        "v${snapshot.data?.version} ",
-        //(${snapshot.data?.buildNumber})
+        "v${snapshot.data?.version.replaceAll('-tv', '')}-${snapshot.data?.buildNumber}",
         style: style,
         textAlign: textAlign,
       ),
