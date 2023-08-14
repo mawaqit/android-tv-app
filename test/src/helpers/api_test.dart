@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logger/logger.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
@@ -6,6 +7,12 @@ import 'package:mawaqit/src/models/times.dart';
 
 void main() {
   group('Api unit tests', () {
+    test('Search Mosque with id', () async {
+      final mosque = Api.searchMosqueWithId('1');
+
+      expect(mosque, completion(isA<Mosque>()));
+    });
+
     /// make sure api search is working fine
     test('mosque searching is working', () {
       final data = Api.searchMosques('paris');
@@ -19,8 +26,8 @@ void main() {
         /// GRANDE MOSQUÉE DE PARIS
         '05b4d393-fb76-4d9b-b2a4-f98ab4c4b64f',
 
-        /// MOSQUÉE DE PARIS 19
-        'ec5cd403-c500-4db2-b789-fc2e641752d8',
+        /// Maison d'Allah بيت الله
+        '8e8a41cf-62d4-4890-9454-120d27b229e1',
       ];
 
       for (final uuid in testMosquesUUIDs) {
