@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
+import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 
 class OfflineScreen extends StatefulWidget {

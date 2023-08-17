@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
@@ -32,8 +33,10 @@ class _MosqueBackgroundScreenState extends State<MosqueBackgroundScreen> {
 
     return CallbackShortcuts(
       bindings: {
-        SingleActivator(LogicalKeyboardKey.arrowLeft): () => _scaffoldKey.currentState?.openDrawer(),
-        SingleActivator(LogicalKeyboardKey.arrowRight): () => _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowLeft): () =>
+            _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowRight): () =>
+            _scaffoldKey.currentState?.openDrawer(),
       },
       child: Focus(
         autofocus: true,
@@ -48,10 +51,13 @@ class _MosqueBackgroundScreenState extends State<MosqueBackgroundScreen> {
                 : BoxDecoration(
                     image: DecorationImage(
                       image: mosqueConfig.backgroundMotif == "0"
-                          ? MawaqitNetworkImageProvider(mosqueProvider.mosque?.interiorPicture ?? "")
+                          ? MawaqitNetworkImageProvider(
+                              mosqueProvider.mosque?.interiorPicture ?? "")
                           : mosqueConfig.backgroundMotif == "-1"
-                              ? MawaqitNetworkImageProvider(mosqueProvider.mosque?.exteriorPicture ?? "")
-                              : MawaqitNetworkImageProvider(mosqueProvider.mosqueConfig!.motifUrl),
+                              ? MawaqitNetworkImageProvider(
+                                  mosqueProvider.mosque?.exteriorPicture ?? "")
+                              : MawaqitNetworkImageProvider(
+                                  mosqueProvider.mosqueConfig!.motifUrl),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
                         Colors.black.withOpacity(.4),

@@ -11,6 +11,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/HttpOverrides.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -21,11 +22,12 @@ import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
-import 'package:mawaqit/src/services/update_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:wakelock/wakelock.dart';
+
+import '../services/update_manager/update_manager.dart';
 
 enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
 
@@ -46,10 +48,12 @@ class _SplashScreen extends State<Splash> {
 
     Hive.initFlutter();
 
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
 
     HttpOverrides.global = MyHttpOverrides();
-    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
 
     // hide status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -79,7 +83,7 @@ class _SplashScreen extends State<Splash> {
   /// navigates to first screen
   void _navigateToHome() async {
     try {
-      await UpdateManager.init();
+      await UpdateManager.instance().init();
       await initApplicationUI();
       var settings = await _initSettings();
       var goBoarding = await loadBoarding();
@@ -91,7 +95,8 @@ class _SplashScreen extends State<Splash> {
       } else {
         AppRouter.pushReplacement(OfflineHomeScreen());
       }
-    } on DioError catch (e) {
+    } on DioError catch (e, stack) {
+      logger.e(e, 'e', stack);
       if (e.response == null) {
         print('no internet connection');
         print(e.requestOptions.uri);
@@ -102,7 +107,8 @@ class _SplashScreen extends State<Splash> {
         setState(() => error = ErrorState.mosqueNotFound);
         // e.response!.data;
       }
-    } catch (e) {
+    } catch (e, stack) {
+      logger.e(e, 'e', stack);
       setState(() => error = ErrorState.mosqueDataError);
       rethrow;
     }

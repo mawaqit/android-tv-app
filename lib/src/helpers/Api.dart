@@ -1,4 +1,5 @@
-
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -17,6 +18,7 @@ import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:xml_parser/xml_parser.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -224,5 +226,31 @@ class Api {
         .post('/3.0/mosque/$uuid/androidtv-life-status', data: data)
         .then((value) => logger.d(value))
         .catchError((e) => logger.d((e as DioError).requestOptions.uri));
+  }
+
+  static Future<String> getLatestVersion() async {
+    final response = await dio.get('/2.0/tv/version');
+
+    return response.data['version'];
+  }
+
+  /// downloaded apk will be saved in the cache folder under the name mawaqit.apk
+  static Stream<double> downloadApk() async* {
+    final dir = await getApplicationCacheDirectory();
+    await File('${dir.path}/mawaqit.apk').delete();
+
+    final controller = StreamController<double>();
+
+    dio
+        .download('https://get.mawaqit.net/apk/tv', '${dir.path}/mawaqit.apk',
+            onReceiveProgress: (count, total) {
+          final progress = count / total * 100;
+          logger.d(progress);
+          controller.add(progress);
+        })
+        .then((value) => controller.close())
+        .catchError(logger.e);
+
+    yield* controller.stream;
   }
 }
