@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -154,22 +153,18 @@ class Api {
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file
   static Future<String?> randomHadithCached({String language = 'ar'}) async {
-    try {
-      List<XmlElement> hadiths = [];
+    List<XmlElement> hadiths = [];
 
-      for (var lang in language.split('-')) {
-        final response = await dioStatic.get('/xml/ahadith/$lang.xml');
+    for (var lang in language.split('-')) {
+      final response = await dioStatic.get('/xml/ahadith/$lang.xml');
 
-        final document = XmlDocument.from(response.data)!;
+      final document = XmlDocument.from(response.data)!;
 
-        hadiths.addAll(document.getElementsWhere(name: 'hadith')!);
-      }
-
-      final num = Random().nextInt(hadiths.length);
-      return hadiths[num].text;
-    } on DioError catch (e) {
-      logger.d(e.requestOptions.uri);
+      hadiths.addAll(document.getElementsWhere(name: 'hadith')!);
     }
+
+    final num = Random().nextInt(hadiths.length);
+    return hadiths[num].text;
   }
 
   static Future<String> randomHadith({String language = 'ar'}) async {

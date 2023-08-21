@@ -28,7 +28,8 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(seconds: 140);
 
-class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
+class MosqueManager extends ChangeNotifier
+    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -109,7 +110,11 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription?.cancel();
     _configSubscription?.cancel();
 
-    bool isDone() => times != null && mosqueConfig != null && mosque != null && !completer.isCompleted;
+    bool isDone() =>
+        times != null &&
+        mosqueConfig != null &&
+        mosque != null &&
+        !completer.isCompleted;
 
     /// if getting item returns an error
     onItemError(e, stack) {
@@ -158,15 +163,19 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     return completer.future;
   }
 
-  Future<Mosque> searchMosqueWithId(String mosqueId) => Api.searchMosqueWithId(mosqueId);
+  Future<Mosque> searchMosqueWithId(String mosqueId) =>
+      Api.searchMosqueWithId(mosqueId);
 
-  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async => Api.searchMosques(mosque, page: page);
+  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async =>
+      Api.searchMosques(mosque, page: page);
 
 //todo handle page and get more
   Future<List<Mosque>> searchWithGps() async {
-    final position = await getCurrentLocation().catchError((e) => throw GpsError());
+    final position =
+        await getCurrentLocation().catchError((e) => throw GpsError());
 
-    final url = Uri.parse("$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
+    final url = Uri.parse(
+        "$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
     Map<String, String> requestHeaders = {
       // "Api-Access-Token": mawaqitApiToken,
     };
@@ -193,7 +202,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   }
 
   Future<Position> getCurrentLocation() async {
-    var enabled = await GeolocatorPlatform.instance.isLocationServiceEnabled().timeout(Duration(seconds: 5));
+    var enabled = await GeolocatorPlatform.instance
+        .isLocationServiceEnabled()
+        .timeout(Duration(seconds: 5));
 
     if (!enabled) {
       enabled = await GeolocatorPlatform.instance.openLocationSettings();
@@ -201,7 +212,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     if (!enabled) throw GpsError();
 
     final permission = await GeolocatorPlatform.instance.requestPermission();
-    if (permission == LocationPermission.deniedForever || permission == LocationPermission.denied) throw GpsError();
+    if (permission == LocationPermission.deniedForever ||
+        permission == LocationPermission.denied) throw GpsError();
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }
@@ -216,18 +228,22 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       mosque?.exteriorPicture,
       mosqueConfig?.motifUrl,
       kFooterQrLink,
-      ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
+      ...mosque?.announcements
+              .map((e) => e.image)
+              .where((element) => element != null) ??
+          <String>[],
     ].where((e) => e != null).cast<String>();
 
     /// some images isn't existing anymore so we will ignore errors
-    final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
+    final futures = images
+        .map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {}))
+        .toList();
     await Future.wait(futures);
   }
 
   /// pre cache the random hadith file to be used in the hadith widget
   Future<void> preCacheHadith() async {
-    final language = await AppLanguage.getCountryCode();
-    await Api.randomHadithCached(language: language ?? 'ar');
+    await Api.randomHadithCached(language: mosqueConfig?.hadithLang ?? 'ar');
   }
 }
 
