@@ -8,6 +8,7 @@ import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
+import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
@@ -104,63 +105,68 @@ class MosqueManager extends ChangeNotifier
   /// - handle errors of response
   /// It will return a future that will be completed when all data is fetched and cached
   Future<void> fetchMosque(String uuid) async {
-    final completer = Completer();
-
     _mosqueSubscription?.cancel();
     _timesSubscription?.cancel();
     _configSubscription?.cancel();
 
-    bool isDone() =>
-        times != null &&
-        mosqueConfig != null &&
-        mosque != null &&
-        !completer.isCompleted;
-
     /// if getting item returns an error
     onItemError(e, stack) {
       logger.e(e, '', stack);
-      if (!completer.isCompleted) completer.completeError(e, stack);
 
       mosque = null;
       notifyListeners();
+
+      throw e;
     }
 
     /// cache date before complete the [completer]
-    completeFuture() async {
+    Future<void> completeFuture() async {
       await Future.wait([
         AudioManager().precacheVoices(mosqueConfig!),
         preCacheImages(),
         preCacheHadith(),
       ]).catchError((e) {});
-
-      if (!completer.isCompleted) completer.complete();
     }
 
-    _mosqueSubscription = Api.getMosqueStream(uuid).listen((event) {
-      mosque = event;
-      loadWeather(mosque!);
-      notifyListeners();
+    final mosqueStream = Api.getMosqueStream(uuid).asBroadcastStream();
+    final timesStream = Api.getMosqueTimesStream(uuid).asBroadcastStream();
+    final configStream = Api.getMosqueConfigStream(uuid).asBroadcastStream();
 
-      if (isDone()) completeFuture();
-    }, onError: onItemError);
+    _mosqueSubscription = mosqueStream.listen(
+      (e) {
+        mosque = e;
+        notifyListeners();
+      },
+      onError: onItemError,
+    );
 
-    _timesSubscription = Api.getMosqueTimesStream(uuid).listen((event) {
-      times = event;
-      notifyListeners();
+    _timesSubscription = timesStream.listen(
+      (e) {
+        times = e;
+        notifyListeners();
+      },
+      onError: onItemError,
+    );
 
-      if (isDone()) completeFuture();
-    }, onError: onItemError);
+    _configSubscription = configStream.listen(
+      (e) {
+        mosqueConfig = e;
+        notifyListeners();
+      },
+      onError: onItemError,
+    );
 
-    _configSubscription = Api.getMosqueConfigStream(uuid).listen((event) async {
-      mosqueConfig = event;
-      notifyListeners();
+    /// wait for all streams to complete
+    await Future.wait([
+      mosqueStream.first.logPerformance('mosque'),
+      timesStream.first.logPerformance('times'),
+      configStream.first.logPerformance('config'),
+    ]).logPerformance('Mosque data loader');
+    await completeFuture();
 
-      if (isDone()) completeFuture();
-    }, onError: onItemError);
+    loadWeather(mosque!);
 
     mosqueUUID = uuid;
-
-    return completer.future;
   }
 
   Future<Mosque> searchMosqueWithId(String mosqueId) =>
@@ -243,7 +249,7 @@ class MosqueManager extends ChangeNotifier
 
   /// pre cache the random hadith file to be used in the hadith widget
   Future<void> preCacheHadith() async {
-    await Api.randomHadithCached(language: mosqueConfig?.hadithLang ?? 'ar');
+    await Api.cacheHadithXMLFiles(language: mosqueConfig?.hadithLang ?? 'ar');
   }
 }
 
