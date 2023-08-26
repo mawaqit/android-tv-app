@@ -172,13 +172,9 @@ class _SplashScreen extends State<Splash> {
                 width: double.infinity,
                 child: SplashScreen.callback(
                   isLoading: false,
-                  onSuccess: (e) {
-                    animationFuture.complete();
-                  },
-                  onError: (error, stacktrace) {
-                    print(error);
-                    print(stacktrace);
-                  },
+                  onSuccess: (e) => animationFuture.complete(),
+                  onError: (error, stacktrace) =>
+                      animationFuture.completeError(error, stacktrace),
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
                   startAnimation: 'idle',

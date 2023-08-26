@@ -5,6 +5,7 @@ extension PerformanceHelper<T> on Future<T> {
     /// disable performance logs in release mode
     if (!kDebugMode) return this;
 
+    print('[$name]: start');
     final stopwatch = Stopwatch()..start();
     final result = await this;
     stopwatch.stop();

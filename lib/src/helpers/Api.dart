@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -93,7 +94,9 @@ class Api {
   }
 
   static Future<Mosque> getMosque(String id) async {
-    final response = await dio.get('/3.0/mosque/$id/info');
+    final response = await dio.get(
+      '/3.0/mosque/$id/info',
+    );
 
     return Mosque.fromMap(response.data);
   }
@@ -150,15 +153,9 @@ class Api {
     return mosques;
   }
 
-  static Future<void> cacheHadithXMLFiles({String language = 'ar'}) async {
-    final languages = language.split('-');
-
-    print('getting hadiths for $languages');
-
-    await Future.wait(
-      languages.map((e) => dioStatic.get('/xml/ahadith/$e.xml')),
-    );
-  }
+  static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
+      Future.wait(
+          language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
 
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file
@@ -173,11 +170,12 @@ class Api {
 
     final document = XmlDocument.from(response.data)!;
 
-    final hadiths = document.getChildren('hadith');
+    final hadiths = document.getElements('hadith');
 
     if (hadiths == null) return null;
 
     final random = Random().nextInt(hadiths.length);
+
     return hadiths[random].text;
   }
 

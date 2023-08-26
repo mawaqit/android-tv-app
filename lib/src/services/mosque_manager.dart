@@ -17,6 +17,7 @@ import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
+import 'package:mawaqit/src/services/mixins/random_hadith_mixin.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
 import 'mixins/audio_mixin.dart';
@@ -30,7 +31,12 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 const kAzkarDuration = const Duration(seconds: 140);
 
 class MosqueManager extends ChangeNotifier
-    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
+    with
+        WeatherMixin,
+        AudioMixin,
+        MosqueHelpersMixin,
+        NetworkConnectivity,
+        RandomHadithMixin {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -245,11 +251,6 @@ class MosqueManager extends ChangeNotifier
         .map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {}))
         .toList();
     await Future.wait(futures);
-  }
-
-  /// pre cache the random hadith file to be used in the hadith widget
-  Future<void> preCacheHadith() async {
-    await Api.cacheHadithXMLFiles(language: mosqueConfig?.hadithLang ?? 'ar');
   }
 }
 
