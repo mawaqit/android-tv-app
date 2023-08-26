@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -93,7 +94,9 @@ class Api {
   }
 
   static Future<Mosque> getMosque(String id) async {
-    final response = await dio.get('/3.0/mosque/$id/info');
+    final response = await dio.get(
+      '/3.0/mosque/$id/info',
+    );
 
     return Mosque.fromMap(response.data);
   }
@@ -150,21 +153,30 @@ class Api {
     return mosques;
   }
 
+  static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
+      Future.wait(
+          language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
+
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file
   static Future<String?> randomHadithCached({String language = 'ar'}) async {
-    List<XmlElement> hadiths = [];
+    /// select only single language
+    language = (language.split('-')..shuffle()).first;
 
-    for (var lang in language.split('-')) {
-      final response = await dioStatic.get('/xml/ahadith/$lang.xml');
+    /// this should be called only on offline mode so it should hit the cache
+    final response = await dioStatic
+        .get('/xml/ahadith/$language.xml')
+        .timeout(Duration(seconds: 5));
 
-      final document = XmlDocument.from(response.data)!;
+    final document = XmlDocument.from(response.data)!;
 
-      hadiths.addAll(document.getElementsWhere(name: 'hadith')!);
-    }
+    final hadiths = document.getElements('hadith');
 
-    final num = Random().nextInt(hadiths.length);
-    return hadiths[num].text;
+    if (hadiths == null) return null;
+
+    final random = Random().nextInt(hadiths.length);
+
+    return hadiths[random].text;
   }
 
   static Future<String> randomHadith({String language = 'ar'}) async {

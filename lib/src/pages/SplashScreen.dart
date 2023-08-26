@@ -15,6 +15,7 @@ import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 
 import 'package:mawaqit/src/helpers/HttpOverrides.dart';
+import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/models/settings.dart';
@@ -36,8 +37,15 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashScreen extends State<Splash> {
+  final animationFuture = Completer<void>();
+
   SharedPref sharedPref = SharedPref();
   ErrorState? error;
+
+  void initState() {
+    super.initState();
+    _initApplication().logPerformance('Init application');
+  }
 
   // bool applicationProblem = false;
 
@@ -47,10 +55,12 @@ class _SplashScreen extends State<Splash> {
 
     Hive.initFlutter();
 
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
 
     HttpOverrides.global = MyHttpOverrides();
-    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
 
     // hide status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -63,11 +73,11 @@ class _SplashScreen extends State<Splash> {
 
   Future<Settings> _initSettings() async {
     await context.read<AppLanguage>().fetchLocale();
-    await context.read<MosqueManager>().init();
+    await context.read<MosqueManager>().init().logPerformance("Mosque manager");
 
     final settingsManage = context.read<SettingsManager>();
 
-    await settingsManage.init();
+    await settingsManage.init().logPerformance('Setting manager');
     return settingsManage.settings;
   }
 
@@ -78,13 +88,16 @@ class _SplashScreen extends State<Splash> {
   }
 
   /// navigates to first screen
-  void _navigateToHome() async {
+  Future<void> _initApplication() async {
     try {
       await initApplicationUI();
       var settings = await _initSettings();
       var goBoarding = await loadBoarding();
       var mosqueManager = context.read<MosqueManager>();
       bool hasNoMosque = mosqueManager.mosqueUUID == null;
+
+      /// waite for the animation if it is not loaded yet
+      await animationFuture.future;
 
       if (hasNoMosque || goBoarding && settings.boarding == "1") {
         AppRouter.pushReplacement(OnBoardingScreen());
@@ -102,7 +115,8 @@ class _SplashScreen extends State<Splash> {
         setState(() => error = ErrorState.mosqueNotFound);
         // e.response!.data;
       }
-    } catch (e) {
+    } catch (e, stack) {
+      logger.e(e, '', stack);
       setState(() => error = ErrorState.mosqueDataError);
       rethrow;
     }
@@ -130,14 +144,14 @@ class _SplashScreen extends State<Splash> {
           title: S.of(context).noInternet,
           description: S.of(context).noInternetMessage,
           image: R.ASSETS_SVG_NO_WI_FI_SVG,
-          onTryAgain: _navigateToHome,
+          onTryAgain: _initApplication,
         );
       case ErrorState.mosqueDataError:
         return ErrorScreen(
           title: S.of(context).error,
           description: S.of(context).mosqueErrorMessage,
           image: R.ASSETS_IMG_ICON_EXIT_PNG,
-          onTryAgain: _navigateToHome,
+          onTryAgain: _initApplication,
         );
       case null:
         break;
@@ -158,8 +172,9 @@ class _SplashScreen extends State<Splash> {
                 width: double.infinity,
                 child: SplashScreen.callback(
                   isLoading: false,
-                  onSuccess: (e) => _navigateToHome(),
-                  onError: (error, stacktrace) {},
+                  onSuccess: (e) => animationFuture.complete(),
+                  onError: (error, stacktrace) =>
+                      animationFuture.completeError(error, stacktrace),
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
                   startAnimation: 'idle',
