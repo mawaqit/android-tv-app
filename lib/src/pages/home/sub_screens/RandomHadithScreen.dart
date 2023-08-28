@@ -8,7 +8,6 @@ import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
 
 import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
@@ -29,10 +28,7 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
 
-    mosqueManager
-        .getRandomHadith()
-        .then((value) => setState(() => hadith = value))
-        .catchError((e) => widget.onDone?.call());
+    mosqueManager.getRandomHadith().then((value) => setState(() => hadith = value)).catchError((e) => widget.onDone?.call());
 
     super.initState();
   }
