@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -15,6 +16,7 @@ import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
+import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
@@ -96,7 +98,9 @@ class Api {
   }
 
   static Future<Mosque> getMosque(String id) async {
-    final response = await dio.get('/3.0/mosque/$id/info');
+    final response = await dio.get(
+      '/3.0/mosque/$id/info',
+    );
 
     return Mosque.fromMap(response.data);
   }
@@ -153,25 +157,27 @@ class Api {
     return mosques;
   }
 
+  static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
+      Future.wait(language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
+
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file
   static Future<String?> randomHadithCached({String language = 'ar'}) async {
-    try {
-      List<XmlElement> hadiths = [];
+    /// select only single language
+    language = (language.split('-')..shuffle()).first;
 
-      for (var lang in language.split('-')) {
-        final response = await dioStatic.get('/xml/ahadith/$lang.xml');
+    /// this should be called only on offline mode so it should hit the cache
+    final response = await dioStatic.get('/xml/ahadith/$language.xml').timeout(Duration(seconds: 5));
 
-        final document = XmlDocument.from(response.data)!;
+    final document = XmlDocument.from(response.data)!;
 
-        hadiths.addAll(document.getElementsWhere(name: 'hadith')!);
-      }
+    final hadiths = document.getElements('hadith');
 
-      final num = Random().nextInt(hadiths.length);
-      return hadiths[num].text;
-    } on DioError catch (e) {
-      logger.d(e.requestOptions.uri);
-    }
+    if (hadiths == null) return null;
+
+    final random = Random().nextInt(hadiths.length);
+
+    return hadiths[random].text;
   }
 
   static Future<String> randomHadith({String language = 'ar'}) async {
@@ -235,22 +241,17 @@ class Api {
   }
 
   /// downloaded apk will be saved in the cache folder under the name mawaqit.apk
-  static Stream<double> downloadApk() async* {
-    final dir = await getApplicationCacheDirectory();
-    await File('${dir.path}/mawaqit.apk').delete();
+  static Future<String> downloadApk({ValueChanged<double>? onProgress}) async {
+    final dir = await getApplicationSupportDirectory().logPerformance('get application dir');
 
-    final controller = StreamController<double>();
+    final oldFile = File('${dir.path}/mawaqit.apk');
+    if (await oldFile.exists()) await oldFile.delete();
 
-    dio
-        .download('https://get.mawaqit.net/apk/tv', '${dir.path}/mawaqit.apk',
-            onReceiveProgress: (count, total) {
-          final progress = count / total * 100;
-          logger.d(progress);
-          controller.add(progress);
-        })
-        .then((value) => controller.close())
-        .catchError(logger.e);
+    await dio.download('https://get.mawaqit.net/apk/tv', '${dir.path}/mawaqit.apk', onReceiveProgress: (count, total) {
+      final progress = count / total * 100;
+      onProgress?.call(progress);
+    }).catchError(logger.e);
 
-    yield* controller.stream;
+    return '${dir.path}/mawaqit.apk';
   }
 }

@@ -10,22 +10,21 @@ class JummuaLive extends StatefulWidget {
   const JummuaLive({
     Key? key,
     this.onDone,
-    this.duration = 30,
   }) : super(key: key);
 
   final VoidCallback? onDone;
-  final int duration;
 
   @override
   State<JummuaLive> createState() => _JummuaLiveState();
 }
 
 class _JummuaLiveState extends State<JummuaLive> {
-  bool showHadith = false;
+  /// invalid channel id
+  bool invalidStreamUrl = false;
 
   @override
   void initState() {
-    showHadith = context.read<MosqueManager>().mosque?.streamUrl == null;
+    invalidStreamUrl = context.read<MosqueManager>().mosque?.streamUrl == null;
 
     super.initState();
   }
@@ -35,9 +34,12 @@ class _JummuaLiveState extends State<JummuaLive> {
     final mosqueManager = context.read<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
-    if (showHadith) return JumuaHadithSubScreen(onDone: widget.onDone);
+    /// disable live stream in mosque primary screen
+    final jumuaaDisableInMosque = !userPrefs.isSecondaryScreen && mosqueManager.typeIsMosque;
 
-    if (!userPrefs.isSecondaryScreen && mosqueManager.typeIsMosque) {
+    if (invalidStreamUrl || mosqueManager.mosque?.streamUrl == null || jumuaaDisableInMosque) {
+      if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) return JumuaHadithSubScreen(onDone: widget.onDone);
+
       return Scaffold(backgroundColor: Colors.black);
     }
 
@@ -45,7 +47,7 @@ class _JummuaLiveState extends State<JummuaLive> {
       channelId: mosqueManager.mosque!.streamUrl!,
       onDone: widget.onDone,
       muted: mosqueManager.typeIsMosque,
-      onNotFound: () => setState(() => showHadith = true),
+      onNotFound: () => setState(() => invalidStreamUrl = true),
     );
   }
 }

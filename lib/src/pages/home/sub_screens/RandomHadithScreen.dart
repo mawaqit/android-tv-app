@@ -1,5 +1,8 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
+import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
@@ -24,17 +27,8 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
-    final mosqueConfig = mosqueManager.mosqueConfig;
 
-    if (mosqueManager.isOnline) {
-      Api.randomHadith(language: mosqueConfig!.hadithLang!)
-          .then((value) => setState(() => hadith = value))
-          .catchError((e) => widget.onDone?.call());
-    } else {
-      Api.randomHadithCached(language: mosqueConfig!.hadithLang!)
-          .then((value) => setState(() => hadith = value))
-          .catchError((e) => widget.onDone?.call());
-    }
+    mosqueManager.getRandomHadith().then((value) => setState(() => hadith = value)).catchError((e) => widget.onDone?.call());
 
     super.initState();
   }

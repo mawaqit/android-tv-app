@@ -8,6 +8,7 @@ import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
+import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
@@ -16,6 +17,7 @@ import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
+import 'package:mawaqit/src/services/mixins/random_hadith_mixin.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
 import 'mixins/audio_mixin.dart';
@@ -28,7 +30,13 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(seconds: 140);
 
-class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
+class MosqueManager extends ChangeNotifier
+    with
+        WeatherMixin,
+        AudioMixin,
+        MosqueHelpersMixin,
+        NetworkConnectivity,
+        RandomHadithMixin {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -103,70 +111,83 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   /// - handle errors of response
   /// It will return a future that will be completed when all data is fetched and cached
   Future<void> fetchMosque(String uuid) async {
-    final completer = Completer();
-
     _mosqueSubscription?.cancel();
     _timesSubscription?.cancel();
     _configSubscription?.cancel();
 
-    bool isDone() => times != null && mosqueConfig != null && mosque != null && !completer.isCompleted;
-
     /// if getting item returns an error
     onItemError(e, stack) {
       logger.e(e, '', stack);
-      if (!completer.isCompleted) completer.completeError(e, stack);
 
       mosque = null;
       notifyListeners();
+
+      throw e;
     }
 
     /// cache date before complete the [completer]
-    completeFuture() async {
+    Future<void> completeFuture() async {
       await Future.wait([
         AudioManager().precacheVoices(mosqueConfig!),
         preCacheImages(),
         preCacheHadith(),
       ]).catchError((e) {});
-
-      if (!completer.isCompleted) completer.complete();
     }
 
-    _mosqueSubscription = Api.getMosqueStream(uuid).listen((event) {
-      mosque = event;
-      loadWeather(mosque!);
-      notifyListeners();
+    final mosqueStream = Api.getMosqueStream(uuid).asBroadcastStream();
+    final timesStream = Api.getMosqueTimesStream(uuid).asBroadcastStream();
+    final configStream = Api.getMosqueConfigStream(uuid).asBroadcastStream();
 
-      if (isDone()) completeFuture();
-    }, onError: onItemError);
+    _mosqueSubscription = mosqueStream.listen(
+      (e) {
+        mosque = e;
+        notifyListeners();
+      },
+      onError: onItemError,
+    );
 
-    _timesSubscription = Api.getMosqueTimesStream(uuid).listen((event) {
-      times = event;
-      notifyListeners();
+    _timesSubscription = timesStream.listen(
+      (e) {
+        times = e;
+        notifyListeners();
+      },
+      onError: onItemError,
+    );
 
-      if (isDone()) completeFuture();
-    }, onError: onItemError);
+    _configSubscription = configStream.listen(
+      (e) {
+        mosqueConfig = e;
+        notifyListeners();
+      },
+      onError: onItemError,
+    );
 
-    _configSubscription = Api.getMosqueConfigStream(uuid).listen((event) async {
-      mosqueConfig = event;
-      notifyListeners();
+    /// wait for all streams to complete
+    await Future.wait([
+      mosqueStream.first.logPerformance('mosque'),
+      timesStream.first.logPerformance('times'),
+      configStream.first.logPerformance('config'),
+    ]).logPerformance('Mosque data loader');
+    await completeFuture();
 
-      if (isDone()) completeFuture();
-    }, onError: onItemError);
+    loadWeather(mosque!);
 
     mosqueUUID = uuid;
-
-    return completer.future;
   }
 
-  Future<Mosque> searchMosqueWithId(String mosqueId) => Api.searchMosqueWithId(mosqueId);
+  Future<Mosque> searchMosqueWithId(String mosqueId) =>
+      Api.searchMosqueWithId(mosqueId);
 
-  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async => Api.searchMosques(mosque, page: page);
+  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async =>
+      Api.searchMosques(mosque, page: page);
 
 //todo handle page and get more
   Future<List<Mosque>> searchWithGps() async {
-    final position = await getCurrentLocation().catchError((e) => throw GpsError());
+    final position =
+        await getCurrentLocation().catchError((e) => throw GpsError());
 
-    final url = Uri.parse("$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
+    final url = Uri.parse(
+        "$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
     Map<String, String> requestHeaders = {
       // "Api-Access-Token": mawaqitApiToken,
     };
@@ -193,7 +214,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   }
 
   Future<Position> getCurrentLocation() async {
-    var enabled = await GeolocatorPlatform.instance.isLocationServiceEnabled().timeout(Duration(seconds: 5));
+    var enabled = await GeolocatorPlatform.instance
+        .isLocationServiceEnabled()
+        .timeout(Duration(seconds: 5));
 
     if (!enabled) {
       enabled = await GeolocatorPlatform.instance.openLocationSettings();
@@ -201,7 +224,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     if (!enabled) throw GpsError();
 
     final permission = await GeolocatorPlatform.instance.requestPermission();
-    if (permission == LocationPermission.deniedForever || permission == LocationPermission.denied) throw GpsError();
+    if (permission == LocationPermission.deniedForever ||
+        permission == LocationPermission.denied) throw GpsError();
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }
@@ -216,18 +240,17 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       mosque?.exteriorPicture,
       mosqueConfig?.motifUrl,
       kFooterQrLink,
-      ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
+      ...mosque?.announcements
+              .map((e) => e.image)
+              .where((element) => element != null) ??
+          <String>[],
     ].where((e) => e != null).cast<String>();
 
     /// some images isn't existing anymore so we will ignore errors
-    final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
+    final futures = images
+        .map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {}))
+        .toList();
     await Future.wait(futures);
-  }
-
-  /// pre cache the random hadith file to be used in the hadith widget
-  Future<void> preCacheHadith() async {
-    final language = await AppLanguage.getCountryCode();
-    await Api.randomHadithCached(language: language ?? 'ar');
   }
 }
 
