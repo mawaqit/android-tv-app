@@ -46,7 +46,6 @@ class _JummuaLiveState extends State<JummuaLive> {
     return MawaqitYoutubePlayer(
       channelId: mosqueManager.mosque!.streamUrl!,
       onDone: widget.onDone,
-      muted: mosqueManager.typeIsMosque,
       onNotFound: () => setState(() => invalidStreamUrl = true),
     );
   }
