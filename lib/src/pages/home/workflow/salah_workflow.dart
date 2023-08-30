@@ -108,7 +108,10 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
           skip: true,
         ),
         WorkFlowItem(
-          builder: (context, next) => IqamaaCountDownSubScreen(onDone: next),
+          builder: (context, next) => IqamaaCountDownSubScreen(
+            onDone: next,
+            currentSalahIndex: currentSalah,
+          ),
           skip: now.isAfter(currentIqamaTime),
           disabled: mosqueManger.mosqueConfig?.iqamaEnabled == false,
         ),
