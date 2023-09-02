@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:isolate';
 import 'dart:math';
 
@@ -17,11 +18,12 @@ import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import 'package:xml_parser/xml_parser.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:unique_identifier/unique_identifier.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
@@ -154,8 +156,7 @@ class Api {
   }
 
   static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
-      Future.wait(
-          language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
+      Future.wait(language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
 
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file
@@ -164,9 +165,7 @@ class Api {
     language = (language.split('-')..shuffle()).first;
 
     /// this should be called only on offline mode so it should hit the cache
-    final response = await dioStatic
-        .get('/xml/ahadith/$language.xml')
-        .timeout(Duration(seconds: 5));
+    final response = await dioStatic.get('/xml/ahadith/$language.xml').timeout(Duration(seconds: 5));
 
     final document = XmlDocument.from(response.data)!;
 
@@ -204,18 +203,38 @@ class Api {
     }
   }
 
+  /// generate a unique id for the device and save it locally
+  static Future<String> deviceId([List<Object> args = const []]) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final uuid = prefs.getString('DEVICE-UUID');
+
+    if (uuid != null) return uuid;
+
+    final now = DateTime.now();
+
+    final newUuid = Uuid().v5(
+      null,
+      '${now.toUtc()} ${args.map((e) => e.toString()).join(' ')}',
+      options: {'randomNamespace': true},
+    );
+
+    await prefs.setString('DEVICE-UUID', newUuid);
+
+    return newUuid;
+  }
+
   static Future<dynamic> updateUserStatus() async {
     final uuid = await MosqueManager.loadLocalUUID();
     if (uuid == null) return;
 
-    final userPreferencesManager = UserPreferencesManager();
-    await userPreferencesManager.init();
+    final userPreferencesManager = await UserPreferencesManager().init();
     final hardware = await DeviceInfoPlugin().androidInfo;
     final softWare = await PackageInfo.fromPlatform();
     final language = await AppLanguage.getCountryCode();
 
     final data = {
-      'device-id': await UniqueIdentifier.serial,
+      'device-id': await deviceId([jsonEncode(hardware.data)]),
       'brand': hardware.brand,
       'model': hardware.model,
       'android-version': hardware.version.release,
