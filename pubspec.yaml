@@ -107,6 +107,7 @@ dependencies:
   youtube_explode_dart: ^1.12.4
   audiofileplayer: ^2.1.1
   unique_identifier: ^0.3.0
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:

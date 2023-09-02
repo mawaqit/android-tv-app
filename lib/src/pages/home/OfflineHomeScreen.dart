@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
@@ -8,12 +9,14 @@ import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
+import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
 import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 import '../HomeScreen.dart';
 
@@ -41,15 +44,51 @@ class OfflineHomeScreen extends StatelessWidget {
     );
   }
 
+  /// todo register this each day at 00:00
   Widget activeWorkflow(MosqueManager mosqueManager) {
-    switch (mosqueManager.workflow) {
-      case HomeActiveWorkflow.normal:
-        return NormalWorkflowScreen();
-      case HomeActiveWorkflow.salah:
-        return SalahWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
-      case HomeActiveWorkflow.jumuaa:
-        return JumuaaWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
-    }
+    final now = mosqueManager.mosqueDate();
+    final isFriday = now.weekday == DateTime.friday;
+
+    final times = mosqueManager.useTomorrowTimes ? mosqueManager.actualTimes(now.add(1.days)) : mosqueManager.actualTimes(now);
+
+    final iqama =
+        mosqueManager.useTomorrowTimes ? mosqueManager.actualIqamaTimes(now.add(1.days)) : mosqueManager.actualIqamaTimes(now);
+
+    return RepeatingWorkFlowWidget(
+      child: NormalWorkflowScreen(),
+      items: [
+        ...times.mapIndexed((index, elem) => RepeatingWorkflowItem(
+              builder: (context, next) => SalahWorkflowScreen(onDone: next),
+              repeatingDuration: 1.days,
+
+              dateTime: elem,
+
+              /// auto start Workflow if user starts the app during the Salah time
+              /// give 4 minute for the salah and 2 for azkar
+              showInitial: () => now.isAfter(elem) && now.isBefore(iqama[index].add(6.minutes)),
+
+              // dateTime: e,
+              // disable Duhr if it's Friday
+              disabled: index == 1 && isFriday,
+            )),
+
+        // Jumuaa Workflow
+        RepeatingWorkflowItem(
+          builder: (context, next) => JumuaaWorkflowScreen(onDone: next),
+          repeatingDuration: 7.days,
+          dateTime: mosqueManager.activeJumuaaDate(),
+          showInitial: () {
+            final activeJumuaaDate = mosqueManager.activeJumuaaDate();
+
+            if (now.isBefore(activeJumuaaDate)) return false;
+
+            /// If user opens the app during the Jumuaa time then show the Jumuaa workflow
+            /// give 30 minutes for the Jumuaa
+            return now.isAfter(activeJumuaaDate.add(Duration(minutes: mosqueManager.mosqueConfig!.jumuaTimeout ?? 30)));
+          },
+        )
+      ],
+    );
   }
 
   /// show online home if enabled
