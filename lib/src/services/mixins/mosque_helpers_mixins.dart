@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/models/announcement.dart';
@@ -19,8 +18,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   abstract Times? times;
   abstract MosqueConfig? mosqueConfig;
 
-  abstract HomeActiveWorkflow workflow;
-
   /// this will be set from the [NetworkConnectivity] mixin
   /// because we use in the [activeAnnouncements] getter
   bool get isOnline;
@@ -32,33 +29,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
         S.current.maghrib,
         S.current.isha,
       ][index];
-
-  calculateActiveWorkflow() {
-    if (jumuaaWorkflowTime()) {
-      workflow = HomeActiveWorkflow.jumuaa;
-    } else if (salahWorkflow()) {
-      workflow = HomeActiveWorkflow.salah;
-    } else {
-      workflow = HomeActiveWorkflow.normal;
-    }
-
-    notifyListeners();
-  }
-
-  backToNormalHomeScreen() {
-    workflow = HomeActiveWorkflow.normal;
-    notifyListeners();
-  }
-
-  startSalahWorkflow() {
-    if (nextIqamaIndex() == 1 && mosqueDate().weekday == DateTime.friday && typeIsMosque) {
-      workflow = HomeActiveWorkflow.jumuaa;
-    } else {
-      workflow = HomeActiveWorkflow.salah;
-    }
-
-    notifyListeners();
-  }
 
   bool isDisableHadithBetweenSalah() {
     final disableTime = mosqueConfig?.randomHadithIntervalDisabling ?? '';
