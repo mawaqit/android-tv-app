@@ -1,8 +1,26 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:mawaqit/src/helpers/AppDate.dart';
 
 extension StringTimeUtils on String {
+  /// convert xx:xx to today date
+  DateTime toTodayDate([DateTime? today, DateTime? tryOffset]) {
+    today ??= AppDateTime.now();
+
+    try {
+      return DateFormat('HH:mm').parse(this, true).copyWith(year: today.year, month: today.month, day: today.day);
+    } on FormatException catch (e) {
+      if (tryOffset != null) {
+        final value = int.tryParse(this);
+        if (value != null) return tryOffset.add(Duration(minutes: value));
+      }
+
+      rethrow;
+    }
+  }
+
   /// expect value of xx:xx with
   /// incase of [tryOffset] handle also the relative timing in minutes like +5
   TimeOfDay? toTimeOfDay({DateTime? tryOffset, minimumMinutes = 0}) {
@@ -38,8 +56,7 @@ extension StringTimeUtils on String {
   /// expect value of +2 with date
   TimeOfDay? toTimeOffset(String time) {
     try {
-      return TimeOfDay.fromDateTime(
-          time.toTimeOfDay()!.toDate().add(Duration(minutes: int.parse(this))));
+      return TimeOfDay.fromDateTime(time.toTimeOfDay()!.toDate().add(Duration(minutes: int.parse(this))));
     } on FormatException catch (e) {}
 
     return null;
