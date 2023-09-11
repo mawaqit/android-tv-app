@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
+import 'package:collection/collection.dart';
 
 class Times {
   final String? jumua;
@@ -11,13 +13,41 @@ class Times {
   final bool hijriDateForceTo30;
   final bool jumuaAsDuhr;
   final int imsakNbMinBeforeFajr;
-  final String? shuruq;
+  // final String? shuruq;
 
   // final List<String> times;
+  @protected
   final List calendar;
+
+  @protected
   final List iqamaCalendar;
 
 //<editor-fold desc="Data Methods">
+
+  List<String> dayTimesStrings(DateTime date) => List.from(calendar[date.month + 1][date.day.toString()]!.take(6))..remove(1);
+
+  List<String> dayIqamaStrings(DateTime date) =>
+      List.from(iqamaCalendar[date.month + 1][date.day.toString()]!.take(6))..remove(1);
+
+  List<DateTime> dayTimes(DateTime date) => dayTimesStrings(date).map((e) => e.toTodayDate(date)).toList();
+
+  List<DateTime> dayIqamas(DateTime date) {
+    final times = dayTimes(date);
+    return dayIqamaStrings(date).mapIndexed((i, e) => e.toTodayDate(date, times[i])).toList();
+  }
+
+  DateTime daySalahTime(DateTime date, int salahIndex) => dayTimesStrings(date)[salahIndex].toTodayDate(date);
+
+  DateTime? dayIqamaTime(DateTime date, int salahIndex) => dayIqamaStrings(date)[salahIndex].toTodayDate(date);
+
+  /// return the shuruq time as a date
+  DateTime? shuruq([DateTime? date]) {
+    date ??= AppDateTime.now();
+
+    String time = calendar[date.month + 1][date.day.toString()]![1];
+
+    return time.toTodayDate(date);
+  }
 
   const Times({
     required this.jumua,
@@ -28,7 +58,6 @@ class Times {
     required this.hijriDateForceTo30,
     required this.jumuaAsDuhr,
     required this.imsakNbMinBeforeFajr,
-    required this.shuruq,
     // required this.times,
     required this.calendar,
     required this.iqamaCalendar,
@@ -47,8 +76,6 @@ class Times {
           hijriDateForceTo30 == other.hijriDateForceTo30 &&
           jumuaAsDuhr == other.jumuaAsDuhr &&
           imsakNbMinBeforeFajr == other.imsakNbMinBeforeFajr &&
-          shuruq == other.shuruq &&
-          // times == other.times &&
           calendar == other.calendar &&
           iqamaCalendar == other.iqamaCalendar);
 
@@ -62,8 +89,6 @@ class Times {
       hijriDateForceTo30.hashCode ^
       jumuaAsDuhr.hashCode ^
       imsakNbMinBeforeFajr.hashCode ^
-      shuruq.hashCode ^
-      // times.hashCode ^
       calendar.hashCode ^
       iqamaCalendar.hashCode;
 
@@ -78,58 +103,9 @@ class Times {
         ' hijriDateForceTo30: $hijriDateForceTo30,' +
         ' jumuaAsDuhr: $jumuaAsDuhr,' +
         ' imsakNbMinBeforeFajr: $imsakNbMinBeforeFajr,' +
-        ' shuruq: $shuruq,' +
-        // ' times: $times,' +
         ' calendar: $calendar,' +
         ' iqamaCalendar: $iqamaCalendar,' +
         '}';
-  }
-
-  Times copyWith({
-    String? jumua,
-    String? jumua2,
-    String? aidPrayerTime,
-    String? aidPrayerTime2,
-    int? hijriAdjustment,
-    bool? hijriDateForceTo30,
-    bool? jumuaAsDuhr,
-    int? imsakNbMinBeforeFajr,
-    String? shuruq,
-    List<String>? times,
-    List<Object>? calendar,
-    List<Object>? iqamaCalendar,
-  }) {
-    return Times(
-      jumua: jumua ?? this.jumua,
-      jumua2: jumua2 ?? this.jumua2,
-      aidPrayerTime: aidPrayerTime ?? this.aidPrayerTime,
-      aidPrayerTime2: aidPrayerTime2 ?? this.aidPrayerTime2,
-      hijriAdjustment: hijriAdjustment ?? this.hijriAdjustment,
-      hijriDateForceTo30: hijriDateForceTo30 ?? this.hijriDateForceTo30,
-      jumuaAsDuhr: jumuaAsDuhr ?? this.jumuaAsDuhr,
-      imsakNbMinBeforeFajr: imsakNbMinBeforeFajr ?? this.imsakNbMinBeforeFajr,
-      shuruq: shuruq ?? this.shuruq,
-      // times: times ?? this.times,
-      calendar: calendar ?? this.calendar,
-      iqamaCalendar: iqamaCalendar ?? this.iqamaCalendar,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'jumua': this.jumua,
-      'jumua2': this.jumua2,
-      'aidPrayerTime': this.aidPrayerTime,
-      'aidPrayerTime2': this.aidPrayerTime2,
-      'hijriAdjustment': this.hijriAdjustment,
-      'hijriDateForceTo30': this.hijriDateForceTo30,
-      'jumuaAsDuhr': this.jumuaAsDuhr,
-      'imsakNbMinBeforeFajr': this.imsakNbMinBeforeFajr,
-      'shuruq': this.shuruq,
-      // 'times': this.times,
-      'calendar': this.calendar,
-      'iqamaCalendar': this.iqamaCalendar,
-    };
   }
 
   factory Times.fromMap(Map<String, dynamic> map) {
@@ -142,7 +118,6 @@ class Times {
       hijriDateForceTo30: map['hijriDateForceTo30'] ?? false,
       jumuaAsDuhr: map['jumuaAsDuhr'] ?? false,
       imsakNbMinBeforeFajr: map['imsakNbMinBeforeFajr'] ?? 0,
-      shuruq: map['shuruq'],
       // times: List<String>.from(map['times']),
       calendar: map['calendar'],
       iqamaCalendar: map['iqamaCalendar'],

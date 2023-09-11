@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
+import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/models/announcement.dart';
@@ -79,27 +81,24 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   bool get isShurukTime {
-    final shrukDate = times?.shuruq?.toTimeOfDay()?.toDate(mosqueDate());
+    final shrukDate = times?.shuruq(AppDateTime.now());
 
     if (shrukDate == null) return false;
 
-    return mosqueDate().isAfter(actualTimes()[0]) && mosqueDate().isBefore(shrukDate);
+    return AppDateTime.now().isAfter(actualTimes()[0]) && AppDateTime.now().isBefore(shrukDate);
   }
 
   String getShurukInString(BuildContext context) {
-    final shurukTime = times!.shuruq!.toTimeOfDay()!.toDate(mosqueDate()).difference(mosqueDate());
+    final shurukTime = times!.shuruq(AppDateTime.now())!.difference(AppDateTime.now());
     return StringManager.getCountDownText(context, shurukTime, S.of(context).shuruk);
   }
 
   String? getShurukTimeString([DateTime? date]) {
-    date ??= mosqueDate();
-    if (useTomorrowTimes) date = date.add(Duration(days: 1));
+    final shuruq = times!.shuruq(AppDateTime.now());
 
-    final t = List.from(times!.calendar[date.month - 1][date.day.toString()]);
+    if (shuruq == null) return null;
 
-    if (t.length == 5) return times!.shuruq;
-
-    return t[1];
+    return DateFormat('HH:mm').format(shuruq);
   }
 
   bool get typeIsMosque {
@@ -218,15 +217,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
-  DateTime mosqueDate() => !kDebugMode
-      ? DateTime.now()
-      : DateTime.now().add(Duration(
-          days: 3,
-          hours: 3,
-        ));
-
-  /// used to test time
-  TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
+  @Deprecated('Use AppDateTime.now()')
+  DateTime mosqueDate() => AppDateTime.now();
 
   MawaqitHijriCalendar mosqueHijriDate(int? forceAdjustment) => MawaqitHijriCalendar.fromDateWithAdjustments(
         mosqueDate(),
@@ -255,7 +247,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   /// @Param [forceActualDuhr] force to use actual duhr time instead of jumua time during the friday
   List<String> timesOfDay(DateTime date, {bool forceActualDuhr = false}) {
-    List<String> t = List.from(times!.calendar[date.month - 1][date.day.toString()]);
+    List<String> t = times!.dayTimesStrings(date);
 
     if (t.length >= 6) t.removeAt(1);
     if (t.length > 5) t = t.sublist(0, 5);
@@ -277,11 +269,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   List<String> get tomorrowTimes => timesOfDay(mosqueDate().add(Duration(days: 1)));
 
-  List<String> iqamasOfDay(DateTime date) {
-    final todayIqama = times!.iqamaCalendar[date.month - 1][date.day.toString()].cast<String>();
-
-    return todayIqama;
-  }
+  @Deprecated('User Times.dayIqamaStrings')
+  List<String> iqamasOfDay(DateTime date) => times!.dayIqamaStrings(date);
 
   List<String> get todayIqama => iqamasOfDay(mosqueDate());
 
