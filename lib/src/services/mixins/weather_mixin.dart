@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
+import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/weather.dart';
@@ -10,16 +13,21 @@ mixin WeatherMixin on ChangeNotifier {
   Weather? weather;
   MosqueConfig? mosqueConfig;
 
-  Future<void> loadWeather(Mosque mosque) async {
-    if (mosque.uuid != null)
-      Api.getWeather(mosque.uuid!).then((value) {
-        weather = value;
-        notifyListeners();
-      }).catchError((e, stack) {
-        debugPrintStack(stackTrace: stack, label: e.toString());
-        weather = null;
-        notifyListeners();
-      });
+  StreamSubscription? _weatherSubscription;
+
+  void loadWeather(Mosque mosque) async {
+    if (mosque.uuid != null) {
+      _weatherSubscription?.cancel().catchError(() {});
+
+      _weatherSubscription = generateStream(Duration(hours: 1)).listen((event) => Api.getWeather(mosque.uuid!).then((value) {
+            weather = value;
+            notifyListeners();
+          }).catchError((e, stack) {
+            debugPrintStack(stackTrace: stack, label: e.toString());
+            weather = null;
+            notifyListeners();
+          }));
+    }
   }
 
   Color getColorFeeling() {
