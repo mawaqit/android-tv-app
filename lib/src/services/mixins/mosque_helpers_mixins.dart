@@ -9,6 +9,7 @@ import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:collection/collection.dart';
 
 import '../../../i18n/l10n.dart';
 import '../../models/mosque.dart';
@@ -19,8 +20,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   abstract Mosque? mosque;
   abstract Times? times;
   abstract MosqueConfig? mosqueConfig;
-
-  abstract HomeActiveWorkflow workflow;
 
   /// this will be set from the [NetworkConnectivity] mixin
   /// because we use in the [activeAnnouncements] getter
@@ -33,33 +32,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
         S.current.maghrib,
         S.current.isha,
       ][index];
-
-  calculateActiveWorkflow() {
-    if (jumuaaWorkflowTime()) {
-      workflow = HomeActiveWorkflow.jumuaa;
-    } else if (salahWorkflow()) {
-      workflow = HomeActiveWorkflow.salah;
-    } else {
-      workflow = HomeActiveWorkflow.normal;
-    }
-
-    notifyListeners();
-  }
-
-  backToNormalHomeScreen() {
-    workflow = HomeActiveWorkflow.normal;
-    notifyListeners();
-  }
-
-  startSalahWorkflow() {
-    if (nextIqamaIndex() == 1 && mosqueDate().weekday == DateTime.friday && typeIsMosque) {
-      workflow = HomeActiveWorkflow.jumuaa;
-    } else {
-      workflow = HomeActiveWorkflow.salah;
-    }
-
-    notifyListeners();
-  }
 
   bool isDisableHadithBetweenSalah() {
     final disableTime = mosqueConfig?.randomHadithIntervalDisabling ?? '';
@@ -122,18 +94,20 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// get today salah prayer times as a list of times
-  List<DateTime> actualTimes() => todayTimes.map((e) => e.toTimeOfDay()!.toDate(mosqueDate())).toList();
+  List<DateTime> actualTimes([DateTime? date]) {
+    date ??= mosqueDate();
+
+    return timesOfDay(date).map((e) => e.toTimeOfDay()!.toDate(date)).toList();
+  }
 
   /// get today iqama prayer times as a list of times
-  List<DateTime> actualIqamaTimes() => [
-        for (var i = 0; i < 5; i++)
-          todayIqama[i]
-              .toTimeOfDay(
-                tryOffset: todayTimes[i].toTimeOfDay()!.toDate(mosqueDate()),
-                // minimumMinutes: 3,
-              )!
-              .toDate(mosqueDate()),
-      ];
+  List<DateTime> actualIqamaTimes([DateTime? date]) {
+    date ??= mosqueDate();
+
+    final times = actualTimes(date);
+
+    return iqamasOfDay(date).mapIndexed((i, e) => e.toTimeOfDay(tryOffset: times[i])!.toDate(date)).toList();
+  }
 
   /// return the upcoming salah index
   /// return -1 in case of issue(invalid times format)
@@ -217,8 +191,11 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   /// used to test time
+  TimeOfDay mosqueTimeOfDay() => TimeOfDay.fromDateTime(mosqueDate());
+
   @Deprecated('Use AppDateTime.now()')
   DateTime mosqueDate() => AppDateTime.now();
+
 
   MawaqitHijriCalendar mosqueHijriDate(int? forceAdjustment) => MawaqitHijriCalendar.fromDateWithAdjustments(
         mosqueDate(),
@@ -279,6 +256,23 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// if jumua as duhr return jumua
   String? get jumuaTime {
     return times!.jumuaAsDuhr ? todayTimes[1] : times!.jumua;
+  }
+
+  DateTime nextFridayDate([DateTime? now]) {
+    now ??= mosqueDate();
+
+    return now.add(Duration(days: (7 - now.weekday + DateTime.friday) % 7));
+  }
+
+  /// return next Jumuaa date
+  /// if today is Jumuaa return today jumuaa date
+  /// else return next friday date
+  DateTime activeJumuaaDate([DateTime? now]) {
+    final nextFriday = nextFridayDate(now);
+
+    final jumuaaTime = times!.jumuaAsDuhr ? timesOfDay(nextFriday)[1] : times!.jumua;
+
+    return jumuaaTime!.toTimeOfDay()!.toDate(nextFriday);
   }
 
   /// if the iqama is less than 2min

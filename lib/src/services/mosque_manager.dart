@@ -6,7 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
-import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
@@ -31,12 +30,7 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 const kAzkarDuration = const Duration(seconds: 140);
 
 class MosqueManager extends ChangeNotifier
-    with
-        WeatherMixin,
-        AudioMixin,
-        MosqueHelpersMixin,
-        NetworkConnectivity,
-        RandomHadithMixin {
+    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity, RandomHadithMixin {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -51,8 +45,6 @@ class MosqueManager extends ChangeNotifier
   StreamSubscription? _mosqueSubscription;
   StreamSubscription? _timesSubscription;
   StreamSubscription? _configSubscription;
-
-  HomeActiveWorkflow workflow = HomeActiveWorkflow.normal;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -74,7 +66,6 @@ class MosqueManager extends ChangeNotifier
   Future<void> setMosqueUUid(String uuid) async {
     try {
       await fetchMosque(uuid);
-      calculateActiveWorkflow();
 
       _saveToLocale();
 
@@ -100,7 +91,6 @@ class MosqueManager extends ChangeNotifier
     mosqueUUID = await sharedPref.read('mosqueUUId');
     if (mosqueUUID != null) {
       await fetchMosque(mosqueUUID!);
-      calculateActiveWorkflow();
     }
   }
 
@@ -175,19 +165,15 @@ class MosqueManager extends ChangeNotifier
     mosqueUUID = uuid;
   }
 
-  Future<Mosque> searchMosqueWithId(String mosqueId) =>
-      Api.searchMosqueWithId(mosqueId);
+  Future<Mosque> searchMosqueWithId(String mosqueId) => Api.searchMosqueWithId(mosqueId);
 
-  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async =>
-      Api.searchMosques(mosque, page: page);
+  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async => Api.searchMosques(mosque, page: page);
 
 //todo handle page and get more
   Future<List<Mosque>> searchWithGps() async {
-    final position =
-        await getCurrentLocation().catchError((e) => throw GpsError());
+    final position = await getCurrentLocation().catchError((e) => throw GpsError());
 
-    final url = Uri.parse(
-        "$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
+    final url = Uri.parse("$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
     Map<String, String> requestHeaders = {
       // "Api-Access-Token": mawaqitApiToken,
     };
@@ -214,9 +200,7 @@ class MosqueManager extends ChangeNotifier
   }
 
   Future<Position> getCurrentLocation() async {
-    var enabled = await GeolocatorPlatform.instance
-        .isLocationServiceEnabled()
-        .timeout(Duration(seconds: 5));
+    var enabled = await GeolocatorPlatform.instance.isLocationServiceEnabled().timeout(Duration(seconds: 5));
 
     if (!enabled) {
       enabled = await GeolocatorPlatform.instance.openLocationSettings();
@@ -224,8 +208,7 @@ class MosqueManager extends ChangeNotifier
     if (!enabled) throw GpsError();
 
     final permission = await GeolocatorPlatform.instance.requestPermission();
-    if (permission == LocationPermission.deniedForever ||
-        permission == LocationPermission.denied) throw GpsError();
+    if (permission == LocationPermission.deniedForever || permission == LocationPermission.denied) throw GpsError();
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }
@@ -240,16 +223,11 @@ class MosqueManager extends ChangeNotifier
       mosque?.exteriorPicture,
       mosqueConfig?.motifUrl,
       kFooterQrLink,
-      ...mosque?.announcements
-              .map((e) => e.image)
-              .where((element) => element != null) ??
-          <String>[],
+      ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
     ].where((e) => e != null).cast<String>();
 
     /// some images isn't existing anymore so we will ignore errors
-    final futures = images
-        .map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {}))
-        .toList();
+    final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
     await Future.wait(futures);
   }
 }

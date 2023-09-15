@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/enum/home_active_screen.dart';
@@ -8,12 +9,15 @@ import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
+import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
+import 'package:mawaqit/src/pages/home/workflow/app_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
 import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 import '../HomeScreen.dart';
 
@@ -41,17 +45,6 @@ class OfflineHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget activeWorkflow(MosqueManager mosqueManager) {
-    switch (mosqueManager.workflow) {
-      case HomeActiveWorkflow.normal:
-        return NormalWorkflowScreen();
-      case HomeActiveWorkflow.salah:
-        return SalahWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
-      case HomeActiveWorkflow.jumuaa:
-        return JumuaaWorkflowScreen(onDone: mosqueManager.backToNormalHomeScreen);
-    }
-  }
-
   /// show online home if enabled
   /// show announcement mode if enabled
   /// show offline home if enabled
@@ -64,7 +57,10 @@ class OfflineHomeScreen extends StatelessWidget {
 
     if (announcementMode) return AnnouncementScreen();
 
-    return activeWorkflow(mosqueManager);
+    final now = mosqueManager.mosqueDate();
+    return AppWorkflowScreen(
+      key: ValueKey(now.day ^ now.month ^ now.year ^ (mosqueManager.mosque?.id ?? 1)),
+    );
   }
 
   @override
