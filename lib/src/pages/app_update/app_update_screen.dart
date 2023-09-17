@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:mawaqit/main.dart';
+import 'package:flutter/services.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
+
+const kChannel = 'com.mawaqit.androidTv/updater';
 
 class AppUpdateScreen extends StatefulWidget {
   const AppUpdateScreen({super.key});
@@ -15,22 +15,10 @@ class AppUpdateScreen extends StatefulWidget {
 class _AppUpdateScreenState extends State<AppUpdateScreen> {
   double value = 0;
 
-  checkIfThereAreAnOldDownloadedVersion() async {}
-
-  updateProgress(double value) => setState(() => this.value = value);
-
   downloadApk() async {
-    final url = await Api.downloadApk(onProgress: updateProgress);
+    await Api.downloadApk(onProgress: (value) => setState(() => this.value = value));
 
-    final oldFile = File(url);
-
-    logger.d("oldFile: $url");
-
-    // final installer = FlutterAppInstaller();
-    // if (await oldFile.exists())
-    //   await installer.installApk(filePath: url.replaceAll('/data', ''));
-    // else
-    //   logger.d("File not found $url");
+    final channel = MethodChannel(kChannel).invokeMethod('UPDATE_APK');
   }
 
   @override

@@ -78,6 +78,8 @@ mixin UpdateManagerDialogsMixin on UpdateManager {
     required String oldVersion,
     required String newVersion,
   }) {
+    if(oldVersion == newVersion) return false;
+    
     final oldVersionComponents = oldVersion
         .replaceAll(RegExp('-.*'), '')
         .replaceAll('\+.*', '')

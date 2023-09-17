@@ -1,5 +1,4 @@
 import 'package:google_api_availability/google_api_availability.dart';
-import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/services/update_manager/google_play_manager.dart';
 import 'package:mawaqit/src/services/update_manager/mawaqit_update_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -22,12 +21,10 @@ abstract class UpdateManager {
   }
 
   Future<void> init() async {
-    final hasGooglePlay = await GoogleApiAvailability.instance
-        .checkGooglePlayServicesAvailability();
+    final hasGooglePlay = await GoogleApiAvailability.instance.checkGooglePlayServicesAvailability();
 
     /// if user have google play use it to update the app
-    if (hasGooglePlay == GooglePlayServicesAvailability.success)
-      _instance = GooglePlayUpdateImpl();
+    if (hasGooglePlay == GooglePlayServicesAvailability.success) _instance = GooglePlayUpdateImpl();
 
     final newVersion = await checkForUpdate();
     if (newVersion == null) return;
@@ -50,8 +47,7 @@ abstract class UpdateManager {
     required String newVersion,
   });
 
-  Future<String> currentAppVersion() =>
-      PackageInfo.fromPlatform().then((value) => value.version);
+  Future<String> currentAppVersion() => PackageInfo.fromPlatform().then((value) => value.version);
 
   /// check to show the update dialog or not
   Future<bool> shouldShowUpdateDialog(String newVersion);
@@ -60,5 +56,7 @@ abstract class UpdateManager {
   Future<bool> showUpdateDialog(String newVersion);
 
   /// start the update process
+  /// open google play updater
+  /// or mawaqit download screen
   Future<void> startUpdate();
 }

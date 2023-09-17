@@ -1,31 +1,24 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 import 'dart:math';
-
-import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
-import 'package:flutter/material.dart';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
-
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
-import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:xml_parser/xml_parser.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:unique_identifier/unique_identifier.dart';
+import 'package:xml_parser/xml_parser.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
@@ -242,7 +235,7 @@ class Api {
 
   /// downloaded apk will be saved in the cache folder under the name mawaqit.apk
   static Future<String> downloadApk({ValueChanged<double>? onProgress}) async {
-    final dir = await getApplicationSupportDirectory().logPerformance('get application dir');
+    final dir = await getApplicationSupportDirectory();
 
     final oldFile = File('${dir.path}/mawaqit.apk');
     if (await oldFile.exists()) await oldFile.delete();
@@ -250,7 +243,7 @@ class Api {
     await dio.download('https://get.mawaqit.net/apk/tv', '${dir.path}/mawaqit.apk', onReceiveProgress: (count, total) {
       final progress = count / total * 100;
       onProgress?.call(progress);
-    }).catchError(logger.e);
+    });
 
     return '${dir.path}/mawaqit.apk';
   }
