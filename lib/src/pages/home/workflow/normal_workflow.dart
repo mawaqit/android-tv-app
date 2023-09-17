@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
@@ -25,32 +23,6 @@ class NormalWorkflowScreen extends StatefulWidget {
 }
 
 class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
-  Future? nextSalahFuture;
-
-  /// this function will trigger the next salah workflow
-  nextSalahHandler() {
-    nextSalahFuture?.ignore();
-
-    final mosqueManager = context.read<MosqueManager>();
-
-    nextSalahFuture = Future.delayed(mosqueManager.nextSalahAfter() - Duration(minutes: 5));
-    nextSalahFuture?.then((value) => mosqueManager.startSalahWorkflow());
-  }
-
-  @override
-  void initState() {
-    nextSalahHandler();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    nextSalahFuture?.ignore();
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
@@ -99,9 +71,9 @@ class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
           showInitial: () {
             final now = mosqueManager.mosqueDate();
 
-            final differece = now.difference(mosqueManager.actualTimes()[0]);
+            final difference = now.difference(mosqueManager.actualTimes()[0]);
 
-            return differece > 1.hours && differece < 3.hours;
+            return difference > 1.hours && difference < 3.hours;
           },
         ),
       ],
