@@ -10,7 +10,7 @@ extension StringTimeUtils on String {
     today ??= AppDateTime.now();
 
     try {
-      return DateFormat('HH:mm').parse(this, true).copyWith(year: today.year, month: today.month, day: today.day);
+      return DateFormat('HH:mm').parse(this).copyWith(year: today.year, month: today.month, day: today.day);
     } on FormatException catch (e) {
       if (tryOffset != null) {
         final value = int.tryParse(this);

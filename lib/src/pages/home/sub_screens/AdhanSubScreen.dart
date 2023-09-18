@@ -79,7 +79,7 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
                 fit: BoxFit.scaleDown,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(MawaqitIcons.icon_adhan, size: 12.vw)
                         .animate()

@@ -56,7 +56,7 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
                   children: [
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: 15.vw,
+                      size: 12.vw,
                       shadows: kHomeTextShadow,
                       color: Colors.white,
                     ).animate().slideX(begin: -2).addRepaintBoundary(),
@@ -81,7 +81,7 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
                     ),
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: 15.vw,
+                      size: 12.vw,
                       shadows: kHomeTextShadow,
                       color: Colors.white,
                     ).animate().slideX(begin: 2).addRepaintBoundary(),

@@ -1,8 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
-import 'package:collection/collection.dart';
 
 class Times {
   final String? jumua;
@@ -24,10 +23,10 @@ class Times {
 
 //<editor-fold desc="Data Methods">
 
-  List<String> dayTimesStrings(DateTime date) => List.from(calendar[date.month + 1][date.day.toString()]!.take(6))..remove(1);
+  List<String> dayTimesStrings(DateTime date) => List.from(calendar[date.month - 1][date.day.toString()]!.take(6))..remove(1);
 
   List<String> dayIqamaStrings(DateTime date) =>
-      List.from(iqamaCalendar[date.month + 1][date.day.toString()]!.take(6))..remove(1);
+      List.from(iqamaCalendar[date.month - 1][date.day.toString()]!.take(6))..remove(1);
 
   List<DateTime> dayTimes(DateTime date) => dayTimesStrings(date).map((e) => e.toTodayDate(date)).toList();
 
@@ -44,7 +43,7 @@ class Times {
   DateTime? shuruq([DateTime? date]) {
     date ??= AppDateTime.now();
 
-    String time = calendar[date.month + 1][date.day.toString()]![1];
+    String time = calendar[date.month - 1][date.day.toString()]![1];
 
     return time.toTodayDate(date);
   }
