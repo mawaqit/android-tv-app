@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
@@ -58,7 +57,6 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.read<MosqueManager>();
-    final nextIqama = mosqueManager.nextIqamaaAfter();
 
     final tr = S.of(context);
 
@@ -94,7 +92,7 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
         StreamBuilder(
             stream: Stream.periodic(Duration(seconds: 1)),
             builder: (context, snapshot) {
-              final remaining = nextIqama;
+              final remaining = mosqueManager.nextIqamaaAfter();
               if (remaining <= Duration.zero) {
                 Future.delayed(Duration(milliseconds: 80), widget.onDone);
               }
