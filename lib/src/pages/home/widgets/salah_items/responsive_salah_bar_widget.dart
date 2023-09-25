@@ -100,29 +100,32 @@ class ResponsiveSalahBarWidget extends StatelessOrientationWidget {
 
     return Column(
       children: [
-        SizedBox(height: 2.vh),
         if (imsakForTurkish != null)
-          HorizontalSalahItem(
-            time: imsakForTurkish,
-            title: S.of(context).imsak,
-            iqama: '',
-            removeBackground: true,
+          Expanded(
+            child: HorizontalSalahItem(
+              time: imsakForTurkish,
+              title: S.of(context).imsak,
+              iqama: '',
+              removeBackground: true,
+            ),
           ),
         for (var i = 0; i < 5; i++)
-          HorizontalSalahItem(
-            title: mosqueProvider.salahName(i),
-            time: todayTimes[i],
-            iqama: todayIqama[i],
-            active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
-            withDivider: false,
-            removeBackground: true,
-            showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-            isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
-          )
-              .animate(delay: _step * i)
-              .fadeIn(duration: _duration)
-              .slideX(begin: 1, duration: _duration, curve: Curves.easeOut)
-              .addRepaintBoundary(),
+          Expanded(
+            child: HorizontalSalahItem(
+              title: mosqueProvider.salahName(i),
+              time: todayTimes[i],
+              iqama: todayIqama[i],
+              active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
+              withDivider: false,
+              removeBackground: true,
+              showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
+              isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
+            )
+                .animate(delay: _step * i)
+                .fadeIn(duration: _duration)
+                .slideX(begin: 1, duration: _duration, curve: Curves.easeOut)
+                .addRepaintBoundary(),
+          ),
       ],
     );
   }
