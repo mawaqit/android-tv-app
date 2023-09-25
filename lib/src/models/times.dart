@@ -23,7 +23,25 @@ class Times {
 
 //<editor-fold desc="Data Methods">
 
-  List<String> dayTimesStrings(DateTime date) => List.from(calendar[date.month - 1][date.day.toString()]!.take(6))..remove(1);
+  bool get isTurki => dayTimesStrings(AppDateTime.now(), salahOnly: false).length == 7;
+
+  /// if [salahOnly] is true, it will return only the salah times, otherwise it will return all the times including Sabah(turki) and shuruq
+  List<String> dayTimesStrings(DateTime date, {bool salahOnly = true}) {
+    final dayTimes = List<String>.from(calendar[date.month - 1][date.day.toString()]);
+
+    if (!salahOnly) return dayTimes;
+
+    /// turki uses 7 times, so we remove the first one
+    if (dayTimes.length == 7) {
+      // remove fajr as its not used for adhan calculations
+      dayTimes.removeAt(0);
+    }
+
+    // remove shuruq as its not used for adhan calculations
+    dayTimes.removeAt(1);
+
+    return dayTimes;
+  }
 
   List<String> dayIqamaStrings(DateTime date) =>
       List.from(iqamaCalendar[date.month - 1][date.day.toString()]!.take(6))..remove(1);
@@ -117,7 +135,6 @@ class Times {
       hijriDateForceTo30: map['hijriDateForceTo30'] ?? false,
       jumuaAsDuhr: map['jumuaAsDuhr'] ?? false,
       imsakNbMinBeforeFajr: map['imsakNbMinBeforeFajr'] ?? 0,
-      // times: List<String>.from(map['times']),
       calendar: map['calendar'],
       iqamaCalendar: map['iqamaCalendar'],
     );

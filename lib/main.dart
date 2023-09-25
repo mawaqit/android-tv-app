@@ -12,6 +12,7 @@ import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
+import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/ConnectivityService.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
@@ -41,6 +42,8 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Api.getMosqueTimes('626cf81c-ebf1-4f4f-8ad0-5fc840f9c14b')
+        .then((value) => value.dayTimesStrings(AppDateTime.now(), salahOnly: false));
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),

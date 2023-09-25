@@ -47,7 +47,6 @@ class SalahItemWidget extends StatelessWidget {
     final is12period = mosqueConfig?.timeDisplayFormat == "12";
 
     return Container(
-      width: 16.vwr,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2.vw),
         color: active
