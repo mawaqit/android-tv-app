@@ -37,9 +37,7 @@ class SalahInWidget extends StatelessWidget {
         Icon(MawaqitIcons.icon_adhan, color: Colors.white, size: 2.3.vwr),
         Container(
           constraints: BoxConstraints(maxWidth: 30.vwr),
-          padding: EdgeInsets.symmetric(
-            horizontal: 1.45.vwr,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 1.45.vwr),
           child: FittedBox(
             child: !mosqueManager.isShurukTime
                 ? Text(
