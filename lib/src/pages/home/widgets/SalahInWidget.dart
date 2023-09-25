@@ -30,14 +30,11 @@ class SalahInWidget extends StatelessWidget {
     );
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
       mainAxisSize: MainAxisSize.min,
+      textBaseline: TextBaseline.alphabetic,
       children: [
-        Icon(
-          MawaqitIcons.icon_adhan,
-          color: Colors.white,
-          size: 2.3.vwr,
-        ),
+        Icon(MawaqitIcons.icon_adhan, color: Colors.white, size: 2.3.vwr),
         Container(
           constraints: BoxConstraints(maxWidth: 30.vwr),
           padding: EdgeInsets.symmetric(
