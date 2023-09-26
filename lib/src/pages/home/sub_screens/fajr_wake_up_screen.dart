@@ -36,6 +36,12 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
   }
 
   @override
+  void dispose() {
+    context.read<AudioManager>().stop();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
     final mosque = mosqueProvider.mosque!;

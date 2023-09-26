@@ -58,6 +58,7 @@ class SalahItemWidget extends StatelessOrientationWidget {
       ),
       padding: EdgeInsets.symmetric(vertical: 1.6.vr, horizontal: 1.vwr),
       child: FittedBox(
+        alignment: Alignment.topCenter,
         fit: BoxFit.scaleDown,
         child: Column(
           mainAxisSize: MainAxisSize.min,
