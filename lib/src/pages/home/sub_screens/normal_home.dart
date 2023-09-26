@@ -66,20 +66,28 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
           child: Column(
             children: [
               SizedBox(height: 2.vh),
-              Expanded(child: ResponsiveSalahBarWidget()),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ShurukWidget().animate().slideX().fadeIn().addRepaintBoundary(),
-                  SalahItemWidget(
-                    title: S.of(context).jumua,
-                    time: mosqueProvider.jumuaTime ?? "",
-                    iqama: mosqueProvider.times!.jumua2,
-                    active: mosqueProvider.nextIqamaIndex() == 1 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
-                    removeBackground: true,
-                  ).animate().slideX(begin: 1).fadeIn().addRepaintBoundary(),
-                ],
+              Expanded(
+                flex: 6,
+                child: ResponsiveSalahBarWidget(),
+              ),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ShurukWidget().animate().slideX().fadeIn().addRepaintBoundary(),
+                    FittedBox(
+                      child: SalahItemWidget(
+                        title: S.of(context).jumua,
+                        time: mosqueProvider.jumuaTime ?? "",
+                        iqama: mosqueProvider.times!.jumua2,
+                        active: mosqueProvider.nextIqamaIndex() == 1 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
+                        removeBackground: true,
+                      ).animate().slideX(begin: 1).fadeIn().addRepaintBoundary(),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
