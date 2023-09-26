@@ -57,12 +57,13 @@ class SalahItemWidget extends StatelessOrientationWidget {
                 : Colors.black.withOpacity(.5),
       ),
       padding: EdgeInsets.symmetric(vertical: 1.6.vr, horizontal: 1.vwr),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (title != null && title!.trim().isNotEmpty)
-            FittedBox(
-              child: Text(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (title != null && title!.trim().isNotEmpty)
+              Text(
                 maxLines: 1,
                 title ?? "",
                 style: TextStyle(
@@ -72,14 +73,11 @@ class SalahItemWidget extends StatelessOrientationWidget {
                   height: 1.5,
                 ),
               ),
-            ),
-          SizedBox(height: 1.vr),
-          if (time.trim().isEmpty)
-            Icon(Icons.dnd_forwardslash, size: 6.vwr)
-          else
-            FittedBox(
-              fit: BoxFit.fitHeight,
-              child: TimeWidget.fromString(
+            SizedBox(height: 1.vr),
+            if (time.trim().isEmpty)
+              Icon(Icons.dnd_forwardslash, size: 6.vwr)
+            else
+              TimeWidget.fromString(
                 show24hFormat: !is12period,
                 time: time,
                 style: TextStyle(
@@ -90,19 +88,16 @@ class SalahItemWidget extends StatelessOrientationWidget {
                   // fontFamily: StringManager.getFontFamily(context),
                 ),
               ),
-            ),
-          if (iqama != null && showIqama)
-            SizedBox(
-              height: isArabic ? 1.5.vr : 1.3.vwr,
-              child: Divider(
-                thickness: 1,
-                color: withDivider ? Colors.white : Colors.transparent,
+            if (iqama != null && showIqama)
+              SizedBox(
+                height: isArabic ? 1.5.vr : 1.3.vwr,
+                child: Divider(
+                  thickness: 1,
+                  color: withDivider ? Colors.white : Colors.transparent,
+                ),
               ),
-            ),
-          if (iqama != null && showIqama)
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: TimeWidget.fromString(
+            if (iqama != null && showIqama)
+              TimeWidget.fromString(
                 show24hFormat: !is12period,
                 time: iqama!,
                 style: TextStyle(
@@ -113,8 +108,8 @@ class SalahItemWidget extends StatelessOrientationWidget {
                   color: Colors.white,
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -142,11 +137,12 @@ class SalahItemWidget extends StatelessOrientationWidget {
                 : Colors.black.withOpacity(.5),
       ),
       padding: EdgeInsets.symmetric(vertical: 1.6.vr, horizontal: 1.vwr),
-      child: Row(
-        children: [
-          if (title != null && title!.trim().isNotEmpty)
-            FittedBox(
-              child: Text(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          children: [
+            if (title != null && title!.trim().isNotEmpty)
+              Text(
                 maxLines: 1,
                 title ?? "",
                 style: TextStyle(
@@ -156,17 +152,14 @@ class SalahItemWidget extends StatelessOrientationWidget {
                   height: 1.5,
                 ),
               ),
-            ),
-          SizedBox(width: 2.vr),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (time.trim().isEmpty)
-                Icon(Icons.dnd_forwardslash, size: 6.vwr)
-              else
-                FittedBox(
-                  fit: BoxFit.fitHeight,
-                  child: TimeWidget.fromString(
+            SizedBox(width: 2.vr),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (time.trim().isEmpty)
+                  Icon(Icons.dnd_forwardslash, size: 6.vwr)
+                else
+                  TimeWidget.fromString(
                     show24hFormat: !is12period,
                     time: time,
                     style: TextStyle(
@@ -177,19 +170,16 @@ class SalahItemWidget extends StatelessOrientationWidget {
                       // fontFamily: StringManager.getFontFamily(context),
                     ),
                   ),
-                ),
-              if (iqama != null && showIqama)
-                SizedBox(
-                  height: isArabic ? 1.5.vr : 1.3.vwr,
-                  child: Divider(
-                    thickness: 1,
-                    color: withDivider ? Colors.white : Colors.transparent,
+                if (iqama != null && showIqama)
+                  SizedBox(
+                    height: isArabic ? 1.5.vr : 1.3.vwr,
+                    child: Divider(
+                      thickness: 1,
+                      color: withDivider ? Colors.white : Colors.transparent,
+                    ),
                   ),
-                ),
-              if (iqama != null && showIqama)
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: TimeWidget.fromString(
+                if (iqama != null && showIqama)
+                  TimeWidget.fromString(
                     show24hFormat: !is12period,
                     time: iqama!,
                     style: TextStyle(
@@ -200,10 +190,10 @@ class SalahItemWidget extends StatelessOrientationWidget {
                       color: Colors.white,
                     ),
                   ),
-                ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

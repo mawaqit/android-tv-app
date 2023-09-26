@@ -77,15 +77,13 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     ShurukWidget().animate().slideX().fadeIn().addRepaintBoundary(),
-                    FittedBox(
-                      child: SalahItemWidget(
-                        title: S.of(context).jumua,
-                        time: mosqueProvider.jumuaTime ?? "",
-                        iqama: mosqueProvider.times!.jumua2,
-                        active: mosqueProvider.nextIqamaIndex() == 1 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
-                        removeBackground: true,
-                      ).animate().slideX(begin: 1).fadeIn().addRepaintBoundary(),
-                    ),
+                    SalahItemWidget(
+                      title: S.of(context).jumua,
+                      time: mosqueProvider.jumuaTime ?? "",
+                      iqama: mosqueProvider.times!.jumua2,
+                      active: mosqueProvider.nextIqamaIndex() == 1 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
+                      removeBackground: true,
+                    ).animate().slideX(begin: 1).fadeIn().addRepaintBoundary(),
                   ],
                 ),
               ),
