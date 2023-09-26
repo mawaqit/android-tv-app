@@ -163,5 +163,7 @@
   "hijriAdjustments": "Local Hijri adjustments",
   "hijriAdjustmentsDescription": "Adjust the hijri date locally in your device. This will not affect the online mosque settings",
   "backoffice_default": "Backoffice Defaults",
-  "recommended": "Recommended"
+  "recommended": "Recommended",
+  "sabah": "Sabah"
 }
+ 

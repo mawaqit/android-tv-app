@@ -23,7 +23,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   bool get isOnline;
 
   salahName(int index) => [
-        S.current.fajr,
+        times!.isTurki ? S.current.sabah : S.current.fajr,
         S.current.duhr,
         S.current.asr,
         S.current.maghrib,
