@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
@@ -206,17 +205,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     /// isha might be after midnight so we need to check if it's after fajr
     return now.isAfter(isha) && isha.isAfter(fajr);
-  }
-
-  List<String> salahBarTimes() {
-    if (useTomorrowTimes) {
-      return timesOfDay(
-        mosqueDate().add(1.days),
-        forceActualDuhr: true,
-      );
-    } else {
-      return timesOfDay(mosqueDate(), forceActualDuhr: true);
-    }
   }
 
   /// @Param [forceActualDuhr] force to use actual duhr time instead of jumua time during the friday
