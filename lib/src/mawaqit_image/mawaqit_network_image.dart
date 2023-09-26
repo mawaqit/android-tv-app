@@ -19,9 +19,17 @@ class MawaqitNetworkImage extends Image {
     super.filterQuality = FilterQuality.low,
     super.frameBuilder,
     super.loadingBuilder,
-    super.errorBuilder,
+    super.errorBuilder = _defaultImageBuild,
     super.isAntiAlias = false,
     super.key,
     super.opacity,
   }) : super(image: MawaqitNetworkImageProvider(imageUrl));
+
+  static Widget _defaultImageBuild(
+    BuildContext context,
+    Object error,
+    StackTrace? stackTrace,
+  ) {
+    return SizedBox.shrink();
+  }
 }
