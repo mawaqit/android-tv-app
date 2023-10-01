@@ -51,6 +51,7 @@ class ResponsiveSalahBarWidget extends StatelessOrientationWidget {
                 child: SalahItemWidget(
                   time: imsakForTurkish,
                   title: S.of(context).imsak,
+                  withDivider: false,
                 )
                     .animate()
                     .fadeIn(duration: _duration)

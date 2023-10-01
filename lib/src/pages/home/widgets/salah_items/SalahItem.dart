@@ -48,6 +48,7 @@ class SalahItemWidget extends StatelessOrientationWidget {
     final is12period = mosqueConfig?.timeDisplayFormat == "12";
 
     return Container(
+      margin: EdgeInsets.all(1.vw),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2.vw),
         color: active
@@ -78,23 +79,23 @@ class SalahItemWidget extends StatelessOrientationWidget {
             if (time.trim().isEmpty)
               Icon(Icons.dnd_forwardslash, size: 6.vwr)
             else
-              TimeWidget.fromString(
-                show24hFormat: !is12period,
-                time: time,
-                style: TextStyle(
-                  fontSize: isIqamaMoreImportant ? smallFont : bigFont,
-                  fontWeight: FontWeight.w700,
-                  shadows: kHomeTextShadow,
-                  color: Colors.white,
-                  // fontFamily: StringManager.getFontFamily(context),
-                ),
-              ),
-            if (iqama != null && showIqama)
-              SizedBox(
-                height: isArabic ? 1.5.vr : 1.3.vwr,
-                child: Divider(
-                  thickness: 1,
-                  color: withDivider ? Colors.white : Colors.transparent,
+              Container(
+                decoration: (iqama != null && showIqama && withDivider)
+                    ? BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Colors.white, width: 1)),
+                      )
+                    : null,
+                child: TimeWidget.fromString(
+                  show24hFormat: !is12period,
+                  time: time,
+                  style: TextStyle(
+                    fontSize: isIqamaMoreImportant ? smallFont : bigFont,
+                    fontWeight: FontWeight.w700,
+                    shadows: kHomeTextShadow,
+                    color: Colors.white,
+                    height: 1,
+                    // fontFamily: StringManager.getFontFamily(context),
+                  ),
                 ),
               ),
             if (iqama != null && showIqama)
@@ -179,6 +180,15 @@ class SalahItemWidget extends StatelessOrientationWidget {
                       color: withDivider ? Colors.white : Colors.transparent,
                     ),
                   ),
+                // if (iqama != null && showIqama)
+                // SizedBox(
+                //   height: isArabic ? 1.5.vr : 1.3.vwr,
+                //   width: 100,
+                //   child: Divider(
+                //     thickness: 1,
+                //     color: withDivider ? Colors.white : Colors.transparent,
+                //   ),
+                // ),
                 if (iqama != null && showIqama)
                   TimeWidget.fromString(
                     show24hFormat: !is12period,
