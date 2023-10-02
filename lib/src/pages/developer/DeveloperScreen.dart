@@ -28,6 +28,8 @@ import 'package:provider/provider.dart';
 
 typedef ForcedScreen = ({WidgetBuilder builder, String name});
 
+typedef TestMosque = ({String name, String uuid});
+
 /// this screen made to speed up the development process
 /// user can force to use specific screen
 /// user can change mosque language or mosque from the screen
@@ -41,6 +43,13 @@ class DeveloperScreen extends StatefulWidget {
 class _DeveloperScreenState extends State<DeveloperScreen> {
   ForcedScreen? forcedScreen;
   StreamSubscription? walkThrowScreensSubscription;
+
+  static const testMosques = <TestMosque>[
+    (name: "Test Mosque", uuid: "8e8a41cf-62d4-4890-9454-120d27b229e1"),
+    (name: "Mosquee El Falah", uuid: "6e8cc6b6-901a-4271-a5f7-818a1fa20a34"),
+    (name: "Mosquee Le Grand Quevilly", uuid: "dbfd7ccf-70da-49f3-93a9-a4a7e8cccf04"),
+    (name: "[Staging] TEST ISTANBUL (10149)", uuid: "626cf81c-ebf1-4f4f-8ad0-5fc840f9c14b"),
+  ];
 
   List<ForcedScreen> get screens => [
         (builder: (context) => NormalHomeSubScreen(), name: S.current.normalScreen),
@@ -81,6 +90,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
       });
     });
   }
+
+  changeMosque(String uuid) => context.read<MosqueManager>().fetchMosque(uuid).catchError((e) {});
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +138,15 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
             SelectorOption(
               title: "Walk throw screens",
               onSelect: walkThrowScreens,
+            ),
+            SelectorOption(
+              title: "Change mosque ",
+              subOptions: testMosques
+                  .map((e) => SelectorOption(
+                        title: e.name,
+                        onSelect: () => changeMosque(e.uuid),
+                      ))
+                  .toList(),
             ),
             SelectorOption(
               title: S.of(context).forceScreen,
