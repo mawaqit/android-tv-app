@@ -41,41 +41,39 @@ class ResponsiveSalahBarWidget extends StatelessOrientationWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 3.vw),
-      child: IntrinsicHeight(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (imsakForTurkish != null)
-              Expanded(
-                child: SalahItemWidget(
-                  time: imsakForTurkish,
-                  title: S.of(context).imsak,
-                  withDivider: false,
-                )
-                    .animate()
-                    .fadeIn(duration: _duration)
-                    .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
-                    .addRepaintBoundary(),
-              ),
-            for (var i = 0; i < 5; i++)
-              Expanded(
-                child: SalahItemWidget(
-                  title: mosqueProvider.salahName(i),
-                  time: todayTimes[i],
-                  iqama: todayIqama[i],
-                  active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
-                  withDivider: false,
-                  showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
-                  isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
-                )
-                    .animate(delay: _step * (i + 1))
-                    .fadeIn(duration: _duration)
-                    .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
-                    .addRepaintBoundary(),
-              ),
-          ].addPadding(width: 1.vw),
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          if (imsakForTurkish != null)
+            Expanded(
+              child: SalahItemWidget(
+                time: imsakForTurkish,
+                title: S.of(context).imsak,
+                iqama: '',
+                withDivider: false,
+              )
+                  .animate()
+                  .fadeIn(duration: _duration)
+                  .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
+                  .addRepaintBoundary(),
+            ),
+          for (var i = 0; i < 5; i++)
+            Expanded(
+              child: SalahItemWidget(
+                title: mosqueProvider.salahName(i),
+                time: todayTimes[i],
+                iqama: todayIqama[i],
+                active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
+                withDivider: false,
+                showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
+                isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
+              )
+                  .animate(delay: _step * (i + 1))
+                  .fadeIn(duration: _duration)
+                  .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
+                  .addRepaintBoundary(),
+            ),
+        ].addPadding(width: 1.vw),
       ),
     );
   }
