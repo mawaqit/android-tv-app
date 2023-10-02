@@ -61,9 +61,10 @@ class Times {
   DateTime? shuruq([DateTime? date]) {
     date ??= AppDateTime.now();
 
-    String time = calendar[date.month - 1][date.day.toString()]![1];
+    final times = dayTimesStrings(date, salahOnly: false);
+    if (times.length == 7) times.removeAt(0);
 
-    return time.toTodayDate(date);
+    return times[1].toTodayDate(date);
   }
 
   const Times({
