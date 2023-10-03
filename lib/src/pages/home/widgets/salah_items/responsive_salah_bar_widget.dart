@@ -51,6 +51,8 @@ class ResponsiveSalahBarWidget extends StatelessOrientationWidget {
                 title: S.of(context).imsak,
                 iqama: '',
                 withDivider: false,
+                showIqama: mosqueProvider.mosqueConfig?.iqamaEnabled == true,
+                isIqamaMoreImportant: mosqueProvider.mosqueConfig?.iqamaMoreImportant ?? false,
               )
                   .animate()
                   .fadeIn(duration: _duration)
