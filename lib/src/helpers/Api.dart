@@ -118,10 +118,7 @@ class Api {
   }
 
   static Future<Times> getMosqueTimes(String id) async {
-    /// todo remove this after the api is deployed to production
-    final isStaging = dio.options.baseUrl.contains('staging');
-
-    final response = await dio.get('/${isStaging ? '3.1' : '3.0'}/mosque/$id/times');
+    final response = await dio.get('/3.1/mosque/$id/times');
 
     return Times.fromMap(response.data);
   }
