@@ -7,7 +7,7 @@ class WeatherIcons extends IconData {
     return _values[value] ??
         _values["day-$value"] ??
         _values["night-$value"] ??
-        degrees;
+        day_sunny;
   }
 
   factory WeatherIcons.fromStringWithDateNight(
@@ -26,7 +26,6 @@ class WeatherIcons extends IconData {
     "day-fog": day_fog,
     "day-hail": day_hail,
     "day-haze": day_haze,
-    "haze": day_haze,
     "day-lightning": day_lightning,
     "day-rain": day_rain,
     "day-rain-mix": day_rain_mix,
