@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
@@ -76,6 +75,7 @@ class MosqueManager extends ChangeNotifier
   }
 
   Future<void> _saveToLocale() async {
+    logger.d("Saving into local");
     // await sharedPref.save('mosqueId', mosqueId);
     await sharedPref.save('mosqueUUId', mosqueUUID);
     // sharedPref.save('mosqueSlug', mosqueSlug);
@@ -117,11 +117,15 @@ class MosqueManager extends ChangeNotifier
 
     /// cache date before complete the [completer]
     Future<void> completeFuture() async {
-      await Future.wait([
-        AudioManager().precacheVoices(mosqueConfig!),
-        preCacheImages(),
-        preCacheHadith(),
-      ]).catchError((e) {});
+      try {
+        await Future.wait([
+          AudioManager().precacheVoices(mosqueConfig!),
+          preCacheImages(),
+          preCacheHadith(),
+        ]);
+      } catch (e, stack) {
+        debugPrintStack(label: e.toString(), stackTrace: stack);
+      }
     }
 
     final mosqueStream = Api.getMosqueStream(uuid).asBroadcastStream();
