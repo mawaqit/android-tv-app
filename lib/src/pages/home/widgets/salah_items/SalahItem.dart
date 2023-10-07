@@ -179,16 +179,7 @@ class SalahItemWidget extends StatelessOrientationWidget {
                       thickness: 1,
                       color: withDivider ? Colors.white : Colors.transparent,
                     ),
-                  ),
-                // if (iqama != null && showIqama)
-                // SizedBox(
-                //   height: isArabic ? 1.5.vr : 1.3.vwr,
-                //   width: 100,
-                //   child: Divider(
-                //     thickness: 1,
-                //     color: withDivider ? Colors.white : Colors.transparent,
-                //   ),
-                // ),
+                  ), 
                 if (iqama != null && showIqama)
                   TimeWidget.fromString(
                     show24hFormat: !is12period,
