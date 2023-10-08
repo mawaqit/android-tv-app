@@ -100,10 +100,12 @@ class AudioManager extends ChangeNotifier {
 
   /// this method will precache all the audio files for this mosque
   Future<void> precacheVoices(MosqueConfig config) async {
-    await getFile(adhanLink(config));
-    await getFile(adhanLink(config, useFajrAdhan: true));
-    await getFile(bipLink);
-    await getFile(duaAfterAdhanLink);
+    await Future.wait([
+      getFile(adhanLink(config)),
+      getFile(adhanLink(config, useFajrAdhan: true)),
+      getFile(bipLink),
+      getFile(duaAfterAdhanLink),
+    ]);
   }
 
   Future<ByteData> getFile(String url, {bool enableCache = true}) async {
