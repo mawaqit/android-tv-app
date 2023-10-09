@@ -9,5 +9,7 @@ class AppDateTime {
 
   static DateTime now() => kDebugMode ? DateTime.now().add(difference) : DateTime.now();
 
+  static DateTime tomorrow() => DateTime.now().add(const Duration(days: 1));
+
   static bool get isFriday => now().weekday == DateTime.friday;
 }
