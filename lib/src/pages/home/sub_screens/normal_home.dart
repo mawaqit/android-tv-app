@@ -61,29 +61,34 @@ class NormalHomeSubScreen extends StatelessOrientationWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
-        Flexible(
-          child: HomeTimeWidget().animate().slideY(delay: Duration(milliseconds: 500)).fadeIn().addRepaintBoundary(),
-        ),
-        Column(
-          children: [
-            ResponsiveSalahBarWidget(),
-            SizedBox(height: 2.vwr),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ShurukWidget().animate().slideX().fadeIn().addRepaintBoundary(),
-                SalahItemWidget(
-                  title: S.of(context).jumua,
-                  time: mosqueProvider.jumuaTime ?? "",
-                  iqama: mosqueProvider.times!.jumua2,
-                  active:
-                      mosqueProvider.nextIqamaIndex() == 1 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
-                  removeBackground: true,
-                ).animate().slideX(begin: 1).fadeIn().addRepaintBoundary(),
-              ],
-            ),
-          ],
+        HomeTimeWidget().animate().slideY(delay: Duration(milliseconds: 500)).fadeIn().addRepaintBoundary(),
+        Expanded(
+          child: Column(
+            children: [
+              SizedBox(height: 2.vh),
+              Expanded(
+                flex: 6,
+                child: ResponsiveSalahBarWidget(),
+              ),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ShurukWidget().animate().slideX().fadeIn().addRepaintBoundary(),
+                    SalahItemWidget(
+                      title: S.of(context).jumua,
+                      time: mosqueProvider.jumuaTime ?? "",
+                      iqama: mosqueProvider.times!.jumua2,
+                      active: mosqueProvider.nextIqamaIndex() == 1 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
+                      removeBackground: true,
+                    ).animate().slideX(begin: 1).fadeIn().addRepaintBoundary(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         Column(
           children: [

@@ -103,7 +103,6 @@ class MosqueHeader extends StatelessOrientationWidget {
               WeatherWidget(),
             ],
           ),
-          SizedBox(height: 1.8.vh),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -145,6 +144,7 @@ class MosqueHeader extends StatelessOrientationWidget {
                 ),
             ],
           ),
+          SizedBox(height: 1.8.vh),
         ],
       ),
     );

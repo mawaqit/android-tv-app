@@ -8,4 +8,6 @@ class AppDateTime {
   static Duration get difference => Duration(hours: -6, minutes: 30);
 
   static DateTime now() => kDebugMode ? DateTime.now().add(difference) : DateTime.now();
+
+  static bool get isFriday => now().weekday == DateTime.friday;
 }

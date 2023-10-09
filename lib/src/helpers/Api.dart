@@ -1,27 +1,21 @@
-import 'dart:isolate';
 import 'dart:math';
-
-import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
-import 'package:flutter/material.dart';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
-
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
-import 'package:xml_parser/xml_parser.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:unique_identifier/unique_identifier.dart';
+import 'package:xml_parser/xml_parser.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
@@ -124,7 +118,7 @@ class Api {
   }
 
   static Future<Times> getMosqueTimes(String id) async {
-    final response = await dio.get('/3.0/mosque/$id/times');
+    final response = await dio.get('/3.1/mosque/$id/times');
 
     return Times.fromMap(response.data);
   }
