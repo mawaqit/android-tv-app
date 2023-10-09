@@ -1,108 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
-import 'package:mawaqit/src/pages/home/widgets/FlashWidget.dart';
-import 'package:mawaqit/src/pages/home/widgets/ShurukWidget.dart';
-import 'package:mawaqit/src/pages/home/widgets/TimeWidget.dart';
-import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
 import 'package:mawaqit/src/pages/home/widgets/orientation_widget.dart';
-import 'package:mawaqit/src/pages/home/widgets/salah_items/SalahItem.dart';
-import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/footer.dart';
+import '../../times/normal_home/landscape_normal_home.dart';
+import '../../times/normal_home/portrait_normal_home.dart';
+import '../../times/turkish_home/landscape_turkish_home.dart';
+import '../../times/turkish_home/portrait_turkish_home.dart';
 
-/// prayer times screen
-/// the main home screen on the app
 class NormalHomeSubScreen extends StatelessOrientationWidget {
-  NormalHomeSubScreen({Key? key}) : super(key: key);
+  const NormalHomeSubScreen({super.key});
 
   @override
   Widget buildLandscape(BuildContext context) {
-    final mosqueProvider = context.read<MosqueManager>();
-    final mosque = mosqueProvider.mosque!;
+    final mosqueManager = context.watch<MosqueManager>();
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.vw).copyWith(top: 1.5.vw),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ShurukWidget().animate().slideX().fadeIn().addRepaintBoundary(),
-              HomeTimeWidget().animate().slideY(delay: Duration(milliseconds: 500)).fadeIn().addRepaintBoundary(),
-              SalahItemWidget(
-                title: S.of(context).jumua,
-                time: mosqueProvider.jumuaTime ?? "",
-                iqama: mosqueProvider.times!.jumua2,
-                active: mosqueProvider.nextIqamaIndex() == 1 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
-                removeBackground: true,
-              ).animate().slideX(begin: 1).fadeIn().addRepaintBoundary(),
-            ],
-          ),
-        ),
-        ResponsiveSalahBarWidget(),
-        Footer(),
-      ],
-    );
+    if (mosqueManager.times!.isTurki) return LandScapeTurkishHome();
+
+    return LandscapeNormalHome();
   }
 
   @override
   Widget buildPortrait(BuildContext context) {
-    final mosqueProvider = context.read<MosqueManager>();
-    final mosque = mosqueProvider.mosque!;
+    final mosqueManager = context.watch<MosqueManager>();
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Directionality(textDirection: TextDirection.ltr, child: MosqueHeader(mosque: mosque)),
-        HomeTimeWidget().animate().slideY(delay: Duration(milliseconds: 500)).fadeIn().addRepaintBoundary(),
-        Expanded(
-          child: Column(
-            children: [
-              SizedBox(height: 2.vh),
-              Expanded(
-                flex: 6,
-                child: ResponsiveSalahBarWidget(),
-              ),
-              Expanded(
-                flex: 2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ShurukWidget().animate().slideX().fadeIn().addRepaintBoundary(),
-                    SalahItemWidget(
-                      title: S.of(context).jumua,
-                      time: mosqueProvider.jumuaTime ?? "",
-                      iqama: mosqueProvider.times!.jumua2,
-                      active: mosqueProvider.nextIqamaIndex() == 1 && mosqueProvider.mosqueDate().weekday == DateTime.friday,
-                      removeBackground: true,
-                    ).animate().slideX(begin: 1).fadeIn().addRepaintBoundary(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        Column(
-          children: [
-            if (mosque.flash != null)
-              Container(
-                color: Colors.black26,
-                height: 5.vh,
-                alignment: Alignment.center,
-                child: FlashWidget(),
-              ),
-            Footer(hideMessage: true),
-          ],
-        ),
-      ],
-    );
+    if (mosqueManager.times!.isTurki) return PortraitTurkishHome();
+
+    return PortraitNormalHome();
   }
 }
