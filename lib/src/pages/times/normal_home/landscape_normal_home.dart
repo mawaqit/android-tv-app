@@ -4,7 +4,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/pages/home/widgets/ShurukWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/TimeWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
@@ -54,7 +53,15 @@ class LandscapeNormalHome extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                  child: Center(child: ShurukWidget().animate(delay: Duration(milliseconds: 500)).slideX(begin: -1).fadeIn())),
+                child: Center(
+                  child: SalahItemWidget(
+                    removeBackground: true,
+                    title: S.of(context).shuruk,
+                    time: mosqueManager.getShurukTimeString() ?? '',
+                    isIqamaMoreImportant: mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
+                  ).animate(delay: Duration(milliseconds: 500)).slideX(begin: -1).fadeIn(),
+                ),
+              ),
               Expanded(child: HomeTimeWidget().animate().fadeIn().slideY(begin: -1), flex: 2),
               Expanded(child: Center(child: JumuaWidget().animate(delay: Duration(milliseconds: 500)).slideX(begin: 1).fadeIn())),
             ],

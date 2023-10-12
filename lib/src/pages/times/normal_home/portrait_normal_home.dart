@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/pages/home/widgets/ShurukWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_header.dart';
+import 'package:mawaqit/src/pages/home/widgets/salah_items/SalahItem.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/horizontal_salah_item.dart';
 import 'package:provider/provider.dart';
 
@@ -82,8 +82,18 @@ class PortraitNormalHome extends StatelessWidget {
           flex: 2,
           child: Row(
             children: [
-              Expanded(child: Center(child: ShurukWidget().animate().slideX(begin: -1).fadeIn())),
-              Expanded(child: Center(child: JumuaWidget().animate().slideX(begin: 1).fadeIn())),
+              Expanded(
+                  child: Center(
+                      child: SalahItemWidget(
+                title: S.of(context).shuruk,
+                time: mosqueManager.getShurukTimeString() ?? '',
+                removeBackground: true,
+              ).animate().slideX(begin: -1).fadeIn())),
+              Expanded(
+                child: Center(
+                  child: JumuaWidget().animate().slideX(begin: 1).fadeIn(),
+                ),
+              ),
             ],
           ),
         ),
