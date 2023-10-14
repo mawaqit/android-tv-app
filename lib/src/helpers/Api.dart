@@ -1,27 +1,21 @@
-import 'dart:isolate';
 import 'dart:math';
-
-import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
-import 'package:flutter/material.dart';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
-
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
-import 'package:xml_parser/xml_parser.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:unique_identifier/unique_identifier.dart';
+import 'package:xml_parser/xml_parser.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
@@ -201,9 +195,9 @@ class Api {
     }
   }
 
-  static Future<dynamic> updateUserStatus() async {
+  static Future<(String, Map<String, dynamic>)?> prepareUserData() async {
     final uuid = await MosqueManager.loadLocalUUID();
-    if (uuid == null) return;
+    if (uuid == null) return null;
 
     final userPreferencesManager = UserPreferencesManager();
     await userPreferencesManager.init();
@@ -223,9 +217,17 @@ class Api {
       'legacy-web-app': userPreferencesManager.webViewMode,
       'announcement-mode': userPreferencesManager.announcementsOnly,
     };
+    return (uuid, data);
+  }
+
+  static Future<dynamic> updateUserStatus() async {
+    final userData = await Api.prepareUserData();
+
+    if (userData == null) return;
+    final (uuid, data) = userData;
 
     await dio
-        .post('/3.0/mosque/$uuid/androidtv-life-status', data: data)
+        .post('/3.0/mosque/${uuid}/androidtv-life-status', data: data)
         .then((value) => logger.d(value))
         .catchError((e) => logger.d((e as DioError).requestOptions.uri));
   }
