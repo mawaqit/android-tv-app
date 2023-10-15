@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
+import 'package:disk_space/disk_space.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
@@ -204,6 +205,8 @@ class Api {
     final hardware = await DeviceInfoPlugin().androidInfo;
     final softWare = await PackageInfo.fromPlatform();
     final language = await AppLanguage.getCountryCode();
+    final space = await DiskSpace.getFreeDiskSpace;
+    final totalSpace = await DiskSpace.getTotalDiskSpace;
 
     final data = {
       'device-id': await UniqueIdentifier.serial,
@@ -216,6 +219,8 @@ class Api {
       'secondary-screen': userPreferencesManager.isSecondaryScreen,
       'legacy-web-app': userPreferencesManager.webViewMode,
       'announcement-mode': userPreferencesManager.announcementsOnly,
+      'space': totalSpace,
+      'free-space': space,
     };
     return (uuid, data);
   }

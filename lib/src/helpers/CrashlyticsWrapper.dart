@@ -10,21 +10,22 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 /// this is a wrapper class for all crashlytics related functions
 class CrashlyticsWrapper {
   static StreamSubscription? _subscription;
-  static init(FutureOr? Function() appRunner) {
-    Sentry.init(
+  static init(FutureOr<void>? Function() appRunner) async {
+    await Sentry.init(
       (options) async {
+        options.dsn = kSentryDns;
+
         final info = await PackageInfo.fromPlatform();
         final prefs = UserPreferencesManager();
         await prefs.init();
 
-        options.dsn = kSentryDns;
-        options.release = 'androidtv@${info.version.replaceAll('-tv', '')}';
-        options.environment = prefs.forceStaging ? 'staging' : 'production';
+        options.release = 'androidtv@${info.version}';
+        if (prefs.forceStaging) options.environment = 'staging';
       },
       appRunner: appRunner,
     );
 
-    /// keep the user scope updated 
+    /// keep the user scope updated
     _subscription?.cancel();
     _subscription = generateStream(Duration(minutes: 10)).listen((event) {
       updateUserScope();
@@ -38,7 +39,8 @@ class CrashlyticsWrapper {
 
     Sentry.configureScope((scopes) {
       if (userData == null) {
-        scopes.clear();
+        scopes.setUser(null);
+        scopes.setContexts("user-data", null);
         return;
       }
 
@@ -46,9 +48,7 @@ class CrashlyticsWrapper {
 
       scopes.setUser(SentryUser(segment: uuid, id: data['device-id']));
 
-      for (var key in data.keys) {
-        scopes.setContexts(key, data[key]);
-      }
+      scopes.setContexts("user-data", data);
     });
   }
 

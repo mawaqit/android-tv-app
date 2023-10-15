@@ -24,11 +24,10 @@ import 'package:sizer/sizer.dart';
 
 final logger = Logger();
 
-void main() {
-  CrashlyticsWrapper.init(
+Future<void> main() async {
+  await CrashlyticsWrapper.init(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-
       await Firebase.initializeApp();
       runApp(ProviderScope(child: MyApp()));
     },
