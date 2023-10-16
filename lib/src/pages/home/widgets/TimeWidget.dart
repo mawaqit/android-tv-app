@@ -30,7 +30,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
@@ -52,7 +52,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                   ],
                 ),
               ),
-              Padding(padding: EdgeInsets.all(isArabicLang ? 0.1.vw : 2.vh), child: SalahInWidget()),
+              Padding(padding: EdgeInsets.all(1.vwr), child: Center(child: SalahInWidget())),
             ],
           ),
         ),

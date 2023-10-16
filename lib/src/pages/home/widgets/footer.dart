@@ -14,69 +14,79 @@ const kFooterQrLink = 'https://mawaqit.net/static/images/store-qrcode.png?4.89.2
 class Footer extends StatelessWidget {
   const Footer({
     Key? key,
-    this.hideMessage = false,
   }) : super(key: key);
-
-  final bool hideMessage;
 
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.read<MosqueManager>();
-    final mosque = mosqueManager.mosque;
+    final mosque = mosqueManager.mosque!;
 
-    return Container(
-      height: 10.vr,
-      color: mosque?.flash?.content.isEmpty != false ? null : Colors.black.withOpacity(.3),
-      padding: EdgeInsets.symmetric(horizontal: .3.vw, vertical: .5.vw),
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: Row(
-          children: [
-            IntrinsicWidth(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    heightFactor: 0,
-                    alignment: Alignment(-1, 1),
-                    child: Text(
-                      "ID ${mosque?.id}",
-                      textDirection: TextDirection.ltr,
-                      style: TextStyle(
-                        fontSize: .8.vwr,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        shadows: kAfterAdhanTextShadow,
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return Column(
+      children: [
+        if (isPortrait && mosque.flash != null)
+          Container(
+            color: Colors.black26,
+            height: 5.vh,
+            alignment: Alignment.center,
+            child: FlashWidget(),
+          ),
+        Container(
+          height: 10.vr,
+          color: mosque?.flash?.content.isEmpty != false ? null : Colors.black.withOpacity(.3),
+          padding: EdgeInsets.symmetric(horizontal: .3.vw, vertical: .5.vw),
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Row(
+              children: [
+                IntrinsicWidth(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        heightFactor: 0,
+                        alignment: Alignment(-1, 1),
+                        child: Text(
+                          "ID ${mosque?.id}",
+                          textDirection: TextDirection.ltr,
+                          style: TextStyle(
+                            fontSize: .8.vwr,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            shadows: kAfterAdhanTextShadow,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: .5.vh),
-                  Expanded(
-                    child: FittedBox(
-                      child: MawaqitNetworkImage(
-                        imageUrl: kFooterQrLink,
-                        errorBuilder: (context, url, error) => SizedBox(),
-                        width: 4.3.vwr,
-                        height: 4.3.vwr,
+                      SizedBox(height: .5.vh),
+                      Expanded(
+                        child: FittedBox(
+                          child: MawaqitNetworkImage(
+                            imageUrl: kFooterQrLink,
+                            errorBuilder: (context, url, error) => SizedBox(),
+                            width: 4.3.vwr,
+                            height: 4.3.vwr,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                isPortrait
+                    ? Spacer()
+                    : Expanded(
+                        child: mosque?.flash != null
+                            ? FlashWidget()
+                            : mosqueManager.mosqueConfig?.footer == true
+                                ? MosqueInformationWidget()
+                                : SizedBox(),
+                      ),
+                HomeLogoVersion(),
+              ],
             ),
-            hideMessage
-                ? Spacer()
-                : Expanded(
-                    child: mosque?.flash != null
-                        ? FlashWidget()
-                        : mosqueManager.mosqueConfig?.footer == true
-                            ? MosqueInformationWidget()
-                            : SizedBox(),
-                  ),
-            HomeLogoVersion(),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

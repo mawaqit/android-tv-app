@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/orientation_widget.dart';
@@ -27,7 +29,14 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
     final mosqueProvider = context.watch<MosqueManager>();
     final nextActiveIqama = activeItem ?? mosqueProvider.nextIqamaIndex();
 
-    final todayTimes = mosqueProvider.salahBarTimes();
+    final times = mosqueProvider.times!;
+    final now = AppDateTime.now();
+    final todayTimes = mosqueProvider.useTomorrowTimes
+        ? times.dayTimesStrings(now.add(1.days), salahOnly: false)
+        : times.dayTimesStrings(now, salahOnly: false);
+
+    final turkishImask = todayTimes.length == 7 ? todayTimes.removeAt(0) : null;
+    todayTimes.removeAt(1);
 
     /// on jumuaa we disable duhr highlight for mosques only
     bool duhrHighlightDisable = mosqueProvider.mosqueDate().weekday == DateTime.friday && mosqueProvider.typeIsMosque;
@@ -37,12 +46,18 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          if (turkishImask != null)
+            SalahItemWidget(time: turkishImask)
+                .animate()
+                .fadeIn(duration: _duration)
+                .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
+                .addRepaintBoundary(),
           for (var i = 0; i < 5; i++)
             SalahItemWidget(
               time: todayTimes[i],
               active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
             )
-                .animate(delay: _step * i)
+                .animate(delay: _step * (i + 1))
                 .fadeIn(duration: _duration)
                 .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
                 .addRepaintBoundary(),
@@ -56,52 +71,49 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
     final mosqueProvider = context.watch<MosqueManager>();
     final nextActiveIqama = activeItem ?? mosqueProvider.nextIqamaIndex();
 
-    final todayTimes = mosqueProvider.salahBarTimes();
+    final times = mosqueProvider.times!;
+    final now = AppDateTime.now();
+    final todayTimes = mosqueProvider.useTomorrowTimes
+        ? times.dayTimesStrings(now.add(1.days), salahOnly: false)
+        : times.dayTimesStrings(now, salahOnly: false);
+
+    final turkishImask = todayTimes.length == 7 ? todayTimes.removeAt(0) : null;
+    todayTimes.removeAt(1);
 
     /// on jumuaa we disable duhr highlight for mosques only
-    bool duhrHighlightDisable = mosqueProvider.mosqueDate().weekday == DateTime.friday && mosqueProvider.typeIsMosque;
+    bool duhrHighlightDisable = AppDateTime.isFriday && mosqueProvider.typeIsMosque;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 1.vh),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        alignment: WrapAlignment.center,
         children: [
-          // top three salah item (fajr, duhr, asr)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              for (var i = 0; i < 3; i++)
-                Expanded(
-                  child: MiniHorizontalSalahItem(
-                    title: mosqueProvider.salahName(i),
-                    time: todayTimes[i],
-                    active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
-                  )
-                      .animate(delay: _step * i)
-                      .fadeIn(duration: _duration)
-                      .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
-                      .addRepaintBoundary(),
-                ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (var i = 3; i < 5; i++)
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: MiniHorizontalSalahItem(
-                    title: mosqueProvider.salahName(i),
-                    time: todayTimes[i],
-                    active: nextActiveIqama == i,
-                  )
-                      .animate(delay: _step * i)
-                      .fadeIn(duration: _duration)
-                      .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
-                      .addRepaintBoundary(),
-                ),
-            ],
-          ),
+          if (turkishImask != null)
+            SizedBox(
+              width: 30.vw,
+              child: MiniHorizontalSalahItem(
+                title: S.of(context).imsak,
+                time: turkishImask,
+              )
+                  .animate()
+                  .fadeIn(duration: _duration)
+                  .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
+                  .addRepaintBoundary(),
+            ),
+          for (var i = 0; i < 5; i++)
+            SizedBox(
+              width: 30.vw,
+              child: MiniHorizontalSalahItem(
+                title: mosqueProvider.salahName(i),
+                time: todayTimes[i],
+                active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
+              )
+                  .animate(delay: _step * (i + 1))
+                  .fadeIn(duration: _duration)
+                  .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
+                  .addRepaintBoundary(),
+            ),
         ],
       ),
     );

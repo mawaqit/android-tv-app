@@ -1,15 +1,12 @@
-import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
-import 'package:mawaqit/src/enum/home_active_screen.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:collection/collection.dart';
 
 import '../../../i18n/l10n.dart';
 import '../../models/mosque.dart';
@@ -26,7 +23,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   bool get isOnline;
 
   salahName(int index) => [
-        S.current.fajr,
+        times!.isTurki ? S.current.sabah : S.current.fajr,
         S.current.duhr,
         S.current.asr,
         S.current.maghrib,
@@ -196,7 +193,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   @Deprecated('Use AppDateTime.now()')
   DateTime mosqueDate() => AppDateTime.now();
 
-
   MawaqitHijriCalendar mosqueHijriDate(int? forceAdjustment) => MawaqitHijriCalendar.fromDateWithAdjustments(
         mosqueDate(),
         force30Days: times!.hijriDateForceTo30,
@@ -209,17 +205,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     /// isha might be after midnight so we need to check if it's after fajr
     return now.isAfter(isha) && isha.isAfter(fajr);
-  }
-
-  List<String> salahBarTimes() {
-    if (useTomorrowTimes) {
-      return timesOfDay(
-        mosqueDate().add(1.days),
-        forceActualDuhr: true,
-      );
-    } else {
-      return timesOfDay(mosqueDate(), forceActualDuhr: true);
-    }
   }
 
   /// @Param [forceActualDuhr] force to use actual duhr time instead of jumua time during the friday
@@ -249,8 +234,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   @Deprecated('User Times.dayIqamaStrings')
   List<String> iqamasOfDay(DateTime date) => times!.dayIqamaStrings(date);
 
+  @Deprecated('Use times.dayIqamaStrings')
   List<String> get todayIqama => iqamasOfDay(mosqueDate());
 
+  @Deprecated('Use times.dayIqamaStrings')
   List<String> get tomorrowIqama => iqamasOfDay(mosqueDate().add(Duration(days: 1)));
 
   /// if jumua as duhr return jumua
