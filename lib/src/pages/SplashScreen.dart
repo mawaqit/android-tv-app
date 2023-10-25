@@ -12,6 +12,7 @@ import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
+import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/CrashlyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/HttpOverrides.dart';
@@ -53,6 +54,8 @@ class _SplashScreen extends State<Splash> {
   Future<void> initApplicationUI() async {
     await GlobalConfiguration().loadFromAsset("configuration");
     generateStream(Duration(minutes: 10)).listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
+
+    AppDateTime.init();
 
     Hive.initFlutter();
 
