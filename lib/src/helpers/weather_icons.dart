@@ -1,21 +1,60 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:mawaqit/src/helpers/AppDate.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
+import 'package:mawaqit/src/themes/UIShadows.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+
+class WeatherIconWidget extends StatelessWidget {
+  WeatherIconWidget({super.key, required this.icon, this.useDay = true});
+
+  final String icon;
+  final bool useDay;
+
+  @override
+  Widget build(BuildContext context) {
+    try {
+      return Icon(
+        WeatherIcons.fromStringWithDateNight(icon, useDay),
+        size: 3.vwr,
+        color: Colors.white,
+        shadows: kAfterAdhanTextShadow,
+      );
+    } catch (e, stack) {
+      //todo use Crashlytics wrapper instead
+      Sentry.captureException(e, stackTrace: stack);
+
+      return SizedBox.shrink();
+    }
+  }
+}
 
 class WeatherIcons extends IconData {
   const WeatherIcons(super.codePoint) : super(fontFamily: 'WeatherIcons');
 
   factory WeatherIcons.fromString(String value) {
-    return _values[value] ??
-        _values["day-$value"] ??
-        _values["night-$value"] ??
-        degrees;
+    return _values[value] ?? _values["day-$value"] ?? _values["night-$value"] ?? degrees;
   }
 
   factory WeatherIcons.fromStringWithDateNight(
     String value, [
     bool isDay = true,
   ]) {
-    return _values['${isDay ? 'day' : 'night'}-$value'] ??
-        WeatherIcons.fromString(value);
+    if (value == 'sunny') return sunnyIcons(isDay);
+
+    final icon = _values['${isDay ? 'day' : 'night'}-$value'];
+
+    if (icon == null) throw Exception('Icon ${isDay ? 'day' : 'night'}-$value not found');
+
+    return icon;
+  }
+
+  static WeatherIcons sunnyIcons(bool isDay) {
+    if (isDay) return day_sunny;
+
+    final day = MawaqitHijriCalendar.fromDate(AppDateTime.now()).day;
+
+    return _values['moon-$day'] ?? _values['moon-0'];
   }
 
   static const Map _values = {
@@ -26,6 +65,15 @@ class WeatherIcons extends IconData {
     "day-fog": day_fog,
     "day-hail": day_hail,
     "day-haze": day_haze,
+    "night-haze": day_haze,
+    "day-smoke": smoke,
+    "night-smoke": smoke,
+    "day-dust": dust,
+    "night-dust": dust,
+    "day-smog": smog,
+    "night-smog": smog,
+    "day-tornado": tornado,
+    "night-tornado": tornado,
     "haze": day_haze,
     "day-lightning": day_lightning,
     "day-rain": day_rain,
@@ -42,6 +90,7 @@ class WeatherIcons extends IconData {
     "day-sunny-overcast": day_sunny_overcast,
     "day-thunderstorm": day_thunderstorm,
     "day-windy": day_windy,
+    "night-windy": day_windy,
     "day-cloudy-high": day_cloudy_high,
     "day-light-wind": day_light_wind,
     "solar-eclipse": solar_eclipse,

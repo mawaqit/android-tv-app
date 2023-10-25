@@ -28,17 +28,7 @@ class WeatherWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          WeatherIcons.fromStringWithDateNight(
-            mosqueManager.weather!.icon,
-
-            /// If it's after Maghrib, we show the night icon
-            mosqueManager.salahIndex < 3,
-          ),
-          size: 3.vwr,
-          color: Colors.white,
-          shadows: kAfterAdhanTextShadow,
-        ),
+        WeatherIconWidget(icon: mosqueManager.weather!.icon, useDay: mosqueManager.salahIndex < 3),
         SizedBox(width: 1.6.vw),
         Text(
           "$temperature",
