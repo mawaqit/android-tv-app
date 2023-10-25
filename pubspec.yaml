@@ -108,6 +108,7 @@ dependencies:
   audiofileplayer: ^2.1.1
   unique_identifier: ^0.3.0
   collection: any
+  disk_space: ^0.2.1
 
 dev_dependencies:
   flutter_test:
