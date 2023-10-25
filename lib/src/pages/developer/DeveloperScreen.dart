@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/developer_mode/AnnouncementTest.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/pages/LanguageScreen.dart';
-import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/developer/widgets/selector_widget.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AdhanSubScreen.dart';
@@ -25,6 +28,8 @@ import 'package:provider/provider.dart';
 
 typedef ForcedScreen = ({WidgetBuilder builder, String name});
 
+typedef TestMosque = ({String name, String uuid});
+
 /// this screen made to speed up the development process
 /// user can force to use specific screen
 /// user can change mosque language or mosque from the screen
@@ -37,6 +42,14 @@ class DeveloperScreen extends StatefulWidget {
 
 class _DeveloperScreenState extends State<DeveloperScreen> {
   ForcedScreen? forcedScreen;
+  StreamSubscription? walkThrowScreensSubscription;
+
+  static const testMosques = <TestMosque>[
+    (name: "Test Mosque", uuid: "8e8a41cf-62d4-4890-9454-120d27b229e1"),
+    (name: "Mosquee El Falah", uuid: "6e8cc6b6-901a-4271-a5f7-818a1fa20a34"),
+    (name: "Mosquee Le Grand Quevilly", uuid: "dbfd7ccf-70da-49f3-93a9-a4a7e8cccf04"),
+    (name: "[Staging] TEST ISTANBUL (10149)", uuid: "626cf81c-ebf1-4f4f-8ad0-5fc840f9c14b"),
+  ];
 
   List<ForcedScreen> get screens => [
         (builder: (context) => NormalHomeSubScreen(), name: S.current.normalScreen),
@@ -53,6 +66,32 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         (builder: (context) => FajrWakeUpSubScreen(), name: S.current.fajrWakeUp),
         (builder: (context) => DuaaEftarScreen(), name: S.current.duaaElEftar),
       ];
+
+  forceScreen(ForcedScreen e) {
+    cancelWalkThrowScreens();
+    setState(() {
+      forcedScreen = e;
+    });
+  }
+
+  void cancelWalkThrowScreens() {
+    walkThrowScreensSubscription?.cancel();
+    setState(() {
+      walkThrowScreensSubscription = null;
+    });
+  }
+
+  void walkThrowScreens() {
+    walkThrowScreensSubscription?.cancel();
+    walkThrowScreensSubscription = generateStream(10.seconds).listen((event) {
+      if (event > screens.length) walkThrowScreensSubscription?.cancel();
+      setState(() {
+        forcedScreen = screens[event % screens.length];
+      });
+    });
+  }
+
+  changeMosque(String uuid) => context.read<MosqueManager>().fetchMosque(uuid).catchError((e) {});
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +136,17 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               onSelect: () => AppRouter.push(LanguageScreen()),
             ),
             SelectorOption(
-              title: S.of(context).changeMosque,
-              onSelect: () => AppRouter.push(MosqueSearchScreen()),
+              title: "Walk throw screens",
+              onSelect: walkThrowScreens,
+            ),
+            SelectorOption(
+              title: "Change mosque ",
+              subOptions: testMosques
+                  .map((e) => SelectorOption(
+                        title: e.name,
+                        onSelect: () => changeMosque(e.uuid),
+                      ))
+                  .toList(),
             ),
             SelectorOption(
               title: S.of(context).forceScreen,
@@ -110,7 +158,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                 ...screens.map(
                   (e) => SelectorOption(
                     title: e.name,
-                    onSelect: () => setState(() => forcedScreen = e),
+                    onSelect: () => forceScreen(e),
                   ),
                 ),
               ],
@@ -123,6 +171,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               title: "Toggle orientation",
               onSelect: () => context.read<UserPreferencesManager>().toggleOrientation(),
             ),
+            if (walkThrowScreensSubscription != null) SelectorOption(title: "Cancel walk throw", onSelect: cancelWalkThrowScreens)
           ],
         ),
       ),

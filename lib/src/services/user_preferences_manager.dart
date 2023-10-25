@@ -18,11 +18,13 @@ class UserPreferencesManager extends ChangeNotifier {
     init();
   }
 
-  Future<void> init() async {
+  Future<UserPreferencesManager> init() async {
     _sharedPref = await SharedPreferences.getInstance();
 
     Api.useStagingApi(forceStaging);
     forceOrientation();
+
+    return this;
   }
 
   late SharedPreferences _sharedPref;

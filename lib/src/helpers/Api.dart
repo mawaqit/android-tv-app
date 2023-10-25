@@ -119,7 +119,7 @@ class Api {
   }
 
   static Future<Times> getMosqueTimes(String id) async {
-    final response = await dio.get('/3.0/mosque/$id/times');
+    final response = await dio.get('/3.1/mosque/$id/times');
 
     return Times.fromMap(response.data);
   }
