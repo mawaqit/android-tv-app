@@ -55,7 +55,7 @@ class _SplashScreen extends State<Splash> {
     await GlobalConfiguration().loadFromAsset("configuration");
     generateStream(Duration(minutes: 10)).listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
 
-    AppDateTime.init();
+    await AppDateFixer.init();
 
     Hive.initFlutter();
 
