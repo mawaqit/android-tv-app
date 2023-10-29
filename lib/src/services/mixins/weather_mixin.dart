@@ -17,7 +17,7 @@ mixin WeatherMixin on ChangeNotifier {
 
   void loadWeather(Mosque mosque) async {
     if (mosque.uuid != null) {
-      _weatherSubscription?.cancel().catchError(() {});
+      _weatherSubscription?.cancel().catchError((e) {});
 
       _weatherSubscription = generateStream(Duration(hours: 1)).listen((event) => Api.getWeather(mosque.uuid!).then((value) {
             weather = value;
