@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/weather_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -29,34 +28,26 @@ class WeatherWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          WeatherIcons.fromStringWithDateNight(
-            mosqueManager.weather!.icon,
-
-            /// If it's after Maghrib, we show the night icon
-            mosqueManager.salahIndex < 3,
-          ),
-          size: 3.vwr,
-          color: Colors.white,
-          shadows: kAfterAdhanTextShadow,
-        ),
+        WeatherIconWidget(icon: mosqueManager.weather!.icon, useDay: mosqueManager.salahIndex < 3),
         SizedBox(width: 1.6.vw),
         Text(
           "$temperature",
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontSize: 3.vwr,
-              fontWeight: FontWeight.w700,
-              color: HexColor(mosqueManager.getColorFeeling()),
-              shadows: kHomeTextShadow),
+                fontSize: 3.vwr,
+                fontWeight: FontWeight.w700,
+                color: mosqueManager.getColorFeeling(),
+                shadows: kHomeTextShadow,
+              ),
         ),
         Text(
           "°$temperatureUnit",
           style: TextStyle(
-              fontWeight: FontWeight.w700,
-              height: 1,
-              color: HexColor(mosqueManager.getColorFeeling()),
-              fontSize: 2.4.vwr,
-              shadows: kHomeTextShadow),
+            fontWeight: FontWeight.w700,
+            height: 1,
+            color: mosqueManager.getColorFeeling(),
+            fontSize: 2.4.vwr,
+            shadows: kHomeTextShadow,
+          ),
         ),
       ],
     );

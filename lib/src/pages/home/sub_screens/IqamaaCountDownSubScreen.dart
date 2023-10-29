@@ -16,8 +16,13 @@ import 'package:provider/provider.dart';
 import '../../../helpers/time_utils.dart';
 
 class IqamaaCountDownSubScreen extends StatefulWidget {
-  const IqamaaCountDownSubScreen({Key? key, this.onDone}) : super(key: key);
+  const IqamaaCountDownSubScreen({
+    Key? key,
+    this.onDone,
+    this.currentSalahIndex = 0,
+  }) : super(key: key);
 
+  final int currentSalahIndex;
   final VoidCallback? onDone;
 
   @override
@@ -25,35 +30,33 @@ class IqamaaCountDownSubScreen extends StatefulWidget {
 }
 
 class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
-  StreamSubscription? _streamSubscription;
-
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
-    final nextIqamaa = mosqueManager.nextIqamaaAfter();
 
-    if (nextIqamaa <= Duration.zero || nextIqamaa > Duration(minutes: 30)) {
-      Future.delayed(Duration(milliseconds: 80), widget.onDone);
-    } else {
-      Future.delayed(nextIqamaa, widget.onDone);
-    }
+    var currentSalahTime = mosqueManager.actualTimes()[widget.currentSalahIndex];
+    var currentIqamaTime = mosqueManager.actualIqamaTimes()[widget.currentSalahIndex];
+    final now = mosqueManager.mosqueDate();
 
-    _streamSubscription = Stream.periodic(Duration(seconds: 1)).listen((event) {
-      setState(() {});
+    /// if the iqama is comming the next day then add one day to the iqama time
+    if (currentIqamaTime.isBefore(currentSalahTime)) currentIqamaTime = currentIqamaTime.add(Duration(days: 1));
+
+    final nextIqamaaAfter = currentIqamaTime.difference(now);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Future.delayed(nextIqamaaAfter, widget.onDone);
     });
+
     super.initState();
   }
 
   @override
   void dispose() {
-    _streamSubscription?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.read<MosqueManager>();
-    final nextIqama = mosqueManager.nextIqamaaAfter();
 
     final tr = S.of(context);
 
@@ -89,7 +92,7 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
         StreamBuilder(
             stream: Stream.periodic(Duration(seconds: 1)),
             builder: (context, snapshot) {
-              final remaining = nextIqama;
+              final remaining = mosqueManager.nextIqamaaAfter();
               if (remaining <= Duration.zero) {
                 Future.delayed(Duration(milliseconds: 80), widget.onDone);
               }

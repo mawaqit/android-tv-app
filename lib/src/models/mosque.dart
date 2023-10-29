@@ -139,6 +139,7 @@ class Mosque {
       announcements.hashCode;
 
   factory Mosque.fromMap(Map<String, dynamic> map) {
+    print('[Mosque UUID] ${map['uuid']}');
     return Mosque(
       id: map['id'] ?? -1,
       uuid: map['uuid'],

@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
+import 'package:disk_space/disk_space.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
@@ -121,7 +122,7 @@ class Api {
   }
 
   static Future<Times> getMosqueTimes(String id) async {
-    final response = await dio.get('/3.0/mosque/$id/times');
+    final response = await dio.get('/3.1/mosque/$id/times');
 
     return Times.fromMap(response.data);
   }
@@ -201,15 +202,17 @@ class Api {
     }
   }
 
-  static Future<dynamic> updateUserStatus() async {
+  static Future<(String, Map<String, dynamic>)?> prepareUserData() async {
     final uuid = await MosqueManager.loadLocalUUID();
-    if (uuid == null) return;
+    if (uuid == null) return null;
 
     final userPreferencesManager = UserPreferencesManager();
     await userPreferencesManager.init();
     final hardware = await DeviceInfoPlugin().androidInfo;
     final softWare = await PackageInfo.fromPlatform();
     final language = await AppLanguage.getCountryCode();
+    final space = await DiskSpace.getFreeDiskSpace;
+    final totalSpace = await DiskSpace.getTotalDiskSpace;
 
     final data = {
       'device-id': await UniqueIdentifier.serial,
@@ -222,10 +225,20 @@ class Api {
       'secondary-screen': userPreferencesManager.isSecondaryScreen,
       'legacy-web-app': userPreferencesManager.webViewMode,
       'announcement-mode': userPreferencesManager.announcementsOnly,
+      'space': totalSpace,
+      'free-space': space,
     };
+    return (uuid, data);
+  }
+
+  static Future<dynamic> updateUserStatus() async {
+    final userData = await Api.prepareUserData();
+
+    if (userData == null) return;
+    final (uuid, data) = userData;
 
     await dio
-        .post('/3.0/mosque/$uuid/androidtv-life-status', data: data)
+        .post('/3.0/mosque/${uuid}/androidtv-life-status', data: data)
         .then((value) => logger.d(value))
         .catchError((e) => logger.d((e as DioError).requestOptions.uri));
   }

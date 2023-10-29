@@ -23,16 +23,24 @@ class FajrWakeUpSubScreen extends StatefulWidget {
 }
 
 class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
+  late AudioManager audioManager;
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
-    context.read<AudioManager>().loadAndPlayAdhanVoice(
-          mosqueManager.mosqueConfig!,
-          onDone: widget.onDone,
-          useFajrAdhan: true,
-        );
+    audioManager = context.read<AudioManager>();
+    audioManager.loadAndPlayAdhanVoice(
+      mosqueManager.mosqueConfig!,
+      onDone: widget.onDone,
+      useFajrAdhan: true,
+    );
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    audioManager.stop();
+    super.dispose();
   }
 
   @override
@@ -56,7 +64,7 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
                   children: [
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: 15.vw,
+                      size: 12.vw,
                       shadows: kHomeTextShadow,
                       color: Colors.white,
                     ).animate().slideX(begin: -2).addRepaintBoundary(),
@@ -81,7 +89,7 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
                     ),
                     Icon(
                       MawaqitIcons.icon_adhan,
-                      size: 15.vw,
+                      size: 12.vw,
                       shadows: kHomeTextShadow,
                       color: Colors.white,
                     ).animate().slideX(begin: 2).addRepaintBoundary(),

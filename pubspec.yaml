@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-version: 1.7.0-tv+238
+version: 1.8.0+258
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -55,8 +55,7 @@ dependencies:
   http: ^0.13.6
   dio: ^5.1.2
   dio_cache_interceptor: ^3.4.2
-  dio_cache_interceptor_hive_store: ^3.2.1
-  cached_network_image: ^3.2.3
+  dio_cache_interceptor_hive_store: ^3.2.1 
   xml_parser: ^1.0.0
 
   share_plus: ^6.3.1
@@ -89,8 +88,7 @@ dependencies:
 
   # MAP
   #location: ^4.3.0
-  geolocator: ^9.0.2
-  hijri: ^3.0.0
+  geolocator: ^9.0.2 
 
   #  webview_flutter: ^3.0.0
 
@@ -107,11 +105,11 @@ dependencies:
   youtube_explode_dart: ^1.12.4
   audiofileplayer: ^2.1.1
   unique_identifier: ^0.3.0
-  google_api_availability: ^5.0.0
-  app_version_update: ^3.1.0
-  in_app_update: ^4.1.4
-  flutter_app_update: ^3.0.2
+  google_api_availability: ^5.0.0 
+  in_app_update: ^4.1.4 
   app_installer: ^1.1.0
+  collection: any
+  disk_space: ^0.2.1
 
 dev_dependencies:
   flutter_test:

@@ -42,6 +42,9 @@ class RepeatingWorkflowItem {
   /// first item on the list has higher priority
   final bool Function()? showInitial;
 
+  /// debug name for the item to be shown in the debug mode
+  final String? debugName;
+
   RepeatingWorkflowItem({
     required this.builder,
     this.disabled = false,
@@ -52,16 +55,25 @@ class RepeatingWorkflowItem {
     this.minimumDuration,
     this.duration,
     this.showInitial,
+    this.debugName,
   });
 }
 
 /// handle workflows that its item isn't shown one after another
 /// TODO: This will be used in the future to handle the active workflow
 class RepeatingWorkFlowWidget extends StatefulWidget {
-  const RepeatingWorkFlowWidget({Key? key, this.child, this.items = const []}) : super(key: key);
+  const RepeatingWorkFlowWidget({
+    Key? key,
+    this.child,
+    this.items = const [],
+    this.debugName,
+  }) : super(key: key);
 
   /// main child if there are no active child
   final Widget? child;
+
+  /// debug name for the workflow to be shown in the debug mode
+  final String? debugName;
 
   /// items that will show in the workflow
   final List<RepeatingWorkflowItem> items;
@@ -92,26 +104,28 @@ class _RepeatingWorkFlowWidgetState extends State<RepeatingWorkFlowWidget> {
   checkInitialItem() {
     for (var i = 0; i < widget.items.length; i++) {
       if (widget.items[i].showInitial?.call() ?? false) {
-        startItem(i);
-        return;
+        if (startItem(i)) return;
       }
     }
     addNextItemHandled();
   }
 
   /// active item with index
-  startItem(int itemIndex) {
+  /// return true if the item is started
+  /// return false if the item is disabled or there are another active item
+  bool startItem(int itemIndex) {
     /// if widget is removed from the tree
     /// no need for this
-    if (!mounted) return;
+    if (!mounted) return true;
 
     final item = widget.items[itemIndex];
 
-    if (item.disabled) return;
+    if (item.disabled) return false;
 
     /// if there are active item and the item isn't forced to start will do nothing
-    if (activeItem != null && !item.forceStart) return;
+    if (activeItem != null && !item.forceStart) return false;
 
+    print('[Repeating ${widget.debugName ?? 'workflow'}] [Starting] ${item.debugName ?? itemIndex}');
     setState(() => activeItem = itemIndex);
 
     /// set the minimum duration if set
@@ -125,6 +139,8 @@ class _RepeatingWorkFlowWidgetState extends State<RepeatingWorkFlowWidget> {
       /// if the item has duration
       Future.delayed(item.duration!, () => onItemDone(itemIndex));
     }
+
+    return true;
   }
 
   /// called when the item is done from the item builder or after the duration
@@ -138,6 +154,7 @@ class _RepeatingWorkFlowWidgetState extends State<RepeatingWorkFlowWidget> {
 
     if (minimumDurationFuture != null) await minimumDurationFuture;
 
+    print('[Repeating ${widget.debugName ?? 'workflow'}] [Done] ${widget.items[itemIndex].debugName ?? itemIndex}');
     setState(() {
       activeItem = null;
 
@@ -171,6 +188,10 @@ class _RepeatingWorkFlowWidgetState extends State<RepeatingWorkFlowWidget> {
 
     /// if the item has past his time will do nothing
     if (nextActiveItemDuration?.isNegative ?? true) return;
+
+    print(
+      '[Repeating ${widget.debugName ?? 'workflow'}] [Next] ${firstItem.debugName ?? nextItemIndex} in $nextActiveItemDuration',
+    );
 
     /// add the trigger
     Future.delayed(nextActiveItemDuration!, () => startItem(nextItemIndex));

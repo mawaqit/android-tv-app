@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
+import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/weather.dart';
@@ -10,39 +13,40 @@ mixin WeatherMixin on ChangeNotifier {
   Weather? weather;
   MosqueConfig? mosqueConfig;
 
-  Future<void> loadWeather(Mosque mosque) async {
-    if (mosque.uuid != null)
-      Api.getWeather(mosque.uuid!).then((value) {
-        weather = value;
-        notifyListeners();
-      }).catchError((e, stack) {
-        debugPrintStack(stackTrace: stack, label: e.toString());
-        weather = null;
-        notifyListeners();
-      });
+  StreamSubscription? _weatherSubscription;
+
+  void loadWeather(Mosque mosque) async {
+    if (mosque.uuid != null) {
+      _weatherSubscription?.cancel().catchError(() {});
+
+      _weatherSubscription = generateStream(Duration(hours: 1)).listen((event) => Api.getWeather(mosque.uuid!).then((value) {
+            weather = value;
+            notifyListeners();
+          }).catchError((e, stack) {
+            debugPrintStack(stackTrace: stack, label: e.toString());
+            weather = null;
+            notifyListeners();
+          }));
+    }
   }
 
-  String getColorFeeling() {
-    String? feeling = weather?.feeling;
-    String color = "#FFFFFF";
-    switch (feeling) {
-      case "very-hot":
-        color = "#AA3333";
-        return color;
-      case "hot":
-        color = "#d58512";
-        return color;
-      case "middle":
-        color = "#ffd05f";
-        return color;
-      case "cold":
-        color = "#FFFFFF";
-        return color;
-      case "very-cold":
-        color = "#3498db";
-        return color;
+  Color getColorFeeling() {
+    final temp = weather?.temperature;
+
+    switch (temp) {
+      case null:
+        return Colors.white;
+      case <= 0:
+        return Color(0xFF3498DB); // very cold
+      case <= 10:
+        return Color(0xFFFFFFFF); // cold
+      case <= 20:
+        return Color(0xFFFFD05F); // middle
+      case <= 30:
+        return Color(0xFFD58512); // hot
+      default:
+        return Color(0xFFAA3333); // very hot
     }
-    return color;
   }
 
   Color getColorTheme() {
