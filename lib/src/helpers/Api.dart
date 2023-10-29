@@ -151,7 +151,8 @@ class Api {
   }
 
   static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
-      Future.wait(language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
+      Future.wait(
+          language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
 
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file
@@ -160,7 +161,9 @@ class Api {
     language = (language.split('-')..shuffle()).first;
 
     /// this should be called only on offline mode so it should hit the cache
-    final response = await dioStatic.get('/xml/ahadith/$language.xml').timeout(Duration(seconds: 5));
+    final response = await dioStatic
+        .get('/xml/ahadith/$language.xml')
+        .timeout(Duration(seconds: 5));
 
     final document = XmlDocument.from(response.data)!;
 
@@ -238,9 +241,14 @@ class Api {
     final dir = await getApplicationSupportDirectory();
 
     final oldFile = File('${dir.path}/mawaqit.apk');
-    if (await oldFile.exists()) await oldFile.delete();
 
-    await dio.download('https://get.mawaqit.net/apk/tv', '${dir.path}/mawaqit.apk', onReceiveProgress: (count, total) {
+    if (await oldFile.exists()) {
+      await oldFile.delete();
+    }
+
+    await dio
+        .download('https://get.mawaqit.net/apk/tv', '${dir.path}/mawaqit.apk',
+            onReceiveProgress: (count, total) {
       final progress = count / total * 100;
       onProgress?.call(progress);
     });

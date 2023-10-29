@@ -111,6 +111,7 @@ dependencies:
   app_version_update: ^3.1.0
   in_app_update: ^4.1.4
   flutter_app_update: ^3.0.2
+  app_installer: ^1.1.0
 
 dev_dependencies:
   flutter_test:

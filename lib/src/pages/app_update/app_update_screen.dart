@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
+import 'package:app_installer/app_installer.dart';
 
 const kChannel = 'com.mawaqit.androidTv/updater';
 
@@ -15,10 +15,24 @@ class AppUpdateScreen extends StatefulWidget {
 class _AppUpdateScreenState extends State<AppUpdateScreen> {
   double value = 0;
 
-  downloadApk() async {
-    await Api.downloadApk(onProgress: (value) => setState(() => this.value = value));
+  Future<String>? _downloadingFuture;
 
-    final channel = MethodChannel(kChannel).invokeMethod('UPDATE_APK');
+  downloadApk() async {
+    try {
+      _downloadingFuture = Api.downloadApk(
+        onProgress: (value) => setState(() => this.value = value),
+      );
+
+      final file = await _downloadingFuture!;
+
+      await AppInstaller.installApk(file);
+
+      Navigator.pop(context);
+    } catch (e) {
+      //todo show error to user
+
+      rethrow;
+    }
   }
 
   @override
@@ -50,7 +64,9 @@ class _AppUpdateScreenState extends State<AppUpdateScreen> {
                 textAlign: TextAlign.center,
               ),
               Text(
-                value == 100 ? 'Download completed... installing apk' : 'Downloading new apk version... please wait...',
+                value == 100
+                    ? 'Download completed... installing apk'
+                    : 'Downloading new apk version... please wait...',
                 style: theme.textTheme.labelMedium,
                 textAlign: TextAlign.center,
               ),
@@ -74,7 +90,12 @@ class _AppUpdateScreenState extends State<AppUpdateScreen> {
               SizedBox(height: 50),
               FractionallySizedBox(
                 widthFactor: .7,
-                child: OutlinedButton(onPressed: () {}, child: Text("Cancel")),
+                child: OutlinedButton(
+                    onPressed: () {
+                      _downloadingFuture?.ignore();
+                      Navigator.pop(context);
+                    },
+                    child: Text("Cancel")),
               )
             ],
           ),
