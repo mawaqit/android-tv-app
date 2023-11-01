@@ -60,7 +60,7 @@ class _MosqueBackgroundScreenState extends State<MosqueBackgroundScreen> {
                       onError: (exception, stackTrace) {},
                     ),
                   ),
-            child: Container(child: widget.child),
+            child: RepaintBoundary(child: widget.child),
           ),
         ),
       ),
