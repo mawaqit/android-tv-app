@@ -29,7 +29,7 @@ class MosqueConfig {
   final bool? iqamaFullScreenCountdown;
   final String? theme;
 
-  String get motifUrl => 'https://mawaqit.net/bundles/app/prayer-times/img/background/${backgroundMotif ?? 5}.jpg';
+  String get motifUrl => 'https://mawaqit.net/prayer-times/img/background/${backgroundMotif ?? 5}.jpg';
 
 //<editor-fold desc="Data Methods">
 
