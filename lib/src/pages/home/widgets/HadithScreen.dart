@@ -5,10 +5,13 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 
+import '../../../helpers/font_manager.dart';
+
 /// this screen made to show of the hadith screen
 class HadithWidget extends StatelessWidget {
   HadithWidget({
     Key? key,
+    required this.locale,
     this.title,
     this.arabicText,
     this.translatedTitle,
@@ -28,6 +31,9 @@ class HadithWidget extends StatelessWidget {
 
   /// translated title of the hadith
   final String? translatedTitle;
+
+  /// locale of the translated text
+  final String locale;
 
   /// translated text of the hadith
   final String? translatedText;
@@ -50,22 +56,26 @@ class HadithWidget extends StatelessWidget {
             titleText(
               title!,
               textDirection: TextDirection.rtl,
+              locale: locale,
             ),
           if (arabicText != null && arabicText != '')
             contentText(
               arabicText!,
               textDirection: TextDirection.rtl,
+              locale: 'ar',
               delay: .1.seconds,
             ),
           if (translatedTitle != null && translatedTitle != title && translatedTitle != '')
             titleText(
               translatedTitle!,
+              locale: locale,
               textDirection: textDirection,
               delay: .2.seconds,
             ),
           if (translatedText != null && translatedText != arabicText && translatedText != '')
             contentText(
               translatedText!,
+              locale: locale,
               textDirection: textDirection,
               delay: .3.seconds,
             ),
@@ -76,6 +86,7 @@ class HadithWidget extends StatelessWidget {
 
   Widget titleText(
     String text, {
+     required  String locale,
     TextDirection? textDirection,
     Duration? delay,
   }) {
@@ -85,7 +96,7 @@ class HadithWidget extends StatelessWidget {
         fontSize: 6.2.vwr,
         fontWeight: FontWeight.bold,
         color: Colors.white,
-        shadows: kAfterAdhanTextShadow,
+        fontFamily: FontManager.getFontFamily(locale ),
       ),
       textAlign: TextAlign.center,
       textDirection: textDirection,
@@ -94,6 +105,7 @@ class HadithWidget extends StatelessWidget {
 
   Widget contentText(
     String text, {
+        required  String locale,
     TextDirection? textDirection,
     Duration? delay,
   }) {
@@ -108,6 +120,7 @@ class HadithWidget extends StatelessWidget {
             text,
             style: TextStyle(
               fontSize: 600,
+              fontFamily: FontManager.getFontFamily(locale),
               color: Colors.white,
               shadows: kIqamaCountDownTextShadow,
             ),

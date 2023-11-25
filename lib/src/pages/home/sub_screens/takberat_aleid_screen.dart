@@ -44,6 +44,7 @@ class _TakberatAleidScreenState extends State<TakberatAleidScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -52,6 +53,7 @@ class _TakberatAleidScreenState extends State<TakberatAleidScreen> {
           Expanded(
             child: HadithWidget(
               title: S.of(context).eidMubarak,
+              locale: lang,
               translatedText: S.of(context).takbeerAleidText,
               mainAxisAlignment: MainAxisAlignment.start,
             ),

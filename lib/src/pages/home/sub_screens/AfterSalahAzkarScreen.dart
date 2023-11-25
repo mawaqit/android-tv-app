@@ -73,7 +73,6 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
   Widget build(BuildContext context) {
     final translatedHadith = translatedItem(activeHadith);
     final arabicHadith = arabicItem(activeHadith);
-
     return Column(
       children: [
         SizedBox(height: 10),
@@ -83,6 +82,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
             title: azkarTitle,
             arabicText: arabicHadith,
             translatedText: translatedHadith,
+            locale: context.watch<MosqueManager>().mosqueConfig!.hadithLang ?? 'en',
           ),
         ),
         ResponsiveMiniSalahBarWidget(),

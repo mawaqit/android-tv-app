@@ -42,8 +42,10 @@ class _DuaaBetweenAdhanAndIqamaaScreenState
 
   @override
   Widget build(BuildContext context) {
+    // final s = S.of(context);
     return HadithWidget(
       title: 'الدعاء لا يرد بين الأذان والإقامة',
+      locale: context.watch<MosqueManager>().mosqueConfig!.hadithLang ?? 'en',
       arabicText: arabicTr.duaaBetweenSalahAndAdhan,
       translatedText: S.of(context).duaaBetweenSalahAndAdhan,
     );

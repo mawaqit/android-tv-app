@@ -61,11 +61,13 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
     return HadithWidget(
       title: arTranslation.afterAdhanHadithTitle,
       arabicText: arTranslation.afterSalahHadith,
       translatedTitle: S.of(context).afterAdhanHadithTitle,
       translatedText: S.of(context).afterSalahHadith,
+      locale:lang,
     );
   }
 }

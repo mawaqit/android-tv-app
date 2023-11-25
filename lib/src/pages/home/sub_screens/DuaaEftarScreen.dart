@@ -37,12 +37,14 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
   @override
   Widget build(BuildContext context) {
     final arabic = AppLocalizationsAr();
+    final lang = Localizations.localeOf(context).languageCode;
 
     return Column(
       children: [
         AboveSalahBar(),
         Expanded(
           child: HadithWidget(
+            locale: lang,
             title: arabic.duaaElEftar,
             arabicText: arabic.duaaElEftarText,
             translatedText: S.of(context).duaaElEftarText,

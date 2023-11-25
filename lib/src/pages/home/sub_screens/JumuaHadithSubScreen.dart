@@ -17,7 +17,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
     final mosqueConfig = context.read<MosqueManager>().mosqueConfig;
     final tr = S.of(context);
     final jumuaArHadith = AppLocalizationsAr().jumuaaHadith;
-
+    final lang = Localizations.localeOf(context).languageCode;
     if (!mosqueConfig!.jumuaDhikrReminderEnabled!) return Scaffold(backgroundColor: Colors.black);
 
     return Column(
@@ -28,6 +28,7 @@ class JumuaHadithSubScreen extends StatelessWidget {
         ),
         Expanded(
           child: HadithWidget(
+            locale: lang,
             title: tr.jumuaaScreenTitle,
             arabicText: jumuaArHadith,
             translatedText: tr.jumuaaHadith,
