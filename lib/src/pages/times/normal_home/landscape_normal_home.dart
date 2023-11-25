@@ -12,6 +12,8 @@ import 'package:mawaqit/src/pages/times/widgets/jumua_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../home/widgets/FadeInOut.dart';
+
 class LandscapeNormalHome extends StatelessWidget {
   const LandscapeNormalHome({super.key});
 
@@ -35,12 +37,15 @@ class LandscapeNormalHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
-    final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+    final today = mosqueManager.useTomorrowTimes
+        ? AppDateTime.tomorrow()
+        : AppDateTime.now();
 
     final times = mosqueManager.times!.dayTimesStrings(today);
     final iqamas = mosqueManager.times!.dayIqamaStrings(today);
 
-    final isIqamaMoreImportant = mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
+    final isIqamaMoreImportant =
+        mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
     final iqamaEnabled = mosqueManager.mosqueConfig?.iqamaEnabled == true;
 
     final nextActiveSalah = mosqueManager.nextSalahIndex();
@@ -54,16 +59,35 @@ class LandscapeNormalHome extends StatelessWidget {
             children: [
               Expanded(
                 child: Center(
-                  child: SalahItemWidget(
-                    removeBackground: true,
-                    title: S.of(context).shuruk,
-                    time: mosqueManager.getShurukTimeString() ?? '',
-                    isIqamaMoreImportant: mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
-                  ).animate(delay: Duration(milliseconds: 500)).slideX(begin: -1).fadeIn(),
+                  child: FadeInOutWidget(
+                    duration: Duration(seconds: 15),
+                    disableSecond: mosqueManager.isImsakEnabled == false,
+                    first: SalahItemWidget(
+                      removeBackground: true,
+                      title: S.of(context).shuruk,
+                      time: mosqueManager.getShurukTimeString() ?? '',
+                      isIqamaMoreImportant:
+                          mosqueManager.mosqueConfig!.iqamaMoreImportant ==
+                              true,
+                    ),
+                    secondDuration: Duration(seconds: 15),
+                    second: SalahItemWidget(
+                      title: S.of(context).imsak,
+                      time: mosqueManager.imsak ?? "",
+                      removeBackground: true,
+                    ),
+                  ),
                 ),
               ),
-              Expanded(child: HomeTimeWidget().animate().fadeIn().slideY(begin: -1), flex: 2),
-              Expanded(child: Center(child: JumuaWidget().animate(delay: Duration(milliseconds: 500)).slideX(begin: 1).fadeIn())),
+              Expanded(
+                  child: HomeTimeWidget().animate().fadeIn().slideY(begin: -1),
+                  flex: 2),
+              Expanded(
+                  child: Center(
+                      child: JumuaWidget()
+                          .animate(delay: Duration(milliseconds: 500))
+                          .slideX(begin: 1)
+                          .fadeIn())),
             ],
           ),
         ),
@@ -80,14 +104,20 @@ class LandscapeNormalHome extends StatelessWidget {
                     iqama: iqamas[i],
                     withDivider: false,
                     showIqama: iqamaEnabled,
-                    active: nextActiveSalah == i && (i != 1 || !AppDateTime.isFriday || mosqueManager.times?.jumua == null),
+                    active: nextActiveSalah == i &&
+                        (i != 1 ||
+                            !AppDateTime.isFriday ||
+                            mosqueManager.times?.jumua == null),
                     isIqamaMoreImportant: isIqamaMoreImportant,
                   ),
               ]
                   .mapIndexed((i, e) => Expanded(
                           child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 1.vw),
-                        child: e.animate(delay: Duration(milliseconds: 100 * i)).slideY(begin: 1).fadeIn(),
+                        child: e
+                            .animate(delay: Duration(milliseconds: 100 * i))
+                            .slideY(begin: 1)
+                            .fadeIn(),
                       )))
                   .toList(),
             ),
