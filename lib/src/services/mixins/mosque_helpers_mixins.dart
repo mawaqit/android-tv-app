@@ -256,6 +256,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// else return next friday date
   DateTime activeJumuaaDate([DateTime? now]) {
     final nextFriday = nextFridayDate(now);
+    bool isJumuaOrJumua2EmptyOrNull = (times?.jumua ?? '').isEmpty && (times?.jumua2 ?? '').isEmpty;
+    if (isJumuaOrJumua2EmptyOrNull) {
+      return nextFriday;
+    }
 
     final jumuaaTime = times!.jumuaAsDuhr ? timesOfDay(nextFriday)[1] : times!.jumua;
 
