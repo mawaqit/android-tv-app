@@ -131,7 +131,6 @@ class Times {
     String? replacedJumua = (map['jumua'] == null && map['jumua2'] != null)
         ? null
         : map['jumua2'];
-    print('time: $map');
     return Times(
       jumua: map['jumua'] ?? map['jumua2'],
       jumua2: replacedJumua,
