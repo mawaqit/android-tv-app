@@ -256,14 +256,17 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// cases 3: if Jumuaa is not as Duhr and jumuaa or jumuaa2 is not empty return *jumuaa1* time.
   DateTime activeJumuaaDate([DateTime? now]) {
     final nextFriday = nextFridayDate(now);
-    if(times!.jumuaAsDuhr == true) return  timesOfDay(nextFriday)[1].toTimeOfDay()!.toDate(nextFriday);
-    bool isJumuaOrJumua2EmptyOrNull = (times?.jumua ?? '').isEmpty && (times?.jumua2 ?? '').isEmpty;
-    if (isJumuaOrJumua2EmptyOrNull) {
+    if (times!.jumuaAsDuhr == true) return timesOfDay(nextFriday)[1].toTimeOfDay()!.toDate(nextFriday);
+    if (_isJumuaOrJumua2EmptyOrNull()) {
       return nextFriday;
     }
 
-    final jumuaaTime = times!.jumua;
-    return jumuaaTime!.toTimeOfDay()!.toDate(nextFriday);
+    final jumuaaTime = times!.jumua; // return jumuaa1 time
+    return jumuaaTime!.toTimeOfDay()!.toDate(nextFriday); // parsing the value of juma to time of day and then to date
+  }
+
+  bool _isJumuaOrJumua2EmptyOrNull() {
+    return (times?.jumua ?? '').isEmpty && (times?.jumua2 ?? '').isEmpty;
   }
 
   /// if the iqama is less than 2min
