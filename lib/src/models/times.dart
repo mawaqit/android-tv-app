@@ -127,9 +127,13 @@ class Times {
   }
 
   factory Times.fromMap(Map<String, dynamic> map) {
+    /// if the jumua is null and jumua2 is not null, we use jumua2 as jumua
+    String? replacedJumua = (map['jumua'] == null && map['jumua2'] != null)
+        ? null
+        : map['jumua2'];
     return Times(
-      jumua: map['jumua'],
-      jumua2: map['jumua2'],
+      jumua: map['jumua'] ?? map['jumua2'],
+      jumua2: replacedJumua,
       aidPrayerTime: map['aidPrayerTime'],
       aidPrayerTime2: map['aidPrayerTime2'],
       hijriAdjustment: map['hijriAdjustment'] ?? -1,
