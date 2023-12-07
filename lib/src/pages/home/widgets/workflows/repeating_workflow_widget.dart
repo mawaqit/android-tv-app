@@ -232,8 +232,9 @@ class _RepeatingWorkFlowWidgetState extends State<RepeatingWorkFlowWidget> {
   @override
   Widget build(BuildContext context) {
     if (activeItem != null) {
-      final item = widget.items[activeItem!];
-      return item.builder(context, () => onItemDone(activeItem!));
+      final localActiveItem = activeItem;
+      final item = widget.items[localActiveItem!];
+      return item.builder(context, () => onItemDone(localActiveItem));
     }
 
     return widget.child ?? Container();
