@@ -197,9 +197,6 @@ class Api {
   }
 
   static Future<(String, Map<String, dynamic>)?> prepareUserData() async {
-    final uuid = await MosqueManager.loadLocalUUID();
-    if (uuid == null) return null;
-
     final userPreferencesManager = UserPreferencesManager();
     await userPreferencesManager.init();
     final hardware = await DeviceInfoPlugin().androidInfo;
@@ -208,21 +205,31 @@ class Api {
     final space = await DiskSpace.getFreeDiskSpace;
     final totalSpace = await DiskSpace.getTotalDiskSpace;
 
-    final data = {
+    final commonDeviceData = {
       'device-id': await UniqueIdentifier.serial,
       'brand': hardware.brand,
       'model': hardware.model,
       'android-version': hardware.version.release,
       'app-version': softWare.version,
+      'space': totalSpace,
+      'free-space': space,
+    };
+
+    final uuid = await MosqueManager.loadLocalUUID();
+    if (uuid == null) {
+      return ("Mosque uuid is not set", commonDeviceData);
+    }
+
+    final userData = {
+      ...commonDeviceData,
+      'mosque-uuid': uuid,
       'language': language,
       'landscape': userPreferencesManager.orientationLandscape,
       'secondary-screen': userPreferencesManager.isSecondaryScreen,
       'legacy-web-app': userPreferencesManager.webViewMode,
       'announcement-mode': userPreferencesManager.announcementsOnly,
-      'space': totalSpace,
-      'free-space': space,
     };
-    return (uuid, data);
+    return (uuid, userData);
   }
 
   static Future<dynamic> updateUserStatus() async {
