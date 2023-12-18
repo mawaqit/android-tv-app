@@ -109,7 +109,6 @@ dependencies:
   unique_identifier: ^0.3.0
   collection: any
   disk_space: ^0.2.1
-  mocktail: ^1.0.2
 
 dev_dependencies:
   flutter_test:
