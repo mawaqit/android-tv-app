@@ -109,6 +109,7 @@ dependencies:
   unique_identifier: ^0.3.0
   collection: any
   disk_space: ^0.2.1
+  mocktail: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -117,6 +118,7 @@ dev_dependencies:
   # to get unused packages run
   # flutter pub run dependency_validator
   dependency_validator:
+  http_mock_adapter: ^0.4.4
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
