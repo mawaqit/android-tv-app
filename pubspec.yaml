@@ -117,6 +117,7 @@ dev_dependencies:
   # to get unused packages run
   # flutter pub run dependency_validator
   dependency_validator:
+  http_mock_adapter: ^0.4.4
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

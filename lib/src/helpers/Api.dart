@@ -20,6 +20,7 @@ import 'package:xml_parser/xml_parser.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
+import 'api_interceptor/json_interceptor.dart';
 
 class Api {
   static final dio = Dio(
@@ -37,6 +38,8 @@ class Api {
   static final dioStatic = Dio(
     BaseOptions(
       baseUrl: kStaticFilesUrl,
+      connectTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 10),
       headers: {
         'Api-Access-Token': kApiToken,
         'accept': 'application/json',
@@ -50,6 +53,8 @@ class Api {
   static Future<void> init() async {
     dio.interceptors.add(ApiCacheInterceptor(cacheStore));
     dioStatic.interceptors.add(ApiCacheInterceptor(cacheStore));
+    dio.interceptors.add(JsonInterceptor());
+    dioStatic.interceptors.add(JsonInterceptor());
   }
 
   /// only change the base url
@@ -159,9 +164,8 @@ class Api {
     language = (language.split('-')..shuffle()).first;
 
     /// this should be called only on offline mode so it should hit the cache
-    final response = await dioStatic
-        .get('/xml/ahadith/$language.xml')
-        .timeout(Duration(seconds: 5));
+
+    final response = await dioStatic.get('/xml/ahadith/$language.xml');
 
     final document = XmlDocument.from(response.data)!;
 
