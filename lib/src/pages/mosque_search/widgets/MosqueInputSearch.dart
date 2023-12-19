@@ -66,7 +66,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
               noMore = results.isEmpty;
             }))
         .catchError((e, stack) => setState(() {
-              logger.w(e.toString(), '', stack);
+              logger.w(e.toString(), stackTrace: stack);
               loading = false;
               error = S.of(context).backendError;
             }));
