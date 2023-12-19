@@ -107,7 +107,7 @@ class MosqueManager extends ChangeNotifier
 
     /// if getting item returns an error
     onItemError(e, stack) {
-      logger.e(e, '', stack);
+      logger.e(e, stackTrace: stack);
 
       mosque = null;
       notifyListeners();

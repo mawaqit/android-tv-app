@@ -115,7 +115,7 @@ class _SplashScreen extends State<Splash> {
         // e.response!.data;
       }
     } catch (e, stack) {
-      logger.e(e, '', stack);
+      logger.e(e, stackTrace:  stack);
       setState(() => error = ErrorState.mosqueDataError);
       rethrow;
     }
