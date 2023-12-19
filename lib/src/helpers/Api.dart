@@ -20,6 +20,7 @@ import 'package:xml_parser/xml_parser.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
+import 'api_interceptor/json_interceptor.dart';
 
 class Api {
   static final dio = Dio(
@@ -50,6 +51,8 @@ class Api {
   static Future<void> init() async {
     dio.interceptors.add(ApiCacheInterceptor(cacheStore));
     dioStatic.interceptors.add(ApiCacheInterceptor(cacheStore));
+    dio.interceptors.add(JsonInterceptor());
+    dioStatic.interceptors.add(JsonInterceptor());
   }
 
   /// only change the base url
