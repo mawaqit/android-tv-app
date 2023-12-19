@@ -164,6 +164,7 @@ class Api {
     language = (language.split('-')..shuffle()).first;
 
     /// this should be called only on offline mode so it should hit the cache
+
     final response = await dioStatic.get('/xml/ahadith/$language.xml');
 
     final document = XmlDocument.from(response.data)!;
@@ -203,32 +204,64 @@ class Api {
   }
 
   static Future<(String, Map<String, dynamic>)?> prepareUserData() async {
-    final uuid = await MosqueManager.loadLocalUUID();
-    if (uuid == null) return null;
+    try {
+      final userPreferencesManager = UserPreferencesManager();
+      await userPreferencesManager.init();
 
-    final userPreferencesManager = UserPreferencesManager();
-    await userPreferencesManager.init();
-    final hardware = await DeviceInfoPlugin().androidInfo;
-    final softWare = await PackageInfo.fromPlatform();
-    final language = await AppLanguage.getCountryCode();
-    final space = await DiskSpace.getFreeDiskSpace;
-    final totalSpace = await DiskSpace.getTotalDiskSpace;
+      var hardwareFuture = DeviceInfoPlugin().androidInfo;
+      var softwareFuture = PackageInfo.fromPlatform();
+      var languageFuture = AppLanguage.getCountryCode();
+      var freeSpaceFuture = DiskSpace.getFreeDiskSpace;
+      var totalSpaceFuture = DiskSpace.getTotalDiskSpace;
+      var deviceIdFuture = UniqueIdentifier.serial;
 
-    final data = {
-      'device-id': await UniqueIdentifier.serial,
-      'brand': hardware.brand,
-      'model': hardware.model,
-      'android-version': hardware.version.release,
-      'app-version': softWare.version,
-      'language': language,
-      'landscape': userPreferencesManager.orientationLandscape,
-      'secondary-screen': userPreferencesManager.isSecondaryScreen,
-      'legacy-web-app': userPreferencesManager.webViewMode,
-      'announcement-mode': userPreferencesManager.announcementsOnly,
-      'space': totalSpace,
-      'free-space': space,
-    };
-    return (uuid, data);
+      // Wait for all futures to complete in a parallel way
+      var results = await Future.wait([
+        hardwareFuture,
+        softwareFuture,
+        languageFuture,
+        freeSpaceFuture,
+        totalSpaceFuture,
+        deviceIdFuture
+      ]);
+
+      // Extract results
+      var hardware = results[0] as AndroidDeviceInfo;
+      var software = results[1] as PackageInfo;
+      var language = results[2] as String;
+      var freeSpace = results[3] as double;
+      var totalSpace = results[4] as double;
+      var deviceId = results[5] as String;
+
+      final commonDeviceData = {
+        'device-id': deviceId,
+        'brand': hardware.brand,
+        'model': hardware.model,
+        'android-version': hardware.version.release,
+        'app-version': software.version,
+        'space': totalSpace,
+        'free-space': freeSpace,
+      };
+
+      final uuid = await MosqueManager.loadLocalUUID();
+      if (uuid == null) {
+        return ("Mosque uuid is not set", commonDeviceData);
+      }
+
+      final userData = {
+        ...commonDeviceData,
+        'mosque-uuid': uuid,
+        'language': language,
+        'landscape': userPreferencesManager.orientationLandscape,
+        'secondary-screen': userPreferencesManager.isSecondaryScreen,
+        'legacy-web-app': userPreferencesManager.webViewMode,
+        'announcement-mode': userPreferencesManager.announcementsOnly,
+      };
+      return (uuid, userData);
+    } catch (e, stack) {
+      debugPrintStack(label: e.toString(), stackTrace: stack);
+      return null;
+    }
   }
 
   static Future<dynamic> updateUserStatus() async {
