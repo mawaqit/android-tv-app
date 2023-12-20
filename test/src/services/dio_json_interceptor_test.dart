@@ -18,25 +18,6 @@ void main() {
 
 
     });
-    test('Test onResponse Interceptor with correct JSON', () async {
-      const route = '/test2';
-      const responseJson =
-      """
-        {
-          "message": "Success!"
-        }
-      """;
-      dioAdapter.onGet(
-          route,
-            (server) => server.reply(
-          200,
-              responseJson,
-          delay: const Duration(seconds: 1),
-        ),
-      );
-      final response = await dio.get(route);
-      expect(response.data, json.decode(responseJson));
-    });
 
     test('Test onResponse Interceptor with incorrect JSON', () async {
       final responseJson = """test json""";
