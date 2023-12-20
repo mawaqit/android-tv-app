@@ -72,14 +72,19 @@ class Api {
   static Future<bool> kMosqueExistence(int id) {
     var url = 'https://mawaqit.net/en/id/$id?view=desktop';
 
-    return dio.get(url).then((value) => true).catchError((e) => false);
+    return dio
+        .get(url, options: Options(extra: {'bypassJsonInterceptor': true}))
+        .then((value) => true)
+        .catchError((e) => false);
   }
 
   static Future<bool> checkTheInternetConnection() {
     final url = 'https://www.google.com/';
 
     return dio
-        .get(url, options: Options(extra: {'disableCache': true}))
+        .get(url,
+            options: Options(
+                extra: {'disableCache': true, 'bypassJsonInterceptor': true}))
         .timeout(Duration(seconds: 5))
         .then((value) => true)
         .catchError((e) => false);
