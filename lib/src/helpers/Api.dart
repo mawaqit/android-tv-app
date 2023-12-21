@@ -54,7 +54,6 @@ class Api {
     dio.interceptors.add(ApiCacheInterceptor(cacheStore));
     dioStatic.interceptors.add(ApiCacheInterceptor(cacheStore));
     dio.interceptors.add(JsonInterceptor());
-    dioStatic.interceptors.add(JsonInterceptor());
   }
 
   /// only change the base url
@@ -72,14 +71,19 @@ class Api {
   static Future<bool> kMosqueExistence(int id) {
     var url = 'https://mawaqit.net/en/id/$id?view=desktop';
 
-    return dio.get(url).then((value) => true).catchError((e) => false);
+    return dio
+        .get(url, options: Options(extra: {'bypassJsonInterceptor': true}))
+        .then((value) => true)
+        .catchError((e) => false);
   }
 
   static Future<bool> checkTheInternetConnection() {
     final url = 'https://www.google.com/';
 
     return dio
-        .get(url, options: Options(extra: {'disableCache': true}))
+        .get(url,
+            options: Options(
+                extra: {'disableCache': true, 'bypassJsonInterceptor': true}))
         .timeout(Duration(seconds: 5))
         .then((value) => true)
         .catchError((e) => false);
@@ -179,10 +183,10 @@ class Api {
   }
 
   static Future<String> randomHadith({String language = 'ar'}) async {
-    final response = await dio.get(
-      '/2.0/hadith/random',
-      queryParameters: {'lang': language},
-    );
+    final response = await dio.get('/2.0/hadith/random',
+        queryParameters: {'lang': language},
+        options: Options(
+            extra: {'disableCache': true, "bypassJsonInterceptor": true}));
 
     return response.data['text'];
   }
@@ -190,7 +194,8 @@ class Api {
   static Future<dynamic> getWeather(String mosqueUUID) async {
     final response = await dio.get(
       '/2.0/mosque/$mosqueUUID/weather',
-      options: Options(extra: {'disableCache': true}),
+      options:
+          Options(extra: {'disableCache': true, "bypassJsonInterceptor": true}),
     );
 
     return Weather.fromMap(response.data);
