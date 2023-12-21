@@ -184,10 +184,9 @@ class Api {
   }
 
   static Future<String> randomHadith({String language = 'ar'}) async {
-    final response = await dio.get(
-      '/2.0/hadith/random',
-      queryParameters: {'lang': language},
-    );
+    final response = await dio.get('/2.0/hadith/random',
+        queryParameters: {'lang': language},
+        options: Options(extra: {"bypassJsonInterceptor": true}));
 
     return response.data['text'];
   }
