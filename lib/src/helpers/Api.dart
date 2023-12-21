@@ -54,7 +54,6 @@ class Api {
     dio.interceptors.add(ApiCacheInterceptor(cacheStore));
     dioStatic.interceptors.add(ApiCacheInterceptor(cacheStore));
     dio.interceptors.add(JsonInterceptor());
-    dioStatic.interceptors.add(JsonInterceptor());
   }
 
   /// only change the base url
