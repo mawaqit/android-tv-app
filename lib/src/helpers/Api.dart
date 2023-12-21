@@ -195,7 +195,8 @@ class Api {
   static Future<dynamic> getWeather(String mosqueUUID) async {
     final response = await dio.get(
       '/2.0/mosque/$mosqueUUID/weather',
-      options: Options(extra: {'disableCache': true}),
+      options:
+          Options(extra: {'disableCache': true, "bypassJsonInterceptor": true}),
     );
 
     return Weather.fromMap(response.data);
