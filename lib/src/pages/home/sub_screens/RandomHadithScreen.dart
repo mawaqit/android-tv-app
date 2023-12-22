@@ -1,5 +1,4 @@
 import 'dart:isolate';
-
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
@@ -27,8 +26,14 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
-
-    mosqueManager.getRandomHadith().then((value) => setState(() => hadith = value)).catchError((e) => widget.onDone?.call());
+    mosqueManager
+        .getRandomHadith()
+        .then(
+          (value) => setState(() => hadith = value),
+        )
+        .catchError(
+          (e) => widget.onDone?.call(),
+        );
 
     super.initState();
   }

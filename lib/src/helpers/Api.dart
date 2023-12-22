@@ -157,6 +157,7 @@ class Api {
     return mosques;
   }
 
+  /// prepare the data to be cached
   static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
       Future.wait(
           language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
@@ -182,6 +183,7 @@ class Api {
     return hadiths[random].text;
   }
 
+  /// get the hadith from the server directly
   static Future<String> randomHadith({String language = 'ar'}) async {
     final response = await dio.get('/2.0/hadith/random',
         queryParameters: {'lang': language},
