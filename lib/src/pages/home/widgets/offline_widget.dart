@@ -13,14 +13,12 @@ class OfflineWidget extends StatelessWidget {
     final mosqueManager = context.read<MosqueManager>();
     final tr = S.of(context);
 
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: .5.vh, horizontal: .35.vw),
-      child: Row(
+    return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(width: 1.vw),
           CircleAvatar(
-            radius: .6.vwr,
+            radius: .4.vwr,
             backgroundColor: mosqueManager.isOnline ? Colors.green : Colors.red[700],
           ),
           SizedBox(width: .4.vwr),
@@ -29,13 +27,12 @@ class OfflineWidget extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               shadows: kHomeTextShadow,
-              fontSize: 1.5.vwr,
+              fontSize: 1.vwr,
               height: 1.1,
               fontWeight: FontWeight.w400,
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 }

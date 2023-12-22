@@ -42,7 +42,7 @@ class HadithWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? EdgeInsets.all(2.vwr),
+      padding: padding ?? EdgeInsets.all(1.vwr),
       child: Column(
         mainAxisAlignment: mainAxisAlignment,
         children: [
@@ -82,7 +82,7 @@ class HadithWidget extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        fontSize: 6.2.vwr,
+        fontSize: 4.vwr,
         fontWeight: FontWeight.bold,
         color: Colors.white,
         shadows: kAfterAdhanTextShadow,
