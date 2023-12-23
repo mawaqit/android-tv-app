@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -12,6 +14,8 @@ import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart';
 
+import '../../i18n/AppLanguage.dart';
+
 /// allow user to change the app settings
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -19,11 +23,9 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final mosqueManager = context.watch<MosqueManager>();
+    final appLanguage = Provider.of<AppLanguage>(context);
     final userPreferences = context.watch<UserPreferencesManager>();
     final themeManager = context.watch<ThemeNotifier>();
-
     return ScreenWithAnimationWidget(
       animation: 'settings',
       child: Padding(
@@ -44,6 +46,26 @@ class SettingScreen extends StatelessWidget {
                     subtitle: S.of(context).descLang,
                     icon: Icon(Icons.language, size: 35),
                     onTap: () => AppRouter.push(LanguageScreen()),
+                  ),
+                  _SettingItem(
+                    title: S.of(context).randomHadithLanguage,
+                    subtitle: S.of(context).descLang,
+                    icon: Icon(Icons.language, size: 35),
+                    onTap: () => AppRouter.push(
+                      LanguageScreen(
+                        isIconActivated: true,
+                        title: S.of(context).randomHadithLanguage,
+                        description: S.of(context).descLang,
+                        languages: appLanguage.hadithLocalizedLanguage.keys
+                            .toList(),
+                        isSelected: (langCode) =>
+                            appLanguage.hadithLanguage == langCode,
+                        onSelect: (langCode) {
+                           context.read<AppLanguage>().setHadithLanguage(langCode);
+                          AppRouter.pop();
+                        },
+                      ),
+                    ),
                   ),
                   _SettingItem(
                     title: S.of(context).changeMosque,
