@@ -164,6 +164,22 @@
   "hijriAdjustmentsDescription": "Adjust the hijri date locally in your device. This will not affect the online mosque settings",
   "backoffice_default": "Backoffice Defaults",
   "recommended": "Recommended",
-  "sabah": "Sabah"
+  "sabah": "Sabah",
+  "randomHadithLanguage": "Random hadith language",
+  "en": "English",
+  "fr": "French",
+  "ar": "Arabic",
+  "tr": "Turkish",
+  "de": "German",
+  "es": "Spanish",
+  "pt": "Portuguese",
+  "nl": "Dutch",
+  "fr_ar": "French & Arabic",
+  "en_ar": "English & Arabic",
+  "de_ar": "German & Arabic",
+  "ta_ar": "Tamil & Arabic",
+  "tr_ar": "Turkish & Arabic",
+  "es_ar": "Spanish & Arabic",
+  "pt_ar": "Portuguese & Arabic",
+  "nl_ar": "Dutch & Arabic"
 }
- 
