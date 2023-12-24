@@ -6,7 +6,17 @@ import 'package:mawaqit/src/data/config.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// [AppLanguage] is a class that handles the app language
+/// It is a singleton class that can be accessed from anywhere in the app
 class AppLanguage extends ChangeNotifier {
+
+  static final AppLanguage _instance = AppLanguage._internal();
+  factory AppLanguage() {
+    return _instance;
+  }
+
+  AppLanguage._internal();
+
   /// [kHadithLanguage] key stored in the shared preference
   static const  String kHadithLanguage = 'hadith_language';
   String _hadithLanguage = "";
