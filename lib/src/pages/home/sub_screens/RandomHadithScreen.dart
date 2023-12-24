@@ -50,7 +50,7 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
         ),
         Expanded(
           child: HadithWidget(
-            translatedText: hadith,
+            translatedText: context.watch<MosqueManager>().hadith,
             textDirection: StringManager.getTextDirectionOfLocal(
               Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
             ),
