@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -7,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
-import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSelector extends StatelessWidget {
@@ -109,14 +106,6 @@ class LanguageTile extends StatefulWidget {
 }
 
 class _LanguageTileState extends State<LanguageTile> {
-  late final Future<String?> _hadithLanguageFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _hadithLanguageFuture = context.read<AppLanguage>().getHadithLanguage();
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
