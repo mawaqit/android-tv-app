@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -15,6 +13,7 @@ import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart';
 
 import '../../i18n/AppLanguage.dart';
+import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
 class SettingScreen extends StatelessWidget {
@@ -24,8 +23,11 @@ class SettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
+    final mosqueProvider = context.watch<MosqueManager>();
     final userPreferences = context.watch<UserPreferencesManager>();
     final themeManager = context.watch<ThemeNotifier>();
+    final String checkInternet = S.of(context).noInternet;
+    final String hadithLanguage = S.of(context).connectToChangeHadith;
     return ScreenWithAnimationWidget(
       animation: 'settings',
       child: Padding(
@@ -56,13 +58,23 @@ class SettingScreen extends StatelessWidget {
                         isIconActivated: true,
                         title: S.of(context).randomHadithLanguage,
                         description: S.of(context).descLang,
-                        languages: appLanguage.hadithLocalizedLanguage.keys
-                            .toList(),
-                        isSelected: (langCode) =>
-                            appLanguage.hadithLanguage == langCode,
+                        languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
+                        isSelected: (langCode) => appLanguage.hadithLanguage == langCode,
                         onSelect: (langCode) {
-                           context.read<AppLanguage>().setHadithLanguage(langCode);
-                          AppRouter.pop();
+                          bool isConnectedToInternet = mosqueProvider.isOnline;
+                          if (!isConnectedToInternet) {
+                            showCheckInternetDialog(
+                              context: context,
+                              onRetry: () {
+                                AppRouter.pop();
+                              },
+                              title: checkInternet,
+                              content: hadithLanguage,
+                            );
+                          } else {
+                            context.read<AppLanguage>().setHadithLanguage(langCode);
+                            AppRouter.pop();
+                          }
                         },
                       ),
                     ),
