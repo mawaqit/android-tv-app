@@ -30,11 +30,36 @@ mixin MosqueHelpersMixin on ChangeNotifier {
         S.current.isha,
       ][index];
 
+  /// Checks if the Hadith feature should be disabled based on the current Salah time.
+  /// The disabling rule is defined in the mosque configuration.
+  ///
+  /// Returns `true` if the Hadith feature is disabled for the current Salah time.
   bool isDisableHadithBetweenSalah() {
-    final disableTime = mosqueConfig?.randomHadithIntervalDisabling ?? '';
-    final disabledHadithPeriod = int.tryParse(disableTime.split('-').first);
+    (int, int)? periods = _parseDisablingPeriods(mosqueConfig?.randomHadithIntervalDisabling ?? '');
 
-    return disabledHadithPeriod == salahIndex;
+    if (periods == null) {
+      return false;
+    }
+
+    return salahIndex >= periods.$1 && salahIndex <= periods.$2;
+  }
+
+  /// Parses the start and end periods from the disabling interval configuration.
+  /// Returns a `tuple` containing the start and end periods, or `null` if parsing fails.
+  (int, int)? _parseDisablingPeriods(String config) {
+    if (!config.contains('-')) {
+      return null;
+    }
+
+    List<String> parts = config.split('-');
+    int? startPeriod = int.tryParse(parts[0]);
+    int? endPeriod = int.tryParse(parts[1]);
+
+    if (startPeriod == null || endPeriod == null) {
+      return null;
+    }
+
+    return (startPeriod, endPeriod);
   }
 
   bool adhanVoiceEnable([int? salahIndex]) {
