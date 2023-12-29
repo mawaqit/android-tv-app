@@ -40,8 +40,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     if (periods == null) {
       return false;
     }
-
-    return salahIndex >= periods.$1 && salahIndex <= periods.$2;
+    return salahIndex >= periods.$1 && salahIndex < periods.$2;
   }
 
   /// Parses the start and end periods from the disabling interval configuration.
