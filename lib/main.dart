@@ -2,7 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ProviderBase, ProviderContainer, ProviderObserver, ProviderScope;
 import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -13,6 +14,7 @@ import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/ConnectivityService.dart';
 import 'package:mawaqit/src/helpers/CrashlyticsWrapper.dart';
+import 'package:mawaqit/src/helpers/riverpod_logger.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -29,7 +31,12 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
-      runApp(ProviderScope(child: MyApp()));
+      runApp(
+        ProviderScope(
+          child: MyApp(),
+          observers: [RiverpodLogger()],
+        ),
+      );
     },
   );
 }
