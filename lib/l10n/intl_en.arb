@@ -6,6 +6,7 @@
   "languages": "Languages",
   "appLang": "App Language",
   "descLang": "Please select your preferred language",
+  "hadithLangDesc": "This override  your choice in the admin console, you can chose a different language by screen",
   "whoops": "Whoops!",
   "noInternet": "No internet connection",
   "tryAgain": "Try Again",

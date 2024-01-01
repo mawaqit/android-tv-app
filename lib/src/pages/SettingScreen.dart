@@ -44,6 +44,18 @@ class SettingScreen extends StatelessWidget {
                 shrinkWrap: true,
                 children: [
                   _SettingItem(
+                    title: S.of(context).changeMosque,
+                    subtitle: S.of(context).searchMosque,
+                    icon: Icon(MawaqitIcons.icon_mosque, size: 35),
+                    onTap: () => AppRouter.push(MosqueSearchScreen()),
+                  ),
+                  _SettingItem(
+                    title: S.of(context).hijriAdjustments,
+                    subtitle: S.of(context).hijriAdjustmentsDescription,
+                    icon: Icon(MawaqitIcons.icon_mosque, size: 35),
+                    onTap: () => AppRouter.push(HijriAdjustmentsScreen()),
+                  ),
+                  _SettingItem(
                     title: S.of(context).languages,
                     subtitle: S.of(context).descLang,
                     icon: Icon(Icons.language, size: 35),
@@ -51,7 +63,7 @@ class SettingScreen extends StatelessWidget {
                   ),
                   _SettingItem(
                     title: S.of(context).randomHadithLanguage,
-                    subtitle: S.of(context).descLang,
+                    subtitle: S.of(context).hadithLangDesc,
                     icon: Icon(Icons.language, size: 35),
                     onTap: () => AppRouter.push(
                       LanguageScreen(
@@ -79,18 +91,6 @@ class SettingScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  _SettingItem(
-                    title: S.of(context).changeMosque,
-                    subtitle: S.of(context).searchMosque,
-                    icon: Icon(MawaqitIcons.icon_mosque, size: 35),
-                    onTap: () => AppRouter.push(MosqueSearchScreen()),
-                  ),
-                  _SettingItem(
-                    title: S.of(context).hijriAdjustments,
-                    subtitle: S.of(context).hijriAdjustmentsDescription,
-                    icon: Icon(MawaqitIcons.icon_mosque, size: 35),
-                    onTap: () => AppRouter.push(HijriAdjustmentsScreen()),
-                  ),
                   SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
@@ -116,13 +116,6 @@ class SettingScreen extends StatelessWidget {
                       ),
                     )),
                   ),
-                  _SettingSwitchItem(
-                    title: S.of(context).webView,
-                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
-                    icon: Icon(Icons.online_prediction, size: 35),
-                    value: userPreferences.webViewMode,
-                    onChanged: (value) => userPreferences.webViewMode = value,
-                  ),
                   if (!userPreferences.webViewMode)
                     _SettingSwitchItem(
                       title: S.of(context).announcementOnlyMode,
@@ -139,6 +132,13 @@ class SettingScreen extends StatelessWidget {
                       icon: Icon(Icons.monitor, size: 35),
                       onChanged: (value) => userPreferences.isSecondaryScreen = value,
                     ),
+                  _SettingSwitchItem(
+                    title: S.of(context).webView,
+                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    icon: Icon(Icons.online_prediction, size: 35),
+                    value: userPreferences.webViewMode,
+                    onChanged: (value) => userPreferences.webViewMode = value,
+                  ),
                 ],
               ),
             ),
@@ -174,7 +174,10 @@ class _SettingItem extends StatelessWidget {
         leading: icon ?? SizedBox(),
         trailing: Icon(Icons.arrow_forward_ios),
         title: Text(title),
-        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis) : null,
+        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(
+          fontSize: 10,
+          color: Colors.white.withOpacity(0.7)
+        )) : null,
         onTap: onTap,
       ),
     );
