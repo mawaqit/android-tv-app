@@ -12,6 +12,9 @@ import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart';
 
+import '../../i18n/AppLanguage.dart';
+import 'home/widgets/show_check_internet_dialog.dart';
+
 /// allow user to change the app settings
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -19,11 +22,12 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final mosqueManager = context.watch<MosqueManager>();
+    final appLanguage = Provider.of<AppLanguage>(context);
+    final mosqueProvider = context.watch<MosqueManager>();
     final userPreferences = context.watch<UserPreferencesManager>();
     final themeManager = context.watch<ThemeNotifier>();
-
+    final String checkInternet = S.of(context).noInternet;
+    final String hadithLanguage = S.of(context).connectToChangeHadith;
     return ScreenWithAnimationWidget(
       animation: 'settings',
       child: Padding(
@@ -40,12 +44,6 @@ class SettingScreen extends StatelessWidget {
                 shrinkWrap: true,
                 children: [
                   _SettingItem(
-                    title: S.of(context).languages,
-                    subtitle: S.of(context).descLang,
-                    icon: Icon(Icons.language, size: 35),
-                    onTap: () => AppRouter.push(LanguageScreen()),
-                  ),
-                  _SettingItem(
                     title: S.of(context).changeMosque,
                     subtitle: S.of(context).searchMosque,
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
@@ -56,6 +54,42 @@ class SettingScreen extends StatelessWidget {
                     subtitle: S.of(context).hijriAdjustmentsDescription,
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
                     onTap: () => AppRouter.push(HijriAdjustmentsScreen()),
+                  ),
+                  _SettingItem(
+                    title: S.of(context).languages,
+                    subtitle: S.of(context).descLang,
+                    icon: Icon(Icons.language, size: 35),
+                    onTap: () => AppRouter.push(LanguageScreen()),
+                  ),
+                  _SettingItem(
+                    title: S.of(context).randomHadithLanguage,
+                    subtitle: S.of(context).hadithLangDesc,
+                    icon: Icon(Icons.language, size: 35),
+                    onTap: () => AppRouter.push(
+                      LanguageScreen(
+                        isIconActivated: true,
+                        title: S.of(context).randomHadithLanguage,
+                        description: S.of(context).descLang,
+                        languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
+                        isSelected: (langCode) => appLanguage.hadithLanguage == langCode,
+                        onSelect: (langCode) {
+                          bool isConnectedToInternet = mosqueProvider.isOnline;
+                          if (!isConnectedToInternet) {
+                            showCheckInternetDialog(
+                              context: context,
+                              onRetry: () {
+                                AppRouter.pop();
+                              },
+                              title: checkInternet,
+                              content: hadithLanguage,
+                            );
+                          } else {
+                            context.read<AppLanguage>().setHadithLanguage(langCode);
+                            AppRouter.pop();
+                          }
+                        },
+                      ),
+                    ),
                   ),
                   SizedBox(height: 30),
                   Divider(),
@@ -82,13 +116,6 @@ class SettingScreen extends StatelessWidget {
                       ),
                     )),
                   ),
-                  _SettingSwitchItem(
-                    title: S.of(context).webView,
-                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
-                    icon: Icon(Icons.online_prediction, size: 35),
-                    value: userPreferences.webViewMode,
-                    onChanged: (value) => userPreferences.webViewMode = value,
-                  ),
                   if (!userPreferences.webViewMode)
                     _SettingSwitchItem(
                       title: S.of(context).announcementOnlyMode,
@@ -105,6 +132,13 @@ class SettingScreen extends StatelessWidget {
                       icon: Icon(Icons.monitor, size: 35),
                       onChanged: (value) => userPreferences.isSecondaryScreen = value,
                     ),
+                  _SettingSwitchItem(
+                    title: S.of(context).webView,
+                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    icon: Icon(Icons.online_prediction, size: 35),
+                    value: userPreferences.webViewMode,
+                    onChanged: (value) => userPreferences.webViewMode = value,
+                  ),
                 ],
               ),
             ),
@@ -140,7 +174,10 @@ class _SettingItem extends StatelessWidget {
         leading: icon ?? SizedBox(),
         trailing: Icon(Icons.arrow_forward_ios),
         title: Text(title),
-        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis) : null,
+        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(
+          fontSize: 10,
+          color: Colors.white.withOpacity(0.7)
+        )) : null,
         onTap: onTap,
       ),
     );

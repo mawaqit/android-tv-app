@@ -55,9 +55,8 @@ class MosqueManager extends ChangeNotifier
   Future<void> init() async {
     await Api.init();
     await loadFromLocale();
-    // subscribeToTime();
+    initState();
     listenToConnectivity();
-
     notifyListeners();
   }
 
