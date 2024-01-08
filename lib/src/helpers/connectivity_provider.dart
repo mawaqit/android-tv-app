@@ -12,7 +12,7 @@ class ConnectivityProvider extends StreamNotifier<ConnectivityStatus> {
   Stream<ConnectivityStatus> build() {
     return ref
         .watch(connectivityServiceProvider(ConnectivityServiceParams(
-          interval: const Duration(seconds: 2),
+          interval: const Duration(seconds: 10),
         )))
         .onStatusChange;
   }
