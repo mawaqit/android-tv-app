@@ -13,8 +13,8 @@ class RiverpodLogger extends ProviderObserver {
     log('''
        {
           "provider": "${provider.name ?? provider.runtimeType}",
-          "newValue": "$newValue",
           "previousValue": "$previousValue",
+          "newValue": "$newValue",
        }
     ''');
   }
