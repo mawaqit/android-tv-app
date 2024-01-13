@@ -10,3 +10,6 @@ const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
+
+/// [kStorageLimit] limit for the app to work correctly
+const double kStorageLimit = 200;
