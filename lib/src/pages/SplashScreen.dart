@@ -30,10 +30,9 @@ import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:wakelock/wakelock.dart';
-
 import '../helpers/device_manager_provider.dart';
 
-enum ErrorState { mosqueNotFound, noInternet, mosqueDataError, storageError }
+enum ErrorState { mosqueNotFound, noInternet, mosqueDataError}
 
 class Splash extends ConsumerStatefulWidget {
   @override
@@ -55,8 +54,7 @@ class _SplashScreen extends ConsumerState<Splash> {
 
   Future<void> initApplicationUI() async {
     await GlobalConfiguration().loadFromAsset("configuration");
-    generateStream(Duration(minutes: 10))
-        .listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
+    generateStream(Duration(minutes: 10)).listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
 
     Hive.initFlutter();
 
@@ -94,14 +92,10 @@ class _SplashScreen extends ConsumerState<Splash> {
   Future<void> _refreshDeviceStorage() async {
     await ref.read(deviceManagerProvider.notifier).getFreeSpace();
   }
+
   /// navigates to first screen
   Future<void> _initApplication() async {
     try {
-      final deviceInfo =  ref.read(deviceManagerProvider);
-      if (deviceInfo.hasError) {
-        setState(() => error = ErrorState.storageError);
-        return;
-      }
       await initApplicationUI();
       var settings = await _initSettings();
       var goBoarding = await loadBoarding();
@@ -142,14 +136,18 @@ class _SplashScreen extends ConsumerState<Splash> {
   Widget build(BuildContext context) {
     RelativeSizes.instance.size = MediaQuery.of(context).size;
 
+    final deviceInfo = ref.watch(deviceManagerProvider);
+
+    if (deviceInfo.hasError) {
+      return ErrorScreen(
+        title: S.of(context).error,
+        description: S.of(context).lowStorageMessage,
+        image: R.ASSETS_IMG_ICON_STORAGE_ERROR_SVG,
+        onTryAgain: _refreshDeviceStorage,
+      );
+    }
+
     switch (error) {
-      case ErrorState.storageError:
-        return ErrorScreen(
-          title: S.of(context).error,
-          description: S.of(context).lowStorageMessage,
-          image: R.ASSETS_IMG_ICON_STORAGE_ERROR_PNG,
-          onTryAgain: _refreshDeviceStorage,
-        );
       case ErrorState.mosqueNotFound:
         return ErrorScreen(
           title: S.of(context).reset,
