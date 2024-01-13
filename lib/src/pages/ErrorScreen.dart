@@ -53,11 +53,12 @@ class ErrorScreen extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             Text(
               title,
               style: TextStyle(color: Colors.white70, fontSize: 40.0, fontWeight: FontWeight.bold),
             ),
+            SizedBox(height: 10),
             Text(
               description,
               style: TextStyle(color: Colors.white70, fontSize: 15.0),
