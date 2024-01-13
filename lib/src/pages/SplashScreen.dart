@@ -6,6 +6,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -30,14 +31,16 @@ import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:wakelock/wakelock.dart';
 
-enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
+import '../helpers/device_manager_provider.dart';
 
-class Splash extends StatefulWidget {
+enum ErrorState { mosqueNotFound, noInternet, mosqueDataError, storageError }
+
+class Splash extends ConsumerStatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _SplashScreen();
+  _SplashScreen createState() => _SplashScreen();
 }
 
-class _SplashScreen extends State<Splash> {
+class _SplashScreen extends ConsumerState<Splash> {
   final animationFuture = Completer<void>();
 
   SharedPref sharedPref = SharedPref();
@@ -52,7 +55,8 @@ class _SplashScreen extends State<Splash> {
 
   Future<void> initApplicationUI() async {
     await GlobalConfiguration().loadFromAsset("configuration");
-    generateStream(Duration(minutes: 10)).listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
+    generateStream(Duration(minutes: 10))
+        .listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
 
     Hive.initFlutter();
 
@@ -86,9 +90,18 @@ class _SplashScreen extends State<Splash> {
     return res == null;
   }
 
+  /// [_refreshDeviceStorage] checks if the device has enough storage to run the app
+  Future<void> _refreshDeviceStorage() async {
+    await ref.read(deviceManagerProvider.notifier).getFreeSpace();
+  }
   /// navigates to first screen
   Future<void> _initApplication() async {
     try {
+      final deviceInfo =  ref.read(deviceManagerProvider);
+      if (deviceInfo.hasError) {
+        setState(() => error = ErrorState.storageError);
+        return;
+      }
       await initApplicationUI();
       var settings = await _initSettings();
       var goBoarding = await loadBoarding();
@@ -130,6 +143,13 @@ class _SplashScreen extends State<Splash> {
     RelativeSizes.instance.size = MediaQuery.of(context).size;
 
     switch (error) {
+      case ErrorState.storageError:
+        return ErrorScreen(
+          title: S.of(context).error,
+          description: S.of(context).lowStorageMessage,
+          image: R.ASSETS_IMG_ICON_STORAGE_ERROR_PNG,
+          onTryAgain: _refreshDeviceStorage,
+        );
       case ErrorState.mosqueNotFound:
         return ErrorScreen(
           title: S.of(context).reset,
