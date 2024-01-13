@@ -86,8 +86,8 @@ class R {
   /// ![preview](file://E:\Projects\android-tv\assets\img\icon_exit.png)
   static const String ASSETS_IMG_ICON_EXIT_PNG = 'assets/img/icon_exit.png';
 
-  /// ![preview](file://E:\Projects\android-tv\assets\img\icon_storage_error.png)
-  static const String ASSETS_IMG_ICON_STORAGE_ERROR_PNG = 'assets/img/icon_storage_error.png';
+  /// ![preview](file://E:\Projects\android-tv\assets\img\icon_storage_error.svg)
+  static const String ASSETS_IMG_ICON_STORAGE_ERROR_SVG = 'assets/img/icon_storage_error.svg';
 
   /// ![preview](file://E:\Projects\android-tv\assets\scripts\clean.js)
   static const String ASSETS_SCRIPTS_CLEAN_JS = 'assets/scripts/clean.js';
