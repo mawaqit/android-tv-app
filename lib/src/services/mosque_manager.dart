@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/main.dart';
@@ -239,3 +240,10 @@ class MosqueManager extends ChangeNotifier
 class InvalidMosqueId implements Exception {}
 
 class GpsError implements Exception {}
+
+/// [mosqueManagerProvider] provides [MosqueManager] instance
+final mosqueManagerProvider = Provider((ref) {
+  final manager = MosqueManager();
+  manager.init();
+  return manager;
+});
