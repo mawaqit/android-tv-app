@@ -184,5 +184,6 @@
   "pt_ar": "Portuguese & Arabic",
   "nl_ar": "Dutch & Arabic",
   "connectToChangeHadith": "Please connect to the internet to change the hadith language.",
-  "retry": "Retry"
+  "retry": "Retry",
+  "lowStorageMessage": "Low storage space, please free some space to continue"
 }
