@@ -36,7 +36,7 @@ dependencies:
   firebase_crashlytics: ^3.2.0
 
   # monitoring/logging
-  sentry_flutter: ^7.5.2
+  sentry_flutter: ^7.14.0
   logger: ^2.0.2+1
 
   # STORAGE
@@ -59,7 +59,7 @@ dependencies:
   cached_network_image: ^3.2.3
   xml_parser: ^1.0.0
 
-  share_plus: ^6.3.1
+  share_plus: ^7.2.1
   launch_review: ^3.0.1
   url_launcher: ^6.1.11
   store_redirect: ^2.0.1
@@ -68,11 +68,11 @@ dependencies:
 
   # TOOLS
   google_fonts: ^4.0.4
-  package_info_plus: ^3.0.3
-  device_info_plus: ^9.0.2
+  package_info_plus: ^4.0.0
+  device_info_plus: ^9.1.1
   android_intent_plus: ^4.0.0
   global_configuration: ^2.0.0-nullsafety.1
-  wakelock: ^0.6.2
+  wakelock_plus:
   path_provider: ^2.0.14
   uuid: ^3.0.5
 
@@ -147,6 +147,7 @@ flutter:
     - assets/animations/lottie/
     - assets/svg/
     - assets/voices/
+    - shorebird.yaml
 
   fonts:
     - family: MawaqitIcons
