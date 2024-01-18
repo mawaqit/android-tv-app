@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
-    show AsyncValueX, ConsumerWidget, FutureProvider, ProviderBase, ProviderContainer, ProviderObserver, ProviderScope, UncontrolledProviderScope;
+    show FutureProvider, ProviderContainer, UncontrolledProviderScope;
 import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -15,7 +15,6 @@ import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/ConnectivityService.dart';
 import 'package:mawaqit/src/helpers/CrashlyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/device_manager_provider.dart';
-import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/helpers/riverpod_logger.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
@@ -25,7 +24,7 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart'
-    show ChangeNotifierProvider, Consumer, MultiProvider, ProviderObserver, UncontrolledProviderScope, StreamProvider;
+    show ChangeNotifierProvider, Consumer, MultiProvider, StreamProvider;
 import 'package:sizer/sizer.dart';
 
 /// [directoryProvider]  get the cache directory in the device
