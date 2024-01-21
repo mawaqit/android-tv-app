@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -12,11 +14,18 @@ import 'package:mawaqit/src/pages/times/widgets/jumua_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../main.dart';
+import '../../../services/app_update_manager.dart';
 import '../../home/widgets/FadeInOut.dart';
 
-class LandscapeNormalHome extends StatelessWidget {
+class LandscapeNormalHome extends ConsumerStatefulWidget {
   const LandscapeNormalHome({super.key});
 
+  @override
+  ConsumerState<LandscapeNormalHome> createState() => _LandscapeNormalHomeState();
+}
+
+class _LandscapeNormalHomeState extends ConsumerState<LandscapeNormalHome> {
   String salahName(int index) {
     switch (index) {
       case 0:
@@ -34,12 +43,26 @@ class LandscapeNormalHome extends StatelessWidget {
     }
   }
 
+
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+
+  void showSnack(String text) {
+    if (_scaffoldKey.currentContext != null) {
+      ScaffoldMessenger.of(_scaffoldKey.currentContext!).showSnackBar(SnackBar(content: Text(text)));
+    }
+  }
+  @override
+  void initState() {
+    ref.read(appUpdateManagerProvider);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
-    final today = mosqueManager.useTomorrowTimes
-        ? AppDateTime.tomorrow()
-        : AppDateTime.now();
+    final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
     final times = mosqueManager.times!.dayTimesStrings(today);
     final iqamas = mosqueManager.times!.dayIqamaStrings(today);

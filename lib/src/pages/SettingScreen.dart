@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
@@ -11,8 +12,10 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../i18n/AppLanguage.dart';
+import '../services/app_update_manager.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
@@ -61,6 +64,7 @@ class SettingScreen extends StatelessWidget {
                     icon: Icon(Icons.language, size: 35),
                     onTap: () => AppRouter.push(LanguageScreen()),
                   ),
+                  SettingCard(),
                   _SettingItem(
                     title: S.of(context).randomHadithLanguage,
                     subtitle: S.of(context).hadithLangDesc,
@@ -214,6 +218,24 @@ class _SettingSwitchItem extends StatelessWidget {
         value: value,
         onChanged: onChanged,
       ),
+    );
+  }
+}
+
+class SettingCard extends riverpod.ConsumerWidget {
+  const SettingCard({super.key});
+
+  @override
+  Widget build(BuildContext context, riverpod.WidgetRef ref) {
+
+    return _SettingItem(
+      title: S.of(context).check_for_updates,
+      subtitle: S.of(context).check_for_updates_description,
+      icon: Icon(Icons.update, size: 35),
+      onTap: () async {
+        await ref.read(appUpdateManagerProvider.notifier).settingsUpdate();
+        ref.read(appUpdateManagerProvider.notifier).build();
+      },
     );
   }
 }

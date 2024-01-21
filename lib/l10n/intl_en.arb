@@ -184,5 +184,7 @@
   "pt_ar": "Portuguese & Arabic",
   "nl_ar": "Dutch & Arabic",
   "connectToChangeHadith": "Please connect to the internet to change the hadith language.",
-  "retry": "Retry"
+  "retry": "Retry",
+  "check_for_updates": "Check for updates",
+  "check_for_updates_description": "Check if there is new update for the app or not"
 }

@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/services/app_update_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
-abstract class StatelessOrientationWidget extends StatefulWidget {
+abstract class StatelessOrientationWidget extends ConsumerStatefulWidget {
   const StatelessOrientationWidget({super.key});
 
   @override
-  State<StatelessOrientationWidget> createState() => _StatelessOrientationWidgetState();
+  createState() => _StatelessOrientationWidgetState();
 
   Widget buildLandscape(BuildContext context);
 
   Widget buildPortrait(BuildContext context) => buildLandscape(context);
 }
 
-class _StatelessOrientationWidgetState extends State<StatelessOrientationWidget> {
+class _StatelessOrientationWidgetState extends ConsumerState<StatelessOrientationWidget> {
+  @override
+  void initState() {
+    ref.read(appUpdateManagerProvider.notifier).scheduleUpdate();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final userPrefs = context.watch<UserPreferencesManager>();
