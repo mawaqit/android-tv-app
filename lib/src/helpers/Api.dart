@@ -23,6 +23,7 @@ import 'package:xml_parser/xml_parser.dart';
 
 import '../models/mosque.dart';
 import '../models/weather.dart';
+import 'api_interceptor/json_interceptor.dart';
 
 class Api {
   static final dio = Dio(
@@ -40,6 +41,8 @@ class Api {
   static final dioStatic = Dio(
     BaseOptions(
       baseUrl: kStaticFilesUrl,
+      connectTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 10),
       headers: {
         'Api-Access-Token': kApiToken,
         'accept': 'application/json',
@@ -53,6 +56,7 @@ class Api {
   static Future<void> init() async {
     dio.interceptors.add(ApiCacheInterceptor(cacheStore));
     dioStatic.interceptors.add(ApiCacheInterceptor(cacheStore));
+    dio.interceptors.add(JsonInterceptor());
   }
 
   /// only change the base url
@@ -70,14 +74,19 @@ class Api {
   static Future<bool> kMosqueExistence(int id) {
     var url = 'https://mawaqit.net/en/id/$id?view=desktop';
 
-    return dio.get(url).then((value) => true).catchError((e) => false);
+    return dio
+        .get(url, options: Options(extra: {'bypassJsonInterceptor': true}))
+        .then((value) => true)
+        .catchError((e) => false);
   }
 
   static Future<bool> checkTheInternetConnection() {
     final url = 'https://www.google.com/';
 
     return dio
-        .get(url, options: Options(extra: {'disableCache': true}))
+        .get(url,
+            options: Options(
+                extra: {'disableCache': true, 'bypassJsonInterceptor': true}))
         .timeout(Duration(seconds: 5))
         .then((value) => true)
         .catchError((e) => false);
@@ -151,6 +160,7 @@ class Api {
     return mosques;
   }
 
+  /// prepare the data to be cached
   static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
       Future.wait(
           language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
@@ -162,9 +172,7 @@ class Api {
     language = (language.split('-')..shuffle()).first;
 
     /// this should be called only on offline mode so it should hit the cache
-    final response = await dioStatic
-        .get('/xml/ahadith/$language.xml')
-        .timeout(Duration(seconds: 5));
+    final response = await dioStatic.get('/xml/ahadith/$language.xml').timeout(Duration(seconds: 5));
 
     final document = XmlDocument.from(response.data)!;
 
@@ -177,11 +185,12 @@ class Api {
     return hadiths[random].text;
   }
 
+  /// get the hadith from the server directly
   static Future<String> randomHadith({String language = 'ar'}) async {
-    final response = await dio.get(
-      '/2.0/hadith/random',
-      queryParameters: {'lang': language},
-    );
+    final response = await dio.get('/2.0/hadith/random',
+        queryParameters: {'lang': language},
+        options: Options(
+            extra: {'disableCache': true, "bypassJsonInterceptor": true}));
 
     return response.data['text'];
   }
@@ -189,7 +198,8 @@ class Api {
   static Future<dynamic> getWeather(String mosqueUUID) async {
     final response = await dio.get(
       '/2.0/mosque/$mosqueUUID/weather',
-      options: Options(extra: {'disableCache': true}),
+      options:
+          Options(extra: {'disableCache': true, "bypassJsonInterceptor": true}),
     );
 
     return Weather.fromMap(response.data);
@@ -203,32 +213,64 @@ class Api {
   }
 
   static Future<(String, Map<String, dynamic>)?> prepareUserData() async {
-    final uuid = await MosqueManager.loadLocalUUID();
-    if (uuid == null) return null;
+    try {
+      final userPreferencesManager = UserPreferencesManager();
+      await userPreferencesManager.init();
 
-    final userPreferencesManager = UserPreferencesManager();
-    await userPreferencesManager.init();
-    final hardware = await DeviceInfoPlugin().androidInfo;
-    final softWare = await PackageInfo.fromPlatform();
-    final language = await AppLanguage.getCountryCode();
-    final space = await DiskSpace.getFreeDiskSpace;
-    final totalSpace = await DiskSpace.getTotalDiskSpace;
+      var hardwareFuture = DeviceInfoPlugin().androidInfo;
+      var softwareFuture = PackageInfo.fromPlatform();
+      var languageFuture = AppLanguage.getCountryCode();
+      var freeSpaceFuture = DiskSpace.getFreeDiskSpace;
+      var totalSpaceFuture = DiskSpace.getTotalDiskSpace;
+      var deviceIdFuture = UniqueIdentifier.serial;
 
-    final data = {
-      'device-id': await UniqueIdentifier.serial,
-      'brand': hardware.brand,
-      'model': hardware.model,
-      'android-version': hardware.version.release,
-      'app-version': softWare.version,
-      'language': language,
-      'landscape': userPreferencesManager.orientationLandscape,
-      'secondary-screen': userPreferencesManager.isSecondaryScreen,
-      'legacy-web-app': userPreferencesManager.webViewMode,
-      'announcement-mode': userPreferencesManager.announcementsOnly,
-      'space': totalSpace,
-      'free-space': space,
-    };
-    return (uuid, data);
+      // Wait for all futures to complete in a parallel way
+      var results = await Future.wait([
+        hardwareFuture,
+        softwareFuture,
+        languageFuture,
+        freeSpaceFuture,
+        totalSpaceFuture,
+        deviceIdFuture
+      ]);
+
+      // Extract results
+      var hardware = results[0] as AndroidDeviceInfo;
+      var software = results[1] as PackageInfo;
+      var language = results[2] as String;
+      var freeSpace = results[3] as double;
+      var totalSpace = results[4] as double;
+      var deviceId = results[5] as String;
+
+      final commonDeviceData = {
+        'device-id': deviceId,
+        'brand': hardware.brand,
+        'model': hardware.model,
+        'android-version': hardware.version.release,
+        'app-version': software.version,
+        'space': totalSpace,
+        'free-space': freeSpace,
+      };
+
+      final uuid = await MosqueManager.loadLocalUUID();
+      if (uuid == null) {
+        return ("Mosque uuid is not set", commonDeviceData);
+      }
+
+      final userData = {
+        ...commonDeviceData,
+        'mosque-uuid': uuid,
+        'language': language,
+        'landscape': userPreferencesManager.orientationLandscape,
+        'secondary-screen': userPreferencesManager.isSecondaryScreen,
+        'legacy-web-app': userPreferencesManager.webViewMode,
+        'announcement-mode': userPreferencesManager.announcementsOnly,
+      };
+      return (uuid, userData);
+    } catch (e, stack) {
+      debugPrintStack(label: e.toString(), stackTrace: stack);
+      return null;
+    }
   }
 
   static Future<dynamic> updateUserStatus() async {
@@ -241,31 +283,5 @@ class Api {
         .post('/3.0/mosque/${uuid}/androidtv-life-status', data: data)
         .then((value) => logger.d(value))
         .catchError((e) => logger.d((e as DioError).requestOptions.uri));
-  }
-
-  static Future<String> getLatestVersion() async {
-    final response = await dio.get('/2.0/tv/version');
-
-    return response.data['version'];
-  }
-
-  /// downloaded apk will be saved in the cache folder under the name mawaqit.apk
-  static Future<String> downloadApk({ValueChanged<double>? onProgress}) async {
-    final dir = await getApplicationSupportDirectory();
-
-    final oldFile = File('${dir.path}/mawaqit.apk');
-
-    if (await oldFile.exists()) {
-      await oldFile.delete();
-    }
-
-    await dio
-        .download('https://get.mawaqit.net/apk/tv', '${dir.path}/mawaqit.apk',
-            onReceiveProgress: (count, total) {
-      final progress = count / total * 100;
-      onProgress?.call(progress);
-    });
-
-    return '${dir.path}/mawaqit.apk';
   }
 }

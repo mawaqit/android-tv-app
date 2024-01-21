@@ -22,7 +22,7 @@ class MosqueHeader extends StatelessOrientationWidget {
     final mosqueConfig = context.watch<MosqueManager>().mosqueConfig;
 
     return Padding(
-      padding: EdgeInsets.only(top: 1.8.vh, left: .8.vw, right: .8.vw),
+      padding: EdgeInsets.only(top: 1.8.vh, right: .8.vw),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -30,8 +30,6 @@ import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:wakelock/wakelock.dart';
 
-import '../services/update_manager/update_manager.dart';
-
 enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
 
 class Splash extends StatefulWidget {
@@ -54,17 +52,14 @@ class _SplashScreen extends State<Splash> {
 
   Future<void> initApplicationUI() async {
     await GlobalConfiguration().loadFromAsset("configuration");
-    generateStream(Duration(minutes: 10)).listen((event) =>
-        Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
+    generateStream(Duration(minutes: 10)).listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
 
     Hive.initFlutter();
 
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(!kDebugMode);
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
     HttpOverrides.global = MyHttpOverrides();
-    FocusManager.instance.highlightStrategy =
-        FocusHighlightStrategy.alwaysTraditional;
+    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
 
     // hide status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -94,7 +89,6 @@ class _SplashScreen extends State<Splash> {
   /// navigates to first screen
   Future<void> _initApplication() async {
     try {
-      await UpdateManager.instance().init();
       await initApplicationUI();
       var settings = await _initSettings();
       var goBoarding = await loadBoarding();
@@ -109,8 +103,7 @@ class _SplashScreen extends State<Splash> {
       } else {
         AppRouter.pushReplacement(OfflineHomeScreen());
       }
-    } on DioError catch (e, stack) {
-      logger.e(e, 'e', stack);
+    } on DioError catch (e) {
       if (e.response == null) {
         print('no internet connection');
         print(e.requestOptions.uri);
@@ -122,7 +115,7 @@ class _SplashScreen extends State<Splash> {
         // e.response!.data;
       }
     } catch (e, stack) {
-      logger.e(e, 'e', stack);
+      logger.e(e, stackTrace:  stack);
       setState(() => error = ErrorState.mosqueDataError);
       rethrow;
     }
@@ -179,8 +172,7 @@ class _SplashScreen extends State<Splash> {
                 child: SplashScreen.callback(
                   isLoading: false,
                   onSuccess: (e) => animationFuture.complete(),
-                  onError: (error, stacktrace) =>
-                      animationFuture.completeError(error, stacktrace),
+                  onError: (error, stacktrace) => animationFuture.completeError(error, stacktrace),
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
                   startAnimation: 'idle',

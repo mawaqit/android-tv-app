@@ -40,14 +40,15 @@ class CrashlyticsWrapper {
     Sentry.configureScope((scopes) {
       if (userData == null) {
         scopes.setUser(null);
+        
         scopes.setContexts("user-data", null);
         return;
       }
-
       final (uuid, data) = userData;
 
+      scopes.setTag('app-version', data['app-version']);
+      scopes.setTag('android-version', data['android-version']);
       scopes.setUser(SentryUser(segment: uuid, id: data['device-id']));
-
       scopes.setContexts("user-data", data);
     });
   }

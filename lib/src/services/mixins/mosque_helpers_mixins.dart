@@ -30,18 +30,41 @@ mixin MosqueHelpersMixin on ChangeNotifier {
         S.current.isha,
       ][index];
 
+  /// Checks if the Hadith feature should be disabled based on the current Salah time.
+  /// The disabling rule is defined in the mosque configuration.
+  ///
+  /// Returns `true` if the Hadith feature is disabled for the current Salah time.
   bool isDisableHadithBetweenSalah() {
-    final disableTime = mosqueConfig?.randomHadithIntervalDisabling ?? '';
-    final disabledHadithPeriod = int.tryParse(disableTime.split('-').first);
+    (int, int)? periods = _parseDisablingPeriods(mosqueConfig?.randomHadithIntervalDisabling ?? '');
 
-    return disabledHadithPeriod == salahIndex;
+    if (periods == null) {
+      return false;
+    }
+    return salahIndex >= periods.$1 && salahIndex < periods.$2;
+  }
+
+  /// Parses the start and end periods from the disabling interval configuration.
+  /// Returns a `tuple` containing the start and end periods, or `null` if parsing fails.
+  (int, int)? _parseDisablingPeriods(String config) {
+    if (!config.contains('-')) {
+      return null;
+    }
+
+    List<String> parts = config.split('-');
+    int? startPeriod = int.tryParse(parts[0]);
+    int? endPeriod = int.tryParse(parts[1]);
+
+    if (startPeriod == null || endPeriod == null) {
+      return null;
+    }
+
+    return (startPeriod, endPeriod);
   }
 
   bool adhanVoiceEnable([int? salahIndex]) {
     salahIndex ??= this.salahIndex;
 
-    return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1' &&
-        (mosqueConfig?.adhanVoice?.isNotEmpty ?? false);
+    return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1' && (mosqueConfig?.adhanVoice?.isNotEmpty ?? false);
   }
 
   int get salahIndex => (nextSalahIndex() - 1) % 5;
@@ -55,15 +78,12 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     if (shrukDate == null) return false;
 
-    return AppDateTime.now().isAfter(actualTimes()[0]) &&
-        AppDateTime.now().isBefore(shrukDate);
+    return AppDateTime.now().isAfter(actualTimes()[0]) && AppDateTime.now().isBefore(shrukDate);
   }
 
   String getShurukInString(BuildContext context) {
-    final shurukTime =
-        times!.shuruq(AppDateTime.now())!.difference(AppDateTime.now());
-    return StringManager.getCountDownText(
-        context, shurukTime, S.of(context).shuruk);
+    final shurukTime = times!.shuruq(AppDateTime.now())!.difference(AppDateTime.now());
+    return StringManager.getCountDownText(context, shurukTime, S.of(context).shuruk);
   }
 
   String? getShurukTimeString([DateTime? date]) {
@@ -82,20 +102,16 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   bool isEidFirstDay(int? hijriAdjustment) {
     final hijri = mosqueHijriDate(hijriAdjustment);
 
-    return (hijri.islamicMonth == 9 && hijri.islamicDate == 1) ||
-        (hijri.islamicMonth == 11 && hijri.islamicDate == 10);
+    return (hijri.islamicMonth == 9 && hijri.islamicDate == 1) || (hijri.islamicMonth == 11 && hijri.islamicDate == 10);
   }
 
   bool showEid(int? hijriAdjustment) {
-    if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null)
-      return false;
+    if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) return false;
 
     final date = mosqueHijriDate(hijriAdjustment);
     return (date.islamicMonth == 8 && date.islamicDate >= 23) ||
         (date.islamicMonth == 9 && date.islamicDate == 1) ||
-        (date.islamicMonth == 11 &&
-            date.islamicDate < 11 &&
-            date.islamicDate >= 3);
+        (date.islamicMonth == 11 && date.islamicDate < 11 && date.islamicDate >= 3);
   }
 
   /// get today salah prayer times as a list of times
@@ -111,9 +127,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     final times = actualTimes(date);
 
-    return iqamasOfDay(date)
-        .mapIndexed((i, e) => e.toTimeOfDay(tryOffset: times[i])!.toDate(date))
-        .toList();
+    return iqamasOfDay(date).mapIndexed((i, e) => e.toTimeOfDay(tryOffset: times[i])!.toDate(date)).toList();
   }
 
   /// return the upcoming salah index
@@ -149,8 +163,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     /// next salah is tomorrow fajr
     if (duration < Duration.zero) {
-      final tomorrowFajr =
-          tomorrowTimes[0].toTimeOfDay()!.toDate(now.add(Duration(days: 1)));
+      final tomorrowFajr = tomorrowTimes[0].toTimeOfDay()!.toDate(now.add(Duration(days: 1)));
 
       return tomorrowFajr.difference(now);
     }
@@ -170,8 +183,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     if (mosqueConfig == null) return Duration.zero;
 
     return Duration(
-      minutes:
-          int.tryParse(mosqueConfig!.duaAfterPrayerShowTimes[salahIndex]) ?? 10,
+      minutes: int.tryParse(mosqueConfig!.duaAfterPrayerShowTimes[salahIndex]) ?? 10,
     );
   }
 
@@ -186,8 +198,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       /// otherwise show tomorrow imsak
       if (now.isAfter(actualTimes()[0])) tomorrowFajr = tomorrowTimes[0];
 
-      int minutes =
-          tomorrowFajr.toTimeOfDay()!.inMinutes - times!.imsakNbMinBeforeFajr;
+      int minutes = tomorrowFajr.toTimeOfDay()!.inMinutes - times!.imsakNbMinBeforeFajr;
 
       String _timeTwoDigit = timeTwoDigit(
         seconds: minutes % 60,
@@ -206,8 +217,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   @Deprecated('Use AppDateTime.now()')
   DateTime mosqueDate() => AppDateTime.now();
 
-  MawaqitHijriCalendar mosqueHijriDate(int? forceAdjustment) =>
-      MawaqitHijriCalendar.fromDateWithAdjustments(
+  MawaqitHijriCalendar mosqueHijriDate(int? forceAdjustment) => MawaqitHijriCalendar.fromDateWithAdjustments(
         mosqueDate(),
         force30Days: times!.hijriDateForceTo30,
         adjustment: forceAdjustment ?? times!.hijriAdjustment,
@@ -243,8 +253,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// this will modify the duhr time to jumua time if it's mosque and friday
   List<String> get todayTimes => timesOfDay(mosqueDate());
 
-  List<String> get tomorrowTimes =>
-      timesOfDay(mosqueDate().add(Duration(days: 1)));
+  List<String> get tomorrowTimes => timesOfDay(mosqueDate().add(Duration(days: 1)));
 
   @Deprecated('User Times.dayIqamaStrings')
   List<String> iqamasOfDay(DateTime date) => times!.dayIqamaStrings(date);
@@ -253,8 +262,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   List<String> get todayIqama => iqamasOfDay(mosqueDate());
 
   @Deprecated('Use times.dayIqamaStrings')
-  List<String> get tomorrowIqama =>
-      iqamasOfDay(mosqueDate().add(Duration(days: 1)));
+  List<String> get tomorrowIqama => iqamasOfDay(mosqueDate().add(Duration(days: 1)));
 
   /// if jumua as duhr return jumua
   String? get jumuaTime {
@@ -267,16 +275,22 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return now.add(Duration(days: (7 - now.weekday + DateTime.friday) % 7));
   }
 
-  /// return next Jumuaa date
-  /// if today is Jumuaa return today jumuaa date
-  /// else return next friday date
+  /// cases 1: if Jumuaa is as Duhr return Duhr pray of the day.
+  /// cases 2: if Jumuaa is not as Duhr and both jumuaa and jumuaa2 are empty return next friday date.
+  /// cases 3: if Jumuaa is not as Duhr and jumuaa or jumuaa2 is not empty return *jumuaa1* time.
   DateTime activeJumuaaDate([DateTime? now]) {
     final nextFriday = nextFridayDate(now);
+    if (times!.jumuaAsDuhr == true) return timesOfDay(nextFriday)[1].toTimeOfDay()!.toDate(nextFriday);
+    if (_isJumuaOrJumua2EmptyOrNull()) {
+      return nextFriday;
+    }
 
-    final jumuaaTime =
-        times!.jumuaAsDuhr ? timesOfDay(nextFriday)[1] : times!.jumua;
+    final jumuaaTime = times!.jumua; // return jumuaa1 time
+    return jumuaaTime!.toTimeOfDay()!.toDate(nextFriday); // parsing the value of juma to time of day and then to date
+  }
 
-    return jumuaaTime!.toTimeOfDay()!.toDate(nextFriday);
+  bool _isJumuaOrJumua2EmptyOrNull() {
+    return (times?.jumua ?? '').isEmpty && (times?.jumua2 ?? '').isEmpty;
   }
 
   /// if the iqama is less than 2min
@@ -301,8 +315,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     if (!typeIsMosque) return false;
     if (jumuaaStartTime == null) return false;
 
-    if (now.isBefore(jumuaaStartTime) || now.isAfter(jumuaaEndTime!))
-      return false;
+    if (now.isBefore(jumuaaStartTime) || now.isAfter(jumuaaEndTime!)) return false;
 
     return true;
   }
@@ -313,8 +326,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     final lastIqamaIndex = (nextIqamaIndex() - 1) % 5;
     var lastIqamaTime = actualIqamaTimes()[lastIqamaIndex];
-    if (lastIqamaTime.isAfter(now))
-      lastIqamaTime = lastIqamaTime.subtract(Duration(days: 1));
+    if (lastIqamaTime.isAfter(now)) lastIqamaTime = lastIqamaTime.subtract(Duration(days: 1));
 
     final salahDuration = mosqueConfig!.duaAfterPrayerShowTimes[lastIqamaIndex];
     final salahAndAzkarEndTime = lastIqamaTime.add(
@@ -322,8 +334,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     );
 
     /// skip salah workflow in jumuaa duhr
-    if (typeIsMosque && now.weekday == DateTime.friday && nextSalahIndex() == 1)
-      return false;
+    if (typeIsMosque && now.weekday == DateTime.friday && nextSalahIndex() == 1) return false;
 
     if (nextSalahAfter() < Duration(minutes: 5)) {
       return true;
@@ -333,8 +344,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     if (nextSalahIndex() != nextIqamaIndex()) return true;
 
     /// we are in time between iqama end and azkar start
-    if (now.isBefore(salahAndAzkarEndTime) && now.isAfter(lastIqamaTime))
-      return true;
+    if (now.isBefore(salahAndAzkarEndTime) && now.isAfter(lastIqamaTime)) return true;
 
     return false;
   }
@@ -345,8 +355,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       final endDate = DateTime.tryParse(element.endDate ?? '');
       final now = mosqueDate();
 
-      final inTime = now.isAfter(startDate ?? DateTime(2000)) &&
-          now.isBefore(endDate ?? DateTime(3000));
+      final inTime = now.isAfter(startDate ?? DateTime(2000)) && now.isBefore(endDate ?? DateTime(3000));
 
       /// on offline mode we don't show videos
       if (element.video != null && !isOnline) return false;

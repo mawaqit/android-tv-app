@@ -55,9 +55,8 @@ class MosqueManager extends ChangeNotifier
   Future<void> init() async {
     await Api.init();
     await loadFromLocale();
-    // subscribeToTime();
+    initState();
     listenToConnectivity();
-
     notifyListeners();
   }
 
@@ -107,7 +106,7 @@ class MosqueManager extends ChangeNotifier
 
     /// if getting item returns an error
     onItemError(e, stack) {
-      logger.e(e, '', stack);
+      logger.e(e, stackTrace: stack);
 
       mosque = null;
       notifyListeners();

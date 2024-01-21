@@ -31,7 +31,7 @@ class MawaqitImageCache {
       final cacheDirectory = getTemporaryDirectory();
       await cacheDirectory.delete(recursive: true);
     } catch (e, stack) {
-      logger.e('error', e, stack);
+      logger.e(e, stackTrace: stack);
     }
   }
 
