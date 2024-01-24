@@ -5,13 +5,22 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/TimeShiftManager.dart';
+import '../../../services/features_manager.dart';
+
 class CurrentTimeWidget extends StatelessWidget {
-  const CurrentTimeWidget({Key? key}) : super(key: key);
+  CurrentTimeWidget({Key? key}) : super(key: key);
+  final TimeShiftManager timeManager = TimeShiftManager();
 
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
-    final now = mosqueManager.mosqueDate();
+    final featureManager = context.watch<FeatureManager>();
+    final shiftedTime = DateTime.now().add(Duration(
+        hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
+    final now = featureManager.isFeatureEnabled("timezone_shift")
+        ? shiftedTime
+        : mosqueManager.mosqueDate();
 
     final mosqueConfig = mosqueManager.mosqueConfig;
     bool is12hourFormat = mosqueConfig?.timeDisplayFormat == "12";

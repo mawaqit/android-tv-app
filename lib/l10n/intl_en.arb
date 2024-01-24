@@ -184,5 +184,8 @@
   "pt_ar": "Portuguese & Arabic",
   "nl_ar": "Dutch & Arabic",
   "connectToChangeHadith": "Please connect to the internet to change the hadith language.",
-  "retry": "Retry"
+  "retry": "Retry",
+  "timeSetting": "Configure the time",
+  "timeSettingDesc":"Set a custom time",
+  "selectedTime":"The current selected time" 
 }
