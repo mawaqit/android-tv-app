@@ -104,7 +104,6 @@ class TimeShiftManager {
           selectedTimeFromPicker.minute - _previousTime.minute;
       _shift = hourDifference;
       _shiftinMinutes = minuteDifference;
-      print("Minutes" + shiftInMinutes.toString());
       // Update adjusted time based on the shift.
       if (_shift > 0) {
         _adjustedTime = _adjustedTime.add(Duration(hours: _shift));
