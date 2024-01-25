@@ -187,5 +187,9 @@
   "retry": "Retry",
   "timeSetting": "Configure the time",
   "timeSettingDesc":"Set a custom time",
-  "selectedTime":"The current selected time" 
+  "selectedTime":"The current selected time",
+  "confirmation":"Confirmation",
+  "confirmationMessage":"Are you sure you want to use device time?",
+  "useDeviceTime":"Use device time"
+
 }

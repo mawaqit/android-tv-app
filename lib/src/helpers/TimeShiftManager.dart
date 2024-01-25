@@ -104,6 +104,7 @@ class TimeShiftManager {
           selectedTimeFromPicker.minute - _previousTime.minute;
       _shift = hourDifference;
       _shiftinMinutes = minuteDifference;
+      print("Minutes" + shiftInMinutes.toString());
       // Update adjusted time based on the shift.
       if (_shift > 0) {
         _adjustedTime = _adjustedTime.add(Duration(hours: _shift));
@@ -121,6 +122,21 @@ class TimeShiftManager {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setInt(_shiftKey, _shift);
       prefs.setInt(_shiftInMinutesKey, _shiftinMinutes);
+      prefs.setString(_adjustedTimeKey, _adjustedTime.toIso8601String());
+    } catch (e, stackTrace) {
+      logger.e(e, stackTrace: stackTrace);
+    }
+  }
+
+  // Perform time adjustments based on timezone changes and hourly differences.
+  Future<void> useDeviceTime() async {
+    try {
+      _shift = 0;
+      _adjustedTime = DateTime.now();
+
+      // Save shift and adjusted time to shared preferences.
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setInt(_shiftKey, _shift);
       prefs.setString(_adjustedTimeKey, _adjustedTime.toIso8601String());
     } catch (e, stackTrace) {
       logger.e(e, stackTrace: stackTrace);
