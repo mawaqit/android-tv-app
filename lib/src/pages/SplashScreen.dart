@@ -30,6 +30,7 @@ import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:wakelock/wakelock.dart';
 
+import '../helpers/AppDate.dart';
 import '../services/features_manager.dart';
 
 enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
@@ -82,7 +83,7 @@ class _SplashScreen extends State<Splash> {
     await context.read<FeatureManager>().fetchFeatureFlags();
 
     final settingsManage = context.read<SettingsManager>();
-
+    FeatureManagerProvider.initialize(context);
     await settingsManage.init().logPerformance('Setting manager');
     return settingsManage.settings;
   }
