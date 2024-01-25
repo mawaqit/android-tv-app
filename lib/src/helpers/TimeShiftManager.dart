@@ -128,7 +128,7 @@ class TimeShiftManager {
     }
   }
 
-  // Perform time adjustments based on timezone changes and hourly differences.
+  // Reset shift and use device Time.
   Future<void> useDeviceTime() async {
     try {
       _shift = 0;
