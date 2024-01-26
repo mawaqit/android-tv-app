@@ -110,9 +110,9 @@ class TimeShiftManager {
       } else if (_shift < 0) {
         _adjustedTime = _adjustedTime.subtract(Duration(hours: _shift));
       } else if (minuteDifference > 0) {
-        _adjustedTime = _adjustedTime.add(Duration(minutes: minuteDifference));
+        _adjustedTime = _adjustedTime.add(Duration(minutes: _shiftinMinutes));
       } else if (minuteDifference < 0) {
-        _adjustedTime = _adjustedTime.add(Duration(minutes: minuteDifference));
+        _adjustedTime = _adjustedTime.add(Duration(minutes: _shiftinMinutes));
       }
 
       _previousTime = DateTime.now();
