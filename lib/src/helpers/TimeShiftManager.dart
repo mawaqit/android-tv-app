@@ -77,7 +77,6 @@ class TimeShiftManager {
       // Check if the hour has changed for adjusting time.
       if (currentTime.hour != _previousTime.hour) {
         int hourDifference = currentTime.hour - _previousTime.hour;
-        print("hour difference" + hourDifference.toString());
         // Calculate shift based on the hourly difference.
         if (hourDifference == 2 || hourDifference == 1) {
           _shift = -1;
