@@ -4,10 +4,10 @@ import 'package:mawaqit/i18n/l10n.dart';
 
 import '../helpers/TimeShiftManager.dart';
 
-class TimePickerDialogg extends StatelessWidget {
+class TimePickerModal extends StatelessWidget {
   final TimeShiftManager timeShiftManager;
 
-  TimePickerDialogg({required this.timeShiftManager});
+  TimePickerModal({required this.timeShiftManager});
 
   @override
   Widget build(BuildContext context) {

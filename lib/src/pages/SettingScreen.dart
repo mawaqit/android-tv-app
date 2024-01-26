@@ -136,7 +136,7 @@ class SettingScreen extends StatelessWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => TimePickerDialogg(
+                              builder: (context) => TimePickerModal(
                                   timeShiftManager: timeShiftManager),
                             );
                           },
