@@ -65,13 +65,11 @@ class DioProviderParameter {
 
 /// [dioProvider] is a Riverpod provider for creating DioModule instances.
 /// It allows creating DioModule with different configurations throughout the app.
-final dioProvider =
-  Provider.family<DioModule, DioProviderParameter>((ref, dioParameter) {
-    return DioModule(
-      baseUrl: dioParameter.baseUrl,
-
-      /// kStaticFilesUrl , kBaseUrl, kStaticFilesUrl
-      headers: DioModule().defaultHeader,
-      interceptor: dioParameter.interceptor,
-    );
+final dioProvider = Provider.family<DioModule, DioProviderParameter>((ref, dioParameter) {
+  return DioModule(
+    /// kStaticFilesUrl , kBaseUrl, kStaticFilesUrl
+    baseUrl: dioParameter.baseUrl,
+    headers: DioModule().defaultHeader,
+    interceptor: dioParameter.interceptor,
+  );
 });
