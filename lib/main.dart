@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
-    show FutureProvider, ProviderContainer, UncontrolledProviderScope;
+    show ConsumerWidget, FutureProvider, Provider, ProviderContainer, UncontrolledProviderScope, WidgetRef;
 import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -23,8 +23,7 @@ import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart'
-    show ChangeNotifierProvider, Consumer, MultiProvider, StreamProvider;
+import 'package:provider/provider.dart' show ChangeNotifierProvider, Consumer, MultiProvider, StreamProvider;
 import 'package:sizer/sizer.dart';
 
 /// [directoryProvider]  get the cache directory in the device
@@ -57,16 +56,23 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+final scaffoldMessengerKeyProvider = Provider((ref) => GlobalKey<ScaffoldMessengerState>());
+
+class MyApp extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scaffoldMessengerKey = ref.watch(scaffoldMessengerKeyProvider);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => AppLanguage()),
-        ChangeNotifierProvider(create: (context) => MosqueManager()),
+        ChangeNotifierProvider.value(
+          value: ref.watch(mosqueManagerProvider),
+        ),
         ChangeNotifierProvider(create: (context) => SettingsManager()),
-        ChangeNotifierProvider(create: (context) => AudioManager()),
+        ChangeNotifierProvider.value(
+          value: ref.watch(audioManagerProvider),
+        ),
         ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
         StreamProvider(create: (context) => Api.updateUserStatusStream(), initialData: 0, lazy: false),
       ],
@@ -95,6 +101,7 @@ class MyApp extends StatelessWidget {
                   theme: theme.lightTheme,
                   darkTheme: theme.darkTheme,
                   locale: model.appLocal,
+                  scaffoldMessengerKey: scaffoldMessengerKey,
                   navigatorKey: AppRouter.navigationKey,
                   navigatorObservers: [AnalyticsWrapper.observer()],
                   localizationsDelegates: [

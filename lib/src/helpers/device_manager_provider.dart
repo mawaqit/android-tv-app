@@ -1,13 +1,15 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disk_space/disk_space.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/data/constants.dart';
+import 'package:mawaqit/main.dart' show localizationProvider, logger, scaffoldMessengerKeyProvider;
 import 'package:mawaqit/src/models/device_info.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:unique_identifier/unique_identifier.dart';
-import 'package:mawaqit/main.dart' show logger;
 
 import '../../i18n/AppLanguage.dart';
+import '../data/constants.dart';
+import '../services/localization_manager.dart';
 
 /// DeviceManagerProvider extends AsyncNotifier to asynchronously manage DeviceInfo.
 /// [DeviceManagerProvider] It fetches and provides device-related information throughout the app.
@@ -59,6 +61,15 @@ class DeviceManagerProvider extends AsyncNotifier<DeviceInfo> {
       final freeSpace = await DiskSpace.getFreeDiskSpace;
       if (freeSpace != null && freeSpace <= kStorageLimit) {
         logger.e('Device Exception: Storage limit reached');
+        final scaffoldMessengerKey = ref.read(scaffoldMessengerKeyProvider);
+        final message = ref.read(appLocalizationsProvider).lowStorageMessage;
+
+        // delay the message to show after the splash screen
+        Future.delayed(Duration(seconds: 5), () async {
+          scaffoldMessengerKey.currentState?.showSnackBar(
+            _storageSnackBarWidget(message),
+          );
+        });
         throw Exception('Storage limit reached');
       }
       return state.value!.copyWith(
@@ -66,9 +77,25 @@ class DeviceManagerProvider extends AsyncNotifier<DeviceInfo> {
       );
     });
   }
+
+  SnackBar _storageSnackBarWidget(String message) {
+    return SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.black,
+            content: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            duration: Duration(seconds: 5),
+          );
+  }
 }
 
 /// Global provider for DeviceManagerProvider.
 /// This provider is used to access the device information and status updates throughout the app.
-final deviceManagerProvider =
-AsyncNotifierProvider<DeviceManagerProvider, DeviceInfo>(DeviceManagerProvider.new);
+final deviceManagerProvider = AsyncNotifierProvider<DeviceManagerProvider, DeviceInfo>(DeviceManagerProvider.new);
