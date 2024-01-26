@@ -44,27 +44,46 @@ class _MosqueBackgroundScreenState extends State<MosqueBackgroundScreen> {
         child: Scaffold(
           key: _scaffoldKey,
           drawer: MawaqitDrawer(goHome: () => AppRouter.popAll()),
-          body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: mosqueConfig!.backgroundType == "color"
-                ? BoxDecoration(color: HexColor(mosqueConfig.backgroundColor))
-                : BoxDecoration(
-                    image: DecorationImage(
-                      image: mosqueConfig.backgroundMotif == "0"
-                          ? MawaqitNetworkImageProvider(mosqueProvider.mosque?.interiorPicture ?? "")
-                          : mosqueConfig.backgroundMotif == "-1"
-                              ? MawaqitNetworkImageProvider(mosqueProvider.mosque?.exteriorPicture ?? "")
-                              : MawaqitNetworkImageProvider(mosqueProvider.mosqueConfig!.motifUrl),
-                      fit: BoxFit.cover,
-                      colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(.4),
-                        BlendMode.srcOver,
+          body: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: mosqueConfig!.backgroundType == "color"
+                    ? BoxDecoration(
+                        color: HexColor(mosqueConfig.backgroundColor))
+                    : BoxDecoration(
+                        image: DecorationImage(
+                          image: mosqueConfig.backgroundMotif == "0"
+                              ? MawaqitNetworkImageProvider(
+                                  mosqueProvider.mosque?.interiorPicture ?? "")
+                              : mosqueConfig.backgroundMotif == "-1"
+                                  ? MawaqitNetworkImageProvider(
+                                      mosqueProvider.mosque?.exteriorPicture ??
+                                          "")
+                                  : MawaqitNetworkImageProvider(
+                                      mosqueProvider.mosqueConfig!.motifUrl),
+                          fit: BoxFit.cover,
+                          colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(.4),
+                            BlendMode.srcOver,
+                          ),
+                          onError: (exception, stackTrace) {},
+                        ),
                       ),
-                      onError: (exception, stackTrace) {},
-                    ),
-                  ),
-            child: RepaintBoundary(child: widget.child),
+                child: RepaintBoundary(child: widget.child),
+              ),
+              Positioned(
+                top: 10.0,
+                left: 10.0,
+                child: IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    _scaffoldKey.currentState?.openDrawer();
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
