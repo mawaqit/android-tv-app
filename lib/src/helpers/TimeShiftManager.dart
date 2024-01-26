@@ -41,9 +41,9 @@ class TimeShiftManager {
     _previousTimeZone = DateTime.now().timeZoneName;
   }
 
-  // Start a periodic timer for time adjustments, triggered every 10 minutes.
+  // Start a periodic timer for time adjustments, triggered every 1 hour.
   void startPeriodicTimer() {
-    const Duration period = Duration(minutes: 10);
+    const Duration period = Duration(hours: 1);
     if (!_timeSetFromHour) {
       Timer.periodic(period, (Timer timer) {
         adjustTime();
