@@ -19,6 +19,7 @@ import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/random_hadith_mixin.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
+import '../helpers/device_manager_provider.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
 
@@ -39,12 +40,18 @@ class MosqueManager extends ChangeNotifier
   bool get loaded => mosque != null && times != null && mosqueConfig != null;
 
   Mosque? mosque;
+  ProviderRef ref;
+
   Times? times;
   MosqueConfig? mosqueConfig;
 
   StreamSubscription? _mosqueSubscription;
   StreamSubscription? _timesSubscription;
   StreamSubscription? _configSubscription;
+
+  MosqueManager({
+    required this.ref,
+  });
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -118,8 +125,9 @@ class MosqueManager extends ChangeNotifier
     /// cache date before complete the [completer]
     Future<void> completeFuture() async {
       try {
+        final audioManager = ref.read(audioManagerProvider);
         await Future.wait([
-          AudioManager().precacheVoices(mosqueConfig!),
+          audioManager.precacheVoices(mosqueConfig!),
           preCacheImages(),
           preCacheHadith(),
         ]);
@@ -220,19 +228,30 @@ class MosqueManager extends ChangeNotifier
   /// handle pre caching for images
   /// Qr, mosque image, mosque logo, announcement image
   Future<void> preCacheImages() async {
-    final images = [
-      mosque?.image,
-      mosque?.logo,
-      mosque?.interiorPicture,
-      mosque?.exteriorPicture,
-      mosqueConfig?.motifUrl,
-      kFooterQrLink,
-      ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
-    ].where((e) => e != null).cast<String>();
+    /// check for storage
+    await ref.read(deviceManagerProvider.notifier).getFreeSpace();
 
-    /// some images isn't existing anymore so we will ignore errors
-    final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
-    await Future.wait(futures);
+    final deviceManager = ref.watch(deviceManagerProvider);
+    deviceManager.maybeWhen(
+        orElse: () {
+        },
+        data: (data) async {
+          final images = [
+            mosque?.image,
+            mosque?.logo,
+            mosque?.interiorPicture,
+            mosque?.exteriorPicture,
+            mosqueConfig?.motifUrl,
+            kFooterQrLink,
+            ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
+          ].where((e) => e != null).cast<String>();
+
+          /// some images isn't existing anymore so we will ignore errors
+          final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
+          await Future.wait(futures);
+        });
+
+
   }
 }
 
@@ -243,7 +262,7 @@ class GpsError implements Exception {}
 
 /// [mosqueManagerProvider] provides [MosqueManager] instance
 final mosqueManagerProvider = Provider((ref) {
-  final manager = MosqueManager();
+  final manager = MosqueManager(ref: ref);
   manager.init();
   return manager;
 });

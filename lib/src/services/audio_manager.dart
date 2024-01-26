@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/helpers/cache_interceptor.dart';
@@ -11,19 +12,26 @@ import 'package:mawaqit/src/models/mosqueConfig.dart';
 import '../../main.dart';
 import '../helpers/device_manager_provider.dart';
 import '../module/dio_module.dart';
+
 class AudioManager extends ChangeNotifier {
   String bipLink = "$kStaticFilesUrl/mp3/bip.mp3";
+  String bipAsset = "assets/voices/bip.mp3";
+  String duaAfterAdhanAsset = 'assets/voices/duaa-after-adhan.mp3';
   String duaAfterAdhanLink = "$kStaticFilesUrl/mp3/duaa-after-adhan.mp3";
 
   Audio? player;
+  ///
+  final Dio dio;
+
+  AudioManager({
+    required this.dio,
+  });
 
   final option = CacheOptions(
     store: HiveCacheStore(null),
     priority: CachePriority.high,
     policy: CachePolicy.request,
   );
-
-  late final dio = Dio()..interceptors.add(DioCacheInterceptor(options: option));
 
   String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
@@ -108,8 +116,8 @@ class AudioManager extends ChangeNotifier {
     await Future.wait([
       _getFile(adhanLink(config)),
       _getFile(adhanLink(config, useFajrAdhan: true)),
-      _getFile(bipLink),
-      _getFile(duaAfterAdhanLink),
+      _getFileFromAssets(bipAsset),
+      _getFileFromAssets(duaAfterAdhanLink),
     ]);
   }
 
@@ -120,6 +128,15 @@ class AudioManager extends ChangeNotifier {
     );
 
     return Uint8List.fromList(file.data!).buffer.asByteData();
+  }
+
+  /// [_getFileFromAssets] loads a file from the assets and returns it as a ByteData object.
+  Future<ByteData> _getFileFromAssets(String assetPath) async {
+    // Load the file as a ByteData object from the assets
+    final byteData = await rootBundle.load(assetPath);
+
+    // Return the ByteData
+    return byteData;
   }
 
   void dispose() {
@@ -153,7 +170,7 @@ final audioManagerProvider = Provider<AudioManager>((ref) {
 
   // Configures Dio for network requests with the base URL and the cache interceptor.
   final dioParameters = DioProviderParameter(
-    interceptor: interceptor,
+    interceptor: interceptor.$1,
     baseUrl: kStaticFilesUrl,
   );
 
@@ -161,8 +178,11 @@ final audioManagerProvider = Provider<AudioManager>((ref) {
   final dioModule = ref.watch(dioProvider(dioParameters));
 
   // Creates an instance of AudioManager with the Dio instance.
-  final audioManager = AudioManager();
+  final audioManager = AudioManager(
+    dio: dioModule.dio,
+  );
+
   ref.onDispose(audioManager.dispose);
+
   return audioManager;
 });
-

@@ -11,11 +11,17 @@ class CacheInterceptorHelper  {
 
   /// [createInterceptor] Creates a DioCacheInterceptor based on the current state of the device.
   /// The caching policy is determined by the device storage.
-  DioCacheInterceptor createInterceptor(AsyncValue<DeviceInfo> deviceManager, String path) {
+  (DioCacheInterceptor ,bool) createInterceptor(AsyncValue<DeviceInfo> deviceManager, String path) {
     return deviceManager.when(
-      data: (deviceInfo) => _createCacheInterceptor(CachePolicy.request, path),
-      loading: () => _createCacheInterceptor(CachePolicy.request, path),
-      error: (err, stack) => _createCacheInterceptor(CachePolicy.noCache, path),
+      data: (deviceInfo) {
+        return (_createCacheInterceptor(CachePolicy.request, path), true);
+      },
+      loading:() {
+        return (_createCacheInterceptor(CachePolicy.request, path), true);
+      },
+      error: (err, stack) {
+        return (_createCacheInterceptor(CachePolicy.noCache, path), false);
+      },
     );
   }
 
