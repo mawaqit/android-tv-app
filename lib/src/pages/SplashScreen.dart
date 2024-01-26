@@ -32,7 +32,7 @@ import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:wakelock/wakelock.dart';
 import '../helpers/device_manager_provider.dart';
 
-enum ErrorState { mosqueNotFound, noInternet, mosqueDataError}
+enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
 
 class Splash extends ConsumerStatefulWidget {
   @override
@@ -122,7 +122,6 @@ class _SplashScreen extends ConsumerState<Splash> {
         // e.response!.data;
       }
     } catch (e, stack) {
-      logger.e(e, stackTrace:  stack);
       setState(() => error = ErrorState.mosqueDataError);
       rethrow;
     }
@@ -135,17 +134,6 @@ class _SplashScreen extends ConsumerState<Splash> {
 
   Widget build(BuildContext context) {
     RelativeSizes.instance.size = MediaQuery.of(context).size;
-
-    final deviceInfo = ref.watch(deviceManagerProvider);
-
-    if (deviceInfo.hasError) {
-      return ErrorScreen(
-        title: S.of(context).error,
-        description: S.of(context).lowStorageMessage,
-        image: R.ASSETS_IMG_ICON_STORAGE_ERROR_SVG,
-        onTryAgain: _refreshDeviceStorage,
-      );
-    }
 
     switch (error) {
       case ErrorState.mosqueNotFound:
