@@ -28,6 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
             _scaffoldKey.currentState?.openDrawer(),
         SingleActivator(LogicalKeyboardKey.arrowRight): () =>
             _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowDown): () =>
+            _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowUp): () =>
+            _scaffoldKey.currentState?.openDrawer(),
       },
       child: Scaffold(
         key: _scaffoldKey,

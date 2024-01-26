@@ -34,6 +34,10 @@ class _MosqueBackgroundScreenState extends State<MosqueBackgroundScreen> {
       bindings: {
         SingleActivator(LogicalKeyboardKey.arrowLeft): () => _scaffoldKey.currentState?.openDrawer(),
         SingleActivator(LogicalKeyboardKey.arrowRight): () => _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowDown): () =>
+            _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowUp): () =>
+            _scaffoldKey.currentState?.openDrawer(),
       },
       child: Focus(
         autofocus: true,
