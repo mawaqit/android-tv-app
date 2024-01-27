@@ -7,31 +7,33 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
-class MainActivity: FlutterActivity() {
-  private val CHANNEL = "com.mawaqit.androidTv/updater"
+class MainActivity : FlutterActivity() {
+  private val CHANNEL = "com.mawaqit.androidTv/update_apk"
 
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
 
-    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler{
-      cal, result ->
-          if(cal.method == "UPDATE_APK"){
-            updateApk();
-            result.success(true);
-          }
+    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+      if (call.method == "installApk") {
+        val apkPath = call.argument<String>("apkPath")
+        apkPath?.let {
+          updateApk(it)
+        }
+      } else {
+        result.notImplemented()
+      }
     }
   }
 
 
-  fun updateApk(){
-    val file = File(context.cacheDir,  "mawaqit.apk")
+  private fun updateApk(apkPath: String) {
+    val file = File(apkPath)
 
-    val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+    val uri = FileProvider.getUriForFile(this, "${applicationContext.packageName}.provider", file)
 
-    /// start a setup intent
-    val intent =  Intent(Intent.ACTION_VIEW)
+    val intent = Intent(Intent.ACTION_VIEW)
     intent.setDataAndType(uri, "application/vnd.android.package-archive")
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    context.startActivity(intent)
+    startActivity(intent)
   }
 }

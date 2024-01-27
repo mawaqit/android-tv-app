@@ -1,13 +1,19 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:app_installer/app_installer.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
+import '../data/constants.dart';
 import '../helpers/AppDate.dart';
 import 'mosque_manager.dart';
-
 
 enum AppUpdateState {
   idle,
@@ -20,12 +26,11 @@ enum AppUpdateState {
   userCancelled,
 }
 
-class   AppUpdateManager extends AsyncNotifier<AppUpdateState> {
+class AppUpdateManager extends AsyncNotifier<AppUpdateState> {
   late final AppUpdateInfo _updateInfo;
 
   @override
   Future<AppUpdateState> build() async {
-
     try {
       _updateInfo = await InAppUpdate.checkForUpdate();
     } catch (e) {
@@ -49,7 +54,7 @@ class   AppUpdateManager extends AsyncNotifier<AppUpdateState> {
     state = AsyncLoading();
     state = await AsyncValue.guard(() async {
       if (_checkForUpdate()) {
-        return InAppUpdate.startFlexibleUpdate().then((result) {
+        return InAppUpdate.startFlexibleUpdate().then((result) async {
           if (result == AppUpdateResult.success) {
             return AppUpdateState.updateDownloaded;
           } else if (result == AppUpdateResult.inAppUpdateFailed) {
@@ -79,8 +84,7 @@ class   AppUpdateManager extends AsyncNotifier<AppUpdateState> {
     });
   }
 
-
-/// [scheduleUpdate] Defines an asynchronous method for scheduling an app update.
+  /// [scheduleUpdate] Defines an asynchronous method for scheduling an app update.
   Future<void> scheduleUpdate() async {
     try {
       final sharedPreferences = await SharedPreferences.getInstance();
@@ -118,13 +122,14 @@ class   AppUpdateManager extends AsyncNotifier<AppUpdateState> {
           final times = mosqueManager.times!.dayTimes(timeNow);
 
           // Logs various timestamps for debugging purposes.
-          logger.d('update: times: $times \n time now $timeNow \n last Popup Display: $lastPopupDisplay \n one week ago: $oneWeekAgo');
+          logger.d(
+              'update: times: $times \n time now $timeNow \n last Popup Display: $lastPopupDisplay \n one week ago: $oneWeekAgo');
 
           // Checks if the current time is within a specific time window between two prayer times.
           // Also checks if the last popup display was more than a week ago.
-          if (timeNow.isAfter(times[3]) && timeNow.isBefore(times[4])
-              && timeNow.millisecondsSinceEpoch >= lastPopupDisplay + oneWeekAgo
-          ) {
+          if (timeNow.isAfter(times[3]) &&
+              timeNow.isBefore(times[4]) &&
+              timeNow.millisecondsSinceEpoch >= lastPopupDisplay + oneWeekAgo) {
             // Updates the 'last_popup_display' timestamp in SharedPreferences to the current time.
             final check = await sharedPreferences.setInt('last_update', DateTime.now().millisecondsSinceEpoch);
             logger.d('update: check: $check');
@@ -140,7 +145,25 @@ class   AppUpdateManager extends AsyncNotifier<AppUpdateState> {
     }
   }
 
-  /// Private method to check for update availability.
+  /// [downloadAndInstallApk] installs the APK from the provided URL.
+  Future<void> downloadAndInstallApk(String url, String apkName) async {
+    try {
+      logger.i('Update: Downloading and installing the APK');
+      await _requestPermissions();
+      String apkPath = await _downloadApk(url, apkName);
+      if (apkPath.isNotEmpty) {
+        const platform = MethodChannel(updateApkMethodChannel);
+        await platform.invokeMethod('installApk', {'apkPath': apkPath});
+      } else {
+        throw Exception('Error apk path is empty');
+      }
+    } catch (e) {
+      logger.e('Error downloading and installing the APK: $e');
+    }
+  }
+
+
+  /// [_checkForUpdate] Private method to check for update availability.
   bool _checkForUpdate() {
     if (_updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
       return true;
@@ -148,7 +171,42 @@ class   AppUpdateManager extends AsyncNotifier<AppUpdateState> {
       throw Exception('No update available');
     }
   }
+
+  /// [_requestPermissions] requests the required permissions for the update.
+  /// Currently only storage permissions are required.
+  Future<void> _requestPermissions() async {
+    try {
+      await [Permission.storage].request();
+    } catch (e) {
+      throw Exception('Error requesting permissions.');
+    }
+  }
+
+  /// [_downloadApk] downloads the APK from the provided URL and returns the path to the downloaded file.
+  /// The file is downloaded to the application cache directory.
+  Future<String> _downloadApk(String url, String fileName) async {
+    Dio dio = Dio();
+    try {
+      // Get the application cache directory
+      var dir = await getApplicationCacheDirectory();
+      String apkPath = '${dir?.path}/mawaqit.apk';
+
+      // If the file already exists, return the path
+      File file = File(apkPath);
+      if (await file.exists()) {
+        return apkPath;
+      }
+
+      // if the file doesn't exist, download it
+      await dio.download(
+        url,
+        apkPath,
+      );
+      return apkPath;
+    } catch (e) {
+      throw Exception('Error downloading the APK.');
+    }
+  }
 }
 
-final appUpdateManagerProvider =
-AsyncNotifierProvider<AppUpdateManager, AppUpdateState>(AppUpdateManager.new);
+final appUpdateManagerProvider = AsyncNotifierProvider<AppUpdateManager, AppUpdateState>(AppUpdateManager.new);

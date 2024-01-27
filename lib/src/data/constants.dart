@@ -10,3 +10,5 @@ const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
+
+const updateApkMethodChannel = 'com.mawaqit.androidTv/update_apk';
