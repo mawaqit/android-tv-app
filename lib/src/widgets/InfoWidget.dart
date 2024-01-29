@@ -20,21 +20,35 @@ class _VersionWidgetState extends State<VersionWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+onTap: () {
         setState(() {
-          tapCount++;
-          if (tapCount >= 7) {
-            context.read<UserPreferencesManager>().developerModeEnabled = true;
+          if (context.read<UserPreferencesManager>().developerModeEnabled) {
+            // Deactivate debug menu
+            context.read<UserPreferencesManager>().developerModeEnabled = false;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                    "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية"),
+                    "You have desactivated the Abogabal secret menu 😎💪 رائع! لقد قمت بإلغاء تنشيط قائمة أبو جبل السرية"),
               ),
             );
-            tapCount = -100; // Reset tapCount to prevent further triggering
+          } else {
+            tapCount++;
+            if (tapCount >= 7) {
+              context.read<UserPreferencesManager>().developerModeEnabled =
+                  true;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية",
+                  ),
+                ),
+              );
+              tapCount = 0; // Reset tapCount after activation
+            }
           }
         });
       },
+
       child: FutureBuilder<PackageInfo>(
         future: PackageInfo.fromPlatform(),
         builder: (context, snapshot) => Text(
