@@ -58,6 +58,7 @@ class LandscapeNormalHome extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
+                flex: 2,
                 child: Center(
                   child: FadeInOutWidget(
                     duration: Duration(seconds: 15),
@@ -80,14 +81,14 @@ class LandscapeNormalHome extends StatelessWidget {
                 ),
               ),
               Expanded(
-                  child: HomeTimeWidget().animate().fadeIn().slideY(begin: -1),
-                  flex: 2),
+
+
+                  child: HomeTimeWidget().animate().fadeIn().slideY(begin: -1), flex: 4),
               Expanded(
-                  child: Center(
-                      child: JumuaWidget()
-                          .animate(delay: Duration(milliseconds: 500))
-                          .slideX(begin: 1)
-                          .fadeIn())),
+                flex: 2,
+                child:
+                    Center(child: JumuaWidget().animate(delay: Duration(milliseconds: 500)).slideX(begin: 1).fadeIn()),
+              ),
             ],
           ),
         ),
@@ -104,10 +105,8 @@ class LandscapeNormalHome extends StatelessWidget {
                     iqama: iqamas[i],
                     withDivider: false,
                     showIqama: iqamaEnabled,
-                    active: nextActiveSalah == i &&
-                        (i != 1 ||
-                            !AppDateTime.isFriday ||
-                            mosqueManager.times?.jumua == null),
+                    active:
+                        nextActiveSalah == i && (i != 1 || !AppDateTime.isFriday || mosqueManager.times?.jumua == null),
                     isIqamaMoreImportant: isIqamaMoreImportant,
                   ),
               ]
