@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
+import 'package:flutter/services.dart';
+
+import 'Api.dart';
 
 // TimeShiftManager is a singleton class responsible for managing time adjustments,
 // particularly handling time shifts and periodic adjustments. It utilizes shared preferences
@@ -16,7 +19,8 @@ class TimeShiftManager {
   DateTime _previousTime = DateTime.now();
   String _previousTimeZone = Intl.getCurrentLocale();
   bool _timeSetFromHour = false;
-
+  bool _isLauncherInstalled = false;
+  String _deviceModel = "";
   static const String _shiftKey = 'shift';
   static const String _shiftInMinutesKey = 'shiftInMinutes';
   static const String _adjustedTimeKey = 'adjustedTime';
@@ -24,8 +28,19 @@ class TimeShiftManager {
 
   factory TimeShiftManager() => _instance;
 
+  Future<bool> isPackageInstalled(String packageName) async {
+    try {
+      final result = await MethodChannel('nativeMethodsChannel')
+          .invokeMethod('isPackageInstalled', {'packageName': packageName});
+      return result;
+    } on PlatformException catch (_) {
+      return false;
+    }
+  }
+
   TimeShiftManager._internal() {
     initializeTimes();
+
     startPeriodicTimer();
   }
 
@@ -39,12 +54,23 @@ class TimeShiftManager {
     _previousTime = DateTime.parse(
         prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String());
     _previousTimeZone = DateTime.now().timeZoneName;
+    _isLauncherInstalled = await isPackageInstalled("com.mawaqit.launcher");
+    try {
+      final userData = await Api.prepareUserData();
+      if (userData != null) {
+        _deviceModel = userData.$2['model'];
+      }
+    } catch (e, stackTrace) {
+      logger.e('Error fetching user data: $e', stackTrace: stackTrace);
+    }
   }
 
-  // Start a periodic timer for time adjustments, triggered every 1 hour.
+  // Start a periodic timer for time adjustments, triggered every 30 seconds.
   void startPeriodicTimer() {
-    const Duration period = Duration(hours: 1);
-    if (!_timeSetFromHour) {
+    const Duration period = Duration(seconds: 30);
+    if (!_timeSetFromHour &&
+        _isLauncherInstalled &&
+        _deviceModel == "MAWABOX") {
       Timer.periodic(period, (Timer timer) {
         adjustTime();
       });
@@ -55,13 +81,6 @@ class TimeShiftManager {
   Future<void> adjustTime() async {
     try {
       DateTime currentTime = DateTime.now();
-      String currentTimeZone = DateTime.now().timeZoneName;
-
-      // Skip adjustment if timezone has changed.
-      if (_previousTimeZone != currentTimeZone) {
-        _previousTimeZone = currentTimeZone;
-        return;
-      }
 
       const Duration timeThreshold = Duration(minutes: 5);
 
