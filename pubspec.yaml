@@ -55,10 +55,10 @@ dependencies:
   http: ^0.13.6
   dio: ^5.1.2
   dio_cache_interceptor: ^3.4.2
-  dio_cache_interceptor_hive_store: ^3.2.1 
+  dio_cache_interceptor_hive_store: ^3.2.1
   xml_parser: ^1.0.0
 
-  share_plus: ^6.3.1
+  share_plus: ^7.2.1
   launch_review: ^3.0.1
   url_launcher: ^6.1.11
   store_redirect: ^2.0.1
@@ -71,7 +71,7 @@ dependencies:
   device_info_plus: ^9.0.2
   android_intent_plus: ^4.0.0
   global_configuration: ^2.0.0-nullsafety.1
-  wakelock: ^0.6.2
+  wakelock: ^0.4.0
   path_provider: ^2.0.14
   uuid: ^3.0.5
 
@@ -88,7 +88,8 @@ dependencies:
 
   # MAP
   #location: ^4.3.0
-  geolocator: ^9.0.2 
+  geolocator: ^9.0.2
+  hijri: ^3.0.0
 
   #  webview_flutter: ^3.0.0
 
@@ -105,11 +106,11 @@ dependencies:
   youtube_explode_dart: ^1.12.4
   audiofileplayer: ^2.1.1
   unique_identifier: ^0.3.0
-  google_api_availability: ^5.0.0 
-  in_app_update: ^4.1.4 
-  app_installer: ^1.1.0
   collection: any
   disk_space: ^0.2.1
+  permission_handler: ^11.0.1
+  app_installer: ^1.1.0
+  in_app_update: ^4.2.2
 
 dev_dependencies:
   flutter_test:
@@ -123,7 +124,8 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 dependency_overrides:
-  win32: ^5.0.5
+  webview_flutter: any
+
 
 # The following section is specific to Flutter.
 flutter:

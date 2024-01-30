@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app_installer/app_installer.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,6 +83,14 @@ class AppUpdateManager extends AsyncNotifier<AppUpdateState> {
     });
   }
 
+  Future<void> downloadApk() async {
+    state = AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      downloadAndInstallApk('https://cdn.mawaqit.net/android/tv/apk/MAWAQIT-For-TV-v1.9.0-279.apk');
+      return AppUpdateState.updateDownloaded;
+    });
+  }
+
   /// [scheduleUpdate] Defines an asynchronous method for scheduling an app update.
   Future<void> scheduleUpdate() async {
     try {
@@ -146,11 +153,12 @@ class AppUpdateManager extends AsyncNotifier<AppUpdateState> {
   }
 
   /// [downloadAndInstallApk] installs the APK from the provided URL.
-  Future<void> downloadAndInstallApk(String url, String apkName) async {
+  Future<void> downloadAndInstallApk(String url) async {
     try {
       logger.i('Update: Downloading and installing the APK');
       await _requestPermissions();
-      String apkPath = await _downloadApk(url, apkName);
+      String apkPath = await _downloadApk(url);
+
       if (apkPath.isNotEmpty) {
         const platform = MethodChannel(updateApkMethodChannel);
         await platform.invokeMethod('installApk', {'apkPath': apkPath});
@@ -161,7 +169,6 @@ class AppUpdateManager extends AsyncNotifier<AppUpdateState> {
       logger.e('Error downloading and installing the APK: $e');
     }
   }
-
 
   /// [_checkForUpdate] Private method to check for update availability.
   bool _checkForUpdate() {
@@ -184,7 +191,7 @@ class AppUpdateManager extends AsyncNotifier<AppUpdateState> {
 
   /// [_downloadApk] downloads the APK from the provided URL and returns the path to the downloaded file.
   /// The file is downloaded to the application cache directory.
-  Future<String> _downloadApk(String url, String fileName) async {
+  Future<String> _downloadApk(String url) async {
     Dio dio = Dio();
     try {
       // Get the application cache directory

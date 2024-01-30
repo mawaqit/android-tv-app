@@ -65,6 +65,7 @@ class SettingScreen extends StatelessWidget {
                     onTap: () => AppRouter.push(LanguageScreen()),
                   ),
                   SettingCard(),
+                  SettingDownloadApkCard(),
                   _SettingItem(
                     title: S.of(context).randomHadithLanguage,
                     subtitle: S.of(context).hadithLangDesc,
@@ -234,6 +235,24 @@ class SettingCard extends riverpod.ConsumerWidget {
       icon: Icon(Icons.update, size: 35),
       onTap: () async {
         await ref.read(appUpdateManagerProvider.notifier).settingsUpdate();
+        ref.read(appUpdateManagerProvider.notifier).build();
+      },
+    );
+  }
+}
+
+class SettingDownloadApkCard extends riverpod.ConsumerWidget {
+  const SettingDownloadApkCard({super.key});
+
+  @override
+  Widget build(BuildContext context, riverpod.WidgetRef ref) {
+
+    return _SettingItem(
+      title: 'Download APK',
+      subtitle: S.of(context).check_for_updates_description,
+      icon: Icon(Icons.update, size: 35),
+      onTap: () async {
+        await ref.read(appUpdateManagerProvider.notifier).downloadApk();
         ref.read(appUpdateManagerProvider.notifier).build();
       },
     );
