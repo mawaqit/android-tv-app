@@ -169,7 +169,7 @@
   "randomHadithLanguage": "Linguagem aleatória nos hadith",
   "en": "Inglês",
   "fr": "Francês",
-  "ar": "árabe",
+  "ar": "Árabe",
   "tr": "Turco",
   "de": "Alemão",
   "es": "Espanhol",
@@ -184,5 +184,5 @@
   "pt_ar": "Português e Árabe",
   "nl_ar": "Holandês e Árabe",
   "connectToChangeHadith": "Por favor, conecte-se à internet para alterar a linguagem dos hadith.",
-  "retry": "Tentativa"
+  "retry": "Repetir"
 }
