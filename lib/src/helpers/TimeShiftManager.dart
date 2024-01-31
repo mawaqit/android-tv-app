@@ -17,7 +17,6 @@ class TimeShiftManager {
   int _shiftinMinutes = 0;
   DateTime _adjustedTime = DateTime.now();
   DateTime _previousTime = DateTime.now();
-  String _previousTimeZone = Intl.getCurrentLocale();
   bool _timeSetFromHour = false;
   bool _isLauncherInstalled = false;
   String _deviceModel = "";
@@ -53,7 +52,6 @@ class TimeShiftManager {
         prefs.getString(_adjustedTimeKey) ?? DateTime.now().toIso8601String());
     _previousTime = DateTime.parse(
         prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String());
-    _previousTimeZone = DateTime.now().timeZoneName;
     _isLauncherInstalled = await isPackageInstalled("com.mawaqit.launcher");
     try {
       final userData = await Api.prepareUserData();
@@ -163,6 +161,7 @@ class TimeShiftManager {
   // Getters for external access to shift and adjusted time.
   int get shift => _shift;
   int get shiftInMinutes => _shiftinMinutes;
-
+  String get deviceModel => _deviceModel;
+  bool get isLauncherInstalled => _isLauncherInstalled;
   DateTime get adjustedTime => _adjustedTime;
 }

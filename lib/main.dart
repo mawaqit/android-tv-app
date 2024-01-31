@@ -43,7 +43,6 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -53,7 +52,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MosqueManager()),
         ChangeNotifierProvider(create: (context) => SettingsManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
-        ChangeNotifierProvider(create: (context) => FeatureManager()),
+        ChangeNotifierProvider(create: (context) => FeatureManager(context)),
         ChangeNotifierProvider(
             create: (context) => UserPreferencesManager(), lazy: false),
         StreamProvider(

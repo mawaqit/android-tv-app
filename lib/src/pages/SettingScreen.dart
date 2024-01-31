@@ -21,9 +21,25 @@ import 'home/widgets/show_check_internet_dialog.dart';
 /// allow user to change the app settings
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+      future: _initializeTimeShiftManager(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return _buildSettingScreen(context);
+        } else {
+          return SizedBox();
+        }
+      },
+    );
+  }
+
+  Future<void> _initializeTimeShiftManager() async {
+    await TimeShiftManager().initializeTimes();
+  }
+
+  Widget _buildSettingScreen(BuildContext context) {
     final theme = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
     final mosqueProvider = context.watch<MosqueManager>();
@@ -128,7 +144,9 @@ class SettingScreen extends StatelessWidget {
                       ),
                     )),
                   ),
-                  featureManager.isFeatureEnabled("timezone_shift")
+                  featureManager.isFeatureEnabled("timezone_shift") &&
+                          timeShiftManager.deviceModel == "MAWABOX" &&
+                          timeShiftManager.isLauncherInstalled 
                       ? _SettingItem(
                           title: S.of(context).timeSetting,
                           subtitle: S.of(context).timeSettingDesc,
