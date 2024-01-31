@@ -23,7 +23,7 @@
   <application
     android:banner="@mipmap/ic_banner"
     android:icon="@mipmap/ic_launcher"
-    android:testOnly="true"
+    android:testOnly="false"
     android:label="@string/app_name"
     android:usesCleartextTraffic="true">
 
