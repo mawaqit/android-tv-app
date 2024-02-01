@@ -17,6 +17,31 @@ class HomeLogoVersion extends StatefulWidget {
 class _HomeLogoVersionState extends State<HomeLogoVersion> {
   int tapCount = 0;
 
+  static const int _activationTapCount = 7;
+  static const String _activationMessage = "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية";
+  static const String _deactivationMessage = "You have deactivated the Abogabal secret menu 😎💪 رائع! لقد قمت بإلغاء تنشيط قائمة أبو جبل السرية";
+
+  void _handleTap() {
+    final userPreferencesManager = Provider.of<UserPreferencesManager>(context, listen: false);
+    if (userPreferencesManager.developerModeEnabled) {
+      userPreferencesManager.developerModeEnabled = false;
+      _showSnackBar(_deactivationMessage);
+    } else {
+      tapCount++;
+      if (tapCount >= _activationTapCount) {
+        userPreferencesManager.developerModeEnabled = true;
+        _showSnackBar(_activationMessage);
+        tapCount = 0; // Reset tapCount after activation
+      }
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return IntrinsicWidth(
@@ -25,32 +50,7 @@ class _HomeLogoVersionState extends State<HomeLogoVersion> {
         children: [
           GestureDetector(
             onTap: () {
-              if (Provider.of<UserPreferencesManager>(context, listen: false)
-                  .developerModeEnabled) {
-                // Deactivate debug menu
-                Provider.of<UserPreferencesManager>(context, listen: false)
-                    .developerModeEnabled = false;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                        "You have deactivated the Abogabal secret menu 😎💪 رائع! لقد قمت بإلغاء تنشيط قائمة أبو جبل السرية"),
-                  ),
-                );
-              } else {
-                tapCount++;
-                if (tapCount >= 7) {
-                  Provider.of<UserPreferencesManager>(context, listen: false)
-                      .developerModeEnabled = true;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية",
-                      ),
-                    ),
-                  );
-                  tapCount = 0; // Reset tapCount after activation
-                }
-              }
+              _handleTap();
             },
             child: SvgPicture.asset(
               R.ASSETS_SVG_MAWAQIT_LOGO_TEXT_LIGHT_SVG,
@@ -75,6 +75,7 @@ class _HomeLogoVersionState extends State<HomeLogoVersion> {
               ),
             ),
           ),
+          // ... rest of the widget tree remains unchanged
         ],
       ),
     );

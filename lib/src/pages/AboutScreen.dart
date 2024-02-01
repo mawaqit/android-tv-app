@@ -8,6 +8,16 @@ import 'package:mawaqit/const/resource.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({Key? key}) : super(key: key);
+  static const int _activationTapCount = 7;
+  static const String _activationMessage =
+      "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية";
+  static const String _deactivationMessage =
+      "You have deactivated the Abogabal secret menu 😎💪 رائع! لقد قمت بإلغاء تنشيط قائمة أبو جبل السرية";
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,28 +33,18 @@ class AboutScreen extends StatelessWidget {
             event is RawKeyDownEvent) {
           if (!menuActivated) {
             tapCount++;
-            if (tapCount >= 7) {
+            if (tapCount >= _activationTapCount) {
               menuActivated = true;
               Provider.of<UserPreferencesManager>(context, listen: false)
                   .developerModeEnabled = true;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                      "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية"),
-                ),
-              );
+              _showSnackBar(context, _activationMessage);
               tapCount = 0;
             }
           } else {
             menuActivated = false;
             Provider.of<UserPreferencesManager>(context, listen: false)
                 .developerModeEnabled = false;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                    "You have deactivated the Abogabal secret menu 😎💪 رائع! لقد قمت بإلغاء تنشيط قائمة أبو جبل السرية"),
-              ),
-            );
+            _showSnackBar(context, _deactivationMessage);
           }
         }
       },
