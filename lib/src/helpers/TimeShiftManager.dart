@@ -18,12 +18,16 @@ class TimeShiftManager {
   DateTime _adjustedTime = DateTime.now();
   DateTime _previousTime = DateTime.now();
   bool _timeSetFromHour = false;
+  bool _timeSetManualy = false;
   bool _isLauncherInstalled = false;
   String _deviceModel = "";
+  int _shiftedhours = 0;
   static const String _shiftKey = 'shift';
   static const String _shiftInMinutesKey = 'shiftInMinutes';
   static const String _adjustedTimeKey = 'adjustedTime';
   static const String _previousTimeKey = 'previousTime';
+  static const String _shiftedhoursKey = 'shiftedhours';
+  static const String _timeSetManualyKey = 'timeSetManualy';
 
   factory TimeShiftManager() => _instance;
 
@@ -47,7 +51,9 @@ class TimeShiftManager {
   Future<void> initializeTimes() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     _shift = prefs.getInt(_shiftKey) ?? 0;
-    _shiftinMinutes = prefs.getInt(_shiftKey) ?? 0;
+    _shiftedhours = prefs.getInt(_shiftedhoursKey) ?? 0;
+    _shiftinMinutes = prefs.getInt(_shiftInMinutesKey) ?? 0;
+    _timeSetManualy = prefs.getBool(_timeSetManualyKey) ?? false;
     _adjustedTime = DateTime.parse(
         prefs.getString(_adjustedTimeKey) ?? DateTime.now().toIso8601String());
     _previousTime = DateTime.parse(
@@ -66,13 +72,15 @@ class TimeShiftManager {
   // Start a periodic timer for time adjustments, triggered every 30 seconds.
   void startPeriodicTimer() {
     const Duration period = Duration(seconds: 30);
-    if (!_timeSetFromHour &&
-        _isLauncherInstalled &&
-        _deviceModel == "MAWABOX") {
-      Timer.periodic(period, (Timer timer) {
+
+    Timer.periodic(period, (Timer timer) {
+      if (!_timeSetFromHour &&
+          _isLauncherInstalled &&
+          _deviceModel == "MAWABOX" &&
+          !_timeSetManualy) {
         adjustTime();
-      });
-    }
+      }
+    });
   }
 
   // Perform time adjustments based on timezone changes and hourly differences.
@@ -80,7 +88,7 @@ class TimeShiftManager {
     try {
       DateTime currentTime = DateTime.now();
 
-      const Duration timeThreshold = Duration(minutes: 5);
+      const Duration timeThreshold = Duration(seconds: 30);
 
       // Save previous time if it is within the specified time threshold.
       if (_previousTime.isAfter(currentTime.subtract(timeThreshold)) &&
@@ -94,16 +102,23 @@ class TimeShiftManager {
       // Check if the hour has changed for adjusting time.
       if (currentTime.hour != _previousTime.hour) {
         int hourDifference = currentTime.hour - _previousTime.hour;
+        if (hourDifference == 1) _shiftedhours++;
         // Calculate shift based on the hourly difference.
-        if (hourDifference == 2 || hourDifference == 1) {
+        if (_shiftedhours == 2) {
           _shift = -1;
           _adjustedTime = _adjustedTime.subtract(Duration(hours: 1));
+          _shiftedhours = 0;
+        }
+        if (hourDifference == -1) {
+          _timeSetManualy = true;
         }
         _previousTime = currentTime;
 
         // Save shift and adjusted time to shared preferences.
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setInt(_shiftKey, _shift);
+        prefs.setBool(_timeSetManualyKey, _timeSetManualy);
+        prefs.setInt(_shiftedhoursKey, _shiftedhours);
         prefs.setString(_adjustedTimeKey, _adjustedTime.toIso8601String());
       }
     } catch (e, stackTrace) {
