@@ -34,56 +34,35 @@ class _MosqueBackgroundScreenState extends State<MosqueBackgroundScreen> {
       bindings: {
         SingleActivator(LogicalKeyboardKey.arrowLeft): () => _scaffoldKey.currentState?.openDrawer(),
         SingleActivator(LogicalKeyboardKey.arrowRight): () => _scaffoldKey.currentState?.openDrawer(),
-        SingleActivator(LogicalKeyboardKey.arrowDown): () =>
-            _scaffoldKey.currentState?.openDrawer(),
-        SingleActivator(LogicalKeyboardKey.arrowUp): () =>
-            _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowDown): () => _scaffoldKey.currentState?.openDrawer(),
+        SingleActivator(LogicalKeyboardKey.arrowUp): () => _scaffoldKey.currentState?.openDrawer(),
       },
       child: Focus(
         autofocus: true,
         child: Scaffold(
           key: _scaffoldKey,
           drawer: MawaqitDrawer(goHome: () => AppRouter.popAll()),
-          body: Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: mosqueConfig!.backgroundType == "color"
-                    ? BoxDecoration(
-                        color: HexColor(mosqueConfig.backgroundColor))
-                    : BoxDecoration(
-                        image: DecorationImage(
-                          image: mosqueConfig.backgroundMotif == "0"
-                              ? MawaqitNetworkImageProvider(
-                                  mosqueProvider.mosque?.interiorPicture ?? "")
-                              : mosqueConfig.backgroundMotif == "-1"
-                                  ? MawaqitNetworkImageProvider(
-                                      mosqueProvider.mosque?.exteriorPicture ??
-                                          "")
-                                  : MawaqitNetworkImageProvider(
-                                      mosqueProvider.mosqueConfig!.motifUrl),
-                          fit: BoxFit.cover,
-                          colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(.4),
-                            BlendMode.srcOver,
-                          ),
-                          onError: (exception, stackTrace) {},
-                        ),
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: mosqueConfig!.backgroundType == "color"
+                ? BoxDecoration(color: HexColor(mosqueConfig.backgroundColor))
+                : BoxDecoration(
+                    image: DecorationImage(
+                      image: mosqueConfig.backgroundMotif == "0"
+                          ? MawaqitNetworkImageProvider(mosqueProvider.mosque?.interiorPicture ?? "")
+                          : mosqueConfig.backgroundMotif == "-1"
+                              ? MawaqitNetworkImageProvider(mosqueProvider.mosque?.exteriorPicture ?? "")
+                              : MawaqitNetworkImageProvider(mosqueProvider.mosqueConfig!.motifUrl),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(.4),
+                        BlendMode.srcOver,
                       ),
-                child: RepaintBoundary(child: widget.child),
-              ),
-              Positioned(
-                top: 10.0,
-                left: 10.0,
-                child: IconButton(
-                  icon: Icon(Icons.menu),
-                  onPressed: () {
-                    _scaffoldKey.currentState?.openDrawer();
-                  },
-                ),
-              ),
-            ],
+                      onError: (exception, stackTrace) {},
+                    ),
+                  ),
+            child: RepaintBoundary(child: widget.child),
           ),
         ),
       ),
