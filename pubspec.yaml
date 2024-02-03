@@ -109,7 +109,6 @@ dependencies:
   collection: any
   disk_space: ^0.2.1
   permission_handler: ^11.0.1
-  app_installer: ^1.1.0
   in_app_update: ^4.2.2
 
 dev_dependencies:
