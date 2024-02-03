@@ -224,13 +224,19 @@ class _SettingSwitchItem extends StatelessWidget {
 }
 
 class SettingCard extends riverpod.ConsumerWidget {
-  const SettingCard({super.key});
-
+  SettingCard({super.key});
+  String test  = "There is an update available on Play store";
   @override
   Widget build(BuildContext context, riverpod.WidgetRef ref) {
-
+    final appUpdateManagerState = ref.watch(appUpdateManagerProvider);
     return _SettingItem(
-      title: S.of(context).check_for_updates,
+      title: appUpdateManagerState.when(
+        data: (data) {
+          return data.name;
+        },
+        loading: () => 'loading',
+        error: (error, stackTrace) => 'error $error',
+      ),
       subtitle: S.of(context).check_for_updates_description,
       icon: Icon(Icons.update, size: 35),
       onTap: () async {
