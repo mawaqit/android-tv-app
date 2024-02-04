@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/data/constants.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';

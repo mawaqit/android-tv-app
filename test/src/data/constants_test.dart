@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mawaqit/src/data/constants.dart';
+import 'package:mawaqit/src/const/constants.dart';
 
 void main() {
   group("Environment variables tests", () {
