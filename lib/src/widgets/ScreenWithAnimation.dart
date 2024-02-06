@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 /// this widget is used to show a screen with a lottie animation on the left side
 class ScreenWithAnimationWidget extends StatelessWidget {
@@ -22,6 +23,18 @@ class ScreenWithAnimationWidget extends StatelessWidget {
     final userPrefs = context.watch<UserPreferencesManager>();
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Set your desired size here
+          iconSize: 12.sp,
+          splashRadius: 7.sp,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: SafeArea(
         child: Flex(
           direction: userPrefs.calculatedOrientation == Orientation.portrait ? Axis.vertical : Axis.horizontal,

@@ -10,6 +10,12 @@ class VersionWidget extends StatefulWidget {
   final TextStyle? style;
   final TextAlign? textAlign;
 
+  String _formatVersion(PackageInfo? packageInfo) {
+    final version = packageInfo?.version.replaceAll('-tv', '') ?? '';
+    final buildNumber = packageInfo?.buildNumber ?? '';
+    return "v$version-$buildNumber";
+  }
+
   @override
   _VersionWidgetState createState() => _VersionWidgetState();
 }
@@ -19,43 +25,13 @@ class _VersionWidgetState extends State<VersionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-onTap: () {
-        setState(() {
-          if (context.read<UserPreferencesManager>().developerModeEnabled) {
-            // Deactivate debug menu
-            context.read<UserPreferencesManager>().developerModeEnabled = false;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                    "You have desactivated the Abogabal secret menu 😎💪 رائع! لقد قمت بإلغاء تنشيط قائمة أبو جبل السرية"),
-              ),
-            );
-          } else {
-            tapCount++;
-            if (tapCount >= 7) {
-              context.read<UserPreferencesManager>().developerModeEnabled =
-                  true;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية",
-                  ),
-                ),
-              );
-              tapCount = 0; // Reset tapCount after activation
-            }
-          }
-        });
-      },
 
-      child: FutureBuilder<PackageInfo>(
-        future: PackageInfo.fromPlatform(),
-        builder: (context, snapshot) => Text(
-          "v${snapshot.data?.version.replaceAll('-tv', '')}-${snapshot.data?.buildNumber}",
-          style: widget.style,
-          textAlign: widget.textAlign,
-        ),
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, snapshot) => Text(
+        _formatVersion(snapshot.data),
+        style: style,
+        textAlign: textAlign,
       ),
     );
   }

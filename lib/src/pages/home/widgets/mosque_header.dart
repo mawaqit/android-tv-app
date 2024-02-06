@@ -28,13 +28,17 @@ class MosqueHeader extends StatelessOrientationWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 2, child: OfflineWidget()),
+
+          Expanded(flex: 1, child: OfflineWidget()),
           Expanded(
-            flex: 4,
-            child: buildMosqueName(mosqueConfig),
+            flex: 6,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: buildMosqueName(mosqueConfig),
+            ),
           ),
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Align(
               // align based on direction of the text
               alignment: AlignmentDirectional.centerEnd,
@@ -108,7 +112,9 @@ class MosqueHeader extends StatelessOrientationWidget {
       ),
     );
   }
-  Container buildMosqueName(MosqueConfig? mosqueConfig){
+
+
+  Container buildMosqueName(MosqueConfig? mosqueConfig) {
     return Container(
       alignment: Alignment.bottomCenter,
       child: Row(
@@ -125,30 +131,24 @@ class MosqueHeader extends StatelessOrientationWidget {
             ),
           )
               : SizedBox(),
-          // SizedBox(width: 10),
-          Flexible(
-            child: Container(
-              padding: EdgeInsets.only(left: 1.vw),
-              child: StatefulBuilder(
-                key: ValueKey(mosque.name.hashCode ^ SizerUtil.orientation.hashCode),
-                builder: (context, setState) => TextScroll(
-                  mosque.name,
-                  intervalSpaces: 10,
-                  pauseBetween: 3.seconds,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 4.vwr,
-                    height: 1.2,
-                    shadows: kIqamaCountDownTextShadow,
-                    fontWeight: FontWeight.bold,
-                    // fontFamily: StringManager.fontFamilyKufi,
-                  ),
-                ),
+
+          SizedBox(width: 10),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              mosque.name,
+              maxLines: 1,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 4.vwr,
+                height: 1.2,
+                overflow: TextOverflow.visible,
+                shadows: kIqamaCountDownTextShadow,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-
-          // SizedBox(width: 10),
+          SizedBox(width: 10),
           mosque.logo != null && mosqueConfig!.showLogo
               ? Padding(
             padding: const EdgeInsets.all(8.0),
