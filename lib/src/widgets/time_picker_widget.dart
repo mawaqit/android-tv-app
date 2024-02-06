@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mawaqit/i18n/l10n.dart';
 
+import '../../i18n/l10n.dart';
 import '../helpers/TimeShiftManager.dart';
 
 class TimePickerModal extends StatelessWidget {
@@ -12,18 +12,13 @@ class TimePickerModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Color(0xff161b22),
       title: Text(S.of(context).timeSetting),
-      content: TimePicker(onTimeSelected: (selectedTime) {
-        timeShiftManager.adjustTimeFromTimePicker(selectedTime);
-      }),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text(S.of(context).ok),
-        ),
-      ],
+      content: TimePicker(
+        onTimeSelected: (selectedTime) {
+          timeShiftManager.adjustTimeFromTimePicker(selectedTime);
+        },
+      ),
     );
   }
 }
@@ -39,28 +34,35 @@ class TimePicker extends StatefulWidget {
 
 class _TimePickerState extends State<TimePicker> {
   final TimeShiftManager timeManager = TimeShiftManager();
-  DateTime selectedTime = DateTime.now();
+  late DateTime selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTime = DateTime.now().add(Duration(
+        hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
+  }
 
   @override
   Widget build(BuildContext context) {
-    DateTime selectedTime = DateTime.now().add(Duration(
-        hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         ListTile(
           title: Text(
-              '${S.of(context).selectedTime} ${_formatTime(selectedTime)}'),
+            '${S.of(context).selectedTime} ${_formatTime(selectedTime)}',
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            ElevatedButton(
+            OutlinedButton(
+              autofocus: true,
               onPressed: () => _selectTime(context),
               child: Text(S.of(context).timeSettingDesc),
             ),
             SizedBox(width: 10),
-            ElevatedButton(
+            OutlinedButton(
               onPressed: () => _showConfirmationDialog(),
               child: Text(S.of(context).useDeviceTime),
             ),
@@ -71,26 +73,32 @@ class _TimePickerState extends State<TimePicker> {
   }
 
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
+    await showDialog<TimeOfDay>(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(selectedTime),
+      builder: (BuildContext context) {
+        return DPadTimePicker(
+          onTimeSelected: (selectedTime) {
+            _handleSelectedTime(selectedTime);
+          },
+        );
+      },
+    );
+  }
+
+  void _handleSelectedTime(DateTime selectedTimeOfDay) {
+    final newDateTime = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      selectedTimeOfDay.hour,
+      selectedTimeOfDay.minute,
     );
 
-    if (picked != null) {
-      DateTime selectedDateTime = DateTime(
-        selectedTime.year,
-        selectedTime.month,
-        selectedTime.day,
-        picked.hour,
-        picked.minute,
-      );
+    setState(() {
+      selectedTime = newDateTime;
+    });
 
-      setState(() {
-        selectedTime = selectedDateTime;
-      });
-
-      widget.onTimeSelected(selectedDateTime);
-    }
+    widget.onTimeSelected(newDateTime);
   }
 
   String _formatTime(DateTime time) {
@@ -102,18 +110,22 @@ class _TimePickerState extends State<TimePicker> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Color(0xff161b22),
           title: Text(S.of(context).confirmation),
           content: Text(S.of(context).confirmationMessage),
           actions: <Widget>[
-            TextButton(
+            OutlinedButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
               child: Text(S.of(context).cancel),
             ),
-            TextButton(
+            OutlinedButton(
               onPressed: () {
                 timeManager.useDeviceTime();
+                setState(() {
+                  selectedTime = DateTime.now();
+                });
                 Navigator.of(context).pop();
               },
               child: Text(S.of(context).ok),
@@ -121,6 +133,148 @@ class _TimePickerState extends State<TimePicker> {
           ],
         );
       },
+    );
+  }
+}
+
+class DPadTimePicker extends StatefulWidget {
+  final void Function(DateTime)? onTimeSelected;
+
+  DPadTimePicker({Key? key, this.onTimeSelected}) : super(key: key);
+
+  @override
+  _DPadTimePickerState createState() => _DPadTimePickerState();
+}
+
+class _DPadTimePickerState extends State<DPadTimePicker> {
+  late int _selectedHour;
+  late int _selectedMinute;
+
+  @override
+  void initState() {
+    super.initState();
+    final now = TimeOfDay.now();
+    _selectedHour = now.hour;
+    _selectedMinute = now.minute;
+  }
+
+  void _selectNextHour() {
+    setState(() {
+      _selectedHour = (_selectedHour + 1) % 24;
+    });
+  }
+
+  void _selectPreviousHour() {
+    setState(() {
+      _selectedHour = (_selectedHour - 1 + 24) % 24;
+    });
+  }
+
+  void _selectNextMinute() {
+    setState(() {
+      _selectedMinute = (_selectedMinute + 1) % 60;
+    });
+  }
+
+  void _selectPreviousMinute() {
+    setState(() {
+      _selectedMinute = (_selectedMinute - 1 + 60) % 60;
+    });
+  }
+
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xff161b22),
+      contentPadding: EdgeInsets.all(16),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Select Time",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_upward),
+                    onPressed: _selectNextHour,
+                  ),
+                  Text(
+                    _selectedHour.toString().padLeft(2, '0'),
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_downward),
+                    onPressed: _selectPreviousHour,
+                  ),
+                ],
+              ),
+              SizedBox(width: 25),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    ":",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              SizedBox(width: 25),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_upward),
+                    onPressed: _selectNextMinute,
+                  ),
+                  Text(
+                    _selectedMinute.toString().padLeft(2, '0'),
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_downward),
+                    onPressed: _selectPreviousMinute,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 16), // Add spacing between selectors and buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Cancel"),
+              ),
+              SizedBox(width: 16),
+              OutlinedButton(
+                onPressed: () {
+                  final selectedDateTime = DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    DateTime.now().day,
+                    _selectedHour,
+                    _selectedMinute,
+                  );
+                  print("selected" + selectedDateTime.toIso8601String());
+                  widget.onTimeSelected?.call(selectedDateTime);
+
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

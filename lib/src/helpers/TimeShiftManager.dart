@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
@@ -135,20 +134,17 @@ class TimeShiftManager {
           selectedTimeFromPicker.minute - _previousTime.minute;
       _shift = hourDifference;
       _shiftinMinutes = minuteDifference;
-      // Update adjusted time based on the shift.
+
       if (_shift > 0) {
         _adjustedTime = _adjustedTime.add(Duration(hours: _shift));
       } else if (_shift < 0) {
         _adjustedTime = _adjustedTime.subtract(Duration(hours: _shift));
-      } else if (minuteDifference > 0) {
-        _adjustedTime = _adjustedTime.add(Duration(minutes: _shiftinMinutes));
-      } else if (minuteDifference < 0) {
+      } else if (_shift == 0 && minuteDifference != 0) {
         _adjustedTime = _adjustedTime.add(Duration(minutes: _shiftinMinutes));
       }
 
       _previousTime = DateTime.now();
 
-      // Save shift and adjusted time to shared preferences.
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setInt(_shiftKey, _shift);
       prefs.setInt(_shiftInMinutesKey, _shiftinMinutes);
@@ -163,10 +159,10 @@ class TimeShiftManager {
     try {
       _shift = 0;
       _adjustedTime = DateTime.now();
-
-      // Save shift and adjusted time to shared preferences.
+      _shiftinMinutes = 0;
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setInt(_shiftKey, _shift);
+      prefs.setInt(_shiftKey, _shiftinMinutes);
       prefs.setString(_adjustedTimeKey, _adjustedTime.toIso8601String());
     } catch (e, stackTrace) {
       logger.e(e, stackTrace: stackTrace);
