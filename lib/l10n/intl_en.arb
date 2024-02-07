@@ -190,6 +190,6 @@
   "selectedTime":"The current selected time",
   "confirmation":"Confirmation",
   "confirmationMessage":"Are you sure you want to use device time?",
-  "useDeviceTime":"Use device time"
-
+  "useDeviceTime":"Use device time",
+  "selectTime":"Select Time"
 }

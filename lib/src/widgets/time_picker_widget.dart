@@ -190,7 +190,7 @@ class _DPadTimePickerState extends State<DPadTimePicker> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Select Time",
+            S.of(context).selectTime,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 16),
@@ -252,7 +252,7 @@ class _DPadTimePickerState extends State<DPadTimePicker> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("Cancel"),
+                child: Text(S.of(context).cancel),
               ),
               SizedBox(width: 16),
               OutlinedButton(
@@ -269,7 +269,7 @@ class _DPadTimePickerState extends State<DPadTimePicker> {
 
                   Navigator.of(context).pop();
                 },
-                child: Text("OK"),
+                child: Text(S.of(context).ok),
               ),
             ],
           ),
