@@ -29,7 +29,6 @@ class OnBoardingNotifier extends AsyncNotifier<OnboardingState> {
 
     state = await AsyncValue.guard(() async {
       final appLanguage = provider.Provider.of<AppLanguage>(context, listen: false);
-      print('change notifier: ${language}');
       appLanguage.changeLanguage(Locale(language), '');
       await deviceInfoUseCase.setOnboardingAppLanguage(language);
       update((p0) => p0.copyWith(language: language));
