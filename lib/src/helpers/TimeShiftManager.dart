@@ -129,16 +129,11 @@ class TimeShiftManager {
   Future<void> adjustTimeFromTimePicker(DateTime selectedTimeFromPicker) async {
     try {
       _timeSetFromHour = true;
-      int hourDifference = 0;
-      int minuteDifference = 0;
-      if (_previousTime == DateTime.now()) {
-        hourDifference = selectedTimeFromPicker.hour - _previousTime.hour;
-        minuteDifference = selectedTimeFromPicker.minute - _previousTime.minute;
-      } else {
-        hourDifference = selectedTimeFromPicker.hour - DateTime.now().hour;
-        minuteDifference =
-            selectedTimeFromPicker.minute - DateTime.now().minute;
-      }
+
+      int hourDifference = selectedTimeFromPicker.hour - DateTime.now().hour;
+      int minuteDifference =
+          selectedTimeFromPicker.minute - DateTime.now().minute;
+
       _shift = hourDifference;
       _shiftinMinutes = minuteDifference;
       if (_shift > 0) {
@@ -153,8 +148,6 @@ class TimeShiftManager {
       } else if (_shiftinMinutes < 0) {
         _adjustedTime = _adjustedTime.add(Duration(minutes: _shiftinMinutes));
       }
-
-      _previousTime = DateTime.now();
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setInt(_shiftKey, _shift);

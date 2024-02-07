@@ -121,6 +121,7 @@ class _TimePickerState extends State<TimePicker> {
               child: Text(S.of(context).cancel),
             ),
             OutlinedButton(
+              autofocus: true,
               onPressed: () {
                 timeManager.useDeviceTime();
                 setState(() {
