@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provider/provider.dart';
 
-import '../services/user_preferences_manager.dart';
-
-class VersionWidget extends StatefulWidget {
+class VersionWidget extends StatelessWidget {
   const VersionWidget({Key? key, this.style, this.textAlign}) : super(key: key);
 
   final TextStyle? style;
@@ -17,15 +14,7 @@ class VersionWidget extends StatefulWidget {
   }
 
   @override
-  _VersionWidgetState createState() => _VersionWidgetState();
-}
-
-class _VersionWidgetState extends State<VersionWidget> {
-  int tapCount = 0;
-
-  @override
   Widget build(BuildContext context) {
-
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) => Text(
