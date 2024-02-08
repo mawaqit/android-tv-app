@@ -143,13 +143,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initializeOnBoardingItems();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(onBoardingProvider.notifier).getSystemLanguage();
     });
-  }
-
-  Future<void> initializeOnBoardingItems() async {
-    await ref.read(onBoardingProvider.notifier).getSystemLanguage();
   }
 
   @override
