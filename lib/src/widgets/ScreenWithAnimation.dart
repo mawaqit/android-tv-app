@@ -23,21 +23,11 @@ class ScreenWithAnimationWidget extends StatelessWidget {
     final userPrefs = context.watch<UserPreferencesManager>();
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back), // Set your desired size here
-          iconSize: 12.sp,
-          splashRadius: 7.sp,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
       body: SafeArea(
         child: Flex(
-          direction: userPrefs.calculatedOrientation == Orientation.portrait ? Axis.vertical : Axis.horizontal,
+          direction: userPrefs.calculatedOrientation == Orientation.portrait
+              ? Axis.vertical
+              : Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
