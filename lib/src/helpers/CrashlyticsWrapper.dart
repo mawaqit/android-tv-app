@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:mawaqit/src/data/constants.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -40,7 +40,7 @@ class CrashlyticsWrapper {
     Sentry.configureScope((scopes) {
       if (userData == null) {
         scopes.setUser(null);
-        
+
         scopes.setContexts("user-data", null);
         return;
       }
