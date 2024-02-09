@@ -110,6 +110,9 @@ dependencies:
   collection: any
   disk_space: ^0.2.1
 
+  # object equality comparisons
+  equatable: ^2.0.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
