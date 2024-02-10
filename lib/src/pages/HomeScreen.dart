@@ -22,16 +22,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final appLanguage = context.read<AppLanguage>();
 
-    return CallbackShortcuts(
-      bindings: {
-        SingleActivator(LogicalKeyboardKey.arrowLeft): () =>
-            _scaffoldKey.currentState?.openDrawer(),
-        SingleActivator(LogicalKeyboardKey.arrowRight): () =>
-            _scaffoldKey.currentState?.openDrawer(),
-        SingleActivator(LogicalKeyboardKey.arrowDown): () =>
-            _scaffoldKey.currentState?.openDrawer(),
-        SingleActivator(LogicalKeyboardKey.arrowUp): () =>
-            _scaffoldKey.currentState?.openDrawer(),
+    return RawKeyboardListener(
+      focusNode: FocusNode(),
+      onKey: (event) {
+        if (event is RawKeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+              event.logicalKey == LogicalKeyboardKey.arrowUp ||
+              event.logicalKey == LogicalKeyboardKey.arrowLeft ||
+              event.logicalKey == LogicalKeyboardKey.arrowRight) {
+            _scaffoldKey.currentState?.openDrawer();
+          }
+        }
       },
       child: Scaffold(
         key: _scaffoldKey,
