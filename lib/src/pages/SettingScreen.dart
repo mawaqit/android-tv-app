@@ -29,148 +29,132 @@ class SettingScreen extends StatelessWidget {
     final themeManager = context.watch<ThemeNotifier>();
     final String checkInternet = S.of(context).noInternet;
     final String hadithLanguage = S.of(context).connectToChangeHadith;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back), // Set your desired size here
-          iconSize: 12.sp,
-          splashRadius: 7.sp,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
-      body: ScreenWithAnimationWidget(
-        animation: 'settings',
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(S.of(context).settings,
-                  style: theme.textTheme.headlineMedium),
-              const SizedBox(height: 20),
-              Flexible(
-                fit: FlexFit.loose,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    _SettingItem(
-                      title: S.of(context).changeMosque,
-                      subtitle: S.of(context).searchMosque,
-                      icon: Icon(MawaqitIcons.icon_mosque, size: 35),
-                      onTap: () => AppRouter.push(MosqueSearchScreen()),
-                    ),
-                    _SettingItem(
-                      title: S.of(context).hijriAdjustments,
-                      subtitle: S.of(context).hijriAdjustmentsDescription,
-                      icon: Icon(MawaqitIcons.icon_mosque, size: 35),
-                      onTap: () => AppRouter.push(HijriAdjustmentsScreen()),
-                    ),
-                    _SettingItem(
-                      title: S.of(context).languages,
-                      subtitle: S.of(context).descLang,
-                      icon: Icon(Icons.language, size: 35),
-                      onTap: () => AppRouter.push(LanguageScreen()),
-                    ),
-                    _SettingItem(
-                      title: S.of(context).randomHadithLanguage,
-                      subtitle: S.of(context).hadithLangDesc,
-                      icon: Icon(Icons.language, size: 35),
-                      onTap: () => AppRouter.push(
-                        LanguageScreen(
-                          isIconActivated: true,
-                          title: S.of(context).randomHadithLanguage,
-                          description: S.of(context).descLang,
-                          languages:
-                              appLanguage.hadithLocalizedLanguage.keys.toList(),
-                          isSelected: (langCode) =>
-                              appLanguage.hadithLanguage == langCode,
-                          onSelect: (langCode) {
-                            bool isConnectedToInternet =
-                                mosqueProvider.isOnline;
-                            if (!isConnectedToInternet) {
-                              showCheckInternetDialog(
-                                context: context,
-                                onRetry: () {
-                                  AppRouter.pop();
-                                },
-                                title: checkInternet,
-                                content: hadithLanguage,
-                              );
-                            } else {
-                              context
-                                  .read<AppLanguage>()
-                                  .setHadithLanguage(langCode);
-                              AppRouter.pop();
-                            }
-                          },
-                        ),
+    return ScreenWithAnimationWidget(
+      animation: 'settings',
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(S.of(context).settings, style: theme.textTheme.headlineMedium),
+            const SizedBox(height: 20),
+            Flexible(
+              fit: FlexFit.loose,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  _SettingItem(
+                    title: S.of(context).changeMosque,
+                    subtitle: S.of(context).searchMosque,
+                    icon: Icon(MawaqitIcons.icon_mosque, size: 35),
+                    onTap: () => AppRouter.push(MosqueSearchScreen()),
+                  ),
+                  _SettingItem(
+                    title: S.of(context).hijriAdjustments,
+                    subtitle: S.of(context).hijriAdjustmentsDescription,
+                    icon: Icon(MawaqitIcons.icon_mosque, size: 35),
+                    onTap: () => AppRouter.push(HijriAdjustmentsScreen()),
+                  ),
+                  _SettingItem(
+                    title: S.of(context).languages,
+                    subtitle: S.of(context).descLang,
+                    icon: Icon(Icons.language, size: 35),
+                    onTap: () => AppRouter.push(LanguageScreen()),
+                  ),
+                  _SettingItem(
+                    title: S.of(context).randomHadithLanguage,
+                    subtitle: S.of(context).hadithLangDesc,
+                    icon: Icon(Icons.language, size: 35),
+                    onTap: () => AppRouter.push(
+                      LanguageScreen(
+                        isIconActivated: true,
+                        title: S.of(context).randomHadithLanguage,
+                        description: S.of(context).descLang,
+                        languages:
+                            appLanguage.hadithLocalizedLanguage.keys.toList(),
+                        isSelected: (langCode) =>
+                            appLanguage.hadithLanguage == langCode,
+                        onSelect: (langCode) {
+                          bool isConnectedToInternet = mosqueProvider.isOnline;
+                          if (!isConnectedToInternet) {
+                            showCheckInternetDialog(
+                              context: context,
+                              onRetry: () {
+                                AppRouter.pop();
+                              },
+                              title: checkInternet,
+                              content: hadithLanguage,
+                            );
+                          } else {
+                            context
+                                .read<AppLanguage>()
+                                .setHadithLanguage(langCode);
+                            AppRouter.pop();
+                          }
+                        },
                       ),
                     ),
-                    SizedBox(height: 30),
-                    Divider(),
-                    SizedBox(height: 10),
-                    Text(
-                      S.of(context).applicationModes,
-                      style: theme.textTheme.headlineSmall,
-                      textAlign: TextAlign.center,
-                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Divider(),
+                  SizedBox(height: 10),
+                  Text(
+                    S.of(context).applicationModes,
+                    style: theme.textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                  _SettingSwitchItem(
+                    title: theme.brightness == Brightness.light
+                        ? S.of(context).darkMode
+                        : S.of(context).lightMode,
+                    icon: Icon(Icons.brightness_4, size: 35),
+                    onChanged: (value) => themeManager.toggleMode(),
+                    value: themeManager.isLightTheme ?? false,
+                  ),
+                  _SettingItem(
+                    title: S.of(context).orientation,
+                    subtitle: S.of(context).selectYourMawaqitTvAppOrientation,
+                    icon: Icon(Icons.portrait, size: 35),
+                    onTap: () => AppRouter.push(ScreenWithAnimationWidget(
+                      animation: 'welcome',
+                      child: OnBoardingOrientationWidget(
+                        onSelect: () => Navigator.pop(context),
+                      ),
+                    )),
+                  ),
+                  if (!userPreferences.webViewMode)
                     _SettingSwitchItem(
-                      title: theme.brightness == Brightness.light
-                          ? S.of(context).darkMode
-                          : S.of(context).lightMode,
-                      icon: Icon(Icons.brightness_4, size: 35),
-                      onChanged: (value) => themeManager.toggleMode(),
-                      value: themeManager.isLightTheme ?? false,
+                      title: S.of(context).announcementOnlyMode,
+                      subtitle: S.of(context).announcementOnlyModeEXPLINATION,
+                      icon: Icon(Icons.notifications, size: 35),
+                      value: userPreferences.announcementsOnly,
+                      onChanged: (value) =>
+                          userPreferences.announcementsOnly = value,
                     ),
-                    _SettingItem(
-                      title: S.of(context).orientation,
-                      subtitle: S.of(context).selectYourMawaqitTvAppOrientation,
-                      icon: Icon(Icons.portrait, size: 35),
-                      onTap: () => AppRouter.push(ScreenWithAnimationWidget(
-                        animation: 'welcome',
-                        child: OnBoardingOrientationWidget(
-                          onSelect: () => Navigator.pop(context),
-                        ),
-                      )),
-                    ),
-                    if (!userPreferences.webViewMode)
-                      _SettingSwitchItem(
-                        title: S.of(context).announcementOnlyMode,
-                        subtitle: S.of(context).announcementOnlyModeEXPLINATION,
-                        icon: Icon(Icons.notifications, size: 35),
-                        value: userPreferences.announcementsOnly,
-                        onChanged: (value) =>
-                            userPreferences.announcementsOnly = value,
-                      ),
-                    if (!userPreferences.webViewMode &&
-                        !userPreferences.announcementsOnly)
-                      _SettingSwitchItem(
-                        title: S.of(context).secondaryScreen,
-                        subtitle: S.of(context).secondaryScreenExplanation,
-                        value: userPreferences.isSecondaryScreen,
-                        icon: Icon(Icons.monitor, size: 35),
-                        onChanged: (value) =>
-                            userPreferences.isSecondaryScreen = value,
-                      ),
+                  if (!userPreferences.webViewMode &&
+                      !userPreferences.announcementsOnly)
                     _SettingSwitchItem(
-                      title: S.of(context).webView,
-                      subtitle: S
-                          .of(context)
-                          .ifYouAreFacingAnIssueWithTheAppActivateThis,
-                      icon: Icon(Icons.online_prediction, size: 35),
-                      value: userPreferences.webViewMode,
-                      onChanged: (value) => userPreferences.webViewMode = value,
+                      title: S.of(context).secondaryScreen,
+                      subtitle: S.of(context).secondaryScreenExplanation,
+                      value: userPreferences.isSecondaryScreen,
+                      icon: Icon(Icons.monitor, size: 35),
+                      onChanged: (value) =>
+                          userPreferences.isSecondaryScreen = value,
                     ),
-                  ],
-                ),
+                  _SettingSwitchItem(
+                    title: S.of(context).webView,
+                    subtitle: S
+                        .of(context)
+                        .ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    icon: Icon(Icons.online_prediction, size: 35),
+                    value: userPreferences.webViewMode,
+                    onChanged: (value) => userPreferences.webViewMode = value,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
