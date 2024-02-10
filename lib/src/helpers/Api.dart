@@ -12,12 +12,14 @@ import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
+import 'package:mawaqit/src/pages/HijriAdjustmentsScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 import 'package:xml_parser/xml_parser.dart';
 
+import '../models/hijri_data_config_model.dart';
 import '../models/mosque.dart';
 import '../models/weather.dart';
 import 'api_interceptor/json_interceptor.dart';
@@ -127,11 +129,32 @@ class Api {
     }
   }
 
+  /// [getMosqueTimes] Fetches prayer times and hijri date configuration for a mosque.
+  ///
+  /// Retrieves the prayer times for a given mosque identified by [id].
+  /// It also fetches the hijri date configuration associated with the mosque
+  /// and merges this information into the `Times` model.
   static Future<Times> getMosqueTimes(String id) async {
     final response = await dio.get('/3.1/mosque/$id/times');
+    final hijriDateConfig = await _getHijriDate(id);
+
+    // Adds hijri date adjustment details to the response data.
+    response.data['hijriAdjustment'] = hijriDateConfig.hijriAdjustment;
+    response.data['hijriDateForceTo30'] = hijriDateConfig.hijriDateForceTo30;
 
     return Times.fromMap(response.data);
   }
+
+  /// [_getHijriDate] Fetches the Hijri date configuration for a mosque.
+  ///
+  /// Makes an API call to retrieve the Hijri date settings for the mosque
+  /// identified by [id]. The settings include whether there is an adjustment
+  /// to the Hijri date and if the Hijri date should be forced to 30 days.
+  static Future<HijriDateConfigModel> _getHijriDate(String id) async {
+    final response = await dio.get('/3.0/mosque/$id/hijri-date');
+    return HijriDateConfigModel.fromJson(response.data);
+  }
+
 
   static Future<Mosque> searchMosqueWithId(String mosqueId) async {
     final response = await dio.get('/3.0/mosque/$mosqueId');
