@@ -8,24 +8,38 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/connectivity_provider.dart';
-class OfflineWidget extends ConsumerWidget {
-  const OfflineWidget({Key? key}) : super(key: key);
+import 'mosque_background_screen.dart';
+
+class OfflineWidget extends ConsumerStatefulWidget {
+  const OfflineWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final mosqueManager = context.read<MosqueManager>();
+  ConsumerState createState() => _OfflineWidgetState();
+}
+
+class _OfflineWidgetState extends ConsumerState<OfflineWidget> {
+
+  @override
+  Widget build(BuildContext context) {
     final tr = S.of(context);
     final connectivity = ref.watch(connectivityProvider);
     return switch(connectivity){
       AsyncData(:final value) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: 1.vw),
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+              print('open drawer');
+            },
+          ),
           CircleAvatar(
             radius: .4.vwr,
             backgroundColor: value == ConnectivityStatus.connected ? Colors.green : Colors.red[700],
           ),
           SizedBox(width: .4.vwr),
+
           Text(
             value == ConnectivityStatus.connected ? tr.online : tr.offline,
             style: TextStyle(
@@ -36,6 +50,7 @@ class OfflineWidget extends ConsumerWidget {
               fontWeight: FontWeight.w400,
             ),
           ),
+
         ],
       ),
       AsyncError(:final error) => Container(),
