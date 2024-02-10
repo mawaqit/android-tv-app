@@ -7,6 +7,9 @@ import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/AppDate.dart';
+import '../../../helpers/TimeShiftManager.dart';
+import '../../../services/features_manager.dart';
 import '../widgets/workflows/repeating_workflow_widget.dart';
 
 /// this is the main workflow of the app
@@ -17,14 +20,27 @@ class AppWorkflowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
-    final now = mosqueManager.mosqueDate();
+    final now = AppDateTime.now();
+    final TimeShiftManager timeManager = TimeShiftManager();
+    final featureManager = Provider.of<FeatureManager>(context);
 
-    final times = mosqueManager.useTomorrowTimes ? mosqueManager.actualTimes(now.add(1.days)) : mosqueManager.actualTimes(now);
+    ValueKey? key;
 
-    final iqama =
-        mosqueManager.useTomorrowTimes ? mosqueManager.actualIqamaTimes(now.add(1.days)) : mosqueManager.actualIqamaTimes(now);
+    if (featureManager.isFeatureEnabled("timezone_shift") &&
+        timeManager.deviceModel == "MAWABOX" &&
+        timeManager.isLauncherInstalled) {
+      key = ValueKey('${timeManager.shift}_${timeManager.shiftInMinutes}');
+    }
+    final times = mosqueManager.useTomorrowTimes
+        ? mosqueManager.actualTimes(now.add(1.days))
+        : mosqueManager.actualTimes(now);
+
+    final iqama = mosqueManager.useTomorrowTimes
+        ? mosqueManager.actualIqamaTimes(now.add(1.days))
+        : mosqueManager.actualIqamaTimes(now);
 
     return RepeatingWorkFlowWidget(
+      key: key,
       debugName: "App workflow",
       child: NormalWorkflowScreen(),
       items: [
@@ -37,7 +53,9 @@ class AppWorkflowScreen extends StatelessWidget {
 
               /// auto start Workflow if user starts the app during the Salah time
               /// give 4 minute for the salah and 2 for azkar
-              showInitial: () => now.isAfter(elem.add(-5.minutes)) && now.isBefore(iqama[index].add(6.minutes)),
+              showInitial: () =>
+                  now.isAfter(elem.add(-5.minutes)) &&
+                  now.isBefore(iqama[index].add(6.minutes)),
 
               // dateTime: e,
               // disable Duhr if it's Friday
@@ -57,7 +75,8 @@ class AppWorkflowScreen extends StatelessWidget {
 
             /// If user opens the app during the Jumuaa time then show the Jumuaa workflow
             /// give 30 minutes for the Jumuaa
-            return now.isBefore(activeJumuaaDate.add(Duration(minutes: mosqueManager.mosqueConfig!.jumuaTimeout ?? 30)));
+            return now.isBefore(activeJumuaaDate.add(Duration(
+                minutes: mosqueManager.mosqueConfig!.jumuaTimeout ?? 30)));
           },
         ),
       ],

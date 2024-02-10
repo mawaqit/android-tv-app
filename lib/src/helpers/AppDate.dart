@@ -32,7 +32,9 @@ class AppDateTime {
       return DateTime.now().add(difference);
     } else {
       return FeatureManagerProvider.featureManager
-              .isFeatureEnabled("timezone_shift")
+                  .isFeatureEnabled("timezone_shift") &&
+              timeManager.deviceModel == "MAWABOX" &&
+              timeManager.isLauncherInstalled
           ? DateTime.now().add(Duration(
               hours: timeManager.shift, minutes: timeManager.shiftInMinutes))
           : DateTime.now();
