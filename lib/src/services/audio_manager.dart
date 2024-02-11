@@ -117,7 +117,7 @@ class AudioManager extends ChangeNotifier {
       _getFile(adhanLink(config)),
       _getFile(adhanLink(config, useFajrAdhan: true)),
       _getFileFromAssets(bipAsset),
-      _getFileFromAssets(duaAfterAdhanLink),
+      _getFileFromAssets(duaAfterAdhanAsset),
     ]);
   }
 
