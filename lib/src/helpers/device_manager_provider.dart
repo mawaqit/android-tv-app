@@ -8,7 +8,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
 import '../../i18n/AppLanguage.dart';
-import '../data/constants.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import '../services/localization_manager.dart';
 
 /// DeviceManagerProvider extends AsyncNotifier to asynchronously manage DeviceInfo.

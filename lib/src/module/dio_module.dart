@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/constants.dart';
+import 'package:mawaqit/src/const/constants.dart';
 
 /// [DioModule] is a wrapper class for the Dio HTTP client.
 /// It configures Dio with custom settings such as base URL, and interceptors.

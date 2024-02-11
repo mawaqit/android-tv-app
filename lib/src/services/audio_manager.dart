@@ -5,10 +5,10 @@ import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_stor
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/data/constants.dart';
 import 'package:mawaqit/src/helpers/cache_interceptor.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 
+import 'package:mawaqit/src/const/constants.dart';
 import '../../main.dart';
 import '../helpers/device_manager_provider.dart';
 import '../module/dio_module.dart';
