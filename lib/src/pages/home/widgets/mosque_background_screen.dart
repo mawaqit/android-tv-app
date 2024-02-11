@@ -33,11 +33,18 @@ class _MosqueBackgroundScreenState extends ConsumerState<MosqueBackgroundScreen>
     final deviceManager = ref.watch(deviceManagerProvider);
     if (!mosqueProvider.loaded) return SizedBox();
 
-    return CallbackShortcuts(
-      bindings: {
-        SingleActivator(LogicalKeyboardKey.arrowLeft): () => _scaffoldKey.currentState?.openDrawer(),
-        SingleActivator(LogicalKeyboardKey.arrowRight): () => _scaffoldKey.currentState?.openDrawer(),
-      },
+    return RawKeyboardListener(
+       focusNode: FocusNode(),
+       onKey: (event) {
+         if (event is RawKeyDownEvent) {
+           if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+               event.logicalKey == LogicalKeyboardKey.arrowUp ||
+               event.logicalKey == LogicalKeyboardKey.arrowLeft ||
+               event.logicalKey == LogicalKeyboardKey.arrowRight) {
+             _scaffoldKey.currentState?.openDrawer();
+           }
+         }
+       },
       child: Focus(
         autofocus: true,
         child: Scaffold(

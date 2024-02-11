@@ -128,7 +128,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 dependency_overrides:
-  win32: ^5.0.5
+  win32: 5.0.5
 
 # The following section is specific to Flutter.
 flutter:

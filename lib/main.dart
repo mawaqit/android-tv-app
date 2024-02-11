@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'
 import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/data/constants.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/Api.dart';

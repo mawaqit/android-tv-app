@@ -45,7 +45,7 @@ class LandScapeTurkishHome extends StatelessWidget {
 
     final nextActiveSalah = mosqueManager.nextSalahIndex();
 
-    return Column( 
+    return Column(
       children: [
         MosqueHeader(mosque: mosqueManager.mosque!),
         Expanded(
@@ -53,6 +53,7 @@ class LandScapeTurkishHome extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
+                flex: 2,
                 child: Center(
                   child: SalahItemWidget(
                     title: S.of(context).sabah,
@@ -66,8 +67,8 @@ class LandScapeTurkishHome extends StatelessWidget {
                   ).animate().slideX().fade(),
                 ),
               ),
-              Expanded(child: HomeTimeWidget().animate().slideY().fade(), flex: 2), 
-              Expanded(child: Center(child: JumuaWidget().animate().slideX(begin: 1).fade())),
+              Expanded(flex: 4, child: HomeTimeWidget().animate().slideY().fade()),
+              Expanded(flex: 2, child: Center(child: JumuaWidget().animate().slideX(begin: 1).fade())),
             ],
           ),
         ),
