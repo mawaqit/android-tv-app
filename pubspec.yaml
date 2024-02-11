@@ -113,6 +113,9 @@ dependencies:
   # equality comparisons
   equatable: ^2.0.5
 
+  # snack bar
+  flash: ^3.0.5+2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
