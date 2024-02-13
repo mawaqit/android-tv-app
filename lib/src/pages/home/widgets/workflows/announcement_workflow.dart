@@ -63,7 +63,7 @@ class _AnnouncementContinuesWorkFlowWidgetState extends ConsumerState<Announceme
     int nextPageIndex = (_currentIndex + 1) % activeWorkFlowItems.length;
     _pageController.animateToPage(
       nextPageIndex,
-      duration: const Duration(milliseconds: 300), // Adjust duration as needed
+      duration: const Duration(milliseconds: 1), // Adjust duration as needed
       curve: Curves.easeInOut,
     ).then((_) {
       if (!mounted) return;
