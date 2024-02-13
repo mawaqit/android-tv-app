@@ -17,20 +17,25 @@ import 'package:provider/provider.dart';
 
 import '../../../i18n/AppLanguage.dart';
 import '../../../i18n/l10n.dart';
+import '../../widgets/mawaqit_back_icon_button.dart';
+
 import '../../helpers/LocaleHelper.dart';
 import '../../state_management/on_boarding/on_boarding_notifier.dart';
+
 import 'widgets/onboarding_screen_type.dart';
 
 class OnBoardingItem {
   final String animation;
   final Widget? widget;
   final bool enableNextButton;
+  final bool enablePreviousButton;
   final bool Function()? skip;
 
   OnBoardingItem({
     required this.animation,
     this.widget,
     this.enableNextButton = true,
+    this.enablePreviousButton = true,
 
     /// if item is skipped, it will be marked as done
     this.skip,
@@ -52,6 +57,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'language',
       widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
+      enablePreviousButton: false,
     ),
     OnBoardingItem(
       animation: 'welcome',
@@ -65,6 +71,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       animation: 'search',
       widget: MosqueSearch(onDone: () => nextPage(4)),
       enableNextButton: false,
+      enablePreviousButton: false,
     ),
 
     /// main screen or secondary screen (if user has already selected a mosque)
@@ -72,6 +79,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       animation: 'search',
       widget: OnBoardingScreenType(onDone: () => nextPage(5)),
       enableNextButton: false,
+      enablePreviousButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
 
@@ -80,6 +88,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       animation: 'search',
       widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
       enableNextButton: false,
+      enablePreviousButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
   ];
@@ -140,6 +149,18 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     setState(() {});
   }
 
+  previousPage(int previousScreen) {
+    while (true) {
+      currentScreen = previousScreen;
+      // if false or null, don't skip this screen
+      if (onBoardingItems[currentScreen].skip?.call() != true) break;
+
+      previousScreen--;
+    }
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -159,20 +180,23 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     final sortedLocales = LocaleHelper.getSortedLocales(locales, appLanguage);
 
     ref.listen(onBoardingProvider, (previous, next) {
-      if(next.value?.language != previous!.value?.language){
+      if (next.value?.language != previous!.value?.language) {
         next.whenOrNull(
           data: (state) async {
             if (state.language != 'unknown') {
               final locale = LocaleHelper.splitLocaleCode(state.language);
               if (sortedLocales.contains(locale)) {
                 String language = locale.languageCode;
-                ref.read(onBoardingProvider.notifier).setLanguage(language, context);
-                var tempOnBoardingItems = getOnBoardingItems(); // remove language selector
+                ref
+                    .read(onBoardingProvider.notifier)
+                    .setLanguage(language, context);
+                var tempOnBoardingItems =
+                    getOnBoardingItems(); // remove language selector
                 setState(() {
                   tempOnBoardingItems.removeAt(0);
                 });
                 setState(() {
-                  onBoardingItems=tempOnBoardingItems ;
+                  onBoardingItems = tempOnBoardingItems;
                 });
               }
             }
@@ -194,7 +218,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     );
   }
 
-  WillPopScope buildWillPopScope(OnBoardingItem activePage, BuildContext context) {
+  WillPopScope buildWillPopScope(
+      OnBoardingItem activePage, BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         if (currentScreen == 0) return true;
@@ -215,7 +240,11 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
               children: [
                 VersionWidget(
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.color
+                        ?.withOpacity(.5),
                   ),
                 ),
                 Spacer(flex: 2),
@@ -225,11 +254,18 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                   decorator: DotsDecorator(
                     size: const Size.square(9.0),
                     activeSize: const Size(21.0, 9.0),
-                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                    activeShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
                     spacing: EdgeInsets.all(3),
                   ),
                 ),
                 Spacer(),
+                if (activePage.enablePreviousButton)
+                  MawaqitBackIconButton(
+                    icon: Icons.arrow_back_rounded,
+                    label: S.of(context).previous,
+                    onPressed: () => previousPage(currentScreen - 1),
+                  ),
                 if (activePage.enableNextButton)
                   MawaqitIconButton(
                     icon: Icons.arrow_forward_rounded,
