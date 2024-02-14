@@ -108,8 +108,11 @@ class TimeShiftManager {
           _adjustedTime = _adjustedTime.subtract(Duration(hours: 1));
           _shiftedhours = 0;
         }
-        if (hourDifference == -1) {
-          _timeSetManualy = true;
+
+        if (hourDifference == -1 || hourDifference == -2) {
+          _shift = 0;
+          _adjustedTime = DateTime.now();
+          _shiftinMinutes = 0;
         }
         _previousTime = currentTime;
 
