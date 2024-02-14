@@ -10,6 +10,7 @@ class ScreenWithAnimationWidget extends StatelessWidget {
     Key? key,
     required this.animation,
     required this.child,
+    this.hasBackButton = false,
   }) : super(key: key);
 
   /// only the animation name without the extension
@@ -17,27 +18,32 @@ class ScreenWithAnimationWidget extends StatelessWidget {
 
   /// the widget to show on the right side
   final Widget child;
+  final bool hasBackButton;
 
   @override
   Widget build(BuildContext context) {
     final userPrefs = context.watch<UserPreferencesManager>();
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back), // Set your desired size here
-          iconSize: 12.sp,
-          splashRadius: 7.sp,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
+      appBar: hasBackButton
+          ? AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back), // Set your desired size here
+                iconSize: 12.sp,
+                splashRadius: 7.sp,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            )
+          : AppBar(elevation: 0),
       body: SafeArea(
         child: Flex(
-          direction: userPrefs.calculatedOrientation == Orientation.portrait ? Axis.vertical : Axis.horizontal,
+          direction: userPrefs.calculatedOrientation == Orientation.portrait
+              ? Axis.vertical
+              : Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(

@@ -191,5 +191,7 @@
   "confirmation":"Confirmation",
   "confirmationMessage":"Are you sure you want to use device time?",
   "useDeviceTime":"Use device time",
-  "selectTime":"Select Time"
+  "selectTime":"Select Time",
+  "previous": "Previous"
+
 }
