@@ -367,7 +367,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   List<Announcement> activeAnnouncements(bool enableVideos) {
-    return mosque!.announcements.where((element) {
+    final announcements =  mosque!.announcements.where((element) {
       final startDate = DateTime.tryParse(element.startDate ?? '');
       final endDate = DateTime.tryParse(element.endDate ?? '');
       final now = mosqueDate();
@@ -382,5 +382,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
       return inTime;
     }).toList();
+    // check if announcement has only youtube video, add another one for infinite loop
+    if(announcements.length == 1 && announcements[0].video != null){
+      announcements.add(announcements[0]);
+    }
+    return announcements;
   }
 }

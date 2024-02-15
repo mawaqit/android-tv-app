@@ -53,7 +53,7 @@ class _AnnouncementContinuesWorkFlowWidgetState extends ConsumerState<Announceme
 
   void initiateItemTransition() {
     final currentItem = activeWorkFlowItems[_currentIndex];
-    if(currentItem.duration != null) {
+    if (currentItem.duration != null) {
       scheduleTransition(currentItem.duration!);
     }
   }
@@ -61,11 +61,13 @@ class _AnnouncementContinuesWorkFlowWidgetState extends ConsumerState<Announceme
   void goToNextPage() {
     if (!mounted) return;
     int nextPageIndex = (_currentIndex + 1) % activeWorkFlowItems.length;
-    _pageController.animateToPage(
+    _pageController
+        .animateToPage(
       nextPageIndex,
-      duration: const Duration(milliseconds: 1), // Adjust duration as needed
+      duration: const Duration(microseconds: 1), // Adjust duration as needed
       curve: Curves.easeInOut,
-    ).then((_) {
+    )
+        .then((_) {
       if (!mounted) return;
       setState(() {
         _currentIndex = nextPageIndex;
@@ -78,6 +80,11 @@ class _AnnouncementContinuesWorkFlowWidgetState extends ConsumerState<Announceme
     _transitionTimer?.cancel(); // Cancel any existing timer
     _transitionTimer = Timer(duration, goToNextPage);
   }
+  @override
+  void didUpdateWidget(covariant AnnouncementContinuesWorkFlowWidget oldWidget) {
+    activeWorkFlowItems = widget.workFlowItems.where((item) => !item.skip && !item.disabled).toList();
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +94,7 @@ class _AnnouncementContinuesWorkFlowWidgetState extends ConsumerState<Announceme
         ref.read(videoWorkflowProvider.notifier).resetVideoFinished();
       }
     });
-      return PageView.builder(
+    return PageView.builder(
       controller: _pageController,
       itemCount: activeWorkFlowItems.length,
       physics: NeverScrollableScrollPhysics(), // Disable manual swiping

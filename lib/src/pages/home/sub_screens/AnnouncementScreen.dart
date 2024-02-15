@@ -18,7 +18,7 @@ import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import '../widgets/workflows/announcement_workflow.dart';
 
 /// show all announcements in one after another
-class AnnouncementScreen extends StatelessWidget {
+class AnnouncementScreen extends ConsumerWidget {
   AnnouncementScreen({
     Key? key,
     this.onDone,
@@ -31,7 +31,7 @@ class AnnouncementScreen extends StatelessWidget {
   final bool enableVideos;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final announcements = context.read<MosqueManager>().activeAnnouncements(enableVideos);
 
     if (announcements.isEmpty) return NormalHomeSubScreen();
