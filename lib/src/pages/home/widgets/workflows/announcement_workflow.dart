@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/state_management/workflow/announcement_workflow.dart';
 import 'package:mawaqit/src/state_management/workflow/workflow_notifier.dart';
 
 /// [AnnouncementWorkFlowItem] is a class that represents an item in the announcement workflow.
@@ -61,6 +62,12 @@ class _AnnouncementContinuesWorkFlowWidgetState extends ConsumerState<Announceme
   void goToNextPage() {
     if (!mounted) return;
     int nextPageIndex = (_currentIndex + 1) % activeWorkFlowItems.length;
+    // Check if the workflow is resetting back to the first index
+    if (nextPageIndex == 0) {
+      // Trigger the announcement workflow finished action
+      ref.read(announcementWorkflowProvider.notifier).setAnnouncementWorkflowFinished();
+    }
+
     _pageController
         .animateToPage(
       nextPageIndex,

@@ -13,6 +13,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../state_management/workflow/announcement_workflow.dart';
 import '../../../state_management/workflow/workflow_notifier.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import '../widgets/workflows/announcement_workflow.dart';
@@ -33,6 +34,9 @@ class AnnouncementScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final announcements = context.read<MosqueManager>().activeAnnouncements(enableVideos);
+    ref.listen(announcementWorkflowProvider, (prev,next){
+      if(next == WorkflowState.finished) onDone?.call();
+    });
 
     if (announcements.isEmpty) return NormalHomeSubScreen();
 
