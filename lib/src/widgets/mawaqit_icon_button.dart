@@ -28,26 +28,28 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
 
     return SizedBox(
       child: Card(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
         color: theme.colorScheme.primary,
         elevation: 0,
         child: InkWell(
           onTap: widget.onPressed,
           onFocusChange: (value) => setState(() => focused = value),
-          focusColor: color.withOpacity(.3),
+          focusColor: Color(0xFF490094),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
             child: Row(
               children: [
                 Text(
                   widget.label,
-                  style: theme.textTheme.bodySmall!.copyWith(color: color),
+                  style: theme.textTheme.bodySmall!
+                      .copyWith(color: focused ? Colors.white : color),
                 ),
                 SizedBox(width: 10),
                 Align(
                   alignment: Alignment(.5, 0),
-                  child: Icon(widget.icon, color: color, size: 16),
+                  child: Icon(widget.icon,
+                      color: focused ? Colors.white : color, size: 16),
                   widthFactor: .5,
                   heightFactor: 1,
                 ),

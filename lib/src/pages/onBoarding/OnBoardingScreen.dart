@@ -96,28 +96,31 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   List<OnBoardingItem> getOnBoardingItems() {
     return [
       OnBoardingItem(
-        animation: 'language',
-        widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
-      ),
+          animation: 'language',
+          widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
+          enableNextButton: false,
+          enablePreviousButton: false),
       OnBoardingItem(
-        animation: 'welcome',
-        widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
-      ),
+          animation: 'welcome',
+          widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
+          enableNextButton: false,
+          enablePreviousButton: false),
       OnBoardingItem(
         animation: 'welcome',
         widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(3)),
       ),
       OnBoardingItem(
-        animation: 'search',
-        widget: MosqueSearch(onDone: () => nextPage(4)),
-        enableNextButton: false,
-      ),
+          animation: 'search',
+          widget: MosqueSearch(onDone: () => nextPage(4)),
+          enableNextButton: false,
+          enablePreviousButton: false),
 
       /// main screen or secondary screen (if user has already selected a mosque)
       OnBoardingItem(
         animation: 'search',
         widget: OnBoardingScreenType(onDone: () => nextPage(5)),
         enableNextButton: false,
+        enablePreviousButton: false,
         skip: () => !context.read<MosqueManager>().typeIsMosque,
       ),
 
@@ -126,6 +129,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
         animation: 'search',
         widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
         enableNextButton: false,
+        enablePreviousButton: false,
         skip: () => !context.read<MosqueManager>().typeIsMosque,
       ),
     ];
@@ -192,9 +196,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                     .setLanguage(language, context);
                 var tempOnBoardingItems =
                     getOnBoardingItems(); // remove language selector
-                setState(() {
+                /*    setState(() {
                   tempOnBoardingItems.removeAt(0);
-                });
+                }); */
                 setState(() {
                   onBoardingItems = tempOnBoardingItems;
                 });
