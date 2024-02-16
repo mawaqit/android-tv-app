@@ -68,7 +68,7 @@ class TimeShiftManager {
     }
   }
 
-  // Start a periodic timer for time adjustments, triggered every 30 seconds.
+  // Start a periodic timer for time adjustments, triggered every 10 seconds.
   void startPeriodicTimer() {
     const Duration period = Duration(seconds: 30);
 
@@ -100,8 +100,14 @@ class TimeShiftManager {
 
       // Check if the hour has changed for adjusting time.
       if (currentTime.hour != _previousTime.hour) {
+        Duration difference = _previousTime.difference(currentTime);
+
         int hourDifference = currentTime.hour - _previousTime.hour;
-        if (hourDifference == 1) _shiftedhours++;
+        int minuteDifference = difference.inMinutes % 60;
+
+        if (hourDifference == 1 ||
+            minuteDifference >= 55 && minuteDifference <= 65) _shiftedhours++;
+
         // Calculate shift based on the hourly difference.
         if (_shiftedhours == 2) {
           _shift = -1;
