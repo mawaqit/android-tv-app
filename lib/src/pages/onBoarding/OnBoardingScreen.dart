@@ -167,13 +167,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
               if (sortedLocales.contains(locale)) {
                 String language = locale.languageCode;
                 ref.read(onBoardingProvider.notifier).setLanguage(language, context);
-                var tempOnBoardingItems = getOnBoardingItems(); // remove language selector
-                setState(() {
-                  tempOnBoardingItems.removeAt(0);
-                });
-                setState(() {
-                  onBoardingItems=tempOnBoardingItems ;
-                });
               }
             }
           },
