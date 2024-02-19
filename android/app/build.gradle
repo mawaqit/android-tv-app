@@ -44,7 +44,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-  compileSdkVersion 33
+  compileSdk 33
   ndkVersion "25.2.9519653"
 
   sourceSets {
@@ -63,17 +63,10 @@ android {
 
   signingConfigs {
     release {
-      if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
-        storeFile file(System.getenv()["CM_KEYSTORE_PATH"])
-        storePassword System.getenv()["CM_KEYSTORE_PASSWORD"]
-        keyAlias System.getenv()["CM_KEY_ALIAS"]
-        keyPassword System.getenv()["CM_KEY_PASSWORD"]
-      } else {
-        keyAlias keystoreProperties['keyAlias']
-        keyPassword keystoreProperties['keyPassword']
-        storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-        storePassword keystoreProperties['storePassword']
-      }
+      storeFile file('/Users/ds/upload-keystore.jks')
+      storePassword '123456'
+      keyAlias 'upload'
+      keyPassword '123456'
 
     }
 //        debug {
@@ -98,7 +91,7 @@ flutter {
 }
 
 dependencies {
-  ext.kotlin_version = '<latest-version>'
+  ext.kotlin_version = '1.9.22'
   // FIREBASE PACKAGES
   implementation 'com.android.support:multidex:1.0.3'
 
@@ -107,5 +100,6 @@ dependencies {
 
   implementation 'androidx.legacy:legacy-support-v13:1.0.0'
   implementation 'androidx.leanback:leanback:1.0.0'
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 

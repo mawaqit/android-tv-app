@@ -28,7 +28,7 @@ import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
 
@@ -52,7 +52,8 @@ class _SplashScreen extends State<Splash> {
 
   Future<void> initApplicationUI() async {
     await GlobalConfiguration().loadFromAsset("configuration");
-    generateStream(Duration(minutes: 10)).listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
+    generateStream(Duration(minutes: 10))
+        .listen((event) => WakelockPlus.toggle(enable: true).catchError(CrashlyticsWrapper.sendException));
 
     Hive.initFlutter();
 
@@ -115,7 +116,7 @@ class _SplashScreen extends State<Splash> {
         // e.response!.data;
       }
     } catch (e, stack) {
-      logger.e(e, stackTrace:  stack);
+      logger.e(e, stackTrace: stack);
       setState(() => error = ErrorState.mosqueDataError);
       rethrow;
     }
@@ -128,7 +129,17 @@ class _SplashScreen extends State<Splash> {
 
   Widget build(BuildContext context) {
     RelativeSizes.instance.size = MediaQuery.of(context).size;
-
+    return Scaffold(
+      body: Container(
+        width: 100,
+        height: 100,
+        color: Colors.blueAccent,
+        child: Text(
+          "Testing patch in shorebird",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
     switch (error) {
       case ErrorState.mosqueNotFound:
         return ErrorScreen(
