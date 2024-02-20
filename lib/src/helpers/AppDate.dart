@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
-import '../services/features_manager.dart';
+import '../services/FeatureManager.dart';
 import 'TimeShiftManager.dart';
 
-final TimeShiftManager timeManager = TimeShiftManager();
+final TimeShiftManager _timeManager = TimeShiftManager();
 
 class FeatureManagerProvider {
   static FeatureManager? _featureManager;
@@ -33,10 +33,10 @@ class AppDateTime {
     } else {
       return FeatureManagerProvider.featureManager
                   .isFeatureEnabled("timezone_shift") &&
-              timeManager.deviceModel == "MAWABOX" &&
-              timeManager.isLauncherInstalled
+              _timeManager.deviceModel == "MAWABOX" &&
+              _timeManager.isLauncherInstalled
           ? DateTime.now().add(Duration(
-              hours: timeManager.shift, minutes: timeManager.shiftInMinutes))
+              hours: _timeManager.shift, minutes: _timeManager.shiftInMinutes))
           : DateTime.now();
     }
   }

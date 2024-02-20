@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../../helpers/AppDate.dart';
 import '../../../helpers/TimeShiftManager.dart';
-import '../../../services/features_manager.dart';
+import '../../../services/FeatureManager.dart';
 import '../widgets/workflows/repeating_workflow_widget.dart';
 
 /// this is the main workflow of the app

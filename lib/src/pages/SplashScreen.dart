@@ -31,7 +31,7 @@ import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '../helpers/AppDate.dart';
-import '../services/features_manager.dart';
+import '../services/FeatureManager.dart';
 
 enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
 

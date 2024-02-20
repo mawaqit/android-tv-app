@@ -30,7 +30,7 @@ class TimeShiftManager {
 
   factory TimeShiftManager() => _instance;
 
-  Future<bool> isPackageInstalled(String packageName) async {
+  Future<bool> _isPackageInstalled(String packageName) async {
     try {
       final result = await MethodChannel('nativeMethodsChannel')
           .invokeMethod('isPackageInstalled', {'packageName': packageName});
@@ -57,7 +57,7 @@ class TimeShiftManager {
         prefs.getString(_adjustedTimeKey) ?? DateTime.now().toIso8601String());
     _previousTime = DateTime.parse(
         prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String());
-    _isLauncherInstalled = await isPackageInstalled("com.mawaqit.launcher");
+    _isLauncherInstalled = await _isPackageInstalled("com.mawaqit.launcher");
     try {
       final userData = await Api.prepareUserData();
       if (userData != null) {

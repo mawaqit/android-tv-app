@@ -14,7 +14,7 @@ class TimePickerModal extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Color(0xff161b22),
       title: Text(S.of(context).timeSetting),
-      content: TimePicker(
+      content: _TimePicker(
         onTimeSelected: (selectedTime) {
           timeShiftManager.adjustTimeFromTimePicker(selectedTime);
         },
@@ -23,16 +23,16 @@ class TimePickerModal extends StatelessWidget {
   }
 }
 
-class TimePicker extends StatefulWidget {
+class _TimePicker extends StatefulWidget {
   final Function(DateTime) onTimeSelected;
 
-  TimePicker({required this.onTimeSelected});
+  _TimePicker({required this.onTimeSelected});
 
   @override
-  _TimePickerState createState() => _TimePickerState();
+  __TimePickerState createState() => __TimePickerState();
 }
 
-class _TimePickerState extends State<TimePicker> {
+class __TimePickerState extends State<_TimePicker> {
   final TimeShiftManager timeManager = TimeShiftManager();
   late DateTime selectedTime;
 
@@ -76,7 +76,7 @@ class _TimePickerState extends State<TimePicker> {
     await showDialog<TimeOfDay>(
       context: context,
       builder: (BuildContext context) {
-        return DPadTimePicker(
+        return _DPadTimePicker(
           onTimeSelected: (selectedTime) {
             _handleSelectedTime(selectedTime);
           },
@@ -138,16 +138,16 @@ class _TimePickerState extends State<TimePicker> {
   }
 }
 
-class DPadTimePicker extends StatefulWidget {
+class _DPadTimePicker extends StatefulWidget {
   final void Function(DateTime)? onTimeSelected;
 
-  DPadTimePicker({Key? key, this.onTimeSelected}) : super(key: key);
+  _DPadTimePicker({Key? key, this.onTimeSelected}) : super(key: key);
 
   @override
   _DPadTimePickerState createState() => _DPadTimePickerState();
 }
 
-class _DPadTimePickerState extends State<DPadTimePicker> {
+class _DPadTimePickerState extends State<_DPadTimePicker> {
   late int _selectedHour;
   late int _selectedMinute;
 
@@ -265,7 +265,6 @@ class _DPadTimePickerState extends State<DPadTimePicker> {
                     _selectedHour,
                     _selectedMinute,
                   );
-                  print("selected" + selectedDateTime.toIso8601String());
                   widget.onTimeSelected?.call(selectedDateTime);
 
                   Navigator.of(context).pop();

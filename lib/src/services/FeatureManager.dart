@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -5,12 +6,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mawaqit/main.dart';
 import 'package:provider/provider.dart';
 
+import '../const/constants.dart';
 import 'mosque_manager.dart';
 
 class FeatureManager extends ChangeNotifier {
   Map<String, bool> _featureFlags = {};
   bool isConnectedToInternet = false;
   SharedPreferences? _prefs;
+  static final dio = Dio(
+    BaseOptions(
+      baseUrl: kBaseUrl,
+      headers: {
+        'Api-Access-Token': kApiToken,
+        'accept': 'application/json',
+        'mawaqit-device': 'android-tv',
+      },
+    ),
+  );
 
   FeatureManager(BuildContext context) {
     final mosqueProvider = Provider.of<MosqueManager>(context, listen: false);
@@ -56,13 +68,12 @@ class FeatureManager extends ChangeNotifier {
 
   Future<void> fetchFeatureFlags(BuildContext context) async {
     try {
-      final response = await http.get(
-        Uri.parse(
-            'https://cdn.mawaqit.net/android/tv/android-tv-feature-flag.json'),
+      final response = await dio.get(
+        'https://cdn.mawaqit.net/android/tv/android-tv-feature-flag.json',
       );
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final data = json.decode(response.data);
         _featureFlags.clear();
         data.forEach((key, value) {
           if (value is bool) {
