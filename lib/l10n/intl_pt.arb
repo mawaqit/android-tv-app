@@ -184,5 +184,6 @@
   "pt_ar": "Português e Árabe",
   "nl_ar": "Holandês e Árabe",
   "connectToChangeHadith": "Por favor, conecte-se à internet para alterar a linguagem dos hadith.",
-  "retry": "Repetir"
+  "retry": "Repetir",
+  "previous": "Anterior"
 }
