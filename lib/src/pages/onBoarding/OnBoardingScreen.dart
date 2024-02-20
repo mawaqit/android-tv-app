@@ -32,8 +32,8 @@ class OnBoardingItem {
   OnBoardingItem({
     required this.animation,
     this.widget,
-    this.enableNextButton = true,
-    this.enablePreviousButton = true,
+    this.enableNextButton = false,
+    this.enablePreviousButton = false,
 
     /// if item is skipped, it will be marked as done
     this.skip,
@@ -55,31 +55,26 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'language',
       widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
-      enablePreviousButton: false,
-      enableNextButton: false,
     ),
     OnBoardingItem(
-        animation: 'welcome',
-        widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
-        enableNextButton: false,
-        enablePreviousButton: false),
+      animation: 'welcome',
+      widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
+    ),
     OnBoardingItem(
       animation: 'welcome',
       widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(3)),
+      enableNextButton: true,
+      enablePreviousButton: true,
     ),
     OnBoardingItem(
       animation: 'search',
       widget: MosqueSearch(onDone: () => nextPage(4)),
-      enableNextButton: false,
-      enablePreviousButton: false,
     ),
 
     /// main screen or secondary screen (if user has already selected a mosque)
     OnBoardingItem(
       animation: 'search',
       widget: OnBoardingScreenType(onDone: () => nextPage(5)),
-      enableNextButton: false,
-      enablePreviousButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
 
@@ -87,8 +82,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'search',
       widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
-      enableNextButton: false,
-      enablePreviousButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
   ];
