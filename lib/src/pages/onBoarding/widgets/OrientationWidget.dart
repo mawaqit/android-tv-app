@@ -4,7 +4,8 @@ import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 class OnBoardingOrientationWidget extends StatelessWidget {
-  const OnBoardingOrientationWidget({Key? key, this.onSelect}) : super(key: key);
+  const OnBoardingOrientationWidget({Key? key, this.onSelect})
+      : super(key: key);
 
   final VoidCallback? onSelect;
 
@@ -27,36 +28,35 @@ class OnBoardingOrientationWidget extends StatelessWidget {
               style: theme.textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
-            Text(tr.selectYourMawaqitTvAppOrientation, style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
+            Text(tr.selectYourMawaqitTvAppOrientation,
+                style: theme.textTheme.titleMedium,
+                textAlign: TextAlign.center),
             SizedBox(height: 50),
             OutlinedButton(
-              onFocusChange: (value) {
-                if (value) userPrefs.orientationLandscape = true;
-              },
               onPressed: () {
                 userPrefs.orientationLandscape = true;
                 onSelect?.call();
               },
               child: Text(tr.landscape),
-              autofocus: userPrefs.calculatedOrientation == Orientation.landscape,
+              autofocus:
+                  userPrefs.calculatedOrientation == Orientation.landscape,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(tr.landscapeBTNDescription, textAlign: TextAlign.center),
+              child:
+                  Text(tr.landscapeBTNDescription, textAlign: TextAlign.center),
             ),
             SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: OutlinedButton(
-                onFocusChange: (value) {
-                  if (value) userPrefs.orientationLandscape = false;
-                },
                 onPressed: () {
                   userPrefs.orientationLandscape = false;
                   onSelect?.call();
                 },
                 child: Text(tr.portrait),
-                autofocus: userPrefs.calculatedOrientation == Orientation.portrait,
+                autofocus:
+                    userPrefs.calculatedOrientation == Orientation.portrait,
               ),
             ),
             Text(tr.portraitBTNDescription, textAlign: TextAlign.center),

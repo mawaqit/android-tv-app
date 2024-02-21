@@ -32,8 +32,8 @@ class OnBoardingItem {
   OnBoardingItem({
     required this.animation,
     this.widget,
-    this.enableNextButton = true,
-    this.enablePreviousButton = true,
+    this.enableNextButton = false,
+    this.enablePreviousButton = false,
 
     /// if item is skipped, it will be marked as done
     this.skip,
@@ -55,7 +55,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'language',
       widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
-      enablePreviousButton: false,
     ),
     OnBoardingItem(
       animation: 'welcome',
@@ -64,20 +63,18 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'welcome',
       widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(3)),
+      enableNextButton: true,
+      enablePreviousButton: true,
     ),
     OnBoardingItem(
       animation: 'search',
       widget: MosqueSearch(onDone: () => nextPage(4)),
-      enableNextButton: false,
-      enablePreviousButton: false,
     ),
 
     /// main screen or secondary screen (if user has already selected a mosque)
     OnBoardingItem(
       animation: 'search',
       widget: OnBoardingScreenType(onDone: () => nextPage(5)),
-      enableNextButton: false,
-      enablePreviousButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
 
@@ -85,49 +82,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'search',
       widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
-      enableNextButton: false,
-      enablePreviousButton: false,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
   ];
-
-  List<OnBoardingItem> getOnBoardingItems() {
-    return [
-      OnBoardingItem(
-        animation: 'language',
-        widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
-      ),
-      OnBoardingItem(
-        animation: 'welcome',
-        widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
-      ),
-      OnBoardingItem(
-        animation: 'welcome',
-        widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(3)),
-      ),
-      OnBoardingItem(
-        animation: 'search',
-        widget: MosqueSearch(onDone: () => nextPage(4)),
-        enableNextButton: false,
-      ),
-
-      /// main screen or secondary screen (if user has already selected a mosque)
-      OnBoardingItem(
-        animation: 'search',
-        widget: OnBoardingScreenType(onDone: () => nextPage(5)),
-        enableNextButton: false,
-        skip: () => !context.read<MosqueManager>().typeIsMosque,
-      ),
-
-      /// Allow user to select between regular mode or announcement mode
-      OnBoardingItem(
-        animation: 'search',
-        widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
-        enableNextButton: false,
-        skip: () => !context.read<MosqueManager>().typeIsMosque,
-      ),
-    ];
-  }
 
   onDone() {
     sharedPref.save('boarding', 'true');
@@ -185,7 +142,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
               final locale = LocaleHelper.splitLocaleCode(state.language);
               if (sortedLocales.contains(locale)) {
                 String language = locale.languageCode;
-                ref.read(onBoardingProvider.notifier).setLanguage(language, context);
+                ref
+                    .read(onBoardingProvider.notifier)
+                    .setLanguage(language, context);
               }
             }
           },
@@ -206,7 +165,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     );
   }
 
-  WillPopScope buildWillPopScope(OnBoardingItem activePage, BuildContext context) {
+  WillPopScope buildWillPopScope(
+      OnBoardingItem activePage, BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         if (currentScreen == 0) return true;
@@ -227,7 +187,11 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
               children: [
                 VersionWidget(
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.color
+                        ?.withOpacity(.5),
                   ),
                 ),
                 Spacer(flex: 2),
@@ -237,7 +201,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                   decorator: DotsDecorator(
                     size: const Size.square(9.0),
                     activeSize: const Size(21.0, 9.0),
-                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                    activeShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
                     spacing: EdgeInsets.all(3),
                   ),
                 ),
