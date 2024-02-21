@@ -14,14 +14,33 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
+import '../helpers/TimeShiftManager.dart';
+import '../services/FeatureManager.dart';
+import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+      future: _initializeTimeShiftManager(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return _buildSettingScreen(context);
+        } else {
+          return SizedBox();
+        }
+      },
+    );
+  }
+
+  Future<void> _initializeTimeShiftManager() async {
+    await TimeShiftManager().initializeTimes();
+  }
+
+  Widget _buildSettingScreen(BuildContext context) {
     final theme = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
     final mosqueProvider = context.watch<MosqueManager>();
@@ -29,6 +48,9 @@ class SettingScreen extends StatelessWidget {
     final themeManager = context.watch<ThemeNotifier>();
     final String checkInternet = S.of(context).noInternet;
     final String hadithLanguage = S.of(context).connectToChangeHadith;
+    TimeShiftManager timeShiftManager = TimeShiftManager();
+    final featureManager = Provider.of<FeatureManager>(context);
+
     return ScreenWithAnimationWidget(
       animation: 'settings',
       child: Padding(
@@ -123,6 +145,22 @@ class SettingScreen extends StatelessWidget {
                       ),
                     )),
                   ),
+                  featureManager.isFeatureEnabled("timezone_shift") &&
+                          timeShiftManager.deviceModel == "MAWABOX" &&
+                          timeShiftManager.isLauncherInstalled 
+                      ? _SettingItem(
+                          title: S.of(context).timeSetting,
+                          subtitle: S.of(context).timeSettingDesc,
+                          icon: Icon(MawaqitIcons.icon_clock, size: 35),
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => TimePickerModal(
+                                  timeShiftManager: timeShiftManager),
+                            );
+                          },
+                        )
+                      : SizedBox(),
                   if (!userPreferences.webViewMode)
                     _SettingSwitchItem(
                       title: S.of(context).announcementOnlyMode,
