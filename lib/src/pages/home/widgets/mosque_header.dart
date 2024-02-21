@@ -28,6 +28,7 @@ class MosqueHeader extends StatelessOrientationWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           Expanded(flex: 1, child: OfflineWidget()),
           Expanded(
             flex: 6,
@@ -112,6 +113,7 @@ class MosqueHeader extends StatelessOrientationWidget {
     );
   }
 
+
   Container buildMosqueName(MosqueConfig? mosqueConfig) {
     return Container(
       alignment: Alignment.bottomCenter,
@@ -129,6 +131,7 @@ class MosqueHeader extends StatelessOrientationWidget {
             ),
           )
               : SizedBox(),
+
           SizedBox(width: 10),
           FittedBox(
             fit: BoxFit.scaleDown,
