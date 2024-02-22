@@ -66,6 +66,12 @@ class DeviceInfoDataSource {
       deviceId: deviceId,
     );
   }
+
+
+  /// [getDeviceLanguage] Returns the current device language.
+  Future<String> getDeviceLanguage() async {
+    return Platform.localeName;
+  }
 }
 
 

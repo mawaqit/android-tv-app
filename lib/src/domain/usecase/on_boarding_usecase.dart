@@ -20,8 +20,8 @@ class OnBoardingUseCase {
   }
 
   Future<String> getDeviceLanguage() async {
-    final deviceInfoModel = await deviceInfoRepository.getAllDeviceInfo();
-    return deviceInfoModel.language;
+    final deviceLanguage = await deviceInfoRepository.getLanguageWithoutCache();
+    return deviceLanguage;
   }
 
   Future<void> setOnboardingAppLanguage(String language) async {

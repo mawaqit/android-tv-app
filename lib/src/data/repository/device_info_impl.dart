@@ -71,6 +71,19 @@ class DeviceInfoImpl implements DeviceInfoRepository {
       rethrow;
     }
   }
+
+  /// [getLanguageWithoutCache] Fetches the current device language setting directly.
+  ///
+  /// Retrieves the preferred language setting from the device without relying
+  /// on cached values.
+  Future<String> getLanguageWithoutCache() async {
+    try {
+      return deviceInfoDataSource.getDeviceLanguage();
+    } catch (e, s) {
+      logger.e('Error fetching the language locale', stackTrace: s);
+      rethrow;
+    }
+  }
 }
 
 class DeviceInfoImplProviderArgument {
