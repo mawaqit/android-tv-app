@@ -8,11 +8,29 @@ import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
-class OnBoardingLanguageSelector extends StatelessWidget {
-  const OnBoardingLanguageSelector({Key? key, required this.onSelect})
-      : super(key: key);
+class OnBoardingLanguageSelector extends StatefulWidget {
+  const OnBoardingLanguageSelector({Key? key, required this.onSelect}) : super(key: key);
 
   final void Function() onSelect;
+
+  @override
+  State<OnBoardingLanguageSelector> createState() => _OnBoardingLanguageSelectorState();
+}
+
+class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +39,32 @@ class OnBoardingLanguageSelector extends StatelessWidget {
     final themeData = Theme.of(context);
 
     /// if the [langCode] is current used language
-    bool isSelected(String langCode) =>
-        appLanguage.appLocal.languageCode == langCode;
+    bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
 
     final sortedLocales = [
       Locale('ar'),
-      ...locales
-          .where((element) =>
-              element.languageCode != 'ar' && element.languageCode != 'ba')
-          .toList()
+      ...locales.where((element) => element.languageCode != 'ar' && element.languageCode != 'ba').toList()
         ..sort((a, b) => appLanguage
             .languageName(a.languageCode)
             .toLowerCase()
             .compareTo(appLanguage.languageName(b.languageCode).toLowerCase())),
     ];
+
+    // After defining your sortedLocales and other UI components
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        final appLanguage = Provider.of<AppLanguage>(context, listen: false);
+        int selectedIndex = sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
+        if (selectedIndex != -1) {
+          double position = selectedIndex * 51 ; // Estimate the height per item. Adjust this based on your item height.
+          _scrollController.animateTo(
+            position,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      }
+    });
 
     return Column(
       children: [
@@ -44,9 +74,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
           style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.w700,
-            color: themeData.brightness == Brightness.dark
-                ? null
-                : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ).animate().slideY().fade(),
         SizedBox(height: 8),
@@ -55,9 +83,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
           textAlign: TextAlign.center,
           style: GoogleFonts.inter(
             fontSize: 15,
-            color: themeData.brightness == Brightness.dark
-                ? null
-                : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ).animate().slideX(begin: .5).fade(),
         SizedBox(height: 20),
@@ -65,6 +91,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.only(top: 5),
             child: ListView.separated(
+              controller: _scrollController,
               padding: EdgeInsets.only(
                 top: 5,
                 bottom: 5,
@@ -75,7 +102,7 @@ class OnBoardingLanguageSelector extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
                 return LanguageTile(
-                  onSelect: onSelect,
+                  onSelect: widget.onSelect,
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),
                 );
@@ -122,9 +149,7 @@ class _LanguageTileState extends State<LanguageTile> {
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
         child: Ink(
           decoration: BoxDecoration(
-            color: isFocused || widget.isSelected
-                ? themeData.selectedRowColor
-                : null,
+            color: isFocused || widget.isSelected ? themeData.selectedRowColor : null,
             borderRadius: BorderRadius.circular(10),
           ),
           child: InkWell(
@@ -132,8 +157,7 @@ class _LanguageTileState extends State<LanguageTile> {
             onFocusChange: (i) => setState(() => isFocused = i),
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              appLanguage.changeLanguage(
-                  widget.locale, mosqueManager.mosqueUUID);
+              appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueUUID);
               widget.onSelect();
             },
             child: ListTile(
@@ -144,9 +168,7 @@ class _LanguageTileState extends State<LanguageTile> {
                 appLanguage.languageName(widget.locale.languageCode),
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
-              trailing: widget.isSelected
-                  ? Icon(MawaqitIcons.icon_checked, color: Colors.white)
-                  : null,
+              trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
             ),
           ),
         ),
