@@ -148,6 +148,7 @@ flutter:
     - assets/animations/lottie/
     - assets/svg/
     - assets/voices/
+    - assets/voices/adhan/
 
   fonts:
     - family: MawaqitIcons
