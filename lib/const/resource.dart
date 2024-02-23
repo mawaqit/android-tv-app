@@ -102,4 +102,19 @@ class R {
 
   /// ![preview](file://E:\Projects\android-tv\assets\svg\no-wi-fi.svg)
   static const String ASSETS_SVG_NO_WI_FI_SVG = 'assets/svg/no-wi-fi.svg';
+
+  static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_FAJR_MP3 =
+      'assets/voices/adhan/adhan-madina-fajr.mp3';
+
+  static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_MP3 =
+      'assets/voices/adhan/adhan-madina.mp3';
+
+  static const String ASSETS_VOICES_ADHAN_BIP_MP3 =
+      'assets/voices/adhan/bip.mp3';
+
+  static const String ASSETS_VOICES_DUAA_IFTAR_MP3 =
+      'assets/voices/duaa_iftar.mp3';
+
+  static const String ASSETS_VOICES_TAKBIR_AID_MP3 =
+      'assets/voices/takbir-aid.mp3';
 }
