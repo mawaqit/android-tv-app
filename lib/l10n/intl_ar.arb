@@ -184,5 +184,13 @@
   "pt_ar": "البرتغالية والعربية",
   "nl_ar": "الهولندية والعربية",
   "connectToChangeHadith": "يرجى الاتصال بالإنترنت لتغيير لغة الحديث.",
-  "retry": "أعد المحاولة"
+  "retry": "أعد المحاولة",
+  "timeSetting": "تكوين الوقت",
+  "timeSettingDesc": "ضبط الوقت المخصّص",
+  "selectedTime": "الوقت الحالي المحدد",
+  "confirmation": "تأكيد",
+  "confirmationMessage": "هل أنت متأكد من أنك تريد استخدام وقت الجهاز؟",
+  "useDeviceTime": "استخدام وقت الجهاز",
+  "selectTime": "حدد الوقت",
+  "previous": "السابق"
 }
