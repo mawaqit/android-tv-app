@@ -5,6 +5,7 @@ import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import '../../../i18n/AppLanguage.dart';
 
+@Deprecated('Use RandomHadithNotifier instead')
 mixin RandomHadithMixin on ChangeNotifier {
   abstract bool isOnline;
   abstract MosqueConfig? mosqueConfig;
@@ -41,13 +42,13 @@ mixin RandomHadithMixin on ChangeNotifier {
   AppLanguage appLanguage = AppLanguage();
 
   /// pre cache the random hadith file to be used in the hadith widget
-  Future<void> preCacheHadith() async {
-    await Api.cacheHadithXMLFiles(language: mosqueConfig?.hadithLang ?? 'ar');
-
-    /// fetch hadith for the first time
-    /// Delay it to keep the main thread free for the UI animations
-    Future.delayed(Duration(seconds: 5), _fetchHadith);
-  }
+  // Future<void> preCacheHadith() async {
+  //   await Api.cacheHadithXMLFiles(language: mosqueConfig?.hadithLang ?? 'ar');
+  //
+  //   /// fetch hadith for the first time
+  //   /// Delay it to keep the main thread free for the UI animations
+  //   Future.delayed(Duration(seconds: 5), _fetchHadith);
+  // }
 
   /// [_fetchHadith] will fetch the hadith from the hadith file
   /// and store it in [_hadith]

@@ -28,14 +28,6 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
-    mosqueManager
-        .getRandomHadith()
-        .then(
-          (value) => setState(() => hadith = value),
-        )
-        .catchError(
-          (e) => widget.onDone?.call(),
-        );
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       ref.read(randomHadithNotifierProvider.notifier).getRandomHadith(
             language: mosqueManager.mosqueConfig!.hadithLang ?? 'ar',
@@ -73,9 +65,12 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
             loading: () => Center(
               child: CircularProgressIndicator(),
             ),
-            error: (error, stackTrace) => Center(
+            error: (error, stackTrace) {
+              widget.onDone?.call();
+              return Center(
               child: Text('Error: $error'),
-            ),
+            );
+            },
           ),
         ),
         ResponsiveMiniSalahBarWidget(),
