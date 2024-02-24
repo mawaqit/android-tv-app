@@ -11,16 +11,16 @@ import 'package:provider/provider.dart';
 import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
 
-class RandomHadithScreen extends StatefulWidget {
+class RandomHadithScreen extends ConsumerStatefulWidget {
   const RandomHadithScreen({Key? key, this.onDone}) : super(key: key);
 
   final VoidCallback? onDone;
 
   @override
-  State<RandomHadithScreen> createState() => _RandomHadithScreenState();
+  ConsumerState<RandomHadithScreen> createState() => _RandomHadithScreenState();
 }
 
-class _RandomHadithScreenState extends State<RandomHadithScreen> {
+class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
   String? hadith;
 
   @override
