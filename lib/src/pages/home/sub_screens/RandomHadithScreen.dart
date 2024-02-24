@@ -1,5 +1,6 @@
 import 'dart:isolate';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
+import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 
 class RandomHadithScreen extends ConsumerStatefulWidget {
   const RandomHadithScreen({Key? key, this.onDone}) : super(key: key);
