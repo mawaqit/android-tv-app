@@ -34,14 +34,18 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
         .catchError(
           (e) => widget.onDone?.call(),
         );
-
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      ref.read(randomHadithNotifierProvider.notifier).getRandomHadith(
+            language: mosqueManager.mosqueConfig!.hadithLang ?? 'ar',
+          );
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
-
+    final hadithState = ref.watch(randomHadithNotifierProvider);
     return Column(
       children: [
         Padding(
@@ -49,10 +53,26 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
           child: AboveSalahBar(),
         ),
         Expanded(
-          child: HadithWidget(
-            translatedText: context.watch<MosqueManager>().hadith,
-            textDirection: StringManager.getTextDirectionOfLocal(
-              Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
+          // child: HadithWidget(
+          //   translatedText: context.watch<MosqueManager>().hadith,
+          //   textDirection: StringManager.getTextDirectionOfLocal(
+          //     Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
+          //   ),
+          // ),
+          child: hadithState.when(
+            data: (hadith) {
+              return HadithWidget(
+                translatedText: hadith.hadith,
+                textDirection: StringManager.getTextDirectionOfLocal(
+                  Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
+                ),
+              );
+            },
+            loading: () => Center(
+              child: CircularProgressIndicator(),
+            ),
+            error: (error, stackTrace) => Center(
+              child: Text('Error: $error'),
             ),
           ),
         ),
