@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
@@ -20,10 +21,10 @@ import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends riverpod.ConsumerWidget {
   const SettingScreen({Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, riverpod.WidgetRef ref) {
     return FutureBuilder<void>(
       future: _initializeTimeShiftManager(),
       builder: (context, snapshot) {
@@ -147,7 +148,7 @@ class SettingScreen extends StatelessWidget {
                   ),
                   featureManager.isFeatureEnabled("timezone_shift") &&
                           timeShiftManager.deviceModel == "MAWABOX" &&
-                          timeShiftManager.isLauncherInstalled 
+                          timeShiftManager.isLauncherInstalled
                       ? _SettingItem(
                           title: S.of(context).timeSetting,
                           subtitle: S.of(context).timeSettingDesc,
