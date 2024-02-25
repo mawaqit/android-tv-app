@@ -184,5 +184,13 @@
   "pt_ar": "Portugais et Arabe",
   "nl_ar": "Néerlandais et arabes",
   "connectToChangeHadith": "Veuillez vous connecter à Internet pour changer la langue des hadiths.",
-  "retry": "Réessayez"
+  "retry": "Réessayez",
+  "timeSetting": "Configurer l'heure",
+  "timeSettingDesc": "Définir une heure personnalisée",
+  "selectedTime": "L'heure actuelle sélectionnée",
+  "confirmation": "Valider",
+  "confirmationMessage": "Êtes-vous sûr de vouloir utiliser l'heure de l'appareil ?",
+  "useDeviceTime": "Utiliser l'heure de l'appareil",
+  "selectTime": "Sélectionner l'heure",
+  "previous": "Précédent"
 }

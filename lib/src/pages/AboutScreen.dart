@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -21,6 +22,7 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     int tapCount = 0;
     bool menuActivated =
         Provider.of<UserPreferencesManager>(context, listen: false)
@@ -53,6 +55,7 @@ class AboutScreen extends StatelessWidget {
           animation: R.ASSETS_ANIMATIONS_LOTTIE_WELCOME_JSON,
           child: OnBoardingMawaqitAboutWidget(),
         ),
+
       ),
     );
   }
