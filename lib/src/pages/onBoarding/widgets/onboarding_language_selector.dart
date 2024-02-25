@@ -9,15 +9,18 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 class OnBoardingLanguageSelector extends StatefulWidget {
-  const OnBoardingLanguageSelector({Key? key, required this.onSelect}) : super(key: key);
+  const OnBoardingLanguageSelector({Key? key, required this.onSelect})
+      : super(key: key);
 
   final void Function() onSelect;
 
   @override
-  State<OnBoardingLanguageSelector> createState() => _OnBoardingLanguageSelectorState();
+  State<OnBoardingLanguageSelector> createState() =>
+      _OnBoardingLanguageSelectorState();
 }
 
-class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector> {
+class _OnBoardingLanguageSelectorState
+    extends State<OnBoardingLanguageSelector> {
   late ScrollController _scrollController;
 
   @override
@@ -39,11 +42,15 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
     final themeData = Theme.of(context);
 
     /// if the [langCode] is current used language
-    bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
+    bool isSelected(String langCode) =>
+        appLanguage.appLocal.languageCode == langCode;
 
     final sortedLocales = [
       Locale('ar'),
-      ...locales.where((element) => element.languageCode != 'ar' && element.languageCode != 'ba').toList()
+      ...locales
+          .where((element) =>
+              element.languageCode != 'ar' && element.languageCode != 'ba')
+          .toList()
         ..sort((a, b) => appLanguage
             .languageName(a.languageCode)
             .toLowerCase()
@@ -54,9 +61,11 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         final appLanguage = Provider.of<AppLanguage>(context, listen: false);
-        int selectedIndex = sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
+        int selectedIndex = sortedLocales.indexWhere((locale) =>
+            appLanguage.appLocal.languageCode == locale.languageCode);
         if (selectedIndex != -1) {
-          double position = selectedIndex * 51 ; // Estimate the height per item. Adjust this based on your item height.
+          double position = selectedIndex *
+              51; // Estimate the height per item. Adjust this based on your item height.
           _scrollController.animateTo(
             position,
             duration: Duration(milliseconds: 300),
@@ -74,7 +83,9 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
           style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.w700,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark
+                ? null
+                : themeData.primaryColor,
           ),
         ).animate().slideY().fade(),
         SizedBox(height: 8),
@@ -83,7 +94,9 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
           textAlign: TextAlign.center,
           style: GoogleFonts.inter(
             fontSize: 15,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark
+                ? null
+                : themeData.primaryColor,
           ),
         ).animate().slideX(begin: .5).fade(),
         SizedBox(height: 20),
@@ -149,7 +162,11 @@ class _LanguageTileState extends State<LanguageTile> {
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
         child: Ink(
           decoration: BoxDecoration(
-            color: isFocused || widget.isSelected ? themeData.selectedRowColor : null,
+            color: isFocused
+                ? themeData.selectedRowColor
+                : widget.isSelected
+                    ? themeData.selectedRowColor.withGreen(140)
+                    : null, 
             borderRadius: BorderRadius.circular(10),
           ),
           child: InkWell(
@@ -157,7 +174,8 @@ class _LanguageTileState extends State<LanguageTile> {
             onFocusChange: (i) => setState(() => isFocused = i),
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueUUID);
+              appLanguage.changeLanguage(
+                  widget.locale, mosqueManager.mosqueUUID);
               widget.onSelect();
             },
             child: ListTile(
@@ -168,7 +186,9 @@ class _LanguageTileState extends State<LanguageTile> {
                 appLanguage.languageName(widget.locale.languageCode),
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
-              trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
+              trailing: widget.isSelected
+                  ? Icon(MawaqitIcons.icon_checked, color: Colors.white)
+                  : null,
             ),
           ),
         ),
