@@ -57,9 +57,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
     ),
     OnBoardingItem(
-      animation: 'welcome',
-      widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
-    ),
+        animation: 'welcome',
+        widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
+        enablePreviousButton: true),
     OnBoardingItem(
       animation: 'welcome',
       widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(3)),
@@ -73,17 +73,17 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
 
     /// main screen or secondary screen (if user has already selected a mosque)
     OnBoardingItem(
-      animation: 'search',
-      widget: OnBoardingScreenType(onDone: () => nextPage(5)),
-      skip: () => !context.read<MosqueManager>().typeIsMosque,
-    ),
+        animation: 'search',
+        widget: OnBoardingScreenType(onDone: () => nextPage(5)),
+        skip: () => !context.read<MosqueManager>().typeIsMosque,
+        enablePreviousButton: true),
 
     /// Allow user to select between regular mode or announcement mode
     OnBoardingItem(
-      animation: 'search',
-      widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
-      skip: () => !context.read<MosqueManager>().typeIsMosque,
-    ),
+        animation: 'search',
+        widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
+        skip: () => !context.read<MosqueManager>().typeIsMosque,
+        enablePreviousButton: true),
   ];
 
   onDone() {
