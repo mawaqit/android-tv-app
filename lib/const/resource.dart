@@ -102,4 +102,7 @@ class R {
 
   /// ![preview](file://E:\Projects\android-tv\assets\svg\no-wi-fi.svg)
   static const String ASSETS_SVG_NO_WI_FI_SVG = 'assets/svg/no-wi-fi.svg';
+
+  static const String ASSETS_VOICES_ADHAN_BIP_MP3 =
+      'assets/voices/adhan/bip.mp3';
 }
