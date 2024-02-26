@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
@@ -12,10 +13,13 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../state_management/workflow/announcement_workflow.dart';
+import '../../../state_management/workflow/workflow_notifier.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
+import '../widgets/workflows/announcement_workflow.dart';
 
 /// show all announcements in one after another
-class AnnouncementScreen extends StatelessWidget {
+class AnnouncementScreen extends ConsumerWidget {
   AnnouncementScreen({
     Key? key,
     this.onDone,
@@ -28,19 +32,21 @@ class AnnouncementScreen extends StatelessWidget {
   final bool enableVideos;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final announcements = context.read<MosqueManager>().activeAnnouncements(enableVideos);
+    ref.listen(announcementWorkflowProvider, (prev,next){
+      if(next == WorkflowState.finished) onDone?.call();
+    });
 
     if (announcements.isEmpty) return NormalHomeSubScreen();
 
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
-        ContinuesWorkFlowWidget(
-          onDone: onDone,
+        AnnouncementContinuesWorkFlowWidget(
           workFlowItems: announcements
-              .map((e) => WorkFlowItem(
-                    builder: (context, next) => announcementWidgets(e, nextAnnouncement: next),
+              .map((e) => AnnouncementWorkFlowItem(
+                    builder: (context) => announcementWidgets(e),
                     duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
                   ))
               .toList(),
@@ -76,7 +82,7 @@ class AnnouncementScreen extends StatelessWidget {
       return _VideoAnnouncement(
         key: ValueKey(activeAnnouncement.video),
         url: activeAnnouncement.video!,
-        onEnded: nextAnnouncement,
+        onEnded: nextAnnouncement, // Make sure this is correctly called when the video ends
       );
     }
 
@@ -164,7 +170,7 @@ class _ImageAnnouncement extends StatelessWidget {
   }
 }
 
-class _VideoAnnouncement extends StatefulWidget {
+class _VideoAnnouncement extends ConsumerStatefulWidget {
   const _VideoAnnouncement({
     Key? key,
     required this.url,
@@ -175,10 +181,10 @@ class _VideoAnnouncement extends StatefulWidget {
   final VoidCallback? onEnded;
 
   @override
-  State<_VideoAnnouncement> createState() => _VideoAnnouncementState();
+  ConsumerState<_VideoAnnouncement> createState() => _VideoAnnouncementState();
 }
 
-class _VideoAnnouncementState extends State<_VideoAnnouncement> {
+class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
   late YoutubePlayerController _controller;
 
   @override
@@ -217,7 +223,10 @@ class _VideoAnnouncementState extends State<_VideoAnnouncement> {
         child: YoutubePlayer(
           controller: _controller,
           showVideoProgressIndicator: true,
-          onEnded: (metaData) => widget.onEnded?.call(),
+          onEnded: (metaData) {
+            ref.read(videoWorkflowProvider.notifier).setVideoFinished();
+            widget.onEnded?.call();
+          },
         ),
       ),
     );

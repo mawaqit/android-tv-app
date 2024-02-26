@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/data/config.dart';
+import 'package:mawaqit/src/const/config.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

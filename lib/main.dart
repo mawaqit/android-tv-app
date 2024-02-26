@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'
 import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/data/constants.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
@@ -17,6 +17,7 @@ import 'package:mawaqit/src/helpers/CrashlyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/riverpod_logger.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
+import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -51,15 +52,24 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MosqueManager()),
         ChangeNotifierProvider(create: (context) => SettingsManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
-        ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
-        StreamProvider(create: (context) => Api.updateUserStatusStream(), initialData: 0, lazy: false),
+        ChangeNotifierProvider(create: (context) => FeatureManager(context)),
+        ChangeNotifierProvider(
+            create: (context) => UserPreferencesManager(), lazy: false),
+        StreamProvider(
+            create: (context) => Api.updateUserStatusStream(),
+            initialData: 0,
+            lazy: false),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) => ConnectivityService().connectionStatusController.stream.map((event) {
-              if (event == ConnectivityStatus.Wifi || event == ConnectivityStatus.Cellular) {
+            create: (context) => ConnectivityService()
+                .connectionStatusController
+                .stream
+                .map((event) {
+              if (event == ConnectivityStatus.Wifi ||
+                  event == ConnectivityStatus.Cellular) {
                 //todo check actual internet
               }
 
@@ -67,12 +77,15 @@ class MyApp extends StatelessWidget {
             }),
             child: Consumer<ThemeNotifier>(
               builder: (context, theme, _) => Shortcuts(
-                shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
+                shortcuts: {
+                  SingleActivator(LogicalKeyboardKey.select): ActivateIntent()
+                },
                 child: MaterialApp(
                   title: kAppName,
                   themeMode: theme.mode,
                   localeResolutionCallback: (locale, supportedLocales) {
-                    if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
+                    if (locale?.languageCode.toLowerCase() == 'ba')
+                      return Locale('en');
 
                     return locale;
                   },

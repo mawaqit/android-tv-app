@@ -13,17 +13,36 @@ import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
-import '../services/app_update_manager.dart';
+import '../helpers/TimeShiftManager.dart';
+import '../services/FeatureManager.dart';
+import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+      future: _initializeTimeShiftManager(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return _buildSettingScreen(context);
+        } else {
+          return SizedBox();
+        }
+      },
+    );
+  }
+
+  Future<void> _initializeTimeShiftManager() async {
+    await TimeShiftManager().initializeTimes();
+  }
+
+  Widget _buildSettingScreen(BuildContext context) {
     final theme = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
     final mosqueProvider = context.watch<MosqueManager>();
@@ -31,6 +50,9 @@ class SettingScreen extends StatelessWidget {
     final themeManager = context.watch<ThemeNotifier>();
     final String checkInternet = S.of(context).noInternet;
     final String hadithLanguage = S.of(context).connectToChangeHadith;
+    TimeShiftManager timeShiftManager = TimeShiftManager();
+    final featureManager = Provider.of<FeatureManager>(context);
+
     return ScreenWithAnimationWidget(
       animation: 'settings',
       child: Padding(
@@ -75,8 +97,10 @@ class SettingScreen extends StatelessWidget {
                         isIconActivated: true,
                         title: S.of(context).randomHadithLanguage,
                         description: S.of(context).descLang,
-                        languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
-                        isSelected: (langCode) => appLanguage.hadithLanguage == langCode,
+                        languages:
+                            appLanguage.hadithLocalizedLanguage.keys.toList(),
+                        isSelected: (langCode) =>
+                            appLanguage.hadithLanguage == langCode,
                         onSelect: (langCode) {
                           bool isConnectedToInternet = mosqueProvider.isOnline;
                           if (!isConnectedToInternet) {
@@ -89,7 +113,9 @@ class SettingScreen extends StatelessWidget {
                               content: hadithLanguage,
                             );
                           } else {
-                            context.read<AppLanguage>().setHadithLanguage(langCode);
+                            context
+                                .read<AppLanguage>()
+                                .setHadithLanguage(langCode);
                             AppRouter.pop();
                           }
                         },
@@ -105,7 +131,9 @@ class SettingScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
+                    title: theme.brightness == Brightness.light
+                        ? S.of(context).darkMode
+                        : S.of(context).lightMode,
                     icon: Icon(Icons.brightness_4, size: 35),
                     onChanged: (value) => themeManager.toggleMode(),
                     value: themeManager.isLightTheme ?? false,
@@ -121,25 +149,46 @@ class SettingScreen extends StatelessWidget {
                       ),
                     )),
                   ),
+                  featureManager.isFeatureEnabled("timezone_shift") &&
+                          timeShiftManager.deviceModel == "MAWABOX" &&
+                          timeShiftManager.isLauncherInstalled
+                      ? _SettingItem(
+                          title: S.of(context).timeSetting,
+                          subtitle: S.of(context).timeSettingDesc,
+                          icon: Icon(MawaqitIcons.icon_clock, size: 35),
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => TimePickerModal(
+                                  timeShiftManager: timeShiftManager),
+                            );
+                          },
+                        )
+                      : SizedBox(),
                   if (!userPreferences.webViewMode)
                     _SettingSwitchItem(
                       title: S.of(context).announcementOnlyMode,
                       subtitle: S.of(context).announcementOnlyModeEXPLINATION,
                       icon: Icon(Icons.notifications, size: 35),
                       value: userPreferences.announcementsOnly,
-                      onChanged: (value) => userPreferences.announcementsOnly = value,
+                      onChanged: (value) =>
+                          userPreferences.announcementsOnly = value,
                     ),
-                  if (!userPreferences.webViewMode && !userPreferences.announcementsOnly)
+                  if (!userPreferences.webViewMode &&
+                      !userPreferences.announcementsOnly)
                     _SettingSwitchItem(
                       title: S.of(context).secondaryScreen,
                       subtitle: S.of(context).secondaryScreenExplanation,
                       value: userPreferences.isSecondaryScreen,
                       icon: Icon(Icons.monitor, size: 35),
-                      onChanged: (value) => userPreferences.isSecondaryScreen = value,
+                      onChanged: (value) =>
+                          userPreferences.isSecondaryScreen = value,
                     ),
                   _SettingSwitchItem(
                     title: S.of(context).webView,
-                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    subtitle: S
+                        .of(context)
+                        .ifYouAreFacingAnIssueWithTheAppActivateThis,
                     icon: Icon(Icons.online_prediction, size: 35),
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
@@ -179,10 +228,13 @@ class _SettingItem extends StatelessWidget {
         leading: icon ?? SizedBox(),
         trailing: Icon(Icons.arrow_forward_ios),
         title: Text(title),
-        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(
-          fontSize: 10,
-          color: Colors.white.withOpacity(0.7)
-        )) : null,
+        subtitle: subtitle != null
+            ? Text(subtitle!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 10, color: Colors.white.withOpacity(0.7)))
+            : null,
         onTap: onTap,
       ),
     );
@@ -215,7 +267,9 @@ class _SettingSwitchItem extends StatelessWidget {
         autofocus: true,
         secondary: icon ?? SizedBox(),
         title: Text(title),
-        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip) : null,
+        subtitle: subtitle != null
+            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip)
+            : null,
         value: value,
         onChanged: onChanged,
       ),

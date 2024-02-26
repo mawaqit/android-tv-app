@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:mawaqit/src/models/flash.dart';
 
 import 'announcement.dart';
 
-class Mosque {
+class Mosque extends Equatable{
   final int id;
   final String? uuid;
   final String? type;
@@ -177,5 +178,7 @@ class Mosque {
     );
   }
 
+  @override
+  List get props => [id];
 //</editor-fold>
 }

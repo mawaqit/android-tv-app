@@ -7,12 +7,18 @@ class VersionWidget extends StatelessWidget {
   final TextStyle? style;
   final TextAlign? textAlign;
 
+  String _formatVersion(PackageInfo? packageInfo) {
+    final version = packageInfo?.version.replaceAll('-tv', '') ?? '';
+    final buildNumber = packageInfo?.buildNumber ?? '';
+    return "v$version-$buildNumber";
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) => Text(
-        "v${snapshot.data?.version.replaceAll('-tv', '')}-${snapshot.data?.buildNumber}",
+        _formatVersion(snapshot.data),
         style: style,
         textAlign: textAlign,
       ),

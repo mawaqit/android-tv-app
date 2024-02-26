@@ -6,11 +6,12 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 class CurrentTimeWidget extends StatelessWidget {
-  const CurrentTimeWidget({Key? key}) : super(key: key);
+  CurrentTimeWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
+
     final now = mosqueManager.mosqueDate();
 
     final mosqueConfig = mosqueManager.mosqueConfig;
