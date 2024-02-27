@@ -15,7 +15,21 @@ class MawaqitIconButton extends StatefulWidget {
 }
 
 class _MawaqitIconButtonState extends State<MawaqitIconButton> {
+  late FocusNode _focusNode;
   bool focused = false;
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -27,28 +41,34 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
         color: theme.colorScheme.primary,
         elevation: 0,
-        child: InkWell(
-          onTap: widget.onPressed,
+        child: Focus(
           onFocusChange: (value) => setState(() => focused = value),
-          focusColor: Color(0xFF490094),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-            child: Row(
-              children: [
-                Text(
-                  widget.label,
-                  style: theme.textTheme.bodySmall!
-                      .copyWith(color: focused ? Colors.white : color),
+          child: Material(
+            color: focused ? Color(0xFF490094) : theme.colorScheme.primary,
+            child: InkWell(
+              focusNode: _focusNode,
+              onTap: widget.onPressed,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                child: Row(
+                  children: [
+                    Text(
+                      widget.label,
+                      style: theme.textTheme.bodySmall!
+                          .copyWith(color: focused ? Colors.white : color),
+                    ),
+                    SizedBox(width: 10),
+                    Align(
+                      alignment: Alignment(.5, 0),
+                      child: Icon(widget.icon,
+                          color: focused ? Colors.white : color, size: 16),
+                      widthFactor: .5,
+                      heightFactor: 1,
+                    ),
+                  ],
                 ),
-                SizedBox(width: 10),
-                Align(
-                  alignment: Alignment(.5, 0),
-                  child: Icon(widget.icon,
-                      color: focused ? Colors.white : color, size: 16),
-                  widthFactor: .5,
-                  heightFactor: 1,
-                ),
-              ],
+              ),
             ),
           ),
         ),
