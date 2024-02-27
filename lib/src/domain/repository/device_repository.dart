@@ -13,4 +13,7 @@ abstract class DeviceInfoRepository {
 
   /// [setLanguage] Sets the user's preferred language in the app's persistent storage.
   Future<void> setLanguage(String language, String? mosqueUUID);
+
+  /// [getLanguageWithoutCache] Retrieves the current user's preferred language setting without using cache.
+  Future<String> getLanguageWithoutCache();
 }
