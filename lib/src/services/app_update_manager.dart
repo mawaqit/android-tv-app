@@ -10,7 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
-import '../data/constants.dart';
+import '../const/constants.dart';
 import '../helpers/AppDate.dart';
 import 'mosque_manager.dart';
 
@@ -32,13 +32,13 @@ class AppUpdateManager extends AsyncNotifier<AppUpdateState> {
   Future<AppUpdateState> build() async {
     try {
       _updateInfo = await InAppUpdate.checkForUpdate();
+      if (_updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        return AppUpdateState.idle;
+      } else {
+        return AppUpdateState.updateNotAvailable;
+      }
     } catch (e) {
       throw Exception('Error checking for update $e');
-    }
-    if (_updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-      return AppUpdateState.idle;
-    } else {
-      return AppUpdateState.updateNotAvailable;
     }
   }
 
@@ -175,7 +175,7 @@ class AppUpdateManager extends AsyncNotifier<AppUpdateState> {
     if (_updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
       return true;
     } else {
-      throw Exception('No update available');
+      return false;
     }
   }
 
@@ -196,7 +196,7 @@ class AppUpdateManager extends AsyncNotifier<AppUpdateState> {
     try {
       // Get the application cache directory
       var dir = await getApplicationCacheDirectory();
-      String apkPath = '${dir?.path}/mawaqit.apk';
+      String apkPath = '${dir.path}/mawaqit.apk';
 
       // If the file already exists, return the path
       File file = File(apkPath);

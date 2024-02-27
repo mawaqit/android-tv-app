@@ -186,8 +186,7 @@
   "connectToChangeHadith": "Please connect to the internet to change the hadith language.",
   "retry": "Retry",
   "check_for_updates": "Check for updates",
-  "check_for_updates_description": "Check if there is new update for the app or not"
-  "retry": "Retry",
+  "check_for_updates_description": "Check if there is new update for the app or not",
   "timeSetting": "Configure the time",
   "timeSettingDesc":"Set a custom time",
   "selectedTime":"The current selected time",

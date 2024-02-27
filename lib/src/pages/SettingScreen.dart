@@ -18,6 +18,7 @@ import 'package:sizer/sizer.dart';
 import '../../i18n/AppLanguage.dart';
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
+import '../services/app_update_manager.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
