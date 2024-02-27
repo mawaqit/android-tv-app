@@ -18,7 +18,7 @@ abstract class StatelessOrientationWidget extends ConsumerStatefulWidget {
 class _StatelessOrientationWidgetState extends ConsumerState<StatelessOrientationWidget> {
   @override
   void initState() {
-    ref.read(appUpdateManagerProvider.notifier).scheduleUpdate();
+    // ref.read(appUpdateManagerProvider.notifier).scheduleUpdate();
     super.initState();
   }
   @override

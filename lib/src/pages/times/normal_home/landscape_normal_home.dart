@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../main.dart';
 import '../../../services/app_update_manager.dart';
+import '../../../state_management/in_app_update/in_app_update_notifier.dart';
 import '../../home/widgets/FadeInOut.dart';
 
 class LandscapeNormalHome extends ConsumerStatefulWidget {
@@ -55,12 +56,19 @@ class _LandscapeNormalHomeState extends ConsumerState<LandscapeNormalHome> {
   }
   @override
   void initState() {
-    ref.read(appUpdateManagerProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final mosqueManager = context.read<MosqueManager>();
+      final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+      final times = mosqueManager.times!.dayTimesStrings(today);
+      ref.read(inAppUpdateProvider.notifier).scheduleUpdate(times);
+      logger.i('LandscapeNormalHome: initState');
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    logger.i('LandscapeNormalHome: initState');
     final mosqueManager = context.watch<MosqueManager>();
     final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
