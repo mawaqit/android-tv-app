@@ -10,6 +10,7 @@ import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
+import 'package:mawaqit/src/helpers/android_tv_os_detector.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/pages/HijriAdjustmentsScreen.dart';
@@ -155,7 +156,6 @@ class Api {
     return HijriDateConfigModel.fromJson(response.data);
   }
 
-
   static Future<Mosque> searchMosqueWithId(String mosqueId) async {
     final response = await dio.get('/3.0/mosque/$mosqueId');
 
@@ -227,9 +227,12 @@ class Api {
   }
 
   static Stream<void> updateUserStatusStream() async* {
-    await for (var i in generateStream(Duration(minutes: 10))) {
-      await updateUserStatus();
-      yield i;
+    bool isPhoneOrTablet = await AndroidTvOsDetector.isPhoneOrTablet();
+    if (!isPhoneOrTablet) {
+      await for (var i in generateStream(Duration(minutes: 10))) {
+        await updateUserStatus();
+        yield i;
+      }
     }
   }
 

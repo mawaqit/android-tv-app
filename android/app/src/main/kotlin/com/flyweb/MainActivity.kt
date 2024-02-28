@@ -8,6 +8,7 @@ import io.flutter.embedding.engine.dart.DartExecutor.DartEntrypoint
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
+import android.hardware.Camera;
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "nativeMethodsChannel"
@@ -20,7 +21,12 @@ class MainActivity : FlutterActivity() {
                 val packageName = call.argument<String>("packageName")
                 val isInstalled = isPackageInstalled(packageName)
                 result.success(isInstalled)
-            } else {
+            }  else  if (call.method == "isPhoneOrTablet") {
+                val numCameras = Camera.getNumberOfCameras()
+                val isPhoneOrTablet = numCameras > 0
+                result.success(isPhoneOrTablet)
+            }  
+                 else {
                 result.notImplemented()
             }
         }
