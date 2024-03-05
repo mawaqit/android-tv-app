@@ -21,12 +21,7 @@ class MainActivity : FlutterActivity() {
                 val packageName = call.argument<String>("packageName")
                 val isInstalled = isPackageInstalled(packageName)
                 result.success(isInstalled)
-            }  else  if (call.method == "isPhoneOrTablet") {
-                val numCameras = Camera.getNumberOfCameras()
-                val isPhoneOrTablet = numCameras > 0
-                result.success(isPhoneOrTablet)
-            }  
-                 else {
+            }  else {
                 result.notImplemented()
             }
         }

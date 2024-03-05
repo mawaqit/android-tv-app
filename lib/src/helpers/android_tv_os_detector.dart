@@ -1,17 +1,23 @@
-import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 class AndroidTvOsDetector {
-  static const MethodChannel _channel =
-      const MethodChannel('nativeMethodsChannel');
-
   static Future<bool> isPhoneOrTablet() async {
     try {
-      final bool isPhoneOrTablet =
-          await _channel.invokeMethod('isPhoneOrTablet') ?? false;
-      return isPhoneOrTablet;
+      final screenSize =
+          WidgetsBinding.instance.platformDispatcher.views.first.physicalSize;
+      final orientation = screenSize.width > screenSize.height
+          ? Orientation.landscape
+          : Orientation.portrait;
+      final deviceWidth = orientation == Orientation.landscape
+          ? screenSize.height
+          : screenSize.width;
+
+      final isTablet = deviceWidth <= 950;
+
+      return isTablet;
     } on PlatformException catch (_) {
-      return false;
+      return false; 
     }
   }
 }
