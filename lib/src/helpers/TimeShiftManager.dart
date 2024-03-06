@@ -25,6 +25,7 @@ class TimeShiftManager {
   static const String _adjustedTimeKey = 'adjustedTime';
   static const String _previousTimeKey = 'previousTime';
   static const String _shiftedhoursKey = 'shiftedhours';
+  static const String _timezoneOffsetKey = 'timezoneOffset';
 
   factory TimeShiftManager() => _instance;
 
@@ -84,7 +85,14 @@ class TimeShiftManager {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       DateTime currentTime = DateTime.now();
       _previousTime = currentTime.subtract(const Duration(seconds: 10));
-
+      // Check if timezone offset has changed since the previous execution.
+      String previousTimezoneOffset = prefs.getString(_timezoneOffsetKey) ?? '';
+      String currentTimezoneOffset = currentTime.timeZoneOffset.toString();
+      if (previousTimezoneOffset != currentTimezoneOffset) {
+        // Update the timezone offset in SharedPreferences.
+        prefs.setString(_timezoneOffsetKey, currentTimezoneOffset);
+        return; // Exit the function without performing any logic.
+      }
       String previousSavedTime =
           prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String();
       var _previousTimeFromShared = DateTime.parse(previousSavedTime);
