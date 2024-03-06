@@ -68,7 +68,7 @@ class TimeShiftManager {
 
   // Start a periodic timer for time adjustments, triggered every 10 seconds.
   void startPeriodicTimer() {
-    const Duration period = Duration(seconds: 60);
+    const Duration period = Duration(seconds: 30);
 
     Timer.periodic(period, (Timer timer) {
       if (!_timeSetFromHour &&
@@ -85,19 +85,19 @@ class TimeShiftManager {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       DateTime currentTime = DateTime.now();
       _previousTime = currentTime.subtract(const Duration(seconds: 10));
-      // Check if timezone offset has changed since the previous execution.
       String previousTimezoneOffset = prefs.getString(_timezoneOffsetKey) ?? '';
       String currentTimezoneOffset = currentTime.timeZoneOffset.toString();
-      if (previousTimezoneOffset != currentTimezoneOffset) {
-        // Update the timezone offset in SharedPreferences.
+      if (previousTimezoneOffset != currentTimezoneOffset &&
+          currentTime.month == 3 &&
+          currentTime.day == 31) {
         prefs.setString(_timezoneOffsetKey, currentTimezoneOffset);
-        return; // Exit the function without performing any logic.
+        return;
       }
+
       String previousSavedTime =
           prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String();
       var _previousTimeFromShared = DateTime.parse(previousSavedTime);
       prefs.setString(_previousTimeKey, _previousTime.toIso8601String());
-
       if (currentTime.hour != _previousTimeFromShared.hour) {
         int timeDifferenceMillis =
             (currentTime.hour * 60 + currentTime.minute) * 60 * 1000 -
