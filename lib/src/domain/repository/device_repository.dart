@@ -16,4 +16,7 @@ abstract class DeviceInfoRepository {
 
   /// [getLanguageWithoutCache] Retrieves the current user's preferred language setting without using cache.
   Future<String> getLanguageWithoutCache();
+
+  /// [isPhoneOrTablet] Checks if the device is a phone or a tablet.
+  Future<bool> isPhoneOrTablet();
 }

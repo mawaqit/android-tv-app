@@ -84,6 +84,18 @@ class DeviceInfoImpl implements DeviceInfoRepository {
       rethrow;
     }
   }
+
+  ///  [isPhoneOrTablet] Checks if the device is a phone or a tablet.
+  ///
+  /// return a boolean value indicating if the device is a phone or a tablet.
+  Future<bool> isPhoneOrTablet() async {
+    try {
+      return await deviceInfoDataSource.isPhoneOrTablet();
+    } catch (e, s) {
+      logger.e('Error fetching device type', stackTrace: s);
+      rethrow;
+    }
+  }
 }
 
 class DeviceInfoImplProviderArgument {
