@@ -25,6 +25,7 @@ class TimeShiftManager {
   static const String _adjustedTimeKey = 'adjustedTime';
   static const String _previousTimeKey = 'previousTime';
   static const String _shiftedhoursKey = 'shiftedhours';
+  static const String _timezoneOffsetKey = 'timezoneOffset';
 
   factory TimeShiftManager() => _instance;
 
@@ -67,7 +68,7 @@ class TimeShiftManager {
 
   // Start a periodic timer for time adjustments, triggered every 10 seconds.
   void startPeriodicTimer() {
-    const Duration period = Duration(seconds: 10);
+    const Duration period = Duration(seconds: 30);
 
     Timer.periodic(period, (Timer timer) {
       if (!_timeSetFromHour &&
@@ -84,12 +85,19 @@ class TimeShiftManager {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       DateTime currentTime = DateTime.now();
       _previousTime = currentTime.subtract(const Duration(seconds: 10));
+      String previousTimezoneOffset = prefs.getString(_timezoneOffsetKey) ?? '';
+      String currentTimezoneOffset = currentTime.timeZoneOffset.toString();
+      if (previousTimezoneOffset != currentTimezoneOffset &&
+          currentTime.month == 3 &&
+          currentTime.day == 31) {
+        prefs.setString(_timezoneOffsetKey, currentTimezoneOffset);
+        return;
+      }
 
       String previousSavedTime =
           prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String();
       var _previousTimeFromShared = DateTime.parse(previousSavedTime);
       prefs.setString(_previousTimeKey, _previousTime.toIso8601String());
-
       if (currentTime.hour != _previousTimeFromShared.hour) {
         int timeDifferenceMillis =
             (currentTime.hour * 60 + currentTime.minute) * 60 * 1000 -
@@ -106,7 +114,6 @@ class TimeShiftManager {
         if (_shiftedhours == 2) {
           _shift = -1;
           _adjustedTime = _adjustedTime.subtract(const Duration(hours: 1));
-          _shiftedhours = 0;
         }
 
         if (minuteDifference >= -65 && minuteDifference <= -55) {
