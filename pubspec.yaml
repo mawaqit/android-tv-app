@@ -101,6 +101,8 @@ dependencies:
   sizer: ^2.0.15
 
   timeago_flutter: ^3.4.0
+  timezone: 
+  wifi_scan: ^0.4.1
 
   #  media
   youtube_player_flutter: ^8.1.2
@@ -109,6 +111,7 @@ dependencies:
   unique_identifier: ^0.3.0
   collection: any
   disk_space: ^0.2.1
+  root_access: ^1.0.4
 
   equatable: ^2.0.5
 dev_dependencies:

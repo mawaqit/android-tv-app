@@ -192,6 +192,10 @@
   "confirmationMessage":"Are you sure you want to use device time?",
   "useDeviceTime":"Use device time",
   "selectTime":"Select Time",
-  "previous": "Previous"
-
+  "previous": "Previous",
+  "appTimezone":"App Timezone",
+  "descTimezone":"Please select you preferred timezone",
+  "appWifi": "Connect to wifi",
+  "descWifi": "Please connect to your preferred wifi",
+  "searchCountries":"Search countries..."
 }

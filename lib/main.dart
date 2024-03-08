@@ -24,6 +24,7 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 final logger = Logger();
 
@@ -32,12 +33,9 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
-      runApp(
-        ProviderScope(
-          child: MyApp(),
-          observers: [RiverpodLogger()],
-        ),
-      );
+      tz.initializeTimeZones();
+
+      runApp(ProviderScope(child: MyApp()));
     },
   );
 }
