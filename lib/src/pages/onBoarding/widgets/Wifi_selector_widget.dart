@@ -101,7 +101,7 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
           children: [
             ElevatedButton.icon(
               icon: const Icon(Icons.refresh),
-              label: S.of(context).scanAgain,
+              label: Text(S.of(context).scanAgain),
               onPressed: () async => _startScan(),
             ),
           ],
