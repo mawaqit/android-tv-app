@@ -126,6 +126,7 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
         ),
         itemCount: accessPoints.length,
         itemBuilder: (context, i) => _AccessPointTile(
+          onSelect: widget.onSelect,
           accessPoint: accessPoints[i],
           hasPermission: _hasPermission,
         ),
@@ -137,9 +138,11 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
 class _AccessPointTile extends StatefulWidget {
   final WiFiAccessPoint accessPoint;
   final bool hasPermission;
+  final void Function() onSelect;
 
   _AccessPointTile({
     Key? key,
+    required this.onSelect,
     required this.accessPoint,
     required this.hasPermission,
   }) : super(key: key);
@@ -213,6 +216,7 @@ class _AccessPointTileState extends State<_AccessPointTile> {
                         passwordController.text,
                       );
                       Navigator.pop(context);
+                      widget.onSelect?.call();
                     } catch (e, stack) {
                       logger.e(e, stackTrace: stack);
                     }
