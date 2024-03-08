@@ -21,7 +21,16 @@ class MainActivity : FlutterActivity() {
                 when (call.method) {
                     "setDeviceTimezone" -> setDeviceTimezone(call, result)
                     "connectToWifi" -> connectToWifi(call, result)
-                    else -> result.notImplemented()
+                    "isPackageInstalled" -> {
+                            val packageName = call.argument<String>("packageName")
+                            if (packageName != null) {
+                                val isInstalled = isPackageInstalled(packageName)
+                                result.success(isInstalled)
+                            } else {
+                                result.error("INVALID_ARGUMENT", "Package name is null", null)
+                            }
+                        }                  
+                             else -> result.notImplemented()
                 }
             }
     }
