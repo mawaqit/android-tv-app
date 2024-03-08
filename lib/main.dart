@@ -35,7 +35,10 @@ Future<void> main() async {
       await Firebase.initializeApp();
       tz.initializeTimeZones();
 
-      runApp(ProviderScope(child: MyApp()));
+      runApp(ProviderScope(
+        child: MyApp(),
+        observers: [RiverpodLogger()],
+      ));
     },
   );
 }
