@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 
-import 'package:flutter/services.dart';
+import '../../../../main.dart';
 
 const String nativeFunctionsChannel = 'nativeFunctionsChannel';
 
@@ -34,18 +35,21 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
     });
   }
 
+  @override
+  void dispose() {
+    subscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> _startScan() async {
     if (shouldCheckCan) {
       final can = await WiFiScan.instance.canStartScan();
       if (can != CanStartScan.yes) {
-        if (mounted) print("Cannot start scan: $can");
-        return;
+        if (mounted) return;
       }
     }
 
-    final result = await WiFiScan.instance.startScan();
-    if (mounted) print("startScan: $result");
-    setState(() => accessPoints = []);
+    if (mounted) setState(() => accessPoints = []);
     if (await _canGetScannedResults()) {
       final results = await WiFiScan.instance.getScannedResults();
       setState(() => accessPoints = results);
@@ -56,8 +60,7 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
     if (shouldCheckCan) {
       final can = await WiFiScan.instance.canGetScannedResults();
       if (can != CanGetScannedResults.yes) {
-        if (mounted) print("Cannot get scanned results: $can");
-        accessPoints = [];
+        if (mounted) accessPoints = [];
         return false;
       }
     }
@@ -98,7 +101,7 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
           children: [
             ElevatedButton.icon(
               icon: const Icon(Icons.refresh),
-              label: const Text('Scan Again'),
+              label: S.of(context).scanAgain,
               onPressed: () async => _startScan(),
             ),
           ],
@@ -106,7 +109,7 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
         SizedBox(height: 20),
         Expanded(
           child: accessPoints.isEmpty
-              ? const Text("NO SCANNED RESULTS")
+              ? Text(S.of(context).noScannedResultsFound)
               : _buildAccessPointsList(),
         ),
       ],
@@ -146,7 +149,7 @@ class _AccessPointTile extends StatefulWidget {
 }
 
 class _AccessPointTileState extends State<_AccessPointTile> {
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool _showPassword = false;
   static const platform = MethodChannel(nativeFunctionsChannel);
 
@@ -159,7 +162,7 @@ class _AccessPointTileState extends State<_AccessPointTile> {
         "security": security,
       });
     } on PlatformException catch (e) {
-      print(e);
+      print('Failed to connect to WiFi: $e');
     }
   }
 
@@ -188,7 +191,7 @@ class _AccessPointTileState extends State<_AccessPointTile> {
                   controller: passwordController,
                   obscureText: !_showPassword,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: S.of(context).wifiPassword,
                     suffixIcon: IconButton(
                       icon: Icon(
                         _showPassword ? Icons.visibility : Icons.visibility_off,
@@ -203,7 +206,6 @@ class _AccessPointTileState extends State<_AccessPointTile> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    print('pressed');
                     try {
                       await connectToWifi(
                         widget.accessPoint.ssid,
@@ -212,10 +214,10 @@ class _AccessPointTileState extends State<_AccessPointTile> {
                       );
                       Navigator.pop(context);
                     } catch (e, stack) {
-                      print('Error: $e\n$stack');
+                      logger.e(e, stackTrace: stack);
                     }
                   },
-                  child: Text('Connect'),
+                  child: Text(S.of(context).connect),
                 ),
               ],
             ),

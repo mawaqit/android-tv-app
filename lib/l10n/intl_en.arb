@@ -197,5 +197,9 @@
   "descTimezone":"Please select you preferred timezone",
   "appWifi": "Connect to wifi",
   "descWifi": "Please connect to your preferred wifi",
-  "searchCountries":"Search countries..."
+  "searchCountries":"Search countries...",
+  "scanAgain":"Scan Again",
+  "noScannedResultsFound":"No near access points found",
+  "connect":"Connect",
+  "wifiPassword":"Password"
 }
