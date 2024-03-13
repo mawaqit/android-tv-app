@@ -144,10 +144,12 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'language',
       widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2)),
+      enablePreviousButton: true,
     ),
     OnBoardingItem(
       animation: 'language',
       widget: OnBoardingWifiSelector(onSelect: () => nextPage(3)),
+      enablePreviousButton: true,
     ),
     OnBoardingItem(
         animation: 'welcome',
