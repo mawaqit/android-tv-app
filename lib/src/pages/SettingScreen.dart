@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
@@ -11,17 +12,22 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
+import '../../main.dart';
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
+import '../services/app_update_manager.dart';
+import '../state_management/in_app_update/in_app_update_notifier.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
@@ -84,6 +90,8 @@ class SettingScreen extends StatelessWidget {
                     icon: Icon(Icons.language, size: 35),
                     onTap: () => AppRouter.push(LanguageScreen()),
                   ),
+                  SettingCard(),
+                  // SettingDownloadApkCard(),
                   _SettingItem(
                     title: S.of(context).randomHadithLanguage,
                     subtitle: S.of(context).hadithLangDesc,
@@ -93,10 +101,8 @@ class SettingScreen extends StatelessWidget {
                         isIconActivated: true,
                         title: S.of(context).randomHadithLanguage,
                         description: S.of(context).descLang,
-                        languages:
-                            appLanguage.hadithLocalizedLanguage.keys.toList(),
-                        isSelected: (langCode) =>
-                            appLanguage.hadithLanguage == langCode,
+                        languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
+                        isSelected: (langCode) => appLanguage.hadithLanguage == langCode,
                         onSelect: (langCode) {
                           bool isConnectedToInternet = mosqueProvider.isOnline;
                           if (!isConnectedToInternet) {
@@ -109,9 +115,7 @@ class SettingScreen extends StatelessWidget {
                               content: hadithLanguage,
                             );
                           } else {
-                            context
-                                .read<AppLanguage>()
-                                .setHadithLanguage(langCode);
+                            context.read<AppLanguage>().setHadithLanguage(langCode);
                             AppRouter.pop();
                           }
                         },
@@ -127,9 +131,7 @@ class SettingScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light
-                        ? S.of(context).darkMode
-                        : S.of(context).lightMode,
+                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
                     icon: Icon(Icons.brightness_4, size: 35),
                     onChanged: (value) => themeManager.toggleMode(),
                     value: themeManager.isLightTheme ?? false,
@@ -147,7 +149,7 @@ class SettingScreen extends StatelessWidget {
                   ),
                   featureManager.isFeatureEnabled("timezone_shift") &&
                           timeShiftManager.deviceModel == "MAWABOX" &&
-                          timeShiftManager.isLauncherInstalled 
+                          timeShiftManager.isLauncherInstalled
                       ? _SettingItem(
                           title: S.of(context).timeSetting,
                           subtitle: S.of(context).timeSettingDesc,
@@ -155,8 +157,7 @@ class SettingScreen extends StatelessWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => TimePickerModal(
-                                  timeShiftManager: timeShiftManager),
+                              builder: (context) => TimePickerModal(timeShiftManager: timeShiftManager),
                             );
                           },
                         )
@@ -167,24 +168,19 @@ class SettingScreen extends StatelessWidget {
                       subtitle: S.of(context).announcementOnlyModeEXPLINATION,
                       icon: Icon(Icons.notifications, size: 35),
                       value: userPreferences.announcementsOnly,
-                      onChanged: (value) =>
-                          userPreferences.announcementsOnly = value,
+                      onChanged: (value) => userPreferences.announcementsOnly = value,
                     ),
-                  if (!userPreferences.webViewMode &&
-                      !userPreferences.announcementsOnly)
+                  if (!userPreferences.webViewMode && !userPreferences.announcementsOnly)
                     _SettingSwitchItem(
                       title: S.of(context).secondaryScreen,
                       subtitle: S.of(context).secondaryScreenExplanation,
                       value: userPreferences.isSecondaryScreen,
                       icon: Icon(Icons.monitor, size: 35),
-                      onChanged: (value) =>
-                          userPreferences.isSecondaryScreen = value,
+                      onChanged: (value) => userPreferences.isSecondaryScreen = value,
                     ),
                   _SettingSwitchItem(
                     title: S.of(context).webView,
-                    subtitle: S
-                        .of(context)
-                        .ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
                     icon: Icon(Icons.online_prediction, size: 35),
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
@@ -228,8 +224,7 @@ class _SettingItem extends StatelessWidget {
             ? Text(subtitle!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 10, color: Colors.white.withOpacity(0.7)))
+                style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.7)))
             : null,
         onTap: onTap,
       ),
@@ -263,12 +258,61 @@ class _SettingSwitchItem extends StatelessWidget {
         autofocus: true,
         secondary: icon ?? SizedBox(),
         title: Text(title),
-        subtitle: subtitle != null
-            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip)
-            : null,
+        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip) : null,
         value: value,
         onChanged: onChanged,
       ),
     );
   }
 }
+
+class SettingCard extends riverpod.ConsumerWidget {
+  SettingCard({super.key});
+
+  String test = "There is an update available on Play store";
+
+  @override
+  Widget build(BuildContext context, riverpod.WidgetRef ref) {
+    final appUpdateManagerState = ref.watch(inAppUpdateProvider);
+    final l10n = S.of(context);
+    return _SettingItem(
+      title: appUpdateManagerState.when(
+        data: (data) {
+          logger.i('in app update:data.name ${data.inAppUpdateStatus}');
+          return l10n.check_for_updates;
+        },
+        loading: () => 'loading',
+        error: (error, stackTrace) => 'error $error',
+      ),
+      subtitle: S.of(context).check_for_updates_description,
+      icon: Icon(Icons.update, size: 35),
+      onTap: appUpdateManagerState.maybeWhen(
+        orElse: () {
+          logger.i('in app update:data.name');
+          return () async {
+            await ref.read(inAppUpdateProvider.notifier).startUpdate();
+          };
+        },
+        loading: () => null,
+      ),
+    );
+  }
+}
+
+// class SettingDownloadApkCard extends riverpod.ConsumerWidget {
+//   const SettingDownloadApkCard({super.key});
+//
+//   @override
+//   Widget build(BuildContext context, riverpod.WidgetRef ref) {
+//
+//     return _SettingItem(
+//       title: 'Download APK',
+//       subtitle: S.of(context).check_for_updates_description,
+//       icon: Icon(Icons.update, size: 35),
+//       onTap: () async {
+//         await ref.read(appUpdateManagerProvider.notifier).downloadApk();
+//         ref.read(appUpdateManagerProvider.notifier).build();
+//       },
+//     );
+//   }
+// }

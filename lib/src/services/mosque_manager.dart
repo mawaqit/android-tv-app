@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/main.dart';
@@ -100,6 +101,7 @@ class MosqueManager extends ChangeNotifier
   /// - handle errors of response
   /// It will return a future that will be completed when all data is fetched and cached
   Future<void> fetchMosque(String uuid) async {
+    logger.i('Fetching mosque data');
     _mosqueSubscription?.cancel();
     _timesSubscription?.cancel();
     _configSubscription?.cancel();
@@ -239,3 +241,12 @@ class MosqueManager extends ChangeNotifier
 class InvalidMosqueId implements Exception {}
 
 class GpsError implements Exception {}
+
+/// [mosqueManagerProvider] provides [MosqueManager] instance
+final mosqueManagerProvider = FutureProvider((ref) async {
+  final manager = MosqueManager();
+  await manager.init();
+
+  logger.i('MosqueManager initialized');
+  return manager;
+});

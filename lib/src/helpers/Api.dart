@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -16,6 +18,7 @@ import 'package:mawaqit/src/pages/HijriAdjustmentsScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 import 'package:xml_parser/xml_parser.dart';
 
@@ -192,8 +195,7 @@ class Api {
     language = (language.split('-')..shuffle()).first;
 
     /// this should be called only on offline mode so it should hit the cache
-
-    final response = await dioStatic.get('/xml/ahadith/$language.xml');
+    final response = await dioStatic.get('/xml/ahadith/$language.xml').timeout(Duration(seconds: 5));
 
     final document = XmlDocument.from(response.data)!;
 
