@@ -9,10 +9,8 @@ import 'package:flutter/services.dart';
 const platform = MethodChannel('nativeFunctionsChannel');
 
 class OnBoardingTimeZoneSelector extends StatefulWidget {
-  const OnBoardingTimeZoneSelector({Key? key, required this.onSelect})
-      : super(key: key);
-
-  final void Function() onSelect;
+  const OnBoardingTimeZoneSelector({Key? key, this.onSelect}) : super(key: key);
+  final void Function()? onSelect;
 
   @override
   _OnBoardingTimeZoneSelectorState createState() =>

@@ -5,6 +5,8 @@ import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/pages/HijriAdjustmentsScreen.dart';
 import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
+import 'package:mawaqit/src/pages/TimezoneScreen.dart';
+import 'package:mawaqit/src/pages/WifiSelectorScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -85,6 +87,18 @@ class SettingScreen extends StatelessWidget {
                     onTap: () => AppRouter.push(LanguageScreen()),
                   ),
                   _SettingItem(
+                    title: S.of(context).appTimezone,
+                    subtitle: S.of(context).descTimezone,
+                    icon: Icon(Icons.timelapse, size: 35),
+                    onTap: () => AppRouter.push(TimezoneScreen()),
+                  ),
+                  _SettingItem(
+                    title: S.of(context).appWifi,
+                    subtitle: S.of(context).descWifi,
+                    icon: Icon(Icons.wifi, size: 35),
+                    onTap: () => AppRouter.push(WifiSelectorScreen()),
+                  ),
+                  _SettingItem(
                     title: S.of(context).randomHadithLanguage,
                     subtitle: S.of(context).hadithLangDesc,
                     icon: Icon(Icons.language, size: 35),
@@ -147,7 +161,7 @@ class SettingScreen extends StatelessWidget {
                   ),
                   featureManager.isFeatureEnabled("timezone_shift") &&
                           timeShiftManager.deviceModel == "MAWABOX" &&
-                          timeShiftManager.isLauncherInstalled 
+                          timeShiftManager.isLauncherInstalled
                       ? _SettingItem(
                           title: S.of(context).timeSetting,
                           subtitle: S.of(context).timeSettingDesc,

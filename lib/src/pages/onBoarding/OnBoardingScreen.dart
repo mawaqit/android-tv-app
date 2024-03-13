@@ -7,7 +7,7 @@ import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/TimeZoneSelectorWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mode.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_language_selector.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -150,12 +150,14 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       widget: OnBoardingWifiSelector(onSelect: () => nextPage(3)),
     ),
     OnBoardingItem(
-      animation: 'welcome',
-      widget: OnBoardingOrientationWidget(onSelect: () => nextPage(4)),
-    ),
+        animation: 'welcome',
+        widget: OnBoardingOrientationWidget(onSelect: () => nextPage(4)),
+        enablePreviousButton: true),
     OnBoardingItem(
       animation: 'welcome',
       widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(5)),
+      enableNextButton: true,
+      enablePreviousButton: true,
     ),
     OnBoardingItem(
       animation: 'search',
@@ -175,7 +177,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'search',
       widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(8)),
-      enableNextButton: false,
+      enablePreviousButton: true,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
   ];

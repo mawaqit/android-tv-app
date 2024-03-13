@@ -30,7 +30,7 @@ class TimeShiftManager {
 
   Future<bool> _isPackageInstalled(String packageName) async {
     try {
-      final result = await MethodChannel('nativeMethodsChannel')
+      final result = await MethodChannel('nativeFunctionsChannel')
           .invokeMethod('isPackageInstalled', {'packageName': packageName});
       return result;
     } on PlatformException catch (_) {
