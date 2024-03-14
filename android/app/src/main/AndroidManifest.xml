@@ -19,6 +19,8 @@
   <uses-feature android:name="android.hardware.sensor" android:required="false"/>
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  <uses-permission android:name="android.permission.MANAGE_DEVICE_ADMINS" />
+
   <application
     android:banner="@mipmap/ic_banner"
     android:icon="@mipmap/ic_launcher"
@@ -85,6 +87,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
+    </receiver>
+    <receiver
+      android:name=".MyDeviceAdminReceiver"
+      android:label="androidtv"
+      android:permission="android.permission.BIND_DEVICE_ADMIN"
+      android:exported="true" >
+      <meta-data
+        android:name="android.app.device_admin"
+        android:resource="@xml/policies" />
+      <intent-filter>
+        <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+        <action android:name="android.app.action.PROFILE_PROVISIONING_COMPLETE"/>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+      </intent-filter>
     </receiver>
     <meta-data
       android:name="google_analytics_adid_collection_enabled"

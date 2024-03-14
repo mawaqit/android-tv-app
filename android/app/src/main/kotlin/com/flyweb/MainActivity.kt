@@ -15,8 +15,15 @@ import android.provider.Settings
 import android.content.Intent
 import android.net.Uri
 import java.io.File
+import android.content.Context
+import android.content.ComponentName
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+import android.app.admin.DevicePolicyManager
 
 class MainActivity : FlutterActivity() {
+private lateinit var mAdminComponentName: ComponentName
+  private lateinit var mDevicePolicyManager: DevicePolicyManager
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -34,11 +41,26 @@ class MainActivity : FlutterActivity() {
                             } else {
                                 result.error("INVALID_ARGUMENT", "Package name is null", null)
                             }
-                        }                  
+                        }  
+                    "startKioskMode"->manageKioskMode(true)
+                    "stopKioskMode"->manageKioskMode(false)           
                              else -> result.notImplemented()
                 }
             }
     }
+      private fun manageKioskMode(enable: Boolean) {
+    if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+        mDevicePolicyManager = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        mAdminComponentName = MyDeviceAdminReceiver.getComponentName(this)
+        mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, arrayOf(packageName))
+        if(enable) {
+          this.startLockTask()
+        } else {
+          this.stopLockTask()
+        }
+      return
+    }
+  }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var REQUEST_OVERLAY_PERMISSIONS = 100
