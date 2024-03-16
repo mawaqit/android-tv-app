@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -12,9 +15,20 @@ import 'package:mawaqit/src/pages/times/widgets/jumua_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
-class LandScapeTurkishHome extends StatelessWidget {
+import '../../../../i18n/AppLanguage.dart';
+import '../../../../main.dart';
+import '../../../state_management/app_update/app_update_notifier.dart';
+import '../../../state_management/app_update/app_update_state.dart';
+import '../../../widgets/show_update_alert.dart';
+
+class LandScapeTurkishHome extends riverpod.ConsumerStatefulWidget {
   const LandScapeTurkishHome({super.key});
 
+  @override
+  riverpod.ConsumerState createState() => _LandScapeTurkishHomeState();
+}
+
+class _LandScapeTurkishHomeState extends riverpod.ConsumerState<LandScapeTurkishHome> {
   String salahName(int index) {
     switch (index) {
       case 0:
@@ -32,8 +46,45 @@ class LandScapeTurkishHome extends StatelessWidget {
     }
   }
 
+  late Timer _updateTimer;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateTimer = Timer.periodic(Duration(minutes: 25), (timer) {
+        logger.d('update: check for playstore update');
+        final mosque = Provider.of<MosqueManager>(context, listen: false);
+        final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+        final prays = mosque.times?.dayTimesStrings(today);
+        ref.read(appUpdateProvider.notifier).startScheduleUpdate(
+          languageCode: context.read<AppLanguage>().appLocal.languageCode,
+          prayerTimeList: prays ?? [],
+        );
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _updateTimer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(appUpdateProvider, (previous, next) {
+      if (next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable &&
+          next.value!.message != previous!.value!.message){
+        showUpdateAlert(
+          context: context,
+          duration: Duration(seconds: 30),
+          content: next.value!.releaseNote,
+          title: next.value!.message,
+          onPressed: () => ref.read(appUpdateProvider.notifier).openStore(),
+        );
+      }
+    });
     final mosqueManager = context.watch<MosqueManager>();
     final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
@@ -120,10 +171,10 @@ class LandScapeTurkishHome extends StatelessWidget {
                   ),
               ]
                   .mapIndexed((i, e) => Expanded(
-                          child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 1.vw),
-                        child: e.animate(delay: Duration(milliseconds: 100 * i)).slideY(begin: 1).fade(),
-                      )))
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 1.vw),
+                    child: e.animate(delay: Duration(milliseconds: 100 * i)).slideY(begin: 1).fade(),
+                  )))
                   .toList(),
             ),
           ),
