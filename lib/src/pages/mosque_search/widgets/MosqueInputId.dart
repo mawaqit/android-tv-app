@@ -10,6 +10,9 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/AppRouter.dart';
+import '../../home/OfflineHomeScreen.dart';
+
 class MosqueInputId extends StatefulWidget {
   const MosqueInputId({Key? key, this.onDone}) : super(key: key);
 
@@ -93,8 +96,10 @@ class _MosqueInputIdState extends State<MosqueInputId> {
                       .read<MosqueManager>()
                       .setMosqueUUid(searchOutput!.uuid.toString())
                       .then((value) {
-                    widget.onDone?.call();
-                  }).catchError((e) {
+                    !context.read<MosqueManager>().typeIsMosque
+                        ? AppRouter.pushReplacement(OfflineHomeScreen())
+                        : widget.onDone?.call();
+                  }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {
                       setState(() {
                         loading = false;
