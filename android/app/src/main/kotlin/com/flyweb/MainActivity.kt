@@ -65,11 +65,19 @@ private lateinit var mAdminComponentName: ComponentName
         super.onCreate(savedInstanceState)
         var REQUEST_OVERLAY_PERMISSIONS = 100
         if (isRootAvailable() && !Settings.canDrawOverlays(getApplicationContext())) {
-            val myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-            val uri: Uri = Uri.fromParts("package", getPackageName(), null)
-            myIntent.setData(uri)
-            startActivityForResult(myIntent, REQUEST_OVERLAY_PERMISSIONS)
-            return
+             try {
+        val command = "appops set com.mawaqit.androidtv SYSTEM_ALERT_WINDOW allow"
+        val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
+        val outputStream = DataOutputStream(process.outputStream)
+        outputStream.writeBytes(command + "\n")
+        outputStream.flush()
+        outputStream.close()
+        process.waitFor()
+        return
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+            
         }
     }
 
