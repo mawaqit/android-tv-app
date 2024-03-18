@@ -106,8 +106,6 @@ class _MosqueInputIdState extends State<MosqueInputId> {
                         error = S.of(context).slugError;
                       });
                     } else {
-                      debugPrintStack(stackTrace: stack, label: e.toString());
-
                       setState(() {
                         loading = false;
                         error = S.of(context).backendError;
