@@ -1,42 +1,48 @@
-
-import 'package:flutter/cupertino.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/domain/usecase/on_boarding_usecase.dart';
-import 'package:provider/provider.dart' as provider ;
+import 'package:mawaqit/src/helpers/shared_preference_module.dart';
 
-import '../../../i18n/AppLanguage.dart';
 import 'on_boarding_state.dart';
 
-class OnBoardingNotifier extends AsyncNotifier<OnboardingState> {
+
+class OnBoardingNotifier extends AsyncNotifier<OnBoardingState> {
   @override
-  Future<OnboardingState> build() async {
-    return OnboardingState.initial();
+  OnBoardingState build() {
+    return OnBoardingState();
   }
 
-  Future<void> getSystemLanguage() async {
-    final deviceInfoUseCase = await ref.read(deviceInfoUseCaseProvider.future);
+  Future<void> nextPage() async {
     state = AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final language = await deviceInfoUseCase.getDeviceLanguage();
-      update((p0) => p0.copyWith(language: language));
-      return state.value!;
-    });
+    if (state.value!.currentScreen < 5) {
+      state = AsyncValue.data(
+        state.value!.copyWith(currentScreen: state.value!.currentScreen + 1),
+      );
+    } else {
+      final sharedPref = await ref.read(sharedPrefModule.future);
+      state = await AsyncValue.guard(() async {
+        await sharedPref.setString('boarding', 'true');
+        state = AsyncValue.data(
+          state.value!.copyWith(isCompleted: true),
+        );
+        return state.value!;
+      });
+    }
   }
 
-  Future<void> setLanguage(String language, BuildContext context) async {
+  void previousPage() {
     state = AsyncLoading();
-    final deviceInfoUseCase = await ref.read(deviceInfoUseCaseProvider.future);
+    if (state.value!.currentScreen > 0) {
+      state = AsyncValue.data(
+        state.value!.copyWith(currentScreen: state.value!.currentScreen - 1),
+      );
+    }
+  }
 
-    state = await AsyncValue.guard(() async {
-      final appLanguage = provider.Provider.of<AppLanguage>(context, listen: false);
-      appLanguage.changeLanguage(Locale(language), '');
-      await deviceInfoUseCase.setOnboardingAppLanguage(language);
-      update((p0) => p0.copyWith(language: language));
-      return state.value!;
-    });
+  void resetPage() {
+    state = AsyncValue.data(
+      state.value!.copyWith(currentScreen: 0, isCompleted: false),
+    );
   }
 }
 
-
-final onBoardingProvider =
-AsyncNotifierProvider<OnBoardingNotifier, OnboardingState>(OnBoardingNotifier.new);
+final boardingProvider = AsyncNotifierProvider<OnBoardingNotifier, OnBoardingState>(OnBoardingNotifier.new);
