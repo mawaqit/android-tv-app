@@ -151,7 +151,7 @@ class Mosque extends Equatable{
       phone: map['phone'],
       url: map['url'],
       type: map["type"] == null ? "MOSQUE" : map['type'],
-      image: map['image'] ?? kDefaultMosqueImage,
+      image: map['image'],
       logo: map['logo'],
       interiorPicture: map['interiorPicture'],
       exteriorPicture: map['exteriorPicture'],
