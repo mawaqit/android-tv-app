@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:mawaqit/src/models/flash.dart';
 
+import '../const/constants.dart';
 import 'announcement.dart';
 
 class Mosque extends Equatable{
@@ -150,7 +151,7 @@ class Mosque extends Equatable{
       phone: map['phone'],
       url: map['url'],
       type: map["type"] == null ? "MOSQUE" : map['type'],
-      image: map['image'],
+      image: map['image'] ?? kDefaultMosqueImage,
       logo: map['logo'],
       interiorPicture: map['interiorPicture'],
       exteriorPicture: map['exteriorPicture'],
