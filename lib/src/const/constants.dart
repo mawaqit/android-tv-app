@@ -12,3 +12,6 @@ const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
+
+const kDefaultMosqueImage =
+    'https://raw.githubusercontent.com/mawaqit/backend/master/public/prayer-times/img/default.jpg?token=GHSAT0AAAAAACO2GSMDPZ2N52P34422WGKCZPXSAOA';
