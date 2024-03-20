@@ -11,6 +11,22 @@ class OnBoardingNotifier extends AsyncNotifier<OnBoardingState> {
     return OnBoardingState();
   }
 
+  Future<void> checkNotMosque(
+    bool isMosque,
+      ) async {
+    state = AsyncLoading();
+    if(!isMosque){
+      final sharedPref = await ref.read(sharedPrefModule.future);
+      state = await AsyncValue.guard(() async {
+        await sharedPref.setString('boarding', 'true');
+        state = AsyncValue.data(
+          state.value!.copyWith(isCompleted: true),
+        );
+        return state.value!;
+      });
+    }
+  }
+
   Future<void> nextPage() async {
     state = AsyncLoading();
     if (state.value!.currentScreen < 5) {
