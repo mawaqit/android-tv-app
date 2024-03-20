@@ -11,6 +11,7 @@ import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/AppRouter.dart';
+import '../../../helpers/SharedPref.dart';
 import '../../home/OfflineHomeScreen.dart';
 
 class MosqueInputId extends StatefulWidget {
@@ -25,6 +26,7 @@ class MosqueInputId extends StatefulWidget {
 class _MosqueInputIdState extends State<MosqueInputId> {
   final inputController = TextEditingController();
   Mosque? searchOutput;
+  SharedPref sharedPref = SharedPref();
 
   bool loading = false;
   String? error;
@@ -64,6 +66,11 @@ class _MosqueInputIdState extends State<MosqueInputId> {
     });
   }
 
+  onboardingWorkflowDone() {
+    sharedPref.save('boarding', 'true');
+    AppRouter.pushReplacement(OfflineHomeScreen());
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -97,7 +104,7 @@ class _MosqueInputIdState extends State<MosqueInputId> {
                       .setMosqueUUid(searchOutput!.uuid.toString())
                       .then((value) {
                     !context.read<MosqueManager>().typeIsMosque
-                        ? AppRouter.pushReplacement(OfflineHomeScreen())
+                        ? onboardingWorkflowDone()
                         : widget.onDone?.call();
                   }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {
