@@ -95,7 +95,7 @@ class AudioManager extends ChangeNotifier {
   }
 
   Future<void> loadAssetsAndPlay(String assets, {VoidCallback? onDone}) async {
-    final file = await getFileFromAssets(R.ASSETS_VOICES_ADHAN_BIP_MP3);
+    final file = await getFileFromAssets(assets);
 
     if (player != null) stop();
 
