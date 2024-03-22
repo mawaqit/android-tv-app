@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -12,11 +15,21 @@ import 'package:mawaqit/src/pages/times/widgets/jumua_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../i18n/AppLanguage.dart';
+import '../../../../main.dart';
+import '../../../state_management/app_update/app_update_notifier.dart';
+import '../../../state_management/app_update/app_update_state.dart';
+import '../../../widgets/show_update_alert.dart';
 import '../../home/widgets/FadeInOut.dart';
 
-class LandscapeNormalHome extends StatelessWidget {
+class LandscapeNormalHome extends riverpod.ConsumerStatefulWidget {
   const LandscapeNormalHome({super.key});
 
+  @override
+  riverpod.ConsumerState createState() => _LandscapeNormalHomeState();
+}
+
+class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHome> {
   String salahName(int index) {
     switch (index) {
       case 0:
@@ -34,18 +47,52 @@ class LandscapeNormalHome extends StatelessWidget {
     }
   }
 
+  late Timer _updateTimer;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateTimer = Timer.periodic(Duration(minutes: 25), (timer) {
+        final mosque = Provider.of<MosqueManager>(context, listen: false);
+        final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+        final prays = mosque.times?.dayTimesStrings(today);
+        ref.read(appUpdateProvider.notifier).startScheduleUpdate(
+          languageCode: context.read<AppLanguage>().appLocal.languageCode,
+          prayerTimeList: prays ?? [],
+        );
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _updateTimer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(appUpdateProvider, (previous, next) {
+      if (next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable &&
+          next.value!.message != previous!.value!.message){
+        showUpdateAlert(
+          context: context,
+          duration: Duration(seconds: 30),
+          content: next.value!.releaseNote,
+          title: next.value!.message,
+          onPressed: () => ref.read(appUpdateProvider.notifier).openStore(),
+        );
+      }
+    });
+
     final mosqueManager = context.watch<MosqueManager>();
-    final today = mosqueManager.useTomorrowTimes
-        ? AppDateTime.tomorrow()
-        : AppDateTime.now();
+    final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
     final times = mosqueManager.times!.dayTimesStrings(today);
     final iqamas = mosqueManager.times!.dayIqamaStrings(today);
 
-    final isIqamaMoreImportant =
-        mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
+    final isIqamaMoreImportant = mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
     final iqamaEnabled = mosqueManager.mosqueConfig?.iqamaEnabled == true;
 
     final nextActiveSalah = mosqueManager.nextSalahIndex();
@@ -67,9 +114,7 @@ class LandscapeNormalHome extends StatelessWidget {
                       removeBackground: true,
                       title: S.of(context).shuruk,
                       time: mosqueManager.getShurukTimeString() ?? '',
-                      isIqamaMoreImportant:
-                          mosqueManager.mosqueConfig!.iqamaMoreImportant ==
-                              true,
+                      isIqamaMoreImportant: mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
                     ),
                     secondDuration: Duration(seconds: 15),
                     second: SalahItemWidget(
@@ -80,10 +125,7 @@ class LandscapeNormalHome extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-
-
-                  child: HomeTimeWidget().animate().fadeIn().slideY(begin: -1), flex: 4),
+              Expanded(child: HomeTimeWidget().animate().fadeIn().slideY(begin: -1), flex: 4),
               Expanded(
                 flex: 2,
                 child:
@@ -113,10 +155,7 @@ class LandscapeNormalHome extends StatelessWidget {
                   .mapIndexed((i, e) => Expanded(
                           child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 1.vw),
-                        child: e
-                            .animate(delay: Duration(milliseconds: 100 * i))
-                            .slideY(begin: 1)
-                            .fadeIn(),
+                        child: e.animate(delay: Duration(milliseconds: 100 * i)).slideY(begin: 1).fadeIn(),
                       )))
                   .toList(),
             ),
