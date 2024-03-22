@@ -15,7 +15,6 @@ import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
-import 'package:mawaqit/src/services/mixins/random_hadith_mixin.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
 import 'mixins/audio_mixin.dart';
@@ -29,7 +28,7 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 const kAzkarDuration = const Duration(seconds: 140);
 
 class MosqueManager extends ChangeNotifier
-    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity, RandomHadithMixin {
+    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -55,7 +54,6 @@ class MosqueManager extends ChangeNotifier
   Future<void> init() async {
     await Api.init();
     await loadFromLocale();
-    initState();
     listenToConnectivity();
     notifyListeners();
   }
@@ -120,7 +118,6 @@ class MosqueManager extends ChangeNotifier
         await Future.wait([
           AudioManager().precacheVoices(mosqueConfig!),
           preCacheImages(),
-          preCacheHadith(),
         ]);
       } catch (e, stack) {
         debugPrintStack(label: e.toString(), stackTrace: stack);
@@ -132,7 +129,7 @@ class MosqueManager extends ChangeNotifier
     final configStream = Api.getMosqueConfigStream(uuid).asBroadcastStream();
 
     _mosqueSubscription = mosqueStream.listen(
-      (e) {
+          (e) {
         mosque = e;
         notifyListeners();
       },
@@ -140,7 +137,7 @@ class MosqueManager extends ChangeNotifier
     );
 
     _timesSubscription = timesStream.listen(
-      (e) {
+          (e) {
         times = e;
         notifyListeners();
       },
@@ -148,7 +145,7 @@ class MosqueManager extends ChangeNotifier
     );
 
     _configSubscription = configStream.listen(
-      (e) {
+          (e) {
         mosqueConfig = e;
         notifyListeners();
       },

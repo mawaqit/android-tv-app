@@ -12,3 +12,10 @@ const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
+
+abstract class RandomHadithConstant {
+  static const String kLastHadithXMLFetchDate = "last_hadith_xml_fetch_date";
+  static const String kBoxName = "random_hadith_list";
+  static const String kHadithLanguage = "hadith_language";
+  static const String kLastHadithXMLFetchLanguage = "last_hadith_xml_language";
+}
