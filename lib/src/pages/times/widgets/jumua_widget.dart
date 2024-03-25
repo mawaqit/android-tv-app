@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/pages/home/widgets/FadeInOut.dart';
@@ -37,7 +38,8 @@ class JumuaWidget extends StatelessWidget {
       title: S.of(context).salatElEid,
       iqama: mosqueManager.times!.aidPrayerTime2,
       time: mosqueManager.times!.aidPrayerTime ?? "",
-      isIqamaMoreImportant: mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
+      isIqamaMoreImportant:
+          mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
     );
   }
 
@@ -46,10 +48,13 @@ class JumuaWidget extends StatelessWidget {
       withDivider: true,
       removeBackground: true,
       title: S.of(context).jumua,
-      time: mosqueManager.jumuaTime ?? "",
+      time: DateFormat.Hm().format(mosqueManager.activeJumuaaDate()) ?? "",
       iqama: mosqueManager.times!.jumua2,
-      isIqamaMoreImportant: mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
-      active: mosqueManager.nextIqamaIndex() == 1 && AppDateTime.isFriday && mosqueManager.times?.jumua != null,
+      isIqamaMoreImportant:
+          mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
+      active: mosqueManager.nextIqamaIndex() == 1 &&
+          AppDateTime.isFriday &&
+          mosqueManager.times?.jumua != null,
     );
   }
 }

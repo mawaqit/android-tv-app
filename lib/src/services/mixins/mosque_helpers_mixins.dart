@@ -281,10 +281,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   @Deprecated('Use times.dayIqamaStrings')
   List<String> get tomorrowIqama => iqamasOfDay(mosqueDate().add(Duration(days: 1)));
 
-  /// if jumua as duhr return jumua
+/*   /// if jumua as duhr return jumua
   String? get jumuaTime {
     return times!.jumuaAsDuhr ? todayTimes[1] : times!.jumua;
-  }
+  } */
 
   DateTime nextFridayDate([DateTime? now]) {
     now ??= mosqueDate();
@@ -323,7 +323,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// we are in jumuaa workflow time
   bool jumuaaWorkflowTime() {
     final now = mosqueDate();
-    final jumuaaStartTime = jumuaTime?.toTimeOfDay()?.toDate(now);
+    final jumuaaStartTime = activeJumuaaDate();
     final jumuaaEndTime = jumuaaStartTime?.add(
       Duration(minutes: mosqueConfig?.jumuaTimeout ?? 30) + kAzkarDuration,
     );

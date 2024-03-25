@@ -19,9 +19,11 @@ class JumuaaWorkflowScreen extends StatelessWidget {
     final now = mosqueManager.mosqueDate();
 
     final jumuaaTimeout = mosqueManager.mosqueConfig?.jumuaTimeout ?? 30;
-    final salahTime = int.tryParse(mosqueManager.mosqueConfig!.duaAfterPrayerShowTimes[1]) ?? 0;
+    final salahTime =
+        int.tryParse(mosqueManager.mosqueConfig!.duaAfterPrayerShowTimes[1]) ??
+            0;
 
-    final jumuaaTime = mosqueManager.jumuaTime!.toTimeOfDay()!.toDate(now);
+    final jumuaaTime = mosqueManager.activeJumuaaDate();
     final jumuaaEndTime = jumuaaTime.add(Duration(minutes: jumuaaTimeout));
 
     return ContinuesWorkFlowWidget(
@@ -39,7 +41,9 @@ class JumuaaWorkflowScreen extends StatelessWidget {
           skip: now.isAfter(jumuaaEndTime),
 
           /// handle if user open screen during the jumuaa
-          duration: now.isBefore(jumuaaTime) ? Duration(minutes: jumuaaTimeout) : jumuaaEndTime.difference(now),
+          duration: now.isBefore(jumuaaTime)
+              ? Duration(minutes: jumuaaTimeout)
+              : jumuaaEndTime.difference(now),
         ),
 
         // salah time after jumuaa
