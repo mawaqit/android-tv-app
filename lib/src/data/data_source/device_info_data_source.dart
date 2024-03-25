@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disk_space/disk_space.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
@@ -71,6 +74,23 @@ class DeviceInfoDataSource {
   /// [getDeviceLanguage] Returns the current device language.
   Future<String> getDeviceLanguage() async {
     return Platform.localeName;
+  }
+
+  /// [isPhoneOrTablet] Checks if the device is a phone or a tablet.
+  Future<bool> isPhoneOrTablet() async {
+    try {
+      final screenSize = MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.views.single).size;
+      final orientation = screenSize.width > screenSize.height
+          ? Orientation.landscape
+          : Orientation.portrait;
+      final deviceWidth = orientation == Orientation.landscape
+          ? screenSize.height
+          : screenSize.width;
+      final isTablet = deviceWidth <= 950;
+      return isTablet;
+    } on PlatformException catch (_) {
+      return false;
+    }
   }
 }
 
