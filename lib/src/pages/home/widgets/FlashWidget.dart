@@ -3,7 +3,6 @@ import 'package:marquee/marquee.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:provider/provider.dart';
-import '../../../helpers/AppDate.dart';
 import '../../../helpers/HexColor.dart';
 import '../../../services/mosque_manager.dart';
 import '../../../themes/UIShadows.dart';
