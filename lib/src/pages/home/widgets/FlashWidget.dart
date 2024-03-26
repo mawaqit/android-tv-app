@@ -26,9 +26,18 @@ class _FlashWidgetState extends State<FlashWidget> {
     final startDate = DateTime.tryParse(mosque.flash?.startDate ?? 'x');
     final endDate = DateTime.tryParse(mosque.flash?.endDate ?? 'x');
 
-    if (startDate != null && endDate != null) {
+    if (endDate != null) {
       final now = DateTime.now();
-      enabled = now.isAfter(startDate) && now.isBefore(endDate);
+      final endOfDay =
+          DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
+
+      if (startDate != null) {
+        final startOfDay =
+            DateTime(startDate.year, startDate.month, startDate.day);
+        enabled = now.isAfter(startOfDay) && now.isBefore(endOfDay);
+      } else {
+        enabled = now.isBefore(endOfDay);
+      }
     }
 
     super.initState();
