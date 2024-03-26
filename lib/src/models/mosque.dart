@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:mawaqit/src/models/flash.dart';
 
+import '../const/constants.dart';
 import 'announcement.dart';
 
 class Mosque extends Equatable{
