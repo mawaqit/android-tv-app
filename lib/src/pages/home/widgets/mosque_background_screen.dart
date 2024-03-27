@@ -77,9 +77,7 @@ class _MosqueBackgroundScreenState extends State<MosqueBackgroundScreen> {
         default:
           imageUrl = mosqueConfig.motifUrl;
       }
-
       return CachedNetworkImage(
-        cacheKey: CacheKey.kMosqueBackgroundScreen,
         imageUrl: imageUrl,
         imageBuilder: (context, imageProvider) {
           return Container(
