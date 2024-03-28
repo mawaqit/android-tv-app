@@ -4,7 +4,7 @@ import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _announcementsStoreKey = 'UserPreferencesManager.AnnouncementsOnly';
+const announcementsStoreKey = 'UserPreferencesManager.AnnouncementsOnly';
 const _developerModeKey = 'UserPreferencesManager.developer.mode.enabled';
 const _secondaryScreenKey = 'UserPreferencesManager.secondary.screen.enabled';
 const _webViewModeKey = 'UserPreferencesManager.webView.mode.enabled';
@@ -29,10 +29,10 @@ class UserPreferencesManager extends ChangeNotifier {
 
   late SharedPreferences _sharedPref;
 
-  bool get announcementsOnly => _sharedPref.getBool(_announcementsStoreKey) ?? false;
+  bool get announcementsOnly => _sharedPref.getBool(announcementsStoreKey) ?? false;
 
   set announcementsOnly(bool value) {
-    _sharedPref.setBool(_announcementsStoreKey, value);
+    _sharedPref.setBool(announcementsStoreKey, value);
     notifyListeners();
   }
 

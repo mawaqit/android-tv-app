@@ -147,7 +147,7 @@ class SettingScreen extends StatelessWidget {
                   ),
                   featureManager.isFeatureEnabled("timezone_shift") &&
                           timeShiftManager.deviceModel == "MAWABOX" &&
-                          timeShiftManager.isLauncherInstalled 
+                          timeShiftManager.isLauncherInstalled
                       ? _SettingItem(
                           title: S.of(context).timeSetting,
                           subtitle: S.of(context).timeSettingDesc,
