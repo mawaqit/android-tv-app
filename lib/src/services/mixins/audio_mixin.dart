@@ -6,7 +6,7 @@ mixin AudioMixin on ChangeNotifier {
 
   Duration getAdhanDuration() {
     String? adhanName = mosqueConfig?.adhanVoice;
-    Duration duration = Duration(seconds: 155);
+    Duration duration = Duration(seconds: mosqueConfig!.adhanDuration!);
 
     switch (adhanName) {
       case "adhan-afassy":
