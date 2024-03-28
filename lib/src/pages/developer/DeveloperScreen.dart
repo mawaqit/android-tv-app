@@ -219,7 +219,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   title: "Cancel walk through",
                   onSelect: cancelWalkThrowScreens),
             SelectorOption(
-              title: "Clear data & restart app",
+              title: "Clear data & force close app",
               onSelect: () => _clearDataAndRestartApp(),
             ),
           ],
