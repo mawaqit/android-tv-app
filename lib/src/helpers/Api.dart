@@ -8,12 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
+import 'package:mawaqit/src/data/data_source/device_info_data_source.dart';
 import 'package:mawaqit/src/helpers/ApiInterceptor.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
-import 'package:mawaqit/src/helpers/android_tv_os_detector.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/models/times.dart';
-import 'package:mawaqit/src/pages/HijriAdjustmentsScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -227,8 +226,8 @@ class Api {
   }
 
   static Stream<void> updateUserStatusStream() async* {
-    bool isPhoneOrTablet = await AndroidTvOsDetector.isPhoneOrTablet();
-    if (!isPhoneOrTablet) {
+    bool isBoxOrAndroidTV = await DeviceInfoDataSource().isBoxOrAndroidTV();
+    if (isBoxOrAndroidTV) {
       await for (var i in generateStream(Duration(minutes: 10))) {
         await updateUserStatus();
         yield i;

@@ -21,7 +21,18 @@ class MainActivity : FlutterActivity() {
                 val packageName = call.argument<String>("packageName")
                 val isInstalled = isPackageInstalled(packageName)
                 result.success(isInstalled)
-            }  else {
+            }  else if (call.method == "hasSystemFeature") {
+                val feature = call.argument<String>("feature")
+ if (feature != null) {
+        val pm = applicationContext.packageManager
+        val hasFeature = pm.hasSystemFeature(feature)
+        result.success(hasFeature)
+    } else {
+        result.error("InvalidArgument", "Feature argument is null", null)
+    }
+            }
+            
+            else {
                 result.notImplemented()
             }
         }

@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disk_space/disk_space.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unique_identifier/unique_identifier.dart';
@@ -54,8 +52,10 @@ class DeviceInfoDataSource {
 
     // Extract the individual results from the list
     final androidInfo = results[0] as AndroidDeviceInfo;
-    final freeDevice = results[1] as double; // Assuming DiskSpace.getFreeDiskSpace returns double
-    final totalFreeSpace = results[2] as double; // Assuming DiskSpace.getTotalDiskSpace returns double
+    final freeDevice = results[1]
+        as double; // Assuming DiskSpace.getFreeDiskSpace returns double
+    final totalFreeSpace = results[2]
+        as double; // Assuming DiskSpace.getTotalDiskSpace returns double
     final deviceId = results[3] as String;
 
     // Construct the result map
@@ -70,30 +70,35 @@ class DeviceInfoDataSource {
     );
   }
 
-
   /// [getDeviceLanguage] Returns the current device language.
   Future<String> getDeviceLanguage() async {
     return Platform.localeName;
   }
 
-  /// [isPhoneOrTablet] Checks if the device is a phone or a tablet.
-  Future<bool> isPhoneOrTablet() async {
-    try {
-      final screenSize = MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.views.single).size;
-      final orientation = screenSize.width > screenSize.height
-          ? Orientation.landscape
-          : Orientation.portrait;
-      final deviceWidth = orientation == Orientation.landscape
-          ? screenSize.height
-          : screenSize.width;
-      final isTablet = deviceWidth <= 950;
-      return isTablet;
-    } on PlatformException catch (_) {
-      return false;
+  /// [isBoxOrAndroidTV] Checks if the device is a box or a AndroidTV.
+  Future<bool> isBoxOrAndroidTV() async {
+    final features = MethodChannel('nativeMethodsChannel');
+
+    // Check if the device has the LEANBACK feature, typically found in smart TVs
+    final hasLeanbackFeature = await features.invokeMethod<bool>(
+        'hasSystemFeature', {'feature': 'android.software.leanback'});
+    print("hasLeanbackFeature $hasLeanbackFeature");
+
+    if (hasLeanbackFeature != null && hasLeanbackFeature) {
+      return true;
     }
+
+    // Check if the device has the HDMI feature, typically found in Android boxes
+    final hasHdmiFeature = await features.invokeMethod<bool>(
+        'hasSystemFeature', {'feature': 'android.hardware.hdmi'});
+    print("hasLeanbackFeature $hasHdmiFeature");
+
+    if (hasHdmiFeature != null && hasHdmiFeature) {
+      return true;
+    }
+    return false;
   }
 }
-
 
 class DeviceInfoDataSourceProviderArgument {
   final DeviceInfoPlugin? deviceInfoPlugin;
@@ -105,8 +110,8 @@ class DeviceInfoDataSourceProviderArgument {
   });
 }
 
-final deviceInfoDataSourceProvider =
-    FutureProvider.family<DeviceInfoDataSource, DeviceInfoDataSourceProviderArgument>((ref, args) {
+final deviceInfoDataSourceProvider = FutureProvider.family<DeviceInfoDataSource,
+    DeviceInfoDataSourceProviderArgument>((ref, args) {
   return DeviceInfoDataSource(
     deviceInfoPlugin: args?.deviceInfoPlugin,
     diskSpace: args?.diskSpace,
