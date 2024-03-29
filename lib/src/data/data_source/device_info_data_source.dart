@@ -104,6 +104,14 @@ class DeviceInfoDataSource {
     if (hasEthernetFeature != null && hasEthernetFeature) {
       return true;
     }
+    // Check if the device has the usb host feature, typically found in Android boxes
+    final hasUsbHostFeature = await features.invokeMethod<bool>(
+        'hasSystemFeature', {'feature': 'android.hardware.usb.host'});
+    print("hasLeanbackFeature $hasUsbHostFeature");
+
+    if (hasUsbHostFeature != null && hasUsbHostFeature) {
+      return true;
+    }
     return false;
   }
 }
