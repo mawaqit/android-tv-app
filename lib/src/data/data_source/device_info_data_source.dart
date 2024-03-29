@@ -96,6 +96,14 @@ class DeviceInfoDataSource {
     if (hasHdmiFeature != null && hasHdmiFeature) {
       return true;
     }
+    // Check if the device has the ethernet feature, typically found in Android boxes
+    final hasEthernetFeature = await features.invokeMethod<bool>(
+        'hasSystemFeature', {'feature': 'android.hardware.ethernet'});
+    print("hasLeanbackFeature $hasEthernetFeature");
+
+    if (hasEthernetFeature != null && hasEthernetFeature) {
+      return true;
+    }
     return false;
   }
 }
