@@ -82,7 +82,6 @@ class DeviceInfoDataSource {
     // Check if the device has the LEANBACK feature, typically found in smart TVs
     final hasLeanbackFeature = await features.invokeMethod<bool>(
         'hasSystemFeature', {'feature': 'android.software.leanback'});
-    print("hasLeanbackFeature $hasLeanbackFeature");
 
     if (hasLeanbackFeature != null && hasLeanbackFeature) {
       return true;
@@ -91,7 +90,6 @@ class DeviceInfoDataSource {
     // Check if the device has the HDMI feature, typically found in Android boxes
     final hasHdmiFeature = await features.invokeMethod<bool>(
         'hasSystemFeature', {'feature': 'android.hardware.hdmi'});
-    print("hasLeanbackFeature $hasHdmiFeature");
 
     if (hasHdmiFeature != null && hasHdmiFeature) {
       return true;
@@ -99,7 +97,6 @@ class DeviceInfoDataSource {
     // Check if the device has the ethernet feature, typically found in Android boxes
     final hasEthernetFeature = await features.invokeMethod<bool>(
         'hasSystemFeature', {'feature': 'android.hardware.ethernet'});
-    print("hasLeanbackFeature $hasEthernetFeature");
 
     if (hasEthernetFeature != null && hasEthernetFeature) {
       return true;
@@ -107,7 +104,6 @@ class DeviceInfoDataSource {
     // Check if the device has the usb host feature, typically found in Android boxes
     final hasUsbHostFeature = await features.invokeMethod<bool>(
         'hasSystemFeature', {'feature': 'android.hardware.usb.host'});
-    print("hasLeanbackFeature $hasUsbHostFeature");
 
     if (hasUsbHostFeature != null && hasUsbHostFeature) {
       return true;
