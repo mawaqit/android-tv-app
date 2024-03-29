@@ -85,12 +85,12 @@ class DeviceInfoImpl implements DeviceInfoRepository {
     }
   }
 
-  ///  [isPhoneOrTablet] Checks if the device is a phone or a tablet.
+  ///  [isBoxOrAndroidTV] Checks if the device is a box or a androidTV.
   ///
-  /// return a boolean value indicating if the device is a phone or a tablet.
-  Future<bool> isPhoneOrTablet() async {
+  /// return a boolean value indicating if the device is a box or a AndroidTV.
+  Future<bool> isBoxOrAndroidTV() async {
     try {
-      return await deviceInfoDataSource.isPhoneOrTablet();
+      return await deviceInfoDataSource.isBoxOrAndroidTV();
     } catch (e, s) {
       logger.e('Error fetching device type', stackTrace: s);
       rethrow;
