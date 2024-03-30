@@ -93,7 +93,6 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
         WorkFlowItem(
           builder: (context, next) => AdhanSubScreen(onDone: next),
           skip: now.isAfter(adhanEndTime),
-          minimumDuration: mosqueManger.isShortIqamaDuration(currentSalah) ? 90.seconds : 150.seconds,
         ),
         WorkFlowItem(
           builder: (context, next) => AfterAdhanSubScreen(onDone: next),
