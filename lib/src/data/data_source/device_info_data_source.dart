@@ -75,19 +75,6 @@ class DeviceInfoDataSource {
     return Platform.localeName;
   }
 
-  Future<bool> _checkFeature(MethodChannel features, String feature) async {
-    try {
-      final hasFeature = await features.invokeMethod<bool>(
-        'hasSystemFeature',
-        {'feature': feature},
-      );
-      print('hasFeature: $hasFeature');
-      return hasFeature != null && hasFeature;
-    } catch (e) {
-      return false;
-    }
-  }
-
   /// [isBoxOrAndroidTV] Checks if the device is a box or a AndroidTV.
   Future<bool> isBoxOrAndroidTV() async {
     final features = MethodChannel('nativeMethodsChannel');
@@ -108,6 +95,20 @@ class DeviceInfoDataSource {
     }
 
     return false;
+  }
+
+  /// [_checkFeature] Checks if the device has a specific feature.
+  Future<bool> _checkFeature(MethodChannel features, String feature) async {
+    try {
+      final hasFeature = await features.invokeMethod<bool>(
+        'hasSystemFeature',
+        {'feature': feature},
+      );
+      print('hasFeature: $hasFeature');
+      return hasFeature != null && hasFeature;
+    } catch (e) {
+      return false;
+    }
   }
 }
 
