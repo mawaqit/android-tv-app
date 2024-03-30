@@ -24,12 +24,21 @@ class FeatureManagerProvider {
 class AppDateTime {
   AppDateTime._();
 
-  static Duration get difference =>
-      Duration(days: 30 * 8 + 6, hours: -6, minutes: 30);
+  // Initial setup for debug time; can be replaced or modified as needed.
+  static final DateTime _initialRealTime = DateTime.now();
+  static final DateTime _initialDebugTime = DateTime(
+    _initialRealTime.year,
+    _initialRealTime.month,
+    _initialRealTime.day,
+    13,
+    5
+  );
+
+  static final Duration _timeDifference = _initialDebugTime.difference(_initialRealTime);
 
   static DateTime now() {
     if (kDebugMode) {
-      return DateTime.now().add(difference);
+      return DateTime.now().add(_timeDifference);
     } else {
       return FeatureManagerProvider.featureManager
                   .isFeatureEnabled("timezone_shift") &&
