@@ -75,39 +75,38 @@ class DeviceInfoDataSource {
     return Platform.localeName;
   }
 
+  Future<bool> _checkFeature(MethodChannel features, String feature) async {
+    try {
+      final hasFeature = await features.invokeMethod<bool>(
+        'hasSystemFeature',
+        {'feature': feature},
+      );
+      print('hasFeature: $hasFeature');
+      return hasFeature != null && hasFeature;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /// [isBoxOrAndroidTV] Checks if the device is a box or a AndroidTV.
   Future<bool> isBoxOrAndroidTV() async {
     final features = MethodChannel('nativeMethodsChannel');
 
-    // Check if the device has the LEANBACK feature, typically found in smart TVs
-    final hasLeanbackFeature = await features.invokeMethod<bool>(
-        'hasSystemFeature', {'feature': 'android.software.leanback'});
+    // List of features to check
+    final featuresToCheck = [
+      'android.software.leanback',
+      'android.hardware.hdmi',
+      'android.hardware.ethernet',
+      'android.hardware.usb.host',
+    ];
 
-    if (hasLeanbackFeature != null && hasLeanbackFeature) {
-      return true;
+    for (final feature in featuresToCheck) {
+      final hasFeature = await _checkFeature(features, feature);
+      if (hasFeature) {
+        return true;
+      }
     }
 
-    // Check if the device has the HDMI feature, typically found in Android boxes
-    final hasHdmiFeature = await features.invokeMethod<bool>(
-        'hasSystemFeature', {'feature': 'android.hardware.hdmi'});
-
-    if (hasHdmiFeature != null && hasHdmiFeature) {
-      return true;
-    }
-    // Check if the device has the ethernet feature, typically found in Android boxes
-    final hasEthernetFeature = await features.invokeMethod<bool>(
-        'hasSystemFeature', {'feature': 'android.hardware.ethernet'});
-
-    if (hasEthernetFeature != null && hasEthernetFeature) {
-      return true;
-    }
-    // Check if the device has the usb host feature, typically found in Android boxes
-    final hasUsbHostFeature = await features.invokeMethod<bool>(
-        'hasSystemFeature', {'feature': 'android.hardware.usb.host'});
-
-    if (hasUsbHostFeature != null && hasUsbHostFeature) {
-      return true;
-    }
     return false;
   }
 }
