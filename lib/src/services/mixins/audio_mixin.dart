@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 
@@ -41,6 +43,7 @@ mixin AudioMixin on ChangeNotifier {
         duration = Duration(seconds: 185 + 5);
         break;
     }
+    log('AudioMixin: Adhan duration: $duration');
     return duration;
   }
 }
