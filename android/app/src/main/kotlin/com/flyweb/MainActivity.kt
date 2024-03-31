@@ -51,7 +51,6 @@ private fun clearDataRestart(): Boolean {
         val process = processBuilder.start()
         val exitCode = process.waitFor()
         if (exitCode == 0) {
-            triggerRestart(this)
             return true
         }
         return false
