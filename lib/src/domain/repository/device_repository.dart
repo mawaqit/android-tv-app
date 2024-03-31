@@ -16,4 +16,7 @@ abstract class DeviceInfoRepository {
 
   /// [getLanguageWithoutCache] Retrieves the current user's preferred language setting without using cache.
   Future<String> getLanguageWithoutCache();
+
+  /// [isBoxOrAndroidTV] Checks if the device is a box or a androidTV.
+  Future<bool> isBoxOrAndroidTV();
 }

@@ -12,6 +12,7 @@ import java.io.IOException
 import android.app.Activity
 import android.content.Intent
 
+
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "nativeMethodsChannel"
 
@@ -28,6 +29,19 @@ class MainActivity : FlutterActivity() {
                 val isSuccess = clearDataRestart()
                 result.success(isSuccess)
             } else {
+
+            }  else if (call.method == "hasSystemFeature") {
+                val feature = call.argument<String>("feature")
+ if (feature != null) {
+        val pm = applicationContext.packageManager
+        val hasFeature = pm.hasSystemFeature(feature)
+        result.success(hasFeature)
+    } else {
+        result.error("InvalidArgument", "Feature argument is null", null)
+    }
+            }
+            
+            else {
                 result.notImplemented()
             }
         }
