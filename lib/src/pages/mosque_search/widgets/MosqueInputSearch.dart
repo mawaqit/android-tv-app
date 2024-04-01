@@ -8,6 +8,10 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/AppRouter.dart';
+import '../../../helpers/SharedPref.dart';
+import '../../home/OfflineHomeScreen.dart';
+
 class MosqueInputSearch extends StatefulWidget {
   const MosqueInputSearch({Key? key, this.onDone}) : super(key: key);
 
@@ -20,6 +24,7 @@ class MosqueInputSearch extends StatefulWidget {
 class _MosqueInputSearchState extends State<MosqueInputSearch> {
   final inputController = TextEditingController();
   final scrollController = ScrollController();
+  SharedPref sharedPref = SharedPref();
 
   List<Mosque> results = [];
   bool loading = false;
@@ -27,6 +32,10 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
   String? error;
 
   void Function()? loadMore;
+  onboardingWorkflowDone() {
+    sharedPref.save('boarding', 'true');
+    AppRouter.pushReplacement(OfflineHomeScreen());
+  }
 
   void scrollToTheEndOfTheList() {
     scrollController.animateTo(
@@ -78,7 +87,9 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
         .read<MosqueManager>()
         .setMosqueUUid(mosque.uuid.toString())
         .then((value) {
-      widget.onDone?.call();
+      !context.read<MosqueManager>().typeIsMosque
+          ? onboardingWorkflowDone()
+          : widget.onDone?.call();
     }).catchError((e, stack) {
       if (e is InvalidMosqueId) {
         setState(() {

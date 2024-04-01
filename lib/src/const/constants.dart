@@ -14,3 +14,7 @@ const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
 
 const kGooglePlayId= 'com.mawaqit.androidtv';
+
+abstract class CacheKey {
+  static const String kMosqueBackgroundScreen = 'mosque_background_screen';
+}

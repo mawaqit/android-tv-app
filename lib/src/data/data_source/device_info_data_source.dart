@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disk_space/disk_space.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
@@ -51,8 +52,10 @@ class DeviceInfoDataSource {
 
     // Extract the individual results from the list
     final androidInfo = results[0] as AndroidDeviceInfo;
-    final freeDevice = results[1] as double; // Assuming DiskSpace.getFreeDiskSpace returns double
-    final totalFreeSpace = results[2] as double; // Assuming DiskSpace.getTotalDiskSpace returns double
+    final freeDevice = results[1]
+        as double; // Assuming DiskSpace.getFreeDiskSpace returns double
+    final totalFreeSpace = results[2]
+        as double; // Assuming DiskSpace.getTotalDiskSpace returns double
     final deviceId = results[3] as String;
 
     // Construct the result map
@@ -67,13 +70,47 @@ class DeviceInfoDataSource {
     );
   }
 
-
   /// [getDeviceLanguage] Returns the current device language.
   Future<String> getDeviceLanguage() async {
     return Platform.localeName;
   }
-}
 
+  /// [isBoxOrAndroidTV] Checks if the device is a box or a AndroidTV.
+  Future<bool> isBoxOrAndroidTV() async {
+    final features = MethodChannel('nativeMethodsChannel');
+
+    // List of features to check
+    final featuresToCheck = [
+      'android.software.leanback',
+      'android.hardware.hdmi',
+      'android.hardware.ethernet',
+      'android.hardware.usb.host',
+    ];
+
+    for (final feature in featuresToCheck) {
+      final hasFeature = await _checkFeature(features, feature);
+      if (hasFeature) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /// [_checkFeature] Checks if the device has a specific feature.
+  Future<bool> _checkFeature(MethodChannel features, String feature) async {
+    try {
+      final hasFeature = await features.invokeMethod<bool>(
+        'hasSystemFeature',
+        {'feature': feature},
+      );
+      print('hasFeature: $hasFeature');
+      return hasFeature != null && hasFeature;
+    } catch (e) {
+      return false;
+    }
+  }
+}
 
 class DeviceInfoDataSourceProviderArgument {
   final DeviceInfoPlugin? deviceInfoPlugin;
@@ -85,8 +122,8 @@ class DeviceInfoDataSourceProviderArgument {
   });
 }
 
-final deviceInfoDataSourceProvider =
-    FutureProvider.family<DeviceInfoDataSource, DeviceInfoDataSourceProviderArgument>((ref, args) {
+final deviceInfoDataSourceProvider = FutureProvider.family<DeviceInfoDataSource,
+    DeviceInfoDataSourceProviderArgument>((ref, args) {
   return DeviceInfoDataSource(
     deviceInfoPlugin: args?.deviceInfoPlugin,
     diskSpace: args?.diskSpace,

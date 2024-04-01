@@ -23,7 +23,8 @@ class AudioManager extends ChangeNotifier {
     policy: CachePolicy.request,
   );
 
-  late final dio = Dio()..interceptors.add(DioCacheInterceptor(options: option));
+  late final dio = Dio()
+    ..interceptors.add(DioCacheInterceptor(options: option));
 
   String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
@@ -39,7 +40,6 @@ class AudioManager extends ChangeNotifier {
     return adhanLink;
   }
 
-
   /// Plays audio from provided ByteData.
   ///
   /// This method does not need to know the source of the ByteData, enabling
@@ -48,8 +48,8 @@ class AudioManager extends ChangeNotifier {
   /// Parameters:
   /// - [byteData]: The ByteData of the audio file to be played.
   /// - [onDone]: A callback that gets called when audio playback is complete.
-  Future<void> loadAndPlayFromByteData(ByteData byteData, {VoidCallback? onDone}) async {
-
+  Future<void> loadAndPlayFromByteData(ByteData byteData,
+      {VoidCallback? onDone}) async {
     // Load and play the audio from ByteData
     player = Audio.loadFromByteData(
       byteData,
@@ -64,14 +64,13 @@ class AudioManager extends ChangeNotifier {
     )..play();
   }
 
-
   void loadAndPlayAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
     bool useFajrAdhan = false,
   }) {
     final url = adhanLink(mosqueConfig, useFajrAdhan: useFajrAdhan);
-    if(url.contains('bip')) {
+    if (url.contains('bip')) {
       loadAndPlayIqamaBipVoice(mosqueConfig, onDone: onDone);
     } else {
       loadAndPlay(
@@ -96,10 +95,12 @@ class AudioManager extends ChangeNotifier {
   }
 
   Future<void> loadAssetsAndPlay(String assets, {VoidCallback? onDone}) async {
+    final file = await getFileFromAssets(assets);
+
     if (player != null) stop();
 
-    player = Audio.load(
-      assets,
+    player = Audio.loadFromByteData(
+      file,
       onComplete: () {
         stop();
         onDone?.call();
