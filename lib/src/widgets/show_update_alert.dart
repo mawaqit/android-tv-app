@@ -12,6 +12,7 @@ Future<void> showUpdateAlert({
   required String content,
   required Duration duration,
   required VoidCallback onPressed,
+  required VoidCallback onDismissPressed,
 }) async {
   await context.showFlash<bool>(
     barrierDismissible: true,
@@ -27,12 +28,23 @@ Future<void> showUpdateAlert({
         icon: Icon(Icons.new_releases),
         title: Text(localization.updateAvailable),
         actions: [
-          TextButton(onPressed: controller.dismiss, child: Text(localization.cancel)),
+          TextButton(
+            onPressed: () {
+              controller.dismiss();
+              onDismissPressed();
+            },
+            child: Text(localization.cancel),
+          ),
           TextButton(onPressed: onPressed, child: Text(localization.ok)),
           TextButton(
               onPressed: () {
                 controller.dismiss();
-                _showUpdateVersionDialog(context, content, onPressed);
+                _showUpdateVersionDialog(
+                  context,
+                  content,
+                  onPressed,
+                  onDismissPressed,
+                );
               },
               child: Text(localization.seeMore)),
         ],
@@ -46,6 +58,7 @@ Future<void> _showUpdateVersionDialog(
   BuildContext context,
   String content,
   VoidCallback onPressed,
+  VoidCallback onDismissPressed,
 ) async {
   final l10n = S.of(context);
   return showDialog<void>(
@@ -67,11 +80,11 @@ Future<void> _showUpdateVersionDialog(
                 Navigator.of(context).pop();
               }),
           TextButton(
-            child: Text(l10n.cancel),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+              child: Text(l10n.cancel),
+              onPressed: () {
+                onDismissPressed();
+                Navigator.of(context).pop();
+              }),
         ],
       );
     },
