@@ -84,7 +84,6 @@ class DeviceInfoDataSource {
       'android.software.leanback',
       'android.hardware.hdmi',
       'android.hardware.ethernet',
-      'android.hardware.usb.host',
     ];
 
     for (final feature in featuresToCheck) {
@@ -104,7 +103,7 @@ class DeviceInfoDataSource {
         'hasSystemFeature',
         {'feature': feature},
       );
-      print('hasFeature: $hasFeature');
+      print('hasFeature: $hasFeature $feature');
       return hasFeature != null && hasFeature;
     } catch (e) {
       return false;
