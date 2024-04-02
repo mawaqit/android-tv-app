@@ -4,6 +4,7 @@ import 'package:open_store/open_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
 
+import '../../../main.dart';
 import '../../const/constants.dart';
 import '../../helpers/AppDate.dart';
 import 'app_update_state.dart';
@@ -23,34 +24,84 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
     state = AsyncLoading();
     final shared = await ref.read(sharedPreferencesProvider.future);
     state = await AsyncValue.guard(() async {
+      final isAutoUpdateCheckingEnabled = shared.getBool(CacheKey.kAutoUpdateChecking) ?? true;
+      final isDismissed = shared.getBool(CacheKey.kIsUpdateDismissed) ?? false;
+
+      if (!isAutoUpdateCheckingEnabled) {
+        update(
+          (p0) => p0.copyWith(
+            appUpdateStatus: AppUpdateStatus.noUpdate,
+            isAutoUpdateChecking: false,
+          ),
+        );
+        return state.value!;
+      }
+
       final upgrader = Upgrader(
         messages: UpgraderMessages(
           code: languageCode,
         ),
       );
-
       await upgrader.initialize(); // Prepares the Upgrader package for use.
       String? releaseNotes = upgrader.releaseNotes; // Retrieves release notes, if available.
       String message = upgrader.message(); // Constructs a message for the update prompt.
       final isUpdateAvailable = upgrader.isUpdateAvailable(); // Checks if an update is available.
 
+      final lastDismissedVersion = shared.getString(CacheKey.kUpdateDismissedVersion) ?? '0.0.0';
+
+      logger.d(
+          'AppUpdateNotifier: isDismissed: $isDismissed, isUpdateAvailable: $isUpdateAvailable, lastDismissedVersion: $lastDismissedVersion');
+
+      if (isDismissed &&
+          isUpdateAvailable &&
+          lastDismissedVersion != '0.0.0' &&
+          lastDismissedVersion == upgrader.currentAppStoreVersion()) {
+        update(
+          (p0) => p0.copyWith(
+            appUpdateStatus: AppUpdateStatus.noUpdate,
+            isUpdateDismissed: true,
+          ),
+        );
+        return state.value!;
+      }
+
       final isDisplayUpdate =
           await _shouldDisplayUpdate(prayerTimeList); // Determines if the update prompt should be displayed.
 
       if (isDisplayUpdate && isUpdateAvailable) {
-        await shared.setInt('last_popup_display', DateTime.now().millisecondsSinceEpoch);
-        return AppUpdateState(
-          appUpdateStatus: AppUpdateStatus.updateAvailable,
-          message: message,
-          releaseNote: releaseNotes ?? '',
+        await shared.setInt(CacheKey.kLastPopupDisplay, AppDateTime.now().millisecondsSinceEpoch);
+        update(
+          (p0) => p0.copyWith(
+            appUpdateStatus: AppUpdateStatus.updateAvailable,
+            message: message,
+            releaseNote: releaseNotes ?? ''
+          ),
         );
+        return state.value!;
       } else {
-        return AppUpdateState(
-          appUpdateStatus: AppUpdateStatus.noUpdate,
-          message: '',
-          releaseNote: '',
-        );
+        update((p0) => p0.copyWith(
+              appUpdateStatus: AppUpdateStatus.noUpdate,
+              message: '',
+              releaseNote: '',
+            ));
+        return state.value!;
       }
+    });
+  }
+
+  /// [dismissUpdate] Dismisses the update prompt and updates the state to indicate the prompt has been dismissed.
+  Future<void> dismissUpdate() async {
+    state = AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final shared = await ref.read(sharedPreferencesProvider.future);
+      await shared.setBool(CacheKey.kIsUpdateDismissed, true);
+      final upgrader = Upgrader();
+      await upgrader.initialize();
+      final latestAppStoreVersion = upgrader.currentAppStoreVersion();
+      logger.d('AppUpdateNotifier: dismissUpdate: $latestAppStoreVersion');
+      await shared.setString(CacheKey.kUpdateDismissedVersion, latestAppStoreVersion ?? '0.0.0');
+      update((p0) => p0.copyWith(appUpdateStatus: AppUpdateStatus.noUpdate, isUpdateDismissed: true));
+      return state.value!;
     });
   }
 
@@ -65,12 +116,27 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
     });
   }
 
+  /// [toggleAutoUpdateChecking] Toggles the auto-update checking feature on or off. This method updates the state to reflect the new setting.`
+  Future<void> toggleAutoUpdateChecking() async {
+    state = AsyncLoading();
+    logger.d('AppUpdateNotifier: start toggleAutoUpdateChecking before');
+    state = await AsyncValue.guard(() async {
+      logger.d('AppUpdateNotifier: start toggleAutoUpdateChecking');
+      final shared = await ref.read(sharedPreferencesProvider.future);
+      final isAutoUpdateCheckingEnabled = shared.getBool(CacheKey.kAutoUpdateChecking) ?? true;
+      await shared.setBool(CacheKey.kAutoUpdateChecking, !isAutoUpdateCheckingEnabled);
+      logger.d('AppUpdateNotifier: change toggleAutoUpdateChecking into ${!isAutoUpdateCheckingEnabled}');
+      update((p0) => p0.copyWith(isAutoUpdateChecking: !isAutoUpdateCheckingEnabled));
+      return state.value!;
+    });
+  }
+
   /// [_shouldDisplayUpdate] Determines whether the update prompt should be displayed based on prayer times and the last time the prompt was shown.
   Future<bool> _shouldDisplayUpdate(List<String> prayerTimeList) async {
     final sharedPreferences = await ref.read(sharedPreferencesProvider.future);
-    final DateTime now = DateTime.now().add(AppDateTime.difference);
+    final DateTime now = AppDateTime.now();
     final lastPopupDisplay =
-        sharedPreferences.getInt('last_popup_display') ?? 0; // // Gets the time of the last update prompt
+        sharedPreferences.getInt(CacheKey.kLastPopupDisplay) ?? 0; // gets the time of the last update prompt
     final oneWeekAgo =
         now.subtract(Duration(days: 7)).millisecondsSinceEpoch; // Calculates the timestamp for one week ago.
 
@@ -88,6 +154,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
     // Check if the last popup display was more than a week ago
     final bool isAfterOneWeek = lastPopupDisplay < oneWeekAgo;
 
+    logger.d('AppUpdateNotifier: isBetweenTwoPrays: $isBetweenTwoPrays, isAfterOneWeek: $isAfterOneWeek');
     return isBetweenTwoPrays && isAfterOneWeek;
   }
 }
