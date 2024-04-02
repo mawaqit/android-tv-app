@@ -15,6 +15,10 @@ const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
 
 const kGooglePlayId= 'com.mawaqit.androidtv';
 
-abstract class CacheKey {
+class CacheKey {
   static const String kMosqueBackgroundScreen = 'mosque_background_screen';
+  static const String kLastPopupDisplay = 'last_popup_display';
+  static const String kAutoUpdateChecking = 'auto_update_checking';
+  static const String kIsUpdateDismissed = 'is_update_dismissed';
+  static const String kUpdateDismissedVersion = 'update_dismissed_version';
 }
