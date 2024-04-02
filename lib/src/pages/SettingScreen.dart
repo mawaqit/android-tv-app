@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
@@ -14,8 +15,10 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
+import '../../main.dart';
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
+import '../state_management/app_update/app_update_notifier.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
@@ -117,6 +120,23 @@ class SettingScreen extends StatelessWidget {
                         },
                       ),
                     ),
+                  ),
+                  riverpod.Consumer(
+                    builder: (context, ref, child) {
+                      return _SettingSwitchItem(
+                        title: S.of(context).automaticUpdate,
+                        subtitle: S.of(context).automaticUpdateDescription,
+                        icon: Icon(Icons.update, size: 35),
+                        onChanged: (value) {
+                          logger.d('setting: disable the update $value');
+                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
+                        },
+                        value: ref.watch(appUpdateProvider).maybeWhen(
+                              orElse: () => false,
+                              data: (data) => data.isAutoUpdateChecking,
+                            ),
+                      );
+                    }
                   ),
                   SizedBox(height: 30),
                   Divider(),

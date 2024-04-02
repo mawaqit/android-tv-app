@@ -78,6 +78,7 @@ class _LandScapeTurkishHomeState extends riverpod.ConsumerState<LandScapeTurkish
           next.value!.message != previous!.value!.message){
         showUpdateAlert(
           context: context,
+          onDismissPressed: () => ref.read(appUpdateProvider.notifier).dismissUpdate(),
           duration: Duration(seconds: 30),
           content: next.value!.releaseNote,
           title: next.value!.message,

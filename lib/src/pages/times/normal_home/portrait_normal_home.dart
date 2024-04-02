@@ -84,6 +84,7 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
           content: next.value!.releaseNote,
           title: next.value!.message,
           onPressed: () => ref.read(appUpdateProvider.notifier).openStore(),
+          onDismissPressed: () => ref.read(appUpdateProvider.notifier).dismissUpdate(),
         );
       }
     });
