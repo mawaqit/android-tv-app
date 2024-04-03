@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
+import '../../../main.dart';
 import '../../domain/model/device_info_model.dart';
 
 /// This class uses various plugins to gather device-specific information such as brand,
@@ -84,7 +85,6 @@ class DeviceInfoDataSource {
       'android.software.leanback',
       'android.hardware.hdmi',
       'android.hardware.ethernet',
-      'android.hardware.usb.host',
     ];
 
     for (final feature in featuresToCheck) {
@@ -104,7 +104,7 @@ class DeviceInfoDataSource {
         'hasSystemFeature',
         {'feature': feature},
       );
-      print('hasFeature: $hasFeature');
+      logger.d('hasFeature: $hasFeature $feature');
       return hasFeature != null && hasFeature;
     } catch (e) {
       return false;
