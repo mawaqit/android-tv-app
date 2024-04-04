@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import '../../../helpers/AppRouter.dart';
 import '../../../helpers/SharedPref.dart';
 import '../../home/OfflineHomeScreen.dart';
+import '../custom_keyboard.dart';
 
 class MosqueInputId extends StatefulWidget {
   const MosqueInputId({Key? key, this.onDone}) : super(key: key);
@@ -99,13 +100,8 @@ class _MosqueInputIdState extends State<MosqueInputId> {
                 autoFocus: true,
                 mosque: searchOutput!,
                 onTap: () {
-                  return context
-                      .read<MosqueManager>()
-                      .setMosqueUUid(searchOutput!.uuid.toString())
-                      .then((value) {
-                    !context.read<MosqueManager>().typeIsMosque
-                        ? onboardingWorkflowDone()
-                        : widget.onDone?.call();
+                  return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) {
+                    !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
                   }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {
                       setState(() {
@@ -130,53 +126,108 @@ class _MosqueInputIdState extends State<MosqueInputId> {
   Padding buildInputWidget(BuildContext context, ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        child: TextFormField(
-          controller: inputController,
-          style: GoogleFonts.inter(
-            color:
-                theme.brightness == Brightness.dark ? null : theme.primaryColor,
-          ),
-          onFieldSubmitted: _setMosqueId,
-          cursorColor:
-              theme.brightness == Brightness.dark ? null : theme.primaryColor,
-          keyboardType: TextInputType.number,
-          autofocus: true,
-          textInputAction: TextInputAction.search,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-          ],
-          decoration: InputDecoration(
-            filled: true,
-            errorText: error,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-            hintText: S.of(context).selectWithMosqueId,
-            hintStyle: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: theme.brightness == Brightness.dark
-                  ? null
-                  : theme.primaryColor.withOpacity(0.4),
+      child: GestureDetector(
+        onTap: () {
+          print('open keyboard');
+          showGeneralDialog(
+            context: context,
+            barrierDismissible: true,
+            barrierLabel: '',
+            transitionDuration: Duration(milliseconds: 200),
+            barrierColor: Colors.black.withOpacity(0.5),
+            pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+              return Scaffold(
+                backgroundColor: Colors.transparent,
+                body: Center(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: CustomKeyboardWidget(
+                      controller: inputController,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: TextFormField(
+            controller: inputController,
+            style: GoogleFonts.inter(
+              color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
             ),
-            suffixIcon: IconButton(
-              tooltip: "Search by Id",
-              icon: loading ? CircularProgressIndicator() : Icon(Icons.search),
-              color: theme.brightness == Brightness.dark
-                  ? Colors.white70
-                  : theme.primaryColor,
-              onPressed: () => _setMosqueId(inputController.text),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(width: 0),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(width: 0),
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 2,
-              horizontal: 20,
+            onTap: () {
+              showGeneralDialog(
+                context: context,
+                barrierDismissible: true,
+                barrierLabel: '',
+                transitionDuration: Duration(milliseconds: 200),
+                barrierColor: Colors.black.withOpacity(0.5),
+                pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+                  return Scaffold(
+                    backgroundColor: Colors.transparent,
+                    body: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.45,
+
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: CustomKeyboardWidget(
+                          controller: inputController,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            readOnly: true,
+            showCursor: false,
+            onFieldSubmitted: _setMosqueId,
+            cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+            keyboardType: TextInputType.number,
+            autofocus: true,
+            textInputAction: TextInputAction.search,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+            ],
+            decoration: InputDecoration(
+              filled: true,
+              errorText: error,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              hintText: S.of(context).selectWithMosqueId,
+              hintStyle: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
+              ),
+              suffixIcon: IconButton(
+                tooltip: "Search by Id",
+                icon: loading ? CircularProgressIndicator() : Icon(Icons.search),
+                color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
+                onPressed: () => _setMosqueId(inputController.text),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(width: 0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(width: 0),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 2,
+                horizontal: 20,
+              ),
             ),
           ),
         ),
