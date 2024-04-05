@@ -115,7 +115,8 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
             }),
         Spacer(),
         ResponsiveMiniSalahBarWidget(),
-        SizedBox(height: 10),
+        SizedBox(height: 1.vh),
+
       ],
     );
   }
