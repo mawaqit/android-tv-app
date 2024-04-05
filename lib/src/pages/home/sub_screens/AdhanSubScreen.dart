@@ -39,16 +39,20 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig;
     audioManager = context.read<AudioManager>();
+    final duration = mosqueManager.getAdhanDuration();
 
-    if (mosqueManager.isShortIqamaDuration(mosqueManager.salahIndex)) {
-      /// this will close this screen after 90 seconds
+    Future.delayed(Duration(minutes: 5), () {
       closeAdhanScreen();
-    }
+    });
+
+    Future.delayed(duration, () {
+      closeAdhanScreen();
+    });
 
     if (widget.forceAdhan || mosqueManager.adhanVoiceEnable()) {
       audioManager!.loadAndPlayAdhanVoice(
         mosqueConfig,
-        onDone: closeAdhanScreen,
+        onDone: () {},
         useFajrAdhan: mosqueManager.salahIndex == 0,
       );
     } else {

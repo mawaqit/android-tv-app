@@ -28,7 +28,7 @@ class MosqueConfig {
   final String? backgroundMotif;
   final bool? iqamaFullScreenCountdown;
   final String? theme;
-
+  final int? adhanDuration;
   String get motifUrl => 'https://mawaqit.net/prayer-times/img/background/${backgroundMotif ?? 5}.jpg';
 
 //<editor-fold desc="Data Methods">
@@ -64,6 +64,7 @@ class MosqueConfig {
     required this.adhanEnabledByPrayer,
     required this.showCityInTitle,
     required this.showLogo,
+    required this.adhanDuration,
   });
 
   @override
@@ -97,7 +98,8 @@ class MosqueConfig {
           backgroundType == other.backgroundType &&
           backgroundMotif == other.backgroundMotif &&
           iqamaFullScreenCountdown == other.iqamaFullScreenCountdown &&
-          theme == other.theme);
+          theme == other.theme &&
+          adhanDuration == adhanDuration);
 
   @override
   int get hashCode =>
@@ -127,7 +129,8 @@ class MosqueConfig {
       backgroundType.hashCode ^
       backgroundMotif.hashCode ^
       iqamaFullScreenCountdown.hashCode ^
-      theme.hashCode;
+      theme.hashCode ^
+      adhanDuration.hashCode;
 
   @override
   String toString() {
@@ -158,6 +161,7 @@ class MosqueConfig {
         ' backgroundMotif: $backgroundMotif,' +
         ' iqamaFullScreenCountdown: $iqamaFullScreenCountdown,' +
         ' theme: $theme,' +
+        ' adhanDuration: $adhanDuration,' +
         '}';
   }
 
@@ -191,6 +195,7 @@ class MosqueConfig {
     String? backgroundMotif,
     bool? iqamaFullScreenCountdown,
     String? theme,
+    int? adhanDuration,
   }) {
     return MosqueConfig(
       duaAfterPrayerShowTimes: duaAfterPrayerShowTimes ?? this.duaAfterPrayerShowTimes,
@@ -222,6 +227,7 @@ class MosqueConfig {
       backgroundMotif: backgroundMotif ?? this.backgroundMotif,
       iqamaFullScreenCountdown: iqamaFullScreenCountdown ?? this.iqamaFullScreenCountdown,
       theme: theme ?? this.theme,
+        adhanDuration: adhanDuration ?? this.adhanDuration
     );
   }
 
@@ -255,6 +261,7 @@ class MosqueConfig {
       'backgroundMotif': this.backgroundMotif,
       'iqamaFullScreenCountdown': this.iqamaFullScreenCountdown,
       'theme': this.theme,
+      'adhanDuration': this.adhanDuration,
     };
   }
 
@@ -289,6 +296,7 @@ class MosqueConfig {
       backgroundMotif: map['backgroundMotif'],
       iqamaFullScreenCountdown: map['iqamaFullScreenCountdown'],
       theme: map['theme'],
+      adhanDuration: map['adhanDuration'],
     );
   }
 
