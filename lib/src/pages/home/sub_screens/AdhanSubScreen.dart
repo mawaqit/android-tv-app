@@ -41,6 +41,10 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     audioManager = context.read<AudioManager>();
     final duration = mosqueManager.getAdhanDuration();
 
+    Future.delayed(Duration(minutes: 5), () {
+      closeAdhanScreen();
+    });
+
     Future.delayed(duration, () {
       closeAdhanScreen();
     });
