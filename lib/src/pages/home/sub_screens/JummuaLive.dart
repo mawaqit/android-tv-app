@@ -47,7 +47,9 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     return switch (connectivity) {
       AsyncData(:final value) =>
         switchStreamWidget(value, mosqueManager, jumuaaDisableInMosque),
-      _ => const CircularProgressIndicator(),
+      _ => CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), // Green color
+      ),
     };
   }
 
