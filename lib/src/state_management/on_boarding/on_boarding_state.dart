@@ -1,53 +1,18 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:mawaqit/src/models/mosque.dart';
 
-enum MosqueMode {
-  normal,
-  announcement,
-}
+class OnBoardingState extends Equatable {
+  final int currentScreen;
+  final bool isCompleted;
 
-class OnboardingState extends Equatable {
-  String language;
-  Orientation orientation;
-  String mosqueId;
-  MosqueMode mosqueMode;
-  bool termsAccepted;
+  OnBoardingState({this.currentScreen = 0, this.isCompleted = false});
 
-  OnboardingState({
-    required this.language,
-    required this.orientation,
-    required this.mosqueId,
-    required this.termsAccepted,
-    required this.mosqueMode,
-  });
-
-  factory OnboardingState.initial() {
-    return OnboardingState(
-      language: 'unknown',
-      mosqueMode: MosqueMode.normal,
-      orientation: Orientation.portrait,
-      mosqueId: '',
-      termsAccepted: false,
-    );
-  }
-
-  OnboardingState copyWith({
-    String? language,
-    Orientation? orientation,
-    String? mosqueId,
-    bool? termsAccepted,
-    MosqueMode? mosqueMode,
-  }) {
-    return OnboardingState(
-      language: language ?? this.language,
-      orientation: orientation ?? this.orientation,
-      mosqueId: mosqueId ?? this.mosqueId,
-      mosqueMode: mosqueMode ?? this.mosqueMode,
-      termsAccepted: termsAccepted ?? this.termsAccepted,
+  OnBoardingState copyWith({int? currentScreen, bool? isCompleted}) {
+    return OnBoardingState(
+      currentScreen: currentScreen ?? this.currentScreen,
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 
   @override
-  List<Object> get props => [language, orientation, mosqueId, termsAccepted, mosqueMode];
+  List<Object?> get props => [currentScreen, isCompleted];
 }
