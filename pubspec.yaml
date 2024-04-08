@@ -111,6 +111,9 @@ dependencies:
   disk_space: ^0.2.1
 
   equatable: ^2.0.5
+
+  # internet connectivity checker
+  internet_connection_checker_plus: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
