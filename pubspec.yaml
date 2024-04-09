@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-version: 1.9.0+1
+version: 1.9.4+1
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -111,6 +111,9 @@ dependencies:
   disk_space: ^0.2.1
 
   equatable: ^2.0.5
+
+  # internet connectivity checker
+  internet_connection_checker_plus: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -148,6 +151,7 @@ flutter:
     - assets/animations/lottie/
     - assets/svg/
     - assets/voices/
+    - assets/voices/adhan/
 
   fonts:
     - family: MawaqitIcons

@@ -1,7 +1,11 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/address_model.dart';
-import '../services/connectivity_service.dart';
+
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart' ;
 
 /// This class listens to connectivity changes and notifies its listeners.
 class ConnectivityProvider extends StreamNotifier<ConnectivityStatus> {
@@ -11,12 +15,36 @@ class ConnectivityProvider extends StreamNotifier<ConnectivityStatus> {
   @override
   Stream<ConnectivityStatus> build() {
     return ref
-        .watch(connectivityServiceProvider(ConnectivityServiceParams(
-          interval: const Duration(seconds: 10),
-        )))
-        .onStatusChange;
+        .watch(connectivityStreamProvider.future).asStream();
   }
 }
+
+/// transform the stream of connectivity status to a stream of [ConnectivityStatus].
+///
+/// This provider listens to the stream of connectivity status and transforms it to a stream of [ConnectivityStatus].
+final connectivityStreamProvider = StreamProvider<ConnectivityStatus>((ref) {
+  final internet = InternetConnectionCheckerPlus();
+  return internet.onStatusChange.transform(
+    StreamTransformer.fromHandlers(
+      handleDone: (sink) {
+        sink.close();
+      },
+      handleError: (error, stackTrace, sink) {
+        log('[internet_connectivity]: $error',);
+        sink.add(ConnectivityStatus.disconnected);
+      },
+      handleData: (status, sink) {
+        if (status == InternetConnectionStatus.connected) {
+          sink.add(ConnectivityStatus.connected);
+        } else {
+          sink.add(ConnectivityStatus.disconnected);
+        }
+      },
+    ),
+  );
+});
+
+
 /// Global provider for [ConnectivityProvider].
 /// This provider allows access to the connectivity status stream from anywhere in the app.
 final connectivityProvider =

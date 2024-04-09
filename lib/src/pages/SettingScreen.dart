@@ -230,7 +230,7 @@ class _SettingItem extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontSize: 10, color: Colors.white.withOpacity(0.7)))
+                    fontSize: 10))
             : null,
         onTap: onTap,
       ),

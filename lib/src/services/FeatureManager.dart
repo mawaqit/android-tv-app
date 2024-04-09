@@ -13,16 +13,6 @@ class FeatureManager extends ChangeNotifier {
   Map<String, bool> _featureFlags = {};
   bool isConnectedToInternet = false;
   SharedPreferences? _prefs;
-  static final dio = Dio(
-    BaseOptions(
-      baseUrl: kBaseUrl,
-      headers: {
-        'Api-Access-Token': kApiToken,
-        'accept': 'application/json',
-        'mawaqit-device': 'android-tv',
-      },
-    ),
-  );
 
   FeatureManager(BuildContext context) {
     final mosqueProvider = Provider.of<MosqueManager>(context, listen: false);
@@ -68,12 +58,11 @@ class FeatureManager extends ChangeNotifier {
 
   Future<void> fetchFeatureFlags(BuildContext context) async {
     try {
-      final response = await dio.get(
-        'https://cdn.mawaqit.net/android/tv/android-tv-feature-flag.json',
-      );
+      final response = await http.get(Uri.parse(
+          'https://cdn.mawaqit.net/android/tv/android-tv-feature-flag.json'));
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.data);
+        final data = json.decode(response.body);
         _featureFlags.clear();
         data.forEach((key, value) {
           if (value is bool) {

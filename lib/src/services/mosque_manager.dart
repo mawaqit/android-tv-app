@@ -17,6 +17,7 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
+import '../helpers/AppDate.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
 
@@ -33,6 +34,36 @@ class MosqueManager extends ChangeNotifier
 
   // String? mosqueId;
   String? mosqueUUID;
+
+  bool _flashEnabled = false;
+  bool get flashEnabled => _flashEnabled;
+
+  void _updateFlashEnabled() {
+    if (mosque != null) {
+      final startDate = DateTime.tryParse(mosque!.flash?.startDate ?? 'x');
+      final endDate = DateTime.tryParse(mosque!.flash?.endDate ?? 'x');
+      final currentDate = AppDateTime.now();
+
+      DateTime? endOfDay;
+      if (endDate != null) {
+        endOfDay = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
+      }
+
+      if (startDate == null && endDate == null) {
+        _flashEnabled = true;
+      } else if (startDate != null && endDate == null) {
+        _flashEnabled = currentDate.isAfter(startDate) || currentDate.isAtSameMomentAs(startDate);
+      } else if (startDate == null && endDate != null) {
+        _flashEnabled = currentDate.isBefore(endOfDay!) || currentDate.isAtSameMomentAs(endOfDay);
+      } else if (startDate != null && endDate != null) {
+        _flashEnabled = currentDate.isAfter(startDate) && currentDate.isBefore(endOfDay!) ||
+            currentDate.isAtSameMomentAs(startDate) ||
+            currentDate.isAtSameMomentAs(endOfDay!);
+      }
+      notifyListeners();
+    }
+  }
+
 
   bool get loaded => mosque != null && times != null && mosqueConfig != null;
 
@@ -131,6 +162,7 @@ class MosqueManager extends ChangeNotifier
     _mosqueSubscription = mosqueStream.listen(
           (e) {
         mosque = e;
+        _updateFlashEnabled();
         notifyListeners();
       },
       onError: onItemError,

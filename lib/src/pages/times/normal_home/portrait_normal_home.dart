@@ -18,18 +18,18 @@ import '../widgets/jumua_widget.dart';
 class PortraitNormalHome extends StatelessWidget {
   const PortraitNormalHome({super.key});
 
-  String salahName(int index) {
+  String salahName(int index, BuildContext context) {
     switch (index) {
       case 0:
-        return S.current.fajr;
+        return S.of(context).fajr;
       case 1:
-        return S.current.duhr;
+        return S.of(context).duhr;
       case 2:
-        return S.current.asr;
+        return S.of(context).asr;
       case 3:
-        return S.current.maghrib;
+        return S.of(context).maghrib;
       case 4:
-        return S.current.isha;
+        return S.of(context).isha;
       default:
         return '';
     }
@@ -67,7 +67,7 @@ class PortraitNormalHome extends StatelessWidget {
               children: [
                 for (var i = 0; i < 5; i++)
                   HorizontalSalahItem(
-                    title: salahName(i),
+                    title: salahName(i, context),
                     time: times[i],
                     isIqamaMoreImportant: isIqamaMoreImportant,
 

@@ -3,11 +3,16 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 
+import '../../const/resource.dart';
+import '../../main.dart';
+
 class AudioManager extends ChangeNotifier {
   String bipLink = "$kStaticFilesUrl/mp3/bip.mp3";
+
   String duaAfterAdhanLink = "$kStaticFilesUrl/mp3/duaa-after-adhan.mp3";
 
   Audio? player;
@@ -18,7 +23,8 @@ class AudioManager extends ChangeNotifier {
     policy: CachePolicy.request,
   );
 
-  late final dio = Dio()..interceptors.add(DioCacheInterceptor(options: option));
+  late final dio = Dio()
+    ..interceptors.add(DioCacheInterceptor(options: option));
 
   String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
@@ -34,37 +40,69 @@ class AudioManager extends ChangeNotifier {
     return adhanLink;
   }
 
+  /// Plays audio from provided ByteData.
+  ///
+  /// This method does not need to know the source of the ByteData, enabling
+  /// flexibility in playing audio from different sources such as assets or network responses.
+  ///
+  /// Parameters:
+  /// - [byteData]: The ByteData of the audio file to be played.
+  /// - [onDone]: A callback that gets called when audio playback is complete.
+  Future<void> loadAndPlayFromByteData(ByteData byteData,
+      {VoidCallback? onDone}) async {
+    // Load and play the audio from ByteData
+    player = Audio.loadFromByteData(
+      byteData,
+      onComplete: () {
+        stop(); // Automatically stop and release resources when done
+        onDone?.call(); // Call the onDone callback if provided
+      },
+      onError: (message) {
+        logger.e("Error playing audio: $message");
+        onDone?.call(); // Call the onDone callback if an error occurs
+      },
+    )..play();
+  }
+
   void loadAndPlayAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
     bool useFajrAdhan = false,
   }) {
-    loadAndPlay(
-      url: adhanLink(mosqueConfig, useFajrAdhan: useFajrAdhan),
-      onDone: onDone,
-    );
+    final url = adhanLink(mosqueConfig, useFajrAdhan: useFajrAdhan);
+    if (url.contains('bip')) {
+      loadAndPlayIqamaBipVoice(mosqueConfig, onDone: onDone);
+    } else {
+      loadAndPlay(
+        url: url,
+        onDone: onDone,
+      );
+    }
   }
 
   void loadAndPlayIqamaBipVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
-  }) =>
-      loadAndPlay(url: bipLink, onDone: onDone);
+  }) {
+    loadAssetsAndPlay(R.ASSETS_VOICES_ADHAN_BIP_MP3, onDone: onDone);
+  }
 
   void loadAndPlayDuaAfterAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
-  }) =>
-      loadAndPlay(url: duaAfterAdhanLink, onDone: onDone);
+  }) {
+    loadAndPlay(url: duaAfterAdhanLink, onDone: onDone);
+  }
 
   Future<void> loadAssetsAndPlay(String assets, {VoidCallback? onDone}) async {
+    final file = await getFileFromAssets(assets);
+
     if (player != null) stop();
 
-    player = Audio.load(
-      assets,
+    player = Audio.loadFromByteData(
+      file,
       onComplete: () {
         stop();
-
         onDone?.call();
       },
       onError: (message) => onDone?.call(),
@@ -103,9 +141,14 @@ class AudioManager extends ChangeNotifier {
     await Future.wait([
       getFile(adhanLink(config)),
       getFile(adhanLink(config, useFajrAdhan: true)),
-      getFile(bipLink),
+      getFileFromAssets(R.ASSETS_VOICES_ADHAN_BIP_MP3),
       getFile(duaAfterAdhanLink),
     ]);
+  }
+
+  Future<ByteData> getFileFromAssets(String url) async {
+    final file = await rootBundle.load(url);
+    return file;
   }
 
   Future<ByteData> getFile(String url, {bool enableCache = true}) async {
