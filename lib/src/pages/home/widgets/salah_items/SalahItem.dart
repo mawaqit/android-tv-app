@@ -118,9 +118,9 @@ class SalahItemWidget extends StatelessOrientationWidget {
 
   @override
   Widget buildPortrait(BuildContext context) {
-    double titleFont = 3.vwr;
-    double bigFont = 3.5.vwr;
-    double smallFont = 2.6.vwr;
+    double titleFont = 3.5.vwr;
+    double bigFont = 4.vwr;
+    double smallFont = 3.vwr;
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
@@ -138,10 +138,11 @@ class SalahItemWidget extends StatelessOrientationWidget {
                 ? null
                 : Colors.black.withOpacity(.5),
       ),
-      padding: EdgeInsets.symmetric(vertical: 1.6.vr, horizontal: 1.vwr),
+      padding: EdgeInsets.symmetric(vertical: 1.vr, horizontal: 1.vwr),
       child: FittedBox(
         fit: BoxFit.scaleDown,
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (title != null && title!.trim().isNotEmpty)
               Text(
@@ -154,45 +155,40 @@ class SalahItemWidget extends StatelessOrientationWidget {
                   height: 1.5,
                 ),
               ),
-            SizedBox(width: 2.vr),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (time.trim().isEmpty)
-                  Icon(Icons.dnd_forwardslash, size: 6.vwr)
-                else
-                  TimeWidget.fromString(
-                    show24hFormat: !is12period,
-                    time: time,
-                    style: TextStyle(
-                      fontSize: isIqamaMoreImportant ? smallFont : bigFont,
-                      fontWeight: FontWeight.w700,
-                      shadows: kHomeTextShadow,
-                      color: Colors.white,
-                      // fontFamily: StringManager.getFontFamily(context),
-                    ),
-                  ),
-                if (iqama != null && showIqama)
-                  SizedBox(
-                    height: isArabic ? 1.5.vr : 1.3.vwr,
-                    child: Divider(
-                      thickness: 1,
-                      color: withDivider ? Colors.white : Colors.transparent,
-                    ),
-                  ),
-                if (iqama != null && showIqama)
-                  TimeWidget.fromString(
-                    show24hFormat: !is12period,
-                    time: iqama!,
-                    style: TextStyle(
-                      fontSize: isIqamaMoreImportant ? bigFont : smallFont,
-                      fontWeight: FontWeight.bold,
-                      shadows: kHomeTextShadow,
-                      letterSpacing: 1,
-                      color: Colors.white,
-                    ),
-                  ),
-              ],
+            SizedBox(height: 1.vh),
+            if (time.trim().isEmpty)
+              Icon(Icons.dnd_forwardslash, size: 6.vwr)
+            else
+              TimeWidget.fromString(
+                show24hFormat: !is12period,
+                time: time,
+                style: TextStyle(
+                  fontSize: isIqamaMoreImportant ? smallFont : bigFont,
+                  fontWeight: FontWeight.w700,
+                  shadows: kHomeTextShadow,
+                  color: Colors.white,
+                  // fontFamily: StringManager.getFontFamily(context),
+                ),
+              ),
+            if (iqama != null && showIqama)
+              SizedBox(
+                height: isArabic ? 1.5.vr : 1.3.vwr,
+                child: Divider(
+                  thickness: 1,
+                  color: withDivider ? Colors.white : Colors.transparent,
+                ),
+              ),
+            if (iqama != null && showIqama)
+              TimeWidget.fromString(
+                show24hFormat: !is12period,
+                time: iqama!,
+                style: TextStyle(
+                  fontSize: isIqamaMoreImportant ? bigFont : smallFont,
+                  fontWeight: FontWeight.bold,
+                  shadows: kHomeTextShadow,
+                  letterSpacing: 1,
+                  color: Colors.white,
+                ),
             ),
           ],
         ),
