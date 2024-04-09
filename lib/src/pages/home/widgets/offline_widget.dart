@@ -18,41 +18,38 @@ class OfflineWidget extends ConsumerStatefulWidget {
 }
 
 class _OfflineWidgetState extends ConsumerState<OfflineWidget> {
-
   @override
   Widget build(BuildContext context) {
     final tr = S.of(context);
     final connectivity = ref.watch(connectivityProvider);
-    return switch(connectivity){
+    return switch (connectivity) {
       AsyncData(:final value) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-              print('open drawer');
-            },
-          ),
-          CircleAvatar(
-            radius: .4.vwr,
-            backgroundColor: value == ConnectivityStatus.connected ? Colors.green : Colors.red[700],
-          ),
-          SizedBox(width: .4.vwr),
-
-          Text(
-            value == ConnectivityStatus.connected ? tr.online : tr.offline,
-            style: TextStyle(
-              color: Colors.white,
-              shadows: kHomeTextShadow,
-              fontSize: 1.vwr,
-              height: 1.1,
-              fontWeight: FontWeight.w400,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+                print('open drawer');
+              },
             ),
-          ),
-
-        ],
-      ),
+            CircleAvatar(
+              radius: .4.vwr,
+              backgroundColor: value == ConnectivityStatus.connected ? Colors.green : Colors.red[700],
+            ),
+            SizedBox(width: .4.vwr),
+            Text(
+              value == ConnectivityStatus.connected ? tr.online : tr.offline,
+              style: TextStyle(
+                color: Colors.white,
+                shadows: kHomeTextShadow,
+                fontSize: 1.vwr,
+                height: 1.1,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
       AsyncError(:final error) => Container(),
       _ => const CircularProgressIndicator(),
     };

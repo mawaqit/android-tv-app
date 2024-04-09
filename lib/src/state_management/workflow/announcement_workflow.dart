@@ -1,4 +1,3 @@
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum WorkflowState {
@@ -8,19 +7,20 @@ enum WorkflowState {
   finished,
 }
 
-class AnnouncementWorkflowNotifier extends AutoDisposeNotifier<WorkflowState>{
+class AnnouncementWorkflowNotifier extends AutoDisposeNotifier<WorkflowState> {
   @override
   WorkflowState build() {
     return WorkflowState.idle;
   }
+
   void setAnnouncementWorkflowFinished() {
     state = WorkflowState.finished;
   }
+
   void resetAnnouncementWorkflowFinished() {
     state = WorkflowState.idle;
   }
 }
 
-
 final announcementWorkflowProvider =
-AutoDisposeNotifierProvider<AnnouncementWorkflowNotifier,WorkflowState>(AnnouncementWorkflowNotifier.new);
+    AutoDisposeNotifierProvider<AnnouncementWorkflowNotifier, WorkflowState>(AnnouncementWorkflowNotifier.new);

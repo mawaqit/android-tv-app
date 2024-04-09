@@ -53,10 +53,8 @@ class DeviceInfoDataSource {
 
     // Extract the individual results from the list
     final androidInfo = results[0] as AndroidDeviceInfo;
-    final freeDevice = results[1]
-        as double; // Assuming DiskSpace.getFreeDiskSpace returns double
-    final totalFreeSpace = results[2]
-        as double; // Assuming DiskSpace.getTotalDiskSpace returns double
+    final freeDevice = results[1] as double; // Assuming DiskSpace.getFreeDiskSpace returns double
+    final totalFreeSpace = results[2] as double; // Assuming DiskSpace.getTotalDiskSpace returns double
     final deviceId = results[3] as String;
 
     // Construct the result map
@@ -122,8 +120,8 @@ class DeviceInfoDataSourceProviderArgument {
   });
 }
 
-final deviceInfoDataSourceProvider = FutureProvider.family<DeviceInfoDataSource,
-    DeviceInfoDataSourceProviderArgument>((ref, args) {
+final deviceInfoDataSourceProvider =
+    FutureProvider.family<DeviceInfoDataSource, DeviceInfoDataSourceProviderArgument>((ref, args) {
   return DeviceInfoDataSource(
     deviceInfoPlugin: args?.deviceInfoPlugin,
     diskSpace: args?.diskSpace,

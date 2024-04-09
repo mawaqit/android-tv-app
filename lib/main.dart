@@ -53,23 +53,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SettingsManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => FeatureManager(context)),
-        ChangeNotifierProvider(
-            create: (context) => UserPreferencesManager(), lazy: false),
-        StreamProvider(
-            create: (context) => Api.updateUserStatusStream(),
-            initialData: 0,
-            lazy: false),
+        ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
+        StreamProvider(create: (context) => Api.updateUserStatusStream(), initialData: 0, lazy: false),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) => ConnectivityService()
-                .connectionStatusController
-                .stream
-                .map((event) {
-              if (event == ConnectivityStatus.Wifi ||
-                  event == ConnectivityStatus.Cellular) {
+            create: (context) => ConnectivityService().connectionStatusController.stream.map((event) {
+              if (event == ConnectivityStatus.Wifi || event == ConnectivityStatus.Cellular) {
                 //todo check actual internet
               }
 
@@ -77,15 +69,12 @@ class MyApp extends StatelessWidget {
             }),
             child: Consumer<ThemeNotifier>(
               builder: (context, theme, _) => Shortcuts(
-                shortcuts: {
-                  SingleActivator(LogicalKeyboardKey.select): ActivateIntent()
-                },
+                shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
                 child: MaterialApp(
                   title: kAppName,
                   themeMode: theme.mode,
                   localeResolutionCallback: (locale, supportedLocales) {
-                    if (locale?.languageCode.toLowerCase() == 'ba')
-                      return Locale('en');
+                    if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
 
                     return locale;
                   },

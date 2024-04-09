@@ -39,14 +39,8 @@ class _FadeInOutWidgetState extends State<FadeInOutWidget> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          widget.first
-              .animate(target: _showSecond ? 0 : 1)
-              .fadeIn()
-              .fade(duration: 1.seconds),
-          widget.second
-              .animate(target: _showSecond ? 1 : 0)
-              .fadeIn()
-              .fade(begin: 200, duration: 1.seconds),
+          widget.first.animate(target: _showSecond ? 0 : 1).fadeIn().fade(duration: 1.seconds),
+          widget.second.animate(target: _showSecond ? 1 : 0).fadeIn().fade(begin: 200, duration: 1.seconds),
         ],
       ),
     );
@@ -57,9 +51,7 @@ class _FadeInOutWidgetState extends State<FadeInOutWidget> {
 
     setState(() => _showSecond = !_showSecond && !widget.disableSecond);
 
-    final nextDuration = _showSecond
-        ? widget.secondDuration ?? widget.duration
-        : widget.duration;
+    final nextDuration = _showSecond ? widget.secondDuration ?? widget.duration : widget.duration;
 
     Future.delayed(nextDuration, showNextItem);
   }

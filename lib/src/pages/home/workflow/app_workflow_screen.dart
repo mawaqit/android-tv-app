@@ -31,9 +31,8 @@ class AppWorkflowScreen extends StatelessWidget {
         timeManager.isLauncherInstalled) {
       key = ValueKey('${timeManager.shift}_${timeManager.shiftInMinutes}');
     }
-    final times = mosqueManager.useTomorrowTimes
-        ? mosqueManager.actualTimes(now.add(1.days))
-        : mosqueManager.actualTimes(now);
+    final times =
+        mosqueManager.useTomorrowTimes ? mosqueManager.actualTimes(now.add(1.days)) : mosqueManager.actualTimes(now);
 
     final iqama = mosqueManager.useTomorrowTimes
         ? mosqueManager.actualIqamaTimes(now.add(1.days))
@@ -53,9 +52,7 @@ class AppWorkflowScreen extends StatelessWidget {
 
               /// auto start Workflow if user starts the app during the Salah time
               /// give 4 minute for the salah and 2 for azkar
-              showInitial: () =>
-                  now.isAfter(elem.add(-5.minutes)) &&
-                  now.isBefore(iqama[index].add(6.minutes)),
+              showInitial: () => now.isAfter(elem.add(-5.minutes)) && now.isBefore(iqama[index].add(6.minutes)),
 
               // dateTime: e,
               // disable Duhr if it's Friday
@@ -75,8 +72,8 @@ class AppWorkflowScreen extends StatelessWidget {
 
             /// If user opens the app during the Jumuaa time then show the Jumuaa workflow
             /// give 30 minutes for the Jumuaa
-            return now.isBefore(activeJumuaaDate.add(Duration(
-                minutes: mosqueManager.mosqueConfig!.jumuaTimeout ?? 30)));
+            return now
+                .isBefore(activeJumuaaDate.add(Duration(minutes: mosqueManager.mosqueConfig!.jumuaTimeout ?? 30)));
           },
         ),
       ],

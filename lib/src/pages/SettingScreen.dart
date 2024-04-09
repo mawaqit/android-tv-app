@@ -93,10 +93,8 @@ class SettingScreen extends StatelessWidget {
                         isIconActivated: true,
                         title: S.of(context).randomHadithLanguage,
                         description: S.of(context).descLang,
-                        languages:
-                            appLanguage.hadithLocalizedLanguage.keys.toList(),
-                        isSelected: (langCode) =>
-                            appLanguage.hadithLanguage == langCode,
+                        languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
+                        isSelected: (langCode) => appLanguage.hadithLanguage == langCode,
                         onSelect: (langCode) {
                           bool isConnectedToInternet = mosqueProvider.isOnline;
                           if (!isConnectedToInternet) {
@@ -109,9 +107,7 @@ class SettingScreen extends StatelessWidget {
                               content: hadithLanguage,
                             );
                           } else {
-                            context
-                                .read<AppLanguage>()
-                                .setHadithLanguage(langCode);
+                            context.read<AppLanguage>().setHadithLanguage(langCode);
                             AppRouter.pop();
                           }
                         },
@@ -127,9 +123,7 @@ class SettingScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light
-                        ? S.of(context).darkMode
-                        : S.of(context).lightMode,
+                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
                     icon: Icon(Icons.brightness_4, size: 35),
                     onChanged: (value) => themeManager.toggleMode(),
                     value: themeManager.isLightTheme ?? false,
@@ -155,8 +149,7 @@ class SettingScreen extends StatelessWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => TimePickerModal(
-                                  timeShiftManager: timeShiftManager),
+                              builder: (context) => TimePickerModal(timeShiftManager: timeShiftManager),
                             );
                           },
                         )
@@ -167,24 +160,19 @@ class SettingScreen extends StatelessWidget {
                       subtitle: S.of(context).announcementOnlyModeEXPLINATION,
                       icon: Icon(Icons.notifications, size: 35),
                       value: userPreferences.announcementsOnly,
-                      onChanged: (value) =>
-                          userPreferences.announcementsOnly = value,
+                      onChanged: (value) => userPreferences.announcementsOnly = value,
                     ),
-                  if (!userPreferences.webViewMode &&
-                      !userPreferences.announcementsOnly)
+                  if (!userPreferences.webViewMode && !userPreferences.announcementsOnly)
                     _SettingSwitchItem(
                       title: S.of(context).secondaryScreen,
                       subtitle: S.of(context).secondaryScreenExplanation,
                       value: userPreferences.isSecondaryScreen,
                       icon: Icon(Icons.monitor, size: 35),
-                      onChanged: (value) =>
-                          userPreferences.isSecondaryScreen = value,
+                      onChanged: (value) => userPreferences.isSecondaryScreen = value,
                     ),
                   _SettingSwitchItem(
                     title: S.of(context).webView,
-                    subtitle: S
-                        .of(context)
-                        .ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
                     icon: Icon(Icons.online_prediction, size: 35),
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
@@ -225,11 +213,7 @@ class _SettingItem extends StatelessWidget {
         trailing: Icon(Icons.arrow_forward_ios),
         title: Text(title),
         subtitle: subtitle != null
-            ? Text(subtitle!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 10))
+            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 10))
             : null,
         onTap: onTap,
       ),
@@ -263,9 +247,7 @@ class _SettingSwitchItem extends StatelessWidget {
         autofocus: true,
         secondary: icon ?? SizedBox(),
         title: Text(title),
-        subtitle: subtitle != null
-            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip)
-            : null,
+        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip) : null,
         value: value,
         onChanged: onChanged,
       ),

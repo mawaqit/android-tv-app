@@ -7,7 +7,7 @@ void showCheckInternetDialog({
   required VoidCallback onRetry,
   required String title,
   required String content,
-})  {
+}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {

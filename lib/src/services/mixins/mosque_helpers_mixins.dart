@@ -22,15 +22,14 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// because we use in the [activeAnnouncements] getter
   bool get isOnline;
 
-
   /// [salahNames] getter is used to get the names of the prayers in the current language
   List<String> get salahNames => [
-    times?.isTurki ?? false ? S.current.sabah : S.current.fajr,
-    S.current.duhr,
-    S.current.asr,
-    S.current.maghrib,
-    S.current.isha,
-  ];
+        times?.isTurki ?? false ? S.current.sabah : S.current.fajr,
+        S.current.duhr,
+        S.current.asr,
+        S.current.maghrib,
+        S.current.isha,
+      ];
 
   /// [salahName] it uses the [salahNames] getter to get the name of the prayer in the current language
   String salahName(int index) => salahNames[index];
@@ -39,7 +38,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   String getSalahNameByIndex(int index, BuildContext context) {
     return [
       times!.isTurki ? S.of(context).sabah : S.of(context).fajr,
-      S .of(context).duhr,
+      S.of(context).duhr,
       S.of(context).asr,
       S.of(context).maghrib,
       S.of(context).isha,
@@ -58,7 +57,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     }
     return salahIndex >= periods.$1 && salahIndex < periods.$2;
   }
-
 
   /// Parses the start and end periods from the disabling interval configuration.
   /// Returns a `tuple` containing the start and end periods, or `null` if parsing fails.
@@ -380,7 +378,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   List<Announcement> activeAnnouncements(bool enableVideos) {
-    final announcements =  mosque!.announcements.where((element) {
+    final announcements = mosque!.announcements.where((element) {
       final startDate = DateTime.tryParse(element.startDate ?? '');
       final endDate = DateTime.tryParse(element.endDate ?? '');
       final now = mosqueDate();
@@ -396,7 +394,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       return inTime;
     }).toList();
     // check if announcement has only youtube video, add another one for infinite loop
-    if(announcements.length == 1 && announcements[0].video != null){
+    if (announcements.length == 1 && announcements[0].video != null) {
       announcements.add(announcements[0]);
     }
     return announcements;

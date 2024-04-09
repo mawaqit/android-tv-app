@@ -17,19 +17,20 @@ class HorizontalList extends StatefulWidget {
   Function? onTapLoader;
   Settings? settings;
 
-  HorizontalList({Key? key,
-    this.title = "",
-    this.description = "",
-    this.selected = "",
-    this.selectedFirstColor = "",
-    this.selectedSecondColor = "",
-    this.type = "",
-    this.icon = Icons.edit,
-    this.list = const [],
-    this.onTap,
-    this.onTapColor,
-    this.onTapLoader,
-    this.settings = null})
+  HorizontalList(
+      {Key? key,
+      this.title = "",
+      this.description = "",
+      this.selected = "",
+      this.selectedFirstColor = "",
+      this.selectedSecondColor = "",
+      this.type = "",
+      this.icon = Icons.edit,
+      this.list = const [],
+      this.onTap,
+      this.onTapColor,
+      this.onTapLoader,
+      this.settings = null})
       : super(key: key);
 
   @override
@@ -40,10 +41,7 @@ class _HorizontalList extends State<HorizontalList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
+        width: MediaQuery.of(context).size.width,
         alignment: Alignment.topLeft,
         margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
         padding: EdgeInsets.fromLTRB(0.0, 15.0, 0, 15.0),
@@ -53,28 +51,20 @@ class _HorizontalList extends State<HorizontalList> {
         ),
         child: Container(
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-              Flexible(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                    Container(
-                      child: Text(
-                        widget.title,
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-                      ),
-                      margin: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 12.0, right: 12.0),
-                    ),
-                    SizedBox(height: 10.0),
-                    _buildHorizontalList(
-                        widget.list,
-                        widget.onTap,
-                        widget.onTapColor,
-                        widget.onTapLoader,
-                        widget.selected,
-                        widget.selectedFirstColor,
-                        widget.selectedSecondColor,
-                        widget.type,
-                        widget.settings)
-                  ]))
-            ])));
+          Flexible(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+            Container(
+              child: Text(
+                widget.title,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+              ),
+              margin: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 12.0, right: 12.0),
+            ),
+            SizedBox(height: 10.0),
+            _buildHorizontalList(widget.list, widget.onTap, widget.onTapColor, widget.onTapLoader, widget.selected,
+                widget.selectedFirstColor, widget.selectedSecondColor, widget.type, widget.settings)
+          ]))
+        ])));
   }
 
   Widget _buildHorizontalList(List list, Function? onTap, Function? onTapColor, Function? onTapLoader, String selected,
@@ -96,15 +86,8 @@ class _HorizontalList extends State<HorizontalList> {
         child: new ListView(
           scrollDirection: Axis.horizontal,
           children: list.map((obj) {
-            return _buildItemGradient(
-                obj['title'],
-                obj['image'],
-                obj['firstColor'],
-                obj['secondColor'],
-                onTapColor,
-                selectedFirstColor,
-                selectedSecondColor,
-                settings);
+            return _buildItemGradient(obj['title'], obj['image'], obj['firstColor'], obj['secondColor'], onTapColor,
+                selectedFirstColor, selectedSecondColor, settings);
           }).toList(),
         ),
       );
@@ -167,8 +150,8 @@ class _HorizontalList extends State<HorizontalList> {
                           ),
                           borderRadius: BorderRadius.circular(12.0)),
                       child: new Column(
-                        //constraints:BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-                        //alignment: Alignment.center,
+                          //constraints:BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                          //alignment: Alignment.center,
                           children: [
                             new Expanded(
                               child: new Container(
@@ -176,12 +159,12 @@ class _HorizontalList extends State<HorizontalList> {
                                   borderRadius: BorderRadius.circular(12.0),
                                   image: new DecorationImage(
                                     image: image_,
-                                      fit: BoxFit.fill,
-                                      ),
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                                 alignment: AlignmentDirectional.topCenter,
                                 child: Row(
-                                  /*
+                                    /*
                                 children: [
                                   Expanded(
                                     flex: 1,
@@ -199,7 +182,7 @@ class _HorizontalList extends State<HorizontalList> {
                                   ),
                                 ],
                                 */
-                                ),
+                                    ),
                               ),
                             ),
                           ])))),
@@ -281,9 +264,9 @@ class _HorizontalList extends State<HorizontalList> {
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,
                                           color:
-                                          (selectedFirstColor == firstColor && selectedSecondColor == secondColor)
-                                              ? Colors.white
-                                              : Colors.grey[300]),
+                                              (selectedFirstColor == firstColor && selectedSecondColor == secondColor)
+                                                  ? Colors.white
+                                                  : Colors.grey[300]),
                                     ),
                                   ),
                                 ),

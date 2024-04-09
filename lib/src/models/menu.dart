@@ -1,22 +1,14 @@
 class Menu {
-  String? id="";
-  String? title="";
-  String? type="";
-  String? icon="";
-  String? url="";
-  String? status="";
-  String? date="";
-  String? iconUrl="";
+  String? id = "";
+  String? title = "";
+  String? type = "";
+  String? icon = "";
+  String? url = "";
+  String? status = "";
+  String? date = "";
+  String? iconUrl = "";
 
-  Menu(
-      {this.id,
-        this.title,
-        this.type,
-        this.icon,
-        this.url,
-        this.status,
-        this.date,
-        this.iconUrl});
+  Menu({this.id, this.title, this.type, this.icon, this.url, this.status, this.date, this.iconUrl});
 
   Menu.fromJson(Map<String, dynamic> json) {
     id = json['id'];

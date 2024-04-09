@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -7,6 +9,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../main.dart';
 import '../../../helpers/connectivity_provider.dart';
 import '../../../services/user_preferences_manager.dart';
 import '../../../widgets/mawaqit_youtube_palyer.dart';
@@ -31,7 +34,8 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
   @override
   void initState() {
     invalidStreamUrl = context.read<MosqueManager>().mosque?.streamUrl == null;
-
+    final mosque = context.read<MosqueManager>().mosque!.streamUrl!;
+    log('JummuaLive: invalidStreamUrl: $invalidStreamUrl || $mosque');
     super.initState();
   }
 
@@ -45,21 +49,21 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     final jumuaaDisableInMosque = !userPrefs.isSecondaryScreen && mosqueManager.typeIsMosque;
 
     return switch (connectivity) {
-      AsyncData(:final value) =>
-        switchStreamWidget(value, mosqueManager, jumuaaDisableInMosque),
+      AsyncData(:final value) => switchStreamWidget(value, mosqueManager, jumuaaDisableInMosque),
       _ => CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), // Green color
-      ),
+          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), // Green color
+        ),
     };
   }
 
-  Widget switchStreamWidget(ConnectivityStatus connectivityStatus,
-      MosqueManager mosqueManager, bool jumuaaDisableInMosque) {
+  Widget switchStreamWidget(
+      ConnectivityStatus connectivityStatus, MosqueManager mosqueManager, bool jumuaaDisableInMosque) {
     if (invalidStreamUrl ||
         mosqueManager.mosque?.streamUrl == null ||
         jumuaaDisableInMosque ||
         connectivityStatus == ConnectivityStatus.disconnected) {
-      if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) return JumuaHadithSubScreen(onDone: widget.onDone);
+      if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true)
+        return JumuaHadithSubScreen(onDone: widget.onDone);
 
       return Scaffold(backgroundColor: Colors.black);
     } else {

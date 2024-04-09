@@ -12,10 +12,8 @@ class AppConfig {
     MediaQueryData _queryData = MediaQuery.of(this._context);
     _height = _queryData.size.height / 100.0;
     _width = _queryData.size.width / 100.0;
-    _heightPadding = _height -
-        ((_queryData.padding.top + _queryData.padding.bottom) / 100.0);
-    _widthPadding =
-        _width - (_queryData.padding.left + _queryData.padding.right) / 100.0;
+    _heightPadding = _height - ((_queryData.padding.top + _queryData.padding.bottom) / 100.0);
+    _widthPadding = _width - (_queryData.padding.left + _queryData.padding.right) / 100.0;
   }
 
   double appHeight(double v) {
@@ -38,8 +36,7 @@ class AppConfig {
 class AppColors {
   Color mainColor([double opacity = 1]) {
     try {
-      return Color(int.parse("#490094".replaceAll("#", "0xFF")))
-          .withOpacity(opacity);
+      return Color(int.parse("#490094".replaceAll("#", "0xFF"))).withOpacity(opacity);
     } catch (e) {
       return Color(0xFFCCCCCC).withOpacity(opacity);
     }
@@ -47,8 +44,7 @@ class AppColors {
 
   Color secondColor(double opacity) {
     try {
-      return Color(int.parse("#490094".replaceAll("#", "0xFF")))
-          .withOpacity(opacity);
+      return Color(int.parse("#490094".replaceAll("#", "0xFF"))).withOpacity(opacity);
     } catch (e) {
       return Color(0xFFCCCCCC).withOpacity(opacity);
     }
@@ -56,8 +52,7 @@ class AppColors {
 
   Color accentColor(double opacity) {
     try {
-      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF")))
-          .withOpacity(opacity);
+      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF"))).withOpacity(opacity);
     } catch (e) {
       return Color(0xFFCCCCCC).withOpacity(opacity);
     }
@@ -65,8 +60,7 @@ class AppColors {
 
   Color mainDarkColor(double opacity) {
     try {
-      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF")))
-          .withOpacity(opacity);
+      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF"))).withOpacity(opacity);
     } catch (e) {
       return Color(0xFFCCCCCC).withOpacity(opacity);
     }
@@ -74,8 +68,7 @@ class AppColors {
 
   Color secondDarkColor(double opacity) {
     try {
-      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF")))
-          .withOpacity(opacity);
+      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF"))).withOpacity(opacity);
     } catch (e) {
       return Color(0xFFCCCCCC).withOpacity(opacity);
     }
@@ -83,8 +76,7 @@ class AppColors {
 
   Color accentDarkColor(double opacity) {
     try {
-      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF")))
-          .withOpacity(opacity);
+      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF"))).withOpacity(opacity);
     } catch (e) {
       return Color(0xFFCCCCCC).withOpacity(opacity);
     }
@@ -93,8 +85,7 @@ class AppColors {
   Color scaffoldColor(double opacity) {
     // TODO test if brightness is dark or not
     try {
-      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF")))
-          .withOpacity(opacity);
+      return Color(int.parse("#5a5c69".replaceAll("#", "0xFF"))).withOpacity(opacity);
     } catch (e) {
       return Color(0xFFCCCCCC).withOpacity(opacity);
     }

@@ -22,30 +22,24 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     int tapCount = 0;
-    bool menuActivated =
-        Provider.of<UserPreferencesManager>(context, listen: false)
-            .developerModeEnabled;
+    bool menuActivated = Provider.of<UserPreferencesManager>(context, listen: false).developerModeEnabled;
 
     return RawKeyboardListener(
       focusNode: FocusNode(),
       onKey: (RawKeyEvent event) {
-        if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
-            event is RawKeyDownEvent) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowDown && event is RawKeyDownEvent) {
           if (!menuActivated) {
             tapCount++;
             if (tapCount >= _activationTapCount) {
               menuActivated = true;
-              Provider.of<UserPreferencesManager>(context, listen: false)
-                  .developerModeEnabled = true;
+              Provider.of<UserPreferencesManager>(context, listen: false).developerModeEnabled = true;
               _showSnackBar(context, _activationMessage);
               tapCount = 0;
             }
           } else {
             menuActivated = false;
-            Provider.of<UserPreferencesManager>(context, listen: false)
-                .developerModeEnabled = false;
+            Provider.of<UserPreferencesManager>(context, listen: false).developerModeEnabled = false;
             _showSnackBar(context, _deactivationMessage);
           }
         }
@@ -55,7 +49,6 @@ class AboutScreen extends StatelessWidget {
           animation: R.ASSETS_ANIMATIONS_LOTTIE_WELCOME_JSON,
           child: OnBoardingMawaqitAboutWidget(),
         ),
-
       ),
     );
   }

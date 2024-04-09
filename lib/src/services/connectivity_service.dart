@@ -54,6 +54,7 @@ class ConnectivityService {
       _lastStatus = null; // reset last status
     };
   }
+
   /// [isHostReachable] returns a [Future] that completes with a [AddressCheckResult] object.
   /// [isHostReachable] Method to check if a specific host is reachable.
   Future<AddressCheckResult> isHostReachable(
@@ -102,6 +103,7 @@ class ConnectivityService {
   Future<ConnectivityStatus> get connectionStatus async {
     return await hasConnection ? ConnectivityStatus.connected : ConnectivityStatus.disconnected;
   }
+
   /// [_maybeEmitStatusUpdate]
   Future<void> _maybeEmitStatusUpdate([Timer? timer]) async {
     _timerHandle?.cancel();
@@ -131,8 +133,7 @@ class ConnectivityService {
 }
 
 /// Singleton instance of [ConnectivityService] using Riverpod.
-final connectivityServiceProvider =
-Provider.family<ConnectivityService, ConnectivityServiceParams>((
+final connectivityServiceProvider = Provider.family<ConnectivityService, ConnectivityServiceParams>((
   ref,
   params,
 ) {
