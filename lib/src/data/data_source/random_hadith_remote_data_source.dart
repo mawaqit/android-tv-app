@@ -1,9 +1,13 @@
+import 'dart:developer';
+import 'dart:isolate';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:xml_parser/xml_parser.dart';
 
 import '../../../main.dart';
+import '../../helpers/random_hadith_helper.dart';
 import '../../module/dio_module.dart';
 
 /// [RandomHadithRemoteDataSource] Handles the retrieval of random hadiths from a remote server using Dio.
@@ -12,9 +16,11 @@ import '../../module/dio_module.dart';
 class RandomHadithRemoteDataSource {
   /// [dio] The Dio client used for making HTTP requests.
   final Dio dio;
+  final Dio staticDio;
 
   RandomHadithRemoteDataSource({
     required this.dio,
+    required this.staticDio,
   });
 
   /// [getRandomHadith] Fetches a random hadith in plain text format from the remote server based
@@ -35,34 +41,26 @@ class RandomHadithRemoteDataSource {
 
   /// [getRandomHadithXML] Fetches a random hadith in XML format from the remote server based on the provided language.
   ///
-  /// This is a static method and initializes its own Dio client for the request.
-  /// Dio is initialized internally to ensure the method can be seamlessly executed within an isolate.
-  static Future<List<XmlElement>?> getRandomHadithXML({
+  /// The method returns a list of XmlElement objects representing the hadiths.
+  Future<List<XmlElement>?> getRandomHadithXML({
     String language = 'ar',
   }) async {
-    final dio = Dio(
-      BaseOptions(
-        baseUrl: kStaticFilesUrl,
-        headers: {
-          'Api-Access-Token': kApiToken,
-          'accept': 'application/json',
-          'mawaqit-device': 'android-tv',
-        },
-      ),
+    log('random_hadith: RandomHadithRemoteDataSource: Fetching random hadith XML', time: DateTime.now());
+    final List<XmlElement>? hadithXML = await Isolate.run(
+      () async {
+        final response = await staticDio.get('/xml/ahadith/$language.xml');
+        log('random_hadith: RandomHadithRemoteDataSource: response', time: DateTime.now());
+        final document = XmlDocument.from(response.data)!;
+
+        final hadithXmlList = document.getElements('hadith');
+        log('random_hadith: RandomHadithRemoteDataSource: xml list ${hadithXmlList![0]}', time: DateTime.now());
+        return hadithXmlList;
+      },
+      debugName: 'random_hadith: getRandomHadithXML',
     );
-
-    try {
-      final response = await dio.get('/xml/ahadith/$language.xml');
-
-      final document = XmlDocument.from(response.data)!;
-
-      final hadithXmlList = document.getElements('hadith');
-      return hadithXmlList;
-    } catch (e) {
-      throw e;
-    }
+    log('random_hadith: RandomHadithRemoteDataSource: Finished fetching random hadith XML ${hadithXML![0]}', time: DateTime.now());
+    return hadithXML;
   }
-
 }
 
 /// Riverpod provider for [RandomHadithRemoteDataSource].
@@ -75,8 +73,10 @@ final randomHadithRemoteDataSourceProvider = Provider.autoDispose<RandomHadithRe
       baseUrl: kBaseUrl,
     );
     final dio = ref.read(dioProvider(dioParameters));
+    final staticDio = ref.read(dioProvider(DioProviderParameter(baseUrl: kStaticFilesUrl)));
     return RandomHadithRemoteDataSource(
       dio: dio.dio,
+      staticDio: staticDio.dio,
     );
   },
 );

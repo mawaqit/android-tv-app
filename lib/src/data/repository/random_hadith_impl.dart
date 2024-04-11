@@ -1,9 +1,12 @@
-import 'dart:isolate';
+import 'dart:developer';
+import 'dart:math' show Random;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/data/data_source/random_hadith_local_data_source.dart';
 import 'package:mawaqit/src/domain/repository/random_hadith_repository.dart';
+import 'package:mawaqit/src/helpers/AppDate.dart';
+import 'package:mawaqit/src/helpers/random_hadith_helper.dart';
 import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/services/connectivity_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,58 +47,134 @@ class RandomHadithImpl implements RandomHadithRepository {
   ///
   /// This approach ensures that the Hadith is fetched at most once per day per language,
   /// optimizing both network usage and user experience by providing quick access to cached data.
-  @override
+  ///
+  ///
   @override
   Future<String> getRandomHadith({required String language}) async {
-    final hadithLanguageLocal = sharedPreferences.getString(RandomHadithConstant.kHadithLanguage);
+    log('random_hadith: RandomHadithImpl: Fetching random Hadith');
 
+    final hadithLanguageLocal = sharedPreferences.getString(RandomHadithConstant.kHadithLanguage);
+    log('random_hadith: RandomHadithImpl: Stored language: $hadithLanguageLocal');
     if (hadithLanguageLocal != null) {
       language = hadithLanguageLocal;
     }
 
-    final checkConnectivity = await connectivityService.connectionStatus;
-    if (checkConnectivity == ConnectivityStatus.connected) {
-      final hadith = await remoteDataSource.getRandomHadith(language: language);
+    language = RandomHadithHelper.changeLanguageFormat(language);
+    log('random_hadith: RandomHadithImpl: Formatted language: $language');
 
-      final lastRunTime = sharedPreferences.getInt(RandomHadithConstant.kLastHadithXMLFetchDate);
-      final lastRunLanguage = sharedPreferences.getString(RandomHadithConstant.kLastHadithXMLFetchLanguage);
+    final isConnected = await connectivityService.connectionStatus == ConnectivityStatus.connected;
+    log('random_hadith: RandomHadithImpl: Internet connection status: $isConnected');
 
-      bool isFetchNeeded = true;
+    if (isConnected) {
+      return await _handleOnlineMode(language);
+    } else {
+      return await _handleOfflineMode(language);
+    }
+  }
 
-      if (lastRunTime != null && lastRunLanguage != null) {
-        final lastRunDate = DateTime.fromMillisecondsSinceEpoch(lastRunTime);
-        final now = DateTime.now();
-        isFetchNeeded = now.difference(lastRunDate).inDays >= 1 || lastRunLanguage != language;
+  /// [fetchAndCacheHadith] Fetches and caches a random Hadith from the remote source.
+  ///
+  /// This method uses an Isolate to fetch the Hadith in XML format from the
+  /// remote source and caches it locally using the [RandomHadithLocalDataSource].
+  /// If the provided language string contains two languages separated by an
+  /// underscore, it fetches and caches the Hadith for both languages.
+  Future<void> fetchAndCacheHadith(String language) async {
+    language = RandomHadithHelper.changeLanguageFormat(language);
+
+    log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: isTwoLanguage ${RandomHadithHelper.isTwoLanguage(language)}');
+    if (RandomHadithHelper.isTwoLanguage(language)) {
+      final languageList = RandomHadithHelper.getLanguage(language);
+      log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: languageList $languageList');
+      for (final lang in languageList) {
+        log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: language in for $lang');
+        // Use an isolate to fetch the Hadith in XML format and cache it locally.
+        final hadithXmlList = await remoteDataSource.getRandomHadithXML(language: lang);
+        if (hadithXmlList != null) {
+          final hadithList = hadithXmlList.map((e) => e.text).whereType<String>().toList();
+          log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: hadithList ${hadithList.length} ${hadithList.first}');
+          await localDataSource.cacheRandomHadith(lang, hadithList);
+        }
       }
-
-      // If the fetch is not needed, return the cached Hadith.
-      if(!isFetchNeeded) {
-        return hadith;
-      }
-
-      // Update the date of the last successful fetch operation.
-      final today = DateTime.now().millisecondsSinceEpoch;
-      await sharedPreferences.setInt(RandomHadithConstant.kLastHadithXMLFetchDate, today);
-      await sharedPreferences.setString(RandomHadithConstant.kLastHadithXMLFetchLanguage, language);
-
-      logger.i('isFetchNeeded: $isFetchNeeded $language $lastRunLanguage $lastRunTime');
-      // Use an isolate to fetch the Hadith in XML format and cache it locally.
-      final hadithXmlList = await Isolate.run(
-        () async => RandomHadithRemoteDataSource.getRandomHadithXML(language: language),
-      );
-
+    } else {
+      log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: language $language');
+      final hadithXmlList = await remoteDataSource.getRandomHadithXML(language: language);
       if (hadithXmlList != null) {
-        final List<String> hadithList = [];
-        hadithXmlList.forEach((e) {
-          if (e.text != null) hadithList.add(e.text!);
-        });
+        final hadithList = hadithXmlList.map((e) => e.text).whereType<String>().toList();
+        log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: hadithList ${hadithList.length} ${hadithList.first}');
         await localDataSource.cacheRandomHadith(language, hadithList);
       }
+    }
+  }
+
+  /// Handles the online mode for fetching a random Hadith.
+  ///
+  /// This method checks if a fetch operation is needed based on the last fetch
+  /// timestamp and language. If a new fetch is required, it fetches the Hadith
+  /// from the remote source, updates the local cache, and records the fetch
+  /// timestamp and language in [SharedPreferences].
+  Future<String> _handleOnlineMode(String language) async {
+    log('random_hadith: RandomHadithImpl: Handling online mode');
+
+    final hadith = await remoteDataSource.getRandomHadith(language: language);
+
+    final lastRunTime = sharedPreferences.getInt(RandomHadithConstant.kLastHadithXMLFetchDate);
+    final lastRunLanguage = sharedPreferences.getString(RandomHadithConstant.kLastHadithXMLFetchLanguage);
+
+    log('random_hadith: RandomHadithImpl: Last fetch time: $lastRunTime, Last fetch language: $lastRunLanguage');
+
+    bool isFetchNeeded = true;
+
+    if (lastRunTime != null && lastRunLanguage != null) {
+      final lastRunDate = DateTime.fromMillisecondsSinceEpoch(lastRunTime);
+      final now = AppDateTime.now();
+      isFetchNeeded = now.difference(lastRunDate).inDays >= 1 || lastRunLanguage != language;
+    }
+
+    log('random_hadith: RandomHadithImpl: Fetch needed: $isFetchNeeded');
+
+    // If the fetch is not needed, return the cached Hadith.
+    if (!isFetchNeeded) {
+      log('random_hadith: RandomHadithImpl: Returning cached Hadith');
       return hadith;
+    }
+
+    // Update the date of the last successful fetch operation.
+    final today = DateTime.now().millisecondsSinceEpoch;
+    await sharedPreferences.setInt(RandomHadithConstant.kLastHadithXMLFetchDate, today);
+    await sharedPreferences.setString(RandomHadithConstant.kLastHadithXMLFetchLanguage, language);
+
+    log('random_hadith: RandomHadithImpl: Updating fetch timestamp and language with $language');
+
+    fetchAndCacheHadith(language);
+
+    log('random_hadith: RandomHadithImpl: Returning fetched Hadith');
+    return hadith;
+  }
+
+  /// Handles the offline mode for fetching a random Hadith.
+  ///
+  /// This method fetches the Hadith from the local cache based on the provided
+  /// language. If the language string contains two languages separated by an
+  /// underscore, it randomly selects one of the languages and fetches the
+  /// Hadith for that language.
+  Future<String> _handleOfflineMode(String language) async {
+    log('random_hadith: RandomHadithImpl: Handling offline mode');
+
+    if (RandomHadithHelper.isTwoLanguage(language)) {
+      final languageList = RandomHadithHelper.getLanguage(language);
+      final randomLanguage = languageList[Random().nextInt(languageList.length)];
+      log('random_hadith: RandomHadithImpl: Fetching Hadith for random language: $randomLanguage');
+
+      // Fetch from local cache if not connected.
+      final hadith = await localDataSource.getRandomHadith(language: randomLanguage);
+      log('random_hadith: RandomHadithImpl: Fetched Hadith: ${hadith ?? 'No Hadith found'}');
+      return hadith ?? '';
     } else {
+      log('random_hadith: RandomHadithImpl: Fetching Hadith for language: $language');
+
       // Fetch from local cache if not connected.
       final hadith = await localDataSource.getRandomHadith(language: language);
-
+      log('random_hadith: RandomHadithImpl: Fetched Hadith: ${hadith ?? 'No Hadith found'}');
       return hadith ?? '';
     }
   }
