@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, Ref, WidgetRef;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/connectivity_provider.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
+import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/pages/HijriAdjustmentsScreen.dart';
 import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
@@ -17,19 +19,21 @@ import 'package:sizer/sizer.dart';
 import '../../i18n/AppLanguage.dart';
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
+import '../state_management/random_hadith/random_hadith_notifier.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
-class SettingScreen extends riverpod.ConsumerWidget {
+class SettingScreen extends ConsumerWidget {
   const SettingScreen({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context, riverpod.WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder<void>(
       future: _initializeTimeShiftManager(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return _buildSettingScreen(context);
+          return _buildSettingScreen(context, ref);
         } else {
           return SizedBox();
         }
@@ -41,7 +45,7 @@ class SettingScreen extends riverpod.ConsumerWidget {
     await TimeShiftManager().initializeTimes();
   }
 
-  Widget _buildSettingScreen(BuildContext context) {
+  Widget _buildSettingScreen(BuildContext context,WidgetRef ref) {
     final theme = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
     final mosqueProvider = context.watch<MosqueManager>();
@@ -89,35 +93,51 @@ class SettingScreen extends riverpod.ConsumerWidget {
                     title: S.of(context).randomHadithLanguage,
                     subtitle: S.of(context).hadithLangDesc,
                     icon: Icon(Icons.language, size: 35),
-                    onTap: () => AppRouter.push(
-                      LanguageScreen(
-                        isIconActivated: true,
-                        title: S.of(context).randomHadithLanguage,
-                        description: S.of(context).descLang,
-                        languages:
-                            appLanguage.hadithLocalizedLanguage.keys.toList(),
-                        isSelected: (langCode) =>
-                            appLanguage.hadithLanguage == langCode,
-                        onSelect: (langCode) {
-                          bool isConnectedToInternet = mosqueProvider.isOnline;
-                          if (!isConnectedToInternet) {
-                            showCheckInternetDialog(
-                              context: context,
-                              onRetry: () {
-                                AppRouter.pop();
+                    onTap: () {
+                      context.read<AppLanguage>().getHadithLanguage();
+                      AppRouter.push(
+                        LanguageScreen(
+                          isIconActivated: true,
+                          title: S.of(context).randomHadithLanguage,
+                          description: S.of(context).descLang,
+                          languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
+                          isSelected: (langCode) {
+                            return appLanguage.hadithLanguage == langCode;
+                          },
+                          onSelect: (langCode) async {
+                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                            ref.watch(connectivityProvider).maybeWhen(
+                              orElse: (){
+                                showCheckInternetDialog(
+                                  context: context,
+                                  onRetry: () {
+                                    AppRouter.pop();
+                                  },
+                                  title: checkInternet,
+                                  content: hadithLanguage,
+                                );
                               },
-                              title: checkInternet,
-                              content: hadithLanguage,
+                              data: (isConnectedToInternet) {
+                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                  showCheckInternetDialog(
+                                    context: context,
+                                    onRetry: () {
+                                      AppRouter.pop();
+                                    },
+                                    title: checkInternet,
+                                    content: hadithLanguage,
+                                  );
+                                } else {
+                                  context.read<AppLanguage>().setHadithLanguage(langCode);
+                                  ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: langCode);
+                                  AppRouter.pop();
+                                }
+                              },
                             );
-                          } else {
-                            context
-                                .read<AppLanguage>()
-                                .setHadithLanguage(langCode);
-                            AppRouter.pop();
-                          }
-                        },
-                      ),
-                    ),
+                          },
+                        ),
+                      );
+                    },
                   ),
                   SizedBox(height: 30),
                   Divider(),
@@ -128,9 +148,7 @@ class SettingScreen extends riverpod.ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                   _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light
-                        ? S.of(context).darkMode
-                        : S.of(context).lightMode,
+                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
                     icon: Icon(Icons.brightness_4, size: 35),
                     onChanged: (value) => themeManager.toggleMode(),
                     value: themeManager.isLightTheme ?? false,
@@ -156,8 +174,7 @@ class SettingScreen extends riverpod.ConsumerWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => TimePickerModal(
-                                  timeShiftManager: timeShiftManager),
+                              builder: (context) => TimePickerModal(timeShiftManager: timeShiftManager),
                             );
                           },
                         )
@@ -168,24 +185,19 @@ class SettingScreen extends riverpod.ConsumerWidget {
                       subtitle: S.of(context).announcementOnlyModeEXPLINATION,
                       icon: Icon(Icons.notifications, size: 35),
                       value: userPreferences.announcementsOnly,
-                      onChanged: (value) =>
-                          userPreferences.announcementsOnly = value,
+                      onChanged: (value) => userPreferences.announcementsOnly = value,
                     ),
-                  if (!userPreferences.webViewMode &&
-                      !userPreferences.announcementsOnly)
+                  if (!userPreferences.webViewMode && !userPreferences.announcementsOnly)
                     _SettingSwitchItem(
                       title: S.of(context).secondaryScreen,
                       subtitle: S.of(context).secondaryScreenExplanation,
                       value: userPreferences.isSecondaryScreen,
                       icon: Icon(Icons.monitor, size: 35),
-                      onChanged: (value) =>
-                          userPreferences.isSecondaryScreen = value,
+                      onChanged: (value) => userPreferences.isSecondaryScreen = value,
                     ),
                   _SettingSwitchItem(
                     title: S.of(context).webView,
-                    subtitle: S
-                        .of(context)
-                        .ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
                     icon: Icon(Icons.online_prediction, size: 35),
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
@@ -226,11 +238,7 @@ class _SettingItem extends StatelessWidget {
         trailing: Icon(Icons.arrow_forward_ios),
         title: Text(title),
         subtitle: subtitle != null
-            ? Text(subtitle!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 10))
+            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 10))
             : null,
         onTap: onTap,
       ),
@@ -264,9 +272,7 @@ class _SettingSwitchItem extends StatelessWidget {
         autofocus: true,
         secondary: icon ?? SizedBox(),
         title: Text(title),
-        subtitle: subtitle != null
-            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip)
-            : null,
+        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip) : null,
         value: value,
         onChanged: onChanged,
       ),
