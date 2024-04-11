@@ -29,9 +29,6 @@ class _NormalWorkflowScreenState extends ConsumerState<NormalWorkflowScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(randomHadithNotifierProvider.notifier).getRandomHadith();
-    });
   }
 
   @override

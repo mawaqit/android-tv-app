@@ -1,14 +1,13 @@
-import 'dart:isolate';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/helpers/Api.dart';
-import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
 import '../../../state_management/random_hadith/random_hadith_notifier.dart';
@@ -27,11 +26,10 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
 
   @override
   void initState() {
-    final mosqueManager = context.read<MosqueManager>();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      ref.read(randomHadithNotifierProvider.notifier).getRandomHadith(
-            language: mosqueManager.mosqueConfig!.hadithLang ?? 'ar',
-          );
+    log('random_hadith: RandomHadithScreen initState');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final hadith = context.read<AppLanguage>().hadithLanguage == '' ? 'ar' : context.read<AppLanguage>().hadithLanguage;
+      ref.read(randomHadithNotifierProvider.notifier).getRandomHadith(language: hadith);
     });
     super.initState();
   }
