@@ -9,6 +9,14 @@ class RandomHadithState extends Equatable {
 
   RandomHadithState.initial() : hadith = '';
 
+  RandomHadithState copyWith({
+    String? hadith,
+  }) {
+    return RandomHadithState(
+      hadith: hadith ?? this.hadith,
+    );
+  }
+
   @override
   List<Object?> get props => [hadith];
 }
