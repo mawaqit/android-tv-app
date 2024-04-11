@@ -17,6 +17,22 @@ class ConnectivityProvider extends StreamNotifier<ConnectivityStatus> {
     return ref
         .watch(connectivityStreamProvider.future).asStream();
   }
+
+  /// [checkInternetConnection] Check the internet connection status.
+  ///
+  /// This method checks the internet connection status and updates the state accordingly.
+  Future<void> checkInternetConnection() async {
+    state = AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final internet = InternetConnectionCheckerPlus();
+      final status = await internet.hasConnection;
+      if (status) {
+        return ConnectivityStatus.connected;
+      } else {
+        return ConnectivityStatus.disconnected;
+      }
+    });
+  }
 }
 
 /// transform the stream of connectivity status to a stream of [ConnectivityStatus].
