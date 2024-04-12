@@ -10,8 +10,7 @@ import 'package:mawaqit/src/helpers/HexColor.dart';
 class OfflineScreen extends StatefulWidget {
   final VoidCallback onPressedTryAgain;
 
-  const OfflineScreen({Key? key, required this.onPressedTryAgain})
-      : super(key: key);
+  const OfflineScreen({Key? key, required this.onPressedTryAgain}) : super(key: key);
 
   @override
   State<OfflineScreen> createState() => _OfflineScreenState();
@@ -40,10 +39,7 @@ class _OfflineScreenState extends State<OfflineScreen> {
               ),
               Text(
                 S.of(context).whoops,
-                style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 40.0,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(color: Colors.white70, fontSize: 40.0, fontWeight: FontWeight.bold),
               ),
               Text(
                 S.of(context).noInternet,

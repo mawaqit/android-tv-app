@@ -41,9 +41,7 @@ class ScreenWithAnimationWidget extends StatelessWidget {
           : AppBar(elevation: 0),
       body: SafeArea(
         child: Flex(
-          direction: userPrefs.calculatedOrientation == Orientation.portrait
-              ? Axis.vertical
-              : Axis.horizontal,
+          direction: userPrefs.calculatedOrientation == Orientation.portrait ? Axis.vertical : Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
@@ -52,9 +50,7 @@ class ScreenWithAnimationWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Lottie.asset(
-                    animation.contains('assets/')
-                        ? animation
-                        : 'assets/animations/lottie/$animation.json',
+                    animation.contains('assets/') ? animation : 'assets/animations/lottie/$animation.json',
                     fit: BoxFit.contain,
                   ),
                 ),

@@ -29,8 +29,7 @@ class _NumberInputScreenState extends State<NumberInputScreen> {
     if (int.tryParse(event.logicalKey.keyLabel) != null) {
       setState(() {
         currentNumber ??= 0;
-        currentNumber =
-            (currentNumber! * 10) + int.parse(event.logicalKey.keyLabel);
+        currentNumber = (currentNumber! * 10) + int.parse(event.logicalKey.keyLabel);
       });
     } else if (event.logicalKey == LogicalKeyboardKey.backspace) {
       if (currentNumber == null || currentNumber == 0) return;

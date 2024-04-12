@@ -31,8 +31,8 @@ class TimeShiftManager {
 
   Future<bool> _isPackageInstalled(String packageName) async {
     try {
-      final result = await MethodChannel('nativeMethodsChannel')
-          .invokeMethod('isPackageInstalled', {'packageName': packageName});
+      final result =
+          await MethodChannel('nativeMethodsChannel').invokeMethod('isPackageInstalled', {'packageName': packageName});
       return result;
     } on PlatformException catch (_) {
       return false;
@@ -53,8 +53,7 @@ class TimeShiftManager {
     _shiftedhours = prefs.getInt(_shiftedhoursKey) ?? 0;
     _shiftinMinutes = prefs.getInt(_shiftInMinutesKey) ?? 0;
 
-    _previousTime = DateTime.parse(
-        prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String());
+    _previousTime = DateTime.parse(prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String());
     _timeSetFromHour = prefs.getBool(_timeSetFromHourKey) ?? false;
 
     _isLauncherInstalled = await _isPackageInstalled("com.mawaqit.launcher");
@@ -74,9 +73,7 @@ class TimeShiftManager {
     const Duration period = Duration(seconds: 30);
 
     Timer.periodic(period, (Timer timer) {
-      if (!_timeSetFromHour &&
-          _isLauncherInstalled &&
-          _deviceModel == "MAWABOX") {
+      if (!_timeSetFromHour && _isLauncherInstalled && _deviceModel == "MAWABOX") {
         adjustTime();
       }
     });
@@ -89,13 +86,10 @@ class TimeShiftManager {
       DateTime currentTime = DateTime.now();
       String previousTimezoneOffset = prefs.getString(_timezoneOffsetKey) ?? '';
       String currentTimezoneOffset = currentTime.timeZoneOffset.toString();
-      String previousSavedTime =
-          prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String();
+      String previousSavedTime = prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String();
       _previousTime = currentTime.subtract(const Duration(seconds: 10));
 
-      if (previousTimezoneOffset != currentTimezoneOffset &&
-          currentTime.month == 3 &&
-          currentTime.day == 31) {
+      if (previousTimezoneOffset != currentTimezoneOffset && currentTime.month == 3 && currentTime.day == 31) {
         prefs.setString(_timezoneOffsetKey, currentTimezoneOffset);
         return;
       }
@@ -105,8 +99,7 @@ class TimeShiftManager {
 
       if (currentTime.hour != _previousTimeFromShared.hour) {
         int minuteDifference = (currentTime.hour * 60 + currentTime.minute) -
-            (_previousTimeFromShared.hour * 60 +
-                _previousTimeFromShared.minute);
+            (_previousTimeFromShared.hour * 60 + _previousTimeFromShared.minute);
 
         if (minuteDifference >= 55 && minuteDifference <= 65) _shiftedhours++;
 

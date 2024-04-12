@@ -5,8 +5,7 @@ class Loader extends StatefulWidget {
   String? type;
   Color color;
 
-  Loader({Key? key, this.type = "", this.color = Colors.white})
-      : super(key: key);
+  Loader({Key? key, this.type = "", this.color = Colors.white}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {

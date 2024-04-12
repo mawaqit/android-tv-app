@@ -37,15 +37,12 @@ class LandscapeNormalHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
-    final today = mosqueManager.useTomorrowTimes
-        ? AppDateTime.tomorrow()
-        : AppDateTime.now();
+    final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
     final times = mosqueManager.times!.dayTimesStrings(today);
     final iqamas = mosqueManager.times!.dayIqamaStrings(today);
 
-    final isIqamaMoreImportant =
-        mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
+    final isIqamaMoreImportant = mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
     final iqamaEnabled = mosqueManager.mosqueConfig?.iqamaEnabled == true;
 
     final nextActiveSalah = mosqueManager.nextSalahIndex();
@@ -67,9 +64,7 @@ class LandscapeNormalHome extends StatelessWidget {
                       removeBackground: true,
                       title: S.of(context).shuruk,
                       time: mosqueManager.getShurukTimeString() ?? '',
-                      isIqamaMoreImportant:
-                          mosqueManager.mosqueConfig!.iqamaMoreImportant ==
-                              true,
+                      isIqamaMoreImportant: mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
                     ),
                     secondDuration: Duration(seconds: 15),
                     second: SalahItemWidget(
@@ -80,10 +75,7 @@ class LandscapeNormalHome extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-
-
-                  child: HomeTimeWidget().animate().fadeIn().slideY(begin: -1), flex: 4),
+              Expanded(child: HomeTimeWidget().animate().fadeIn().slideY(begin: -1), flex: 4),
               Expanded(
                 flex: 2,
                 child:
@@ -113,10 +105,7 @@ class LandscapeNormalHome extends StatelessWidget {
                   .mapIndexed((i, e) => Expanded(
                           child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 1.vw),
-                        child: e
-                            .animate(delay: Duration(milliseconds: 100 * i))
-                            .slideY(begin: 1)
-                            .fadeIn(),
+                        child: e.animate(delay: Duration(milliseconds: 100 * i)).slideY(begin: 1).fadeIn(),
                       )))
                   .toList(),
             ),

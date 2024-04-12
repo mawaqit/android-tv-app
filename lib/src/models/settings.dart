@@ -219,13 +219,11 @@ class Settings {
     }
 
     if (json['leftNavigationIcon'] != null) {
-      leftNavigationIcon =
-          new NavigationIcon.fromJson(json['leftNavigationIcon']);
+      leftNavigationIcon = new NavigationIcon.fromJson(json['leftNavigationIcon']);
     }
 
     if (json['rightNavigationIcon'] != null) {
-      rightNavigationIcon =
-          new NavigationIcon.fromJson(json['rightNavigationIcon']);
+      rightNavigationIcon = new NavigationIcon.fromJson(json['rightNavigationIcon']);
     }
 
     if (json['rightNavigationIconList'] != null) {
@@ -302,8 +300,7 @@ class Settings {
     data['colorTab'] = this.colorTab;
 
     if (this.rightNavigationIconList != null) {
-      data['rightNavigationIconList'] =
-          this.rightNavigationIconList!.map((v) => v.toJson()).toList();
+      data['rightNavigationIconList'] = this.rightNavigationIconList!.map((v) => v.toJson()).toList();
     }
 
     if (this.menus != null) {

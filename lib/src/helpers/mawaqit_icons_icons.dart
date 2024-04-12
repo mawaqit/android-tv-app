@@ -27,8 +27,10 @@ class MawaqitIcons {
   static const IconData logo_dark_inactive = IconData(0xe926, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData logo_dark_with_text = IconData(0xe939, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData logo_light_with_text = IconData(0xe94e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData logo_dark_with_text_horizontal = IconData(0xe963, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData logo_light_with_text_horizontal = IconData(0xe78, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData logo_dark_with_text_horizontal =
+      IconData(0xe963, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData logo_light_with_text_horizontal =
+      IconData(0xe78, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
   //Calligraphy
   static const IconData arabic_calligraphy_salat_time = IconData(0xe98d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -59,23 +61,32 @@ class MawaqitIcons {
   static const IconData icon_flag_pt = IconData(0xea09, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_flag_nl = IconData(0xea1a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_facilities_parking = IconData(0xea1d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_facilities_parking_disabled = IconData(0xea1e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icon_facilities_parking_disabled =
+      IconData(0xea1e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_facilities_ablutions = IconData(0xea1f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_facilities_ablutions_disabled = IconData(0xea20, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icon_facilities_ablutions_disabled =
+      IconData(0xea20, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_facilities_wheelchair = IconData(0xea21, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_facilities_wheelchair_disabled = IconData(0xea22, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icon_facilities_wheelchair_disabled =
+      IconData(0xea22, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_facilities_woman = IconData(0xea23, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_facilities_woman_disabled = IconData(0xea24, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icon_facilities_woman_disabled =
+      IconData(0xea24, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_facilities_janazah = IconData(0xea25, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_facilities_janazah_diabled = IconData(0xea26, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icon_facilities_janazah_diabled =
+      IconData(0xea26, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_facilities_children = IconData(0xea27, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_facilities_children_disabled = IconData(0xea28, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icon_facilities_children_disabled =
+      IconData(0xea28, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_facilities_adults = IconData(0xea29, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_facilities_adults_disabled = IconData(0xea2a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icon_facilities_adults_disabled =
+      IconData(0xea2a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_facilities_aidsalat = IconData(0xea2b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_facilities_aidsalat_disabled = IconData(0xea2c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icon_facilities_aidsalat_disabled =
+      IconData(0xea2c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_facilities_iftar = IconData(0xea2d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_facilities_iftar_disabled = IconData(0xea2e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icon_facilities_iftar_disabled =
+      IconData(0xea2e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_salat_aid = IconData(0xe9b1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_arrow_left = IconData(0xea2f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_arrow_right = IconData(0xea30, fontFamily: _kFontFam, fontPackage: _kFontPkg);

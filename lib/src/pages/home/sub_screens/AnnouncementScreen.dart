@@ -54,11 +54,11 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
   Widget build(BuildContext context) {
     ref.listen(announcement_workflow.announcementWorkflowProvider, (previous, next) {
       if (!next.value!.isActivated && previous!.value!.isActivated) widget.onDone?.call();
-      if(next.hasError) widget.onDone?.call();
+      if (next.hasError) widget.onDone?.call();
     });
     return ref.watch(announcement_workflow.announcementWorkflowProvider).maybeWhen(
           orElse: () => SizedBox(),
-          data: (state) =>  Stack(
+          data: (state) => Stack(
             alignment: Alignment.bottomCenter,
             children: [
               announcementWidgets(

@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// [AppLanguage] is a class that handles the app language
 /// It is a singleton class that can be accessed from anywhere in the app
 class AppLanguage extends ChangeNotifier {
-
   static final AppLanguage _instance = AppLanguage._internal();
   factory AppLanguage() {
     return _instance;
@@ -18,7 +17,7 @@ class AppLanguage extends ChangeNotifier {
   AppLanguage._internal();
 
   /// [kHadithLanguage] key stored in the shared preference
-  static const  String kHadithLanguage = 'hadith_language';
+  static const String kHadithLanguage = 'hadith_language';
   String _hadithLanguage = "";
   Locale _appLocale = Locale('en', '');
 
@@ -39,6 +38,7 @@ class AppLanguage extends ChangeNotifier {
       return Config.isoLang[languageCode]?['nativeName'] ?? languageCode;
     }
   }
+
   String get currentLanguageName => languageName(_appLocale.languageCode);
 
   Locale get appLocal => _appLocale;
@@ -102,7 +102,6 @@ class AppLanguage extends ChangeNotifier {
     'nl_ar': (context) => S.of(context).nl_ar,
   };
 
-
   /// set the language of the hadith in shared preference
   Future<void> setHadithLanguage(String language) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -116,7 +115,7 @@ class AppLanguage extends ChangeNotifier {
   Future<String?> getHadithLanguage() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? hadithLanguage = prefs.getString(kHadithLanguage);
-    if(hadithLanguage != null) {
+    if (hadithLanguage != null) {
       _hadithLanguage = hadithLanguage;
       notifyListeners();
       return hadithLanguage;
