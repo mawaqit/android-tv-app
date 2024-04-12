@@ -6,9 +6,13 @@ import 'package:mawaqit/src/models/mosqueConfig.dart';
 mixin AudioMixin on ChangeNotifier {
   abstract MosqueConfig? mosqueConfig;
 
-  Duration getAdhanDuration() {
+  Duration getAdhanDuration(bool isFajrPray) {
     String? adhanName = mosqueConfig?.adhanVoice;
     Duration duration = Duration(seconds: mosqueConfig!.adhanDuration!);
+
+    if(isFajrPray && adhanName != null){
+      adhanName = adhanName + '-fajr';
+    }
 
     switch (adhanName) {
       case "adhan-afassy":
@@ -43,7 +47,7 @@ mixin AudioMixin on ChangeNotifier {
         duration = Duration(seconds: 185 + 5);
         break;
     }
-    log('AudioMixin: Adhan duration: $duration');
+
     return duration;
   }
 }
