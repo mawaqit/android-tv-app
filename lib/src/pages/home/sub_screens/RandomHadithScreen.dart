@@ -58,7 +58,6 @@ class _RandomHadithScreenState extends State<RandomHadithScreen> {
         ),
         ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 10),
-
       ],
     );
   }

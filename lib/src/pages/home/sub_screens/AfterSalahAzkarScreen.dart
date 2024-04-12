@@ -87,7 +87,6 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
         ),
         ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 10),
-
       ],
     );
   }

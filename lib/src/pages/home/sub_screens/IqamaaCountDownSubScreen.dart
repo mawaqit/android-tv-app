@@ -90,7 +90,6 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
           ),
         ).animate().slide(delay: .5.seconds).fade().addRepaintBoundary(),
         SizedBox(height: 1.vh),
-
         StreamBuilder(
             stream: Stream.periodic(Duration(seconds: 1)),
             builder: (context, snapshot) {
@@ -118,7 +117,6 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
         Spacer(),
         ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 1.vh),
-
       ],
     );
   }

@@ -189,7 +189,7 @@ class SalahItemWidget extends StatelessOrientationWidget {
                   letterSpacing: 1,
                   color: Colors.white,
                 ),
-            ),
+              ),
           ],
         ),
       ),

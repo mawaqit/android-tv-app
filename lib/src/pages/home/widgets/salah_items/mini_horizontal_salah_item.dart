@@ -66,7 +66,6 @@ class MiniHorizontalSalahItem extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            
           ],
         ),
       ),
