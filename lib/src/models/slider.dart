@@ -24,4 +24,3 @@ class Slider {
     return data;
   }
 }
-

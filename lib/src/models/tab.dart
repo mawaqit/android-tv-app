@@ -5,12 +5,7 @@ class Tab {
   String? icon_url = "";
   String? icon_base64 = "";
 
-  Tab(
-      {this.id,
-      this.title,
-      this.url,
-      this.icon_url,
-      this.icon_base64});
+  Tab({this.id, this.title, this.url, this.icon_url, this.icon_base64});
 
   Tab.fromJson(Map<String, dynamic> json) {
     id = json['id'];

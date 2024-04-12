@@ -17,8 +17,7 @@ class SettingsManager extends ChangeNotifier {
   /// 1- check for cached value first to speed up the first load time
   /// 2- fetch the new value and cache it for future use
   Future<void> init() async {
-    _settings =
-        await settingsService.getCachedSettings().catchError((e) => null);
+    _settings = await settingsService.getCachedSettings().catchError((e) => null);
 
     if (_settings != null) {
       if (hasListeners) notifyListeners();

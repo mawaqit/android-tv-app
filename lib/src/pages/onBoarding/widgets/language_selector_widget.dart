@@ -76,7 +76,6 @@ class LanguageSelector extends StatelessWidget {
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),
                   isIconActivated: isIconActivated,
-
                 );
               },
             ),

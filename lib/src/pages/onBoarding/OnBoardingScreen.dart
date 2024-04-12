@@ -142,9 +142,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
               final locale = LocaleHelper.splitLocaleCode(state.language);
               if (sortedLocales.contains(locale)) {
                 String language = locale.languageCode;
-                ref
-                    .read(onBoardingProvider.notifier)
-                    .setLanguage(language, context);
+                ref.read(onBoardingProvider.notifier).setLanguage(language, context);
               }
             }
           },
@@ -165,8 +163,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     );
   }
 
-  WillPopScope buildWillPopScope(
-      OnBoardingItem activePage, BuildContext context) {
+  WillPopScope buildWillPopScope(OnBoardingItem activePage, BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         if (currentScreen == 0) return true;
@@ -187,11 +184,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
               children: [
                 VersionWidget(
                   style: TextStyle(
-                    color: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        ?.color
-                        ?.withOpacity(.5),
+                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
                   ),
                 ),
                 Spacer(flex: 2),
@@ -201,8 +194,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                   decorator: DotsDecorator(
                     size: const Size.square(9.0),
                     activeSize: const Size(21.0, 9.0),
-                    activeShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0)),
+                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                     spacing: EdgeInsets.all(3),
                   ),
                 ),

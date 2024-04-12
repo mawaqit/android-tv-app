@@ -1,24 +1,15 @@
 class Social {
-  String? id="";
-  String? title="";
-  String? linkUrl="";
-  String? idApp="";
-  String? icon="";
-  String? url="";
-  String? status="";
-  String? date="";
-  String? iconUrl="";
+  String? id = "";
+  String? title = "";
+  String? linkUrl = "";
+  String? idApp = "";
+  String? icon = "";
+  String? url = "";
+  String? status = "";
+  String? date = "";
+  String? iconUrl = "";
 
-  Social(
-      {this.id,
-        this.title,
-        this.linkUrl,
-        this.idApp,
-        this.icon,
-        this.url,
-        this.status,
-        this.date,
-        this.iconUrl});
+  Social({this.id, this.title, this.linkUrl, this.idApp, this.icon, this.url, this.status, this.date, this.iconUrl});
 
   Social.fromJson(Map<String, dynamic> json) {
     id = json['id'];

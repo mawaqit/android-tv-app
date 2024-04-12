@@ -59,11 +59,7 @@ class KuwaitiCalendar {
       }
     }
 
-    int jd = (365.25 * (y + 4716)).floor() +
-        (30.6001 * (m + 1)).floor() +
-        day +
-        b -
-        1524;
+    int jd = (365.25 * (y + 4716)).floor() + (30.6001 * (m + 1)).floor() + day + b - 1524;
 
     b = 0;
     if (jd > 2299160) {
@@ -84,8 +80,7 @@ class KuwaitiCalendar {
     }
     year = cc - 4716;
 
-    int wd =
-        dayShift != 0 ? gmod(jd + 1 - dayShift, 7) + 1 : gmod(jd + 1, 7) + 1;
+    int wd = dayShift != 0 ? gmod(jd + 1 - dayShift, 7) + 1 : gmod(jd + 1, 7) + 1;
 
     double iyear = 10631 / 30;
     int epochastro = 1948084;

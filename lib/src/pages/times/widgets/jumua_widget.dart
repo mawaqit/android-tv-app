@@ -38,8 +38,7 @@ class JumuaWidget extends StatelessWidget {
       title: S.of(context).salatElEid,
       iqama: mosqueManager.times!.aidPrayerTime2,
       time: mosqueManager.times!.aidPrayerTime ?? "",
-      isIqamaMoreImportant:
-          mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
+      isIqamaMoreImportant: false,
     );
   }
 
@@ -50,11 +49,8 @@ class JumuaWidget extends StatelessWidget {
       title: S.of(context).jumua,
       time: DateFormat.Hm().format(mosqueManager.activeJumuaaDate()) ?? "",
       iqama: mosqueManager.times!.jumua2,
-      isIqamaMoreImportant:
-          mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
-      active: mosqueManager.nextIqamaIndex() == 1 &&
-          AppDateTime.isFriday &&
-          mosqueManager.times?.jumua != null,
+      isIqamaMoreImportant: false,
+      active: mosqueManager.nextIqamaIndex() == 1 && AppDateTime.isFriday && mosqueManager.times?.jumua != null,
     );
   }
 }

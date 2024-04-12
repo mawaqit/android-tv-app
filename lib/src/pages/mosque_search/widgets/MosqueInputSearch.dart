@@ -83,13 +83,8 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
 
   /// handle on mosque tile clicked
   Future<void> _selectMosque(Mosque mosque) {
-    return context
-        .read<MosqueManager>()
-        .setMosqueUUid(mosque.uuid.toString())
-        .then((value) {
-      !context.read<MosqueManager>().typeIsMosque
-          ? onboardingWorkflowDone()
-          : widget.onDone?.call();
+    return context.read<MosqueManager>().setMosqueUUid(mosque.uuid.toString()).then((value) {
+      !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
     }).catchError((e, stack) {
       if (e is InvalidMosqueId) {
         setState(() {
@@ -126,16 +121,11 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
                 style: TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.w700,
-                  color: theme.brightness == Brightness.dark
-                      ? null
-                      : theme.primaryColor,
+                  color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
                 ),
               ).animate().slideY(begin: -1).fade(),
               SizedBox(height: 20),
-              searchField(theme)
-                  .animate()
-                  .slideX(begin: 1, delay: 200.milliseconds)
-                  .fadeIn(),
+              searchField(theme).animate().slideX(begin: 1, delay: 200.milliseconds).fadeIn(),
               SizedBox(height: 20),
               for (var i = 0; i < results.length; i++)
                 MosqueSimpleTile(
@@ -159,8 +149,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
                       builder: (context) {
                         if (loading) return CircularProgressIndicator();
 
-                        if (noMore && results.isEmpty)
-                          return Text(S.of(context).mosqueNoResults);
+                        if (noMore && results.isEmpty) return Text(S.of(context).mosqueNoResults);
                         if (noMore) return Text(S.of(context).mosqueNoMore);
 
                         return SizedBox();
@@ -183,8 +172,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
         color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
       ),
       onFieldSubmitted: (val) => _searchMosque(val, 1),
-      cursorColor:
-          theme.brightness == Brightness.dark ? null : theme.primaryColor,
+      cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
       autofocus: true,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
@@ -194,9 +182,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
         hintText: S.of(context).searchForMosque,
         hintStyle: TextStyle(
           fontWeight: FontWeight.normal,
-          color: theme.brightness == Brightness.dark
-              ? null
-              : theme.primaryColor.withOpacity(0.4),
+          color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
         ),
         suffixIcon: InkWell(
           borderRadius: BorderRadius.circular(30),

@@ -12,13 +12,12 @@ class MosqueInformationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosque = context.read<MosqueManager>().mosque;
     String phoneNumber = "${mosque?.phone != null ? mosque!.phone : ""} ";
-    String association =
-        "${mosque?.association != null ? mosque?.association : ""} ";
+    String association = "${mosque?.association != null ? mosque?.association : ""} ";
     // String bank = "${mosque?.} ";
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.5.vh),
-       child: Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(

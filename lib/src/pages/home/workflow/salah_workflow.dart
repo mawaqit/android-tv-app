@@ -72,8 +72,8 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
     final now = mosqueManger.mosqueDate();
     final currentSalahTime = mosqueManger.actualTimes()[currentSalah];
     final currentIqamaTime = mosqueManger.actualIqamaTimes()[currentSalah];
-
-    final adhanEndTime = currentSalahTime.add(mosqueManger.getAdhanDuration());
+    final isFajrPray = mosqueManger.salahIndex == 0;
+    final adhanEndTime = currentSalahTime.add(mosqueManger.getAdhanDuration(isFajrPray));
     final adhanDuaaEndTime = adhanEndTime.add(Duration(seconds: 35));
     final iqamaEndTime = currentIqamaTime.add(Duration(minutes: 1));
     final salahTime = mosqueManger.mosqueConfig!.duaAfterPrayerShowTimes[currentSalah];
@@ -93,7 +93,6 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
         WorkFlowItem(
           builder: (context, next) => AdhanSubScreen(onDone: next),
           skip: now.isAfter(adhanEndTime),
-          minimumDuration: mosqueManger.isShortIqamaDuration(currentSalah) ? 90.seconds : 150.seconds,
         ),
         WorkFlowItem(
           builder: (context, next) => AfterAdhanSubScreen(onDone: next),

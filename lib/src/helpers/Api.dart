@@ -83,9 +83,7 @@ class Api {
     final url = 'https://www.google.com/';
 
     return dio
-        .get(url,
-            options: Options(
-                extra: {'disableCache': true, 'bypassJsonInterceptor': true}))
+        .get(url, options: Options(extra: {'disableCache': true, 'bypassJsonInterceptor': true}))
         .timeout(Duration(seconds: 5))
         .then((value) => true)
         .catchError((e) => false);
@@ -181,8 +179,7 @@ class Api {
 
   /// prepare the data to be cached
   static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
-      Future.wait(
-          language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
+      Future.wait(language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
 
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file
@@ -209,8 +206,7 @@ class Api {
   static Future<String> randomHadith({String language = 'ar'}) async {
     final response = await dio.get('/2.0/hadith/random',
         queryParameters: {'lang': language},
-        options: Options(
-            extra: {'disableCache': true, "bypassJsonInterceptor": true}));
+        options: Options(extra: {'disableCache': true, "bypassJsonInterceptor": true}));
 
     return response.data['text'];
   }
@@ -218,8 +214,7 @@ class Api {
   static Future<dynamic> getWeather(String mosqueUUID) async {
     final response = await dio.get(
       '/2.0/mosque/$mosqueUUID/weather',
-      options:
-          Options(extra: {'disableCache': true, "bypassJsonInterceptor": true}),
+      options: Options(extra: {'disableCache': true, "bypassJsonInterceptor": true}),
     );
 
     return Weather.fromMap(response.data);
@@ -248,14 +243,8 @@ class Api {
       var deviceIdFuture = UniqueIdentifier.serial;
 
       // Wait for all futures to complete in a parallel way
-      var results = await Future.wait([
-        hardwareFuture,
-        softwareFuture,
-        languageFuture,
-        freeSpaceFuture,
-        totalSpaceFuture,
-        deviceIdFuture
-      ]);
+      var results = await Future.wait(
+          [hardwareFuture, softwareFuture, languageFuture, freeSpaceFuture, totalSpaceFuture, deviceIdFuture]);
 
       // Extract results
       var hardware = results[0] as AndroidDeviceInfo;

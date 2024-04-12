@@ -14,17 +14,17 @@ class NavigationIcon {
 
   NavigationIcon(
       {this.id,
-        this.icon,
-        this.title,
-        this.value,
-        this.type,
-        this.url,
-        this.status,
-        this.fixed,
-        this.createdAt,
-        this.updatedAt,
-        this.iconUrl,
-        this.iconUrlBase64});
+      this.icon,
+      this.title,
+      this.value,
+      this.type,
+      this.url,
+      this.status,
+      this.fixed,
+      this.createdAt,
+      this.updatedAt,
+      this.iconUrl,
+      this.iconUrlBase64});
 
   NavigationIcon.fromJson(Map<String, dynamic> json) {
     id = json['id'];
