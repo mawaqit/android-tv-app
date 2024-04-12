@@ -37,7 +37,6 @@ class _IqamaSubScreenState extends State<IqamaSubScreen> {
 
   @override
   void dispose() {
-    audioManager?.stop();
     super.dispose();
   }
 

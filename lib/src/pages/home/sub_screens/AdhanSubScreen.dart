@@ -65,7 +65,6 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
 
   @override
   void dispose() {
-    audioManager?.stop();
     super.dispose();
   }
 

@@ -39,7 +39,6 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
 
   @override
   void dispose() {
-    audioManager.stop();
     super.dispose();
   }
 
