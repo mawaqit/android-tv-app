@@ -28,7 +28,8 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
   void initState() {
     log('random_hadith: RandomHadithScreen initState');
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final hadith = context.read<AppLanguage>().hadithLanguage == '' ? 'ar' : context.read<AppLanguage>().hadithLanguage;
+      final hadith =
+          context.read<AppLanguage>().hadithLanguage == '' ? 'ar' : context.read<AppLanguage>().hadithLanguage;
       ref.read(randomHadithNotifierProvider.notifier).getRandomHadith(language: hadith);
     });
     super.initState();
@@ -66,8 +67,8 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
             error: (error, stackTrace) {
               widget.onDone?.call();
               return Center(
-              child: Text('Error: $error'),
-            );
+                child: Text('Error: $error'),
+              );
             },
           ),
         ),

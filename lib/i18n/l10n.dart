@@ -7,8 +7,8 @@ class S {
   static AppLocalizations? _current;
 
   static AppLocalizations get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+        _current != null, 'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
     return _current!;
   }
 
@@ -20,11 +20,9 @@ class S {
     return _current!;
   }
 
-  static AppLocalizations? maybeOf(BuildContext context) =>
-      AppLocalizations.of(context);
+  static AppLocalizations? maybeOf(BuildContext context) => AppLocalizations.of(context);
 
-  static LocalizationsDelegate<AppLocalizations> get delegate =>
-      AppLocalizations.delegate;
+  static LocalizationsDelegate<AppLocalizations> get delegate => AppLocalizations.delegate;
 
   static List<Locale> get supportedLocales => AppLocalizations.supportedLocales;
 }

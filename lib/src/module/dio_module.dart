@@ -16,14 +16,14 @@ class DioModule {
     Dio? dio,
     Interceptor? interceptor,
   }) : _dio = dio ??
-      Dio(
-        BaseOptions(
-          baseUrl: baseUrl ?? '',
-          connectTimeout: connectTimeout ?? Duration(seconds: 5),
-          receiveTimeout: receiveTimeout ?? Duration(seconds: 10),
-          headers: headers,
-        ),
-      ) {
+            Dio(
+              BaseOptions(
+                baseUrl: baseUrl ?? '',
+                connectTimeout: connectTimeout ?? Duration(seconds: 5),
+                receiveTimeout: receiveTimeout ?? Duration(seconds: 10),
+                headers: headers,
+              ),
+            ) {
     if (interceptor != null) {
       _dio.interceptors.add(interceptor);
     }
@@ -40,10 +40,10 @@ class DioModule {
   }
 
   Map<String, String> get defaultHeader => {
-    'Api-Access-Token': kApiToken,
-    'accept': 'application/json',
-    'mawaqit-device': 'android-tv',
-  };
+        'Api-Access-Token': kApiToken,
+        'accept': 'application/json',
+        'mawaqit-device': 'android-tv',
+      };
 
   /// Getter to expose the Dio instance.
   Dio get dio => _dio;

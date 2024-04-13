@@ -45,7 +45,7 @@ class SettingScreen extends ConsumerWidget {
     await TimeShiftManager().initializeTimes();
   }
 
-  Widget _buildSettingScreen(BuildContext context,WidgetRef ref) {
+  Widget _buildSettingScreen(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
     final mosqueProvider = context.watch<MosqueManager>();
@@ -107,7 +107,7 @@ class SettingScreen extends ConsumerWidget {
                           onSelect: (langCode) async {
                             await ref.read(connectivityProvider.notifier).checkInternetConnection();
                             ref.watch(connectivityProvider).maybeWhen(
-                              orElse: (){
+                              orElse: () {
                                 showCheckInternetDialog(
                                   context: context,
                                   onRetry: () {
@@ -129,7 +129,9 @@ class SettingScreen extends ConsumerWidget {
                                   );
                                 } else {
                                   context.read<AppLanguage>().setHadithLanguage(langCode);
-                                  ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: langCode);
+                                  ref
+                                      .read(randomHadithNotifierProvider.notifier)
+                                      .fetchAndCacheHadith(language: langCode);
                                   AppRouter.pop();
                                 }
                               },

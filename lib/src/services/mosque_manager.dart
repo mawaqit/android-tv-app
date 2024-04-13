@@ -28,8 +28,7 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(seconds: 140);
 
-class MosqueManager extends ChangeNotifier
-    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
+class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -63,7 +62,6 @@ class MosqueManager extends ChangeNotifier
       notifyListeners();
     }
   }
-
 
   bool get loaded => mosque != null && times != null && mosqueConfig != null;
 
@@ -160,7 +158,7 @@ class MosqueManager extends ChangeNotifier
     final configStream = Api.getMosqueConfigStream(uuid).asBroadcastStream();
 
     _mosqueSubscription = mosqueStream.listen(
-          (e) {
+      (e) {
         mosque = e;
         _updateFlashEnabled();
         notifyListeners();
@@ -169,7 +167,7 @@ class MosqueManager extends ChangeNotifier
     );
 
     _timesSubscription = timesStream.listen(
-          (e) {
+      (e) {
         times = e;
         notifyListeners();
       },
@@ -177,7 +175,7 @@ class MosqueManager extends ChangeNotifier
     );
 
     _configSubscription = configStream.listen(
-          (e) {
+      (e) {
         mosqueConfig = e;
         notifyListeners();
       },

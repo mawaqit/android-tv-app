@@ -1,8 +1,7 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/domain/usecase/on_boarding_usecase.dart';
-import 'package:provider/provider.dart' as provider ;
+import 'package:provider/provider.dart' as provider;
 
 import '../../../i18n/AppLanguage.dart';
 import 'on_boarding_state.dart';
@@ -37,6 +36,4 @@ class OnBoardingNotifier extends AsyncNotifier<OnboardingState> {
   }
 }
 
-
-final onBoardingProvider =
-AsyncNotifierProvider<OnBoardingNotifier, OnboardingState>(OnBoardingNotifier.new);
+final onBoardingProvider = AsyncNotifierProvider<OnBoardingNotifier, OnboardingState>(OnBoardingNotifier.new);

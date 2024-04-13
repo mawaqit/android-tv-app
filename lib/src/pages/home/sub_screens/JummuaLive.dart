@@ -45,21 +45,21 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     final jumuaaDisableInMosque = !userPrefs.isSecondaryScreen && mosqueManager.typeIsMosque;
 
     return switch (connectivity) {
-      AsyncData(:final value) =>
-        switchStreamWidget(value, mosqueManager, jumuaaDisableInMosque),
+      AsyncData(:final value) => switchStreamWidget(value, mosqueManager, jumuaaDisableInMosque),
       _ => CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), // Green color
-      ),
+          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), // Green color
+        ),
     };
   }
 
-  Widget switchStreamWidget(ConnectivityStatus connectivityStatus,
-      MosqueManager mosqueManager, bool jumuaaDisableInMosque) {
+  Widget switchStreamWidget(
+      ConnectivityStatus connectivityStatus, MosqueManager mosqueManager, bool jumuaaDisableInMosque) {
     if (invalidStreamUrl ||
         mosqueManager.mosque?.streamUrl == null ||
         jumuaaDisableInMosque ||
         connectivityStatus == ConnectivityStatus.disconnected) {
-      if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) return JumuaHadithSubScreen(onDone: widget.onDone);
+      if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true)
+        return JumuaHadithSubScreen(onDone: widget.onDone);
 
       return Scaffold(backgroundColor: Colors.black);
     } else {

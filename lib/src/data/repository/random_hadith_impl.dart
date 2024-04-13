@@ -180,7 +180,6 @@ class RandomHadithImpl implements RandomHadithRepository {
   }
 }
 
-
 /// [randomHadithRepositoryProvider] Riverpod provider for RandomHadithImpl.
 final randomHadithRepositoryProvider = FutureProvider.autoDispose<RandomHadithImpl>(
   (ref) async {

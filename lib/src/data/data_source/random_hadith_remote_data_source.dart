@@ -58,7 +58,8 @@ class RandomHadithRemoteDataSource {
       },
       debugName: 'random_hadith: getRandomHadithXML',
     );
-    log('random_hadith: RandomHadithRemoteDataSource: Finished fetching random hadith XML ${hadithXML![0]}', time: DateTime.now());
+    log('random_hadith: RandomHadithRemoteDataSource: Finished fetching random hadith XML ${hadithXML![0]}',
+        time: DateTime.now());
     return hadithXML;
   }
 }

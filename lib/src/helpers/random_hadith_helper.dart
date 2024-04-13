@@ -1,4 +1,3 @@
-
 class RandomHadithHelper {
   static String changeLanguageFormat(String language) {
     return language.replaceAll('_', '-');

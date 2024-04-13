@@ -33,8 +33,7 @@ class RandomHadithNotifier extends AsyncNotifier<RandomHadithState> {
       return Future.value(state.value);
     });
   }
-
 }
 
 final randomHadithNotifierProvider =
-AsyncNotifierProvider<RandomHadithNotifier, RandomHadithState>(RandomHadithNotifier.new);
+    AsyncNotifierProvider<RandomHadithNotifier, RandomHadithState>(RandomHadithNotifier.new);

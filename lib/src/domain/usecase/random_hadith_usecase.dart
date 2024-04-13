@@ -12,10 +12,10 @@ class RandomHadithUseCase {
   Future<String> getRandomHadith({
     String language = 'ar',
   }) async {
-    try{
-      final hadith =  await _hadithRepository.getRandomHadith(language: language);
+    try {
+      final hadith = await _hadithRepository.getRandomHadith(language: language);
       return hadith;
-    }  catch (e) {
+    } catch (e) {
       rethrow;
     }
   }

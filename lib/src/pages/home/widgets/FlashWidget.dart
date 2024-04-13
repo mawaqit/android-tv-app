@@ -16,7 +16,6 @@ class FlashWidget extends StatefulWidget {
 }
 
 class _FlashWidgetState extends State<FlashWidget> {
-
   @override
   Widget build(BuildContext context) {
     final isFlashEnabled = context.select<MosqueManager, bool>((mosque) => mosque.flashEnabled);
@@ -26,9 +25,7 @@ class _FlashWidgetState extends State<FlashWidget> {
     return RepaintBoundary(
       child: Marquee(
         key: ValueKey(flash!.content),
-        textDirection: flash.orientation == 'rtl'
-            ? TextDirection.rtl
-            : TextDirection.ltr,
+        textDirection: flash.orientation == 'rtl' ? TextDirection.rtl : TextDirection.ltr,
         text: flash.content ?? '',
         velocity: 90,
         blankSpace: 400,

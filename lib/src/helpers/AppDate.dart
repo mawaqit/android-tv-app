@@ -26,13 +26,8 @@ class AppDateTime {
 
   // Initial setup for debug time; can be replaced or modified as needed.
   static final DateTime _initialRealTime = DateTime.now();
-  static final DateTime _initialDebugTime = DateTime(
-    _initialRealTime.year,
-    _initialRealTime.month,
-    _initialRealTime.day,
-    13,
-    5
-  );
+  static final DateTime _initialDebugTime =
+      DateTime(_initialRealTime.year, _initialRealTime.month, _initialRealTime.day, 13, 5);
 
   static final Duration _timeDifference = _initialDebugTime.difference(_initialRealTime);
 
@@ -40,12 +35,10 @@ class AppDateTime {
     if (kDebugMode) {
       return DateTime.now().add(_timeDifference);
     } else {
-      return FeatureManagerProvider.featureManager
-                  .isFeatureEnabled("timezone_shift") &&
+      return FeatureManagerProvider.featureManager.isFeatureEnabled("timezone_shift") &&
               _timeManager.deviceModel == "MAWABOX" &&
               _timeManager.isLauncherInstalled
-          ? DateTime.now().add(Duration(
-              hours: _timeManager.shift, minutes: _timeManager.shiftInMinutes))
+          ? DateTime.now().add(Duration(hours: _timeManager.shift, minutes: _timeManager.shiftInMinutes))
           : DateTime.now();
     }
   }

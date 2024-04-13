@@ -78,7 +78,7 @@ class RandomHadithLocalDataSource {
   /// This method returns a list of languages for which hadiths are available in the local storage.
   List<String> availableLanguages() {
     try {
-      if(box.keys.isNotEmpty){
+      if (box.keys.isNotEmpty) {
         return [];
       }
       return box.keys.cast<String>().toList();
