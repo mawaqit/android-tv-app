@@ -35,7 +35,7 @@ class RandomHadithRemoteDataSource {
       );
       return response.data['text'];
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -46,21 +46,26 @@ class RandomHadithRemoteDataSource {
     String language = 'ar',
   }) async {
     log('random_hadith: RandomHadithRemoteDataSource: Fetching random hadith XML', time: DateTime.now());
-    final List<XmlElement>? hadithXML = await Isolate.run(
-      () async {
-        final response = await staticDio.get('/xml/ahadith/$language.xml');
-        log('random_hadith: RandomHadithRemoteDataSource: response', time: DateTime.now());
-        final document = XmlDocument.from(response.data)!;
+    try {
+      final response = await staticDio.get('/xml/ahadith/$language.xml');
+      final List<XmlElement>? hadithXML = await Isolate.run(
+        () async {
+          log('random_hadith: RandomHadithRemoteDataSource: start xml fetch', time: DateTime.now());
+          final document = XmlDocument.from(response.data)!;
 
-        final hadithXmlList = document.getElements('hadith');
-        log('random_hadith: RandomHadithRemoteDataSource: xml list ${hadithXmlList![0]}', time: DateTime.now());
-        return hadithXmlList;
-      },
-      debugName: 'random_hadith: getRandomHadithXML',
-    );
-    log('random_hadith: RandomHadithRemoteDataSource: Finished fetching random hadith XML ${hadithXML![0]}',
-        time: DateTime.now());
-    return hadithXML;
+          final hadithXmlList = document.getElements('hadith');
+          log('random_hadith: RandomHadithRemoteDataSource: xml list ${hadithXmlList![0]}', time: DateTime.now());
+          return hadithXmlList;
+        },
+        debugName: 'random_hadith: getRandomHadithXML',
+      );
+      log('random_hadith: RandomHadithRemoteDataSource: Finished fetching random hadith XML ${hadithXML![0]}',
+          time: DateTime.now());
+      return hadithXML;
+    } catch (e) {
+      logger.e('Error fetching random hadith XML $e', error: e);
+      rethrow;
+    }
   }
 }
 
