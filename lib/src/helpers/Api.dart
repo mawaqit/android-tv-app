@@ -178,9 +178,8 @@ class Api {
   }
 
   /// prepare the data to be cached
-  // static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
-  //     Future.wait(
-  //         language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
+  static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
+      Future.wait(language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
 
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file

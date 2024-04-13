@@ -26,8 +26,14 @@ class AppDateTime {
 
   // Initial setup for debug time; can be replaced or modified as needed.
   static final DateTime _initialRealTime = DateTime.now();
-  static final DateTime _initialDebugTime =
-      DateTime(_initialRealTime.year, _initialRealTime.month, _initialRealTime.day, 13, 5);
+  static final DateTime _initialDebugTime = DateTime(
+    _initialRealTime.year,
+    _initialRealTime.month,
+    _initialRealTime.day,
+    13,
+    00,
+    -10,
+  );
 
   static final Duration _timeDifference = _initialDebugTime.difference(_initialRealTime);
 
