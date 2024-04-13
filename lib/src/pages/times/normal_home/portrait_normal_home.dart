@@ -59,9 +59,9 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
         final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
         final prays = mosque.times?.dayTimesStrings(today);
         ref.read(appUpdateProvider.notifier).startScheduleUpdate(
-          languageCode: context.read<AppLanguage>().appLocal.languageCode,
-          prayerTimeList: prays ?? [],
-        );
+              languageCode: context.read<AppLanguage>().appLocal.languageCode,
+              prayerTimeList: prays ?? [],
+            );
       });
     });
     super.initState();
@@ -77,7 +77,7 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
   Widget build(BuildContext context) {
     ref.listen(appUpdateProvider, (previous, next) {
       if (next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable &&
-          next.value!.message != previous!.value!.message){
+          next.value!.message != previous!.value!.message) {
         showUpdateAlert(
           context: context,
           duration: Duration(seconds: 30),

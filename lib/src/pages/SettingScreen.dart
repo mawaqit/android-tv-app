@@ -117,23 +117,21 @@ class SettingScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  riverpod.Consumer(
-                    builder: (context, ref, child) {
-                      return _SettingSwitchItem(
-                        title: S.of(context).automaticUpdate,
-                        subtitle: S.of(context).automaticUpdateDescription,
-                        icon: Icon(Icons.update, size: 35),
-                        onChanged: (value) {
-                          logger.d('setting: disable the update $value');
-                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
-                        },
-                        value: ref.watch(appUpdateProvider).maybeWhen(
-                              orElse: () => false,
-                              data: (data) => data.isAutoUpdateChecking,
-                            ),
-                      );
-                    }
-                  ),
+                  riverpod.Consumer(builder: (context, ref, child) {
+                    return _SettingSwitchItem(
+                      title: S.of(context).automaticUpdate,
+                      subtitle: S.of(context).automaticUpdateDescription,
+                      icon: Icon(Icons.update, size: 35),
+                      onChanged: (value) {
+                        logger.d('setting: disable the update $value');
+                        ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
+                      },
+                      value: ref.watch(appUpdateProvider).maybeWhen(
+                            orElse: () => false,
+                            data: (data) => data.isAutoUpdateChecking,
+                          ),
+                    );
+                  }),
                   SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),

@@ -72,10 +72,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
         await shared.setInt(CacheKey.kLastPopupDisplay, AppDateTime.now().millisecondsSinceEpoch);
         update(
           (p0) => p0.copyWith(
-            appUpdateStatus: AppUpdateStatus.updateAvailable,
-            message: message,
-            releaseNote: releaseNotes ?? ''
-          ),
+              appUpdateStatus: AppUpdateStatus.updateAvailable, message: message, releaseNote: releaseNotes ?? ''),
         );
         return state.value!;
       } else {

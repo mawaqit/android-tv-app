@@ -74,7 +74,7 @@ Future<void> _showUpdateVersionDialog(
         ),
         actions: <Widget>[
           TextButton(
-              child:  Text(l10n.update),
+              child: Text(l10n.update),
               onPressed: () {
                 onPressed();
                 Navigator.of(context).pop();

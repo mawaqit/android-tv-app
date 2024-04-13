@@ -29,8 +29,7 @@ class AppUpdateState extends Equatable {
         releaseNote = '',
         appUpdateStatus = AppUpdateStatus.initial,
         isAutoUpdateChecking = true,
-        isUpdateDismissed = false
-  ;
+        isUpdateDismissed = false;
 
   AppUpdateState copyWith({
     String? message,
@@ -49,8 +48,7 @@ class AppUpdateState extends Equatable {
   }
 
   @override
-  List get props =>
-      [
+  List get props => [
         message,
         releaseNote,
         appUpdateStatus,

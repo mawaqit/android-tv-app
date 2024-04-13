@@ -57,9 +57,9 @@ class _LandScapeTurkishHomeState extends riverpod.ConsumerState<LandScapeTurkish
         final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
         final prays = mosque.times?.dayTimesStrings(today);
         ref.read(appUpdateProvider.notifier).startScheduleUpdate(
-          languageCode: context.read<AppLanguage>().appLocal.languageCode,
-          prayerTimeList: prays ?? [],
-        );
+              languageCode: context.read<AppLanguage>().appLocal.languageCode,
+              prayerTimeList: prays ?? [],
+            );
       });
     });
     super.initState();
@@ -75,7 +75,7 @@ class _LandScapeTurkishHomeState extends riverpod.ConsumerState<LandScapeTurkish
   Widget build(BuildContext context) {
     ref.listen(appUpdateProvider, (previous, next) {
       if (next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable &&
-          next.value!.message != previous!.value!.message){
+          next.value!.message != previous!.value!.message) {
         showUpdateAlert(
           context: context,
           onDismissPressed: () => ref.read(appUpdateProvider.notifier).dismissUpdate(),
@@ -172,10 +172,10 @@ class _LandScapeTurkishHomeState extends riverpod.ConsumerState<LandScapeTurkish
                   ),
               ]
                   .mapIndexed((i, e) => Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 1.vw),
-                    child: e.animate(delay: Duration(milliseconds: 100 * i)).slideY(begin: 1).fade(),
-                  )))
+                          child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 1.vw),
+                        child: e.animate(delay: Duration(milliseconds: 100 * i)).slideY(begin: 1).fade(),
+                      )))
                   .toList(),
             ),
           ),
