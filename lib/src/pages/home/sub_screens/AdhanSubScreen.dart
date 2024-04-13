@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
@@ -39,16 +40,21 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig;
     audioManager = context.read<AudioManager>();
+    final isFajrPray = mosqueManager.salahIndex == 0;
+    final duration = mosqueManager.getAdhanDuration(isFajrPray);
 
-    if (mosqueManager.isShortIqamaDuration(mosqueManager.salahIndex)) {
-      /// this will close this screen after 90 seconds
+    Future.delayed(Duration(minutes: 5), () {
       closeAdhanScreen();
-    }
+    });
+
+    Future.delayed(duration, () {
+      closeAdhanScreen();
+    });
 
     if (widget.forceAdhan || mosqueManager.adhanVoiceEnable()) {
       audioManager!.loadAndPlayAdhanVoice(
         mosqueConfig,
-        onDone: closeAdhanScreen,
+        onDone: () {},
         useFajrAdhan: mosqueManager.salahIndex == 0,
       );
     } else {

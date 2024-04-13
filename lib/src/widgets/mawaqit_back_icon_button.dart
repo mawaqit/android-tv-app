@@ -37,16 +37,14 @@ class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
               children: [
                 Align(
                   alignment: Alignment(.5, 0),
-                  child: Icon(widget.icon,
-                      color: focused ? Colors.white : color, size: 16),
+                  child: Icon(widget.icon, color: focused ? Colors.white : color, size: 16),
                   widthFactor: .5,
                   heightFactor: 1,
                 ),
                 SizedBox(width: 10),
                 Text(
                   widget.label,
-                  style: theme.textTheme.bodySmall!
-                      .copyWith(color: focused ? Colors.white : color),
+                  style: theme.textTheme.bodySmall!.copyWith(color: focused ? Colors.white : color),
                 ),
               ],
             ),

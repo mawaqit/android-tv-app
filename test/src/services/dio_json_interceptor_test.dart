@@ -15,8 +15,6 @@ void main() {
       dio = Dio(BaseOptions(baseUrl: baseUrl));
       dio.interceptors.add(JsonInterceptor());
       dioAdapter = DioAdapter(dio: dio);
-
-
     });
 
     test('Test onResponse Interceptor with incorrect JSON', () async {

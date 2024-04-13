@@ -65,7 +65,6 @@ class MosqueManager extends ChangeNotifier
     }
   }
 
-
   bool get loaded => mosque != null && times != null && mosqueConfig != null;
 
   Mosque? mosque;

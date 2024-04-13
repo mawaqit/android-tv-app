@@ -90,26 +90,20 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
     });
 
     final mosqueManager = context.watch<MosqueManager>();
-    final today = mosqueManager.useTomorrowTimes
-        ? AppDateTime.tomorrow()
-        : AppDateTime.now();
+    final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
     final times = mosqueManager.times!.dayTimesStrings(today);
     final iqamas = mosqueManager.times!.dayIqamaStrings(today);
 
-    final isIqamaMoreImportant =
-        mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
+    final isIqamaMoreImportant = mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
     final iqamaEnabled = mosqueManager.mosqueConfig?.iqamaEnabled == true;
 
     final nextActiveSalah = mosqueManager.nextSalahIndex();
 
     return Column(
       children: [
-        SizedBox(
-            height: 15.vh, child: MosqueHeader(mosque: mosqueManager.mosque!)),
-        FractionallySizedBox(
-            widthFactor: .7,
-            child: HomeTimeWidget().animate().slideY(begin: -1).fade()),
+        SizedBox(height: 15.vh, child: MosqueHeader(mosque: mosqueManager.mosque!)),
+        FractionallySizedBox(widthFactor: .7, child: HomeTimeWidget().animate().slideY(begin: -1).fade()),
         SizedBox(height: 2.vh),
         Expanded(
           flex: 5,
@@ -124,21 +118,16 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
                     isIqamaMoreImportant: isIqamaMoreImportant,
 
                     /// disable duhr highlight on friday
-                    active: nextActiveSalah == i &&
-                        (i != 1 ||
-                            !AppDateTime.isFriday ||
-                            mosqueManager.times?.jumua == null),
+                    active:
+                        nextActiveSalah == i && (i != 1 || !AppDateTime.isFriday || mosqueManager.times?.jumua == null),
                     iqama: iqamas[i],
                     showIqama: iqamaEnabled,
                     removeBackground: true,
                     withDivider: false,
                   ),
               ]
-                  .mapIndexed((i, e) => Expanded(
-                      child: e
-                          .animate(delay: Duration(milliseconds: 100 * i))
-                          .slideX(begin: 1)
-                          .fadeIn()))
+                  .mapIndexed((i, e) =>
+                      Expanded(child: e.animate(delay: Duration(milliseconds: 100 * i)).slideX(begin: 1).fadeIn()))
                   .toList(),
             ),
           ),
@@ -156,8 +145,7 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
                     removeBackground: true,
                     title: S.of(context).shuruk,
                     time: mosqueManager.getShurukTimeString() ?? '',
-                    isIqamaMoreImportant:
-                        mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
+                    isIqamaMoreImportant: mosqueManager.mosqueConfig!.iqamaMoreImportant == true,
                   ),
                   secondDuration: Duration(seconds: 15),
                   second: SalahItemWidget(

@@ -31,11 +31,7 @@ class Flash {
 
   @override
   String toString() {
-    return 'Flash{' +
-        ' content: $content,' +
-        ' orientation: $orientation,' +
-        ' expire: $expire,' +
-        '}';
+    return 'Flash{' + ' content: $content,' + ' orientation: $orientation,' + ' expire: $expire,' + '}';
   }
 
   Flash copyWith({

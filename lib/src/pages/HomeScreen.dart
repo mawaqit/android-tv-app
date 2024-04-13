@@ -38,9 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
         key: _scaffoldKey,
         drawer: MawaqitDrawer(goHome: () => AppRouter.pop()),
         body: MawaqitWebViewWidget(
-          path: context
-              .watch<MosqueManager>()
-              .buildUrl(appLanguage.appLocal.languageCode),
+          path: context.watch<MosqueManager>().buildUrl(appLanguage.appLocal.languageCode),
         ),
       ),
     );

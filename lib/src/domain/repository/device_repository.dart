@@ -1,4 +1,3 @@
-
 import '../model/device_info_model.dart';
 
 /// An abstraction for retrieving and managing device information.
@@ -7,7 +6,6 @@ import '../model/device_info_model.dart';
 /// device information, including fetching device specifications and
 /// updating user preferences such as the preferred language.
 abstract class DeviceInfoRepository {
-
   /// [getAllDeviceInfo] Fetches all device information.
   Future<DeviceInfoModel> getAllDeviceInfo();
 

@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// [HijriDateConfigModel] Represents the Hijri date configuration for a mosque.
 class HijriDateConfigModel extends Equatable {
-
   /// The adjustment value for the Hijri date.
   int hijriAdjustment;
 
@@ -29,7 +28,6 @@ class HijriDateConfigModel extends Equatable {
       'hijriDateForceTo30': hijriDateForceTo30,
     };
   }
-
 
   /// Creates a copy of the instance with the given override values.
   HijriDateConfigModel copyWith({
