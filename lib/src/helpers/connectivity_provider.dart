@@ -11,6 +11,7 @@ import '../services/connectivity_service.dart';
 
 /// This class listens to connectivity changes and notifies its listeners.
 class ConnectivityProvider extends StreamNotifier<ConnectivityStatus> {
+
   /// Overriding the [build] method to define how the stream of connectivity status is created.
   /// default time for checking connection is 2 seconds.
   @override

@@ -29,7 +29,7 @@ class AppDateTime {
   static final DateTime _initialDebugTime = DateTime(
     _initialRealTime.year,
     _initialRealTime.month,
-    _initialRealTime.day,
+    _initialRealTime.day - 50,
     13,
     00,
     -10,
