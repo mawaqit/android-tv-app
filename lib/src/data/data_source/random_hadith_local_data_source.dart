@@ -26,19 +26,7 @@ class RandomHadithLocalDataSource {
   /// selected hadith. Otherwise, it returns null.
   Future<String?> getRandomHadith({String language = 'ar'}) async {
     try {
-      final s = box.keys;
-      final ss = box.path;
-      log(
-        'Caching hadiths size $s',
-        name: 'RandomHadithLocalDataSource',
-        time: DateTime.now(),
-      );
       // box size
-      log(
-        'Caching hadiths size ${File(ss!).lengthSync()}',
-        name: 'RandomHadithLocalDataSource',
-        time: DateTime.now(),
-      );
       final hadithList = box.get(language) as List<String>?;
       if (hadithList != null && hadithList.isNotEmpty) {
         final randomIndex = Random().nextInt(hadithList.length);
@@ -46,7 +34,7 @@ class RandomHadithLocalDataSource {
       }
       return null;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 

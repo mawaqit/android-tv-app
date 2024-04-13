@@ -78,6 +78,7 @@ class RandomHadithImpl implements RandomHadithRepository {
   /// remote source and caches it locally using the [RandomHadithLocalDataSource].
   /// If the provided language string contains two languages separated by an
   /// underscore, it fetches and caches the Hadith for both languages.
+  @override
   Future<void> fetchAndCacheHadith(String language) async {
     language = RandomHadithHelper.changeLanguageFormat(language);
 
@@ -98,6 +99,7 @@ class RandomHadithImpl implements RandomHadithRepository {
     } else {
       log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: language $language');
       final hadithXmlList = await remoteDataSource.getRandomHadithXML(language: language);
+      log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: fetchedHadithXML ${hadithXmlList?.length} ${hadithXmlList?.first.text}');
       if (hadithXmlList != null) {
         final hadithList = hadithXmlList.map((e) => e.text).whereType<String>().toList();
         log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: hadithList ${hadithList.length} ${hadithList.first}');
@@ -139,7 +141,7 @@ class RandomHadithImpl implements RandomHadithRepository {
     }
 
     // Update the date of the last successful fetch operation.
-    final today = DateTime.now().millisecondsSinceEpoch;
+    final today = AppDateTime.now().millisecondsSinceEpoch;
     await sharedPreferences.setInt(RandomHadithConstant.kLastHadithXMLFetchDate, today);
     await sharedPreferences.setString(RandomHadithConstant.kLastHadithXMLFetchLanguage, language);
 
