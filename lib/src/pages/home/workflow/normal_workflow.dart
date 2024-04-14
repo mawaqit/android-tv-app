@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/RandomHadithScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/fajr_wake_up_screen.dart';
@@ -10,19 +11,26 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../state_management/random_hadith/random_hadith_notifier.dart';
+
 const _HadithDuration = Duration(seconds: 90);
 const _HadithRepeatDuration = Duration(minutes: 4);
 const _AnnouncementRepeatDuration = Duration(minutes: 8);
 
 /// show the [NormalHomeSubScreen][AnnouncementScreen][RandomHadithScreen]
-class NormalWorkflowScreen extends StatefulWidget {
+class NormalWorkflowScreen extends ConsumerStatefulWidget {
   const NormalWorkflowScreen({Key? key}) : super(key: key);
 
   @override
-  State<NormalWorkflowScreen> createState() => _NormalWorkflowScreenState();
+  ConsumerState<NormalWorkflowScreen> createState() => _NormalWorkflowScreenState();
 }
 
-class _NormalWorkflowScreenState extends State<NormalWorkflowScreen> {
+class _NormalWorkflowScreenState extends ConsumerState<NormalWorkflowScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
