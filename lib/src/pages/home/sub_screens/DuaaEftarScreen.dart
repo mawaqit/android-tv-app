@@ -50,7 +50,6 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
           ),
         ),
         ResponsiveMiniSalahBarWidget(),
-        SizedBox(height: 10),
       ],
     );
   }
