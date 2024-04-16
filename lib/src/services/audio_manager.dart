@@ -42,7 +42,6 @@ class AudioManager extends ChangeNotifier {
     return adhanLink;
   }
 
-
   void loadAndPlayAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
@@ -74,8 +73,25 @@ class AudioManager extends ChangeNotifier {
   }
 
   Future<void> loadAssetsAndPlay(String assets, {VoidCallback? onDone}) async {
-    await player.setAsset(assets);
-    player.play();
+    try {
+      await player.setAsset(assets);
+      player.play();
+      player.playerStateStream.listen((state) {
+        if (state.processingState == ProcessingState.completed) {
+          onDone?.call();
+        }
+      });
+    } on PlayerException catch (e, s) {
+      logger.e('[Error playing audio file] $e', stackTrace: s);
+
+      onDone?.call();
+    } on PlayerInterruptedException catch (e, s) {
+      logger.e('[Error playing audio file] $e', stackTrace: s);
+      onDone?.call();
+    } catch (e, s) {
+      logger.e('[Error playing audio file] $e', stackTrace: s);
+      onDone?.call();
+    }
   }
 
   Future<void> loadAndPlay({
@@ -83,9 +99,25 @@ class AudioManager extends ChangeNotifier {
     bool enableCache = true,
     VoidCallback? onDone,
   }) async {
-    await player.setUrl(url);
-    player.play();
+    try {
+      await player.setUrl(url);
+      player.play();
+      player.playerStateStream.listen((state) {
+        if (state.processingState == ProcessingState.completed) {
+          onDone?.call();
+        }
+      });
+    } on PlayerException catch (e, s) {
+      logger.e('[Error playing audio file] $e', stackTrace: s);
 
+      onDone?.call();
+    } on PlayerInterruptedException catch (e, s) {
+      logger.e('[Error playing audio file] $e', stackTrace: s);
+      onDone?.call();
+    } catch (e, s) {
+      logger.e('[Error playing audio file] $e', stackTrace: s);
+      onDone?.call();
+    }
   }
 
   /// this method will precache all the audio files for this mosque
