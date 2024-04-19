@@ -98,7 +98,6 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
             ),
           ),
           ResponsiveMiniSalahBarWidget(),
-          SizedBox(height: 2.vw),
         ],
       ),
     );

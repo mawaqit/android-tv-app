@@ -79,7 +79,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
     walkThrowScreensSubscription?.cancel();
     setState(() {
       walkThrowScreensSubscription = null;
-      forcedScreen = null;  // clear the forcedScreen when canceling the walkthrough
+      forcedScreen = null; // clear the forcedScreen when canceling the walkthrough
     });
   }
 
@@ -109,6 +109,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
     cancelWalkThrowScreens();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     context.watch<MosqueManager>();

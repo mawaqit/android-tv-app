@@ -111,6 +111,11 @@ dependencies:
 
   equatable: ^2.0.5
   just_audio: ^0.9.37
+
+
+  # internet connectivity checker
+  internet_connection_checker_plus: ^1.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
