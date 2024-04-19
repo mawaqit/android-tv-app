@@ -10,7 +10,7 @@ mixin AudioMixin on ChangeNotifier {
     String? adhanName = mosqueConfig?.adhanVoice;
     Duration duration = Duration(seconds: mosqueConfig!.adhanDuration!);
 
-    if(isFajrPray && adhanName != null){
+    if (isFajrPray && adhanName != null) {
       adhanName = adhanName + '-fajr';
     }
 

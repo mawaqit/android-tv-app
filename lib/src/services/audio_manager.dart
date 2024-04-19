@@ -25,8 +25,7 @@ class AudioManager extends ChangeNotifier {
     policy: CachePolicy.request,
   );
 
-  late final dio = Dio()
-    ..interceptors.add(DioCacheInterceptor(options: option));
+  late final dio = Dio()..interceptors.add(DioCacheInterceptor(options: option));
 
   String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
