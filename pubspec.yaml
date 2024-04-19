@@ -119,7 +119,7 @@ dev_dependencies:
   # flutter pub run dependency_validator
   dependency_validator:
   http_mock_adapter: ^0.6.1
-  flutter_lints: 3.0.1
+  flutter_lints: ^3.0.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
