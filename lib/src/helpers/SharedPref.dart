@@ -17,6 +17,11 @@ class SharedPref {
     prefs.setString(key, json.encode(value));
   }
 
+  Future<void> savedString(String key, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, value);
+  }
+
   Future<void> remove(String key) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(key);
