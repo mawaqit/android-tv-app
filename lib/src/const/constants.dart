@@ -22,3 +22,10 @@ class CacheKey {
   static const String kIsUpdateDismissed = 'is_update_dismissed';
   static const String kUpdateDismissedVersion = 'update_dismissed_version';
 }
+
+abstract class RandomHadithConstant {
+  static const String kLastHadithXMLFetchDate = "last_hadith_xml_fetch_date";
+  static const String kBoxName = "random_hadith_list";
+  static const String kHadithLanguage = "hadith_language";
+  static const String kLastHadithXMLFetchLanguage = "last_hadith_xml_language";
+}

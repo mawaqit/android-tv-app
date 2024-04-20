@@ -118,6 +118,9 @@ dependencies:
   # app update
   upgrader: ^6.5.0
   open_store: ^0.5.0
+  
+  # internet connectivity checker
+  internet_connection_checker_plus: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
