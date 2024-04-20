@@ -23,3 +23,11 @@ abstract class RandomHadithConstant {
   static const String kHadithLanguage = "hadith_language";
   static const String kLastHadithXMLFetchLanguage = "last_hadith_xml_language";
 }
+
+abstract class AnnouncementConstant {
+  static const String kBoxName = "announcement";
+}
+
+abstract class MosqueManagerConstant {
+  static const String kMosqueUUID = "mosqueUUID";
+}
