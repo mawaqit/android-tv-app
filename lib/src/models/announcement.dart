@@ -158,8 +158,5 @@ class Announcement {
 
   /// [isCacheable] returns true if the object can be cached
   /// if the announcement has a video it should not be cached
-  bool isCacheable() {
-    if (video != null && video!.isNotEmpty) return false;
-    return true;
-  }
+  bool get isCacheable => video == null;
 }
