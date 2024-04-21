@@ -96,6 +96,17 @@ class DeviceInfoImpl implements DeviceInfoRepository {
       rethrow;
     }
   }
+  ///  [initRootRequest] Checks if the device is a box or a androidTV.
+  ///
+  /// return a boolean value indicating if the device is a box or a AndroidTV.
+  Future<bool> initRootRequest() async {
+    try {
+      return await deviceInfoDataSource.initRootRequest();
+    } catch (e, s) {
+      logger.e('Error fetching root access', stackTrace: s);
+      rethrow;
+    }
+  }
 }
 
 class DeviceInfoImplProviderArgument {
