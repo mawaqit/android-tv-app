@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, Ref, WidgetRef;
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, WidgetRef, Consumer;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
@@ -13,7 +13,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' hide Consumer;
 import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
@@ -143,21 +143,23 @@ class SettingScreen extends ConsumerWidget {
                       );
                     },
                   ),
-                  riverpod.Consumer(builder: (context, ref, child) {
-                    return _SettingSwitchItem(
-                      title: S.of(context).automaticUpdate,
-                      subtitle: S.of(context).automaticUpdateDescription,
-                      icon: Icon(Icons.update, size: 35),
-                      onChanged: (value) {
-                        logger.d('setting: disable the update $value');
-                        ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
-                      },
-                      value: ref.watch(appUpdateProvider).maybeWhen(
-                            orElse: () => false,
-                            data: (data) => data.isAutoUpdateChecking,
-                          ),
-                    );
-                  }),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return _SettingSwitchItem(
+                        title: S.of(context).automaticUpdate,
+                        subtitle: S.of(context).automaticUpdateDescription,
+                        icon: Icon(Icons.update, size: 35),
+                        onChanged: (value) {
+                          logger.d('setting: disable the update $value');
+                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
+                        },
+                        value: ref.watch(appUpdateProvider).maybeWhen(
+                              orElse: () => false,
+                              data: (data) => data.isAutoUpdateChecking,
+                            ),
+                      );
+                    },
+                  ),
                   SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
