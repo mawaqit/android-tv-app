@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
@@ -16,9 +18,11 @@ class AudioManager extends ChangeNotifier {
   String duaAfterAdhanLink = "$kStaticFilesUrl/mp3/duaa-after-adhan.mp3";
 
   late AudioPlayer player;
+
   AudioManager() {
     player = AudioPlayer();
   }
+
   final option = CacheOptions(
     store: HiveCacheStore(null),
     priority: CachePriority.high,
@@ -75,20 +79,33 @@ class AudioManager extends ChangeNotifier {
     try {
       await player.setAsset(assets);
       player.play();
+      log('audio: AudioManager: loadAssetsAndPlay: playing audio file');
       player.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
+          log('audio: AudioManager: loadAssetsAndPlay: done playing audio file');
           onDone?.call();
         }
       });
     } on PlayerException catch (e, s) {
-      logger.e('[Error playing audio file] $e', stackTrace: s);
-
+      log(
+        'audio: AudioManager: loadAssetsAndPlay: error PlayerException: $e',
+        error: e,
+        stackTrace: s,
+      );
       onDone?.call();
     } on PlayerInterruptedException catch (e, s) {
-      logger.e('[Error playing audio file] $e', stackTrace: s);
+      log(
+        'audio: AudioManager: loadAssetsAndPlay: error PlayerInterruptedException: $e',
+        error: e,
+        stackTrace: s,
+      );
       onDone?.call();
     } catch (e, s) {
-      logger.e('[Error playing audio file] $e', stackTrace: s);
+      log(
+        'audio: AudioManager: loadAssetsAndPlay: error : $e',
+        error: e,
+        stackTrace: s,
+      );
       onDone?.call();
     }
   }
@@ -103,18 +120,30 @@ class AudioManager extends ChangeNotifier {
       player.play();
       player.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
+          log('audio: AudioManager: loadAndPlay: done playing audio file');
           onDone?.call();
         }
       });
     } on PlayerException catch (e, s) {
-      logger.e('[Error playing audio file] $e', stackTrace: s);
-
+      log(
+        'audio: AudioManager: loadAndPlay: error PlayerException: $e',
+        error: e,
+        stackTrace: s,
+      );
       onDone?.call();
     } on PlayerInterruptedException catch (e, s) {
-      logger.e('[Error playing audio file] $e', stackTrace: s);
+      log(
+        'audio: AudioManager: loadAndPlay: error PlayerInterruptedException: $e',
+        error: e,
+        stackTrace: s,
+      );
       onDone?.call();
     } catch (e, s) {
-      logger.e('[Error playing audio file] $e', stackTrace: s);
+      log(
+        'audio: AudioManager: loadAndPlay: error: $e',
+        error: e,
+        stackTrace: s,
+      );
       onDone?.call();
     }
   }
