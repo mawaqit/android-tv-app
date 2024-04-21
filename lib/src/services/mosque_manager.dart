@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/main.dart';
@@ -16,8 +18,11 @@ import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../const/constants.dart';
 import '../helpers/AppDate.dart';
+import '../models/announcement.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
 
@@ -90,6 +95,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   /// update mosque id in the app and shared preference
   Future<void> setMosqueUUid(String uuid) async {
     try {
+      await sharedPref.savedString(MosqueManagerConstant.kMosqueUUID, uuid);
       await fetchMosque(uuid);
 
       _saveToLocale();
@@ -103,6 +109,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   Future<void> _saveToLocale() async {
     logger.d("Saving into local");
     // await sharedPref.save('mosqueId', mosqueId);
+
     await sharedPref.save('mosqueUUId', mosqueUUID);
     // sharedPref.save('mosqueSlug', mosqueSlug);
   }
@@ -253,12 +260,17 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       mosque?.exteriorPicture,
       mosqueConfig?.motifUrl,
       kFooterQrLink,
-      ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
     ].where((e) => e != null).cast<String>();
 
     /// some images isn't existing anymore so we will ignore errors
     final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
     await Future.wait(futures);
+  }
+
+  /// get announcement
+  List<Announcement> get announcements {
+    log('announcement: get announcements ${mosque?.announcements}');
+    return mosque?.announcements ?? [];
   }
 }
 

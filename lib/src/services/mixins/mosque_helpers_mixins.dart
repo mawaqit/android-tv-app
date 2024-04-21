@@ -377,26 +377,30 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return false;
   }
 
-  List<Announcement> activeAnnouncements(bool enableVideos) {
-    final announcements = mosque!.announcements.where((element) {
-      final startDate = DateTime.tryParse(element.startDate ?? '');
-      final endDate = DateTime.tryParse(element.endDate ?? '');
-      final now = mosqueDate();
-
-      final inTime = now.isAfter(startDate ?? DateTime(2000)) && now.isBefore(endDate ?? DateTime(3000));
-
-      /// on offline mode we don't show videos
-      if (element.video != null && !isOnline) return false;
-
-      /// on mosque screen we don't show videos in certain conditions
-      if (element.video != null && !enableVideos) return false;
-
-      return inTime;
-    }).toList();
-    // check if announcement has only youtube video, add another one for infinite loop
-    if (announcements.length == 1 && announcements[0].video != null) {
-      announcements.add(announcements[0]);
-    }
-    return announcements;
+  List<Announcement> get activeAnnouncements {
+    return mosque!.announcements.toList();
   }
+
+  // List<Announcement> activeAnnouncements(bool enableVideos) {
+  //   final announcements = mosque!.announcements.where((element) {
+  //     final startDate = element.startDate ?? DateTime.tryParse('');
+  //     final endDate = element.endDate ??  DateTime.tryParse('');
+  //     final now = mosqueDate();
+  //
+  //     final inTime = now.isAfter(startDate ?? DateTime(2000)) && now.isBefore(endDate ?? DateTime(3000));
+  //
+  //     /// on offline mode we don't show videos
+  //     if (element.video != null && !isOnline) return false;
+  //
+  //     /// on mosque screen we don't show videos in certain conditions
+  //     if (element.video != null && !enableVideos) return false;
+  //
+  //     return inTime;
+  //   }).toList();
+  //   // check if announcement has only youtube video, add another one for infinite loop
+  //   if (announcements.length == 1 && announcements[0].video != null) {
+  //     announcements.add(announcements[0]);
+  //   }
+  //   return announcements;
+  // }
 }

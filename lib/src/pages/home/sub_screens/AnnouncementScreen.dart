@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +13,14 @@ import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/WorkFlowWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../state_management/workflow/announcement_workflow/announcement_workflow_notifier.dart'
     as announcement_workflow;
 
+import '../../../state_management/workflow/announcement_workflow/announcement_workflow_state.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 
 class AnnouncementScreen extends ConsumerStatefulWidget {
@@ -40,11 +43,9 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final announcements = context.read<MosqueManager>().activeAnnouncements(true);
-      log('announcement: AnnouncementScreen: initState ${announcements.length}');
-      ref.read(announcement_workflow.announcementWorkflowProvider.notifier).startAnnouncementWorkflow(
-            announcements,
-            false,
+      log('announcement: AnnouncementScreen: 1 startAnnouncement called enableVideos: ${widget.enableVideos}');
+      ref.read(announcement_workflow.announcementWorkflowProvider.notifier).startAnnouncement(
+            widget.enableVideos,
           );
     });
     super.initState();
@@ -53,11 +54,22 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen(announcement_workflow.announcementWorkflowProvider, (previous, next) {
-      if (!next.value!.isActivated && previous!.value!.isActivated) widget.onDone?.call();
-      if (next.hasError) widget.onDone?.call();
+      if (next.value!.status == AnnouncementWorkflowStatus.completed) {
+        // All announcements have been displayed
+        log('announcement: AnnouncementScreen: 1 widget.onDone?.call() called ');
+        widget.onDone?.call();
+      }
+      if (next.hasError) {
+        // An error occurred during the announcement workflow
+        widget.onDone?.call();
+      }
     });
     return ref.watch(announcement_workflow.announcementWorkflowProvider).maybeWhen(
-          orElse: () => SizedBox(),
+          orElse: () => Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), // Green color
+            ),
+          ),
           data: (state) => Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -86,9 +98,9 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
         content: activeAnnouncement.content!,
         title: activeAnnouncement.title,
       );
-    } else if (activeAnnouncement.image != null) {
+    } else if (activeAnnouncement.imageFile != null) {
       return _ImageAnnouncement(
-        image: activeAnnouncement.image!,
+        image: activeAnnouncement.imageFile!,
         onError: nextAnnouncement,
       );
     } else if (activeAnnouncement.video != null) {
@@ -167,7 +179,7 @@ class _ImageAnnouncement extends StatelessWidget {
     this.onError,
   }) : super(key: key);
 
-  final String image;
+  final Uint8List? image;
 
   /// used to skip to the next announcement if the image failed to load
   final VoidCallback? onError;
@@ -175,7 +187,7 @@ class _ImageAnnouncement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image(
-      image: MawaqitNetworkImageProvider(image, onError: onError),
+      image: Image.memory(image!).image,
       fit: BoxFit.fill,
       width: double.infinity,
       height: double.infinity,

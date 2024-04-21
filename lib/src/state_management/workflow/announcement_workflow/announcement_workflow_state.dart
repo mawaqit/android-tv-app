@@ -1,6 +1,20 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import '../../../models/announcement.dart';
 
+enum AnnouncementMode {
+  repeat,
+  linear,
+}
+
+enum AnnouncementWorkflowStatus {
+  idle,
+  loading,
+  playing,
+  completed,
+}
+
+@immutable
 class AnnouncementWorkFlowItem extends Equatable {
   final Announcement announcement;
   final bool skip, disabled;
@@ -14,22 +28,21 @@ class AnnouncementWorkFlowItem extends Equatable {
   });
 
   factory AnnouncementWorkFlowItem.initial() => AnnouncementWorkFlowItem(
-      announcement: Announcement(
-        isDesktop: false,
-        id: 0,
-        isMobile: false,
-        title: '',
-        content: '',
-        image: '',
-        video: '',
-        duration: 0,
-        startDate: '',
-        endDate: '',
-        updatedDate: '',
-      ),
-      skip: false,
-      disabled: false,
-      duration: null);
+        announcement: Announcement(
+          isDesktop: false,
+          id: 0,
+          isMobile: false,
+          title: '',
+          content: '',
+          image: '',
+          video: '',
+          duration: 0,
+          updatedDate: '',
+        ),
+        skip: false,
+        disabled: false,
+        duration: null,
+      );
 
   AnnouncementWorkFlowItem copyWith({
     Announcement? announcement,
@@ -49,41 +62,43 @@ class AnnouncementWorkFlowItem extends Equatable {
   List<Object?> get props => [announcement, skip, disabled, duration];
 }
 
+@immutable
 class AnnouncementWorkflowState extends Equatable {
   final AnnouncementWorkFlowItem announcementItem;
-  final bool isActivated;
-  final int currentActivatedIndex;
+  final AnnouncementWorkflowStatus status;
 
   const AnnouncementWorkflowState({
     required this.announcementItem,
-    this.isActivated = false,
-    required this.currentActivatedIndex,
+    required this.status,
   });
 
   AnnouncementWorkflowState.initial()
       : this(
           announcementItem: AnnouncementWorkFlowItem.initial(),
-          isActivated: true,
-          currentActivatedIndex: 0,
+          status: AnnouncementWorkflowStatus.idle,
         );
 
   AnnouncementWorkflowState copyWith({
     AnnouncementWorkFlowItem? announcementItem,
     bool? isActivated,
-    int? currentActivatedIndex,
+    AnnouncementWorkflowStatus? status,
   }) {
     return AnnouncementWorkflowState(
-      currentActivatedIndex: currentActivatedIndex ?? this.currentActivatedIndex,
       announcementItem: announcementItem ?? this.announcementItem,
-      isActivated: isActivated ?? this.isActivated,
+      status: status ?? this.status,
     );
   }
 
   @override
-  List<Object?> get props => [announcementItem, isActivated, currentActivatedIndex];
+  List<Object?> get props => [
+        announcementItem,
+        status,
+      ];
 
   @override
   String toString() {
-    return 'AnnouncementWorkflowState: { announcementItem: ${announcementItem.duration}, isActivated: $isActivated, currentActivatedIndex: $currentActivatedIndex }';
+    return 'AnnouncementWorkflowState: { announcementItem: ${announcementItem.duration}, '
+        'status: $status'
+        '}';
   }
 }
