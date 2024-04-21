@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -54,7 +56,9 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     if (widget.forceAdhan || mosqueManager.adhanVoiceEnable()) {
       audioManager!.loadAndPlayAdhanVoice(
         mosqueConfig,
-        onDone: () {},
+        onDone: () {
+          log('audio: ui: Adhan done');
+        },
         useFajrAdhan: mosqueManager.salahIndex == 0,
       );
     } else {
@@ -65,7 +69,6 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
 
   @override
   void dispose() {
-    audioManager?.stop();
     super.dispose();
   }
 
