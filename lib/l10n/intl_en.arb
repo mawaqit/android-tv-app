@@ -192,6 +192,11 @@
   "confirmationMessage":"Are you sure you want to use device time?",
   "useDeviceTime":"Use device time",
   "selectTime":"Select Time",
-  "previous": "Previous"
-
+  "previous": "Previous",
+  "updateAvailable": "Update available",
+  "seeMore": "See more",
+  "whatIsNew": "What's new",
+  "update": "Update",
+  "automaticUpdate": "Automatic update",
+  "automaticUpdateDescription": "Enable automatic update to get the latest features and improvements"
 }

@@ -13,8 +13,14 @@ const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
 
-abstract class CacheKey {
+const kGooglePlayId = 'com.mawaqit.androidtv';
+
+class CacheKey {
   static const String kMosqueBackgroundScreen = 'mosque_background_screen';
+  static const String kLastPopupDisplay = 'last_popup_display';
+  static const String kAutoUpdateChecking = 'auto_update_checking';
+  static const String kIsUpdateDismissed = 'is_update_dismissed';
+  static const String kUpdateDismissedVersion = 'update_dismissed_version';
 }
 
 abstract class RandomHadithConstant {

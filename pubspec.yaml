@@ -113,6 +113,13 @@ dependencies:
   just_audio: ^0.9.37
 
 
+  # alert
+  flash: ^3.0.5+2
+
+  # app update
+  upgrader: ^6.5.0
+  open_store: ^0.5.0
+  
   # internet connectivity checker
   internet_connection_checker_plus: ^1.0.1
 
