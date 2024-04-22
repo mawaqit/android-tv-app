@@ -27,6 +27,8 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../main.dart';
+
 typedef ForcedScreen = ({WidgetBuilder builder, String name});
 
 typedef TestMosque = ({String name, String uuid});
@@ -136,6 +138,13 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
       return false;
     }
   }
+  Future<void> _toggleScreen() async {
+    try {
+      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreen');
+    } on PlatformException catch (e) {
+      logger.e(e);
+    }
+  }
 
   @override
   void dispose() {
@@ -229,6 +238,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
             SelectorOption(
               title: "Clear data & force close app",
               onSelect: () => _clearDataAndRestartApp(),
+            ),
+            SelectorOption(
+              title: "Clear data & force close app",
+              onSelect: () => _toggleScreen(),
             ),
           ],
         ),

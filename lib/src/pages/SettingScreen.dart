@@ -62,6 +62,60 @@ class SettingScreen extends ConsumerWidget {
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
+    final today = mosqueProvider.useTomorrowTimes
+        ? AppDateTime.tomorrow()
+        : AppDateTime.now();
+
+    final times =
+        mosqueProvider.times!.dayTimesStrings(today, salahOnly: false);
+
+    Future<void> _toggleScreen() async {
+      try {
+        await MethodChannel('nativeMethodsChannel')
+            .invokeMethod('toggleScreen');
+      } on PlatformException catch (e) {
+        logger.e(e);
+      }
+    }
+
+    void scheduleToggleScreen(List<String> timeStrings) {
+      for (String timeString in timeStrings) {
+        final parts = timeString.split(':');
+        final hour = int.parse(parts[0]);
+        final minute = int.parse(parts[1]);
+
+        final now = AppDateTime.now();
+        final scheduledDateTime =
+            DateTime(now.year, now.month, now.day, hour, minute);
+
+        if (scheduledDateTime.isBefore(now)) {
+          // Schedule for the next day if the time has already passed
+          scheduledDateTime.add(Duration(days: 1));
+        }
+
+        // Schedule one minute before
+        final beforeDelay =
+            scheduledDateTime.difference(now) - Duration(minutes: 1);
+        if (beforeDelay.isNegative) {
+          // Skip scheduling if the delay is negative
+          continue;
+        }
+        Timer(beforeDelay, () {
+          _toggleScreen();
+        });
+        print("Before delay: $beforeDelay");
+        print("Before scheduledDateTime: $scheduledDateTime");
+
+        // Schedule one minute after
+        final afterDelay =
+            scheduledDateTime.difference(now) + Duration(minutes: 1);
+        Timer(afterDelay, () {
+          _toggleScreen();
+        });
+        print("After delay: $afterDelay");
+        print("After scheduledDateTime: $scheduledDateTime");
+      }
+    }
 
 
     return ScreenWithAnimationWidget(
