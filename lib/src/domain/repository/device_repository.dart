@@ -17,4 +17,8 @@ abstract class DeviceInfoRepository {
 
   /// [isBoxOrAndroidTV] Checks if the device is a box or a androidTV.
   Future<bool> isBoxOrAndroidTV();
+
+  /// [initRootRequest] Checks if the device is a rooted.
+
+  Future<bool> initRootRequest();
 }

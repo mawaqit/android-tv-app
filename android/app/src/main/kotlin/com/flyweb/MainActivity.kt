@@ -11,8 +11,13 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.IOException
 import android.app.Activity
 import android.content.Intent
-
-
+import android.app.KeyguardManager
+import android.content.Context
+import java.io.BufferedReader
+import java.io.DataOutputStream
+import java.io.InputStreamReader
+import android.os.AsyncTask
+import android.util.Log
 class MainActivity : FlutterActivity() {
   private val CHANNEL = "nativeMethodsChannel"
 
@@ -37,7 +42,12 @@ class MainActivity : FlutterActivity() {
         } else {
           result.error("InvalidArgument", "Feature argument is null", null)
         }
-      } else {
+      } else if (call.method == "toggleScreen") {
+       toggleScreen(call, result)
+      }
+        
+      
+      else {
         result.notImplemented()
       }
     }
@@ -73,4 +83,82 @@ class MainActivity : FlutterActivity() {
       return false
     }
   }
+private fun toggleScreen(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+        try {
+            val isDeviceLocked = isDeviceLocked()
+            if (!isDeviceLocked) {
+                  val commands = listOf(
+                    "input keyevent 82",
+                    "am start -W -n com.mawaqit.androidtv/.MainActivity"
+                )
+                                executeCommand(commands, result) // Lock the device
+
+            } else {
+                executeCommand(listOf("input keyevent 26"), result) // Lock the device
+            }
+        } catch (e: Exception) {
+            handleCommandException(e, result)
+        }
+    }
+}
+
+private fun isDeviceLocked(): Boolean {
+    try {
+        val process = Runtime.getRuntime().exec("dumpsys power | grep \"mWakefulness=\"")
+        val reader = BufferedReader(InputStreamReader(process.inputStream))
+        val output = reader.use { it.readText() }
+
+        // Check if the output contains "mWakefulness=Awake"
+        val isAwake = output.contains("mWakefulness=Awake")
+        println("Output of command: $output")
+
+        return isAwake
+    } catch (e: IOException) {
+        e.printStackTrace()
+        println("Error executing adb shell command: ${e.message}")
+        return false
+    }
+}
+
+
+private fun executeCommand(commands: List<String>, result: MethodChannel.Result) {
+    try {
+        Log.d("SU_COMMAND", "Executing commands: ${commands.joinToString(separator = " && ")}")
+
+        val suProcess = Runtime.getRuntime().exec("su")
+        val os = DataOutputStream(suProcess.outputStream)
+
+        val command = commands.joinToString(separator = " && ") + "\n"
+        Log.d("SU_COMMAND", "Writing command to DataOutputStream: $command")
+        os.writeBytes(command)
+        os.flush()
+        os.close()
+
+        val output = BufferedReader(InputStreamReader(suProcess.inputStream)).readText()
+        val error = BufferedReader(InputStreamReader(suProcess.errorStream)).readText()
+
+        Log.i("SU_COMMAND", "Command output: $output")
+        Log.e("SU_COMMAND", "Command error: $error")
+
+        val exitCode = suProcess.waitFor()
+        Log.d("SU_COMMAND", "Exit code: $exitCode")
+
+        if (exitCode != 0) {
+            Log.e("SU_COMMAND", "Command failed with exit code $exitCode.")
+            result.error("CMD_ERROR", "Command failed", null)
+        } else {
+            Log.i("SU_COMMAND", "Command executed successfully.")
+            result.success("Command executed successfully.")
+        }
+    } catch (e: Exception) {
+        Log.e("SU_COMMAND", "Exception occurred: ${e.message}")
+        handleCommandException(e, result)
+    }
+}
+
+private fun handleCommandException(e: Exception, result: MethodChannel.Result) {
+    result.error("Exception", "An exception occurred: $e", null)
+}
+
 }

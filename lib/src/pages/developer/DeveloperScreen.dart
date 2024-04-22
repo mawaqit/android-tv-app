@@ -48,23 +48,53 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
   static const testMosques = <TestMosque>[
     (name: "Test Mosque", uuid: "8e8a41cf-62d4-4890-9454-120d27b229e1"),
     (name: "Mosquee El Falah", uuid: "6e8cc6b6-901a-4271-a5f7-818a1fa20a34"),
-    (name: "Mosquee Le Grand Quevilly", uuid: "dbfd7ccf-70da-49f3-93a9-a4a7e8cccf04"),
-    (name: "[Staging] TEST ISTANBUL (10149)", uuid: "626cf81c-ebf1-4f4f-8ad0-5fc840f9c14b"),
+    (
+      name: "Mosquee Le Grand Quevilly",
+      uuid: "dbfd7ccf-70da-49f3-93a9-a4a7e8cccf04"
+    ),
+    (
+      name: "[Staging] TEST ISTANBUL (10149)",
+      uuid: "626cf81c-ebf1-4f4f-8ad0-5fc840f9c14b"
+    ),
   ];
 
   List<ForcedScreen> get screens => [
-        (builder: (context) => NormalHomeSubScreen(), name: S.current.normalScreen),
-        (builder: (context) => AnnouncementTest(), name: S.current.announcement),
-        (builder: (context) => RandomHadithScreen(), name: S.current.randomHadith),
+        (
+          builder: (context) => NormalHomeSubScreen(),
+          name: S.current.normalScreen
+        ),
+        (
+          builder: (context) => AnnouncementTest(),
+          name: S.current.announcement
+        ),
+        (
+          builder: (context) => RandomHadithScreen(),
+          name: S.current.randomHadith
+        ),
         (builder: (context) => AdhanSubScreen(), name: S.current.alAdhan),
-        (builder: (context) => AfterAdhanSubScreen(), name: S.current.afterAdhanHadith),
-        (builder: (context) => DuaaBetweenAdhanAndIqamaaScreen(), name: S.current.duaaRemainder),
-        (builder: (context) => IqamaaCountDownSubScreen(), name: S.current.iqamaaCountDown),
+        (
+          builder: (context) => AfterAdhanSubScreen(),
+          name: S.current.afterAdhanHadith
+        ),
+        (
+          builder: (context) => DuaaBetweenAdhanAndIqamaaScreen(),
+          name: S.current.duaaRemainder
+        ),
+        (
+          builder: (context) => IqamaaCountDownSubScreen(),
+          name: S.current.iqamaaCountDown
+        ),
         (builder: (context) => IqamaSubScreen(), name: S.current.iqama),
-        (builder: (context) => AfterSalahAzkar(), name: S.current.afterSalahAzkar),
+        (
+          builder: (context) => AfterSalahAzkar(),
+          name: S.current.afterSalahAzkar
+        ),
         (builder: (context) => JumuaHadithSubScreen(), name: S.current.jumua),
         (builder: (context) => JummuaLive(), name: S.current.jumuaaLive),
-        (builder: (context) => FajrWakeUpSubScreen(), name: S.current.fajrWakeUp),
+        (
+          builder: (context) => FajrWakeUpSubScreen(),
+          name: S.current.fajrWakeUp
+        ),
         (builder: (context) => DuaaEftarScreen(), name: S.current.duaaElEftar),
       ];
 
@@ -79,7 +109,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
     walkThrowScreensSubscription?.cancel();
     setState(() {
       walkThrowScreensSubscription = null;
-      forcedScreen = null; // clear the forcedScreen when canceling the walkthrough
+      forcedScreen =
+          null; // clear the forcedScreen when canceling the walkthrough
     });
   }
 
@@ -93,11 +124,13 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
     });
   }
 
-  changeMosque(String uuid) => context.read<MosqueManager>().fetchMosque(uuid).catchError((e) {});
+  changeMosque(String uuid) =>
+      context.read<MosqueManager>().fetchMosque(uuid).catchError((e) {});
 
   Future<bool> _clearDataAndRestartApp() async {
     try {
-      final result = await MethodChannel('nativeMethodsChannel').invokeMethod('clearAppData');
+      final result = await MethodChannel('nativeMethodsChannel')
+          .invokeMethod('clearAppData');
       return result;
     } on PlatformException catch (_) {
       return false;
@@ -186,10 +219,13 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
             ),
             SelectorOption(
               title: "Toggle orientation",
-              onSelect: () => context.read<UserPreferencesManager>().toggleOrientation(),
+              onSelect: () =>
+                  context.read<UserPreferencesManager>().toggleOrientation(),
             ),
             if (walkThrowScreensSubscription != null)
-              SelectorOption(title: "Cancel walk through", onSelect: cancelWalkThrowScreens),
+              SelectorOption(
+                  title: "Cancel walk through",
+                  onSelect: cancelWalkThrowScreens),
             SelectorOption(
               title: "Clear data & force close app",
               onSelect: () => _clearDataAndRestartApp(),

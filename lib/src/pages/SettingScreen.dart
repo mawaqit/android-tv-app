@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, Ref, WidgetRef;
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show AsyncValueX, ConsumerWidget, Ref, WidgetRef;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
@@ -17,9 +21,12 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
+import '../../main.dart';
+import '../helpers/AppDate.dart';
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
 import '../state_management/random_hadith/random_hadith_notifier.dart';
+import '../widgets/screen_lock_widget.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
@@ -55,6 +62,7 @@ class SettingScreen extends ConsumerWidget {
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
+
 
     return ScreenWithAnimationWidget(
       animation: 'settings',
@@ -100,12 +108,15 @@ class SettingScreen extends ConsumerWidget {
                           isIconActivated: true,
                           title: S.of(context).randomHadithLanguage,
                           description: S.of(context).descLang,
-                          languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
+                          languages:
+                              appLanguage.hadithLocalizedLanguage.keys.toList(),
                           isSelected: (langCode) {
                             return appLanguage.hadithLanguage == langCode;
                           },
                           onSelect: (langCode) async {
-                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                            await ref
+                                .read(connectivityProvider.notifier)
+                                .checkInternetConnection();
                             ref.watch(connectivityProvider).maybeWhen(
                               orElse: () {
                                 showCheckInternetDialog(
@@ -118,7 +129,8 @@ class SettingScreen extends ConsumerWidget {
                                 );
                               },
                               data: (isConnectedToInternet) {
-                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                if (isConnectedToInternet ==
+                                    ConnectivityStatus.disconnected) {
                                   showCheckInternetDialog(
                                     context: context,
                                     onRetry: () {
@@ -128,9 +140,12 @@ class SettingScreen extends ConsumerWidget {
                                     content: hadithLanguage,
                                   );
                                 } else {
-                                  context.read<AppLanguage>().setHadithLanguage(langCode);
+                                  context
+                                      .read<AppLanguage>()
+                                      .setHadithLanguage(langCode);
                                   ref
-                                      .read(randomHadithNotifierProvider.notifier)
+                                      .read(
+                                          randomHadithNotifierProvider.notifier)
                                       .fetchAndCacheHadith(language: langCode);
                                   AppRouter.pop();
                                 }
@@ -141,6 +156,15 @@ class SettingScreen extends ConsumerWidget {
                       );
                     },
                   ),
+                  _SettingItem(
+                      title: "Screen lock",
+                      subtitle: S.of(context).descLang,
+                      icon: Icon(Icons.language, size: 35),
+                      onTap: () => /* scheduleToggleScreen(times) */ showDialog(
+                            context: context,
+                            builder: (context) => ScreenLockModal(
+                                timeShiftManager: timeShiftManager),
+                          )),
                   SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
@@ -150,7 +174,9 @@ class SettingScreen extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                   _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
+                    title: theme.brightness == Brightness.light
+                        ? S.of(context).darkMode
+                        : S.of(context).lightMode,
                     icon: Icon(Icons.brightness_4, size: 35),
                     onChanged: (value) => themeManager.toggleMode(),
                     value: themeManager.isLightTheme ?? false,
@@ -176,7 +202,8 @@ class SettingScreen extends ConsumerWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => TimePickerModal(timeShiftManager: timeShiftManager),
+                              builder: (context) => TimePickerModal(
+                                  timeShiftManager: timeShiftManager),
                             );
                           },
                         )
@@ -187,19 +214,24 @@ class SettingScreen extends ConsumerWidget {
                       subtitle: S.of(context).announcementOnlyModeEXPLINATION,
                       icon: Icon(Icons.notifications, size: 35),
                       value: userPreferences.announcementsOnly,
-                      onChanged: (value) => userPreferences.announcementsOnly = value,
+                      onChanged: (value) =>
+                          userPreferences.announcementsOnly = value,
                     ),
-                  if (!userPreferences.webViewMode && !userPreferences.announcementsOnly)
+                  if (!userPreferences.webViewMode &&
+                      !userPreferences.announcementsOnly)
                     _SettingSwitchItem(
                       title: S.of(context).secondaryScreen,
                       subtitle: S.of(context).secondaryScreenExplanation,
                       value: userPreferences.isSecondaryScreen,
                       icon: Icon(Icons.monitor, size: 35),
-                      onChanged: (value) => userPreferences.isSecondaryScreen = value,
+                      onChanged: (value) =>
+                          userPreferences.isSecondaryScreen = value,
                     ),
                   _SettingSwitchItem(
                     title: S.of(context).webView,
-                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    subtitle: S
+                        .of(context)
+                        .ifYouAreFacingAnIssueWithTheAppActivateThis,
                     icon: Icon(Icons.online_prediction, size: 35),
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
@@ -240,7 +272,10 @@ class _SettingItem extends StatelessWidget {
         trailing: Icon(Icons.arrow_forward_ios),
         title: Text(title),
         subtitle: subtitle != null
-            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 10))
+            ? Text(subtitle!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 10))
             : null,
         onTap: onTap,
       ),
@@ -274,7 +309,9 @@ class _SettingSwitchItem extends StatelessWidget {
         autofocus: true,
         secondary: icon ?? SizedBox(),
         title: Text(title),
-        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip) : null,
+        subtitle: subtitle != null
+            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip)
+            : null,
         value: value,
         onChanged: onChanged,
       ),

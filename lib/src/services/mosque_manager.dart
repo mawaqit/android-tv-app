@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/main.dart';
@@ -28,7 +29,8 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(seconds: 140);
 
-class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
+class MosqueManager extends ChangeNotifier
+    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -45,19 +47,23 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
 
       DateTime? endOfDay;
       if (endDate != null) {
-        endOfDay = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
+        endOfDay =
+            DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
       }
 
       if (startDate == null && endDate == null) {
         _flashEnabled = true;
       } else if (startDate != null && endDate == null) {
-        _flashEnabled = currentDate.isAfter(startDate) || currentDate.isAtSameMomentAs(startDate);
+        _flashEnabled = currentDate.isAfter(startDate) ||
+            currentDate.isAtSameMomentAs(startDate);
       } else if (startDate == null && endDate != null) {
-        _flashEnabled = currentDate.isBefore(endOfDay!) || currentDate.isAtSameMomentAs(endOfDay);
+        _flashEnabled = currentDate.isBefore(endOfDay!) ||
+            currentDate.isAtSameMomentAs(endOfDay);
       } else if (startDate != null && endDate != null) {
-        _flashEnabled = currentDate.isAfter(startDate) && currentDate.isBefore(endOfDay!) ||
-            currentDate.isAtSameMomentAs(startDate) ||
-            currentDate.isAtSameMomentAs(endOfDay!);
+        _flashEnabled =
+            currentDate.isAfter(startDate) && currentDate.isBefore(endOfDay!) ||
+                currentDate.isAtSameMomentAs(startDate) ||
+                currentDate.isAtSameMomentAs(endOfDay!);
       }
       notifyListeners();
     }
@@ -105,6 +111,57 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     // await sharedPref.save('mosqueId', mosqueId);
     await sharedPref.save('mosqueUUId', mosqueUUID);
     // sharedPref.save('mosqueSlug', mosqueSlug);
+  }
+
+  Future<void> _toggleScreen() async {
+    try {
+      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreen');
+    } on PlatformException catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void scheduleToggleScreen(
+      List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) {
+    for (String timeString in timeStrings) {
+      final parts = timeString.split(':');
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+
+      final now = AppDateTime.now();
+      final scheduledDateTime =
+          DateTime(now.year, now.month, now.day, hour, minute);
+
+      if (scheduledDateTime.isBefore(now)) {
+        // Schedule for the next day if the time has already passed
+        scheduledDateTime.add(Duration(days: 1));
+      }
+
+      // Schedule one minute before
+      final beforeDelay = scheduledDateTime.difference(now) -
+          Duration(minutes: beforeDelayMinutes);
+      if (beforeDelay.isNegative) {
+        // Skip scheduling if the delay is negative
+        continue;
+      }
+      Timer(beforeDelay, () {
+        _toggleScreen();
+      });
+      print("Before delay Minutes: $beforeDelayMinutes");
+      print("After delay Minutes: $afterDelayMinutes");
+
+      print("Before delay: $beforeDelay");
+      print("Before scheduledDateTime: $scheduledDateTime");
+
+      // Schedule one minute after
+      final afterDelay = scheduledDateTime.difference(now) +
+          Duration(minutes: afterDelayMinutes);
+      Timer(afterDelay, () {
+        _toggleScreen();
+      });
+      print("After delay: $afterDelay");
+      print("After scheduledDateTime: $scheduledDateTime");
+    }
   }
 
   static Future<String?> loadLocalUUID() async {
@@ -169,6 +226,14 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription = timesStream.listen(
       (e) {
         times = e;
+        final today =
+            useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+
+        scheduleToggleScreen(
+          e.dayTimesStrings(today, salahOnly: false),
+          1,
+          1,
+        );
         notifyListeners();
       },
       onError: onItemError,
@@ -195,15 +260,19 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     mosqueUUID = uuid;
   }
 
-  Future<Mosque> searchMosqueWithId(String mosqueId) => Api.searchMosqueWithId(mosqueId);
+  Future<Mosque> searchMosqueWithId(String mosqueId) =>
+      Api.searchMosqueWithId(mosqueId);
 
-  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async => Api.searchMosques(mosque, page: page);
+  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async =>
+      Api.searchMosques(mosque, page: page);
 
 //todo handle page and get more
   Future<List<Mosque>> searchWithGps() async {
-    final position = await getCurrentLocation().catchError((e) => throw GpsError());
+    final position =
+        await getCurrentLocation().catchError((e) => throw GpsError());
 
-    final url = Uri.parse("$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
+    final url = Uri.parse(
+        "$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
     Map<String, String> requestHeaders = {
       // "Api-Access-Token": mawaqitApiToken,
     };
@@ -230,7 +299,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   }
 
   Future<Position> getCurrentLocation() async {
-    var enabled = await GeolocatorPlatform.instance.isLocationServiceEnabled().timeout(Duration(seconds: 5));
+    var enabled = await GeolocatorPlatform.instance
+        .isLocationServiceEnabled()
+        .timeout(Duration(seconds: 5));
 
     if (!enabled) {
       enabled = await GeolocatorPlatform.instance.openLocationSettings();
@@ -238,7 +309,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     if (!enabled) throw GpsError();
 
     final permission = await GeolocatorPlatform.instance.requestPermission();
-    if (permission == LocationPermission.deniedForever || permission == LocationPermission.denied) throw GpsError();
+    if (permission == LocationPermission.deniedForever ||
+        permission == LocationPermission.denied) throw GpsError();
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }
@@ -253,11 +325,16 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       mosque?.exteriorPicture,
       mosqueConfig?.motifUrl,
       kFooterQrLink,
-      ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
+      ...mosque?.announcements
+              .map((e) => e.image)
+              .where((element) => element != null) ??
+          <String>[],
     ].where((e) => e != null).cast<String>();
 
     /// some images isn't existing anymore so we will ignore errors
-    final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
+    final futures = images
+        .map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {}))
+        .toList();
     await Future.wait(futures);
   }
 }
