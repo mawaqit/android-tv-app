@@ -28,10 +28,12 @@ import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '../helpers/AppDate.dart';
 import '../services/FeatureManager.dart';
+import '../services/storage_manager.dart';
 
 enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
 
@@ -55,15 +57,17 @@ class _SplashScreen extends State<Splash> {
 
   Future<void> initApplicationUI() async {
     await GlobalConfiguration().loadFromAsset("configuration");
-    generateStream(Duration(minutes: 10))
-        .listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
+    generateStream(Duration(minutes: 10)).listen((event) =>
+        Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
 
     Hive.initFlutter();
 
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
 
     HttpOverrides.global = MyHttpOverrides();
-    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
 
     // hide status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -72,6 +76,15 @@ class _SplashScreen extends State<Splash> {
       await Future.delayed(Duration(seconds: 3));
       SystemChrome.restoreSystemUIOverlays();
     });
+    _saveScheduledEventsToLocale();
+  }
+
+  Future<void> _saveScheduledEventsToLocale() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    logger.d("Saving into local");
+
+    prefs.setBool("isEventsSet", false);
   }
 
   Future<Settings> _initSettings() async {
@@ -175,7 +188,8 @@ class _SplashScreen extends State<Splash> {
                 child: SplashScreen.callback(
                   isLoading: false,
                   onSuccess: (e) => animationFuture.complete(),
-                  onError: (error, stacktrace) => animationFuture.completeError(error, stacktrace),
+                  onError: (error, stacktrace) =>
+                      animationFuture.completeError(error, stacktrace),
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
                   startAnimation: 'idle',

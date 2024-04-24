@@ -17,6 +17,8 @@ import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
+import 'package:mawaqit/src/services/storage_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/AppDate.dart';
 import 'mixins/audio_mixin.dart';
@@ -74,10 +76,11 @@ class MosqueManager extends ChangeNotifier
   Mosque? mosque;
   Times? times;
   MosqueConfig? mosqueConfig;
-
+  bool isEventsSet = false;
   StreamSubscription? _mosqueSubscription;
   StreamSubscription? _timesSubscription;
   StreamSubscription? _configSubscription;
+  static final  _scheduledTimers = <String, List<Timer>>{};
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -90,13 +93,39 @@ class MosqueManager extends ChangeNotifier
     await Api.init();
     await loadFromLocale();
     listenToConnectivity();
+    _grantDumpPermission();
+    isEventsSet = await _checkEventsScheduled();
     notifyListeners();
+  }
+
+  Future<bool> _checkEventsScheduled() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    logger.d("value" + prefs.getBool("isEventsSet").toString());
+    return prefs.getBool("isEventsSet") ?? false;
+  }
+
+  Future<void> _grantDumpPermission() async {
+    try {
+      await MethodChannel('nativeMethodsChannel')
+          .invokeMethod('grantDumpSysPermission');
+    } on PlatformException catch (e) {
+      logger.e(e);
+    }
+  }
+
+  Future<void> _saveScheduledEventsToLocale() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    logger.d("Saving into local");
+
+    prefs.setBool("isEventsSet", true);
   }
 
   /// update mosque id in the app and shared preference
   Future<void> setMosqueUUid(String uuid) async {
     try {
       await fetchMosque(uuid);
+      await _saveScheduledEventsToLocale();
 
       _saveToLocale();
 
@@ -109,7 +138,7 @@ class MosqueManager extends ChangeNotifier
   Future<void> _saveToLocale() async {
     logger.d("Saving into local");
     // await sharedPref.save('mosqueId', mosqueId);
-    await sharedPref.save('mosqueUUId', mosqueUUID);
+    await sharedPref.save('isToggleScreenSet', mosqueUUID);
     // sharedPref.save('mosqueSlug', mosqueSlug);
   }
 
@@ -133,34 +162,41 @@ class MosqueManager extends ChangeNotifier
           DateTime(now.year, now.month, now.day, hour, minute);
 
       if (scheduledDateTime.isBefore(now)) {
-        // Schedule for the next day if the time has already passed
         scheduledDateTime.add(Duration(days: 1));
       }
 
-      // Schedule one minute before
       final beforeDelay = scheduledDateTime.difference(now) -
           Duration(minutes: beforeDelayMinutes);
       if (beforeDelay.isNegative) {
-        // Skip scheduling if the delay is negative
         continue;
       }
-      Timer(beforeDelay, () {
+      final beforeTimer = Timer(beforeDelay, () {
         _toggleScreen();
       });
-      print("Before delay Minutes: $beforeDelayMinutes");
-      print("After delay Minutes: $afterDelayMinutes");
 
-      print("Before delay: $beforeDelay");
-      print("Before scheduledDateTime: $scheduledDateTime");
-
-      // Schedule one minute after
       final afterDelay = scheduledDateTime.difference(now) +
           Duration(minutes: afterDelayMinutes);
-      Timer(afterDelay, () {
+      final afterTimer = Timer(afterDelay, () {
         _toggleScreen();
       });
-      print("After delay: $afterDelay");
-      print("After scheduledDateTime: $scheduledDateTime");
+
+      // Store the timers in the _scheduledTimers map
+      _scheduledTimers[timeString] = [beforeTimer, afterTimer];
+    }
+  }
+
+  static void cancelAllScheduledTimers() {
+    for (final timeString in _scheduledTimers.keys) {
+      cancelScheduledTimers(timeString);
+    }
+  }
+
+  static void cancelScheduledTimers(String timeString) {
+    final timers = _scheduledTimers.remove(timeString);
+    if (timers != null) {
+      for (final timer in timers) {
+        timer.cancel();
+      }
     }
   }
 
@@ -228,12 +264,17 @@ class MosqueManager extends ChangeNotifier
         times = e;
         final today =
             useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+        _checkEventsScheduled().then((_) {
+          if (!isEventsSet) {
+            scheduleToggleScreen(
+              e.dayTimesStrings(today, salahOnly: false),
+              1,
+              1,
+            );
+            isEventsSet = true;
+          }
+        });
 
-        scheduleToggleScreen(
-          e.dayTimesStrings(today, salahOnly: false),
-          1,
-          1,
-        );
         notifyListeners();
       },
       onError: onItemError,

@@ -45,6 +45,9 @@ class MainActivity : FlutterActivity() {
       } else if (call.method == "toggleScreen") {
        toggleScreen(call, result)
       }
+       else if (call.method == "grantDumpSysPermission") {
+    grantDumpSysPermission(call, result)
+              }
         
       
       else {
@@ -83,6 +86,19 @@ class MainActivity : FlutterActivity() {
       return false
     }
   }
+
+  private fun grantDumpSysPermission(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+        try {
+        
+                executeCommand(listOf("pm grant com.mawaqit.androidtv android.permission.DUMP"), result) // Lock the device
+            
+        } catch (e: Exception) {
+            handleCommandException(e, result)
+        }
+    }}
+
+
 private fun toggleScreen(call: MethodCall, result: MethodChannel.Result) {
     AsyncTask.execute {
         try {
@@ -111,12 +127,10 @@ private fun isDeviceLocked(): Boolean {
 
         // Check if the output contains "mWakefulness=Awake"
         val isAwake = output.contains("mWakefulness=Awake")
-        println("Output of command: $output")
 
         return isAwake
     } catch (e: IOException) {
         e.printStackTrace()
-        println("Error executing adb shell command: ${e.message}")
         return false
     }
 }

@@ -230,6 +230,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               title: "Clear data & force close app",
               onSelect: () => _clearDataAndRestartApp(),
             ),
+            SelectorOption(
+              title: "Clear data & force close app",
+              onSelect: () => MosqueManager.cancelAllScheduledTimers(),
+            ),
           ],
         ),
       ),
