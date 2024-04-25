@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -7,6 +8,7 @@ import 'package:mawaqit/src/models/address_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../const/constants.dart';
+import '../../helpers/SharedPref.dart';
 import '../../helpers/connectivity_provider.dart';
 import '../../models/announcement.dart';
 import '../data_source/announcement_local_data_source.dart';
@@ -29,7 +31,7 @@ class AnnouncementImpl implements AnnouncementRepository {
   @override
   Stream<List<Announcement>> getAnnouncementsStream([String? mosqueUUID]) {
     /// get the uuid of the mosque
-    mosqueUUID ??= _sharedPreferences.getString(MosqueManagerConstant.kMosqueUUID);
+    mosqueUUID ??= jsonDecode(_sharedPreferences.getString('mosqueUUId') ?? '{}');
 
     if (mosqueUUID == null || mosqueUUID.isEmpty) {
       throw Exception('No mosque id found');
@@ -48,7 +50,9 @@ class AnnouncementImpl implements AnnouncementRepository {
   @override
   Future<List<Announcement>> getAnnouncements([String? mosqueUUID]) async {
     /// get the uuid of the mosque
-    mosqueUUID ??= _sharedPreferences.getString(MosqueManagerConstant.kMosqueUUID);
+    mosqueUUID ??= jsonDecode(_sharedPreferences.getString('mosqueUUId') ?? '{}');
+
+    log('announcement: AnnouncementImpl: getAnnouncements - mosqueId: $mosqueUUID');
 
     if (mosqueUUID == null || mosqueUUID.isEmpty) {
       throw Exception('No mosque id found');
