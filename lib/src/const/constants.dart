@@ -37,3 +37,7 @@ abstract class AnnouncementConstant {
 abstract class MosqueManagerConstant {
   static const String kMosqueUUID = "mosqueUUID";
 }
+
+abstract class QuranConstant {
+  static const String kQuranVersionLink = "'https://mawaqit.github.io/mawaqit-announcements/public/quran/config.json'";
+}
