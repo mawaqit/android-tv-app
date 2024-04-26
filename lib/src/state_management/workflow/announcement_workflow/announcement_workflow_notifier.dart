@@ -133,9 +133,13 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
           status: AnnouncementWorkflowStatus.playing,
         ),
       );
-      await Future.delayed(Duration(seconds: 5));
-      final duration = ref.read(videoProvider);
-      await Future.delayed(duration);
+      bool isPlaying = ref.read(videoProvider);
+      log('announcement: AnnouncementWorkflowNotifier: _displayAnnouncement: isPlaying $isPlaying');
+      while(isPlaying){
+        await Future.delayed(Duration(seconds: 1));
+        isPlaying = ref.read(videoProvider);
+      }
+      ref.read(videoProvider.notifier).state = true;
     } else if (announcement.duration != null && link == null) {
       // link checks if it is a video or not
       log('announcement: AnnouncementWorkflowNotifier: _displayAnnouncement: text ${announcement.id}');

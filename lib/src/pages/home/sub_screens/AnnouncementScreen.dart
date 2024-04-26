@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -211,11 +212,12 @@ class _VideoAnnouncement extends ConsumerStatefulWidget {
 
 class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
   late YoutubePlayerController _controller;
+  Timer? _timeoutTimer;
 
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
-
+    ref.read(videoProvider.notifier).state = true;
     _controller = YoutubePlayerController(
       initialVideoId: YoutubePlayer.convertUrlToId(widget.url)!,
       flags: YoutubePlayerFlags(
@@ -226,13 +228,10 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
         forceHD: true,
       ),
     )..addListener(() {
-        ref.read(videoProvider.notifier).state = _controller.value.metaData.duration;
+      if (_controller.value.isReady && _controller.value.isPlaying) {
+        _startTimeoutTimer();
+      }
       });
-
-    /// if announcement didn't started playing after 20 seconds skip it
-    Future.delayed(20.seconds, () {
-      if (_controller.value.isReady == false) widget.onEnded?.call();
-    });
 
     super.initState();
   }
@@ -240,7 +239,17 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
   @override
   void dispose() {
     _controller.dispose();
+    _timeoutTimer?.cancel();
     super.dispose();
+  }
+
+  void _startTimeoutTimer() {
+    _timeoutTimer?.cancel();
+    _timeoutTimer = Timer(const Duration(minutes: 5), () {
+      if (mounted) {
+        ref.read(videoProvider.notifier).state = false;
+      }
+    });
   }
 
   @override
@@ -248,6 +257,9 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
     return RepaintBoundary(
       child: Center(
         child: YoutubePlayer(
+          onEnded: (data) {
+            ref.read(videoProvider.notifier).state = false;
+          },
           controller: _controller,
           showVideoProgressIndicator: true,
         ),
@@ -256,4 +268,4 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
   }
 }
 
-final videoProvider = StateProvider<Duration>((ref) => Duration(seconds: 0));
+final videoProvider = StateProvider<bool>((ref) => true);
