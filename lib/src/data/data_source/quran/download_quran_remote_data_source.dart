@@ -4,11 +4,13 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
+import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
+import 'package:mawaqit/src/helpers/directory_helper.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DownloadQuranRemoteDataSource {
   final Dio dio;
-  final CancelToken? cancelToken;
+  CancelToken? cancelToken;
   final String applicationSupportDirectoryPath;
 
   DownloadQuranRemoteDataSource({
@@ -27,9 +29,9 @@ class DownloadQuranRemoteDataSource {
         return value.data['fileName'];
       });
       log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - $version');
-      return version;
+      return version as String;
     } catch (e) {
-      throw Exception('Error occurred while fetching remote quran version: $e');
+      throw FetchRemoteQuranVersionException(e.toString());
     }
   }
 
@@ -51,21 +53,37 @@ class DownloadQuranRemoteDataSource {
         '$url$versionName',
         filePath,
         onReceiveProgress: (received, total) {
-          final progress = received / total;
-          log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - progress: $progress');
+          final progress = (received / total) * 100;
+          // log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - progress: $progress');
           onReceiveProgress?.call(progress);
         },
         cancelToken: cancelToken,
       );
-      log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - end');
-    } catch (e) {
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.cancel) {
+        log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - download cancelled');
+        await DirectoryHelper.deleteFileIfExists(filePath);
+        await DirectoryHelper.deleteDirectories([
+          '$applicationDirectoryPath/quran_zip',
+          '$applicationDirectoryPath/quran',
+        ]);
+        throw CancelDownloadException();
+      }
       throw Exception('Error occurred while downloading quran: $e');
+    } catch (e) {
+      await DirectoryHelper.deleteFileIfExists(filePath);
+      await DirectoryHelper.deleteDirectories([
+        '$applicationDirectoryPath/quran_zip',
+        '$applicationDirectoryPath/quran',
+      ]);
+      throw UnknownException(e.toString());
     }
   }
 
   /// [cancelDownload] cancels the download
   void cancelDownload() {
     cancelToken?.cancel();
+    cancelToken = CancelToken();
     log('quran: DownloadQuranRemoteDataSource: cancelDownload - download cancelled');
   }
 }
@@ -73,8 +91,10 @@ class DownloadQuranRemoteDataSource {
 final downloadQuranRemoteDataSourceProvider = FutureProvider<DownloadQuranRemoteDataSource>(
   (ref) async {
     final savePath = await getApplicationSupportDirectory();
+    final cancelToken = CancelToken();
     return DownloadQuranRemoteDataSource(
       applicationSupportDirectoryPath: savePath.path,
+      cancelToken: cancelToken,
       dio: ref.read(dioProvider),
     );
   },

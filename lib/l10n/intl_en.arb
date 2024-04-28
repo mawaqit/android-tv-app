@@ -198,5 +198,17 @@
   "whatIsNew": "What's new",
   "update": "Update",
   "automaticUpdate": "Automatic update",
-  "automaticUpdateDescription": "Enable automatic update to get the latest features and improvements"
+  "automaticUpdateDescription": "Enable automatic update to get the latest features and improvements",
+  "downloadQuran": "Download Quran",
+  "quran": "Quran",
+  "askDownloadQuran": "Do you want to download the Quran?",
+  "download": "Download",
+  "downloadingQuran": "Downloading Quran",
+  "extractingQuran": "Extracting Quran",
+  "updatedQuran": "Quran updated",
+  "quranLatestVersion": "Quran is up to date",
+  "quranUpdatedVersion": "Quran updated version is: {version}",
+  "quranIsUpdated": "Quran is updated",
+  "quranDownloaded": "Quran downloaded",
+  "quranIsAlreadyDownloaded": "Quran is already downloaded"
 }

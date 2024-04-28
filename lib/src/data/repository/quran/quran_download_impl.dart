@@ -1,6 +1,6 @@
-// quran_download_repository_impl.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/data/data_source/quran/download_quran_remote_data_source.dart';
+import 'package:mawaqit/src/helpers/directory_helper.dart';
 import 'package:mawaqit/src/helpers/zip_extractor_helper.dart';
 
 import 'package:mawaqit/src/data/data_source/quran/download_quran_local_data_source.dart';
@@ -16,31 +16,33 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
     required this.remoteDataSource,
   });
 
+  /// [getLocalQuranVersion] fetches the local quran version
   @override
   Future<String?> getLocalQuranVersion() async {
-    try {
-      final version = await remoteDataSource.getRemoteQuranVersion();
-      return version;
-    } catch (e) {
-      throw Exception('Error occurred while fetching remote quran version: $e');
-    }
+    final version = localDataSource.getQuranVersion();
+    return version;
   }
 
+  /// [downloadQuran] downloads the quran zip file
   @override
-  Future<void> downloadQuran(String version, String? filePath, Function(double) onReceiveProgress) async {
-    try {
-      await remoteDataSource.downloadQuranWithProgress(
-        versionName: version,
-        applicationDirectoryPath: filePath,
-        onReceiveProgress: onReceiveProgress,
-      );
-    } catch (e) {
-      throw Exception('Error occurred while downloading quran: $e');
-    }
+  Future<void> downloadQuran({
+    required String version,
+    String? filePath,
+    required Function(double) onReceiveProgress,
+  }) async {
+    await remoteDataSource.downloadQuranWithProgress(
+      versionName: version,
+      onReceiveProgress: onReceiveProgress,
+    );
   }
 
+  /// [extractQuran] extracts the quran zip file
   @override
-  Future<void> extractQuran(String zipFilePath, String destinationPath, Function(double) onExtractProgress) async {
+  Future<void> extractQuran({
+    required String zipFilePath,
+    required String destinationPath,
+    required Function(double) onExtractProgress,
+  }) async {
     await ZipFileExtractorHelper.extractZipFile(
       zipFilePath: zipFilePath,
       destinationDirPath: destinationPath,
@@ -50,31 +52,33 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
     );
   }
 
+  /// [deleteOldQuran] deletes the old quran
   @override
-  Future<void> deleteOldQuran() async {
-    try {
-      await localDataSource.deleteExistingSvgFiles();
-    } catch (e) {
-      throw Exception('Error occurred while deleting old quran: $e');
-    }
+  Future<void> deleteOldQuran({
+    String? path,
+  }) async {
+    final quranPath = path ?? localDataSource.applicationSupportDirectory.path;
+    final deletePath = '$quranPath/quran';
+    await DirectoryHelper.deleteExistingSvgFiles(path: deletePath);
   }
 
+  /// [deleteZipFile] deletes the zip file
   @override
   Future<void> deleteZipFile(String zipFileName) async {
-    try {
-      await localDataSource.deleteZipFile(zipFileName);
-    } catch (e) {
-      throw Exception('Error occurred while deleting old zip file: $e');
-    }
+    await localDataSource.deleteZipFile(zipFileName);
   }
 
+  /// [getRemoteQuranVersion] fetches the remote quran version
   @override
-  Future<String?> getRemoteQuranVersion() {
-    try {
-      return remoteDataSource.getRemoteQuranVersion();
-    } catch (e) {
-      throw Exception('Error occurred while fetching remote quran version: $e');
-    }
+  Future<String> getRemoteQuranVersion() {
+    return remoteDataSource.getRemoteQuranVersion();
+
+  }
+
+  /// [cancelDownload] cancels the download
+  @override
+  Future<void> cancelDownload() async {
+    remoteDataSource.cancelDownload();
   }
 }
 

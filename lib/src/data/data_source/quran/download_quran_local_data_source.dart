@@ -2,17 +2,23 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/const/constants.dart';
+import 'package:mawaqit/src/helpers/directory_helper.dart';
+import 'package:mawaqit/src/module/shared_preference_module.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DownloadQuranLocalDataSource {
   final Directory applicationSupportDirectory;
+  final SharedPreferences sharedPreference;
 
-  DownloadQuranLocalDataSource(this.applicationSupportDirectory);
+  DownloadQuranLocalDataSource({required this.applicationSupportDirectory, required this.sharedPreference});
 
+  /// [saveSvgFiles] saves the zip file to the local storage
   Future<void> saveSvgFiles(List<File> svgFiles) async {
     final quranDirectory = Directory('${applicationSupportDirectory.path}/quran');
     log('quran: DownloadQuranLocalDataSource: saveSvgFiles - quranDirectory: ${quranDirectory.path}');
-    await _createDirectoryIfNotExists(quranDirectory);
+    await DirectoryHelper.createDirectoryIfNotExists(quranDirectory);
     for (final svgFile in svgFiles) {
       final fileName = svgFile.path.split('/').last;
       final destinationPath = '${quranDirectory.path}/$fileName';
@@ -22,16 +28,10 @@ class DownloadQuranLocalDataSource {
     }
   }
 
-  Future<void> deleteExistingSvgFiles() async {
-    final quranDirectory = Directory('${applicationSupportDirectory.path}/quran');
-    if (await quranDirectory.exists()) {
-      log('quran: DownloadQuranLocalDataSource: deleteExistingSvgFiles - deleting ${quranDirectory.path}');
-      await quranDirectory.delete(recursive: true);
-    }
-  }
-
+  /// [deleteZipFile] deletes the existing svg files
   Future<void> deleteZipFile(String zipFileName) async {
     final zipFilePath = '${applicationSupportDirectory.path}/quran_zip/$zipFileName';
+    _setQuranVersion(zipFileName);
     final zipFile = File(zipFilePath);
     if (await zipFile.exists()) {
       log('quran: DownloadQuranLocalDataSource: deleteZipFile - deleting $zipFilePath');
@@ -39,31 +39,34 @@ class DownloadQuranLocalDataSource {
     }
   }
 
-  Future<String> getQuranVersion({String? path}) async {
-    path ??= applicationSupportDirectory.path;
-    final quranDirectory = Directory('$path/quran_zip');
-    if (!await quranDirectory.exists()) {
+  /// [getQuranVersion] fetches the quran version
+  String getQuranVersion() {
+    final version = sharedPreference.getString(QuranConstant.kQuranLocalVersion) ?? '';
+    final checkSVGs = Directory('${applicationSupportDirectory.path}/quran');
+    if (checkSVGs.existsSync() && checkSVGs.listSync().isNotEmpty) {
+      log('quran: DownloadQuranLocalDataSource: getQuranVersion - checkSVGs: $version');
+      return version;
+    } else {
+      log('quran: DownloadQuranLocalDataSource: getQuranVersion - checkSVGs: $version');
       return '';
     }
-
-    final subFile = quranDirectory.listSync().first;
-    log('quran: DownloadQuranLocalDataSource: getQuranVersion - subFile: $subFile');
-
-    final version = subFile.path.split('/').last;
-    log('quran: DownloadQuranLocalDataSource: getQuranVersion - version: ${version}');
-    return version;
   }
 
-  Future<void> _createDirectoryIfNotExists(Directory directory) async {
-    if (!await directory.exists()) {
-      await directory.create(recursive: true);
-    }
+  /// [_setQuranVersion] sets the quran version
+  void _setQuranVersion(String version) {
+    sharedPreference.setString(QuranConstant.kQuranLocalVersion, version);
+    log('quran: DownloadQuranLocalDataSource: setQuranVersion - version: $version');
   }
 }
 
 final downloadQuranLocalDataSourceProvider = FutureProvider<DownloadQuranLocalDataSource>(
   (ref) async {
     final savePath = await getApplicationSupportDirectory();
-    return DownloadQuranLocalDataSource(savePath);
+    final sharedPref = await ref.read(sharedPreferenceModule.future);
+
+    return DownloadQuranLocalDataSource(
+      applicationSupportDirectory: savePath,
+      sharedPreference: sharedPref,
+    );
   },
 );
