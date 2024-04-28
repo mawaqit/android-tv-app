@@ -40,4 +40,5 @@ abstract class MosqueManagerConstant {
 
 abstract class QuranConstant {
   static const String kQuranVersionLink = "'https://mawaqit.github.io/mawaqit-announcements/public/quran/config.json'";
+  static const String kQuranLocalVersion = 'quran_local_version';
 }
