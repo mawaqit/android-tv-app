@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_archive/flutter_archive.dart';
+import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 
 class ZipFileExtractorHelper {
   static Future<void> extractZipFile({
@@ -22,12 +23,12 @@ class ZipFileExtractorHelper {
         zipFile: zipFile,
         destinationDir: destinationDir,
         onExtracting: (zipEntry, progress) {
-          changeProgress(progress / 100);
+          changeProgress(progress);
           return ZipFileOperation.includeItem;
         },
       );
     } catch (e) {
-      throw Exception('Error occurred while extracting zip file: $e');
+      throw ExtractZipFileException(e.toString());
     }
   }
 }
