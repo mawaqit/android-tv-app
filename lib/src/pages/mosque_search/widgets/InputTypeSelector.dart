@@ -1,14 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/ChromeCastMosqueInputSearch.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputId.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../../../i18n/l10n.dart';
+import '../../../../main.dart';
+import '../../../helpers/Api.dart';
+import 'ChromeCastMosqueInputId.dart';
 
-class InputTypeSelector extends StatelessWidget {
+class InputTypeSelector extends StatefulWidget {
   const InputTypeSelector({Key? key, this.onDone}) : super(key: key);
 
   final void Function()? onDone;
+
+  @override
+  _InputTypeSelectorState createState() => _InputTypeSelectorState();
+}
+
+class _InputTypeSelectorState extends State<InputTypeSelector> {
+  String? _deviceModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDeviceModel();
+  }
+
+  Future<void> _fetchDeviceModel() async {
+    try {
+      final userData = await Api.prepareUserData();
+      if (userData != null) {
+        setState(() {
+          _deviceModel = userData.$2['model'];
+        });
+      }
+    } catch (e, stackTrace) {
+      logger.e('Error fetching user data: $e', stackTrace: stackTrace);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +66,9 @@ class InputTypeSelector extends StatelessWidget {
                 Navigator.push(
                   context,
                   PageTransition(
-                    child: MosqueInputId(onDone: onDone),
+                    child: _deviceModel!.contains("Chromecast")
+                        ? ChromeCastMosqueInputId(onDone: widget.onDone)
+                        : MosqueInputId(onDone: widget.onDone),
                     type: PageTransitionType.fade,
                     alignment: Alignment.center,
                   ),
@@ -49,7 +81,11 @@ class InputTypeSelector extends StatelessWidget {
                 Navigator.push(
                   context,
                   PageTransition(
-                    child: MosqueInputSearch(onDone: onDone),
+                    child: _deviceModel!.contains("Chromecast")
+                        ? ChromeCastMosqueInputSearch(
+                            onDone: widget.onDone,
+                          )
+                        : MosqueInputSearch(onDone: widget.onDone),
                     type: PageTransitionType.fade,
                     alignment: Alignment.center,
                   ),
