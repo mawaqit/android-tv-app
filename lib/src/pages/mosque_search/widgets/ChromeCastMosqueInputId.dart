@@ -115,9 +115,7 @@ class _MosqueInputIdState extends State<ChromeCastMosqueInputId> {
               style: TextStyle(
                 fontSize: 25.0,
                 fontWeight: FontWeight.w700,
-                color: theme.brightness == Brightness.dark
-                    ? null
-                    : theme.primaryColor,
+                color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
               ),
             ),
             SizedBox(height: 10),
@@ -137,13 +135,8 @@ class _MosqueInputIdState extends State<ChromeCastMosqueInputId> {
                 autoFocus: true,
                 mosque: searchOutput!,
                 onTap: () {
-                  return context
-                      .read<MosqueManager>()
-                      .setMosqueUUid(searchOutput!.uuid.toString())
-                      .then((value) {
-                    !context.read<MosqueManager>().typeIsMosque
-                        ? onboardingWorkflowDone()
-                        : widget.onDone?.call();
+                  return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) {
+                    !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
                   }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {
                       setState(() {
@@ -169,17 +162,13 @@ class _MosqueInputIdState extends State<ChromeCastMosqueInputId> {
 
   KeyEventResult _handleKeyEvent(FocusNode node, RawKeyEvent event) {
     if (LogicalKeyboardKey.arrowLeft == event.logicalKey) {
-      FocusManager.instance.primaryFocus!
-          .focusInDirection(TraversalDirection.left);
+      FocusManager.instance.primaryFocus!.focusInDirection(TraversalDirection.left);
     } else if (LogicalKeyboardKey.arrowRight == event.logicalKey) {
-      FocusManager.instance.primaryFocus!
-          .focusInDirection(TraversalDirection.right);
+      FocusManager.instance.primaryFocus!.focusInDirection(TraversalDirection.right);
     } else if (LogicalKeyboardKey.arrowUp == event.logicalKey) {
-      FocusManager.instance.primaryFocus!
-          .focusInDirection(TraversalDirection.up);
+      FocusManager.instance.primaryFocus!.focusInDirection(TraversalDirection.up);
     } else if (LogicalKeyboardKey.arrowDown == event.logicalKey) {
-      FocusManager.instance.primaryFocus!
-          .focusInDirection(TraversalDirection.down);
+      FocusManager.instance.primaryFocus!.focusInDirection(TraversalDirection.down);
     } else if (LogicalKeyboardKey.goBack == event.logicalKey) {
       navKey.currentState!.pop();
     }
@@ -197,13 +186,10 @@ class _MosqueInputIdState extends State<ChromeCastMosqueInputId> {
           child: TextFormField(
             controller: inputController,
             style: GoogleFonts.inter(
-              color: theme.brightness == Brightness.dark
-                  ? null
-                  : theme.primaryColor,
+              color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
             ),
             onFieldSubmitted: _setMosqueId,
-            cursorColor:
-                theme.brightness == Brightness.dark ? null : theme.primaryColor,
+            cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
             keyboardType: TextInputType.none,
             textInputAction: TextInputAction.search,
             inputFormatters: [
@@ -212,22 +198,16 @@ class _MosqueInputIdState extends State<ChromeCastMosqueInputId> {
             decoration: InputDecoration(
               filled: true,
               errorText: error,
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
               hintText: S.of(context).selectWithMosqueId,
               hintStyle: TextStyle(
                 fontWeight: FontWeight.normal,
-                color: theme.brightness == Brightness.dark
-                    ? null
-                    : theme.primaryColor.withOpacity(0.4),
+                color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
               ),
               suffixIcon: IconButton(
                 tooltip: "Search by Id",
-                icon:
-                    loading ? CircularProgressIndicator() : Icon(Icons.search),
-                color: theme.brightness == Brightness.dark
-                    ? Colors.white70
-                    : theme.primaryColor,
+                icon: loading ? CircularProgressIndicator() : Icon(Icons.search),
+                color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
                 onPressed: () => _setMosqueId(inputController.text),
               ),
               focusedBorder: OutlineInputBorder(

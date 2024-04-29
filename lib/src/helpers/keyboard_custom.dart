@@ -68,8 +68,7 @@ class _KeyboardCustomState extends State<KeyboardCustom> {
     _backspaceTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
       if (widget.controller.text.isNotEmpty) {
         setState(() {
-          widget.controller.text = widget.controller.text
-              .substring(0, widget.controller.text.length - 1);
+          widget.controller.text = widget.controller.text.substring(0, widget.controller.text.length - 1);
         });
       }
     });
@@ -86,8 +85,7 @@ class _KeyboardCustomState extends State<KeyboardCustom> {
         onPressed: () {
           setState(() {
             String valorAtual = widget.controller.text;
-            String valorNovo =
-                _shiftEnabled ? tecla.toUpperCase() : tecla.toLowerCase();
+            String valorNovo = _shiftEnabled ? tecla.toUpperCase() : tecla.toLowerCase();
             String valorAtualizado = widget.applyMask(valorAtual + valorNovo);
             widget.controller.text = valorAtualizado;
           });
@@ -108,8 +106,7 @@ class _KeyboardCustomState extends State<KeyboardCustom> {
           alignment: Alignment.center,
           child: Text(
             _shiftEnabled ? tecla.toUpperCase() : tecla.toLowerCase(),
-            style:
-                TextStyle(fontSize: widget.fontSize, color: widget.fontColor),
+            style: TextStyle(fontSize: widget.fontSize, color: widget.fontColor),
           ),
         ),
       ),
@@ -126,8 +123,7 @@ class _KeyboardCustomState extends State<KeyboardCustom> {
           onPressed: () {
             if (icon == Icons.backspace) {
               if (widget.controller.text.isNotEmpty) {
-                widget.controller.text = widget.controller.text
-                    .substring(0, widget.controller.text.length - 1);
+                widget.controller.text = widget.controller.text.substring(0, widget.controller.text.length - 1);
               }
             }
             if (icon == Icons.arrow_forward) {
@@ -274,8 +270,7 @@ class _KeyboardCustomState extends State<KeyboardCustom> {
                       height: size.height * widget.alphanumericHeight,
                       child: Row(
                         children: [
-                          Flexible(
-                              child: buildButtonCustom(Icons.arrow_upward)),
+                          Flexible(child: buildButtonCustom(Icons.arrow_upward)),
                           Flexible(child: buildButton('z')),
                           Flexible(child: buildButton('x')),
                           Flexible(child: buildButton('c')),

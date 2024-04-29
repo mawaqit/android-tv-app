@@ -118,13 +118,8 @@ class _MosqueInputSearchState extends State<ChromeCastMosqueInputSearch> {
 
   /// handle on mosque tile clicked
   Future<void> _selectMosque(Mosque mosque) {
-    return context
-        .read<MosqueManager>()
-        .setMosqueUUid(mosque.uuid.toString())
-        .then((value) {
-      !context.read<MosqueManager>().typeIsMosque
-          ? onboardingWorkflowDone()
-          : widget.onDone?.call();
+    return context.read<MosqueManager>().setMosqueUUid(mosque.uuid.toString()).then((value) {
+      !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
     }).catchError((e, stack) {
       if (e is InvalidMosqueId) {
         setState(() {
@@ -160,16 +155,11 @@ class _MosqueInputSearchState extends State<ChromeCastMosqueInputSearch> {
                 style: TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.w700,
-                  color: theme.brightness == Brightness.dark
-                      ? null
-                      : theme.primaryColor,
+                  color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
                 ),
               ).animate().slideY(begin: -1).fade(),
               SizedBox(height: 20),
-              searchField(theme)
-                  .animate()
-                  .slideX(begin: 1, delay: 200.milliseconds)
-                  .fadeIn(),
+              searchField(theme).animate().slideX(begin: 1, delay: 200.milliseconds).fadeIn(),
               SizedBox(height: 20),
               showKeyboard || inputHasFocus
                   ? KeyboardCustom(
@@ -201,10 +191,7 @@ class _MosqueInputSearchState extends State<ChromeCastMosqueInputSearch> {
                                     autoFocus: i == 0,
                                     mosque: results[i],
                                     onTap: () => _selectMosque(results[i]),
-                                  )
-                                      .animate()
-                                      .slideX(delay: 70.milliseconds * (i % 5))
-                                      .fade(),
+                                  ).animate().slideX(delay: 70.milliseconds * (i % 5)).fade(),
                               ],
                             ),
                           )
@@ -224,14 +211,10 @@ class _MosqueInputSearchState extends State<ChromeCastMosqueInputSearch> {
                                 height: 40,
                                 child: Builder(
                                   builder: (context) {
-                                    if (loading)
-                                      return CircularProgressIndicator();
+                                    if (loading) return CircularProgressIndicator();
 
-                                    if (noMore && results.isEmpty)
-                                      return Text(
-                                          S.of(context).mosqueNoResults);
-                                    if (noMore)
-                                      return Text(S.of(context).mosqueNoMore);
+                                    if (noMore && results.isEmpty) return Text(S.of(context).mosqueNoResults);
+                                    if (noMore) return Text(S.of(context).mosqueNoMore);
 
                                     return SizedBox();
                                   },
@@ -250,17 +233,13 @@ class _MosqueInputSearchState extends State<ChromeCastMosqueInputSearch> {
 
   KeyEventResult _handleKeyEvent(FocusNode node, RawKeyEvent event) {
     if (LogicalKeyboardKey.arrowLeft == event.logicalKey) {
-      FocusManager.instance.primaryFocus!
-          .focusInDirection(TraversalDirection.left);
+      FocusManager.instance.primaryFocus!.focusInDirection(TraversalDirection.left);
     } else if (LogicalKeyboardKey.arrowRight == event.logicalKey) {
-      FocusManager.instance.primaryFocus!
-          .focusInDirection(TraversalDirection.right);
+      FocusManager.instance.primaryFocus!.focusInDirection(TraversalDirection.right);
     } else if (LogicalKeyboardKey.arrowUp == event.logicalKey) {
-      FocusManager.instance.primaryFocus!
-          .focusInDirection(TraversalDirection.up);
+      FocusManager.instance.primaryFocus!.focusInDirection(TraversalDirection.up);
     } else if (LogicalKeyboardKey.arrowDown == event.logicalKey) {
-      FocusManager.instance.primaryFocus!
-          .focusInDirection(TraversalDirection.down);
+      FocusManager.instance.primaryFocus!.focusInDirection(TraversalDirection.down);
     } else if (LogicalKeyboardKey.goBack == event.logicalKey) {
       navKey.currentState!.pop();
     }
@@ -274,12 +253,10 @@ class _MosqueInputSearchState extends State<ChromeCastMosqueInputSearch> {
       child: TextFormField(
         controller: inputController,
         style: GoogleFonts.inter(
-          color:
-              theme.brightness == Brightness.dark ? null : theme.primaryColor,
+          color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
         ),
         onFieldSubmitted: (val) => _searchMosque(val, 1),
-        cursorColor:
-            theme.brightness == Brightness.dark ? null : theme.primaryColor,
+        cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
         keyboardType: TextInputType.none,
         autofocus: true,
         focusNode: _focus,
@@ -291,9 +268,7 @@ class _MosqueInputSearchState extends State<ChromeCastMosqueInputSearch> {
           hintText: S.of(context).searchForMosque,
           hintStyle: TextStyle(
             fontWeight: FontWeight.normal,
-            color: theme.brightness == Brightness.dark
-                ? null
-                : theme.primaryColor.withOpacity(0.4),
+            color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
           ),
           suffixIcon: ExcludeFocus(
             child: InkWell(
