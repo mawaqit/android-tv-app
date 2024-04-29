@@ -228,9 +228,9 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
         forceHD: true,
       ),
     )..addListener(() {
-      if (_controller.value.isReady && _controller.value.isPlaying) {
-        _startTimeoutTimer();
-      }
+        if (_controller.value.isReady && _controller.value.isPlaying) {
+          _startTimeoutTimer();
+        }
       });
 
     super.initState();

@@ -135,7 +135,7 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
       );
       bool isPlaying = ref.read(videoProvider);
       log('announcement: AnnouncementWorkflowNotifier: _displayAnnouncement: isPlaying $isPlaying');
-      while(isPlaying){
+      while (isPlaying) {
         await Future.delayed(Duration(seconds: 1));
         isPlaying = ref.read(videoProvider);
       }
