@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mawaqit/src/pages/mosque_search/widgets/ChromeCastMosqueInputSearch.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_search.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputId.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
 import 'package:page_transition/page_transition.dart';
@@ -7,7 +7,7 @@ import 'package:page_transition/page_transition.dart';
 import '../../../../i18n/l10n.dart';
 import '../../../../main.dart';
 import '../../../helpers/Api.dart';
-import 'ChromeCastMosqueInputId.dart';
+import 'chromecast_mosque_input_id.dart';
 
 class InputTypeSelector extends StatefulWidget {
   const InputTypeSelector({Key? key, this.onDone}) : super(key: key);
