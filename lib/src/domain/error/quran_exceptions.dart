@@ -69,3 +69,32 @@ class ZipFileAlreadyExtractedException extends QuranException {
 class UnknownException extends QuranException {
   UnknownException(String message) : super('Unknown error: $message', 'UNKNOWN_ERROR');
 }
+
+/// QuranRemoteDataSourceException exceptions
+
+class FetchLanguagesException extends QuranException {
+  FetchLanguagesException(String message)
+      : super('Error occurred while fetching languages: $message', 'FETCH_LANGUAGES_ERROR');
+}
+
+class FetchSuwarByLanguageException extends QuranException {
+  FetchSuwarByLanguageException(String message)
+      : super('Error occurred while fetching suwar by language: $message', 'FETCH_SUWAR_BY_LANGUAGE_ERROR');
+}
+
+/// QuranLocalDataSourceException
+
+class SaveSuwarByLanguageException extends QuranException {
+  SaveSuwarByLanguageException(String message)
+      : super('Error occurred while saving suwar by language: $message', 'SAVE_SUWAR_BY_LANGUAGE_ERROR');
+}
+
+class ClearSuwarByLanguageException extends QuranException {
+  ClearSuwarByLanguageException(String message)
+      : super('Error occurred while clearing suwar by language: $message', 'CLEAR_SUWAR_BY_LANGUAGE_ERROR');
+}
+
+class ClearAllSuwarException extends QuranException {
+  ClearAllSuwarException(String message)
+      : super('Error occurred while clearing all suwar: $message', 'CLEAR_ALL_SUWAR_ERROR');
+}
