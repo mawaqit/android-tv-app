@@ -32,6 +32,7 @@ private lateinit var mAdminComponentName: ComponentName
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "setDeviceTimezone" -> setDeviceTimezone(call, result)
+                    "setDeviceOwner" -> setDeviceOwner(call, result)
                     "connectToWifi" -> connectToWifi(call, result)
                     "isPackageInstalled" -> {
                             val packageName = call.argument<String>("packageName")
@@ -95,6 +96,15 @@ private lateinit var mAdminComponentName: ComponentName
             try {
                 val timezone = call.argument<String>("timezone")
                 executeCommand("service call alarm 3 s16 $timezone", result)
+            } catch (e: Exception) {
+                handleCommandException(e, result)
+            }
+        }
+    }
+    private fun setDeviceOwner(call: MethodCall, result: MethodChannel.Result) {
+        AsyncTask.execute {
+            try {
+                executeCommand("dpm set-device-owner com.mawaqit.androidtv/.MyDeviceAdminReceiver", result)
             } catch (e: Exception) {
                 handleCommandException(e, result)
             }

@@ -32,6 +32,7 @@ import 'package:wakelock/wakelock.dart';
 
 import '../helpers/AppDate.dart';
 import '../services/FeatureManager.dart';
+import 'onBoarding/widgets/onboarding_timezone_selector.dart';
 
 enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
 
@@ -46,8 +47,17 @@ class _SplashScreen extends State<Splash> {
   SharedPref sharedPref = SharedPref();
   ErrorState? error;
 
+  Future<void> _setDeviceOwner() async {
+    try {
+      await platform.invokeMethod('setDeviceOwner');
+    } on PlatformException catch (e) {
+      logger.e(e);
+    }
+  }
+
   void initState() {
     super.initState();
+
     _initApplication().logPerformance('Init application');
   }
 
@@ -57,6 +67,7 @@ class _SplashScreen extends State<Splash> {
     await GlobalConfiguration().loadFromAsset("configuration");
     generateStream(Duration(minutes: 10)).listen((event) =>
         Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
+    await _setDeviceOwner();
 
     Hive.initFlutter();
 
