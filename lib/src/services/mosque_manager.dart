@@ -18,6 +18,7 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 import 'package:mawaqit/src/services/storage_manager.dart';
+import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/AppDate.dart';
@@ -25,9 +26,6 @@ import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
-
-const kAfterAdhanHadithDuration = Duration(minutes: 1);
-const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(seconds: 140);
 
@@ -80,7 +78,6 @@ class MosqueManager extends ChangeNotifier
   StreamSubscription? _mosqueSubscription;
   StreamSubscription? _timesSubscription;
   StreamSubscription? _configSubscription;
-  static final  _scheduledTimers = <String, List<Timer>>{};
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -93,43 +90,18 @@ class MosqueManager extends ChangeNotifier
     await Api.init();
     await loadFromLocale();
     listenToConnectivity();
-    _grantDumpPermission();
-    isEventsSet = await _checkEventsScheduled();
+    ToggleScreenFeature.grantDumpPermission();
+    isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
     notifyListeners();
-  }
-
-  Future<bool> _checkEventsScheduled() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    logger.d("value" + prefs.getBool("isEventsSet").toString());
-    return prefs.getBool("isEventsSet") ?? false;
-  }
-
-  Future<void> _grantDumpPermission() async {
-    try {
-      await MethodChannel('nativeMethodsChannel')
-          .invokeMethod('grantDumpSysPermission');
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
-  Future<void> _saveScheduledEventsToLocale() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    logger.d("Saving into local");
-
-    prefs.setBool("isEventsSet", true);
   }
 
   /// update mosque id in the app and shared preference
   Future<void> setMosqueUUid(String uuid) async {
     try {
       await fetchMosque(uuid);
-      await _saveScheduledEventsToLocale();
+      await ToggleScreenFeature.saveScheduledEventsToLocale();
 
       _saveToLocale();
-
-      // print("mosque url${mosque?.url}");
     } catch (e, stack) {
       debugPrintStack(stackTrace: stack);
     }
@@ -138,66 +110,8 @@ class MosqueManager extends ChangeNotifier
   Future<void> _saveToLocale() async {
     logger.d("Saving into local");
     // await sharedPref.save('mosqueId', mosqueId);
-    await sharedPref.save('isToggleScreenSet', mosqueUUID);
+    await sharedPref.save('mosqueUUId', mosqueUUID);
     // sharedPref.save('mosqueSlug', mosqueSlug);
-  }
-
-  Future<void> _toggleScreen() async {
-    try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreen');
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
-  void scheduleToggleScreen(
-      List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) {
-    for (String timeString in timeStrings) {
-      final parts = timeString.split(':');
-      final hour = int.parse(parts[0]);
-      final minute = int.parse(parts[1]);
-
-      final now = AppDateTime.now();
-      final scheduledDateTime =
-          DateTime(now.year, now.month, now.day, hour, minute);
-
-      if (scheduledDateTime.isBefore(now)) {
-        scheduledDateTime.add(Duration(days: 1));
-      }
-
-      final beforeDelay = scheduledDateTime.difference(now) -
-          Duration(minutes: beforeDelayMinutes);
-      if (beforeDelay.isNegative) {
-        continue;
-      }
-      final beforeTimer = Timer(beforeDelay, () {
-        _toggleScreen();
-      });
-
-      final afterDelay = scheduledDateTime.difference(now) +
-          Duration(minutes: afterDelayMinutes);
-      final afterTimer = Timer(afterDelay, () {
-        _toggleScreen();
-      });
-
-      // Store the timers in the _scheduledTimers map
-      _scheduledTimers[timeString] = [beforeTimer, afterTimer];
-    }
-  }
-
-  static void cancelAllScheduledTimers() {
-    for (final timeString in _scheduledTimers.keys) {
-      cancelScheduledTimers(timeString);
-    }
-  }
-
-  static void cancelScheduledTimers(String timeString) {
-    final timers = _scheduledTimers.remove(timeString);
-    if (timers != null) {
-      for (final timer in timers) {
-        timer.cancel();
-      }
-    }
   }
 
   static Future<String?> loadLocalUUID() async {
@@ -264,13 +178,16 @@ class MosqueManager extends ChangeNotifier
         times = e;
         final today =
             useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
-        _checkEventsScheduled().then((_) {
+
+        ToggleScreenFeature.checkEventsScheduled().then((_) {
           if (!isEventsSet) {
-            scheduleToggleScreen(
+            ToggleScreenFeature.scheduleToggleScreen(
               e.dayTimesStrings(today, salahOnly: false),
-              1,
-              1,
+              10,
+              10,
             );
+            ToggleScreenFeature.toggleFeatureState(true);
+
             isEventsSet = true;
           }
         });

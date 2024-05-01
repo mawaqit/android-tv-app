@@ -192,6 +192,12 @@
   "confirmationMessage":"Are you sure you want to use device time?",
   "useDeviceTime":"Use device time",
   "selectTime":"Select Time",
-  "previous": "Previous"
+  "previous": "Previous",
+  "screenLock":"Screen lock",
+  "screenLockMode":"Screen lock mode",
+  "screenLockDesc":"Turn on/off TV before and after each prayer",
+  "screenLockDesc2":"This feature turn on/off the device before and after each prayer adhan",
+  "before":"Before",
+  "after":"After"
 
 }

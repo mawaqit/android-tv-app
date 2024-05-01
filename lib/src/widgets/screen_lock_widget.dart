@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../i18n/l10n.dart';
@@ -41,7 +42,7 @@ class _TimePicker extends StatefulWidget {
 class __TimePickerState extends State<_TimePicker> {
   final TimeShiftManager timeManager = TimeShiftManager();
   late DateTime selectedTime;
-  bool value = false;
+  bool value = true;
   int _selectedMinuteBefore = 10;
   int _selectedMinuteAfter = 10;
 
@@ -50,57 +51,14 @@ class __TimePickerState extends State<_TimePicker> {
     super.initState();
     selectedTime = DateTime.now().add(Duration(
         hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
-  }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      bool isActive = await ToggleScreenFeature.getToggleFeatureState();
 
-  Future<void> _toggleScreen() async {
-    try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreen');
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
-  void scheduleToggleScreen(
-      List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) {
-    for (String timeString in timeStrings) {
-      final parts = timeString.split(':');
-      final hour = int.parse(parts[0]);
-      final minute = int.parse(parts[1]);
-
-      final now = AppDateTime.now();
-      final scheduledDateTime =
-          DateTime(now.year, now.month, now.day, hour, minute);
-
-      if (scheduledDateTime.isBefore(now)) {
-        // Schedule for the next day if the time has already passed
-        scheduledDateTime.add(Duration(days: 1));
-      }
-
-      // Schedule one minute before
-      final beforeDelay = scheduledDateTime.difference(now) -
-          Duration(minutes: beforeDelayMinutes);
-      if (beforeDelay.isNegative) {
-        // Skip scheduling if the delay is negative
-        continue;
-      }
-      Timer(beforeDelay, () {
-        _toggleScreen();
+      setState(() {
+        value = isActive;
       });
-      print("Before delay Minutes: $beforeDelayMinutes");
-      print("After delay Minutes: $afterDelayMinutes");
-
-      print("Before delay: $beforeDelay");
-      print("Before scheduledDateTime: $scheduledDateTime");
-
-      // Schedule one minute after
-      final afterDelay = scheduledDateTime.difference(now) +
-          Duration(minutes: afterDelayMinutes);
-      Timer(afterDelay, () {
-        _toggleScreen();
-      });
-      print("After delay: $afterDelay");
-      print("After scheduledDateTime: $scheduledDateTime");
-    }
+      print("is activated $value");
+    });
   }
 
   void _selectNextMinuteBefore() {
@@ -147,17 +105,33 @@ class __TimePickerState extends State<_TimePicker> {
           child: SwitchListTile(
             autofocus: true,
             secondary: Icon(Icons.monitor, size: 35),
-            title: Text("Screen lock mode"),
+            title: Text(S.of(context).screenLockMode),
             subtitle: Text(
-              "This feature turn on/off the device before and after each prayer adhan",
+              S.of(context).screenLockDesc2,
               maxLines: 2,
               overflow: TextOverflow.clip,
             ),
             value: value,
-            onChanged: (newValue) {
+            onChanged: (newValue) async {
               setState(() {
-                value = !value; // Invert the current value
+                value = newValue; // Update the value
+                ToggleScreenFeature.toggleFeatureState(newValue);
               });
+
+              // Check if newValue is false, then cancel all scheduled timers
+              if (!newValue) {
+                await ToggleScreenFeature.cancelAllScheduledTimers();
+                ToggleScreenFeature.toggleFeatureState(false);
+              }
+              // Check if newValue is true, then create all scheduled timers
+              if (newValue) {
+                ToggleScreenFeature.scheduleToggleScreen(
+                  times,
+                  10,
+                  10,
+                );
+                ToggleScreenFeature.toggleFeatureState(true);
+              }
             },
           ),
         ),
@@ -165,7 +139,7 @@ class __TimePickerState extends State<_TimePicker> {
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text("Before"),
+                  Text(S.of(context).before),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -183,7 +157,7 @@ class __TimePickerState extends State<_TimePicker> {
                       ),
                     ],
                   ),
-                  Text("After"),
+                  Text(S.of(context).after),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -206,11 +180,16 @@ class __TimePickerState extends State<_TimePicker> {
             : SizedBox(),
         value
             ? OutlinedButton(
-                onPressed: () => scheduleToggleScreen(
-                  times,
-                  _selectedMinuteBefore,
-                  _selectedMinuteAfter,
-                ),
+                onPressed: () async => {
+                  await ToggleScreenFeature.cancelAllScheduledTimers(),
+                  ToggleScreenFeature.toggleFeatureState(false),
+                  ToggleScreenFeature.scheduleToggleScreen(
+                    times,
+                    _selectedMinuteBefore,
+                    _selectedMinuteAfter,
+                  ),
+                  ToggleScreenFeature.toggleFeatureState(true),
+                },
                 child: Text(S.current.ok),
               )
             : SizedBox()

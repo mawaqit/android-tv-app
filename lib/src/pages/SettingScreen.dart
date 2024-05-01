@@ -117,7 +117,6 @@ class SettingScreen extends ConsumerWidget {
       }
     }
 
-
     return ScreenWithAnimationWidget(
       animation: 'settings',
       child: Padding(
@@ -211,10 +210,10 @@ class SettingScreen extends ConsumerWidget {
                     },
                   ),
                   _SettingItem(
-                      title: "Screen lock",
-                      subtitle: S.of(context).descLang,
+                      title: S.of(context).screenLock,
+                      subtitle: S.of(context).screenLockDesc,
                       icon: Icon(Icons.language, size: 35),
-                      onTap: () => /* scheduleToggleScreen(times) */ showDialog(
+                      onTap: () => showDialog(
                             context: context,
                             builder: (context) => ScreenLockModal(
                                 timeShiftManager: timeShiftManager),
@@ -257,7 +256,8 @@ class SettingScreen extends ConsumerWidget {
                             showDialog(
                               context: context,
                               builder: (context) => TimePickerModal(
-                                  timeShiftManager: timeShiftManager),
+                                timeShiftManager: timeShiftManager,
+                              ),
                             );
                           },
                         )
