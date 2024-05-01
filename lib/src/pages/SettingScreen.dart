@@ -22,6 +22,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
 import '../../main.dart';
+import '../data/data_source/device_info_data_source.dart';
 import '../helpers/AppDate.dart';
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
@@ -32,8 +33,8 @@ import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
 class SettingScreen extends ConsumerWidget {
-  const SettingScreen({Key? key}) : super(key: key);
-
+  SettingScreen({Key? key}) : super(key: key);
+  bool isDeviceRooted = false;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder<void>(
@@ -50,6 +51,7 @@ class SettingScreen extends ConsumerWidget {
 
   Future<void> _initializeTimeShiftManager() async {
     await TimeShiftManager().initializeTimes();
+    isDeviceRooted = await DeviceInfoDataSource().initRootRequest();
   }
 
   Widget _buildSettingScreen(BuildContext context, WidgetRef ref) {
@@ -65,57 +67,6 @@ class SettingScreen extends ConsumerWidget {
     final today = mosqueProvider.useTomorrowTimes
         ? AppDateTime.tomorrow()
         : AppDateTime.now();
-
-    final times =
-        mosqueProvider.times!.dayTimesStrings(today, salahOnly: false);
-
-    Future<void> _toggleScreen() async {
-      try {
-        await MethodChannel('nativeMethodsChannel')
-            .invokeMethod('toggleScreen');
-      } on PlatformException catch (e) {
-        logger.e(e);
-      }
-    }
-
-    void scheduleToggleScreen(List<String> timeStrings) {
-      for (String timeString in timeStrings) {
-        final parts = timeString.split(':');
-        final hour = int.parse(parts[0]);
-        final minute = int.parse(parts[1]);
-
-        final now = AppDateTime.now();
-        final scheduledDateTime =
-            DateTime(now.year, now.month, now.day, hour, minute);
-
-        if (scheduledDateTime.isBefore(now)) {
-          // Schedule for the next day if the time has already passed
-          scheduledDateTime.add(Duration(days: 1));
-        }
-
-        // Schedule one minute before
-        final beforeDelay =
-            scheduledDateTime.difference(now) - Duration(minutes: 1);
-        if (beforeDelay.isNegative) {
-          // Skip scheduling if the delay is negative
-          continue;
-        }
-        Timer(beforeDelay, () {
-          _toggleScreen();
-        });
-        print("Before delay: $beforeDelay");
-        print("Before scheduledDateTime: $scheduledDateTime");
-
-        // Schedule one minute after
-        final afterDelay =
-            scheduledDateTime.difference(now) + Duration(minutes: 1);
-        Timer(afterDelay, () {
-          _toggleScreen();
-        });
-        print("After delay: $afterDelay");
-        print("After scheduledDateTime: $scheduledDateTime");
-      }
-    }
 
     return ScreenWithAnimationWidget(
       animation: 'settings',
@@ -209,15 +160,19 @@ class SettingScreen extends ConsumerWidget {
                       );
                     },
                   ),
-                  _SettingItem(
-                      title: S.of(context).screenLock,
-                      subtitle: S.of(context).screenLockDesc,
-                      icon: Icon(Icons.language, size: 35),
-                      onTap: () => showDialog(
+                  isDeviceRooted
+                      ? _SettingItem(
+                          title: S.of(context).screenLock,
+                          subtitle: S.of(context).screenLockDesc,
+                          icon: Icon(Icons.language, size: 35),
+                          onTap: () => showDialog(
                             context: context,
                             builder: (context) => ScreenLockModal(
-                                timeShiftManager: timeShiftManager),
-                          )),
+                              timeShiftManager: timeShiftManager,
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
                   SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),

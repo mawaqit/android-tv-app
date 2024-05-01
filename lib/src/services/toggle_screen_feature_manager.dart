@@ -150,4 +150,19 @@ class ToggleScreenFeature {
     logger.d("Saving into local");
     prefs.setBool("isEventsSet", true);
   }
+
+  static Future<void> setLastEventDate(DateTime date) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('lastEventDate', date.toIso8601String());
+  }
+
+  static Future<DateTime?> getLastEventDate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final lastEventDateString = prefs.getString('lastEventDate');
+    if (lastEventDateString != null) {
+      return DateTime.parse(lastEventDateString);
+    } else {
+      return null;
+    }
+  }
 }

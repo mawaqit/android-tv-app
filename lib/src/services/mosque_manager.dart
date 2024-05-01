@@ -21,6 +21,7 @@ import 'package:mawaqit/src/services/storage_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/data_source/device_info_data_source.dart';
 import '../helpers/AppDate.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
@@ -78,6 +79,7 @@ class MosqueManager extends ChangeNotifier
   StreamSubscription? _mosqueSubscription;
   StreamSubscription? _timesSubscription;
   StreamSubscription? _configSubscription;
+  bool isDeviceRooted = false;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -90,8 +92,12 @@ class MosqueManager extends ChangeNotifier
     await Api.init();
     await loadFromLocale();
     listenToConnectivity();
-    ToggleScreenFeature.grantDumpPermission();
+    isDeviceRooted = await DeviceInfoDataSource().initRootRequest();
+    if (isDeviceRooted) {
+      ToggleScreenFeature.grantDumpPermission();
+    }
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
+
     notifyListeners();
   }
 
@@ -179,18 +185,27 @@ class MosqueManager extends ChangeNotifier
         final today =
             useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
-        ToggleScreenFeature.checkEventsScheduled().then((_) {
-          if (!isEventsSet) {
-            ToggleScreenFeature.scheduleToggleScreen(
-              e.dayTimesStrings(today, salahOnly: false),
-              10,
-              10,
-            );
-            ToggleScreenFeature.toggleFeatureState(true);
-
-            isEventsSet = true;
-          }
-        });
+        if (isDeviceRooted) {
+          ToggleScreenFeature.getLastEventDate().then((lastEventDate) async {
+            if (lastEventDate != null && lastEventDate.day != today.day) {
+              isEventsSet = false; // Reset the flag if it's a new day
+              await ToggleScreenFeature.cancelAllScheduledTimers();
+              ToggleScreenFeature.toggleFeatureState(false);
+            }
+          });
+          ToggleScreenFeature.checkEventsScheduled().then((_) {
+            if (!isEventsSet) {
+              ToggleScreenFeature.scheduleToggleScreen(
+                e.dayTimesStrings(today, salahOnly: false),
+                10,
+                10,
+              );
+              ToggleScreenFeature.toggleFeatureState(true);
+              ToggleScreenFeature.setLastEventDate(today);
+              isEventsSet = true;
+            }
+          });
+        }
 
         notifyListeners();
       },
