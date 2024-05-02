@@ -55,10 +55,7 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
   ///
   /// @param announcements The list of announcements to be displayed in a linear manner.
   Future<void> _startLinearAnnouncement(List<Announcement> announcements, bool isPlayingVideo) async {
-    log('announcement: AnnouncementWorkflowNotifier: _startLinearAnnouncement');
-    announcements =
-        announcements.where((element) => TimeHelper.isBetweenStartAndEnd(element.startDate, element.endDate)).toList();
-    log('announcement: AnnouncementWorkflowNotifier: initial $announcements');
+    log('announcement: AnnouncementWorkflowNotifier: _startLinearAnnouncement $announcements');
     for (int i = 0; i < announcements.length; i++) {
       if (!_startLinear) return;
       final announcementMode = await _getAnnouncementMode();
@@ -81,9 +78,6 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
   ///
   /// @param announcements The list of announcements to be displayed in a repeated manner.
   Future<void> _startRepeatedAnnouncement(List<Announcement> announcements, bool isPlayingVideo) async {
-    log('announcement: AnnouncementWorkflowNotifier: _startRepeatedAnnouncement');
-    announcements =
-        announcements.where((element) => TimeHelper.isBetweenStartAndEnd(element.startDate, element.endDate)).toList();
     log('announcement: AnnouncementWorkflowNotifier: _startRepeatedAnnouncement initial $announcements');
     int index = 0;
 
@@ -117,7 +111,7 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
   }
 
   /// [_displayAnnouncement] displays the provided announcement. if it is video it will play
-  /// the video based on videoProvider to get the duration of the video.
+  /// the video based\ on videoProvider to get the duration of the video.
   /// if it is text it will display the text for the provided duration or image
   Future<void> _displayAnnouncement(Announcement announcement, bool isPlayingVideo) async {
     final link = announcement.video;
