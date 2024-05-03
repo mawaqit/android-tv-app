@@ -76,7 +76,7 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
   @override
   Widget build(BuildContext context) {
     ref.listen(appUpdateProvider, (previous, next) {
-      if (next.hasValue && !next.isReloading && next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable){
+      if (next.hasValue && !next.isReloading && next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable) {
         showUpdateAlert(
           context: context,
           duration: Duration(seconds: 30),

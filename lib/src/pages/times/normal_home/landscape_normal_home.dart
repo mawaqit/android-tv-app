@@ -75,7 +75,7 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
   @override
   Widget build(BuildContext context) {
     ref.listen(appUpdateProvider, (previous, next) {
-      if (next.hasValue && !next.isReloading && next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable){
+      if (next.hasValue && !next.isReloading && next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable) {
         log('update available ${next.value} || ${next.isReloading} || ${next.isLoading} || ${next.hasValue}');
         showUpdateAlert(
           context: context,
