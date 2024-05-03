@@ -9,6 +9,7 @@ import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/constants.dart';
+import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
@@ -35,6 +36,7 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       Hive.registerAdapter(AnnouncementAdapter());
+      Hive.registerAdapter(SurahModelAdapter());
       await Hive.initFlutter();
       runApp(
         ProviderScope(
