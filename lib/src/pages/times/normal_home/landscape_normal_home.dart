@@ -53,7 +53,7 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+      _updateTimer = Timer.periodic(Duration(minutes: 25), (timer) {
         final mosque = Provider.of<MosqueManager>(context, listen: false);
         final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
         final prays = mosque.times?.dayTimesStrings(today);
