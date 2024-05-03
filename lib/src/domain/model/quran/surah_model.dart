@@ -1,16 +1,31 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:hive_flutter/adapters.dart';
 
 part 'surah_model.mapper.dart';
+part 'surah_model.g.dart';
 
+@HiveType(typeId: 1)
 @MappableClass()
 class SurahModel {
+
+  @HiveField(0)
   final int id;
+
+  @HiveField(1)
   final String name;
+
+  @HiveField(2)
   @MappableField(key: 'start_page')
   final int startPage;
+
+  @HiveField(3)
   @MappableField(key: 'end_page')
   final int endPage;
+
+  @HiveField(4)
   final int makkia;
+
+  @HiveField(5)
   final int type;
 
   SurahModel(this.id, this.name, this.startPage, this.endPage,
