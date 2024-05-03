@@ -25,28 +25,32 @@ Future<void> showUpdateAlert({
         forwardAnimationCurve: Curves.easeInCirc,
         reverseAnimationCurve: Curves.bounceIn,
         position: FlashPosition.bottom,
-        icon: Icon(Icons.new_releases),
+        icon: Icon(Icons.download_rounded),
         title: Text(localization.updateAvailable),
         actions: [
+          TextButton(
+            onPressed: onPressed,
+            child: Text(localization.update),
+          ),
+          TextButton(
+            onPressed: () {
+              controller.dismiss();
+              _showUpdateVersionDialog(
+                context,
+                content,
+                onPressed,
+                onDismissPressed,
+              );
+            },
+            child: Text(localization.seeMore),
+          ),
           TextButton(
             onPressed: () {
               controller.dismiss();
               onDismissPressed();
             },
-            child: Text(localization.cancel),
+            child: Text(localization.later),
           ),
-          TextButton(onPressed: onPressed, child: Text(localization.ok)),
-          TextButton(
-              onPressed: () {
-                controller.dismiss();
-                _showUpdateVersionDialog(
-                  context,
-                  content,
-                  onPressed,
-                  onDismissPressed,
-                );
-              },
-              child: Text(localization.seeMore)),
         ],
         content: Text(title),
       );
@@ -80,7 +84,7 @@ Future<void> _showUpdateVersionDialog(
                 Navigator.of(context).pop();
               }),
           TextButton(
-              child: Text(l10n.cancel),
+              child: Text(l10n.later),
               onPressed: () {
                 onDismissPressed();
                 Navigator.of(context).pop();

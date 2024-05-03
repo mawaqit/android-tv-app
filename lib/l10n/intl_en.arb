@@ -198,5 +198,6 @@
   "whatIsNew": "What's new",
   "update": "Update",
   "automaticUpdate": "Automatic update",
-  "automaticUpdateDescription": "Enable automatic update to get the latest features and improvements"
+  "automaticUpdateDescription": "Enable automatic update to get the latest features and improvements",
+  "later": "Later"
 }
