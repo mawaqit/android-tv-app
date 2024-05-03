@@ -98,3 +98,8 @@ class ClearAllSuwarException extends QuranException {
   ClearAllSuwarException(String message)
       : super('Error occurred while clearing all suwar: $message', 'CLEAR_ALL_SUWAR_ERROR');
 }
+
+class CannotFindSuwarByLanguageException extends QuranException {
+  CannotFindSuwarByLanguageException(String message)
+      : super('Error occurred while finding suwar by language: $message', 'FIND_SUWAR_BY_LANGUAGE_ERROR');
+}
