@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, ProviderContainer, WidgetRef;
 import 'package:flutter_riverpod/flutter_riverpod.dart' show ConsumerWidget, WidgetRef, ProviderContainer;
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -25,10 +26,11 @@ import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../developer_mode/DrawerListTest.dart';
-import '../pages/SettingScreen.dart';
-import '../pages/quran/widget/download_quran_popup.dart';
-import '../state_management/quran/download_quran/download_quran_notifier.dart';
+import 'package:mawaqit/src/developer_mode/DrawerListTest.dart';
+import 'package:mawaqit/src/pages/SettingScreen.dart';
+import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
+import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
 class MawaqitDrawer extends ConsumerWidget {
   const MawaqitDrawer({Key? key, required this.goHome}) : super(key: key);
@@ -40,8 +42,22 @@ class MawaqitDrawer extends ConsumerWidget {
     final settings = Provider.of<SettingsManager>(context).settings;
     final userPrefs = context.watch<UserPreferencesManager>();
 
-    final theme = Theme.of(context);
+    bool _isNavigating = false;
 
+    final theme = Theme.of(context);
+    ref.listen(quranNotifierProvider, (previous, next) {
+      if (next.hasValue && next.value!.suwar.isNotEmpty && !next.isReloading && !_isNavigating) {
+        _isNavigating = true;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SurahSelectionScreen(),
+          ),
+        ).then((_) {
+          _isNavigating = false;
+        });
+      }
+    });
     return Drawer(
       child: Stack(
         children: [
