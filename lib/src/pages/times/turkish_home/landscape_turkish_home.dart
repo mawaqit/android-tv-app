@@ -74,8 +74,7 @@ class _LandScapeTurkishHomeState extends riverpod.ConsumerState<LandScapeTurkish
   @override
   Widget build(BuildContext context) {
     ref.listen(appUpdateProvider, (previous, next) {
-      if (next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable &&
-          next.value!.message != previous!.value!.message) {
+      if (next.hasValue && !next.isReloading && next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable) {
         showUpdateAlert(
           context: context,
           onDismissPressed: () => ref.read(appUpdateProvider.notifier).dismissUpdate(),

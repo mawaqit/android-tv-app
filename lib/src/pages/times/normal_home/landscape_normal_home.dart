@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
@@ -74,8 +75,8 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
   @override
   Widget build(BuildContext context) {
     ref.listen(appUpdateProvider, (previous, next) {
-      if (next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable &&
-          next.value!.message != previous!.value!.message) {
+      if (next.hasValue && !next.isReloading && next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable) {
+        log('update available ${next.value} || ${next.isReloading} || ${next.isLoading} || ${next.hasValue}');
         showUpdateAlert(
           context: context,
           duration: Duration(seconds: 30),

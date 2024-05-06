@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:open_store/open_store.dart';
@@ -10,7 +12,8 @@ import '../../helpers/AppDate.dart';
 import 'app_update_state.dart';
 
 class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
-  build() async {
+  @override
+  Future<AppUpdateState> build() async {
     return AppUpdateState.initial();
   }
 
@@ -28,13 +31,10 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       final isDismissed = shared.getBool(CacheKey.kIsUpdateDismissed) ?? false;
 
       if (!isAutoUpdateCheckingEnabled) {
-        update(
-          (p0) => p0.copyWith(
-            appUpdateStatus: AppUpdateStatus.noUpdate,
-            isAutoUpdateChecking: false,
-          ),
+        return state.value!.copyWith(
+          appUpdateStatus: AppUpdateStatus.noUpdate,
+          isAutoUpdateChecking: false,
         );
-        return state.value!;
       }
 
       final upgrader = Upgrader(
@@ -50,38 +50,35 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       final lastDismissedVersion = shared.getString(CacheKey.kUpdateDismissedVersion) ?? '0.0.0';
 
       logger.d(
-          'AppUpdateNotifier: isDismissed: $isDismissed, isUpdateAvailable: $isUpdateAvailable, lastDismissedVersion: $lastDismissedVersion');
+          'AppUpdateNotifier: isDismissed: $isDismissed, isUpdateAvailable: $isUpdateAvailable, lastDismissedVersion: $lastDismissedVersion, message $message ');
 
       if (isDismissed &&
           isUpdateAvailable &&
           lastDismissedVersion != '0.0.0' &&
           lastDismissedVersion == upgrader.currentAppStoreVersion()) {
-        update(
-          (p0) => p0.copyWith(
-            appUpdateStatus: AppUpdateStatus.noUpdate,
-            isUpdateDismissed: true,
-          ),
+        return state.value!.copyWith(
+          appUpdateStatus: AppUpdateStatus.noUpdate,
+          isUpdateDismissed: true,
         );
-        return state.value!;
       }
 
       final isDisplayUpdate =
           await _shouldDisplayUpdate(prayerTimeList); // Determines if the update prompt should be displayed.
 
+      log('AppUpdateNotifier: isDisplayUpdate: $isDisplayUpdate, isUpdateAvailable: $isUpdateAvailable');
+
       if (isDisplayUpdate && isUpdateAvailable) {
-        await shared.setInt(CacheKey.kLastPopupDisplay, AppDateTime.now().millisecondsSinceEpoch);
-        update(
-          (p0) => p0.copyWith(
-              appUpdateStatus: AppUpdateStatus.updateAvailable, message: message, releaseNote: releaseNotes ?? ''),
+        return state.value!.copyWith(
+          appUpdateStatus: AppUpdateStatus.updateAvailable,
+          message: message,
+          releaseNote: releaseNotes ?? '',
         );
-        return state.value!;
       } else {
-        update((p0) => p0.copyWith(
-              appUpdateStatus: AppUpdateStatus.noUpdate,
-              message: '',
-              releaseNote: '',
-            ));
-        return state.value!;
+        return state.value!.copyWith(
+          appUpdateStatus: AppUpdateStatus.noUpdate,
+          message: '',
+          releaseNote: '',
+        );
       }
     });
   }
@@ -92,13 +89,15 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
     state = await AsyncValue.guard(() async {
       final shared = await ref.read(sharedPreferencesProvider.future);
       await shared.setBool(CacheKey.kIsUpdateDismissed, true);
+
       final upgrader = Upgrader();
       await upgrader.initialize();
+
+      await shared.setInt(CacheKey.kLastPopupDisplay, AppDateTime.now().millisecondsSinceEpoch);
       final latestAppStoreVersion = upgrader.currentAppStoreVersion();
       logger.d('AppUpdateNotifier: dismissUpdate: $latestAppStoreVersion');
       await shared.setString(CacheKey.kUpdateDismissedVersion, latestAppStoreVersion ?? '0.0.0');
-      update((p0) => p0.copyWith(appUpdateStatus: AppUpdateStatus.noUpdate, isUpdateDismissed: true));
-      return state.value!;
+      return state.value!.copyWith(appUpdateStatus: AppUpdateStatus.noUpdate, isUpdateDismissed: true);
     });
   }
 
@@ -123,8 +122,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       final isAutoUpdateCheckingEnabled = shared.getBool(CacheKey.kAutoUpdateChecking) ?? true;
       await shared.setBool(CacheKey.kAutoUpdateChecking, !isAutoUpdateCheckingEnabled);
       logger.d('AppUpdateNotifier: change toggleAutoUpdateChecking into ${!isAutoUpdateCheckingEnabled}');
-      update((p0) => p0.copyWith(isAutoUpdateChecking: !isAutoUpdateCheckingEnabled));
-      return state.value!;
+      return state.value!.copyWith(isAutoUpdateChecking: !isAutoUpdateCheckingEnabled);
     });
   }
 
