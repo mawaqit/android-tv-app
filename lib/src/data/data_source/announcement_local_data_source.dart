@@ -21,7 +21,7 @@ class AnnouncementLocalDataSource {
       log('announcement: AnnouncementLocalDataSource: cacheAnnouncements - start');
       await box.clear();
       for (final announcement in announcements) {
-        if (announcement.isCacheable) {
+        if (announcement.isCacheable()) {
           await box.put(announcement.id, announcement);
           log('announcement: AnnouncementLocalDataSource: cacheAnnouncements - is cached ${announcement.id}');
         }
@@ -35,7 +35,7 @@ class AnnouncementLocalDataSource {
   Future<void> cacheAnnouncement(Announcement announcement) async {
     try {
       log('announcement: AnnouncementLocalDataSource: cacheAnnouncement - start');
-      if (announcement.isCacheable) {
+      if (announcement.isCacheable()) {
         await box.put(announcement.id, announcement);
         log('announcement: AnnouncementLocalDataSource: cacheAnnouncement - ${announcement.id}');
       }
