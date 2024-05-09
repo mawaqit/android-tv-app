@@ -113,7 +113,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   }
 
   Future<void> loadFromLocale() async {
-    // mosqueId = await sharedPref.read('mosqueId');
     mosqueUUID = await sharedPref.read('mosqueUUId');
     if (mosqueUUID != null) {
       await fetchMosque(mosqueUUID!);

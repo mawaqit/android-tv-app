@@ -57,7 +57,7 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
           for (var i = 0; i < 5; i++)
             SalahItemWidget(
                     withDivider: false,
-                    iqama: iqamas[i],
+                    iqama: isIqamaMoreImportant ? iqamas[i] : null,
                     time: todayTimes[i],
                     active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
                     isIqamaMoreImportant: isIqamaMoreImportant)
@@ -100,7 +100,7 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
           child: SalahItemWidget(
             title: title,
             time: time,
-            iqama: iqama,
+            iqama: isIqamaMoreImportant ? iqama : null,
             active: active,
             isIqamaMoreImportant: isIqamaMoreImportant,
           )
