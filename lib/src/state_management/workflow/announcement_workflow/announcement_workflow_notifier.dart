@@ -29,7 +29,7 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
   }
 
   /// [startAnnouncement] starts the announcement workflow for the provided announcements.
-  Future<void> startAnnouncement([bool isPlayingVideo = true]) async {
+  Future<void> startAnnouncement() async {
     final sharedPreference = await SharedPreferences.getInstance();
     final announcementMode =
         sharedPreference.getBool(announcementsStoreKey) ?? false ? AnnouncementMode.repeat : AnnouncementMode.linear;
@@ -40,10 +40,10 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
       final announcementList = await announcementImpl.getAnnouncements();
       if (announcementMode == AnnouncementMode.repeat) {
         _startRepeated = true;
-        await _startRepeatedAnnouncement(announcementList, isPlayingVideo);
+        await _startRepeatedAnnouncement(announcementList);
       } else {
         _startLinear = true;
-        await _startLinearAnnouncement(announcementList, isPlayingVideo);
+        await _startLinearAnnouncement(announcementList);
       }
     } catch (e, stackTrace) {
       state = AsyncError(e, stackTrace);
@@ -54,7 +54,7 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
   /// it will display the announcements in a linear manner.
   ///
   /// @param announcements The list of announcements to be displayed in a linear manner.
-  Future<void> _startLinearAnnouncement(List<Announcement> announcements, bool isPlayingVideo) async {
+  Future<void> _startLinearAnnouncement(List<Announcement> announcements) async {
     log('announcement: AnnouncementWorkflowNotifier: _startLinearAnnouncement');
     announcements =
         announcements.where((element) => TimeHelper.isBetweenStartAndEnd(element.startDate, element.endDate)).toList();
@@ -67,7 +67,7 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
         break;
       }
       final announcement = announcements[i];
-      await _displayAnnouncement(announcement, isPlayingVideo);
+      await _displayAnnouncement(announcement);
     }
     log('announcement: AnnouncementWorkflowNotifier: _startLinearAnnouncement - completed');
     state = AsyncData(
@@ -80,7 +80,7 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
   /// Handles the repeated announcement timer for the provided announcements.
   ///
   /// @param announcements The list of announcements to be displayed in a repeated manner.
-  Future<void> _startRepeatedAnnouncement(List<Announcement> announcements, bool isPlayingVideo) async {
+  Future<void> _startRepeatedAnnouncement(List<Announcement> announcements) async {
     log('announcement: AnnouncementWorkflowNotifier: _startRepeatedAnnouncement');
     announcements =
         announcements.where((element) => TimeHelper.isBetweenStartAndEnd(element.startDate, element.endDate)).toList();
@@ -111,7 +111,7 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
         break;
       }
       final announcement = announcements[index];
-      await _displayAnnouncement(announcement, isPlayingVideo);
+      await _displayAnnouncement(announcement);
       index = (index + 1) % announcements.length;
     }
   }
@@ -119,10 +119,9 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
   /// [_displayAnnouncement] displays the provided announcement. if it is video it will play
   /// the video based on videoProvider to get the duration of the video.
   /// if it is text it will display the text for the provided duration or image
-  Future<void> _displayAnnouncement(Announcement announcement, bool isPlayingVideo) async {
+  Future<void> _displayAnnouncement(Announcement announcement) async {
     final link = announcement.video;
-    log('announcement: AnnouncementWorkflowNotifier: _displayAnnouncement: $isPlayingVideo');
-    if (isPlayingVideo && link != null && link != 'null') {
+    if (link != null && link != 'null') {
       log('announcement: AnnouncementWorkflowNotifier: _displayAnnouncement: video ${announcement.id}');
       state = AsyncData(
         state.value!.copyWith(
@@ -136,8 +135,7 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
       await Future.delayed(Duration(seconds: 5));
       final duration = ref.read(videoProvider);
       await Future.delayed(duration);
-    } else if (announcement.duration != null && link == null) {
-      // link checks if it is a video or not
+    } else if (announcement.duration != null) {
       log('announcement: AnnouncementWorkflowNotifier: _displayAnnouncement: text ${announcement.id}');
       state = AsyncData(
         state.value!.copyWith(

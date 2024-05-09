@@ -43,9 +43,11 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      log('announcement: AnnouncementScreen: 1 startAnnouncement called enableVideos: ${widget.enableVideos}');
+      final announcements = context.read<MosqueManager>().activeAnnouncements;
+      log('announcement: AnnouncementScreen: initState ${announcements.length} ');
       ref.read(announcement_workflow.announcementWorkflowProvider.notifier).startAnnouncement(
-            widget.enableVideos,
+
+          // false,
           );
     });
     super.initState();
@@ -56,9 +58,14 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
     ref.listen(announcement_workflow.announcementWorkflowProvider, (previous, next) {
       if (next.value!.status == AnnouncementWorkflowStatus.completed) {
         // All announcements have been displayed
-        log('announcement: AnnouncementScreen: 1 widget.onDone?.call() called ');
+        print('announcement: AnnouncementScreen: 1 widget.onDone?.call() called ');
         widget.onDone?.call();
       }
+      // /// when the announcement has zero length
+      // if (index == -1 && next.value!.isActivated == false) {
+      //   print('announcement: AnnouncementScreen: 2 widget.onDone?.call() called ');
+      //   widget.onDone?.call();
+      // }
       if (next.hasError) {
         // An error occurred during the announcement workflow
         widget.onDone?.call();
