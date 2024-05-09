@@ -1,37 +1,15 @@
-import 'dart:developer';
-import 'dart:typed_data';
-
-import 'package:hive_flutter/adapters.dart';
-import 'package:http/http.dart' as http;
-
-part 'announcement.g.dart';
-
-@HiveType(typeId: 0)
 class Announcement {
-  @HiveField(0)
   final int id;
-  @HiveField(1)
   final String title;
-  @HiveField(2)
   final String? content;
-  @HiveField(3)
   final int? duration;
-  @HiveField(4)
-  final DateTime? startDate;
-  @HiveField(5)
+  final String? startDate;
   final String? updatedDate;
-  @HiveField(6)
-  final DateTime? endDate;
-  @HiveField(7)
+  final String? endDate;
   final bool isMobile;
-  @HiveField(8)
   final bool isDesktop;
-  @HiveField(9)
   final String? image;
-  @HiveField(10)
   final String? video;
-  @HiveField(11)
-  final Uint8List? imageFile;
 
 //<editor-fold desc="Data Methods">
 
@@ -44,9 +22,8 @@ class Announcement {
     required this.image,
     required this.video,
     required this.duration,
-    this.startDate,
-    this.endDate,
-    this.imageFile,
+    required this.startDate,
+    required this.endDate,
     required this.updatedDate,
   });
 
@@ -61,7 +38,6 @@ class Announcement {
           isMobile == other.isMobile &&
           isDesktop == other.isDesktop &&
           image == other.image &&
-          imageFile == other.imageFile &&
           video == other.video);
 
   @override
@@ -71,7 +47,6 @@ class Announcement {
       content.hashCode ^
       isMobile.hashCode ^
       isDesktop.hashCode ^
-      imageFile.hashCode ^
       image.hashCode ^
       video.hashCode;
 
@@ -94,7 +69,6 @@ class Announcement {
     String? content,
     bool? isMobile,
     bool? isDesktop,
-    Uint8List? imageFile,
     String? image,
     String? video,
     int? duration,
@@ -110,7 +84,6 @@ class Announcement {
       isDesktop: isDesktop ?? this.isDesktop,
       image: image ?? this.image,
       video: video ?? this.video,
-      imageFile: imageFile ?? this.imageFile,
       duration: this.duration,
       startDate: this.startDate,
       endDate: this.endDate,
@@ -125,7 +98,6 @@ class Announcement {
       'content': this.content,
       'isMobile': this.isMobile,
       'isDesktop': this.isDesktop,
-      'imageFile': this.imageFile,
       'image': this.image,
       'video': this.video,
       "duration": this.duration,
@@ -143,11 +115,11 @@ class Announcement {
       isMobile: map['isMobile'] ?? false,
       isDesktop: map['isDesktop'] ?? true,
       image: map['image'],
-      imageFile: map['imageFile'],
       video: map['video'],
       duration: map["duration"],
-      startDate: map['startDate'] != null ? DateTime.parse(map['startDate']) : null,
-      endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
+      startDate: map['startDate'],
+      endDate: map['endDate'],
+      // endDate: map['endDate']==null?null:DateTime.parse(map['endDate']),
       updatedDate: map['updated'],
     );
   }
@@ -156,10 +128,5 @@ class Announcement {
     return data == null ? [] : data.map((e) => Announcement.fromMap(e)).toList();
   }
 
-  /// [isCacheable] returns true if the object can be cached
-  /// if the announcement has a video it should not be cached
-  bool isCacheable() {
-    if (video != null && video!.isNotEmpty) return false;
-    return true;
-  }
+//</editor-fold>
 }
