@@ -10,11 +10,11 @@ class AnnouncementTest extends StatelessWidget {
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
 
-    // if (mosqueManager.activeAnnouncements(true).isEmpty) {
-    //   return Center(
-    //     child: Text("There are no announcement for this mosque"),
-    //   );
-    // }
+    if (mosqueManager.activeAnnouncements(true).isEmpty) {
+      return Center(
+        child: Text("There are no announcement for this mosque"),
+      );
+    }
 
     return AnnouncementScreen(
       enableVideos: !mosqueManager.typeIsMosque,
