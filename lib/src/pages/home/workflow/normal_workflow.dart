@@ -15,7 +15,7 @@ import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 
 const _HadithDuration = Duration(seconds: 90);
 const _HadithRepeatDuration = Duration(minutes: 4);
-const _AnnouncementRepeatDuration = Duration(minutes: 8);
+const _AnnouncementRepeatDuration = Duration(minutes: 1);
 
 /// show the [NormalHomeSubScreen][AnnouncementScreen][RandomHadithScreen]
 class NormalWorkflowScreen extends ConsumerStatefulWidget {

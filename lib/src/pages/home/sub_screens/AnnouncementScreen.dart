@@ -215,8 +215,8 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
         forceHD: true,
       ),
     )..addListener(() {
-      ref.read(videoProvider.notifier).state = _controller.value.metaData.duration;
-    });
+        ref.read(videoProvider.notifier).state = _controller.value.metaData.duration;
+      });
 
     /// if announcement didn't started playing after 20 seconds skip it
     Future.delayed(20.seconds, () {
