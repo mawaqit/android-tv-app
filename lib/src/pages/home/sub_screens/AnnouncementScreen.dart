@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -14,14 +13,12 @@ import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/WorkFlowWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../state_management/workflow/announcement_workflow/announcement_workflow_notifier.dart'
     as announcement_workflow;
 
-import '../../../state_management/workflow/announcement_workflow/announcement_workflow_state.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 
 class AnnouncementScreen extends ConsumerStatefulWidget {
@@ -44,9 +41,11 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      log('announcement: AnnouncementScreen: 1 startAnnouncement called enableVideos: ${widget.enableVideos}');
-      ref.read(announcement_workflow.announcementWorkflowProvider.notifier).startAnnouncement(
-            widget.enableVideos,
+      final announcements = context.read<MosqueManager>().activeAnnouncements(true);
+      log('announcement: AnnouncementScreen: initState ${announcements.length}');
+      ref.read(announcement_workflow.announcementWorkflowProvider.notifier).startAnnouncementWorkflow(
+            announcements,
+            false,
           );
     });
     super.initState();
@@ -55,22 +54,11 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen(announcement_workflow.announcementWorkflowProvider, (previous, next) {
-      if (next.value!.status == AnnouncementWorkflowStatus.completed) {
-        // All announcements have been displayed
-        log('announcement: AnnouncementScreen: 1 widget.onDone?.call() called ');
-        widget.onDone?.call();
-      }
-      if (next.hasError) {
-        // An error occurred during the announcement workflow
-        widget.onDone?.call();
-      }
+      if (!next.value!.isActivated && previous!.value!.isActivated) widget.onDone?.call();
+      if (next.hasError) widget.onDone?.call();
     });
     return ref.watch(announcement_workflow.announcementWorkflowProvider).maybeWhen(
-          orElse: () => Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), // Green color
-            ),
-          ),
+          orElse: () => SizedBox(),
           data: (state) => Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -99,9 +87,9 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
         content: activeAnnouncement.content!,
         title: activeAnnouncement.title,
       );
-    } else if (activeAnnouncement.imageFile != null) {
+    } else if (activeAnnouncement.image != null) {
       return _ImageAnnouncement(
-        image: activeAnnouncement.imageFile!,
+        image: activeAnnouncement.image!,
         onError: nextAnnouncement,
       );
     } else if (activeAnnouncement.video != null) {
@@ -180,7 +168,7 @@ class _ImageAnnouncement extends StatelessWidget {
     this.onError,
   }) : super(key: key);
 
-  final Uint8List? image;
+  final String image;
 
   /// used to skip to the next announcement if the image failed to load
   final VoidCallback? onError;
@@ -188,7 +176,7 @@ class _ImageAnnouncement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image(
-      image: Image.memory(image!).image,
+      image: MawaqitNetworkImageProvider(image, onError: onError),
       fit: BoxFit.fill,
       width: double.infinity,
       height: double.infinity,
@@ -212,12 +200,11 @@ class _VideoAnnouncement extends ConsumerStatefulWidget {
 
 class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
   late YoutubePlayerController _controller;
-  Timer? _timeoutTimer;
 
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
-    ref.read(videoProvider.notifier).state = true;
+
     _controller = YoutubePlayerController(
       initialVideoId: YoutubePlayer.convertUrlToId(widget.url)!,
       flags: YoutubePlayerFlags(
@@ -228,10 +215,13 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
         forceHD: true,
       ),
     )..addListener(() {
-        if (_controller.value.isReady && _controller.value.isPlaying) {
-          _startTimeoutTimer();
-        }
+        ref.read(videoProvider.notifier).state = _controller.value.metaData.duration;
       });
+
+    /// if announcement didn't started playing after 20 seconds skip it
+    Future.delayed(20.seconds, () {
+      if (_controller.value.isReady == false) widget.onEnded?.call();
+    });
 
     super.initState();
   }
@@ -239,17 +229,7 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
   @override
   void dispose() {
     _controller.dispose();
-    _timeoutTimer?.cancel();
     super.dispose();
-  }
-
-  void _startTimeoutTimer() {
-    _timeoutTimer?.cancel();
-    _timeoutTimer = Timer(const Duration(minutes: 5), () {
-      if (mounted) {
-        ref.read(videoProvider.notifier).state = false;
-      }
-    });
   }
 
   @override
@@ -257,9 +237,6 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
     return RepaintBoundary(
       child: Center(
         child: YoutubePlayer(
-          onEnded: (data) {
-            ref.read(videoProvider.notifier).state = false;
-          },
           controller: _controller,
           showVideoProgressIndicator: true,
         ),
@@ -268,4 +245,4 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
   }
 }
 
-final videoProvider = StateProvider<bool>((ref) => true);
+final videoProvider = StateProvider<Duration>((ref) => Duration(seconds: 0));
