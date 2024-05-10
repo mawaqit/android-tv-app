@@ -52,13 +52,12 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
 
   @override
   void initState() {
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mosque = Provider.of<MosqueManager>(context, listen: false);
       ref.read(appUpdateProvider.notifier).startUpdateScheduler(
-        mosque,
-        context.read<AppLanguage>().appLocal.languageCode,
-      );
+            mosque,
+            context.read<AppLanguage>().appLocal.languageCode,
+          );
     });
     super.initState();
   }

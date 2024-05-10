@@ -48,7 +48,6 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
     }
   }
 
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -56,7 +55,6 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
       ref
           .read(appUpdateProvider.notifier)
           .startUpdateScheduler(mosque, context.read<AppLanguage>().appLocal.languageCode);
-
     });
     super.initState();
   }
