@@ -48,27 +48,19 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
     }
   }
 
-  late Timer _updateTimer;
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateTimer = Timer.periodic(Duration(minutes: 25), (timer) {
-        final mosque = Provider.of<MosqueManager>(context, listen: false);
-        final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
-        final prays = mosque.times?.dayTimesStrings(today);
-        ref.read(appUpdateProvider.notifier).startScheduleUpdate(
-              languageCode: context.read<AppLanguage>().appLocal.languageCode,
-              prayerTimeList: prays ?? [],
-            );
-      });
+      final mosque = Provider.of<MosqueManager>(context, listen: false);
+      ref
+          .read(appUpdateProvider.notifier)
+          .startUpdateScheduler(mosque, context.read<AppLanguage>().appLocal.languageCode);
     });
     super.initState();
   }
 
   @override
   void dispose() {
-    _updateTimer.cancel();
     super.dispose();
   }
 
