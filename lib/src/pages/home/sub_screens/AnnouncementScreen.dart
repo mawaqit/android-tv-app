@@ -163,7 +163,7 @@ class _ImageAnnouncement extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image(
       image: MawaqitNetworkImageProvider(image, onError: onError),
-      fit: BoxFit.fitWidth,
+      fit: BoxFit.fill,
       width: double.infinity,
       height: double.infinity,
     ).animate().slideX().addRepaintBoundary();
