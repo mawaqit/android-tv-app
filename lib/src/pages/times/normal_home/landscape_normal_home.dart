@@ -48,7 +48,6 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
     }
   }
 
-  late Timer _updateTimer;
 
   @override
   void initState() {
@@ -64,7 +63,6 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
 
   @override
   void dispose() {
-    _updateTimer.cancel();
     super.dispose();
   }
 

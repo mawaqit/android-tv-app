@@ -53,7 +53,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
     final duration = thirtyMinutesAfterMaghrib.difference(now);
     log('AppUpdateNotifier: startUpdateScheduler: duration: $duration');
 
-    _updateTimer?.cancel();
+    if(_updateTimer != null) _updateTimer!.cancel();
     _updateTimer = Timer(duration, () async {
       final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
       final prays = mosque.times?.dayTimesStrings(today);
