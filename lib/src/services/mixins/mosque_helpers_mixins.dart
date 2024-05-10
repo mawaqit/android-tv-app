@@ -239,24 +239,11 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       );
 
   bool get useTomorrowTimes {
-    final ishaIndex = 4;
     final now = mosqueDate();
-    final [fajr, ..._] = actualTimes();
-    final ishaIqamaTime = actualIqamaTimes()[ishaIndex];
-    final salahIshaDuration = mosqueConfig?.duaAfterPrayerShowTimes[ishaIndex];
-    final salahIshaEndTime;
-    //Get isha end salat time
-    if (mosqueConfig?.iqamaEnabled == true) {
-      salahIshaEndTime = ishaIqamaTime.add(
-        Duration(minutes: int.tryParse(salahIshaDuration!) ?? 20),
-      );
-    } else {
-      salahIshaEndTime = ishaIqamaTime.add(
-        Duration(minutes: 20),
-      );
-    }
-    // Isha might be after midnight, so we need to check if it's after Fajr
-    return now.isAfter(salahIshaEndTime) && salahIshaEndTime.isAfter(fajr);
+    final [fajr, ..._, isha] = actualTimes();
+
+    /// isha might be after midnight so we need to check if it's after fajr
+    return now.isAfter(isha) && isha.isAfter(fajr);
   }
 
   /// @Param [forceActualDuhr] force to use actual duhr time instead of jumua time during the friday
@@ -292,10 +279,10 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   @Deprecated('Use times.dayIqamaStrings')
   List<String> get tomorrowIqama => iqamasOfDay(mosqueDate().add(Duration(days: 1)));
 
-/*   /// if jumua as duhr return jumua
+  /// if jumua as duhr return jumua
   String? get jumuaTime {
     return times!.jumuaAsDuhr ? todayTimes[1] : times!.jumua;
-  } */
+  }
 
   DateTime nextFridayDate([DateTime? now]) {
     now ??= mosqueDate();
@@ -378,7 +365,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   }
 
   List<Announcement> activeAnnouncements(bool enableVideos) {
-    final announcements = mosque!.announcements.where((element) {
+    final announcements =  mosque!.announcements.where((element) {
       final startDate = DateTime.tryParse(element.startDate ?? '');
       final endDate = DateTime.tryParse(element.endDate ?? '');
       final now = mosqueDate();
@@ -394,7 +381,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       return inTime;
     }).toList();
     // check if announcement has only youtube video, add another one for infinite loop
-    if (announcements.length == 1 && announcements[0].video != null) {
+    if(announcements.length == 1 && announcements[0].video != null){
       announcements.add(announcements[0]);
     }
     return announcements;

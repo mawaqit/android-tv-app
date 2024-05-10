@@ -3,7 +3,7 @@ import 'package:mawaqit/src/models/flash.dart';
 
 import 'announcement.dart';
 
-class Mosque extends Equatable {
+class Mosque extends Equatable{
   final int id;
   final String? uuid;
   final String? type;
