@@ -8,7 +8,6 @@ import 'package:mawaqit/src/state_management/workflow/workflow_notifier.dart';
 ///
 /// It is used to define the content of the announcement workflow and the behavior of each item.
 class AnnouncementWorkFlowItem {
-
   /// [builder] A function that returns a widget to display for this announcement item.
   final Widget Function(BuildContext) builder;
 
@@ -44,7 +43,7 @@ class _AnnouncementContinuesWorkFlowWidgetState extends ConsumerState<Announceme
   final PageController _pageController = PageController();
   List<AnnouncementWorkFlowItem> activeWorkFlowItems = [];
   Timer? _transitionTimer;
-  int  _currentIndex = 0;
+  int _currentIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -87,6 +86,7 @@ class _AnnouncementContinuesWorkFlowWidgetState extends ConsumerState<Announceme
     _transitionTimer?.cancel(); // Cancel any existing timer
     _transitionTimer = Timer(duration, goToNextPage);
   }
+
   @override
   void didUpdateWidget(covariant AnnouncementContinuesWorkFlowWidget oldWidget) {
     activeWorkFlowItems = widget.workFlowItems.where((item) => !item.skip && !item.disabled).toList();
@@ -96,7 +96,7 @@ class _AnnouncementContinuesWorkFlowWidgetState extends ConsumerState<Announceme
   @override
   Widget build(BuildContext context) {
     ref.listen(videoWorkflowProvider, (previous, next) {
-      if(next.isVideoFinished){
+      if (next.isVideoFinished) {
         goToNextPage();
         ref.read(videoWorkflowProvider.notifier).resetVideoFinished();
       }

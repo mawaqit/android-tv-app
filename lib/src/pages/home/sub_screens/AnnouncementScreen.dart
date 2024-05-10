@@ -34,8 +34,8 @@ class AnnouncementScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final announcements = context.read<MosqueManager>().activeAnnouncements(enableVideos);
-    ref.listen(announcementWorkflowProvider, (prev,next){
-      if(next == WorkflowState.finished) onDone?.call();
+    ref.listen(announcementWorkflowProvider, (prev, next) {
+      if (next == WorkflowState.finished) onDone?.call();
     });
 
     if (announcements.isEmpty) return NormalHomeSubScreen();
