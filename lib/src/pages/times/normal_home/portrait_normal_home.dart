@@ -53,11 +53,16 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final mosque = Provider.of<MosqueManager>(context, listen: false);
-      ref.read(appUpdateProvider.notifier).startUpdateScheduler(
-            mosque,
-            context.read<AppLanguage>().appLocal.languageCode,
-          );
+      _updateTimer = Timer.periodic(Duration(minutes: 25), (timer) {
+        final mosque = Provider.of<MosqueManager>(context, listen: false);
+        logger.d('update: check for playstore update');
+        final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+        final prays = mosque.times?.dayTimesStrings(today);
+        ref.read(appUpdateProvider.notifier).startScheduleUpdate(
+              languageCode: context.read<AppLanguage>().appLocal.languageCode,
+              prayerTimeList: prays ?? [],
+            );
+      });
     });
     super.initState();
   }
