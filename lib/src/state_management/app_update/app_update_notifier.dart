@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:open_store/open_store.dart';
@@ -7,17 +10,64 @@ import 'package:upgrader/upgrader.dart';
 import '../../../main.dart';
 import '../../const/constants.dart';
 import '../../helpers/AppDate.dart';
+import '../../services/mosque_manager.dart';
 import 'app_update_state.dart';
 
 class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
-  build() async {
+  Timer? _updateTimer;
+
+  @override
+  Future<AppUpdateState> build() async {
+    ref.onDispose(() {
+      _updateTimer?.cancel();
+    });
     return AppUpdateState.initial();
+  }
+
+  /// [startUpdateScheduler] Starts the app update scheduler based on the prayer times provided by the [MosqueManager].
+  ///
+  /// This method calculates the duration until 30 minutes after the Maghrib prayer time and schedules
+  /// the app update check to run at that time. It cancels any previously scheduled update timer.
+  ///
+  /// The [mosque] parameter is the [MosqueManager] instance that provides the prayer times.
+  /// The [languageCode] parameter is the language code used for retrieving the app update information.
+  ///
+  /// Note: This method assumes that the prayer times are available and valid.
+  void startUpdateScheduler(MosqueManager mosque, String languageCode) {
+    final timeList = mosque.times?.dayTimesStrings(AppDateTime.now());
+    final DateFormat formatter = DateFormat.Hm();
+    // Convert prayer times to DateTime objects for today
+    final DateTime maghribTimeToday = formatter.parse(timeList![3]);
+    log('AppUpdateNotifier: startUpdateScheduler: maghribTimeToday: $maghribTimeToday');
+    final DateTime maghribDateTime = DateTime(
+      AppDateTime.now().year,
+      AppDateTime.now().month,
+      AppDateTime.now().day,
+      maghribTimeToday.hour,
+      maghribTimeToday.minute,
+    );
+
+    // Calculate the time 30 minutes after Maghrib
+    final DateTime thirtyMinutesAfterMaghrib = maghribDateTime.add(Duration(minutes: 30));
+    final now = AppDateTime.now();
+    final duration = thirtyMinutesAfterMaghrib.difference(now);
+    log('AppUpdateNotifier: startUpdateScheduler: duration: $duration');
+
+    if (_updateTimer != null) _updateTimer!.cancel();
+    _updateTimer = Timer(duration, () async {
+      final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+      final prays = mosque.times?.dayTimesStrings(today);
+      await _startScheduleUpdate(
+        languageCode: languageCode,
+        prayerTimeList: prays ?? [],
+      );
+    });
   }
 
   /// [startScheduleUpdate] Initiates the process to check for app updates and updates the state accordingly. This method takes a `languageCode`
   ///
   /// to customize messages for the user and a list of `prayerTimeList` to determine the time of the prays to display update prompts.
-  Future<void> startScheduleUpdate({
+  Future<void> _startScheduleUpdate({
     required String languageCode,
     required List<String> prayerTimeList,
   }) async {
@@ -28,13 +78,10 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       final isDismissed = shared.getBool(CacheKey.kIsUpdateDismissed) ?? false;
 
       if (!isAutoUpdateCheckingEnabled) {
-        update(
-          (p0) => p0.copyWith(
-            appUpdateStatus: AppUpdateStatus.noUpdate,
-            isAutoUpdateChecking: false,
-          ),
+        return state.value!.copyWith(
+          appUpdateStatus: AppUpdateStatus.noUpdate,
+          isAutoUpdateChecking: false,
         );
-        return state.value!;
       }
 
       final upgrader = Upgrader(
@@ -50,38 +97,35 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       final lastDismissedVersion = shared.getString(CacheKey.kUpdateDismissedVersion) ?? '0.0.0';
 
       logger.d(
-          'AppUpdateNotifier: isDismissed: $isDismissed, isUpdateAvailable: $isUpdateAvailable, lastDismissedVersion: $lastDismissedVersion');
+          'AppUpdateNotifier: isDismissed: $isDismissed, isUpdateAvailable: $isUpdateAvailable, lastDismissedVersion: $lastDismissedVersion, message $message ');
 
       if (isDismissed &&
           isUpdateAvailable &&
           lastDismissedVersion != '0.0.0' &&
           lastDismissedVersion == upgrader.currentAppStoreVersion()) {
-        update(
-          (p0) => p0.copyWith(
-            appUpdateStatus: AppUpdateStatus.noUpdate,
-            isUpdateDismissed: true,
-          ),
+        return state.value!.copyWith(
+          appUpdateStatus: AppUpdateStatus.noUpdate,
+          isUpdateDismissed: true,
         );
-        return state.value!;
       }
 
       final isDisplayUpdate =
           await _shouldDisplayUpdate(prayerTimeList); // Determines if the update prompt should be displayed.
 
+      log('AppUpdateNotifier: isDisplayUpdate: $isDisplayUpdate, isUpdateAvailable: $isUpdateAvailable');
+
       if (isDisplayUpdate && isUpdateAvailable) {
-        await shared.setInt(CacheKey.kLastPopupDisplay, AppDateTime.now().millisecondsSinceEpoch);
-        update(
-          (p0) => p0.copyWith(
-              appUpdateStatus: AppUpdateStatus.updateAvailable, message: message, releaseNote: releaseNotes ?? ''),
+        return state.value!.copyWith(
+          appUpdateStatus: AppUpdateStatus.updateAvailable,
+          message: message,
+          releaseNote: releaseNotes ?? '',
         );
-        return state.value!;
       } else {
-        update((p0) => p0.copyWith(
-              appUpdateStatus: AppUpdateStatus.noUpdate,
-              message: '',
-              releaseNote: '',
-            ));
-        return state.value!;
+        return state.value!.copyWith(
+          appUpdateStatus: AppUpdateStatus.noUpdate,
+          message: '',
+          releaseNote: '',
+        );
       }
     });
   }
@@ -92,13 +136,15 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
     state = await AsyncValue.guard(() async {
       final shared = await ref.read(sharedPreferencesProvider.future);
       await shared.setBool(CacheKey.kIsUpdateDismissed, true);
+
       final upgrader = Upgrader();
       await upgrader.initialize();
+
+      await shared.setInt(CacheKey.kLastPopupDisplay, AppDateTime.now().millisecondsSinceEpoch);
       final latestAppStoreVersion = upgrader.currentAppStoreVersion();
       logger.d('AppUpdateNotifier: dismissUpdate: $latestAppStoreVersion');
       await shared.setString(CacheKey.kUpdateDismissedVersion, latestAppStoreVersion ?? '0.0.0');
-      update((p0) => p0.copyWith(appUpdateStatus: AppUpdateStatus.noUpdate, isUpdateDismissed: true));
-      return state.value!;
+      return state.value!.copyWith(appUpdateStatus: AppUpdateStatus.noUpdate, isUpdateDismissed: true);
     });
   }
 
@@ -123,8 +169,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       final isAutoUpdateCheckingEnabled = shared.getBool(CacheKey.kAutoUpdateChecking) ?? true;
       await shared.setBool(CacheKey.kAutoUpdateChecking, !isAutoUpdateCheckingEnabled);
       logger.d('AppUpdateNotifier: change toggleAutoUpdateChecking into ${!isAutoUpdateCheckingEnabled}');
-      update((p0) => p0.copyWith(isAutoUpdateChecking: !isAutoUpdateCheckingEnabled));
-      return state.value!;
+      return state.value!.copyWith(isAutoUpdateChecking: !isAutoUpdateCheckingEnabled);
     });
   }
 

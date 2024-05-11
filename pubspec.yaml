@@ -146,6 +146,7 @@ dev_dependencies:
 
 dependency_overrides:
   win32: 5.0.5
+  rive: ^0.9.1
 
 # The following section is specific to Flutter.
 flutter:

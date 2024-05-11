@@ -52,16 +52,11 @@ class _PortraitTurkishHomeState extends riverpod.ConsumerState<PortraitTurkishHo
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateTimer = Timer.periodic(Duration(minutes: 25), (timer) {
-        logger.d('update: check for playstore update');
-        final mosque = Provider.of<MosqueManager>(context, listen: false);
-        final today = mosque.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
-        final prays = mosque.times?.dayTimesStrings(today);
-        ref.read(appUpdateProvider.notifier).startScheduleUpdate(
-              languageCode: context.read<AppLanguage>().appLocal.languageCode,
-              prayerTimeList: prays ?? [],
-            );
-      });
+      final mosque = Provider.of<MosqueManager>(context, listen: false);
+      ref.read(appUpdateProvider.notifier).startUpdateScheduler(
+            mosque,
+            context.read<AppLanguage>().appLocal.languageCode,
+          );
     });
     super.initState();
   }
@@ -75,8 +70,7 @@ class _PortraitTurkishHomeState extends riverpod.ConsumerState<PortraitTurkishHo
   @override
   Widget build(BuildContext context) {
     ref.listen(appUpdateProvider, (previous, next) {
-      if (next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable &&
-          next.value!.message != previous!.value!.message) {
+      if (next.hasValue && !next.isReloading && next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable) {
         showUpdateAlert(
           context: context,
           duration: Duration(seconds: 30),
