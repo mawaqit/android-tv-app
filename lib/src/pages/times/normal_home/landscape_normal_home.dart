@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
@@ -71,7 +70,7 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
         log('update available ${next.value} || ${next.isReloading} || ${next.isLoading} || ${next.hasValue}');
         showUpdateAlert(
           context: context,
-          duration: Duration(seconds: 30),
+          duration: Duration(minutes: 5),
           content: next.value!.releaseNote,
           title: next.value!.message,
           onPressed: () => ref.read(appUpdateProvider.notifier).openStore(),
