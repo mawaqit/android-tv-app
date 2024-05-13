@@ -100,8 +100,7 @@ class MosqueConfig {
           backgroundType == other.backgroundType &&
           backgroundMotif == other.backgroundMotif &&
           iqamaFullScreenCountdown == other.iqamaFullScreenCountdown &&
-          showPrayerTimesOnMessageScreen ==
-              other.showPrayerTimesOnMessageScreen &&
+          showPrayerTimesOnMessageScreen == other.showPrayerTimesOnMessageScreen &&
           theme == other.theme &&
           adhanDuration == adhanDuration);
 
@@ -234,8 +233,7 @@ class MosqueConfig {
         backgroundMotif: backgroundMotif ?? this.backgroundMotif,
         iqamaFullScreenCountdown: iqamaFullScreenCountdown ?? this.iqamaFullScreenCountdown,
         theme: theme ?? this.theme,
-        showPrayerTimesOnMessageScreen: showPrayerTimesOnMessageScreen ??
-            this.showPrayerTimesOnMessageScreen,
+        showPrayerTimesOnMessageScreen: showPrayerTimesOnMessageScreen ?? this.showPrayerTimesOnMessageScreen,
         adhanDuration: adhanDuration ?? this.adhanDuration);
   }
 
