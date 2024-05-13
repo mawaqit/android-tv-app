@@ -13,6 +13,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../services/user_preferences_manager.dart';
 import '../../../state_management/workflow/announcement_workflow.dart';
 import '../../../state_management/workflow/workflow_notifier.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
@@ -33,11 +34,17 @@ class AnnouncementScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final announcements = context.read<MosqueManager>().activeAnnouncements(enableVideos);
+    final announcements =
+        context.read<MosqueManager>().activeAnnouncements(enableVideos);
     ref.listen(announcementWorkflowProvider, (prev, next) {
       if (next == WorkflowState.finished) onDone?.call();
     });
-
+    bool? showPrayerTimesOnMessageScreen = context
+        .watch<MosqueManager>()
+        .mosqueConfig!
+        .showPrayerTimesOnMessageScreen;
+    bool announcementMode =
+        context.watch<UserPreferencesManager>().announcementsOnly;
     if (announcements.isEmpty) return NormalHomeSubScreen();
 
     return Stack(
@@ -47,7 +54,9 @@ class AnnouncementScreen extends ConsumerWidget {
           workFlowItems: announcements
               .map((e) => AnnouncementWorkFlowItem(
                     builder: (context) => announcementWidgets(e),
-                    duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
+                    duration: e.video != null
+                        ? null
+                        : Duration(seconds: e.duration ?? 30),
                   ))
               .toList(),
         ),
@@ -59,15 +68,29 @@ class AnnouncementScreen extends ConsumerWidget {
             child: AboveSalahBar(),
           ),
         ),
-        IgnorePointer(
-          child: Padding(padding: EdgeInsets.only(bottom: 1.5.vh), child: ResponsiveMiniSalahBarWidget()),
-        )
+
+        announcementMode
+            ? (showPrayerTimesOnMessageScreen!
+                ? IgnorePointer(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 1.5.vh),
+                      child: ResponsiveMiniSalahBarWidget(),
+                    ),
+                  )
+                : const SizedBox.shrink())
+            : IgnorePointer(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 1.5.vh),
+                  child: ResponsiveMiniSalahBarWidget(),
+                ),
+              )
       ],
     );
   }
 
   /// return the widget of the announcement based on its type
-  Widget announcementWidgets(Announcement activeAnnouncement, {VoidCallback? nextAnnouncement}) {
+  Widget announcementWidgets(Announcement activeAnnouncement,
+      {VoidCallback? nextAnnouncement}) {
     if (activeAnnouncement.content != null) {
       return _TextAnnouncement(
         content: activeAnnouncement.content!,
@@ -82,7 +105,8 @@ class AnnouncementScreen extends ConsumerWidget {
       return _VideoAnnouncement(
         key: ValueKey(activeAnnouncement.video),
         url: activeAnnouncement.video!,
-        onEnded: nextAnnouncement, // Make sure this is correctly called when the video ends
+        onEnded:
+            nextAnnouncement, // Make sure this is correctly called when the video ends
       );
     }
 
@@ -91,7 +115,9 @@ class AnnouncementScreen extends ConsumerWidget {
 }
 
 class _TextAnnouncement extends StatelessWidget {
-  const _TextAnnouncement({Key? key, required this.title, required this.content}) : super(key: key);
+  const _TextAnnouncement(
+      {Key? key, required this.title, required this.content})
+      : super(key: key);
 
   final String title;
   final String content;
