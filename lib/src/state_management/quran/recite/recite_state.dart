@@ -5,7 +5,6 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 
-
 class ReciteState extends Equatable {
   final List<ReciterModel> reciters;
   final ReciterModel? selectedReciter;
