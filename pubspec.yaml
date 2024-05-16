@@ -133,6 +133,9 @@ dependencies:
   flutter_archive: ^6.0.3
   dart_mappable: ^4.2.2
   json_annotation: ^4.9.0
+  shimmer: ^3.0.0
+  rxdart: ^0.27.7
+  just_audio_background: ^0.0.1-beta.11
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -179,6 +182,8 @@ flutter:
     - assets/svg/
     - assets/voices/
     - assets/voices/adhan/
+    - assets/img/quran/
+    - assets/icon/
 
   fonts:
     - family: MawaqitIcons
