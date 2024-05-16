@@ -19,7 +19,7 @@ class QuranRemoteDataSource {
   ///
   /// gets the list of languages from the api `https://mp3quran.net/api/v3/languages`
   Future<List<LanguageModel>> getLanguages() async {
-    try{
+    try {
       final response = await _dio.get('languages');
       // log('quran: QuranRemoteDataSource: getLanguages: ${response.data}');
       return (response.data['language'] as List).map((e) => LanguageModel.fromJson(e as Map<String, dynamic>)).toList();
@@ -32,7 +32,7 @@ class QuranRemoteDataSource {
   ///
   /// [languageCode] is the language code of the surwars using the api `https://mp3quran.net/api/v3/suwar`
   Future<List<SurahModel>> getSuwarByLanguage({String languageCode = 'eng'}) async {
-    try{
+    try {
       final response = await _dio.get(
         'suwar',
         queryParameters: {'language': languageCode},

@@ -7,7 +7,6 @@ part 'surah_model.g.dart';
 @HiveType(typeId: 1)
 @MappableClass()
 class SurahModel {
-
   @HiveField(0)
   final int id;
 
@@ -28,14 +27,11 @@ class SurahModel {
   @HiveField(5)
   final int type;
 
-  SurahModel(this.id, this.name, this.startPage, this.endPage,
-      this.makkia, this.type);
+  SurahModel(this.id, this.name, this.startPage, this.endPage, this.makkia, this.type);
 
-  factory SurahModel.fromJson(Map<String, dynamic> map) =>
-      _ensureContainer.fromMap<SurahModel>(map);
+  factory SurahModel.fromJson(Map<String, dynamic> map) => _ensureContainer.fromMap<SurahModel>(map);
 
-  factory SurahModel.fromString(String json) =>
-      _ensureContainer.fromJson<SurahModel>(json);
+  factory SurahModel.fromString(String json) => _ensureContainer.fromJson<SurahModel>(json);
 
   Map<String, dynamic> toJson() {
     return _ensureContainer.toMap(this);
@@ -48,9 +44,7 @@ class SurahModel {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            _ensureContainer.isEqual(this, other));
+    return identical(this, other) || (runtimeType == other.runtimeType && _ensureContainer.isEqual(this, other));
   }
 
   @override
@@ -58,8 +52,7 @@ class SurahModel {
     return _ensureContainer.hash(this);
   }
 
-  SurahModelCopyWith<SurahModel, SurahModel, SurahModel>
-      get copyWith {
+  SurahModelCopyWith<SurahModel, SurahModel, SurahModel> get copyWith {
     return _SurahModelCopyWithImpl(this, $identity, $identity);
   }
 
@@ -68,8 +61,7 @@ class SurahModel {
     return MapperContainer.globals;
   }();
 
-  static SurahModelMapper ensureInitialized() =>
-      SurahModelMapper.ensureInitialized();
+  static SurahModelMapper ensureInitialized() => SurahModelMapper.ensureInitialized();
 
   String getSurahUrl(String serverUrl) {
     // Convert the surah ID to a string

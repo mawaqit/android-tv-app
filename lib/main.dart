@@ -35,7 +35,6 @@ final logger = Logger();
 Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
-
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       final directory = await getApplicationDocumentsDirectory();

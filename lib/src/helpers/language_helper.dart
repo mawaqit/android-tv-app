@@ -1,5 +1,4 @@
 class LanguageHelper {
-
   /// [mapLocaleWithQuran] is a helper function that maps the locale to the Quran API locale.
   ///
   /// using this api `https://mp3quran.net/api/v3/languages`

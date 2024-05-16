@@ -303,7 +303,6 @@ class _QuranPlayer extends ConsumerWidget {
                   }
                 },
               ),
-
             ],
           ),
         ],

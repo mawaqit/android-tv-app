@@ -52,7 +52,6 @@ class FetchRecitersByLastUpdatedDateException extends ReciterException {
         );
 }
 
-
 class SaveRecitersException extends ReciterException {
   SaveRecitersException(String message)
       : super('Error occurred while saving reciters: $message', 'SAVE_RECITERS_ERROR');
