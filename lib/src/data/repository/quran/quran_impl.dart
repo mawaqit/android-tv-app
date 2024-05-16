@@ -32,7 +32,7 @@ class QuranImpl extends QuranRepository {
       log('quran: QuranImpl: getSuwarByLanguage: ${suwar[0]}');
       await _quranLocalDataSource.saveSuwarByLanguage(languageCode, suwar);
       return suwar;
-    } on Exception catch (_){
+    } on Exception catch (_) {
       final suwar = await _quranLocalDataSource.getSuwarByLanguage(languageCode);
       return suwar;
     }

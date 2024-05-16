@@ -13,7 +13,6 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 
-
 class ReciteNotifier extends AsyncNotifier<ReciteState> {
   @override
   build() {

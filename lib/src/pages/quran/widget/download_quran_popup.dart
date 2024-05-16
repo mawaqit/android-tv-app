@@ -162,7 +162,7 @@ Widget _buildInitialPopup(BuildContext context, WidgetRef ref) {
 
 Widget _buildExtractingPopup(BuildContext context, double progress) {
   return AlertDialog(
-    title:  Text(S.of(context).extractingQuran),
+    title: Text(S.of(context).extractingQuran),
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -5,13 +5,12 @@ import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 
 class SideMenu extends StatelessWidget {
-
   const SideMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
     final tr = S.of(context);
-    final isArabic = context.select<AppLanguage,bool>((value) => value.isArabic());
+    final isArabic = context.select<AppLanguage, bool>((value) => value.isArabic());
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Container(
@@ -21,8 +20,8 @@ class SideMenu extends StatelessWidget {
           borderRadius: BorderRadius.only(
             topRight: isArabic ? Radius.circular(30) : Radius.zero,
             bottomRight: isArabic ? Radius.circular(30) : Radius.zero,
-            topLeft: isArabic ?  Radius.zero : Radius.circular(30),
-            bottomLeft: isArabic ?  Radius.zero : Radius.circular(30),
+            topLeft: isArabic ? Radius.zero : Radius.circular(30),
+            bottomLeft: isArabic ? Radius.zero : Radius.circular(30),
           ),
         ),
         child: Column(

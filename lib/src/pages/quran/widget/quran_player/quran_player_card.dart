@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 
-
 class QuranCardPlayer extends StatelessWidget {
   const QuranCardPlayer({
     super.key,
@@ -49,18 +48,18 @@ class QuranCardPlayer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                       'song.title',
+                        'song.title',
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold,
-                        ),
+                              color: Colors.deepPurple,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         'song.description',
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ],
                   ),

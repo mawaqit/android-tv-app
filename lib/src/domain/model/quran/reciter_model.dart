@@ -9,7 +9,6 @@ part 'reciter_model.g.dart';
 @HiveType(typeId: 2)
 @MappableClass()
 class ReciterModel {
-
   @HiveField(0)
   final int id;
 
@@ -24,11 +23,9 @@ class ReciterModel {
 
   ReciterModel(this.id, this.name, this.letter, this.moshaf);
 
-  factory ReciterModel.fromJson(Map<String, dynamic> map) =>
-      _ensureContainer.fromMap<ReciterModel>(map);
+  factory ReciterModel.fromJson(Map<String, dynamic> map) => _ensureContainer.fromMap<ReciterModel>(map);
 
-  factory ReciterModel.fromString(String json) =>
-      _ensureContainer.fromJson<ReciterModel>(json);
+  factory ReciterModel.fromString(String json) => _ensureContainer.fromJson<ReciterModel>(json);
 
   Map<String, dynamic> toJson() {
     return _ensureContainer.toMap(this);
@@ -41,9 +38,7 @@ class ReciterModel {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            _ensureContainer.isEqual(this, other));
+    return identical(this, other) || (runtimeType == other.runtimeType && _ensureContainer.isEqual(this, other));
   }
 
   @override
@@ -51,8 +46,7 @@ class ReciterModel {
     return _ensureContainer.hash(this);
   }
 
-  ReciterModelCopyWith<ReciterModel, ReciterModel, ReciterModel>
-      get copyWith {
+  ReciterModelCopyWith<ReciterModel, ReciterModel, ReciterModel> get copyWith {
     return _ReciterModelCopyWithImpl(this, $identity, $identity);
   }
 
@@ -61,6 +55,5 @@ class ReciterModel {
     return MapperContainer.globals;
   }();
 
-  static ReciterModelMapper ensureInitialized() =>
-      ReciterModelMapper.ensureInitialized();
+  static ReciterModelMapper ensureInitialized() => ReciterModelMapper.ensureInitialized();
 }
