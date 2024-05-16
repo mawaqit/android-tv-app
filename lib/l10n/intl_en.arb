@@ -211,5 +211,7 @@
   "quranUpdatedVersion": "Quran updated version is: {version}",
   "quranIsUpdated": "Quran is updated",
   "quranDownloaded": "Quran downloaded",
-  "quranIsAlreadyDownloaded": "Quran is already downloaded"
+  "quranIsAlreadyDownloaded": "Quran is already downloaded",
+  "chooseReciter": "Choose Reciter",
+  "reciteType": "Recite Type"
 }
