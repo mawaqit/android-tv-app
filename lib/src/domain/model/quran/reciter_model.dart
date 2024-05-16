@@ -1,14 +1,25 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import 'moshaf_model.dart';
 
 part 'reciter_model.mapper.dart';
+part 'reciter_model.g.dart';
 
+@HiveType(typeId: 2)
 @MappableClass()
 class ReciterModel {
+
+  @HiveField(0)
   final int id;
+
+  @HiveField(1)
   final String name;
+
+  @HiveField(2)
   final String letter;
+
+  @HiveField(3)
   final List<MoshafModel> moshaf;
 
   ReciterModel(this.id, this.name, this.letter, this.moshaf);
