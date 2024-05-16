@@ -18,8 +18,7 @@ class PlayerButtons extends StatelessWidget {
           stream: audioPlayer.sequenceStateStream,
           builder: (context, index) {
             return IconButton(
-              onPressed:
-              audioPlayer.hasPrevious ? audioPlayer.seekToPrevious : null,
+              onPressed: audioPlayer.hasPrevious ? audioPlayer.seekToPrevious : null,
               iconSize: 45,
               icon: const Icon(
                 Icons.skip_previous,
@@ -35,8 +34,7 @@ class PlayerButtons extends StatelessWidget {
               final playerState = snapshot.data;
               final processingState = playerState!.processingState;
 
-              if (processingState == ProcessingState.loading ||
-                  processingState == ProcessingState.buffering) {
+              if (processingState == ProcessingState.loading || processingState == ProcessingState.buffering) {
                 return Container(
                   width: 64.0,
                   height: 64.0,
