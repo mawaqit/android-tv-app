@@ -70,4 +70,13 @@ class SurahModel {
 
   static SurahModelMapper ensureInitialized() =>
       SurahModelMapper.ensureInitialized();
+
+  String getSurahUrl(String serverUrl) {
+    // Convert the surah ID to a string
+    String surahIdStr = id.toString().padLeft(3, '0');
+
+    String surahUrl = "$serverUrl$surahIdStr.mp3";
+
+    return surahUrl;
+  }
 }
