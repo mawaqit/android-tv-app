@@ -43,4 +43,5 @@ abstract class QuranConstant {
   static const String kQuranLocalVersion = 'quran_local_version';
   static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
   static const String kSurahBox = 'surah_box';
+  static const String kReciterBox = 'reciter_box';
 }
