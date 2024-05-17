@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
@@ -37,7 +38,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   FocusNode reciterFocusNode = FocusNode();
   FocusNode reciteTypeFocusNode = FocusNode();
   final ScrollController _reciterScrollController = ScrollController();
-  double sizeOfContainerReciter = 25.w;
+  double sizeOfContainerReciter = 15.w;
   double marginOfContainerReciter = 16;
 
   List<ReciterModel> reciters = [];
@@ -71,7 +72,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           S.of(context).chooseReciter,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 2.4.vwr,
+            fontSize: 14.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -108,7 +109,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 2.4.vwr,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -133,31 +134,90 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   Widget _buildReciterList(List<ReciterModel> reciterNames) {
     return Container(
-      height: 170,
-      child: ListView.builder(
-        controller: _reciterScrollController,
-        scrollDirection: Axis.horizontal,
-        itemCount: reciterNames.length,
-        itemBuilder: (context, index) {
-          return Focus(
-            focusNode: reciterFocusNode,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedReciterIndex = index;
-                });
+      height: 16.h,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ListView.builder(
+              controller: _reciterScrollController,
+              scrollDirection: Axis.horizontal,
+              itemCount: reciterNames.length,
+              itemBuilder: (context, index) {
+                return Focus(
+                  focusNode: reciterFocusNode,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedReciterIndex = index;
+                      });
+                    },
+                    child: _reciterCard(index, reciterNames),
+                  ),
+                );
               },
-              child: _reciterCard(index, reciterNames),
             ),
-          );
-        },
+          ),
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            child: _buildRoundedButton(
+              icon: Icons.arrow_left,
+              onPressed: () => _scrollReciterList(ScrollDirection.forward),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: _buildRoundedButton(
+              icon: Icons.arrow_right,
+              onPressed: () => _scrollReciterList(ScrollDirection.reverse),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildRoundedButton({required IconData icon, required VoidCallback onPressed}) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        shape: const CircleBorder(),
+        backgroundColor: Colors.white.withOpacity(0.2),
+        fixedSize: Size(5.w, 5.w),
+      ),
+      child: Icon(
+        icon,
+        color: Colors.white,
+        size: 15.sp,
+      ),
+    );
+  }
+
+  void _scrollReciterList(ScrollDirection direction) {
+    log('scrollReciterList: $direction');
+    final itemWidth = sizeOfContainerReciter + marginOfContainerReciter; // Item width + right margin
+    double targetOffset;
+    if (direction == ScrollDirection.forward) {
+      targetOffset =
+          (_reciterScrollController.offset - itemWidth).clamp(0.0, _reciterScrollController.position.maxScrollExtent);
+    } else {
+      targetOffset =
+          (_reciterScrollController.offset + itemWidth).clamp(0.0, _reciterScrollController.position.maxScrollExtent);
+    }
+
+    _reciterScrollController.animateTo(
+      targetOffset,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
     );
   }
 
   Container _reciterCard(int index, List<ReciterModel> reciterNames) {
     return Container(
-      width: sizeOfContainerReciter,
+      width: 25.w,
       margin: EdgeInsets.only(right: marginOfContainerReciter),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -168,6 +228,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               )
             : null,
       ),
+
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -182,7 +243,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           ),
         ),
         alignment: Alignment.bottomLeft,
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           children: [
             SizedBox(
@@ -190,18 +251,23 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             ),
             Image.asset(
               R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
-              width: 18.w,
+              width: 17.w,
               fit: BoxFit.fitWidth,
             ),
             Spacer(),
-            Text(
-              reciterNames[index].name,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                reciterNames[index].name,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 8.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
             ),
           ],
         ),
@@ -377,13 +443,13 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   Widget _buildReciterListShimmer(bool isDarkMode) {
     return Container(
-      height: 150,
+      height: 16.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 4,
+        itemCount: 20,
         itemBuilder: (context, index) {
           return Container(
-            width: sizeOfContainerReciter,
+            width: 25.w,
             margin: EdgeInsets.only(right: marginOfContainerReciter),
             child: Shimmer.fromColors(
               baseColor: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
@@ -406,12 +472,12 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: 4,
         childAspectRatio: 2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
-      itemCount: 6,
+      itemCount: 2,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
           baseColor: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
