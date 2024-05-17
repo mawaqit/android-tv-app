@@ -93,9 +93,8 @@ class MosqueManager extends ChangeNotifier
     await loadFromLocale();
     listenToConnectivity();
     isDeviceRooted = await DeviceInfoDataSource().initRootRequest();
-    if (isDeviceRooted) {
-      ToggleScreenFeature.grantDumpPermission();
-    }
+    ToggleScreenFeature.grantDumpPermission();
+
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
 
     notifyListeners();
