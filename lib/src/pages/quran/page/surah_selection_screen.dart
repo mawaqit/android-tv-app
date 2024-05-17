@@ -17,6 +17,7 @@ import 'package:shimmer/shimmer.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_notifier.dart';
 import 'package:mawaqit/src/pages/quran/page/quran_player_screen.dart';
+import 'package:sizer/sizer.dart';
 
 class SurahSelectionScreen extends ConsumerStatefulWidget {
   const SurahSelectionScreen({
@@ -56,110 +57,121 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     final georgianDate = timeNow.formatIntoMawaqitFormat(local: '${lang}_$mosqueCountryCode');
     final quranState = ref.watch(quranNotifierProvider);
     return QuranBackground(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        title: Text(
+          georgianDate,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 15.sp,
+          ),
+        ),
+      ),
       screen: Row(
         children: [
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(32.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      georgianDate,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 2.7.vwr,
-                        height: .8,
-                      ),
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 24),
+                // SizedBox(height: 32),
+                // Focus(
+                //   debugLabel: 'Search Surahs',
+                //   focusNode: _searchFocusNode,
+                //   child: TextField(
+                //     readOnly: true,
+                //     autofocus: false,
+                //     cursorColor: Colors.white,
+                //     decoration: InputDecoration(
+                //       hintText: 'Search surahs...',
+                //       hintStyle: TextStyle(color: Colors.white70),
+                //       filled: true,
+                //       fillColor: Colors.white.withOpacity(0.2),
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(30),
+                //         borderSide: BorderSide.none,
+                //       ),
+                //       focusedBorder: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(30),
+                //         borderSide: BorderSide(color: Colors.white),
+                //       ),
+                //     ),
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                // ),
+                Expanded(
+                  child: quranState.when(
+                    data: (data) {
+                      return GridView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 3.w),
+                        controller: _scrollController,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: _crossAxisCount,
+                          childAspectRatio: 1.8,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
+                        ),
+                        itemCount: data.suwar.length,
+                        itemBuilder: (context, index) {
+                          return SurahCard(
+                            surahName: data.suwar[index].name,
+                            surahNumber: data.suwar[index].id,
+                            isSelected: index == selectedIndex,
+                            onTap: () {
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                              final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
+                                    orElse: () => null,
+                                    data: (data) => data.selectedMoshaf,
+                                  );
+                              log('Selected moshaf: $moshaf');
+                              ref.read(quranPlayerNotifierProvider.notifier).initialize(
+                                    moshaf: moshaf!,
+                                    surah: data.suwar[index],
+                                    suwar: data.suwar,
+                                  );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QuranPlayerScreen(),
+                                ),
+                              );
+                              _scrollToSelectedItem();
+                            },
+                          );
+                        },
+                      );
+                    },
+                    error: (error, stack) {
+                      log('Error: $error\n$stack');
+                      return Center(
+                        child: Text(
+                          'Error: $error',
+                        ),
+                      );
+                    },
+                    loading: () => _buildShimmerGrid(),
                   ),
-                  SizedBox(height: 32),
-                  // Focus(
-                  //   debugLabel: 'Search Surahs',
-                  //   focusNode: _searchFocusNode,
-                  //   child: TextField(
-                  //     readOnly: true,
-                  //     autofocus: false,
-                  //     cursorColor: Colors.white,
-                  //     decoration: InputDecoration(
-                  //       hintText: 'Search surahs...',
-                  //       hintStyle: TextStyle(color: Colors.white70),
-                  //       filled: true,
-                  //       fillColor: Colors.white.withOpacity(0.2),
-                  //       border: OutlineInputBorder(
-                  //         borderRadius: BorderRadius.circular(30),
-                  //         borderSide: BorderSide.none,
-                  //       ),
-                  //       focusedBorder: OutlineInputBorder(
-                  //         borderRadius: BorderRadius.circular(30),
-                  //         borderSide: BorderSide(color: Colors.white),
-                  //       ),
-                  //     ),
-                  //     style: TextStyle(color: Colors.white),
-                  //   ),
-                  // ),
-                  Expanded(
-                    child: quranState.when(
-                      data: (data) {
-                        return GridView.builder(
-                          controller: _scrollController,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: _crossAxisCount,
-                            childAspectRatio: 1.5,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                          ),
-                          itemCount: data.suwar.length,
-                          itemBuilder: (context, index) {
-                            return SurahCard(
-                              surahName: data.suwar[index].name,
-                              surahNumber: data.suwar[index].id,
-                              isSelected: index == selectedIndex,
-                              onTap: () {
-                                setState(() {
-                                  selectedIndex = index;
-                                });
-                                final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
-                                      orElse: () => null,
-                                      data: (data) => data.selectedMoshaf,
-                                    );
-                                log('Selected moshaf: $moshaf');
-                                ref.read(quranPlayerNotifierProvider.notifier).initialize(
-                                      moshaf: moshaf!,
-                                      surah: data.suwar[index],
-                                      suwar: data.suwar,
-                                    );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => QuranPlayerScreen(),
-                                  ),
-                                );
-                                _scrollToSelectedItem();
-                              },
-                            );
-                          },
-                        );
-                      },
-                      error: (error, stack) {
-                        log('Error: $error\n$stack');
-                        return Center(
-                          child: Text(
-                            'Error: $error',
-                          ),
-                        );
-                      },
-                      loading: () => _buildShimmerGrid(),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          SideMenu(),
+          quranState.when(
+            data: (data) =>  SideMenu(),
+            error: (error, stack) {
+              log('Error: $error\n$stack');
+              return Center(
+                child: Text(
+                  'Error: $error',
+                ),
+              );
+            },
+            loading: () => SideMenu(),
+          )
         ],
       ),
     );
@@ -212,9 +224,9 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: _crossAxisCount,
-        childAspectRatio: 1.5,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
+        childAspectRatio: 1.8,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 20,
       ),
       itemCount: 20, // Adjust the count as needed
       itemBuilder: (context, index) {
