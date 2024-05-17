@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:sizer/sizer.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({super.key});
@@ -14,7 +15,11 @@ class SideMenu extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Container(
-        width: 100,
+        width: 18.w,
+        constraints: BoxConstraints(
+          minWidth: 30,
+          maxWidth: 100,
+        ),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.2),
           borderRadius: BorderRadius.only(
