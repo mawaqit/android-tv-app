@@ -16,31 +16,35 @@ class QuranBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBar != null
-        ? Scaffold(
-            extendBodyBehindAppBar: true,
-            appBar: appBar,
-            body: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(R.ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG),
-                  fit: BoxFit.cover,
+        ? SafeArea(
+            child: Scaffold(
+              extendBodyBehindAppBar: true,
+              appBar: appBar,
+              body: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(R.ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG),
+                    fit: BoxFit.cover,
+                  ),
+                  gradient: ThemeNotifier.quranBackground(),
                 ),
-                gradient: ThemeNotifier.quranBackground(),
+                padding: EdgeInsets.only(top: 5.h),
+                child: screen,
               ),
-              padding: EdgeInsets.only(top: 5.h),
-              child: screen,
             ),
           )
-        : Scaffold(
-            body: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(R.ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG),
-                  fit: BoxFit.cover,
+        : SafeArea(
+            child: Scaffold(
+              body: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(R.ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG),
+                    fit: BoxFit.cover,
+                  ),
+                  gradient: ThemeNotifier.quranBackground(),
                 ),
-                gradient: ThemeNotifier.quranBackground(),
+                child: screen,
               ),
-              child: screen,
             ),
           );
   }

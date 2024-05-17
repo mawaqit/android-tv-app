@@ -130,16 +130,12 @@ class _QuranPlayer extends ConsumerWidget {
                 children: [
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
-                      trackHeight: 4,
                       thumbShape: const RoundSliderThumbShape(
-                        disabledThumbRadius: 8,
-                        enabledThumbRadius: 8,
+                        enabledThumbRadius: 7,
                       ),
                       overlayShape: const RoundSliderOverlayShape(
                         overlayRadius: 10,
                       ),
-                      activeTrackColor: Colors.white.withOpacity(0.05),
-                      inactiveTrackColor: Colors.white.withOpacity(0.05),
                       thumbColor: Colors.white,
                       valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
                     ),
@@ -151,22 +147,24 @@ class _QuranPlayer extends ConsumerWidget {
                       },
                     ),
                   ),
-                  SizedBox(height: 1.h),
+                  SizedBox(height: 2.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         position.toString().split('.').first,
                         style: TextStyle(
-                          fontSize: 4.w,
+                          fontSize: 12.sp,
                           color: Color(0xFFA8A8A8),
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       Text(
                         duration.toString().split('.').first,
                         style: TextStyle(
-                          fontSize: 4.w,
+                          fontSize: 12.sp,
                           color: Color(0xFFA8A8A8),
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
@@ -313,8 +311,8 @@ class _QuranPlayer extends ConsumerWidget {
 
 class _BackgroundFilter extends StatelessWidget {
   const _BackgroundFilter({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

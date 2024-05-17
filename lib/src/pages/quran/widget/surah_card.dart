@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:sizer/sizer.dart';
 
 class SurahCard extends StatelessWidget {
   final String surahName;
@@ -23,7 +24,7 @@ class SurahCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: isSelected ? Colors.white.withOpacity(0.4) : Colors.white.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Center(
           child: Column(
@@ -33,7 +34,7 @@ class SurahCard extends StatelessWidget {
                 '$surahNumber. $surahName',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 2.2.vwr,
+                  fontSize: 12.sp,
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
