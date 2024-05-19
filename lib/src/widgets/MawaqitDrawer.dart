@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
@@ -32,6 +33,10 @@ import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
+import '../pages/quran/page/quran_mode_selection_screen.dart';
+import '../pages/quran/page/reading_screen.dart';
+import '../state_management/quran/quran/quran_state.dart';
+
 class MawaqitDrawer extends ConsumerWidget {
   const MawaqitDrawer({Key? key, required this.goHome}) : super(key: key);
 
@@ -43,6 +48,24 @@ class MawaqitDrawer extends ConsumerWidget {
     final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
     final theme = Theme.of(context);
+    ref.listen(quranNotifierProvider, (previous, next) {
+      if (next.hasValue && !next.isReloading) {
+        switch (next.value!.mode) {
+          case QuranMode.reading:
+            log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: reading');
+            AppRouter.push(ReadingScreen());
+            break;
+          case QuranMode.listening:
+            log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: listening');
+            ref.read(reciteNotifierProvider.notifier).getAllReciters();
+            AppRouter.push(ReciterSelectionScreen.withoutSurahName());
+            break;
+          case QuranMode.none:
+            AppRouter.push(QuranModeSelection());
+            break;
+        }
+      }
+    });
     return Drawer(
       child: Stack(
         children: [
@@ -166,16 +189,7 @@ class MawaqitDrawer extends ConsumerWidget {
                 icon: Icons.book,
                 text: S.of(context).quran,
                 onTap: () async {
-                  // await showDownloadQuranAlertDialog(context, ref);
-                  ref.read(reciteNotifierProvider.notifier).getAllReciters();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ReciterSelectionScreen(
-                        surahName: '',
-                      ),
-                    ),
-                  );
+                  ref.read(quranNotifierProvider.notifier).getSelectedMode();
                 },
               ),
               DrawerListTitle(
