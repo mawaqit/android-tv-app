@@ -161,7 +161,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
             ),
           ),
           quranState.when(
-            data: (data) =>  SideMenu(),
+            data: (data) => SideMenu(),
             error: (error, stack) {
               log('Error: $error\n$stack');
               return Center(
