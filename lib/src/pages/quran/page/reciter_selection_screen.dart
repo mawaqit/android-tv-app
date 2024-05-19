@@ -228,7 +228,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               )
             : null,
       ),
-
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -256,19 +255,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             ),
             Spacer(),
             FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                reciterNames[index].name,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 8.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            ),
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  reciterNames[index].name,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 8.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
           ],
         ),
       ),
