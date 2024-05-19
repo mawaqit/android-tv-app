@@ -214,7 +214,6 @@
   "quranIsAlreadyDownloaded": "Quran is already downloaded",
   "chooseReciter": "Choose Reciter",
   "reciteType": "Recite Type",
-  "selectMode": "Select Mode",
-  "readingMode": "Reading Mode",
-  "listeningMode": "Listening Mode"
+  "readingMode": "I want to read",
+  "listeningMode": "I want to listen"
 }

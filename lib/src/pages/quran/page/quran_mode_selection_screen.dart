@@ -70,14 +70,6 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: 10.h),
-            Text(
-              S.of(context).selectMode,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 26.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -85,13 +77,14 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                 _buildModeButton(
                   context: context,
                   text: S.of(context).readingMode,
-                  icon: Icons.book,
+                  icon: Icons.menu_book,
                   onPressed: () {
                     setState(() {
                       _selectedIndex = 0;
                     });
                     ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
                     log('Reading mode selected');
+
                     /// it navigates already by the menu at
                   },
                   isSelected: _selectedIndex == 0,
@@ -132,38 +125,31 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
       focusNode: focusNode,
       child: GestureDetector(
         onTap: onPressed,
-        child: Container(
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
           width: 50.w,
           height: 20.h,
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: isSelected
-                ? [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: Offset(0, 3),
-              ),
-            ]
-                : null,
+          decoration: ShapeDecoration(
+            color: isSelected ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.05),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 icon,
-                size: 80,
+                size: isSelected ? 90 : 80,
                 color: Colors.white,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               Text(
                 text,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
+                  fontSize: isSelected ? 18.sp : 16.sp,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             ],
@@ -171,19 +157,5 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
         ),
       ),
     );
-  }
-
-  bool _isNavigating = false;
-
-  void _navigateToReadingScreen(BuildContext context) {
-    if (_isNavigating) return;
-    _isNavigating = true;
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ReadingScreen()),
-    ).then((_) {
-      _isNavigating = false;
-    });
   }
 }
