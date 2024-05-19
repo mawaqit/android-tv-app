@@ -1,78 +1,98 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../data/repository/announcement_impl.dart';
-import '../../../helpers/time_helper.dart';
 import '../../../models/announcement.dart';
 import '../../../pages/home/sub_screens/AnnouncementScreen.dart';
 import 'announcement_workflow_state.dart';
 import '../../../services/user_preferences_manager.dart';
 
-class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<AnnouncementWorkflowState> {
-  late final Timer _timer;
-  bool _startLinear = false;
-  bool _startRepeated = false;
+class AnnouncementWorkflowNotifier extends AsyncNotifier<AnnouncementWorkflowState> {
+  Timer? _periodicTimer;
+  late SharedPreferences sharedPrefs;
 
   @override
   FutureOr<AnnouncementWorkflowState> build() {
     ref.onDispose(() {
-      _timer.cancel();
-      _startLinear = false;
-      _startRepeated = false;
+      _closeActivatedTimers();
     });
     return AnnouncementWorkflowState.initial();
   }
 
-  /// [startAnnouncement] starts the announcement workflow for the provided announcements.
-  Future<void> startAnnouncement([bool isPlayingVideo = true]) async {
-    final sharedPreference = await SharedPreferences.getInstance();
-    final announcementMode =
-        sharedPreference.getBool(announcementsStoreKey) ?? false ? AnnouncementMode.repeat : AnnouncementMode.linear;
-    log('announcement: AnnouncementWorkflowNotifier: startAnnouncement $announcementMode');
+  /// Starts the announcement workflow based on the provided announcements and video enable flag.
+  ///
+  /// @param announcements The list of announcements to be displayed.
+  /// @param enableVideo A flag indicating whether videos are enabled.
+  Future<void> startAnnouncementWorkflow(List<Announcement> announcements, bool enableVideo) async {
     state = AsyncLoading();
-    try {
-      final announcementImpl = await ref.read(announcementRepositoryProvider.future);
-      final announcementList = await announcementImpl.getAnnouncements();
-      if (announcementMode == AnnouncementMode.repeat) {
-        _startRepeated = true;
-        await _startRepeatedAnnouncement(announcementList, isPlayingVideo);
+    state = await AsyncValue.guard(() async {
+      final announcementList = announcements;
+      if (announcements.length == 0) return Future.value(state.value);
+      sharedPrefs = await SharedPreferences.getInstance();
+      final isRepeatingAnnouncementMode = sharedPrefs.getBool(announcementsStoreKey) ?? false;
+      log('announcement: AnnouncementWorkflowNotifier: startAnnouncementWorkflow ${announcementList.length} $isRepeatingAnnouncementMode');
+      if (isRepeatingAnnouncementMode) {
+        _handleRepeatedAnnouncementTimer(announcementList);
       } else {
-        _startLinear = true;
-        await _startLinearAnnouncement(announcementList, isPlayingVideo);
+        _handleLinearAnnouncementTimer(announcementList);
       }
-    } catch (e, stackTrace) {
-      state = AsyncError(e, stackTrace);
-    }
+      return Future.value(state.value);
+    });
   }
 
   /// Handles the linear announcement timer for the provided announcements.
   /// it will display the announcements in a linear manner.
   ///
   /// @param announcements The list of announcements to be displayed in a linear manner.
-  Future<void> _startLinearAnnouncement(List<Announcement> announcements, bool isPlayingVideo) async {
-    log('announcement: AnnouncementWorkflowNotifier: _startLinearAnnouncement');
-    announcements =
-        announcements.where((element) => TimeHelper.isBetweenStartAndEnd(element.startDate, element.endDate)).toList();
-    log('announcement: AnnouncementWorkflowNotifier: initial $announcements');
+  Future<void> _handleLinearAnnouncementTimer(List<Announcement> announcements) async {
+    log('announcement: AnnouncementWorkflowNotifier: _handleLinearAnnouncementTimer');
     for (int i = 0; i < announcements.length; i++) {
-      if (!_startLinear) return;
-      final announcementMode = await _getAnnouncementMode();
-      if (announcementMode == AnnouncementMode.repeat) {
-        log('announcement: AnnouncementWorkflowNotifier: _startRepeatedAnnouncement - switching to linear mode');
+      final isRepeatingAnnouncementMode = sharedPrefs.getBool(announcementsStoreKey) ?? false;
+      if (isRepeatingAnnouncementMode) {
+        log('announcement: AnnouncementWorkflowNotifier: _handleLinearAnnouncementTimer - switching to repeated mode');
         break;
       }
       final announcement = announcements[i];
-      await _displayAnnouncement(announcement, isPlayingVideo);
+      final link = announcement.video;
+      if (link != null && link != 'null') {
+        log('announcement: AnnouncementWorkflowNotifier: _handleLinearAnnouncementTimer - displaying video announcement: $link');
+        update(
+          (p0) => p0.copyWith(
+            announcementItem: AnnouncementWorkFlowItem(
+              announcement: announcements[i],
+              duration: Duration(seconds: announcement.duration!),
+            ),
+            isActivated: true,
+            currentActivatedIndex: i,
+          ),
+        );
+        // await Future.delayed(Duration(seconds: 20));
+        // final duration = ref.read(videoProvider);
+        // await Future.delayed(duration);
+        // log('announcement: AnnouncementWorkflowNotifier: _handleLinearAnnouncementTimer - video duration: $duration');
+      } else {
+        log('announcement: AnnouncementWorkflowNotifier: _handleLinearAnnouncementTimer - displaying text announcement: ${announcement.id}');
+        update(
+          (p0) => p0.copyWith(
+            announcementItem: AnnouncementWorkFlowItem(
+              announcement: announcements[i],
+              duration: Duration(seconds: announcement.duration!),
+            ),
+            isActivated: true,
+            currentActivatedIndex: i,
+          ),
+        );
+        // Wait for the duration of the announcement
+        await Future.delayed(Duration(seconds: announcement.duration!));
+      }
     }
-    log('announcement: AnnouncementWorkflowNotifier: _startLinearAnnouncement - completed');
-    state = AsyncData(
-      state.value!.copyWith(
-        status: AnnouncementWorkflowStatus.completed,
+    log('announcement: AnnouncementWorkflowNotifier: _handleLinearAnnouncementTimer - completed');
+    update(
+      (p0) => p0.copyWith(
+        isActivated: false,
+        currentActivatedIndex: 0,
       ),
     );
   }
@@ -80,86 +100,58 @@ class AnnouncementWorkflowNotifier extends AutoDisposeAsyncNotifier<Announcement
   /// Handles the repeated announcement timer for the provided announcements.
   ///
   /// @param announcements The list of announcements to be displayed in a repeated manner.
-  Future<void> _startRepeatedAnnouncement(List<Announcement> announcements, bool isPlayingVideo) async {
-    log('announcement: AnnouncementWorkflowNotifier: _startRepeatedAnnouncement');
-    announcements =
-        announcements.where((element) => TimeHelper.isBetweenStartAndEnd(element.startDate, element.endDate)).toList();
-    log('announcement: AnnouncementWorkflowNotifier: _startRepeatedAnnouncement initial $announcements');
+  Future<void> _handleRepeatedAnnouncementTimer(List<Announcement> announcements) async {
     int index = 0;
-
-    final announcementImpl = await ref.read(announcementRepositoryProvider.future);
-    final announcementStream = announcementImpl.getAnnouncementsStream();
-    final streamSubscription = announcementStream.listen(
-      (updatedAnnouncements) {
-        announcements = updatedAnnouncements
-            .where((element) => TimeHelper.isBetweenStartAndEnd(element.startDate, element.endDate))
-            .toList();
-        log('announcement: AnnouncementWorkflowNotifier: _startRepeatedAnnouncement $announcements');
-      },
-      onError: (e, stackTrace) {
-        state = AsyncError(e, stackTrace);
-      },
-    );
-    ref.onDispose(() {
-      streamSubscription.cancel();
-    });
-    while (_startRepeated) {
-      final announcementMode = await _getAnnouncementMode();
-      log('announcement: AnnouncementWorkflowNotifier: _startRepeatedAnnouncement - outside: $index');
-      if (announcementMode == AnnouncementMode.linear) {
-        log('announcement: AnnouncementWorkflowNotifier: _startRepeatedAnnouncement - switching to linear mode');
+    log('announcement: AnnouncementWorkflowNotifier: _handleRepeatedAnnouncementTimer');
+    while (true) {
+      final isRepeatingAnnouncementMode = sharedPrefs.getBool(announcementsStoreKey) ?? false;
+      if (!isRepeatingAnnouncementMode) {
+        log('announcement: AnnouncementWorkflowNotifier: _handleRepeatedAnnouncementTimer - switching to linear mode');
         break;
       }
       final announcement = announcements[index];
-      await _displayAnnouncement(announcement, isPlayingVideo);
-      index = (index + 1) % announcements.length;
+      final link = announcement.video;
+      if (link != null && link != 'null') {
+        log('announcement: AnnouncementWorkflowNotifier: _handleRepeatedAnnouncementTimer - displaying video announcement: $link');
+        update(
+          (p0) => p0.copyWith(
+            announcementItem: AnnouncementWorkFlowItem(
+              announcement: announcements[index],
+              duration: Duration(seconds: announcement.duration!),
+            ),
+            isActivated: true,
+            currentActivatedIndex: index,
+          ),
+        );
+        await Future.delayed(Duration(seconds: 20));
+        // final duration = ref.read(videoProvider);
+        // await Future.delayed(duration);
+        // index = (index + 1) % announcements.length; // Move to the next announcement
+      } else if (announcement.duration != null) {
+        log('announcement: AnnouncementWorkflowNotifier: _handleRepeatedAnnouncementTimer - announcement: ${announcement.id}');
+        update(
+          (p0) => p0.copyWith(
+            announcementItem: AnnouncementWorkFlowItem(
+              announcement: announcements[index],
+              duration: Duration(seconds: announcement.duration!),
+            ),
+            isActivated: true,
+            currentActivatedIndex: index,
+          ),
+        );
+        // Wait for the duration of the announcement
+        await Future.delayed(Duration(seconds: announcement.duration!));
+        index = (index + 1) % announcements.length; // Move to the next announcement
+      }
     }
   }
 
-  /// [_displayAnnouncement] displays the provided announcement. if it is video it will play
-  /// the video based on videoProvider to get the duration of the video.
-  /// if it is text it will display the text for the provided duration or image
-  Future<void> _displayAnnouncement(Announcement announcement, bool isPlayingVideo) async {
-    final link = announcement.video;
-    log('announcement: AnnouncementWorkflowNotifier: _displayAnnouncement: $isPlayingVideo');
-    if (isPlayingVideo && link != null && link != 'null') {
-      log('announcement: AnnouncementWorkflowNotifier: _displayAnnouncement: video ${announcement.id}');
-      state = AsyncData(
-        state.value!.copyWith(
-          announcementItem: AnnouncementWorkFlowItem(
-            announcement: announcement,
-            duration: Duration(seconds: announcement.duration!),
-          ),
-          status: AnnouncementWorkflowStatus.playing,
-        ),
-      );
-      await Future.delayed(Duration(seconds: 5));
-      final duration = ref.read(videoProvider);
-      await Future.delayed(duration);
-    } else if (announcement.duration != null && link == null) {
-      // link checks if it is a video or not
-      log('announcement: AnnouncementWorkflowNotifier: _displayAnnouncement: text ${announcement.id}');
-      state = AsyncData(
-        state.value!.copyWith(
-          announcementItem: AnnouncementWorkFlowItem(
-            announcement: announcement,
-            duration: Duration(seconds: announcement.duration!),
-          ),
-          status: AnnouncementWorkflowStatus.playing,
-        ),
-      );
-      await Future.delayed(Duration(seconds: announcement.duration!));
-    }
-  }
-
-  Future<AnnouncementMode> _getAnnouncementMode() async {
-    final sharedPreference = await SharedPreferences.getInstance();
-    final announcementBool = sharedPreference.getBool(announcementsStoreKey) ?? false;
-    return announcementBool ? AnnouncementMode.repeat : AnnouncementMode.linear;
+  void _closeActivatedTimers() {
+    _periodicTimer?.cancel();
+    log('announcement: AnnouncementWorkflowNotifier: _closeActivatedTimers - timers disposed');
   }
 }
 
-final announcementWorkflowProvider =
-    AutoDisposeAsyncNotifierProvider<AnnouncementWorkflowNotifier, AnnouncementWorkflowState>(
+final announcementWorkflowwProvider = AsyncNotifierProvider<AnnouncementWorkflowNotifier, AnnouncementWorkflowState>(
   AnnouncementWorkflowNotifier.new,
 );

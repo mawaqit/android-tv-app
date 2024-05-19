@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:typed_data';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,17 +10,16 @@ import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/WorkFlowWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../../state_management/workflow/announcement_workflow/announcement_workflow_notifier.dart'
-    as announcement_workflow;
-
-import '../../../state_management/workflow/announcement_workflow/announcement_workflow_state.dart';
+import '../../../state_management/workflow/announcement_workflow.dart';
+import '../../../state_management/workflow/workflow_notifier.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
+import '../widgets/workflows/announcement_workflow.dart';
 
-class AnnouncementScreen extends ConsumerStatefulWidget {
+/// show all announcements in one after another
+class AnnouncementScreen extends ConsumerWidget {
   AnnouncementScreen({
     Key? key,
     this.onDone,
@@ -36,59 +32,38 @@ class AnnouncementScreen extends ConsumerStatefulWidget {
   final bool enableVideos;
 
   @override
-  ConsumerState createState() => _AnnouncementScreenState();
-}
-
-class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      log('announcement: AnnouncementScreen: 1 startAnnouncement called enableVideos: ${widget.enableVideos}');
-      ref.read(announcement_workflow.announcementWorkflowProvider.notifier).startAnnouncement(
-            widget.enableVideos,
-          );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final announcements = context.read<MosqueManager>().activeAnnouncements(enableVideos);
+    ref.listen(announcementWorkflowProvider, (prev, next) {
+      if (next == WorkflowState.finished) onDone?.call();
     });
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    ref.listen(announcement_workflow.announcementWorkflowProvider, (previous, next) {
-      if (next.value!.status == AnnouncementWorkflowStatus.completed) {
-        // All announcements have been displayed
-        log('announcement: AnnouncementScreen: 1 widget.onDone?.call() called ');
-        widget.onDone?.call();
-      }
-      if (next.hasError) {
-        // An error occurred during the announcement workflow
-        widget.onDone?.call();
-      }
-    });
-    return ref.watch(announcement_workflow.announcementWorkflowProvider).maybeWhen(
-          orElse: () => Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), // Green color
-            ),
+    if (announcements.isEmpty) return NormalHomeSubScreen();
+
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        AnnouncementContinuesWorkFlowWidget(
+          workFlowItems: announcements
+              .map((e) => AnnouncementWorkFlowItem(
+                    builder: (context) => announcementWidgets(e),
+                    duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
+                  ))
+              .toList(),
+        ),
+        // announcementWidgets(),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 1.vh),
+            child: AboveSalahBar(),
           ),
-          data: (state) => Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              announcementWidgets(
-                state.announcementItem.announcement,
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 1.vh),
-                  child: AboveSalahBar(),
-                ),
-              ),
-              IgnorePointer(
-                child: Padding(padding: EdgeInsets.only(bottom: 1.5.vh), child: ResponsiveMiniSalahBarWidget()),
-              )
-            ],
-          ),
-        );
+        ),
+        IgnorePointer(
+          child: Padding(padding: EdgeInsets.only(bottom: 1.5.vh), child: ResponsiveMiniSalahBarWidget()),
+        )
+      ],
+    );
   }
 
   /// return the widget of the announcement based on its type
@@ -98,9 +73,9 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
         content: activeAnnouncement.content!,
         title: activeAnnouncement.title,
       );
-    } else if (activeAnnouncement.imageFile != null) {
+    } else if (activeAnnouncement.image != null) {
       return _ImageAnnouncement(
-        image: activeAnnouncement.imageFile!,
+        image: activeAnnouncement.image!,
         onError: nextAnnouncement,
       );
     } else if (activeAnnouncement.video != null) {
@@ -179,7 +154,7 @@ class _ImageAnnouncement extends StatelessWidget {
     this.onError,
   }) : super(key: key);
 
-  final Uint8List? image;
+  final String image;
 
   /// used to skip to the next announcement if the image failed to load
   final VoidCallback? onError;
@@ -187,7 +162,7 @@ class _ImageAnnouncement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image(
-      image: Image.memory(image!).image,
+      image: MawaqitNetworkImageProvider(image, onError: onError),
       fit: BoxFit.fill,
       width: double.infinity,
       height: double.infinity,
@@ -225,9 +200,7 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
         hideControls: true,
         forceHD: true,
       ),
-    )..addListener(() {
-        ref.read(videoProvider.notifier).state = _controller.value.metaData.duration;
-      });
+    );
 
     /// if announcement didn't started playing after 20 seconds skip it
     Future.delayed(20.seconds, () {
@@ -250,10 +223,12 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
         child: YoutubePlayer(
           controller: _controller,
           showVideoProgressIndicator: true,
+          onEnded: (metaData) {
+            ref.read(videoWorkflowProvider.notifier).setVideoFinished();
+            widget.onEnded?.call();
+          },
         ),
       ),
     );
   }
 }
-
-final videoProvider = StateProvider<Duration>((ref) => Duration(seconds: 0));

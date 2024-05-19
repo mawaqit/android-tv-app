@@ -33,6 +33,6 @@ class RiverpodLogger extends ProviderObserver {
           "newValue": "$newValue",
           "previousValue": "$previousValue",
        }
-    ''', name: 'RiverpodLogger');
+    ''');
   }
 }
