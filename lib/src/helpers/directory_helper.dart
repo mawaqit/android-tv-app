@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-class DirectoryHelper{
+class DirectoryHelper {
   /// [deleteDirectories] deletes the directories
   static Future<void> deleteDirectories(List<String> directories) async {
     for (final directory in directories) {

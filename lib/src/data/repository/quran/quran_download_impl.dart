@@ -72,7 +72,6 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
   @override
   Future<String> getRemoteQuranVersion() {
     return remoteDataSource.getRemoteQuranVersion();
-
   }
 
   /// [cancelDownload] cancels the download
