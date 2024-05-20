@@ -42,12 +42,18 @@ class MainActivity : FlutterActivity() {
         } else {
           result.error("InvalidArgument", "Feature argument is null", null)
         }
-      } else if (call.method == "toggleScreen") {
-       toggleScreen(call, result)
+      } else if (call.method == "toggleScreenOn") {
+       toggleScreenOn(call, result)
+      }
+       else if (call.method == "toggleScreenOff") {
+       toggleScreenOff(call, result)
       }
        else if (call.method == "grantDumpSysPermission") {
     grantDumpSysPermission(call, result)
               }
+               else if (call.method == "checkRoot") {
+        checkRoot(result)
+    }
         
       
       else {
@@ -65,7 +71,27 @@ class MainActivity : FlutterActivity() {
       false
     }
   }
-
+private fun checkRoot(result: MethodChannel.Result) {
+    try {
+        val p = Runtime.getRuntime().exec("su")
+        val os = DataOutputStream(p.outputStream)
+        os.writeBytes("echo \"Do I have root?\" >/data/LandeRootCheck.txt\n")
+        os.writeBytes("exit\n")
+        os.flush()
+        try {
+            p.waitFor()
+            if (p.exitValue() == 0) {
+                result.success(true)
+            } else {
+                result.success(false)
+            }
+        } catch (e: InterruptedException) {
+            result.error("InterruptedException", "Interrupted exception occurred", null)
+        }
+    } catch (e: IOException) {
+        result.error("IOException", "I/O exception occurred", null)
+    }
+}
   private fun clearDataRestart(): Boolean {
     try {
       val processBuilder = ProcessBuilder()
@@ -99,41 +125,34 @@ class MainActivity : FlutterActivity() {
     }}
 
 
-private fun toggleScreen(call: MethodCall, result: MethodChannel.Result) {
+private fun toggleScreenOn(call: MethodCall, result: MethodChannel.Result) {
     AsyncTask.execute {
         try {
-            val isDeviceLocked = isDeviceLocked()
-            if (!isDeviceLocked) {
                   val commands = listOf(
                     "input keyevent 82",
                     "am start -W -n com.mawaqit.androidtv/.MainActivity"
                 )
                                 executeCommand(commands, result) // Lock the device
 
-            } else {
+          
+        } catch (e: Exception) {
+            handleCommandException(e, result)
+        }
+    }
+}
+private fun toggleScreenOff(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+        try {
+    
                 executeCommand(listOf("input keyevent 26"), result) // Lock the device
-            }
+            
         } catch (e: Exception) {
             handleCommandException(e, result)
         }
     }
 }
 
-private fun isDeviceLocked(): Boolean {
-    try {
-        val process = Runtime.getRuntime().exec("dumpsys power | grep \"mWakefulness=\"")
-        val reader = BufferedReader(InputStreamReader(process.inputStream))
-        val output = reader.use { it.readText() }
 
-        // Check if the output contains "mWakefulness=Awake"
-        val isAwake = output.contains("mWakefulness=Awake")
-
-        return isAwake
-    } catch (e: IOException) {
-        e.printStackTrace()
-        return false
-    }
-}
 
 
 private fun executeCommand(commands: List<String>, result: MethodChannel.Result) {

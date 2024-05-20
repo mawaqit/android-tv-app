@@ -80,6 +80,9 @@ class MosqueManager extends ChangeNotifier
   StreamSubscription? _timesSubscription;
   StreamSubscription? _configSubscription;
   bool isDeviceRooted = false;
+  bool isToggleScreenActivated = false;
+  int minuteBefore = 0;
+  int minuteAfter = 0;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -88,15 +91,39 @@ class MosqueManager extends ChangeNotifier
     return 'https://mawaqit.net/$languageCode/id/${mosque?.id}?view=desktop';
   }
 
+  static const String _minuteBeforeKey = 'selectedMinuteBefore';
+  static const String _minuteAfterKey = 'selectedMinuteAfter';
+
+  static Future<int> getMinuteBefore() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_minuteBeforeKey) ?? 10;
+  }
+
+  static Future<int> getMinuteAfter() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_minuteAfterKey) ?? 10;
+  }
+
+  static Future<bool> checkRoot() async {
+    try {
+      final result =
+          await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
+      return result;
+    } catch (e) {
+      print('Error checking root access: $e');
+      return false;
+    }
+  }
+
   Future<void> init() async {
     await Api.init();
     await loadFromLocale();
     listenToConnectivity();
-    isDeviceRooted = await DeviceInfoDataSource().initRootRequest();
-    ToggleScreenFeature.grantDumpPermission();
-
+    isDeviceRooted = await checkRoot();
+    isToggleScreenActivated = await ToggleScreenFeature.getToggleFeatureState();
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
-
+    minuteBefore = await getMinuteBefore();
+    minuteAfter = await getMinuteAfter();
     notifyListeners();
   }
 
@@ -183,8 +210,8 @@ class MosqueManager extends ChangeNotifier
         times = e;
         final today =
             useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
-
         if (isDeviceRooted) {
+          if (isToggleScreenActivated) {
           ToggleScreenFeature.getLastEventDate().then((lastEventDate) async {
             if (lastEventDate != null && lastEventDate.day != today.day) {
               isEventsSet = false; // Reset the flag if it's a new day
@@ -196,14 +223,15 @@ class MosqueManager extends ChangeNotifier
             if (!isEventsSet) {
               ToggleScreenFeature.scheduleToggleScreen(
                 e.dayTimesStrings(today, salahOnly: false),
-                10,
-                10,
+                  minuteBefore,
+                  minuteAfter,
               );
               ToggleScreenFeature.toggleFeatureState(true);
               ToggleScreenFeature.setLastEventDate(today);
               isEventsSet = true;
             }
           });
+          }
         }
 
         notifyListeners();

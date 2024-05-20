@@ -49,9 +49,21 @@ class SettingScreen extends ConsumerWidget {
     );
   }
 
+  static Future<bool> checkRoot() async {
+    try {
+      final result =
+          await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
+      return result;
+    } catch (e) {
+      print('Error checking root access: $e');
+      return false;
+    }
+  }
+
   Future<void> _initializeTimeShiftManager() async {
     await TimeShiftManager().initializeTimes();
-    isDeviceRooted = await DeviceInfoDataSource().initRootRequest();
+    isDeviceRooted = await checkRoot();
+    print("rooted $isDeviceRooted");
   }
 
   Widget _buildSettingScreen(BuildContext context, WidgetRef ref) {
@@ -160,19 +172,6 @@ class SettingScreen extends ConsumerWidget {
                       );
                     },
                   ),
-                  isDeviceRooted
-                      ? _SettingItem(
-                          title: S.of(context).screenLock,
-                          subtitle: S.of(context).screenLockDesc,
-                          icon: Icon(Icons.language, size: 35),
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) => ScreenLockModal(
-                              timeShiftManager: timeShiftManager,
-                            ),
-                          ),
-                        )
-                      : SizedBox(),
                   SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
@@ -245,6 +244,31 @@ class SettingScreen extends ConsumerWidget {
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
                   ),
+                  
+                  isDeviceRooted
+                      ? Column(
+                          children: [
+                            Divider(),
+                            SizedBox(height: 10),
+                            Text(
+                              "Device Settings",
+                              style: theme.textTheme.headlineSmall,
+                              textAlign: TextAlign.center,
+                            ),
+                            _SettingItem(
+                              title: S.of(context).screenLock,
+                              subtitle: S.of(context).screenLockDesc,
+                              icon: Icon(Icons.power_settings_new, size: 35),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => ScreenLockModal(
+                                  timeShiftManager: timeShiftManager,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),

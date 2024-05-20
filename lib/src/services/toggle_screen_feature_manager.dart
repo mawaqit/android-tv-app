@@ -32,13 +32,13 @@ class ToggleScreenFeature {
         continue;
       }
       final beforeTimer = Timer(beforeDelay, () {
-        toggleScreen();
+        toggleScreenOn();
       });
 
       final afterDelay = scheduledDateTime.difference(now) +
           Duration(minutes: afterDelayMinutes);
       final afterTimer = Timer(afterDelay, () {
-        toggleScreen();
+        toggleScreenOff();
       });
 
       // Store the timers in the _scheduledTimers map
@@ -107,9 +107,19 @@ class ToggleScreenFeature {
     await prefs.remove(_scheduledTimersKey);
   }
 
-  static Future<void> toggleScreen() async {
+  static Future<void> toggleScreenOn() async {
     try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreen');
+      await MethodChannel('nativeMethodsChannel')
+          .invokeMethod('toggleScreenOn');
+    } on PlatformException catch (e) {
+      logger.e(e);
+    }
+  }
+
+  static Future<void> toggleScreenOff() async {
+    try {
+      await MethodChannel('nativeMethodsChannel')
+          .invokeMethod('toggleScreenOff');
     } on PlatformException catch (e) {
       logger.e(e);
     }

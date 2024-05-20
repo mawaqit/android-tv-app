@@ -193,9 +193,9 @@
   "useDeviceTime":"Use device time",
   "selectTime":"Select Time",
   "previous": "Previous",
-  "screenLock":"Screen lock",
-  "screenLockMode":"Screen lock mode",
-  "screenLockDesc":"Turn on/off TV before and after each prayer",
+  "screenLock":"Screen on/off",
+  "screenLockMode":"Screen on/off mode",
+  "screenLockDesc":"Turn on/off TV before and after each prayer to save energy",
   "screenLockDesc2":"This feature turn on/off the device before and after each prayer adhan",
   "before":"Before",
   "after":"After"
