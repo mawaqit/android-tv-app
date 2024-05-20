@@ -212,25 +212,25 @@ class MosqueManager extends ChangeNotifier
             useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
         if (isDeviceRooted) {
           if (isToggleScreenActivated) {
-          ToggleScreenFeature.getLastEventDate().then((lastEventDate) async {
-            if (lastEventDate != null && lastEventDate.day != today.day) {
-              isEventsSet = false; // Reset the flag if it's a new day
-              await ToggleScreenFeature.cancelAllScheduledTimers();
-              ToggleScreenFeature.toggleFeatureState(false);
-            }
-          });
-          ToggleScreenFeature.checkEventsScheduled().then((_) {
-            if (!isEventsSet) {
-              ToggleScreenFeature.scheduleToggleScreen(
-                e.dayTimesStrings(today, salahOnly: false),
-                  minuteBefore,
-                  minuteAfter,
-              );
-              ToggleScreenFeature.toggleFeatureState(true);
-              ToggleScreenFeature.setLastEventDate(today);
-              isEventsSet = true;
-            }
-          });
+            ToggleScreenFeature.getLastEventDate().then((lastEventDate) async {
+              if (lastEventDate != null && lastEventDate.day != today.day) {
+                isEventsSet = false; // Reset the flag if it's a new day
+                await ToggleScreenFeature.cancelAllScheduledTimers();
+                ToggleScreenFeature.toggleFeatureState(false);
+                ToggleScreenFeature.checkEventsScheduled().then((_) {
+                  if (!isEventsSet) {
+                    ToggleScreenFeature.scheduleToggleScreen(
+                      e.dayTimesStrings(today, salahOnly: false),
+                      minuteBefore,
+                      minuteAfter,
+                    );
+                    ToggleScreenFeature.toggleFeatureState(true);
+                    ToggleScreenFeature.setLastEventDate(today);
+                    isEventsSet = true;
+                  }
+                });
+              }
+            });
           }
         }
 

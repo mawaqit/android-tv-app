@@ -58,7 +58,7 @@ class __TimePickerState extends State<_TimePicker> {
 
       setState(() {
         _selectedMinuteBefore = _prefs.getInt(_minuteBeforeKey) ?? 10;
-        _selectedMinuteAfter = _prefs.getInt(_minuteAfterKey) ?? 10;
+        _selectedMinuteAfter = _prefs.getInt(_minuteAfterKey) ?? 30;
         value = isActive;
       });
     });
@@ -132,14 +132,14 @@ class __TimePickerState extends State<_TimePicker> {
                 await ToggleScreenFeature.cancelAllScheduledTimers();
                 ToggleScreenFeature.toggleFeatureState(false);
               }
-              if (newValue) {
+              /*    if (newValue) {
                 ToggleScreenFeature.scheduleToggleScreen(
                   times,
-                  _selectedMinuteBefore,
-                  _selectedMinuteAfter,
+                  4,
+                  4,
                 );
                 ToggleScreenFeature.toggleFeatureState(true);
-              }
+              } */
             },
           ),
         ),
