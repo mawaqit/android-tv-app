@@ -67,8 +67,8 @@ class _SplashScreen extends State<Splash> {
     await GlobalConfiguration().loadFromAsset("configuration");
     generateStream(Duration(minutes: 10)).listen((event) =>
         Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
-    await _setDeviceOwner();
-
+/*     await _setDeviceOwner();
+ */
     Hive.initFlutter();
 
     await FirebaseCrashlytics.instance

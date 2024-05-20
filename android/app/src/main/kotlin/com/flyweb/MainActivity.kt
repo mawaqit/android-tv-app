@@ -127,15 +127,10 @@ private lateinit var mAdminComponentName: ComponentName
                 val password = call.argument<String>("password")
                 var security = call.argument<String>("security")
 
-                if (security?.contains("ESS", ignoreCase = true) == true) {
-                    security = "open"
-                } else if (security?.contains("wpa2", ignoreCase = true) == true) {
-                    security = "wpa2"
-                } else if (security?.contains("wpa3", ignoreCase = true) == true) {
-                    security = "wpa3"
-                }
+              
+            Log.i("SU_COMMAND", "Wifi Command output: cmd wifi connect-network $ssid wpa2 $password")
 
-                executeCommand("cmd wifi connect-network $ssid $security $password", result)
+                executeCommand("cmd wifi connect-network $ssid wpa2 $password", result)
 
             } catch (e: Exception) {
                 handleCommandException(e, result)

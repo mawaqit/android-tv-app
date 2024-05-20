@@ -154,7 +154,7 @@ class _AccessPointTile extends StatefulWidget {
 class _AccessPointTileState extends State<_AccessPointTile> {
   final TextEditingController passwordController = TextEditingController();
   bool _showPassword = false;
-  static const platform = MethodChannel(nativeFunctionsChannel);
+static const platform = MethodChannel('nativeFunctionsChannel');
 
   Future<void> connectToWifi(
       String ssid, String security, String password) async {
@@ -215,6 +215,8 @@ class _AccessPointTileState extends State<_AccessPointTile> {
                         widget.accessPoint.capabilities,
                         passwordController.text,
                       );
+                      /*  print(
+                          "wifi params ${widget.accessPoint.ssid} ${widget.accessPoint.capabilities.} "); */
                       Navigator.pop(context);
                       widget.onSelect?.call();
                     } catch (e, stack) {
