@@ -198,6 +198,12 @@
   "screenLockDesc":"Turn on/off TV before and after each prayer to save energy",
   "screenLockDesc2":"This feature turn on/off the device before and after each prayer adhan",
   "before":"Before",
-  "after":"After"
-
+  "after":"After",
+  "updateAvailable": "Update available",
+  "seeMore": "See more",
+  "whatIsNew": "What's new",
+  "update": "Update",
+  "automaticUpdate": "Notify update",
+  "automaticUpdateDescription": "Enable notify update to receive the latest features and improvements",
+  "later": "Later"
 }

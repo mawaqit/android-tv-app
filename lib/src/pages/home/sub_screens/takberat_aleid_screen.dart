@@ -38,7 +38,6 @@ class _TakberatAleidScreenState extends State<TakberatAleidScreen> {
 
   @override
   void dispose() {
-    audioManager.stop();
     super.dispose();
   }
 

@@ -68,10 +68,10 @@ class AnnouncementWorkflowNotifier extends AsyncNotifier<AnnouncementWorkflowSta
             currentActivatedIndex: i,
           ),
         );
-        await Future.delayed(Duration(seconds: 20));
-        final duration = ref.read(videoProvider);
-        await Future.delayed(duration);
-        log('announcement: AnnouncementWorkflowNotifier: _handleLinearAnnouncementTimer - video duration: $duration');
+        // await Future.delayed(Duration(seconds: 20));
+        // final duration = ref.read(videoProvider);
+        // await Future.delayed(duration);
+        // log('announcement: AnnouncementWorkflowNotifier: _handleLinearAnnouncementTimer - video duration: $duration');
       } else {
         log('announcement: AnnouncementWorkflowNotifier: _handleLinearAnnouncementTimer - displaying text announcement: ${announcement.id}');
         update(
@@ -124,9 +124,9 @@ class AnnouncementWorkflowNotifier extends AsyncNotifier<AnnouncementWorkflowSta
           ),
         );
         await Future.delayed(Duration(seconds: 20));
-        final duration = ref.read(videoProvider);
-        await Future.delayed(duration);
-        index = (index + 1) % announcements.length; // Move to the next announcement
+        // final duration = ref.read(videoProvider);
+        // await Future.delayed(duration);
+        // index = (index + 1) % announcements.length; // Move to the next announcement
       } else if (announcement.duration != null) {
         log('announcement: AnnouncementWorkflowNotifier: _handleRepeatedAnnouncementTimer - announcement: ${announcement.id}');
         update(
@@ -152,6 +152,6 @@ class AnnouncementWorkflowNotifier extends AsyncNotifier<AnnouncementWorkflowSta
   }
 }
 
-final announcementWorkflowProvider = AsyncNotifierProvider<AnnouncementWorkflowNotifier, AnnouncementWorkflowState>(
+final announcementWorkflowwProvider = AsyncNotifierProvider<AnnouncementWorkflowNotifier, AnnouncementWorkflowState>(
   AnnouncementWorkflowNotifier.new,
 );

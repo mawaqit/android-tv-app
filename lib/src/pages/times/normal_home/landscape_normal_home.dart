@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -12,11 +16,21 @@ import 'package:mawaqit/src/pages/times/widgets/jumua_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../i18n/AppLanguage.dart';
+import '../../../../main.dart';
+import '../../../state_management/app_update/app_update_notifier.dart';
+import '../../../state_management/app_update/app_update_state.dart';
+import '../../../widgets/show_update_alert.dart';
 import '../../home/widgets/FadeInOut.dart';
 
-class LandscapeNormalHome extends StatelessWidget {
+class LandscapeNormalHome extends riverpod.ConsumerStatefulWidget {
   const LandscapeNormalHome({super.key});
 
+  @override
+  riverpod.ConsumerState createState() => _LandscapeNormalHomeState();
+}
+
+class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHome> {
   String salahName(int index) {
     switch (index) {
       case 0:
@@ -35,7 +49,37 @@ class LandscapeNormalHome extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final mosque = Provider.of<MosqueManager>(context, listen: false);
+      ref
+          .read(appUpdateProvider.notifier)
+          .startUpdateScheduler(mosque, context.read<AppLanguage>().appLocal.languageCode);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ref.listen(appUpdateProvider, (previous, next) {
+      if (next.hasValue && !next.isReloading && next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable) {
+        log('update available ${next.value} || ${next.isReloading} || ${next.isLoading} || ${next.hasValue}');
+        showUpdateAlert(
+          context: context,
+          duration: Duration(seconds: 30),
+          content: next.value!.releaseNote,
+          title: next.value!.message,
+          onPressed: () => ref.read(appUpdateProvider.notifier).openStore(),
+          onDismissPressed: () => ref.read(appUpdateProvider.notifier).dismissUpdate(),
+        );
+      }
+    });
+
     final mosqueManager = context.watch<MosqueManager>();
     final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
