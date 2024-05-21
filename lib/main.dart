@@ -9,6 +9,9 @@ import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/constants.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
+import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
+import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
@@ -23,6 +26,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -33,7 +37,11 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
-      await Hive.initFlutter();
+      final directory = await getApplicationDocumentsDirectory();
+      Hive.init(directory.path);
+      Hive.registerAdapter(SurahModelAdapter());
+      Hive.registerAdapter(ReciterModelAdapter());
+      Hive.registerAdapter(MoshafModelAdapter());
       runApp(
         ProviderScope(
           child: MyApp(),
