@@ -13,7 +13,7 @@
   "closeApp": "Fechar aplicação",
   "quit": "Sair",
   "forceStaging": "Trocar para ambiente de teste",
-  "disableStaging": "Trocar para modo operacional",
+  "disableStaging": "Mudar para modo operacional",
   "sureCloseApp": "Tem a certeza que pretende sair da aplicação?",
   "ok": "OK",
   "cancel": "CANCELAR",
@@ -76,7 +76,7 @@
   "@azkarList3": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
   },
-  "azkarList4": "",
+  "azkarList4": "Em nome de ALLAH, o Clemente, o Misericordioso 1 Diz: «Ele é ALLAH, o Único!; 2 ALLAH é o Independente (e de Quem tudo e todos dependem); 3 Não gerou e nem foi gerado; 4 E não há ninguém igual a Ele;».",
   "@azkarList4": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
   },
@@ -159,7 +159,7 @@
   "eidMubarak": "Eid Mubarak",
   "takbeerAleidText": "Allah é grande, Allah é grande, Allah é grande, ninguém mais é digno da adoração exceto Allah, Allah é grande, Allah é grande, e louvores para Allah",
   "settings": "Definições",
-  "applicationModes": "Modos da aplicação",
+  "applicationModes": "Modo da aplicação",
   "ifYouAreFacingAnIssueWithTheAppActivateThis": "Se estiver a ter problemas com a aplicação, tente ativar esta opção",
   "hijriAdjustments": "Ajuste local da data islâmica",
   "hijriAdjustmentsDescription": "Ajuste a data islâmica do seu dispositivo local. Isso não afetará as configurações da mesquita on-line.",
@@ -185,8 +185,8 @@
   "nl_ar": "Holandês e Árabe",
   "connectToChangeHadith": "Por favor, conecte-se à internet para alterar a linguagem dos hadith.",
   "retry": "Repetir",
-  "timeSetting": "Configure a hora",
-  "timeSettingDesc": "Definir uma hora personalizada",
+  "timeSetting": "Configurando a hora",
+  "timeSettingDesc": "Definir um nome personalizado",
   "selectedTime": "Hora atualmente selecionada",
   "confirmation": "Confirmar",
   "confirmationMessage": "Tem a certeza que pretende usar a hora do dispositivo?",
