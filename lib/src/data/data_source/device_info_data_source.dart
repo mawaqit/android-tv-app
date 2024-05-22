@@ -4,7 +4,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disk_space/disk_space.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:root_access/root_access.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
 import '../../../main.dart';
@@ -112,15 +111,7 @@ class DeviceInfoDataSource {
     }
   }
 
-  Future<bool> initRootRequest() async {
-    try {
-      bool rootStatus = await RootAccess.requestRootAccess;
 
-      return rootStatus;
-    } catch (e) {
-      return false;
-    }
-  }
 }
 
 class DeviceInfoDataSourceProviderArgument {
