@@ -50,8 +50,7 @@ class __TimePickerState extends State<_TimePicker> {
   @override
   void initState() {
     super.initState();
-    selectedTime = DateTime.now().add(Duration(
-        hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
+    selectedTime = DateTime.now().add(Duration(hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       bool isActive = await ToggleScreenFeature.getToggleFeatureState();
       _prefs = await SharedPreferences.getInstance();
@@ -103,18 +102,14 @@ class __TimePickerState extends State<_TimePicker> {
   @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
-    final today = mosqueProvider.useTomorrowTimes
-        ? AppDateTime.tomorrow()
-        : AppDateTime.now();
+    final today = mosqueProvider.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
-    final times =
-        mosqueProvider.times!.dayTimesStrings(today, salahOnly: false);
+    final times = mosqueProvider.times!.dayTimesStrings(today, salahOnly: false);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           clipBehavior: Clip.antiAlias,
           child: SwitchListTile(

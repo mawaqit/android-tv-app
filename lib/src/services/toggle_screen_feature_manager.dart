@@ -11,23 +11,20 @@ class ToggleScreenFeature {
 
   static final _scheduledTimers = <String, List<Timer>>{};
 
-  static void scheduleToggleScreen(
-      List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) {
+  static void scheduleToggleScreen(List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) {
     for (String timeString in timeStrings) {
       final parts = timeString.split(':');
       final hour = int.parse(parts[0]);
       final minute = int.parse(parts[1]);
 
       final now = AppDateTime.now();
-      final scheduledDateTime =
-          DateTime(now.year, now.month, now.day, hour, minute);
+      final scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
 
       if (scheduledDateTime.isBefore(now)) {
         scheduledDateTime.add(Duration(days: 1));
       }
 
-      final beforeDelay = scheduledDateTime.difference(now) -
-          Duration(minutes: beforeDelayMinutes);
+      final beforeDelay = scheduledDateTime.difference(now) - Duration(minutes: beforeDelayMinutes);
       if (beforeDelay.isNegative) {
         continue;
       }
@@ -35,8 +32,7 @@ class ToggleScreenFeature {
         toggleScreenOn();
       });
 
-      final afterDelay = scheduledDateTime.difference(now) +
-          Duration(minutes: afterDelayMinutes);
+      final afterDelay = scheduledDateTime.difference(now) + Duration(minutes: afterDelayMinutes);
       final afterTimer = Timer(afterDelay, () {
         toggleScreenOff();
       });
@@ -109,8 +105,7 @@ class ToggleScreenFeature {
 
   static Future<void> toggleScreenOn() async {
     try {
-      await MethodChannel('nativeMethodsChannel')
-          .invokeMethod('toggleScreenOn');
+      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreenOn');
     } on PlatformException catch (e) {
       logger.e(e);
     }
@@ -118,8 +113,7 @@ class ToggleScreenFeature {
 
   static Future<void> toggleScreenOff() async {
     try {
-      await MethodChannel('nativeMethodsChannel')
-          .invokeMethod('toggleScreenOff');
+      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreenOff');
     } on PlatformException catch (e) {
       logger.e(e);
     }
@@ -127,8 +121,7 @@ class ToggleScreenFeature {
 
   static Future<void> grantDumpPermission() async {
     try {
-      await MethodChannel('nativeMethodsChannel')
-          .invokeMethod('grantDumpSysPermission');
+      await MethodChannel('nativeMethodsChannel').invokeMethod('grantDumpSysPermission');
     } on PlatformException catch (e) {
       logger.e(e);
     }
