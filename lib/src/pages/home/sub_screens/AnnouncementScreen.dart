@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -38,8 +40,11 @@ class AnnouncementScreen extends ConsumerWidget {
     ref.listen(announcementWorkflowProvider, (prev, next) {
       if (next == WorkflowState.finished) onDone?.call();
     });
-    bool? showPrayerTimesOnMessageScreen = context.watch<MosqueManager>().mosqueConfig!.showPrayerTimesOnMessageScreen;
-    bool announcementMode = context.watch<UserPreferencesManager>().announcementsOnly;
+    bool? showPrayerTimesOnMessageScreen =
+        context.select<MosqueManager, bool?>((mosque) => mosque.mosqueConfig!.showPrayerTimesOnMessageScreen);
+    bool announcementMode =
+        context.select<UserPreferencesManager, bool>((userPreference) => userPreference.announcementsOnly);
+    log('announcement: ui: showPrayerTimesOnMessageScreen $showPrayerTimesOnMessageScreen , announcementMode $announcementMode');
     if (announcements.isEmpty) return NormalHomeSubScreen();
 
     return Stack(
@@ -63,7 +68,7 @@ class AnnouncementScreen extends ConsumerWidget {
         ),
 
         announcementMode
-            ? (showPrayerTimesOnMessageScreen!
+            ? (showPrayerTimesOnMessageScreen ?? false
                 ? IgnorePointer(
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 1.5.vh),
