@@ -34,7 +34,7 @@ import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
 import '../pages/quran/page/quran_mode_selection_screen.dart';
-import '../pages/quran/page/reading_screen.dart';
+import '../pages/quran/page/quran_reading_screen.dart';
 import '../state_management/quran/quran/quran_state.dart';
 
 class MawaqitDrawer extends ConsumerWidget {
@@ -53,7 +53,7 @@ class MawaqitDrawer extends ConsumerWidget {
         switch (next.value!.mode) {
           case QuranMode.reading:
             log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: reading');
-            AppRouter.push(ReadingScreen());
+            AppRouter.push(QuranReadingScreen());
             break;
           case QuranMode.listening:
             log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: listening');
