@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
-
 
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
 import 'package:sizer/sizer.dart';
@@ -17,6 +18,7 @@ class QuranReadingScreen extends ConsumerStatefulWidget {
 }
 
 class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
+  int quranIndex = 0;
   late PageController _pageController;
   late FocusNode _leftFocusNode;
   late FocusNode _rightFocusNode;
@@ -24,9 +26,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
     _leftFocusNode = FocusNode();
     _rightFocusNode = FocusNode();
+    _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await showDownloadQuranAlertDialog(context, ref);
     });
@@ -43,12 +45,24 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   @override
   Widget build(BuildContext context) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
+    ref.listen(quranReadingNotifierProvider, (previous, next) async {
+      if (next.hasValue && next.value!.isInitial) {
+        await Future.delayed(Duration(milliseconds: 500));
+        log('quran: QuranReadingScreen: Current page: ${next}');
+        _pageController.jumpToPage(
+          (next.value!.currentPage) ,
+        );
+        log('quran: QuranReadingScreen: Current page: final ${next}');
+      }
+    });
     return Scaffold(
       backgroundColor: Colors.white,
       body: quranReadingState.when(
         loading: () => Center(child: CircularProgressIndicator()),
         error: (error, s) => Center(child: Text('Error: $error')),
         data: (quranReadingState) {
+          log('quran: QuranReadingScreen: total ${quranReadingState.totalPages}, '
+              'currentPage: ${quranReadingState.currentPage}');
           return Column(
             children: [
               Expanded(
@@ -56,14 +70,14 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   children: [
                     PageView.builder(
                       controller: _pageController,
-                      onPageChanged: (index){
+                      onPageChanged: (index) {
+                        quranIndex = index;
                         ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
                       },
                       itemCount: (quranReadingState.totalPages / 2).ceil(),
                       itemBuilder: (context, index) {
                         final leftPageIndex = index * 2;
                         final rightPageIndex = leftPageIndex + 1;
-
                         return Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
