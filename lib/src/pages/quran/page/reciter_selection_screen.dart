@@ -48,6 +48,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       log('FocusScope.of(context).requestFocus(reciterFocusNode)');
+      ref.read(reciteNotifierProvider.notifier).getAllReciters();
       FocusScope.of(context).requestFocus(reciterFocusNode);
     });
     // reciterFocusNode.requestFocus(); // Set the initial focus on the reciter grid
@@ -65,6 +66,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   @override
   Widget build(BuildContext context) {
     return QuranBackground(
+      isSwitch: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -116,6 +118,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                   ),
                   ref.watch(reciteNotifierProvider).when(
                         data: (reciter) {
+                          log('quran:ui: selectedReciterIndex: $selectedReciterIndex, reciter: ${reciter.reciters.length}');
                           return _buildReciteTypeGrid(
                             reciter.reciters[selectedReciterIndex].moshaf,
                           );

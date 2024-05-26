@@ -57,6 +57,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     final georgianDate = timeNow.formatIntoMawaqitFormat(local: '${lang}_$mosqueCountryCode');
     final quranState = ref.watch(quranNotifierProvider);
     return QuranBackground(
+      isSwitch: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

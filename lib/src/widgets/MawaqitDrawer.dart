@@ -48,24 +48,6 @@ class MawaqitDrawer extends ConsumerWidget {
     final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
     final theme = Theme.of(context);
-    ref.listen(quranNotifierProvider, (previous, next) {
-      if (next.hasValue && !next.isReloading) {
-        switch (next.value!.mode) {
-          case QuranMode.reading:
-            log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: reading');
-            AppRouter.push(QuranReadingScreen());
-            break;
-          case QuranMode.listening:
-            log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: listening');
-            ref.read(reciteNotifierProvider.notifier).getAllReciters();
-            AppRouter.push(ReciterSelectionScreen.withoutSurahName());
-            break;
-          case QuranMode.none:
-            AppRouter.push(QuranModeSelection());
-            break;
-        }
-      }
-    });
     return Drawer(
       child: Stack(
         children: [
@@ -189,7 +171,21 @@ class MawaqitDrawer extends ConsumerWidget {
                 icon: Icons.book,
                 text: S.of(context).quran,
                 onTap: () async {
-                  ref.read(quranNotifierProvider.notifier).getSelectedMode();
+                  await ref.read(quranNotifierProvider.notifier).getSelectedMode();
+                  final state = ref.read(quranNotifierProvider);
+                  switch (state.value!.mode) {
+                    case QuranMode.reading:
+                      log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: reading');
+                      AppRouter.push(QuranReadingScreen());
+                      break;
+                    case QuranMode.listening:
+                      log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: listening');
+                      AppRouter.push(ReciterSelectionScreen.withoutSurahName());
+                      break;
+                    case QuranMode.none:
+                      AppRouter.push(QuranModeSelection());
+                      break;
+                  }
                 },
               ),
               DrawerListTitle(

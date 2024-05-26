@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
+import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:sizer/sizer.dart';
@@ -80,7 +82,12 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                       _selectedIndex = 0;
                     });
                     ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-                    log('Reading mode selected');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QuranReadingScreen(),
+                      ),
+                    );
 
                     /// it navigates already by the menu at
                   },
@@ -96,7 +103,12 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                       _selectedIndex = 1;
                     });
                     ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-                    // Navigate to the listening mode screen
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ReciterSelectionScreen.withoutSurahName(),
+                      ),
+                    );
                     /// it navigates already by the menu at
                   },
                   isSelected: _selectedIndex == 1,

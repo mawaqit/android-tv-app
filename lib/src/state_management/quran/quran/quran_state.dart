@@ -33,7 +33,9 @@ class QuranState extends Equatable {
 
   @override
   String toString() {
-    return 'QuranState{languages: ${languages[0]}, suwar: ${suwar[0]}}, mode: $mode}';
+    final firstLanguage = languages.isNotEmpty ? languages[0] : 'No languages';
+    final firstSurah = suwar.isNotEmpty ? suwar[0] : 'No suwar';
+    return 'QuranState{languages: $firstLanguage, suwar: $firstSurah, mode: $mode}';
   }
 
   @override

@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/const/resource.dart';
+import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:sizer/sizer.dart';
 
@@ -11,10 +14,12 @@ import '../../../state_management/quran/quran/quran_state.dart';
 class QuranBackground extends ConsumerWidget {
   final Widget screen;
   final AppBar? appBar;
+  final bool isSwitch;
 
   const QuranBackground({
     super.key,
     required this.screen,
+    this.isSwitch = false,
     this.appBar,
   });
 
@@ -23,22 +28,30 @@ class QuranBackground extends ConsumerWidget {
     return appBar != null
         ? SafeArea(
             child: Scaffold(
-              floatingActionButton: SizedBox(
-                width: 40.sp, // Set the desired width
-                height: 40.sp, // Set the desired height
-                child: FloatingActionButton(
-                  backgroundColor: Colors.black.withOpacity(.5),
-                  child: Icon(
-                    Icons.menu_book,
-                    color: Colors.white,
-                    size: 15.sp,
-                  ),
-                  onPressed: () async {
-                    Navigator.pop(context);
-                    ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-                  },
-                ),
-              ),
+              floatingActionButton: !isSwitch
+                  ? null
+                  : SizedBox(
+                      width: 40.sp, // Set the desired width
+                      height: 40.sp, // Set the desired height
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.black.withOpacity(.5),
+                        child: Icon(
+                          Icons.menu_book,
+                          color: Colors.white,
+                          size: 15.sp,
+                        ),
+                        onPressed: () async {
+                          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+                          log('quran: QuranBackground: Switch to reading');
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuranReadingScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
               extendBodyBehindAppBar: true,
               appBar: appBar,
               body: Container(
@@ -56,6 +69,30 @@ class QuranBackground extends ConsumerWidget {
           )
         : SafeArea(
             child: Scaffold(
+              floatingActionButton: !isSwitch
+                  ? null
+                  : SizedBox(
+                      width: 40.sp, // Set the desired width
+                      height: 40.sp, // Set the desired height
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.black.withOpacity(.5),
+                        child: Icon(
+                          Icons.menu_book,
+                          color: Colors.white,
+                          size: 15.sp,
+                        ),
+                        onPressed: () async {
+                          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+                          log('quran: QuranBackground: Switch to reading');
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuranReadingScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
               body: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(

@@ -67,14 +67,20 @@ class QuranNotifier extends AsyncNotifier<QuranState> {
     log('quran: QuranNotifier: getSelectedMode');
     state = AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final shared = await ref.read(sharedPreferencesProvider.future);
-      final mode = shared.getString(QuranConstant.kQuranModePref);
-      return state.value!.copyWith(
-        mode: QuranMode.values.firstWhere(
-          (element) => element.toString() == mode,
+      try {
+        final shared = await ref.read(sharedPreferencesProvider.future);
+        final mode = shared.getString(QuranConstant.kQuranModePref);
+        log('quran: QuranNotifier: getSelectedMode: 1 mode: $mode');
+        final modeValue = QuranMode.values.firstWhere(
+              (element) => element.toString() == mode,
           orElse: () => QuranMode.none,
-        ),
-      );
+        );
+        log('quran: QuranNotifier: getSelectedMode: 2 mode: $modeValue');
+        return state.value!.copyWith(mode: modeValue);
+      } catch (err) {
+        log('quran: QuranNotifier: getSelectedMode: error: $err');
+        return state.value!.copyWith(mode: QuranMode.none);
+      }
     });
   }
 }

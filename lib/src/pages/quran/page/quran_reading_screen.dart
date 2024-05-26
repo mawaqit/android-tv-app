@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
+import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
@@ -73,6 +74,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         ref.invalidate(quranReadingNotifierProvider);
       }
     });
+
     return Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: SizedBox(
@@ -86,8 +88,13 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             size: 15.sp,
           ),
           onPressed: () async {
-            Navigator.pop(context);
             ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ReciterSelectionScreen.withoutSurahName(),
+              ),
+            );
           },
         ),
       ),
