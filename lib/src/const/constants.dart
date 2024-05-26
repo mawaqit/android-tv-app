@@ -45,4 +45,5 @@ abstract class QuranConstant {
   static const String kSurahBox = 'surah_box';
   static const String kReciterBox = 'reciter_box';
   static const String kQuranModePref = 'quran_mode';
+  static const String kSavedCurrentPage = 'saved_current_page';
 }
