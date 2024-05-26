@@ -30,7 +30,7 @@ class ReciteState extends Equatable {
 
   @override
   String toString() {
-    return 'ReciteState(reciters: ${reciters[0]}) selectedReciter: $selectedReciter selectedMoshaf: $selectedMoshaf)';
+    return 'ReciteState(reciters: ${reciters[0]}) selectedReciter: ${selectedReciter.hashCode} selectedMoshaf: ${selectedMoshaf.hashCode})';
   }
 
   @override
