@@ -5,10 +5,16 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
+import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:sizer/sizer.dart';
+
+import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
+
+import 'package:mawaqit/src/pages/SplashScreen.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -50,13 +56,39 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         await Future.delayed(Duration(milliseconds: 500));
         log('quran: QuranReadingScreen: Current page: ${next}');
         _pageController.jumpToPage(
-          (next.value!.currentPage) ,
+          (next.value!.currentPage),
         );
         log('quran: QuranReadingScreen: Current page: final ${next}');
       }
     });
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Splash()));
+          },
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+      ),
       backgroundColor: Colors.white,
+      floatingActionButton: SizedBox(
+        width: 40.sp, // Set the desired width
+        height: 40.sp, //
+        child: FloatingActionButton(
+          backgroundColor: Colors.black.withOpacity(.5),
+          child: Icon(
+            Icons.headset,
+            color: Colors.white,
+            size: 15.sp,
+          ),
+          onPressed: () async {
+            ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+          },
+        ),
+      ),
       body: quranReadingState.when(
         loading: () => Center(child: CircularProgressIndicator()),
         error: (error, s) => Center(child: Text('Error: $error')),

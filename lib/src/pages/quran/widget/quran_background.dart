@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:sizer/sizer.dart';
 
-class QuranBackground extends StatelessWidget {
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
+
+import '../../../state_management/quran/quran/quran_state.dart';
+
+class QuranBackground extends ConsumerWidget {
   final Widget screen;
   final AppBar? appBar;
 
@@ -14,10 +19,26 @@ class QuranBackground extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return appBar != null
         ? SafeArea(
             child: Scaffold(
+              floatingActionButton: SizedBox(
+                width: 40.sp, // Set the desired width
+                height: 40.sp, // Set the desired height
+                child: FloatingActionButton(
+                  backgroundColor: Colors.black.withOpacity(.5),
+                  child: Icon(
+                    Icons.menu_book,
+                    color: Colors.white,
+                    size: 15.sp,
+                  ),
+                  onPressed: () async {
+                    ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
               extendBodyBehindAppBar: true,
               appBar: appBar,
               body: Container(

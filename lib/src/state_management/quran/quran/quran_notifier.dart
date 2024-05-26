@@ -64,6 +64,7 @@ class QuranNotifier extends AsyncNotifier<QuranState> {
   }
 
   Future<void> getSelectedMode() async {
+    log('quran: QuranNotifier: getSelectedMode');
     state = AsyncLoading();
     state = await AsyncValue.guard(() async {
       final shared = await ref.read(sharedPreferencesProvider.future);
