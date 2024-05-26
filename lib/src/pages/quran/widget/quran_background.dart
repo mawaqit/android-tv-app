@@ -34,8 +34,8 @@ class QuranBackground extends ConsumerWidget {
                     size: 15.sp,
                   ),
                   onPressed: () async {
-                    ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
                     Navigator.pop(context);
+                    ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
                   },
                 ),
               ),

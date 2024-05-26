@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
@@ -15,6 +16,10 @@ import 'package:sizer/sizer.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 
 import 'package:mawaqit/src/pages/SplashScreen.dart';
+
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
+
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -61,18 +66,14 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         log('quran: QuranReadingScreen: Current page: final ${next}');
       }
     });
+
+    ref.listen(downloadQuranNotifierProvider, (previous, next) {
+      if (!next.hasValue || next.value is Success) {
+        log('quran: QuranReadingScreen: Downloaded quran');
+        ref.invalidate(quranReadingNotifierProvider);
+      }
+    });
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Splash()));
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-      ),
       backgroundColor: Colors.white,
       floatingActionButton: SizedBox(
         width: 40.sp, // Set the desired width
@@ -85,6 +86,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             size: 15.sp,
           ),
           onPressed: () async {
+            Navigator.pop(context);
             ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
           },
         ),
