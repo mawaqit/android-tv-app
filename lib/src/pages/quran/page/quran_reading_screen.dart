@@ -110,6 +110,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 child: Stack(
                   children: [
                     PageView.builder(
+                      reverse: true,
                       controller: _pageController,
                       onPageChanged: (index) {
                         quranIndex = index;
@@ -126,13 +127,13 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                               Expanded(
                                 flex: 1,
                                 child: _buildSvgPicture(
-                                    quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length]),
+                                    quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length]),
                               ),
                             if (rightPageIndex < quranReadingState.svgs.length)
                               Expanded(
                                 flex: 1,
                                 child: _buildSvgPicture(
-                                    quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length]),
+                                    quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length]),
                               ),
                           ],
                         );
@@ -144,7 +145,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       bottom: 0,
                       child: _buildRoundedButton(
                         icon: Icons.arrow_left,
-                        onPressed: () => _scrollPageList(ScrollDirection.forward),
+                        onPressed: () => _scrollPageList(ScrollDirection.reverse),
                       ),
                     ),
                     Positioned(
@@ -153,7 +154,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       bottom: 0,
                       child: _buildRoundedButton(
                         icon: Icons.arrow_right,
-                        onPressed: () => _scrollPageList(ScrollDirection.reverse),
+                        onPressed: () => _scrollPageList(ScrollDirection.forward),
                       ),
                     ),
                   ],
