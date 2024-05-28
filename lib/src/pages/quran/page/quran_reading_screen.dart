@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
+import 'package:mawaqit/src/pages/quran/widget/switch_button.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
@@ -78,10 +79,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: SizedBox(
-        width: 40.sp, // Set the desired width
-        height: 40.sp, //
+        width: 30.sp, // Set the desired width
+        height: 30.sp, //
         child: FloatingActionButton(
-          backgroundColor: Colors.black.withOpacity(.5),
+          backgroundColor: Colors.black.withOpacity(.3),
           child: Icon(
             Icons.headset,
             color: Colors.white,
@@ -143,7 +144,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       left: 10,
                       top: 0,
                       bottom: 0,
-                      child: _buildRoundedButton(
+                      child: SwitchButton(
+                        opacity: 0.7,
                         icon: Icons.arrow_left,
                         onPressed: () => _scrollPageList(ScrollDirection.reverse),
                       ),
@@ -152,7 +154,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       right: 10,
                       top: 0,
                       bottom: 0,
-                      child: _buildRoundedButton(
+                      child: SwitchButton(
+                        opacity: 0.7,
                         icon: Icons.arrow_right,
                         onPressed: () => _scrollPageList(ScrollDirection.forward),
                       ),
@@ -182,26 +185,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     }
   }
 
-  Widget _buildRoundedButton({required IconData icon, required VoidCallback onPressed}) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: 9.w, // Set the desired width
-        height: 9.w, // Set the desired height
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(.3),
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 18.sp,
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildSvgPicture(SvgPicture svgPicture) {
     return Container(

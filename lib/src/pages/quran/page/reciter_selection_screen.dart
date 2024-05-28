@@ -21,6 +21,8 @@ import 'package:mawaqit/i18n/l10n.dart';
 
 import 'package:mawaqit/const/resource.dart';
 
+import 'package:mawaqit/src/pages/quran/widget/switch_button.dart';
+
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
 
@@ -164,7 +166,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             left: 0,
             top: 0,
             bottom: 0,
-            child: _buildRoundedButton(
+            child: SwitchButton(
+              opacity: 0.2,
               icon: Icons.arrow_left,
               onPressed: () => _scrollReciterList(ScrollDirection.forward),
             ),
@@ -173,7 +176,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             right: 0,
             top: 0,
             bottom: 0,
-            child: _buildRoundedButton(
+            child: SwitchButton(
+              opacity: 0.3,
               icon: Icons.arrow_right,
               onPressed: () => _scrollReciterList(ScrollDirection.reverse),
             ),
