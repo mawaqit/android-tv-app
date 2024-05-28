@@ -105,65 +105,65 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         data: (quranReadingState) {
           log('quran: QuranReadingScreen: total ${quranReadingState.totalPages}, '
               'currentPage: ${quranReadingState.currentPage}');
-          return Column(
+          return Stack(
             children: [
-              Expanded(
-                child: Stack(
-                  children: [
-                    PageView.builder(
-                      reverse: true,
-                      controller: _pageController,
-                      onPageChanged: (index) {
-                        quranIndex = index;
-                        ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
-                      },
-                      itemCount: (quranReadingState.totalPages / 2).ceil(),
-                      itemBuilder: (context, index) {
-                        final leftPageIndex = index * 2;
-                        final rightPageIndex = leftPageIndex + 1;
-                        return Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (leftPageIndex < quranReadingState.svgs.length)
-                              Expanded(
-                                flex: 1,
-                                child: _buildSvgPicture(
-                                    quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length]),
-                              ),
-                            if (rightPageIndex < quranReadingState.svgs.length)
-                              Expanded(
-                                flex: 1,
-                                child: _buildSvgPicture(
-                                    quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length]),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                    Positioned(
-                      left: 10,
-                      top: 0,
-                      bottom: 0,
-                      child: SwitchButton(
-                        opacity: 0.7,
-                        icon: Icons.arrow_left,
-                        onPressed: () => _scrollPageList(ScrollDirection.reverse),
-                      ),
-                    ),
-                    Positioned(
-                      right: 10,
-                      top: 0,
-                      bottom: 0,
-                      child: SwitchButton(
-                        opacity: 0.7,
-                        icon: Icons.arrow_right,
-                        onPressed: () => _scrollPageList(ScrollDirection.forward),
-                      ),
-                    ),
-                  ],
+              PageView.builder(
+                reverse: true,
+                controller: _pageController,
+                onPageChanged: (index) {
+                  quranIndex = index;
+                  ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
+                },
+                itemCount: (quranReadingState.totalPages / 2).ceil(),
+                itemBuilder: (context, index) {
+                  final leftPageIndex = index * 2;
+                  final rightPageIndex = leftPageIndex + 1;
+                  return Stack(
+                    children: [
+                      // Left Page
+                      if (leftPageIndex < quranReadingState.svgs.length)
+                        Positioned(
+                          left: 12.w,
+                          top: 0,
+                          bottom: 0,
+                          right: MediaQuery.of(context).size.width / 2,
+                          child: _buildSvgPicture(
+                              quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length]),
+                        ),
+                      // Right Page
+                      if (rightPageIndex < quranReadingState.svgs.length)
+                        Positioned(
+                          right: 12.w,
+                          top: 0,
+                          bottom: 0,
+                          left: MediaQuery.of(context).size.width / 2,
+                          child: _buildSvgPicture(
+                              quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length]),
+                        ),
+                    ],
+                  );
+                },
+              ),
+              Positioned(
+                left: 10,
+                top: 0,
+                bottom: 0,
+                child: SwitchButton(
+                  opacity: 0.7,
+                  icon: Icons.arrow_left,
+                  onPressed: () => _scrollPageList(ScrollDirection.reverse),
                 ),
               ),
-              // _buildNavigationButtons(quranReadingState),
+              Positioned(
+                right: 10,
+                top: 0,
+                bottom: 0,
+                child: SwitchButton(
+                  opacity: 0.7,
+                  icon: Icons.arrow_right,
+                  onPressed: () => _scrollPageList(ScrollDirection.forward),
+                ),
+              ),
             ],
           );
         },
