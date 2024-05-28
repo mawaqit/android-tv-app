@@ -162,26 +162,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               },
             ),
           ),
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            child: SwitchButton(
-              opacity: 0.2,
-              icon: Icons.arrow_left,
-              onPressed: () => _scrollReciterList(ScrollDirection.forward),
-            ),
-          ),
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: SwitchButton(
-              opacity: 0.3,
-              icon: Icons.arrow_right,
-              onPressed: () => _scrollReciterList(ScrollDirection.reverse),
-            ),
-          ),
         ],
       ),
     );

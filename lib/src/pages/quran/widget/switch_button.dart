@@ -5,12 +5,14 @@ class SwitchButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
   final double opacity;
+  final double iconSize;
 
   const SwitchButton({
     super.key,
     required this.icon,
     required this.opacity,
     required this.onPressed,
+    required this.iconSize,
   });
 
   @override
@@ -28,7 +30,7 @@ class SwitchButton extends StatelessWidget {
           child: Icon(
             icon,
             color: Colors.white,
-            size: 18.sp,
+            size: iconSize,
           ),
         ),
       ),

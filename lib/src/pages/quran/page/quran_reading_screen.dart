@@ -127,8 +127,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                           top: 0,
                           bottom: 0,
                           right: MediaQuery.of(context).size.width / 2,
-                          child: _buildSvgPicture(
-                              quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length]),
+                          child:
+                              _buildSvgPicture(quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length]),
                         ),
                       // Right Page
                       if (rightPageIndex < quranReadingState.svgs.length)
@@ -137,8 +137,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                           top: 0,
                           bottom: 0,
                           left: MediaQuery.of(context).size.width / 2,
-                          child: _buildSvgPicture(
-                              quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length]),
+                          child:
+                              _buildSvgPicture(quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length]),
                         ),
                     ],
                   );
@@ -149,6 +149,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 top: 0,
                 bottom: 0,
                 child: SwitchButton(
+                  iconSize: 18.sp,
                   opacity: 0.7,
                   icon: Icons.arrow_left,
                   onPressed: () => _scrollPageList(ScrollDirection.reverse),
@@ -160,8 +161,22 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 bottom: 0,
                 child: SwitchButton(
                   opacity: 0.7,
+                  iconSize: 18.sp,
                   icon: Icons.arrow_right,
                   onPressed: () => _scrollPageList(ScrollDirection.forward),
+                ),
+              ),
+              Positioned(
+                left: 10,
+                top: 10,
+                child: SwitchButton(
+                  opacity: 0.7,
+                  iconSize: 15.sp,
+                  icon: Icons.arrow_back_rounded,
+                  onPressed: () {
+                    log('quran: QuranReadingScreen: back');
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ],
@@ -184,7 +199,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       );
     }
   }
-
 
   Widget _buildSvgPicture(SvgPicture svgPicture) {
     return Container(
