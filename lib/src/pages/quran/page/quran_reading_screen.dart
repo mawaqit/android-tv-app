@@ -183,17 +183,22 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   }
 
   Widget _buildRoundedButton({required IconData icon, required VoidCallback onPressed}) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        shape: const CircleBorder(),
-        backgroundColor: Colors.black.withOpacity(.5),
-        fixedSize: Size(5.w, 5.w),
-      ),
-      child: Icon(
-        icon,
-        color: Colors.white,
-        size: 15.sp,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 9.w, // Set the desired width
+        height: 9.w, // Set the desired height
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(.3),
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Icon(
+            icon,
+            color: Colors.white,
+            size: 18.sp,
+          ),
+        ),
       ),
     );
   }
