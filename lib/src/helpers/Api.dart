@@ -1,4 +1,5 @@
-import 'dart:math';
+import 'dart:developer';
+import 'dart:math' hide log;
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -19,6 +20,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 import 'package:xml_parser/xml_parser.dart';
 
+import '../domain/model/failure/mosque/mosque_failure.dart';
 import '../models/hijri_data_config_model.dart';
 import '../models/mosque.dart';
 import '../models/weather.dart';
@@ -98,11 +100,19 @@ class Api {
   }
 
   static Future<Mosque> getMosque(String id) async {
-    final response = await dio.get(
-      '/3.0/mosque/$id/info',
-    );
-
-    return Mosque.fromMap(response.data);
+    try{
+      final response = await dio.get(
+        '/3.0/mosque/$id/info',
+      );
+      return Mosque.fromMap(response.data);
+    } on DioException catch (e) {
+      // error 404
+      if (e.response != null && e.response?.statusCode == 404) {
+        log('Mosque not found');
+        throw MosqueNotFoundFailure();
+      }
+      rethrow;
+    }
   }
 
   /// re check the mosque config if there are any updated data
