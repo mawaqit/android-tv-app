@@ -8,7 +8,6 @@ abstract class MosqueFailure implements Exception {
   });
 }
 
-
 class MosqueNotFoundFailure extends MosqueFailure {
   const MosqueNotFoundFailure()
       : super(

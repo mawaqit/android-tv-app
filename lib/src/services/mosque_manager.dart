@@ -133,7 +133,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
 
     /// if getting item returns an error
     onItemError(e, stack) {
-      if(e is MosqueFailure){
+      if (e is MosqueFailure) {
         mosque = null;
         notifyListeners();
         return;
