@@ -62,13 +62,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.light,
-        title: Text(
-          georgianDate,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 15.sp,
-          ),
-        ),
       ),
       screen: Row(
         children: [
@@ -77,32 +70,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 24),
-                // SizedBox(height: 32),
-                // Focus(
-                //   debugLabel: 'Search Surahs',
-                //   focusNode: _searchFocusNode,
-                //   child: TextField(
-                //     readOnly: true,
-                //     autofocus: false,
-                //     cursorColor: Colors.white,
-                //     decoration: InputDecoration(
-                //       hintText: 'Search surahs...',
-                //       hintStyle: TextStyle(color: Colors.white70),
-                //       filled: true,
-                //       fillColor: Colors.white.withOpacity(0.2),
-                //       border: OutlineInputBorder(
-                //         borderRadius: BorderRadius.circular(30),
-                //         borderSide: BorderSide.none,
-                //       ),
-                //       focusedBorder: OutlineInputBorder(
-                //         borderRadius: BorderRadius.circular(30),
-                //         borderSide: BorderSide(color: Colors.white),
-                //       ),
-                //     ),
-                //     style: TextStyle(color: Colors.white),
-                //   ),
-                // ),
+                SizedBox(height: 10),
                 Expanded(
                   child: quranState.when(
                     data: (data) {
@@ -161,18 +129,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
               ],
             ),
           ),
-          quranState.when(
-            data: (data) => SideMenu(),
-            error: (error, stack) {
-              log('Error: $error\n$stack');
-              return Center(
-                child: Text(
-                  'Error: $error',
-                ),
-              );
-            },
-            loading: () => SideMenu(),
-          )
         ],
       ),
     );
