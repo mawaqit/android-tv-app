@@ -181,134 +181,137 @@ class _QuranPlayer extends ConsumerWidget {
             },
           ),
           SizedBox(height: 4.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              quranState.maybeWhen(
-                orElse: () {
-                  return const SizedBox();
-                },
-                data: (data) {
-                  if (data.isShuffled) {
-                    return IconButton(
-                      icon: SvgPicture.asset(
-                        R.ASSETS_ICON_SHUFFLE_SVG,
-                        color: Colors.white,
-                        width: 6.w,
-                      ),
-                      iconSize: 8.w,
-                      onPressed: () {
-                        ref.read(quranPlayerNotifierProvider.notifier).shuffle();
-                      },
-                    );
-                  } else {
-                    return IconButton(
-                      icon: SvgPicture.asset(
-                        R.ASSETS_ICON_SHUFFLE_SVG,
-                        color: Colors.grey[800],
-                        width: 6.w,
-                      ),
-                      iconSize: 8.w,
-                      onPressed: () {
-                        ref.read(quranPlayerNotifierProvider.notifier).shuffle();
-                      },
-                    );
-                  }
-                },
-              ),
-              Spacer(),
-              IconButton(
-                icon: SvgPicture.asset(
-                  R.ASSETS_ICON_SKIP_PREVIOUS_SVG,
-                  color: Colors.white,
-                  width: 6.w,
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                quranState.maybeWhen(
+                  orElse: () {
+                    return const SizedBox();
+                  },
+                  data: (data) {
+                    if (data.isShuffled) {
+                      return IconButton(
+                        icon: SvgPicture.asset(
+                          R.ASSETS_ICON_SHUFFLE_SVG,
+                          color: Colors.white,
+                          width: 6.w,
+                        ),
+                        iconSize: 8.w,
+                        onPressed: () {
+                          ref.read(quranPlayerNotifierProvider.notifier).shuffle();
+                        },
+                      );
+                    } else {
+                      return IconButton(
+                        icon: SvgPicture.asset(
+                          R.ASSETS_ICON_SHUFFLE_SVG,
+                          color: Colors.grey[800],
+                          width: 6.w,
+                        ),
+                        iconSize: 8.w,
+                        onPressed: () {
+                          ref.read(quranPlayerNotifierProvider.notifier).shuffle();
+                        },
+                      );
+                    }
+                  },
                 ),
-                iconSize: 8.w,
-                onPressed: () {
-                  log('Seeking to previous');
-                  ref.read(quranPlayerNotifierProvider.notifier).seekToPrevious();
-                },
-              ),
-              SizedBox(
-                width: 2.w,
-              ),
-              Material(
-                color: Colors.transparent,
-                shape: const CircleBorder(side: BorderSide.none),
-                elevation: 15,
-                child: CircleAvatar(
-                  backgroundColor: Colors.grey[900],
-                  radius: 6.w,
-                  child: IconButton(
-                    icon: isPlaying
-                        ? SvgPicture.asset(
-                            R.ASSETS_ICON_PAUSE_SVG,
-                            color: Colors.white,
-                          )
-                        : Icon(
-                            Icons.play_arrow,
-                            color: Colors.white,
-                            size: 8.w,
-                          ),
-                    iconSize: 10.w,
-                    onPressed: () {
-                      if (isPlaying) {
-                        ref.read(quranPlayerNotifierProvider.notifier).pause();
-                      } else {
-                        ref.read(quranPlayerNotifierProvider.notifier).play();
-                      }
-                    },
+                Spacer(),
+                IconButton(
+                  icon: SvgPicture.asset(
+                    R.ASSETS_ICON_SKIP_PREVIOUS_SVG,
+                    color: Colors.white,
+                    width: 6.w,
+                  ),
+                  iconSize: 8.w,
+                  onPressed: () {
+                    log('Seeking to previous');
+                    ref.read(quranPlayerNotifierProvider.notifier).seekToPrevious();
+                  },
+                ),
+                SizedBox(
+                  width: 2.w,
+                ),
+                Material(
+                  color: Colors.transparent,
+                  shape: const CircleBorder(side: BorderSide.none),
+                  elevation: 15,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey[900],
+                    radius: 6.w,
+                    child: IconButton(
+                      icon: isPlaying
+                          ? SvgPicture.asset(
+                              R.ASSETS_ICON_PAUSE_SVG,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                              size: 8.w,
+                            ),
+                      iconSize: 10.w,
+                      onPressed: () {
+                        if (isPlaying) {
+                          ref.read(quranPlayerNotifierProvider.notifier).pause();
+                        } else {
+                          ref.read(quranPlayerNotifierProvider.notifier).play();
+                        }
+                      },
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 2.w,
-              ),
-              IconButton(
-                icon: SvgPicture.asset(
-                  R.ASSETS_ICON_SKIP_NEXT_SVG,
-                  color: Colors.white,
-                  width: 6.w,
+                SizedBox(
+                  width: 2.w,
                 ),
-                iconSize: 8.w,
-                onPressed: () {
-                  ref.read(quranPlayerNotifierProvider.notifier).seekToNext();
-                },
-              ),
-              Spacer(),
-              quranState.maybeWhen(
-                orElse: () {
-                  return const SizedBox();
-                },
-                data: (data) {
-                  if (data.isRepeating) {
-                    return IconButton(
-                      icon: SvgPicture.asset(
-                        R.ASSETS_ICON_REPEAT_SVG,
-                        color: Colors.white,
-                        width: 6.w,
-                      ),
-                      iconSize: 8.w,
-                      onPressed: () {
-                        ref.read(quranPlayerNotifierProvider.notifier).repeat();
-                      },
-                    );
-                  } else {
-                    return IconButton(
-                      icon: SvgPicture.asset(
-                        R.ASSETS_ICON_REPEAT_SVG,
-                        color: Colors.grey[800],
-                        width: 6.w,
-                      ),
-                      iconSize: 8.w,
-                      onPressed: () {
-                        ref.read(quranPlayerNotifierProvider.notifier).repeat();
-                      },
-                    );
-                  }
-                },
-              ),
-            ],
+                IconButton(
+                  icon: SvgPicture.asset(
+                    R.ASSETS_ICON_SKIP_NEXT_SVG,
+                    color: Colors.white,
+                    width: 6.w,
+                  ),
+                  iconSize: 8.w,
+                  onPressed: () {
+                    ref.read(quranPlayerNotifierProvider.notifier).seekToNext();
+                  },
+                ),
+                Spacer(),
+                quranState.maybeWhen(
+                  orElse: () {
+                    return const SizedBox();
+                  },
+                  data: (data) {
+                    if (data.isRepeating) {
+                      return IconButton(
+                        icon: SvgPicture.asset(
+                          R.ASSETS_ICON_REPEAT_SVG,
+                          color: Colors.white,
+                          width: 6.w,
+                        ),
+                        iconSize: 8.w,
+                        onPressed: () {
+                          ref.read(quranPlayerNotifierProvider.notifier).repeat();
+                        },
+                      );
+                    } else {
+                      return IconButton(
+                        icon: SvgPicture.asset(
+                          R.ASSETS_ICON_REPEAT_SVG,
+                          color: Colors.grey[800],
+                          width: 6.w,
+                        ),
+                        iconSize: 8.w,
+                        onPressed: () {
+                          ref.read(quranPlayerNotifierProvider.notifier).repeat();
+                        },
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
