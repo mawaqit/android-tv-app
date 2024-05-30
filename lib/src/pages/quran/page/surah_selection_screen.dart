@@ -3,14 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/helpers/DateUtils.dart';
-import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
-import 'package:provider/provider.dart';
-import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/pages/quran/widget/side_menu.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:shimmer/shimmer.dart';
@@ -51,10 +46,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final timeNow = context.select<MosqueManager, DateTime>((value) => value.mosqueDate());
-    final mosqueCountryCode = context.select<MosqueManager, String>((value) => value.mosque?.countryCode ?? '');
-    final lang = Localizations.localeOf(context).languageCode;
-    final georgianDate = timeNow.formatIntoMawaqitFormat(local: '${lang}_$mosqueCountryCode');
     final quranState = ref.watch(quranNotifierProvider);
     return QuranBackground(
       isSwitch: true,
