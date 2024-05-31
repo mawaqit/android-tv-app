@@ -29,10 +29,7 @@ class MoshafModel {
   @MappableField(key: 'surah_list')
   final List<int> surahList;
 
-  MoshafModel(this.id, String name, this.server, this.surahTotal, this.moshafType, this.surahList)
-      :
-        // Clean up the name property to remove duplicates
-        name = _removeDuplicateSubstrings(name);
+  MoshafModel(this.id, this.name, this.server, this.surahTotal, this.moshafType, this.surahList);
 
   factory MoshafModel.fromJson(Map<String, dynamic> map) => _ensureContainer.fromMap<MoshafModel>(map);
 
@@ -68,14 +65,4 @@ class MoshafModel {
 
   static MoshafModelMapper ensureInitialized() => MoshafModelMapper.ensureInitialized();
 
-  // Method to remove duplicate substrings
-  static String _removeDuplicateSubstrings(String input) {
-    // Regular expression to find repeated substrings
-    final RegExp regex = RegExp(r'(.*) - \1');
-
-    // Replace duplicates with the first occurrence
-    String result = input.replaceAllMapped(regex, (match) => match.group(1)!);
-
-    return result;
-  }
 }
