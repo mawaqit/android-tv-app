@@ -12,9 +12,16 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
+import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
+
+import 'package:mawaqit/src/pages/SplashScreen.dart';
+
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
+
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -84,8 +91,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
-
       floatingActionButton: SizedBox(
         width: 30.sp, // Set the desired width
         height: 30.sp, //
@@ -165,11 +170,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   top: 0,
                   bottom: 0,
                   child: SwitchButton(
-                    iconSize: 18.sp,
+                    iconSize: 14.sp,
                     opacity: 0.7,
-                    icon: Directionality.of(context) == TextDirection.ltr
-                        ? Icons.arrow_left
-                        : Icons.arrow_right,
+                    icon: _getBackIcon(context),
                     onPressed: () => _scrollPageList(ScrollDirection.reverse),
                   ),
                 ),
@@ -179,22 +182,18 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   bottom: 0,
                   child: SwitchButton(
                     opacity: 0.7,
-                    iconSize: 18.sp,
-                    icon: Directionality.of(context) == TextDirection.ltr
-                        ? Icons.arrow_right
-                        : Icons.arrow_left,
+                    iconSize: 14.sp,
+                    icon: _getForwardIcon(context),
                     onPressed: () => _scrollPageList(ScrollDirection.forward),
                   ),
                 ),
                 Positioned(
-                  left: 10,
+                  left: Directionality.of(context) == TextDirection.rtl ?  null : 10,
                   top: 10,
                   child: SwitchButton(
                     opacity: 0.7,
                     iconSize: 15.sp,
-                    icon: Directionality.of(context) == TextDirection.ltr
-                        ? Icons.arrow_back_rounded
-                        : Icons.arrow_forward_rounded,
+                    icon: Icons.arrow_back_rounded,
                     onPressed: () {
                       log('quran: QuranReadingScreen: back');
                       Navigator.pop(context);
@@ -229,5 +228,13 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         alignment: Alignment.center,
       ),
     );
+  }
+
+  IconData _getBackIcon(BuildContext context) {
+    return Directionality.of(context) == TextDirection.rtl ? Icons.arrow_forward : Icons.arrow_back;
+  }
+
+  IconData _getForwardIcon(BuildContext context) {
+    return Directionality.of(context) == TextDirection.rtl ? Icons.arrow_back : Icons.arrow_forward;
   }
 }
