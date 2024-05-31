@@ -43,25 +43,12 @@ private lateinit var mAdminComponentName: ComponentName
                                 result.error("INVALID_ARGUMENT", "Package name is null", null)
                             }
                         }  
-                    "startKioskMode"->manageKioskMode(true)
-                    "stopKioskMode"->manageKioskMode(false)           
+           
                              else -> result.notImplemented()
                 }
             }
     }
-      private fun manageKioskMode(enable: Boolean) {
-    if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-        mDevicePolicyManager = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        mAdminComponentName = MyDeviceAdminReceiver.getComponentName(this)
-        mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, arrayOf(packageName))
-        if(enable) {
-          this.startLockTask()
-        } else {
-          this.stopLockTask()
-        }
-      return
-    }
-  }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var REQUEST_OVERLAY_PERMISSIONS = 100

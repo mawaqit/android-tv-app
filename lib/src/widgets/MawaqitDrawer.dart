@@ -31,20 +31,10 @@ class MawaqitDrawer extends StatelessWidget {
   const MawaqitDrawer({Key? key, required this.goHome}) : super(key: key);
 
   final VoidCallback goHome;
-  static const platform = MethodChannel('nativeFunctionsChannel');
-
-  static startKioskMode() async {
-    await platform.invokeMethod('startKioskMode');
-  }
-
-  static stopKioskMode() async {
-    await platform.invokeMethod('stopKioskMode');
-  }
 
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsManager>(context).settings;
-    final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
     final theme = Theme.of(context);
@@ -198,16 +188,6 @@ class MawaqitDrawer extends StatelessWidget {
             icon: Icons.star,
             text: S.of(context).rate,
             onTap: () => LaunchReview.launch(androidAppId: kAppId),
-          ),
-          DrawerListTitle(
-            icon: Icons.star,
-            text: "Start Kiosk Mode",
-            onTap: () => startKioskMode(),
-          ),
-          DrawerListTitle(
-            icon: Icons.star,
-            text: "Stop Kiosk Mode",
-            onTap: () => stopKioskMode(),
           ),
           SizedBox(height: 20),
         ],
