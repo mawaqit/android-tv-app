@@ -23,6 +23,8 @@ import 'package:mawaqit/src/state_management/quran/download_quran/download_quran
 
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 
+import 'package:mawaqit/i18n/l10n.dart';
+
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
 
@@ -188,16 +190,42 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   ),
                 ),
                 Positioned(
-                  left: Directionality.of(context) == TextDirection.rtl ?  null : 10,
+                  left: Directionality.of(context) == TextDirection.rtl ? null : 10,
                   top: 10,
                   child: SwitchButton(
                     opacity: 0.7,
-                    iconSize: 15.sp,
+                    iconSize: 14.sp,
                     icon: Icons.arrow_back_rounded,
                     onPressed: () {
                       log('quran: QuranReadingScreen: back');
                       Navigator.pop(context);
                     },
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 5,
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        S.of(context).quranReadingPage(
+                          quranReadingState.currentPage * 2 + 1,
+                          quranReadingState.currentPage * 2 + 2,
+                          quranReadingState.totalPages,
+                        ),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
