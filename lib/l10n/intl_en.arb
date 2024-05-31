@@ -215,5 +215,23 @@
   "chooseReciter": "Choose Reciter",
   "reciteType": "Recite Type",
   "readingMode": "I want to read",
-  "listeningMode": "I want to listen"
+  "listeningMode": "I want to listen",
+  "quranReadingPage": "Page {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  }
 }
