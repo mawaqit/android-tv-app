@@ -14,7 +14,6 @@ import 'package:sizer/sizer.dart';
 
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 
-
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
@@ -209,6 +208,17 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   ),
                 ),
               ),
+              Positioned(
+                left: Directionality.of(context) == TextDirection.rtl ? 10 : null,
+                right: Directionality.of(context) == TextDirection.ltr ? 10 : null,
+                top: 10,
+                child: IconButton(
+                  icon: Icon(Icons.list, color: Colors.black.withOpacity(0.7)),
+                  onPressed: () {
+                    _showPageSelector(context, quranReadingState.totalPages);
+                  },
+                ),
+              ),
             ],
           );
         },
@@ -250,5 +260,38 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   IconData _getForwardIcon(BuildContext context) {
     return Directionality.of(context) == TextDirection.rtl ? Icons.arrow_back : Icons.arrow_forward;
+  }
+
+  void _showPageSelector(BuildContext context, int totalPages) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: SizedBox(
+            width: double.maxFinite,
+            child: Text(
+              S.of(context).chooseQuranPage,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: totalPages,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text('${index + 1}'),
+                  onTap: () {
+                    _pageController.jumpToPage(index ~/ 2);
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 }
