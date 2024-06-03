@@ -123,6 +123,8 @@ dependencies:
   # internet connectivity checker
   internet_connection_checker_plus: ^1.0.1
 
+  # manage files and folders
+  flutter_archive: ^6.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -134,6 +136,7 @@ dev_dependencies:
   http_mock_adapter: ^0.6.1
   flutter_lints: ^3.0.2
   hive_generator: ^2.0.1
+  mocktail: ^1.0.3
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
