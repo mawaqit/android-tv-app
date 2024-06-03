@@ -73,7 +73,7 @@ class _PortraitTurkishHomeState extends riverpod.ConsumerState<PortraitTurkishHo
       if (next.hasValue && !next.isReloading && next.value!.appUpdateStatus == AppUpdateStatus.updateAvailable) {
         showUpdateAlert(
           context: context,
-          duration: Duration(seconds: 30),
+          duration: Duration(minutes: 5),
           content: next.value!.releaseNote,
           title: next.value!.message,
           onPressed: () => ref.read(appUpdateProvider.notifier).openStore(),
