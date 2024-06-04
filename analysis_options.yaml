@@ -7,5 +7,3 @@ linter:
   rules:
     - cancel_subscriptions
     - require_trailing_commas
-    - close_sinks
-    - always_use_package_imports
