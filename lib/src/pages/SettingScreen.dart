@@ -30,6 +30,7 @@ import '../../main.dart';
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
 import '../state_management/app_update/app_update_notifier.dart';
+import '../state_management/quran/download_quran/download_quran_notifier.dart';
 import '../state_management/random_hadith/random_hadith_notifier.dart';
 import '../widgets/screen_lock_widget.dart';
 import '../widgets/time_picker_widget.dart';
@@ -161,6 +162,23 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         onChanged: (value) {
                           logger.d('setting: disable the update $value');
                           ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
+                        },
+                        value: ref.watch(appUpdateProvider).maybeWhen(
+                              orElse: () => false,
+                              data: (data) => data.isAutoUpdateChecking,
+                            ),
+                      );
+                    },
+                  ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return _SettingSwitchItem(
+                        title: 'Download Quran',
+                        subtitle: 'Download Quran',
+                        icon: Icon(Icons.download, size: 35),
+                        onChanged: (value) {
+                          logger.d('setting: disable the update $value');
+                          ref.read(downloadQuranNotifierProvider.notifier).download();
                         },
                         value: ref.watch(appUpdateProvider).maybeWhen(
                               orElse: () => false,

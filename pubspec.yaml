@@ -129,6 +129,8 @@ dependencies:
   flutter_kurdish_localization: ^1.0.8
 
 
+  # manage files and folders
+  flutter_archive: ^6.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -141,6 +143,7 @@ dev_dependencies:
 
   flutter_lints: ^3.0.2
   hive_generator: ^2.0.1
+  mocktail: ^1.0.3
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
