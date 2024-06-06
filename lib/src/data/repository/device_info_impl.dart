@@ -96,8 +96,6 @@ class DeviceInfoImpl implements DeviceInfoRepository {
       rethrow;
     }
   }
-
-
 }
 
 class DeviceInfoImplProviderArgument {

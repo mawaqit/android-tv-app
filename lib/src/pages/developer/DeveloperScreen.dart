@@ -106,7 +106,6 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
     }
   }
 
-
   @override
   void dispose() {
     cancelWalkThrowScreens();
@@ -197,7 +196,6 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               title: "Clear data & force close app",
               onSelect: () => _clearDataAndRestartApp(),
             ),
-  
           ],
         ),
       ),
