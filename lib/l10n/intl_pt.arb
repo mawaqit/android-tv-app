@@ -68,15 +68,15 @@
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
-  "azkarList2": "",
+  "azkarList2": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Procuro refúgio no Senhor dos humanos, 2. O Rei dos humanos, 3. O Deus dos humanos, 4. Contra o mal do murmurador que recua, 5. Que murmura nos peitos dos humanos, 6, dos jinns ou dos humanos».",
   "@azkarList2": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
   },
-  "azkarList3": "",
+  "azkarList3": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Procuro refúgio no Senhor da manhã, 2 Contra o mal que criou, 3. E contra o mal da escuridão quando entra, 4. E contra o mal das que sopram nos nós, 5. E contra o mal do invejoso quando inveja».",
   "@azkarList3": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
   },
-  "azkarList4": "Em nome de ALLAH, o Clemente, o Misericordioso 1 Diz: «Ele é ALLAH, o Único!; 2 ALLAH é o Independente (e de Quem tudo e todos dependem); 3 Não gerou e nem foi gerado; 4 E não há ninguém igual a Ele;».",
+  "azkarList4": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Ele é Allah, o Único! 2 Allah é o Independente; 3. Não gerou e nem foi gerado; 4. E não há ninguém igual a Ele».",
   "@azkarList4": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
   },
@@ -140,7 +140,7 @@
   "announcementOnlyMode": "Modo de anúncios",
   "normalMode": "Modo normal ",
   "announcementOnlyModeEXPLINATION": "Escolha se pretende que o ecrã mostre apenas anúncios, isso pode ser útil se você instalar o ecrã na entrada, por exemplo.",
-  "duaaElEftarText": "",
+  "duaaElEftarText": "Ó Allah, por Ti jejuei, com o Teu sustento quebrei o jejum, em Ti acreditei e em Ti confiei. A sede foi saciada, as veias foram molhadas e a recompensa está garantida, se Deus quiser.",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
