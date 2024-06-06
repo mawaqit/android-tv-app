@@ -64,7 +64,6 @@ class SettingScreen extends ConsumerWidget {
   Future<void> _initializeTimeShiftManager() async {
     await TimeShiftManager().initializeTimes();
     isDeviceRooted = await checkRoot();
-    print("rooted $isDeviceRooted");
   }
 
   Widget _buildSettingScreen(BuildContext context, WidgetRef ref) {

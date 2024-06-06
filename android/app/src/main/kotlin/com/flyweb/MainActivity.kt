@@ -48,9 +48,7 @@ class MainActivity : FlutterActivity() {
        else if (call.method == "toggleScreenOff") {
        toggleScreenOff(call, result)
       }
-       else if (call.method == "grantDumpSysPermission") {
-    grantDumpSysPermission(call, result)
-              }
+      
                else if (call.method == "checkRoot") {
         checkRoot(result)
     }
@@ -119,16 +117,7 @@ private fun checkRoot(result: MethodChannel.Result) {
     }
   }
 
-  private fun grantDumpSysPermission(call: MethodCall, result: MethodChannel.Result) {
-    AsyncTask.execute {
-        try {
-        
-                executeCommand(listOf("pm grant com.mawaqit.androidtv android.permission.DUMP"), result) // Lock the device
-            
-        } catch (e: Exception) {
-            handleCommandException(e, result)
-        }
-    }}
+
 
 
 private fun toggleScreenOn(call: MethodCall, result: MethodChannel.Result) {

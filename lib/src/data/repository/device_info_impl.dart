@@ -97,9 +97,7 @@ class DeviceInfoImpl implements DeviceInfoRepository {
     }
   }
 
-  ///  [initRootRequest] Checks if the device is a box or a androidTV.
-  ///
-  /// return a boolean value indicating if the device is a box or a AndroidTV.
+
 }
 
 class DeviceInfoImplProviderArgument {
