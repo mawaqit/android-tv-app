@@ -199,17 +199,5 @@
   "update": "Update",
   "automaticUpdate": "Notify update",
   "automaticUpdateDescription": "Enable notify update to receive the latest features and improvements",
-  "later": "Later",
-  "downloadQuran": "Download Quran",
-  "quran": "Quran",
-  "askDownloadQuran": "Do you want to download the Quran?",
-  "download": "Download",
-  "downloadingQuran": "Downloading Quran",
-  "extractingQuran": "Extracting Quran",
-  "updatedQuran": "Quran updated",
-  "quranLatestVersion": "Quran is up to date",
-  "quranUpdatedVersion": "Quran updated version is: {version}",
-  "quranIsUpdated": "Quran is updated",
-  "quranDownloaded": "Quran downloaded",
-  "quranIsAlreadyDownloaded": "Quran is already downloaded"
+  "later": "Later"
 }
