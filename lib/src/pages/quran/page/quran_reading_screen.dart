@@ -33,7 +33,7 @@ class QuranReadingScreen extends ConsumerStatefulWidget {
 }
 
 class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
-  int quranIndex = 0;
+  int quranIndex = 0; // Current page index
   late PageController _pageController;
   late FocusNode _backButtonFocusNode;
   late FocusNode _listeningModeFocusNode;
@@ -269,11 +269,11 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   }
 
   IconData _getBackIcon(BuildContext context) {
-    return Directionality.of(context) == TextDirection.rtl ? Icons.arrow_forward : Icons.arrow_back;
+    return Directionality.of(context) == TextDirection.rtl ? Icons.arrow_forward_ios : Icons.arrow_back_ios;
   }
 
   IconData _getForwardIcon(BuildContext context) {
-    return Directionality.of(context) == TextDirection.rtl ? Icons.arrow_back : Icons.arrow_forward;
+    return Directionality.of(context) == TextDirection.rtl ? Icons.arrow_back_ios : Icons.arrow_forward_ios;
   }
 
   void _showPageSelector(BuildContext context, int totalPages) {
@@ -285,21 +285,43 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             width: double.maxFinite,
             child: Text(
               S.of(context).chooseQuranPage,
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
           content: Container(
-            width: double.maxFinite,
-            child: ListView.builder(
-              shrinkWrap: true,
+            width: double.maxFinite, // Set a fixed height for the grid
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 6, // Number of columns in the grid
+                childAspectRatio: 3/2, // Adjust the aspect ratio of grid items
+              ),
               itemCount: totalPages,
               itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text('${index + 1}'),
+                final isSelected = index == (quranIndex * 2 );
+                return GestureDetector(
                   onTap: () {
                     _pageController.jumpToPage(index ~/ 2);
                     Navigator.of(context).pop();
                   },
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isSelected ? Theme.of(context).focusColor : null,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      '${index + 1}',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: isSelected ? FontWeight.bold : null,
+                        color: isSelected ? Colors.white : null,
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
