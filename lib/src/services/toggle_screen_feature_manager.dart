@@ -6,35 +6,49 @@ import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/data_source/device_info_data_source.dart';
+import '../helpers/TimeShiftManager.dart';
+
 class ToggleScreenFeature {
   static const _scheduledTimersKey = 'scheduledTimers';
 
   static final _scheduledTimers = <String, List<Timer>>{};
+  TimeShiftManager timeShiftManager = TimeShiftManager();
 
-  static void scheduleToggleScreen(List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) {
+  bool isBox() {
+    return timeShiftManager.isLauncherInstalled;
+  }
+
+  static void scheduleToggleScreen(
+      List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) {
+    final instance = ToggleScreenFeature();
+
     for (String timeString in timeStrings) {
       final parts = timeString.split(':');
       final hour = int.parse(parts[0]);
       final minute = int.parse(parts[1]);
 
       final now = AppDateTime.now();
-      final scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
+      final scheduledDateTime =
+          DateTime(now.year, now.month, now.day, hour, minute);
 
       if (scheduledDateTime.isBefore(now)) {
         scheduledDateTime.add(Duration(days: 1));
       }
 
-      final beforeDelay = scheduledDateTime.difference(now) - Duration(minutes: beforeDelayMinutes);
+      final beforeDelay = scheduledDateTime.difference(now) -
+          Duration(minutes: beforeDelayMinutes);
       if (beforeDelay.isNegative) {
         continue;
       }
       final beforeTimer = Timer(beforeDelay, () {
-        toggleScreenOn();
+        instance.isBox() ? toggleBoxScreenOn() : toggleScreenOn();
       });
 
-      final afterDelay = scheduledDateTime.difference(now) + Duration(minutes: afterDelayMinutes);
+      final afterDelay = scheduledDateTime.difference(now) +
+          Duration(minutes: afterDelayMinutes);
       final afterTimer = Timer(afterDelay, () {
-        toggleScreenOff();
+        instance.isBox() ? toggleBoxScreenOff() : toggleScreenOff();
       });
 
       // Store the timers in the _scheduledTimers map
@@ -105,7 +119,17 @@ class ToggleScreenFeature {
 
   static Future<void> toggleScreenOn() async {
     try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreenOn');
+      await MethodChannel('nativeMethodsChannel')
+          .invokeMethod('toggleScreenOn');
+    } on PlatformException catch (e) {
+      logger.e(e);
+    }
+  }
+
+  static Future<void> toggleBoxScreenOn() async {
+    try {
+      await MethodChannel('nativeMethodsChannel')
+          .invokeMethod('toggleBoxScreenOn');
     } on PlatformException catch (e) {
       logger.e(e);
     }
@@ -113,15 +137,17 @@ class ToggleScreenFeature {
 
   static Future<void> toggleScreenOff() async {
     try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreenOff');
+      await MethodChannel('nativeMethodsChannel')
+          .invokeMethod('toggleScreenOff');
     } on PlatformException catch (e) {
       logger.e(e);
     }
   }
 
-  static Future<void> grantDumpPermission() async {
+  static Future<void> toggleBoxScreenOff() async {
     try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('grantDumpSysPermission');
+      await MethodChannel('nativeMethodsChannel')
+          .invokeMethod('toggleBoxScreenOff');
     } on PlatformException catch (e) {
       logger.e(e);
     }

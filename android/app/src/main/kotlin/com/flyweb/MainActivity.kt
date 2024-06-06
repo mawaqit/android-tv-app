@@ -54,6 +54,12 @@ class MainActivity : FlutterActivity() {
                else if (call.method == "checkRoot") {
         checkRoot(result)
     }
+               else if (call.method == "toggleBoxScreenOff") {
+        toggleBoxScreenOff(call,result)
+    }
+               else if (call.method == "toggleBoxScreenOn") {
+        toggleBoxScreenOn(call,result)
+    }
         
       
       else {
@@ -134,6 +140,39 @@ private fun toggleScreenOn(call: MethodCall, result: MethodChannel.Result) {
                 )
                                 executeCommand(commands, result) // Lock the device
 
+          
+        } catch (e: Exception) {
+            handleCommandException(e, result)
+        }
+    }
+}
+private fun toggleBoxScreenOff(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+        try {
+                  val commands = listOf(
+                    "mount -o rw,remount /",
+                    "cd /sys/class/hdmi/hdmi/attr",
+                    "echo 0 > phy_power"
+
+                )
+                                executeCommand(commands, result) // Lock the device
+
+          
+        } catch (e: Exception) {
+            handleCommandException(e, result)
+        }
+    }
+}
+private fun toggleBoxScreenOn(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+        try {
+                  val commands = listOf(
+                    "mount -o rw,remount /",
+                    "cd /sys/class/hdmi/hdmi/attr",
+                    "echo 1 > phy_power",
+                    "am start -W -n com.mawaqit.androidtv/.MainActivity"
+                )
+                                executeCommand(commands, result) 
           
         } catch (e: Exception) {
             handleCommandException(e, result)
