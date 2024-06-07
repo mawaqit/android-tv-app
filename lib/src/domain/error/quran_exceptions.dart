@@ -103,3 +103,25 @@ class CannotFindSuwarByLanguageException extends QuranException {
   CannotFindSuwarByLanguageException(String message)
       : super('Error occurred while finding suwar by language: $message', 'FIND_SUWAR_BY_LANGUAGE_ERROR');
 }
+
+/// QuranFavoriteDataSourceException
+
+class FetchFavoriteRecitersException extends QuranException {
+  FetchFavoriteRecitersException(String message)
+      : super('Error occurred while fetching favorite reciters: $message', 'FETCH_FAVORITE_RECITERS_ERROR');
+}
+
+class SaveFavoriteSurahByReciterException extends QuranException {
+  SaveFavoriteSurahByReciterException(String message)
+      : super('Error occurred while saving favorite surah by reciter: $message', 'SAVE_FAVORITE_SURAH_BY_RECITER_ERROR');
+}
+
+class SaveFavoriteReciterException extends QuranException {
+  SaveFavoriteReciterException(String message)
+      : super('Error occurred while saving favorite reciter: $message', 'SAVE_FAVORITE_RECITER_ERROR');
+}
+
+class FetchFavoriteSurahsByReciterException extends QuranException {
+  FetchFavoriteSurahsByReciterException(String message)
+      : super('Error occurred while fetching favorite surahs by reciter: $message', 'FETCH_FAVORITE_SURAHS_BY_RECITER_ERROR');
+}
