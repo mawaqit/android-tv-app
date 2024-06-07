@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/data/repository/quran/quran_favorite_impl.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
+import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
+import 'package:mawaqit/src/state_management/quran/favorite/quran_favorite_notifier.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 
@@ -42,8 +45,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   final ScrollController _reciterScrollController = ScrollController();
   double sizeOfContainerReciter = 15.w;
   double marginOfContainerReciter = 16;
-
-  List<ReciterModel> reciters = [];
 
   @override
   void initState() {
@@ -100,8 +101,25 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ref.watch(quranFavoriteNotifierProvider).when(
+                        data: (reciter) {
+                          if (reciter.favoriteReciters.isNotEmpty) {
+                            return ReciterListView(
+                              isFavoriteButton: false,
+                              reciterList: reciter.favoriteReciters,
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                        loading: () => _buildReciterListShimmer(true),
+                        error: (error, stackTrace) => Text('Error: $error'),
+                      ),
                   ref.watch(reciteNotifierProvider).when(
-                        data: (reciter) => _buildReciterList(reciter.reciters),
+                        data: (reciter) => ReciterListView(
+                          isFavoriteButton: true,
+                          reciterList: reciter.reciters,
+                        ),
                         loading: () => _buildReciterListShimmer(true),
                         error: (error, stackTrace) => Text('Error: $error'),
                       ),
@@ -121,45 +139,17 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                   ref.watch(reciteNotifierProvider).when(
                         data: (reciter) {
                           log('quran:ui: selectedReciterIndex: $selectedReciterIndex, reciter: ${reciter.reciters.length}');
-                          return reciter.reciters.isNotEmpty ? _buildReciteTypeGrid(
-                            reciter.reciters[selectedReciterIndex].moshaf,
-                          ): _buildReciteTypeGridShimmer(true);
+                          return reciter.reciters.isNotEmpty
+                              ? _buildReciteTypeGrid(
+                                  reciter.reciters[selectedReciterIndex].moshaf,
+                                )
+                              : _buildReciteTypeGridShimmer(true);
                         },
                         loading: () => _buildReciteTypeGridShimmer(true),
                         error: (error, stackTrace) => Text('Error: $error'),
                       ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildReciterList(List<ReciterModel> reciterNames) {
-    return Container(
-      height: 16.h,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: ListView.builder(
-              controller: _reciterScrollController,
-              scrollDirection: Axis.horizontal,
-              itemCount: reciterNames.length,
-              itemBuilder: (context, index) {
-                return Focus(
-                  focusNode: reciterFocusNode,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedReciterIndex = index;
-                      });
-                    },
-                    child: _reciterCard(index, reciterNames),
-                  ),
-                );
-              },
             ),
           ),
         ],
@@ -199,64 +189,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       targetOffset,
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
-    );
-  }
-
-  Container _reciterCard(int index, List<ReciterModel> reciterNames) {
-    return Container(
-      width: 25.w,
-      margin: EdgeInsets.only(right: marginOfContainerReciter),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: selectedReciterIndex == index
-            ? Border.all(
-                color: Colors.white,
-                width: 2,
-              )
-            : null,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xFF490094),
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [
-              Colors.black.withOpacity(0.7),
-              Colors.transparent,
-            ],
-          ),
-        ),
-        alignment: Alignment.bottomLeft,
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-            ),
-            Image.asset(
-              R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
-              width: 17.w,
-              fit: BoxFit.fitWidth,
-            ),
-            Spacer(),
-            FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  reciterNames[index].name,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
-          ],
-        ),
-      ),
     );
   }
 
@@ -450,6 +382,39 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         },
       ),
     );
+  }
+
+  Widget _buildFavoriteButton() {
+    return ref.watch(reciteNotifierProvider).maybeWhen(
+          data: (recitersList) {
+            final reciters = recitersList.reciters;
+            final isFavorite = ref.watch(quranFavoriteNotifierProvider).maybeWhen(
+                  data: (reciter) =>
+                      reciter.favoriteReciters.map((e) => e.id).contains(reciters[selectedReciterIndex].id),
+                  orElse: () => false,
+                );
+            return ElevatedButton(
+              onPressed: () {
+                log('quran:ui: isFavorite: $isFavorite ${selectedReciterIndex}');
+                if (reciters.isEmpty) return;
+                ref.read(quranFavoriteNotifierProvider.notifier).saveFavoriteReciter(
+                      reciterId: reciters[selectedReciterIndex].id,
+                    );
+              },
+              style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+                backgroundColor: isFavorite ? Colors.white.withOpacity(0.2) : Colors.red,
+                fixedSize: Size(5.w, 5.w),
+              ),
+              child: Icon(
+                isFavorite ? Icons.favorite_border : Icons.favorite,
+                color: Colors.white,
+                size: 15.sp,
+              ),
+            );
+          },
+          orElse: () => Container(),
+        );
   }
 
   Widget _buildReciteTypeGridShimmer(bool isDarkMode) {
