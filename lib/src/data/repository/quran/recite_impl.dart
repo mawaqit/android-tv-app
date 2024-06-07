@@ -21,10 +21,10 @@ class ReciteImpl implements ReciteRepository {
       final reciters = await _remoteDataSource.getReciters(
         language: language,
       );
-      await _localDataSource.saveRecitersBySurah(reciters, surahId);
+      await _localDataSource.saveReciters(reciters);
       return _filterBySurahId(reciters, surahId);
     } catch (e) {
-      final reciters = await _localDataSource.getReciterBySurah(surahId);
+      final reciters = await _localDataSource.getReciters();
       return reciters ?? [];
     }
   }
