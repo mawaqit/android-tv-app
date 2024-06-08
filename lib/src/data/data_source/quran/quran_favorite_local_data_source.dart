@@ -58,6 +58,30 @@ class QuranFavoriteLocalDataSource {
       throw FetchFavoriteSurahsByReciterException(e.toString());
     }
   }
+
+  Future<void> deleteFavoriteReciter({required int reciterId}) async {
+    try {
+      await _quranReciterFavoriteBox.delete(reciterId);
+    } catch (e) {
+      throw DeleteFavoriteReciterException(e.toString());
+    }
+  }
+
+  Future<void> deleteFavoriteSuwar({required int reciterId, required int surahId, required String riwayat}) async {
+    try {
+      if(_quranReciterFavoriteBox.containsKey(reciterId)) {
+        final riwayatMap = _quranReciterFavoriteBox.get(reciterId);
+        final suwar = riwayatMap![riwayat] ?? {};
+        if(suwar.contains(surahId)) {
+          suwar.remove(surahId);
+          riwayatMap[riwayat] = suwar;
+          await _quranReciterFavoriteBox.put(reciterId, riwayatMap);
+        }
+      }
+    } catch (e) {
+      throw DeleteFavoriteSurahException(e.toString());
+    }
+  }
 }
 
 final quranFavoriteLocalDataSourceProvider = FutureProvider<QuranFavoriteLocalDataSource>((ref) async {

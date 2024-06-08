@@ -44,6 +44,16 @@ class QuranFavoriteImpl implements QuranFavoriteRepository {
   }) {
     return _favoriteLocalDataSource.saveFavoriteSurahByReciter(reciterId, surahId, riwayat);
   }
+
+  @override
+  Future<void> deleteFavoriteReciter({required int reciterId}) {
+    return _favoriteLocalDataSource.deleteFavoriteReciter(reciterId: reciterId);
+  }
+
+  @override
+  Future<void> deleteFavoriteSuwar({required int reciterId, required int surahId, required String riwayat}) {
+    return _favoriteLocalDataSource.deleteFavoriteSuwar(reciterId: reciterId, surahId: surahId, riwayat: riwayat);
+  }
 }
 
 final quranFavoriteRepositoryProvider = FutureProvider<QuranFavoriteRepository>((ref) async {

@@ -7,8 +7,8 @@ class QuranFavoriteNotifier extends AsyncNotifier<QuranFavoriteState> {
   build() async {
     getFavoriteReciters();
     return QuranFavoriteState(
-        favoriteReciters: [],
-      );
+      favoriteReciters: [],
+    );
   }
 
   Future<void> getFavoriteReciters() async {
@@ -50,6 +50,32 @@ class QuranFavoriteNotifier extends AsyncNotifier<QuranFavoriteState> {
       state = AsyncLoading();
       final quranFavoriteRepository = await ref.read(quranFavoriteRepositoryProvider.future);
       await quranFavoriteRepository.saveFavoriteReciter(reciterId);
+    } catch (e, s) {
+      state = AsyncError(e, s);
+    }
+  }
+
+  Future<void> deleteFavoriteReciter({required int reciterId}) async {
+    try {
+      state = AsyncLoading();
+      final quranFavoriteRepository = await ref.read(quranFavoriteRepositoryProvider.future);
+      await quranFavoriteRepository.deleteFavoriteReciter(reciterId: reciterId);
+      getFavoriteReciters();
+    } catch (e, s) {
+      state = AsyncError(e, s);
+    }
+  }
+
+  Future<void> deleteFavoriteSuwar({
+    required int reciterId,
+    required int surahId,
+    required String riwayat,
+  }) async {
+    try {
+      state = AsyncLoading();
+      final quranFavoriteRepository = await ref.read(quranFavoriteRepositoryProvider.future);
+      await quranFavoriteRepository.deleteFavoriteSuwar(reciterId: reciterId, surahId: surahId, riwayat: riwayat);
+      getFavoriteReciters();
     } catch (e, s) {
       state = AsyncError(e, s);
     }

@@ -93,9 +93,17 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
           onPressed: () {
             log('quran:ui: isFavorite: $isFavorite ${selectedReciterIndex}');
             if (reciters.isEmpty) return;
-            ref.read(quranFavoriteNotifierProvider.notifier).saveFavoriteReciter(
-              reciterId: reciters[selectedReciterIndex].id,
-            );
+            // if it is favorite
+            if(isFavorite){
+              ref.read(quranFavoriteNotifierProvider.notifier).deleteFavoriteReciter(
+                reciterId: reciters[selectedReciterIndex].id,
+              );
+            }
+            else {
+              ref.read(quranFavoriteNotifierProvider.notifier).saveFavoriteReciter(
+                reciterId: reciters[selectedReciterIndex].id,
+              );
+            }
           },
           style: ElevatedButton.styleFrom(
             shape: CircleBorder(),

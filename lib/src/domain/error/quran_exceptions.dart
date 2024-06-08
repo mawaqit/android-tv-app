@@ -125,3 +125,13 @@ class FetchFavoriteSurahsByReciterException extends QuranException {
   FetchFavoriteSurahsByReciterException(String message)
       : super('Error occurred while fetching favorite surahs by reciter: $message', 'FETCH_FAVORITE_SURAHS_BY_RECITER_ERROR');
 }
+
+class DeleteFavoriteReciterException extends QuranException {
+  DeleteFavoriteReciterException(String message)
+      : super('Error occurred while deleting favorite reciter: $message', 'DELETE_FAVORITE_RECITER_ERROR');
+}
+
+class DeleteFavoriteSurahException extends QuranException {
+  DeleteFavoriteSurahException(String message)
+      : super('Error occurred while deleting favorite surah: $message', 'DELETE_FAVORITE_SURAH_ERROR');
+}

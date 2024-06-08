@@ -16,4 +16,14 @@ abstract class QuranFavoriteRepository {
     int reciterId,
     String riwayat,
   );
+
+  Future<void> deleteFavoriteReciter({
+    required int reciterId,
+  });
+
+  Future<void> deleteFavoriteSuwar({
+    required int reciterId,
+    required int surahId,
+    required String riwayat,
+  });
 }
