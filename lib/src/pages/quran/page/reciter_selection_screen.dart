@@ -22,10 +22,6 @@ import 'package:sizer/sizer.dart';
 
 import 'package:mawaqit/i18n/l10n.dart';
 
-import 'package:mawaqit/const/resource.dart';
-
-import 'package:mawaqit/src/pages/quran/widget/switch_button.dart';
-
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
 
@@ -104,9 +100,14 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                   ref.watch(quranFavoriteNotifierProvider).when(
                         data: (reciter) {
                           if (reciter.favoriteReciters.isNotEmpty) {
-                            return ReciterListView(
-                              isFavoriteButton: false,
-                              reciterList: reciter.favoriteReciters,
+                            return Column(
+                              children: [
+                                ReciterListView(
+                                  isFavoriteButton: false,
+                                  reciterList: reciter.favoriteReciters,
+                                ),
+                                SizedBox(height: 5.h),
+                              ],
                             );
                           } else {
                             return Container();
