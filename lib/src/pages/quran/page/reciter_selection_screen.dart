@@ -65,6 +65,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = S.of(context);
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
     return QuranBackground(
       isSwitch: true,
       appBar: AppBar(
@@ -98,20 +99,24 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    l10n.favoriteReciter,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 14),
                   ref.watch(quranFavoriteNotifierProvider).when(
                         data: (reciter) {
                           if (reciter.favoriteReciters.isNotEmpty) {
                             return Column(
                               children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    l10n.favoriteReciter,
+                                    textAlign: isRTL ? TextAlign.right : TextAlign.left,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 14),
                                 ReciterListView(
                                   onSelected: (index) {
                                     setState(() {
