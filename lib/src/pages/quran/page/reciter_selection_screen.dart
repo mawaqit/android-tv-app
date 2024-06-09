@@ -64,6 +64,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = S.of(context);
     return QuranBackground(
       isSwitch: true,
       appBar: AppBar(
@@ -97,6 +98,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    l10n.favoriteReciter,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 14),
                   ref.watch(quranFavoriteNotifierProvider).when(
                         data: (reciter) {
                           if (reciter.favoriteReciters.isNotEmpty) {
@@ -121,6 +131,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                         loading: () => _buildReciterListShimmer(true),
                         error: (error, stackTrace) => Text('Error: $error'),
                       ),
+                  Text(
+                    l10n.allReciters,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
                   ref.watch(reciteNotifierProvider).when(
                         data: (reciter) => ReciterListView(
                           isFavoriteButton: true,

@@ -234,5 +234,7 @@
       }
     }
   },
-  "chooseQuranPage": "Choose the page"
+  "chooseQuranPage": "Choose the page",
+  "favoriteReciter": "Favorite Reciters",
+  "allReciters": "All Reciters"
 }
