@@ -87,7 +87,10 @@ class QuranFavoriteNotifier extends AsyncNotifier<QuranFavoriteState> {
       state = AsyncLoading();
       final quranFavoriteRepository = await ref.read(quranFavoriteRepositoryProvider.future);
       await quranFavoriteRepository.deleteFavoriteSuwar(reciterId: reciterId, surahId: surahId, riwayatId: riwayatId);
-      getFavoriteReciters();
+      getFavoriteSuwar(
+        riwayatId: riwayatId,
+        reciterId: reciterId,
+      );
     } catch (e, s) {
       state = AsyncError(e, s);
     }

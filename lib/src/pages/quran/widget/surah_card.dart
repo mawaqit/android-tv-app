@@ -47,19 +47,8 @@ class _SurahCardState extends ConsumerState<SurahCard> {
         decoration: BoxDecoration(
           color: widget.isSelected
               ? Theme.of(context).primaryColor.withOpacity(0.8)
-              : _isFocused
-              ? Theme.of(context).primaryColor.withOpacity(0.4)
               : Colors.white.withOpacity(0.2),
           borderRadius: BorderRadius.circular(14),
-          boxShadow: _isFocused
-              ? [
-            BoxShadow(
-              color: Theme.of(context).primaryColor.withOpacity(0.4),
-              blurRadius: 10,
-              offset: Offset(0, 4),
-            ),
-          ]
-              : [],
         ),
         child: Stack(
           children: [

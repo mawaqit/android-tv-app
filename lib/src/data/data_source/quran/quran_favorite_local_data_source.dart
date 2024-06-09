@@ -83,6 +83,7 @@ class QuranFavoriteLocalDataSource {
     required int riwayatId,
   }) async {
     try {
+      log('quran: first QuranFavoriteLocalDataSource: deleteFavoriteSuwar: $reciterId | $surahId | $riwayatId ${_quranReciterFavoriteBox.containsKey(reciterId)}');
       if (_quranReciterFavoriteBox.containsKey(reciterId)) {
         final riwayatObject = _quranReciterFavoriteBox.get(reciterId);
         final newFavoriteSuwar = riwayatObject!.favoriteSuwar.map((e) {
@@ -93,6 +94,7 @@ class QuranFavoriteLocalDataSource {
             return e;
           }
         }).toList();
+        log('quran: QuranFavoriteLocalDataSource: deleteFavoriteSuwar: $newFavoriteSuwar');
         await _quranReciterFavoriteBox.put(reciterId, riwayatObject.copyWith(favoriteSuwar: newFavoriteSuwar));
       }
     } catch (e) {
