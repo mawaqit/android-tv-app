@@ -7,14 +7,14 @@ abstract class QuranFavoriteRepository {
   Future<void> saveFavoriteSuwar({
     required int reciterId,
     required int surahId,
-    required String riwayat,
+    required int riwayatId,
   });
 
   Future<List<ReciterModel>> getFavoriteReciters();
 
   Future<MoshafModel> getFavoriteSuwar(
     int reciterId,
-    String riwayat,
+    int riwayatId,
   );
 
   Future<void> deleteFavoriteReciter({
@@ -24,6 +24,6 @@ abstract class QuranFavoriteRepository {
   Future<void> deleteFavoriteSuwar({
     required int reciterId,
     required int surahId,
-    required String riwayat,
+    required int riwayatId,
   });
 }

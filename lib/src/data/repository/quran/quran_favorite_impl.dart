@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
@@ -24,11 +26,14 @@ class QuranFavoriteImpl implements QuranFavoriteRepository {
   }
 
   @override
-  Future<MoshafModel> getFavoriteSuwar(int reciterId, String riwayat) async {
-    final Set<int> favoriteSuwarIds = await _favoriteLocalDataSource.getFavoriteSuwarByReciter(reciterId, riwayat);
+  Future<MoshafModel> getFavoriteSuwar(int reciterId, int riwayatId) async {
+    final List<int> favoriteSuwarIds = await _favoriteLocalDataSource.getFavoriteSuwarByReciter(reciterId, riwayatId);
     final List<ReciterModel> reciters = await _reciteLocalDataSource.getReciters();
     final ReciterModel reciter = reciters.firstWhere((reciter) => reciter.id == reciterId);
-    return reciter.moshaf.firstWhere((moshaf) => moshaf.name == riwayat).copyWith(surahList: favoriteSuwarIds.toList());
+    log('quran: QuranFavoriteImpl: getFavoriteSuwar: ${favoriteSuwarIds} | ${reciter.name} |  ${reciter.moshaf[0].surahList} | ${reciter.moshaf.firstWhere((moshaf) => moshaf.moshafType == riwayatId).copyWith(surahList: favoriteSuwarIds.toList())}');
+    return reciter.moshaf
+        .firstWhere((moshaf) => moshaf.moshafType == riwayatId)
+        .copyWith(surahList: favoriteSuwarIds.toList());
   }
 
   @override
@@ -40,9 +45,9 @@ class QuranFavoriteImpl implements QuranFavoriteRepository {
   Future<void> saveFavoriteSuwar({
     required int reciterId,
     required int surahId,
-    required String riwayat,
+    required int riwayatId,
   }) {
-    return _favoriteLocalDataSource.saveFavoriteSurahByReciter(reciterId, surahId, riwayat);
+    return _favoriteLocalDataSource.saveFavoriteSurahByReciter(reciterId, surahId, riwayatId);
   }
 
   @override
@@ -51,8 +56,12 @@ class QuranFavoriteImpl implements QuranFavoriteRepository {
   }
 
   @override
-  Future<void> deleteFavoriteSuwar({required int reciterId, required int surahId, required String riwayat}) {
-    return _favoriteLocalDataSource.deleteFavoriteSuwar(reciterId: reciterId, surahId: surahId, riwayat: riwayat);
+  Future<void> deleteFavoriteSuwar({
+    required int reciterId,
+    required int surahId,
+    required int riwayatId,
+  }) async {
+    await _favoriteLocalDataSource.deleteFavoriteSuwar(reciterId: reciterId, surahId: surahId, riwayatId: riwayatId);
   }
 }
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/data/repository/quran/quran_favorite_impl.dart';
 import 'package:mawaqit/src/state_management/quran/favorite/quran_favorite_state.dart';
@@ -21,14 +23,15 @@ class QuranFavoriteNotifier extends AsyncNotifier<QuranFavoriteState> {
   }
 
   Future<void> getFavoriteSuwar({
-    required String riwayat,
+    required int riwayatId,
     required int reciterId,
   }) async {
     state = AsyncLoading();
     state = await AsyncValue.guard(() async {
       final quranFavoriteRepository = await ref.read(quranFavoriteRepositoryProvider.future);
-      final reciters = await quranFavoriteRepository.getFavoriteSuwar(reciterId, riwayat);
-      return state.value!.copyWith(favoriteMoshafs: reciters);
+      final favoriteMoshafs = await quranFavoriteRepository.getFavoriteSuwar(reciterId, riwayatId);
+      log('quran: QuranFavoriteNotifier: getFavoriteSuwar: ${favoriteMoshafs.surahList}');
+      return state.value!.copyWith(favoriteMoshafs: favoriteMoshafs);
     });
   }
 
@@ -45,11 +48,20 @@ class QuranFavoriteNotifier extends AsyncNotifier<QuranFavoriteState> {
     }
   }
 
-  Future<void> saveFavoriteSuwar({required int reciterId}) async {
+  Future<void> saveFavoriteSuwar({
+    required int reciterId,
+    required int surahId,
+    required int riwayatId,
+  }) async {
     try {
       state = AsyncLoading();
       final quranFavoriteRepository = await ref.read(quranFavoriteRepositoryProvider.future);
-      await quranFavoriteRepository.saveFavoriteReciter(reciterId);
+      await quranFavoriteRepository.saveFavoriteSuwar(
+        reciterId: reciterId,
+        surahId: surahId,
+        riwayatId: riwayatId,
+      );
+      getFavoriteSuwar(riwayatId: riwayatId, reciterId: reciterId);
     } catch (e, s) {
       state = AsyncError(e, s);
     }
@@ -69,12 +81,12 @@ class QuranFavoriteNotifier extends AsyncNotifier<QuranFavoriteState> {
   Future<void> deleteFavoriteSuwar({
     required int reciterId,
     required int surahId,
-    required String riwayat,
+    required int riwayatId,
   }) async {
     try {
       state = AsyncLoading();
       final quranFavoriteRepository = await ref.read(quranFavoriteRepositoryProvider.future);
-      await quranFavoriteRepository.deleteFavoriteSuwar(reciterId: reciterId, surahId: surahId, riwayat: riwayat);
+      await quranFavoriteRepository.deleteFavoriteSuwar(reciterId: reciterId, surahId: surahId, riwayatId: riwayatId);
       getFavoriteReciters();
     } catch (e, s) {
       state = AsyncError(e, s);

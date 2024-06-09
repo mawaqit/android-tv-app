@@ -103,6 +103,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                             return Column(
                               children: [
                                 ReciterListView(
+                                  onSelected: (index) {
+                                    setState(() {
+                                      selectedReciterIndex = index;
+                                    });
+                                  },
                                   isFavoriteButton: false,
                                   reciterList: reciter.favoriteReciters,
                                 ),
@@ -119,6 +124,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                   ref.watch(reciteNotifierProvider).when(
                         data: (reciter) => ReciterListView(
                           isFavoriteButton: true,
+                          onSelected: (index) {
+                            setState(() {
+                              selectedReciterIndex = index;
+                            });
+                          },
                           reciterList: reciter.reciters,
                         ),
                         loading: () => _buildReciterListShimmer(true),
@@ -234,7 +244,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SurahSelectionScreen(),
+                  builder: (context) => SurahSelectionScreen(
+                    reciterId: reciters[selectedReciterIndex].id,
+                    riwayatId: reciterTypes[selectedReciteTypeIndex].moshafType,
+                  ),
                 ),
               );
             },
@@ -275,7 +288,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       if (reciterFocusNode.hasFocus) {
         _handleReciteKeyEvent(value, reciters);
       } else if (reciteTypeFocusNode.hasFocus) {
-        _handleReciteTypeKeyEvent(value, reciters);
+        _handleReciteTypeKeyEvent(value, reciters, reciters[selectedReciterIndex].moshaf);
       }
     }
   }
@@ -309,7 +322,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     }
   }
 
-  void _handleReciteTypeKeyEvent(RawKeyEvent value, List<ReciterModel> reciters) {
+  void _handleReciteTypeKeyEvent(RawKeyEvent value, List<ReciterModel> reciters, List<MoshafModel> reciterTypes) {
     log('_handleReciteTypeKeyEvent: $value');
     if (value is RawKeyDownEvent) {
       if (reciteTypeFocusNode.hasFocus) {
@@ -340,7 +353,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SurahSelectionScreen(),
+              builder: (context) => SurahSelectionScreen(
+                reciterId: reciters[selectedReciterIndex].id,
+                riwayatId: reciterTypes[selectedReciteTypeIndex].moshafType,
+              ),
             ),
           );
         }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
+import 'package:mawaqit/src/state_management/quran/favorite/quran_favorite_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
@@ -15,8 +16,13 @@ import 'package:mawaqit/src/pages/quran/page/quran_player_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class SurahSelectionScreen extends ConsumerStatefulWidget {
+  final int reciterId;
+  final int riwayatId;
+
   const SurahSelectionScreen({
     super.key,
+    required this.reciterId,
+    required this.riwayatId,
   });
 
   @override
@@ -34,6 +40,12 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     super.initState();
     _searchFocusNode = FocusNode();
     RawKeyboard.instance.addListener(_handleKeyEvent);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(quranFavoriteNotifierProvider.notifier).getFavoriteSuwar(
+            riwayatId: widget.riwayatId,
+            reciterId: widget.reciterId,
+          );
+    });
   }
 
   @override
@@ -65,6 +77,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                 Expanded(
                   child: quranState.when(
                     data: (data) {
+
                       return GridView.builder(
                         padding: EdgeInsets.symmetric(horizontal: 3.w),
                         controller: _scrollController,
@@ -77,6 +90,26 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                         itemCount: data.suwar.length,
                         itemBuilder: (context, index) {
                           return SurahCard(
+                            onFavoriteTap: () {
+                              log('quran: favorite: Favorite tap on index: $index');
+                              ref.read(quranFavoriteNotifierProvider.notifier).saveFavoriteSuwar(
+                                    reciterId: widget.reciterId,
+                                    surahId: data.suwar[index].id,
+                                    riwayatId: widget.riwayatId,
+                                  );
+                            },
+                            isFavorite: ref.watch(quranFavoriteNotifierProvider).maybeWhen(
+                                  orElse: () => false,
+                                  data: (favoriteData) {
+                                    if (favoriteData.favoriteMoshafs == null ||
+                                        favoriteData.favoriteMoshafs!.moshafType != widget.riwayatId) {
+                                      return false;
+                                    } else {
+                                      log('quran: favorite: Favorite tap on data: ${index} ${favoriteData.favoriteMoshafs} || ${widget.riwayatId} || ${favoriteData.favoriteMoshafs!.surahList.contains(index + 1)}');
+                                      return favoriteData.favoriteMoshafs!.surahList.contains(data.suwar[index].id);
+                                    }
+                                  },
+                                ),
                             surahName: data.suwar[index].name,
                             surahNumber: data.suwar[index].id,
                             isSelected: index == selectedIndex,

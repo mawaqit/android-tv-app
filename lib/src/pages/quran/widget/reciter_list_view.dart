@@ -12,9 +12,11 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 class ReciterListView extends ConsumerStatefulWidget {
   final List<ReciterModel> reciterList;
   final bool isFavoriteButton;
+  final void Function(int) onSelected;
 
   const ReciterListView({
     super.key,
+    required this.onSelected,
     required this.reciterList,
     required this.isFavoriteButton,
   });
@@ -54,6 +56,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
+                    widget.onSelected(index);
                     setState(() {
                       selectedReciterIndex = index;
                     });
