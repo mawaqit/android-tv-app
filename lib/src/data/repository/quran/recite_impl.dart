@@ -21,8 +21,9 @@ class ReciteImpl implements ReciteRepository {
       final reciters = await _remoteDataSource.getReciters(
         language: language,
       );
-      await _localDataSource.saveReciters(reciters);
-      return _filterBySurahId(reciters, surahId);
+      final sortedReciters = _sortReciters(reciters);
+      await _localDataSource.saveReciters(sortedReciters);
+      return _filterBySurahId(sortedReciters, surahId);
     } catch (e) {
       final reciters = await _localDataSource.getReciters();
       return reciters ?? [];
@@ -34,8 +35,9 @@ class ReciteImpl implements ReciteRepository {
       final reciters = await _remoteDataSource.getReciters(
         language: language,
       );
-      await _localDataSource.saveReciters(reciters);
-      return reciters;
+      final sortedReciters = _sortReciters(reciters);
+      await _localDataSource.saveReciters(sortedReciters);
+      return sortedReciters;
     } catch (e) {
       final reciters = await _localDataSource.getReciters();
       return reciters;
@@ -49,6 +51,12 @@ class ReciteImpl implements ReciteRepository {
         return moshaf.surahList.contains(surahId);
       });
     }).toList();
+  }
+
+  /// sort the reciters by the reciter name
+  List<ReciterModel> _sortReciters(List<ReciterModel> reciters) {
+    reciters.sort((a, b) => a.name.compareTo(b.name));
+    return reciters;
   }
 }
 
