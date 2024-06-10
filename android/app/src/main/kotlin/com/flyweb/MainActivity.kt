@@ -32,7 +32,6 @@ private lateinit var mAdminComponentName: ComponentName
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "setDeviceTimezone" -> setDeviceTimezone(call, result)
-                    "setDeviceOwner" -> setDeviceOwner(call, result)
                     "connectToWifi" -> connectToWifi(call, result)
                     "isPackageInstalled" -> {
                             val packageName = call.argument<String>("packageName")
@@ -78,25 +77,17 @@ private lateinit var mAdminComponentName: ComponentName
         return false
     }
   
-    private fun setDeviceTimezone(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                val timezone = call.argument<String>("timezone")
-                executeCommand("service call alarm 3 s16 $timezone", result)
-            } catch (e: Exception) {
-                handleCommandException(e, result)
-            }
+ private fun setDeviceTimezone(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+        try {
+            val timezone = call.argument<String>("timezone")
+            executeCommand("service call alarm 3 s16 $timezone", result)
+        } catch (e: Exception) {
+            handleCommandException(e, result)
         }
     }
-    private fun setDeviceOwner(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                executeCommand("dpm set-device-owner com.mawaqit.androidtv/.MyDeviceAdminReceiver", result)
-            } catch (e: Exception) {
-                handleCommandException(e, result)
-            }
-        }
-    }
+}
+
 
     private fun isPackageInstalled(packageName: String?): Boolean {
         val packageManager = applicationContext.packageManager
@@ -144,10 +135,11 @@ private lateinit var mAdminComponentName: ComponentName
 
             if (exitCode != 0) {
                 Log.e("SU_COMMAND", "Command failed with exit code $exitCode.")
-                result.error("CMD_ERROR", "Command failed", null)
+                                result.success(false)
+
             } else {
                 Log.i("SU_COMMAND", "Command executed successfully.")
-                result.success("Command executed successfully.")
+                result.success(true)
             }
         } catch (e: Exception) {
             handleCommandException(e, result)

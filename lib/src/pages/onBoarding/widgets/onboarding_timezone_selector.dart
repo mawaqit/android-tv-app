@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:flutter/services.dart';
 import '../../../../i18n/l10n.dart';
@@ -210,10 +211,29 @@ class _OnBoardingTimeZoneSelectorState
 
   Future<void> _setDeviceTimezone(String timezone) async {
     try {
-      await platform.invokeMethod('setDeviceTimezone', {"timezone": timezone});
+      bool isSuccess = await platform
+          .invokeMethod('setDeviceTimezone', {"timezone": timezone});
+      if (isSuccess) {
+        _showToast(S.of(context).timezoneSuccess);
+      } else {
+        _showToast(S.of(context).timezoneFailure);
+      }
     } on PlatformException catch (e) {
       logger.e(e);
+      _showToast(S.of(context).timezoneFailure);
     }
+  }
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 
   String _convertToGMTOffset(Duration timeZoneOffset) {
@@ -226,4 +246,3 @@ class _OnBoardingTimeZoneSelectorState
 
   String _padZero(int value) => value < 10 ? '0$value' : '$value';
 }
-

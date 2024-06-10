@@ -205,6 +205,10 @@
   "skip":"Skip",
   "noSSID":"**Hidden SSID**",
   "close":"Close",
-  "search":"Search"
+  "search":"Search",
+  "wifiSuccess":"Successfully connected to Wifi.",
+  "wifiFailure":"Failed to connect to Wifi.",
+  "timezoneSuccess":"Timezone set successfully.",
+  "timezoneFailure":"Failed to set timezone."
 
 }

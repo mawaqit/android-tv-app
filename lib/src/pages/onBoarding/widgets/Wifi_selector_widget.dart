@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 
@@ -159,14 +160,31 @@ class _AccessPointTileState extends State<_AccessPointTile> {
   Future<void> connectToWifi(
       String ssid, String security, String password) async {
     try {
-      await platform.invokeMethod('connectToWifi', {
+      bool isSuccess = await platform.invokeMethod('connectToWifi', {
         "ssid": ssid,
         "password": password,
         "security": security,
       });
+      if (isSuccess) {
+        _showToast(S.of(context).wifiSuccess);
+      } else {
+        _showToast(S.of(context).wifiFailure);
+      }
     } on PlatformException catch (e) {
-      print('Failed to connect to WiFi: $e');
+      _showToast(S.of(context).wifiFailure);
     }
+  }
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 
   @override
