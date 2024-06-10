@@ -8,15 +8,7 @@ class Page {
   String? date = "";
   String? iconUrl = "";
 
-  Page(
-      {this.id,
-      this.title,
-      this.type,
-      this.icon,
-      this.url,
-      this.status,
-      this.date,
-      this.iconUrl});
+  Page({this.id, this.title, this.type, this.icon, this.url, this.status, this.date, this.iconUrl});
 
   Page.fromJson(Map<String, dynamic> json) {
     id = json['id'];

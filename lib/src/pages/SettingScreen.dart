@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, WidgetRef, Consumer;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/connectivity_provider.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
+import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/pages/HijriAdjustmentsScreen.dart';
 import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
@@ -13,26 +16,30 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' hide Consumer;
 import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
+import '../../main.dart';
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
+import '../state_management/app_update/app_update_notifier.dart';
+import '../state_management/random_hadith/random_hadith_notifier.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
-class SettingScreen extends StatelessWidget {
-  SettingScreen({Key? key}) : super(key: key);
+
+class SettingScreen extends ConsumerWidget {
+   SettingScreen({Key? key}) : super(key: key);
   bool isDeviceRooted = false;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder<void>(
       future: _initializeTimeShiftManager(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return _buildSettingScreen(context);
+          return _buildSettingScreen(context, ref);
         } else {
           return SizedBox();
         }
@@ -56,7 +63,7 @@ class SettingScreen extends StatelessWidget {
     isDeviceRooted = await checkRoot();
   }
 
-  Widget _buildSettingScreen(BuildContext context) {
+  Widget _buildSettingScreen(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
     final mosqueProvider = context.watch<MosqueManager>();
@@ -104,35 +111,70 @@ class SettingScreen extends StatelessWidget {
                     title: S.of(context).randomHadithLanguage,
                     subtitle: S.of(context).hadithLangDesc,
                     icon: Icon(Icons.language, size: 35),
-                    onTap: () => AppRouter.push(
-                      LanguageScreen(
-                        isIconActivated: true,
-                        title: S.of(context).randomHadithLanguage,
-                        description: S.of(context).descLang,
-                        languages:
-                            appLanguage.hadithLocalizedLanguage.keys.toList(),
-                        isSelected: (langCode) =>
-                            appLanguage.hadithLanguage == langCode,
-                        onSelect: (langCode) {
-                          bool isConnectedToInternet = mosqueProvider.isOnline;
-                          if (!isConnectedToInternet) {
-                            showCheckInternetDialog(
-                              context: context,
-                              onRetry: () {
-                                AppRouter.pop();
+                    onTap: () {
+                      context.read<AppLanguage>().getHadithLanguage();
+                      AppRouter.push(
+                        LanguageScreen(
+                          isIconActivated: true,
+                          title: S.of(context).randomHadithLanguage,
+                          description: S.of(context).descLang,
+                          languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
+                          isSelected: (langCode) {
+                            return appLanguage.hadithLanguage == langCode;
+                          },
+                          onSelect: (langCode) async {
+                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                            ref.watch(connectivityProvider).maybeWhen(
+                              orElse: () {
+                                showCheckInternetDialog(
+                                  context: context,
+                                  onRetry: () {
+                                    AppRouter.pop();
+                                  },
+                                  title: checkInternet,
+                                  content: hadithLanguage,
+                                );
                               },
-                              title: checkInternet,
-                              content: hadithLanguage,
+                              data: (isConnectedToInternet) {
+                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                  showCheckInternetDialog(
+                                    context: context,
+                                    onRetry: () {
+                                      AppRouter.pop();
+                                    },
+                                    title: checkInternet,
+                                    content: hadithLanguage,
+                                  );
+                                } else {
+                                  context.read<AppLanguage>().setHadithLanguage(langCode);
+                                  ref
+                                      .read(randomHadithNotifierProvider.notifier)
+                                      .fetchAndCacheHadith(language: langCode);
+                                  AppRouter.pop();
+                                }
+                              },
                             );
-                          } else {
-                            context
-                                .read<AppLanguage>()
-                                .setHadithLanguage(langCode);
-                            AppRouter.pop();
-                          }
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return _SettingSwitchItem(
+                        title: S.of(context).automaticUpdate,
+                        subtitle: S.of(context).automaticUpdateDescription,
+                        icon: Icon(Icons.update, size: 35),
+                        onChanged: (value) {
+                          logger.d('setting: disable the update $value');
+                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
                         },
-                      ),
-                    ),
+                        value: ref.watch(appUpdateProvider).maybeWhen(
+                              orElse: () => false,
+                              data: (data) => data.isAutoUpdateChecking,
+                            ),
+                      );
+                    },
                   ),
                   SizedBox(height: 30),
                   Divider(),
@@ -143,9 +185,7 @@ class SettingScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light
-                        ? S.of(context).darkMode
-                        : S.of(context).lightMode,
+                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
                     icon: Icon(Icons.brightness_4, size: 35),
                     onChanged: (value) => themeManager.toggleMode(),
                     value: themeManager.isLightTheme ?? false,
@@ -171,8 +211,7 @@ class SettingScreen extends StatelessWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => TimePickerModal(
-                                  timeShiftManager: timeShiftManager),
+                              builder: (context) => TimePickerModal(timeShiftManager: timeShiftManager),
                             );
                           },
                         )
@@ -183,24 +222,19 @@ class SettingScreen extends StatelessWidget {
                       subtitle: S.of(context).announcementOnlyModeEXPLINATION,
                       icon: Icon(Icons.notifications, size: 35),
                       value: userPreferences.announcementsOnly,
-                      onChanged: (value) =>
-                          userPreferences.announcementsOnly = value,
+                      onChanged: (value) => userPreferences.announcementsOnly = value,
                     ),
-                  if (!userPreferences.webViewMode &&
-                      !userPreferences.announcementsOnly)
+                  if (!userPreferences.webViewMode && !userPreferences.announcementsOnly)
                     _SettingSwitchItem(
                       title: S.of(context).secondaryScreen,
                       subtitle: S.of(context).secondaryScreenExplanation,
                       value: userPreferences.isSecondaryScreen,
                       icon: Icon(Icons.monitor, size: 35),
-                      onChanged: (value) =>
-                          userPreferences.isSecondaryScreen = value,
+                      onChanged: (value) => userPreferences.isSecondaryScreen = value,
                     ),
                   _SettingSwitchItem(
                     title: S.of(context).webView,
-                    subtitle: S
-                        .of(context)
-                        .ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
                     icon: Icon(Icons.online_prediction, size: 35),
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
@@ -266,11 +300,7 @@ class _SettingItem extends StatelessWidget {
         trailing: Icon(Icons.arrow_forward_ios),
         title: Text(title),
         subtitle: subtitle != null
-            ? Text(subtitle!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 10, color: Colors.white.withOpacity(0.7)))
+            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 10))
             : null,
         onTap: onTap,
       ),
@@ -304,9 +334,7 @@ class _SettingSwitchItem extends StatelessWidget {
         autofocus: true,
         secondary: icon ?? SizedBox(),
         title: Text(title),
-        subtitle: subtitle != null
-            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip)
-            : null,
+        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip) : null,
         value: value,
         onChanged: onChanged,
       ),

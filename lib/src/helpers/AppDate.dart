@@ -24,19 +24,27 @@ class FeatureManagerProvider {
 class AppDateTime {
   AppDateTime._();
 
-  static Duration get difference =>
-      Duration(days: 30 * 8 + 6, hours: -6, minutes: 30);
+  // Initial setup for debug time; can be replaced or modified as needed.
+  static final DateTime _initialRealTime = DateTime.now();
+  static final DateTime _initialDebugTime = DateTime(
+    _initialRealTime.year,
+    _initialRealTime.month,
+    _initialRealTime.day - 50,
+    13,
+    00,
+    -10,
+  );
+
+  static final Duration _timeDifference = _initialDebugTime.difference(_initialRealTime);
 
   static DateTime now() {
     if (kDebugMode) {
-      return DateTime.now().add(difference);
+      return DateTime.now().add(_timeDifference);
     } else {
-      return FeatureManagerProvider.featureManager
-                  .isFeatureEnabled("timezone_shift") &&
+      return FeatureManagerProvider.featureManager.isFeatureEnabled("timezone_shift") &&
               _timeManager.deviceModel == "MAWABOX" &&
               _timeManager.isLauncherInstalled
-          ? DateTime.now().add(Duration(
-              hours: _timeManager.shift, minutes: _timeManager.shiftInMinutes))
+          ? DateTime.now().add(Duration(hours: _timeManager.shift, minutes: _timeManager.shiftInMinutes))
           : DateTime.now();
     }
   }

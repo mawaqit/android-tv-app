@@ -5,36 +5,30 @@ class R {
   const R._();
 
   /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\language.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON =
-      'assets/animations/lottie/language.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON = 'assets/animations/lottie/language.json';
 
   /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\search.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_SEARCH_JSON =
-      'assets/animations/lottie/search.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_SEARCH_JSON = 'assets/animations/lottie/search.json';
 
   /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\theme.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_THEME_JSON =
-      'assets/animations/lottie/theme.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_THEME_JSON = 'assets/animations/lottie/theme.json';
 
   /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\theme.json)
   static const String ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON =
       'assets/animations/lottie/settings.json';
 
   /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\welcome.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_WELCOME_JSON =
-      'assets/animations/lottie/welcome.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_WELCOME_JSON = 'assets/animations/lottie/welcome.json';
 
   /// ![preview](file://E:\Projects\android-tv\assets\animations\rive\mawaqit_logo_animation1.riv)
   static const String ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV =
       'assets/animations/rive/mawaqit_logo_animation1.riv';
 
   /// ![preview](file://E:\Projects\android-tv\assets\backgrounds\splash_screen_5.png)
-  static const String ASSETS_BACKGROUNDS_SPLASH_SCREEN_5_PNG =
-      'assets/backgrounds/splash_screen_5.png';
+  static const String ASSETS_BACKGROUNDS_SPLASH_SCREEN_5_PNG = 'assets/backgrounds/splash_screen_5.png';
 
   /// ![preview](file://E:\Projects\android-tv\assets\cfg\configuration.json)
-  static const String ASSETS_CFG_CONFIGURATION_JSON =
-      'assets/cfg/configuration.json';
+  static const String ASSETS_CFG_CONFIGURATION_JSON = 'assets/cfg/configuration.json';
 
   /// ![preview](file://E:\Projects\android-tv\assets\cfg\settings.json)
   static const String ASSETS_CFG_SETTINGS_JSON = 'assets/cfg/settings.json';
@@ -94,12 +88,10 @@ class R {
   static const String ASSETS_SCRIPTS_CLEAN_JS = 'assets/scripts/clean.js';
 
   /// ![preview](file://E:\Projects\android-tv\assets\svg\mawaqit-logo-text-light.svg)
-  static const String ASSETS_SVG_MAWAQIT_LOGO_TEXT_LIGHT_SVG =
-      'assets/svg/mawaqit-logo-text-light.svg';
+  static const String ASSETS_SVG_MAWAQIT_LOGO_TEXT_LIGHT_SVG = 'assets/svg/mawaqit-logo-text-light.svg';
 
   /// ![preview](file://E:\Projects\android-tv\assets\svg\mawaqit_logo_light.svg)
-  static const String ASSETS_SVG_MAWAQIT_LOGO_LIGHT_SVG =
-      'assets/svg/mawaqit_logo_light.svg';
+  static const String ASSETS_SVG_MAWAQIT_LOGO_LIGHT_SVG = 'assets/svg/mawaqit_logo_light.svg';
 
   /// ![preview](file://E:\Projects\android-tv\assets\svg\no-phone.svg)
   static const String ASSETS_SVG_NO_PHONE_SVG = 'assets/svg/no-phone.svg';
@@ -107,6 +99,5 @@ class R {
   /// ![preview](file://E:\Projects\android-tv\assets\svg\no-wi-fi.svg)
   static const String ASSETS_SVG_NO_WI_FI_SVG = 'assets/svg/no-wi-fi.svg';
 
-  static const String ASSETS_VOICES_ADHAN_BIP_MP3 =
-      'assets/voices/adhan/bip.mp3';
+  static const String ASSETS_VOICES_ADHAN_BIP_MP3 = 'assets/voices/adhan/bip.mp3';
 }

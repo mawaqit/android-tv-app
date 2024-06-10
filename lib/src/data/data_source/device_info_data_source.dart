@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disk_space/disk_space.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
+import '../../../main.dart';
 import '../../domain/model/device_info_model.dart';
 
 /// This class uses various plugins to gather device-specific information such as brand,
@@ -67,13 +69,46 @@ class DeviceInfoDataSource {
     );
   }
 
-
   /// [getDeviceLanguage] Returns the current device language.
   Future<String> getDeviceLanguage() async {
     return Platform.localeName;
   }
-}
 
+  /// [isBoxOrAndroidTV] Checks if the device is a box or a AndroidTV.
+  Future<bool> isBoxOrAndroidTV() async {
+    final features = MethodChannel('nativeMethodsChannel');
+
+    // List of features to check
+    final featuresToCheck = [
+      'android.software.leanback',
+      'android.hardware.hdmi',
+      'android.hardware.ethernet',
+    ];
+
+    for (final feature in featuresToCheck) {
+      final hasFeature = await _checkFeature(features, feature);
+      if (hasFeature) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /// [_checkFeature] Checks if the device has a specific feature.
+  Future<bool> _checkFeature(MethodChannel features, String feature) async {
+    try {
+      final hasFeature = await features.invokeMethod<bool>(
+        'hasSystemFeature',
+        {'feature': feature},
+      );
+      logger.d('hasFeature: $hasFeature $feature');
+      return hasFeature != null && hasFeature;
+    } catch (e) {
+      return false;
+    }
+  }
+}
 
 class DeviceInfoDataSourceProviderArgument {
   final DeviceInfoPlugin? deviceInfoPlugin;

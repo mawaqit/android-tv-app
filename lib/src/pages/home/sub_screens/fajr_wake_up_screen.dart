@@ -39,7 +39,6 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
 
   @override
   void dispose() {
-    audioManager.stop();
     super.dispose();
   }
 
@@ -99,7 +98,6 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
             ),
           ),
           ResponsiveMiniSalahBarWidget(),
-          SizedBox(height: 2.vw),
         ],
       ),
     );

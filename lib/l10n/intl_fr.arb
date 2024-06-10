@@ -192,5 +192,12 @@
   "confirmationMessage": "Êtes-vous sûr de vouloir utiliser l'heure de l'appareil ?",
   "useDeviceTime": "Utiliser l'heure de l'appareil",
   "selectTime": "Sélectionner l'heure",
-  "previous": "Précédent"
+  "previous": "Précédent",
+  "updateAvailable": "Mise à jour disponible",
+  "seeMore": "En savoir plus",
+  "whatIsNew": "Quoi de neuf",
+  "update": "Mettre à jour",
+  "automaticUpdate": "Notifier la mise à jour",
+  "automaticUpdateDescription": "Activer la notification de mise à jour pour recevoir les dernières fonctionnalités et améliorations",
+  "later": "Plus tard"
 }

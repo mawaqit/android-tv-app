@@ -39,24 +39,17 @@ class _DrawerListTitle extends State<DrawerListTitle> {
       onFocusChange: (i) => setState(() => isFocused = i),
       child: ListTile(
         autofocus: widget.autoFocus,
-        tileColor:
-            isFocused ? Theme.of(context).focusColor : Colors.transparent,
-        textColor: isFocused
-            ? Colors.white
-            : Theme.of(context).textTheme.bodyMedium?.color,
+        tileColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
+        textColor: isFocused ? Colors.white : Theme.of(context).textTheme.bodyMedium?.color,
         title: Text(
-          widget.autoTranslate
-              ? Intl.message(widget.text ?? '', name: widget.text?.toCamelCase)
-              : widget.text ?? '',
+          widget.autoTranslate ? Intl.message(widget.text ?? '', name: widget.text?.toCamelCase) : widget.text ?? '',
           overflow: TextOverflow.ellipsis,
           style: TextStyle(fontSize: 15.0),
         ),
         leading: _renderIcon(
           widget.iconUrl,
           widget.icon,
-          isFocused
-              ? Colors.white
-              : Theme.of(context).textTheme.bodyMedium?.color,
+          isFocused ? Colors.white : Theme.of(context).textTheme.bodyMedium?.color,
         ),
         trailing: widget.onTap == null
             ? null
@@ -64,9 +57,7 @@ class _DrawerListTitle extends State<DrawerListTitle> {
                 Directionality.of(context) == TextDirection.ltr
                     ? Icons.keyboard_arrow_right
                     : Icons.keyboard_arrow_left,
-                color: isFocused
-                    ? Colors.white
-                    : Theme.of(context).textTheme.bodyMedium?.color,
+                color: isFocused ? Colors.white : Theme.of(context).textTheme.bodyMedium?.color,
               ),
         onTap: widget.onTap,
       ),

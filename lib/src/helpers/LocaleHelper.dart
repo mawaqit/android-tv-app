@@ -8,7 +8,6 @@ import '../../i18n/AppLanguage.dart';
 /// It supports sorting the locales such that 'ar' (Arabic) is always at the start,
 /// 'ba' is excluded, and the rest are sorted alphabetically by their language names.
 class LocaleHelper {
-
   /// [_customLocaleCompare] A private static method that defines the sorting logic.
   ///
   /// It ensures that:
@@ -24,7 +23,7 @@ class LocaleHelper {
   }
 
   /// [splitLocaleCode] Splits a combined language-country code string into a [Locale] object.
- static Locale splitLocaleCode(String localeCode) {
+  static Locale splitLocaleCode(String localeCode) {
     var parts = localeCode.split('_');
     var languageCode = parts[0];
 
@@ -35,7 +34,7 @@ class LocaleHelper {
   static List<Locale> getSortedLocales(List<Locale> locales, AppLanguage appLanguage) {
     final localeNames = Map.fromEntries(
       locales.map(
-            (locale) => MapEntry(
+        (locale) => MapEntry(
           locale.languageCode,
           appLanguage.languageName(locale.languageCode).toLowerCase(),
         ),

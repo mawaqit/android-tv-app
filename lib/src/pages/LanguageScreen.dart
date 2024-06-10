@@ -31,16 +31,18 @@ class LanguageScreen extends StatelessWidget {
     return ScreenWithAnimationWidget(
       animation: R.ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON,
       // child:  OnBoardingLanguageSelector(onSelect: AppRouter.pop)
-      child: title!.isNotEmpty ?  LanguageSelector(
-        onSelect: (selectedLang) {
-          onSelect?.call(selectedLang);  // Call the passed onSelect with the selected language
-        },
-        isSelected: isSelected!,
-        languages: languages!,
-        title: title!,
-        description: description!,
-        isIconActivated: isIconActivated!,
-      ) : OnBoardingLanguageSelector(onSelect: AppRouter.pop),
+      child: title!.isNotEmpty
+          ? LanguageSelector(
+              onSelect: (selectedLang) {
+                onSelect?.call(selectedLang); // Call the passed onSelect with the selected language
+              },
+              isSelected: isSelected!,
+              languages: languages!,
+              title: title!,
+              description: description!,
+              isIconActivated: isIconActivated!,
+            )
+          : OnBoardingLanguageSelector(onSelect: AppRouter.pop),
     );
   }
 // AppBar _renderAppBar(context) {

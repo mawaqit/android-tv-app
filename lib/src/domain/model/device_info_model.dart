@@ -1,7 +1,7 @@
 /// The [DeviceInfoModel] class represents the information about the device
 /// retrieved from various sources. It includes the device's brand, model,
 /// operating system version, language, storage info, and a unique device identifier.
-class DeviceInfoModel{
+class DeviceInfoModel {
   final String brand;
   final String model;
   final String androidVersion;
@@ -27,10 +27,13 @@ class DeviceInfoModel{
         this.model = model ?? 'unknown',
         this.androidVersion = androidVersion ?? 'unknown',
         this.language = language ?? 'unknown',
-        this.freeSpace = freeSpace ?? -1, /// Consider how to represent unknown for double
-        this.totalSpace = totalSpace ?? -1, /// Consider how to represent unknown for double
-        this.deviceId = deviceId ?? 'unknown';
+        this.freeSpace = freeSpace ?? -1,
 
+        /// Consider how to represent unknown for double
+        this.totalSpace = totalSpace ?? -1,
+
+        /// Consider how to represent unknown for double
+        this.deviceId = deviceId ?? 'unknown';
 
   /// Creates a new [DeviceInfoModel] instance from a JSON map.
   ///
@@ -63,8 +66,6 @@ class DeviceInfoModel{
       'device-id': deviceId,
     };
   }
-
-
 
   /// Returns a string representation of the [DeviceInfoModel] instance.
   ///

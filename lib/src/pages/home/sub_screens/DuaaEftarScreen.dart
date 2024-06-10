@@ -30,7 +30,6 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
 
   @override
   void dispose() {
-    audioManager.stop();
     super.dispose();
   }
 
@@ -50,7 +49,6 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
           ),
         ),
         ResponsiveMiniSalahBarWidget(),
-        SizedBox(height: 10),
       ],
     );
   }

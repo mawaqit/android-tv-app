@@ -4,6 +4,7 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:provider/provider.dart';
 import '../../../helpers/HexColor.dart';
+import '../../../models/flash.dart';
 import '../../../services/mosque_manager.dart';
 import '../../../themes/UIShadows.dart';
 
@@ -15,36 +16,17 @@ class FlashWidget extends StatefulWidget {
 }
 
 class _FlashWidgetState extends State<FlashWidget> {
-  var enabled = true;
-  late final Mosque mosque;
-
-  @override
-  void initState() {
-    final mosqueProvider = context.read<MosqueManager>();
-    mosque = mosqueProvider.mosque!;
-
-    final startDate = DateTime.tryParse(mosque.flash?.startDate ?? 'x');
-    final endDate = DateTime.tryParse(mosque.flash?.endDate ?? 'x');
-
-    if (startDate != null && endDate != null) {
-      final now = DateTime.now();
-      enabled = now.isAfter(startDate) && now.isBefore(endDate);
-    }
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (!enabled) return SizedBox();
+    final isFlashEnabled = context.select<MosqueManager, bool>((mosque) => mosque.flashEnabled);
+    final flash = context.select<MosqueManager, Flash?>((mosque) => mosque.mosque?.flash);
+    if (!isFlashEnabled) return SizedBox();
 
     return RepaintBoundary(
       child: Marquee(
-        key: ValueKey(mosque.flash?.content),
-        textDirection: mosque.flash?.orientation == 'rtl'
-            ? TextDirection.rtl
-            : TextDirection.ltr,
-        text: mosque.flash?.content ?? '',
+        key: ValueKey(flash!.content),
+        textDirection: flash.orientation == 'rtl' ? TextDirection.rtl : TextDirection.ltr,
+        text: flash.content ?? '',
         velocity: 90,
         blankSpace: 400,
         style: TextStyle(
@@ -53,7 +35,7 @@ class _FlashWidgetState extends State<FlashWidget> {
           fontWeight: FontWeight.bold,
           wordSpacing: 3,
           shadows: kHomeTextShadow,
-          color: HexColor(mosque.flash?.color ?? "#FFFFFF"),
+          color: HexColor(flash.color ?? "#FFFFFF"),
         ),
       ),
     );

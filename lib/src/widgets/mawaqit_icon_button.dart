@@ -49,20 +49,17 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
               focusNode: _focusNode,
               onTap: widget.onPressed,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 child: Row(
                   children: [
                     Text(
                       widget.label,
-                      style: theme.textTheme.bodySmall!
-                          .copyWith(color: focused ? Colors.white : color),
+                      style: theme.textTheme.bodySmall!.copyWith(color: focused ? Colors.white : color),
                     ),
                     SizedBox(width: 10),
                     Align(
                       alignment: Alignment(.5, 0),
-                      child: Icon(widget.icon,
-                          color: focused ? Colors.white : color, size: 16),
+                      child: Icon(widget.icon, color: focused ? Colors.white : color, size: 16),
                       widthFactor: .5,
                       heightFactor: 1,
                     ),

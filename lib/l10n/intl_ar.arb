@@ -192,5 +192,12 @@
   "confirmationMessage": "هل أنت متأكد من أنك تريد استخدام وقت الجهاز؟",
   "useDeviceTime": "استخدام وقت الجهاز",
   "selectTime": "حدد الوقت",
-  "previous": "السابق"
+  "previous": "السابق",
+  "updateAvailable": "التحديث متاح",
+  "seeMore": "مشاهدة المزيد",
+  "whatIsNew": "ما الجديد",
+  "update": "تحديث",
+  "automaticUpdate": "إشعار التحديث",
+  "automaticUpdateDescription": "تمكين إشعار التحديث لتلقي أحدث الميزات والتحسينات",
+  "later": "لاحقاً"
 }

@@ -56,7 +56,7 @@ workflows:
       - name: Install dependencies
         script: |
           flutter pub get
-
+          dart run build_runner build
       - name: Run flutter Unit tests
         script: |
           mkdir -p test-results

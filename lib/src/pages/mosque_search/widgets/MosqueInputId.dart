@@ -10,6 +10,10 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/AppRouter.dart';
+import '../../../helpers/SharedPref.dart';
+import '../../home/OfflineHomeScreen.dart';
+
 class MosqueInputId extends StatefulWidget {
   const MosqueInputId({Key? key, this.onDone}) : super(key: key);
 
@@ -22,6 +26,7 @@ class MosqueInputId extends StatefulWidget {
 class _MosqueInputIdState extends State<MosqueInputId> {
   final inputController = TextEditingController();
   Mosque? searchOutput;
+  SharedPref sharedPref = SharedPref();
 
   bool loading = false;
   String? error;
@@ -61,6 +66,11 @@ class _MosqueInputIdState extends State<MosqueInputId> {
     });
   }
 
+  onboardingWorkflowDone() {
+    sharedPref.save('boarding', 'true');
+    AppRouter.pushReplacement(OfflineHomeScreen());
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -76,9 +86,7 @@ class _MosqueInputIdState extends State<MosqueInputId> {
               style: TextStyle(
                 fontSize: 25.0,
                 fontWeight: FontWeight.w700,
-                color: theme.brightness == Brightness.dark
-                    ? null
-                    : theme.primaryColor,
+                color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
               ),
             ),
             SizedBox(height: 10),
@@ -89,12 +97,9 @@ class _MosqueInputIdState extends State<MosqueInputId> {
                 autoFocus: true,
                 mosque: searchOutput!,
                 onTap: () {
-                  return context
-                      .read<MosqueManager>()
-                      .setMosqueUUid(searchOutput!.uuid.toString())
-                      .then((value) {
-                    widget.onDone?.call();
-                  }).catchError((e) {
+                  return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) {
+                    !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
+                  }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {
                       setState(() {
                         loading = false;
@@ -123,12 +128,10 @@ class _MosqueInputIdState extends State<MosqueInputId> {
         child: TextFormField(
           controller: inputController,
           style: GoogleFonts.inter(
-            color:
-                theme.brightness == Brightness.dark ? null : theme.primaryColor,
+            color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
           ),
           onFieldSubmitted: _setMosqueId,
-          cursorColor:
-              theme.brightness == Brightness.dark ? null : theme.primaryColor,
+          cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
           keyboardType: TextInputType.number,
           autofocus: true,
           textInputAction: TextInputAction.search,
@@ -142,16 +145,12 @@ class _MosqueInputIdState extends State<MosqueInputId> {
             hintText: S.of(context).selectWithMosqueId,
             hintStyle: TextStyle(
               fontWeight: FontWeight.normal,
-              color: theme.brightness == Brightness.dark
-                  ? null
-                  : theme.primaryColor.withOpacity(0.4),
+              color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
             ),
             suffixIcon: IconButton(
               tooltip: "Search by Id",
               icon: loading ? CircularProgressIndicator() : Icon(Icons.search),
-              color: theme.brightness == Brightness.dark
-                  ? Colors.white70
-                  : theme.primaryColor,
+              color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
               onPressed: () => _setMosqueId(inputController.text),
             ),
             focusedBorder: OutlineInputBorder(

@@ -57,17 +57,15 @@ class _SplashScreen extends State<Splash> {
 
   Future<void> initApplicationUI() async {
     await GlobalConfiguration().loadFromAsset("configuration");
-    generateStream(Duration(minutes: 10)).listen((event) =>
-        Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
+    generateStream(Duration(minutes: 10))
+        .listen((event) => Wakelock.enable().catchError(CrashlyticsWrapper.sendException));
 
     Hive.initFlutter();
 
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(!kDebugMode);
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
     HttpOverrides.global = MyHttpOverrides();
-    FocusManager.instance.highlightStrategy =
-        FocusHighlightStrategy.alwaysTraditional;
+    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
 
     // hide status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -179,8 +177,7 @@ class _SplashScreen extends State<Splash> {
                 child: SplashScreen.callback(
                   isLoading: false,
                   onSuccess: (e) => animationFuture.complete(),
-                  onError: (error, stacktrace) =>
-                      animationFuture.completeError(error, stacktrace),
+                  onError: (error, stacktrace) => animationFuture.completeError(error, stacktrace),
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
                   startAnimation: 'idle',

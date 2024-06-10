@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/developer_mode/AnnouncementTest.dart';
@@ -78,6 +79,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
     walkThrowScreensSubscription?.cancel();
     setState(() {
       walkThrowScreensSubscription = null;
+      forcedScreen = null; // clear the forcedScreen when canceling the walkthrough
     });
   }
 
@@ -92,6 +94,21 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
   }
 
   changeMosque(String uuid) => context.read<MosqueManager>().fetchMosque(uuid).catchError((e) {});
+
+  Future<bool> _clearDataAndRestartApp() async {
+    try {
+      final result = await MethodChannel('nativeMethodsChannel').invokeMethod('clearAppData');
+      return result;
+    } on PlatformException catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  void dispose() {
+    cancelWalkThrowScreens();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +153,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               onSelect: () => AppRouter.push(LanguageScreen()),
             ),
             SelectorOption(
-              title: "Walk throw screens",
+              title: "Walk through screens",
               onSelect: walkThrowScreens,
             ),
             SelectorOption(
@@ -171,7 +188,12 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               title: "Toggle orientation",
               onSelect: () => context.read<UserPreferencesManager>().toggleOrientation(),
             ),
-            if (walkThrowScreensSubscription != null) SelectorOption(title: "Cancel walk throw", onSelect: cancelWalkThrowScreens)
+            if (walkThrowScreensSubscription != null)
+              SelectorOption(title: "Cancel walk through", onSelect: cancelWalkThrowScreens),
+            SelectorOption(
+              title: "Clear data & force close app",
+              onSelect: () => _clearDataAndRestartApp(),
+            ),
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ProviderBase, ProviderContainer, ProviderObserver, ProviderScope;
+import 'package:hive_flutter/adapters.dart';
 import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -34,11 +35,13 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       tz.initializeTimeZones();
-
+            await Hive.initFlutter();
+  
       runApp(ProviderScope(
         child: MyApp(),
         observers: [RiverpodLogger()],
       ));
+
     },
   );
 }
@@ -54,23 +57,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SettingsManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => FeatureManager(context)),
-        ChangeNotifierProvider(
-            create: (context) => UserPreferencesManager(), lazy: false),
-        StreamProvider(
-            create: (context) => Api.updateUserStatusStream(),
-            initialData: 0,
-            lazy: false),
+        ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
+        StreamProvider(create: (context) => Api.updateUserStatusStream(), initialData: 0, lazy: false),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) => ConnectivityService()
-                .connectionStatusController
-                .stream
-                .map((event) {
-              if (event == ConnectivityStatus.Wifi ||
-                  event == ConnectivityStatus.Cellular) {
+            create: (context) => ConnectivityService().connectionStatusController.stream.map((event) {
+              if (event == ConnectivityStatus.Wifi || event == ConnectivityStatus.Cellular) {
                 //todo check actual internet
               }
 
@@ -78,15 +73,12 @@ class MyApp extends StatelessWidget {
             }),
             child: Consumer<ThemeNotifier>(
               builder: (context, theme, _) => Shortcuts(
-                shortcuts: {
-                  SingleActivator(LogicalKeyboardKey.select): ActivateIntent()
-                },
+                shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
                 child: MaterialApp(
                   title: kAppName,
                   themeMode: theme.mode,
                   localeResolutionCallback: (locale, supportedLocales) {
-                    if (locale?.languageCode.toLowerCase() == 'ba')
-                      return Locale('en');
+                    if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
 
                     return locale;
                   },

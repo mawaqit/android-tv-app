@@ -13,7 +13,7 @@
   "closeApp": "Close app",
   "quit": "Quit",
   "forceStaging": "Switch to staging",
-  "disableStaging": "Switch to production",
+  "disableStaging": "Switch to production mode",
   "sureCloseApp": "Are you sure you want to quit the application?",
   "ok": "OK",
   "cancel": "CANCEL",
@@ -159,7 +159,7 @@
   "eidMubarak": "Eid Mubarak",
   "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
   "settings": "Settings",
-  "applicationModes": "Application Modes",
+  "applicationModes": "Application Mode",
   "ifYouAreFacingAnIssueWithTheAppActivateThis": "If you are facing issues with the app, try to enable this option",
   "hijriAdjustments": "Local Hijri adjustments",
   "hijriAdjustmentsDescription": "Adjust the hijri date locally in your device. This will not affect the online mosque settings",
@@ -209,6 +209,13 @@
   "wifiSuccess":"Successfully connected to Wifi.",
   "wifiFailure":"Failed to connect to Wifi.",
   "timezoneSuccess":"Timezone set successfully.",
-  "timezoneFailure":"Failed to set timezone."
-
+  "timezoneFailure":"Failed to set timezone.",
+  "updateAvailable": "Update available",
+  "seeMore": "See more",
+  "whatIsNew": "What's new",
+  "update": "Update",
+  "automaticUpdate": "Notify update",
+  "automaticUpdateDescription": "Enable notify update to receive the latest features and improvements",
+  "later": "Later"
 }
+

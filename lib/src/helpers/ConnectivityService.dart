@@ -4,8 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mawaqit/src/enum/connectivity_status.dart';
 
 class ConnectivityService {
-  StreamController<ConnectivityStatus> connectionStatusController =
-  StreamController<ConnectivityStatus>();
+  StreamController<ConnectivityStatus> connectionStatusController = StreamController<ConnectivityStatus>();
 
   ConnectivityService() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
