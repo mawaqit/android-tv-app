@@ -43,7 +43,7 @@ class SettingScreen extends StatelessWidget {
   static Future<bool> checkRoot() async {
     try {
       final result =
-          await MethodChannel('nativeFunctionsChannel').invokeMethod('checkRoot');
+          await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
       return result;
     } catch (e) {
       print('Error checking root access: $e');

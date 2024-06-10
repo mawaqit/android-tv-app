@@ -187,7 +187,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   ];
   static Future<bool> checkRoot() async {
     try {
-      final result = await MethodChannel('nativeFunctionsChannel')
+      final result =
+          await MethodChannel('nativeMethodsChannel')
           .invokeMethod('checkRoot');
       return result;
     } catch (e) {

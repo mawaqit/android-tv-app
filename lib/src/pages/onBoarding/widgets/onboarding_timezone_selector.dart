@@ -6,7 +6,7 @@ import '../../../../i18n/l10n.dart';
 import '../../../../main.dart';
 import '../../../data/countries.dart';
 
-const platform = MethodChannel('nativeFunctionsChannel');
+const platform = MethodChannel('nativeMethodsChannel');
 
 class OnBoardingTimeZoneSelector extends StatefulWidget {
   final void Function()? onSelect;

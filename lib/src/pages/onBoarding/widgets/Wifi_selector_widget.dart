@@ -8,7 +8,7 @@ import 'package:wifi_scan/wifi_scan.dart';
 
 import '../../../../main.dart';
 
-const String nativeFunctionsChannel = 'nativeFunctionsChannel';
+const String nativeMethodsChannel = 'nativeMethodsChannel';
 
 class OnBoardingWifiSelector extends StatefulWidget {
   const OnBoardingWifiSelector({Key? key, required this.onSelect})
@@ -163,7 +163,7 @@ class _AccessPointTile extends StatefulWidget {
 class _AccessPointTileState extends State<_AccessPointTile> {
   final TextEditingController passwordController = TextEditingController();
   bool _showPassword = false;
-  static const platform = MethodChannel('nativeFunctionsChannel');
+  static const platform = MethodChannel('nativeMethodsChannel');
 
   Future<void> connectToWifi(
       String ssid, String security, String password) async {

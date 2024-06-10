@@ -28,7 +28,7 @@ private lateinit var mAdminComponentName: ComponentName
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "nativeFunctionsChannel")
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "nativeMethodsChannel")
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "setDeviceTimezone" -> setDeviceTimezone(call, result)
@@ -43,6 +43,10 @@ private lateinit var mAdminComponentName: ComponentName
                             }
                         }  
                         "checkRoot"->checkRoot(result)
+                        "clearAppData"->{
+                            val isSuccess = clearDataRestart()
+        result.success(isSuccess)
+                        }
            
                              else -> result.notImplemented()
                 }
@@ -171,4 +175,24 @@ private fun checkRoot(result: MethodChannel.Result) {
         Log.e("SU_COMMAND", "Exception while executing command: ${e.message}")
         result.error("CMD_ERROR", "Exception while executing command", null)
     }
+      private fun clearDataRestart(): Boolean {
+    try {
+      val processBuilder = ProcessBuilder()
+      processBuilder.command("sh", "-c", """
+            pm clear com.mawaqit.androidtv
+        """.trimIndent())
+      val process = processBuilder.start()
+      val exitCode = process.waitFor()
+      if (exitCode == 0) {
+        return true
+      }
+      return false
+    } catch (e: IOException) {
+      e.printStackTrace()
+      return false
+    } catch (e: InterruptedException) {
+      e.printStackTrace()
+      return false
+    }
+  }
 }
