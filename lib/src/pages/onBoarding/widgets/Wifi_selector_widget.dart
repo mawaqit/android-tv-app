@@ -85,7 +85,15 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
                 : themeData.primaryColor,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 10),
+        Divider(
+          thickness: 1,
+          color: themeData.brightness == Brightness.dark
+              ? Colors.white
+              : Colors.black,
+        ),
+        const SizedBox(height: 10),
+
         Text(
           S.of(context).descWifi,
           textAlign: TextAlign.center,
