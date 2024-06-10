@@ -173,7 +173,7 @@ class _AccessPointTileState extends State<_AccessPointTile> {
   Widget build(BuildContext context) {
     final title = widget.accessPoint.ssid.isNotEmpty
         ? widget.accessPoint.ssid
-        : "**EMPTY**";
+        : "**Hidden SSID**";
     final signalIcon = widget.accessPoint.level >= -80
         ? Icons.signal_wifi_4_bar
         : Icons.signal_wifi_0_bar;

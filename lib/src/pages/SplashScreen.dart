@@ -47,13 +47,6 @@ class _SplashScreen extends State<Splash> {
   SharedPref sharedPref = SharedPref();
   ErrorState? error;
 
-  Future<void> _setDeviceOwner() async {
-    try {
-      await platform.invokeMethod('setDeviceOwner');
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
 
   void initState() {
     super.initState();
