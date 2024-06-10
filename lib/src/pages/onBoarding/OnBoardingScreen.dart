@@ -1,5 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
@@ -23,7 +24,6 @@ import '../../state_management/on_boarding/on_boarding_notifier.dart';
 import '../../widgets/mawaqit_back_icon_button.dart';
 import 'widgets/Wifi_selector_widget.dart';
 import 'widgets/onboarding_screen_type.dart';
-import 'package:root_access/root_access.dart';
 
 class OnBoardingItem {
   final String animation;
@@ -185,9 +185,19 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
   ];
+  static Future<bool> checkRoot() async {
+    try {
+      final result = await MethodChannel('nativeFunctionsChannel')
+          .invokeMethod('checkRoot');
+      return result;
+    } catch (e) {
+      print('Error checking root access: $e');
+      return false;
+    }
+  }
 
   Future<void> initRootRequest() async {
-    bool rootStatus = await RootAccess.requestRootAccess;
+    bool rootStatus = await checkRoot();
     setState(() {
       _rootStatus = rootStatus;
     });

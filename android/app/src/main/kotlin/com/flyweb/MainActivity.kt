@@ -20,7 +20,7 @@ import android.content.ComponentName
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.app.admin.DevicePolicyManager
-
+import java.io.IOException
 class MainActivity : FlutterActivity() {
 private lateinit var mAdminComponentName: ComponentName
   private lateinit var mDevicePolicyManager: DevicePolicyManager
@@ -42,12 +42,33 @@ private lateinit var mAdminComponentName: ComponentName
                                 result.error("INVALID_ARGUMENT", "Package name is null", null)
                             }
                         }  
+                        "checkRoot"->checkRoot(result)
            
                              else -> result.notImplemented()
                 }
             }
     }
-
+private fun checkRoot(result: MethodChannel.Result) {
+    try {
+        val p = Runtime.getRuntime().exec("su")
+        val os = DataOutputStream(p.outputStream)
+        os.writeBytes("echo \"Do I have root?\" >/data/LandeRootCheck.txt\n")
+        os.writeBytes("exit\n")
+        os.flush()
+        try {
+            p.waitFor()
+            if (p.exitValue() == 0) {
+                result.success(true)
+            } else {
+                result.success(false)
+            }
+        } catch (e: InterruptedException) {
+            result.error("InterruptedException", "Interrupted exception occurred", null)
+        }
+    } catch (e: IOException) {
+        result.error("IOException", "I/O exception occurred", null)
+    }
+}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var REQUEST_OVERLAY_PERMISSIONS = 100

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
@@ -23,7 +24,8 @@ import 'home/widgets/show_check_internet_dialog.dart';
 
 /// allow user to change the app settings
 class SettingScreen extends StatelessWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+  SettingScreen({Key? key}) : super(key: key);
+  bool isDeviceRooted = false;
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
@@ -38,8 +40,20 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
+  static Future<bool> checkRoot() async {
+    try {
+      final result =
+          await MethodChannel('nativeFunctionsChannel').invokeMethod('checkRoot');
+      return result;
+    } catch (e) {
+      print('Error checking root access: $e');
+      return false;
+    }
+  }
+
   Future<void> _initializeTimeShiftManager() async {
     await TimeShiftManager().initializeTimes();
+    isDeviceRooted = await checkRoot();
   }
 
   Widget _buildSettingScreen(BuildContext context) {
@@ -85,18 +99,6 @@ class SettingScreen extends StatelessWidget {
                     subtitle: S.of(context).descLang,
                     icon: Icon(Icons.language, size: 35),
                     onTap: () => AppRouter.push(LanguageScreen()),
-                  ),
-                  _SettingItem(
-                    title: S.of(context).appTimezone,
-                    subtitle: S.of(context).descTimezone,
-                    icon: Icon(Icons.timelapse, size: 35),
-                    onTap: () => AppRouter.push(TimezoneScreen()),
-                  ),
-                  _SettingItem(
-                    title: S.of(context).appWifi,
-                    subtitle: S.of(context).descWifi,
-                    icon: Icon(Icons.wifi, size: 35),
-                    onTap: () => AppRouter.push(WifiSelectorScreen()),
                   ),
                   _SettingItem(
                     title: S.of(context).randomHadithLanguage,
@@ -203,6 +205,31 @@ class SettingScreen extends StatelessWidget {
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
                   ),
+                  isDeviceRooted
+                      ? Column(
+                          children: [
+                            Divider(),
+                            SizedBox(height: 10),
+                            Text(
+                              "Device Settings",
+                              style: theme.textTheme.headlineSmall,
+                              textAlign: TextAlign.center,
+                            ),
+                            _SettingItem(
+                              title: S.of(context).appTimezone,
+                              subtitle: S.of(context).descTimezone,
+                              icon: Icon(Icons.timelapse, size: 35),
+                              onTap: () => AppRouter.push(TimezoneScreen()),
+                            ),
+                            _SettingItem(
+                              title: S.of(context).appWifi,
+                              subtitle: S.of(context).descWifi,
+                              icon: Icon(Icons.wifi, size: 35),
+                              onTap: () => AppRouter.push(WifiSelectorScreen()),
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),
