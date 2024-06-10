@@ -194,12 +194,17 @@
   "selectTime":"Select Time",
   "previous": "Previous",
   "appTimezone":"App Timezone",
-  "descTimezone":"Please select you preferred timezone",
+  "descTimezone":"Select your timezone to get accurate prayer times.",
   "appWifi": "Connect to wifi",
   "descWifi": "Please connect to your preferred wifi",
-  "searchCountries":"Search countries...",
+  "searchCountries":"Search countries",
   "scanAgain":"Scan Again",
   "noScannedResultsFound":"No near access points found",
   "connect":"Connect",
-  "wifiPassword":"Password"
+  "wifiPassword":"Password",
+  "skip":"Skip",
+  "noSSID":"**Hidden SSID**",
+  "close":"Close",
+  "search":"Search"
+
 }

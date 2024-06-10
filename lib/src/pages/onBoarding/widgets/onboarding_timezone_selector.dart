@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:flutter/services.dart';
+import '../../../../i18n/l10n.dart';
 import '../../../../main.dart';
 import '../../../data/countries.dart';
 
@@ -52,12 +53,12 @@ class _OnBoardingTimeZoneSelectorState
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Search Countries'),
+          title: Text(S.of(context).searchCountries),
           content: TextField(
             controller: searchController,
             onChanged: _filterItems,
             decoration: InputDecoration(
-              hintText: 'Search countries',
+              hintText: S.of(context).searchCountries,
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -74,14 +75,14 @@ class _OnBoardingTimeZoneSelectorState
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: Text(S.of(context).close),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context)
                     .pop(); // Close the dialog when search is submitted
               },
-              child: Text('Search'),
+              child: Text(S.of(context).search),
             ),
           ],
         );
@@ -98,7 +99,7 @@ class _OnBoardingTimeZoneSelectorState
         children: [
           const SizedBox(height: 10),
           Text(
-            'App Timezone',
+            S.of(context).appTimezone,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 25.0,
@@ -117,7 +118,7 @@ class _OnBoardingTimeZoneSelectorState
           ),
           const SizedBox(height: 10),
           Text(
-            'Select your timezone to get accurate prayer times.',
+            S.of(context).descTimezone,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 15,
@@ -148,7 +149,7 @@ class _OnBoardingTimeZoneSelectorState
             ),
             onPressed: _showSearchDialog,
             icon: Icon(Icons.search),
-            label: Text('Search Countries'),
+            label: Text(S.of(context).searchCountries),
           ),
           const SizedBox(height: 20),
           Expanded(

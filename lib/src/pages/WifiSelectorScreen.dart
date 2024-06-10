@@ -17,7 +17,7 @@ class WifiSelectorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenWithAnimationWidget(
-      animation: R.ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON,
+      animation: R.ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON,
       child: OnBoardingWifiSelector(onSelect: AppRouter.pop),
     );
   }

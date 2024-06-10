@@ -30,6 +30,7 @@ class OnBoardingItem {
   final Widget? widget;
   final bool enableNextButton;
   final bool enablePreviousButton;
+  final bool skipPage;
   final bool Function()? skip;
 
   OnBoardingItem({
@@ -37,6 +38,7 @@ class OnBoardingItem {
     this.widget,
     this.enableNextButton = false,
     this.enablePreviousButton = false,
+    this.skipPage = false,
 
     /// if item is skipped, it will be marked as done
     this.skip,
@@ -142,15 +144,15 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
     ),
     OnBoardingItem(
-      animation: 'language',
-      widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2)),
-      enablePreviousButton: true,
-    ),
+        animation: 'language',
+        widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2)),
+        enablePreviousButton: true,
+        skipPage: true),
     OnBoardingItem(
-      animation: 'language',
-      widget: OnBoardingWifiSelector(onSelect: () => nextPage(3)),
-      enablePreviousButton: true,
-    ),
+        animation: 'language',
+        widget: OnBoardingWifiSelector(onSelect: () => nextPage(3)),
+        enablePreviousButton: true,
+        skipPage: true),
     OnBoardingItem(
         animation: 'welcome',
         widget: OnBoardingOrientationWidget(onSelect: () => nextPage(4)),
@@ -297,6 +299,12 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                   MawaqitIconButton(
                     icon: Icons.arrow_forward_rounded,
                     label: S.of(context).next,
+                    onPressed: () => nextPage(currentScreen + 1),
+                  ),
+                if (activePage.skipPage)
+                  MawaqitIconButton(
+                    icon: Icons.arrow_forward_rounded,
+                    label: S.of(context).skip,
                     onPressed: () => nextPage(currentScreen + 1),
                   ),
               ],
