@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, WidgetRef, Consumer;
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show AsyncValueX, ConsumerWidget, WidgetRef, Consumer;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
@@ -54,6 +55,8 @@ class SettingScreen extends ConsumerWidget {
     final userPreferences = context.watch<UserPreferencesManager>();
     final themeManager = context.watch<ThemeNotifier>();
     final String checkInternet = S.of(context).noInternet;
+    final String checkInternetLegacyMode =
+        S.of(context).checkInternetLegacyMode;
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
@@ -102,12 +105,15 @@ class SettingScreen extends ConsumerWidget {
                           isIconActivated: true,
                           title: S.of(context).randomHadithLanguage,
                           description: S.of(context).descLang,
-                          languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
+                          languages:
+                              appLanguage.hadithLocalizedLanguage.keys.toList(),
                           isSelected: (langCode) {
                             return appLanguage.hadithLanguage == langCode;
                           },
                           onSelect: (langCode) async {
-                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                            await ref
+                                .read(connectivityProvider.notifier)
+                                .checkInternetConnection();
                             ref.watch(connectivityProvider).maybeWhen(
                               orElse: () {
                                 showCheckInternetDialog(
@@ -120,7 +126,8 @@ class SettingScreen extends ConsumerWidget {
                                 );
                               },
                               data: (isConnectedToInternet) {
-                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                if (isConnectedToInternet ==
+                                    ConnectivityStatus.disconnected) {
                                   showCheckInternetDialog(
                                     context: context,
                                     onRetry: () {
@@ -130,9 +137,12 @@ class SettingScreen extends ConsumerWidget {
                                     content: hadithLanguage,
                                   );
                                 } else {
-                                  context.read<AppLanguage>().setHadithLanguage(langCode);
+                                  context
+                                      .read<AppLanguage>()
+                                      .setHadithLanguage(langCode);
                                   ref
-                                      .read(randomHadithNotifierProvider.notifier)
+                                      .read(
+                                          randomHadithNotifierProvider.notifier)
                                       .fetchAndCacheHadith(language: langCode);
                                   AppRouter.pop();
                                 }
@@ -151,7 +161,9 @@ class SettingScreen extends ConsumerWidget {
                         icon: Icon(Icons.update, size: 35),
                         onChanged: (value) {
                           logger.d('setting: disable the update $value');
-                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
+                          ref
+                              .read(appUpdateProvider.notifier)
+                              .toggleAutoUpdateChecking();
                         },
                         value: ref.watch(appUpdateProvider).maybeWhen(
                               orElse: () => false,
@@ -169,7 +181,9 @@ class SettingScreen extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                   _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
+                    title: theme.brightness == Brightness.light
+                        ? S.of(context).darkMode
+                        : S.of(context).lightMode,
                     icon: Icon(Icons.brightness_4, size: 35),
                     onChanged: (value) => themeManager.toggleMode(),
                     value: themeManager.isLightTheme ?? false,
@@ -195,7 +209,8 @@ class SettingScreen extends ConsumerWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => TimePickerModal(timeShiftManager: timeShiftManager),
+                              builder: (context) => TimePickerModal(
+                                  timeShiftManager: timeShiftManager),
                             );
                           },
                         )
@@ -206,22 +221,58 @@ class SettingScreen extends ConsumerWidget {
                       subtitle: S.of(context).announcementOnlyModeEXPLINATION,
                       icon: Icon(Icons.notifications, size: 35),
                       value: userPreferences.announcementsOnly,
-                      onChanged: (value) => userPreferences.announcementsOnly = value,
+                      onChanged: (value) =>
+                          userPreferences.announcementsOnly = value,
                     ),
-                  if (!userPreferences.webViewMode && !userPreferences.announcementsOnly)
+                  if (!userPreferences.webViewMode &&
+                      !userPreferences.announcementsOnly)
                     _SettingSwitchItem(
                       title: S.of(context).secondaryScreen,
                       subtitle: S.of(context).secondaryScreenExplanation,
                       value: userPreferences.isSecondaryScreen,
                       icon: Icon(Icons.monitor, size: 35),
-                      onChanged: (value) => userPreferences.isSecondaryScreen = value,
+                      onChanged: (value) =>
+                          userPreferences.isSecondaryScreen = value,
                     ),
                   _SettingSwitchItem(
                     title: S.of(context).webView,
-                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    subtitle: S
+                        .of(context)
+                        .ifYouAreFacingAnIssueWithTheAppActivateThis,
                     icon: Icon(Icons.online_prediction, size: 35),
                     value: userPreferences.webViewMode,
-                    onChanged: (value) => userPreferences.webViewMode = value,
+                    onChanged: (value) async {
+                      await ref
+                          .read(connectivityProvider.notifier)
+                          .checkInternetConnection();
+                      ref.watch(connectivityProvider).maybeWhen(
+                        orElse: () {
+                          showCheckInternetDialog(
+                            context: context,
+                            onRetry: () {
+                              AppRouter.pop();
+                            },
+                            title: checkInternet,
+                            content: checkInternetLegacyMode,
+                          );
+                        },
+                        data: (isConnectedToInternet) {
+                          if (isConnectedToInternet ==
+                              ConnectivityStatus.disconnected) {
+                            showCheckInternetDialog(
+                              context: context,
+                              onRetry: () {
+                                AppRouter.pop();
+                              },
+                              title: checkInternet,
+                              content: checkInternetLegacyMode,
+                            );
+                          } else {
+                            userPreferences.webViewMode = value;
+                          }
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
@@ -259,7 +310,10 @@ class _SettingItem extends StatelessWidget {
         trailing: Icon(Icons.arrow_forward_ios),
         title: Text(title),
         subtitle: subtitle != null
-            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 10))
+            ? Text(subtitle!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 10))
             : null,
         onTap: onTap,
       ),
@@ -293,7 +347,9 @@ class _SettingSwitchItem extends StatelessWidget {
         autofocus: true,
         secondary: icon ?? SizedBox(),
         title: Text(title),
-        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip) : null,
+        subtitle: subtitle != null
+            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip)
+            : null,
         value: value,
         onChanged: onChanged,
       ),

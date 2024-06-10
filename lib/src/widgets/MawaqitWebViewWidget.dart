@@ -22,6 +22,8 @@ import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../services/user_preferences_manager.dart';
+
 /// responsible for rendering a web-view for mawaqit
 class MawaqitWebViewWidget extends StatefulWidget {
   final String? path;
@@ -29,7 +31,8 @@ class MawaqitWebViewWidget extends StatefulWidget {
   /// clean up web specific component like header - footer - breadcrumb
   final bool clean;
 
-  MawaqitWebViewWidget({Key? key, this.path, this.clean = false}) : super(key: key);
+  MawaqitWebViewWidget({Key? key, this.path, this.clean = false})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -52,7 +55,8 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
   bool hasError = false;
 
   final Set<Factory<OneSequenceGestureRecognizer>> _gSet = [
-    Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer()),
+    Factory<VerticalDragGestureRecognizer>(
+        () => VerticalDragGestureRecognizer()),
     Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
     Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
   ].toSet();
@@ -70,7 +74,8 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
         if (Platform.isAndroid) {
           webViewController?.reload();
         } else if (Platform.isIOS) {
-          webViewController?.loadUrl(urlRequest: URLRequest(url: await webViewController?.getUrl()));
+          webViewController?.loadUrl(
+              urlRequest: URLRequest(url: await webViewController?.getUrl()));
         }
       },
     );
@@ -108,8 +113,9 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
 
   @override
   void dispose() {
-    webViewGPSPositionStreams
-        .forEach((StreamSubscription<Position> _flutterGeolocationStream) => _flutterGeolocationStream.cancel());
+    webViewGPSPositionStreams.forEach(
+        (StreamSubscription<Position> _flutterGeolocationStream) =>
+            _flutterGeolocationStream.cancel());
     super.dispose();
   }
 
@@ -118,6 +124,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
     super.build(context);
     print(widget.path);
     final settings = Provider.of<SettingsManager>(context).settings;
+    final userPreferences = context.watch<UserPreferencesManager>();
 
     return Focus(
       autofocus: true,
@@ -136,7 +143,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
         fit: StackFit.expand,
         children: [
           if (hasError)
-            buildErrorWidget()
+            buildErrorWidget(userPreferences)
           else
             InAppWebView(
               key: ValueKey(widget.path),
@@ -148,7 +155,9 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                     useShouldOverrideUrlLoading: true,
                     useOnDownloadStart: true,
                     mediaPlaybackRequiresUserGesture: false,
-                    userAgent: Platform.isAndroid ? settings.userAgent!.valueAndroid! : settings.userAgent!.valueIOS!,
+                    userAgent: Platform.isAndroid
+                        ? settings.userAgent!.valueAndroid!
+                        : settings.userAgent!.valueIOS!,
                   ),
                   android: AndroidInAppWebViewOptions(
                     useHybridComposition: true,
@@ -156,7 +165,8 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                   ios: IOSInAppWebViewOptions(
                     allowsInlineMediaPlayback: true,
                   )),
-              pullToRefreshController: settings.pullRefresh == "1" ? pullToRefreshController : null,
+              pullToRefreshController:
+                  settings.pullRefresh == "1" ? pullToRefreshController : null,
               onWebViewCreated: (InAppWebViewController controller) {
                 webViewController = controller;
                 controller.addJavaScriptHandler(
@@ -176,25 +186,35 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
 
                       switch (action) {
                         case "clearWatch":
-                          _geolocationClearWatch(parseInt(geolocationData['flutterGeolocationIndex'] ?? 0)!);
+                          _geolocationClearWatch(parseInt(
+                              geolocationData['flutterGeolocationIndex'] ??
+                                  0)!);
                           break;
 
                         case "getCurrentPosition":
-                          _geolocationGetCurrentPosition(parseInt(geolocationData['flutterGeolocationIndex'] ?? 0),
-                              PositionOptions().from(geolocationData['option'] ?? null));
+                          _geolocationGetCurrentPosition(
+                              parseInt(
+                                  geolocationData['flutterGeolocationIndex'] ??
+                                      0),
+                              PositionOptions()
+                                  .from(geolocationData['option'] ?? null));
                           break;
 
                         case "watchPosition":
-                          _geolocationWatchPosition(parseInt(geolocationData['flutterGeolocationIndex'] ?? 0)!,
-                              PositionOptions().from(geolocationData['option'] ?? null));
+                          _geolocationWatchPosition(
+                              parseInt(
+                                  geolocationData['flutterGeolocationIndex'] ??
+                                      0)!,
+                              PositionOptions()
+                                  .from(geolocationData['option'] ?? null));
                           break;
                         default:
                       }
                     });
               },
-              androidOnPermissionRequest:
-                  (InAppWebViewController controller, String origin, List<String> resources) async =>
-                      PermissionRequestResponse(
+              androidOnPermissionRequest: (InAppWebViewController controller,
+                      String origin, List<String> resources) async =>
+                  PermissionRequestResponse(
                 resources: resources,
                 action: PermissionRequestResponseAction.GRANT,
               ),
@@ -204,18 +224,29 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                 print(uri.scheme);
                 if (Platform.isAndroid && ["intent"].contains(uri.scheme)) {
                   if (uri.toString().indexOf("maps") != -1) {
-                    var link = uri.toString().substring(uri.toString().indexOf('?link=') + 6);
+                    var link = uri
+                        .toString()
+                        .substring(uri.toString().indexOf('?link=') + 6);
                     // print(link);
-                    AndroidIntent intent = AndroidIntent(action: 'action_view', data: link);
+                    AndroidIntent intent =
+                        AndroidIntent(action: 'action_view', data: link);
                     await intent.launch();
                   } else {
-                    String id = uri
-                        .toString()
-                        .substring(uri.toString().indexOf('id%3D') + 5, uri.toString().indexOf('#Intent'));
+                    String id = uri.toString().substring(
+                        uri.toString().indexOf('id%3D') + 5,
+                        uri.toString().indexOf('#Intent'));
                     await StoreRedirect.redirect(androidAppId: id);
                   }
                   return NavigationActionPolicy.CANCEL;
-                } else if (!["http", "https", "chrome", "data", "javascript", "file", "about"].contains(uri.scheme)) {
+                } else if (![
+                  "http",
+                  "https",
+                  "chrome",
+                  "data",
+                  "javascript",
+                  "file",
+                  "about"
+                ].contains(uri.scheme)) {
                   if (await canLaunchUrl(uri)) {
                     // Launch the App
                     await launchUrl(uri);
@@ -230,7 +261,8 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
               },
               onLoadStop: (controller, url) async {
                 pullToRefreshController!.endRefreshing();
-                Future.delayed(const Duration(milliseconds: 500), () => _geolocationAlertFix());
+                Future.delayed(const Duration(milliseconds: 500),
+                    () => _geolocationAlertFix());
                 if (widget.clean) {
                   await webViewController!.injectJavascriptFileFromAsset(
                     assetFilePath: R.ASSETS_SCRIPTS_CLEAN_JS,
@@ -284,10 +316,10 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
     );
   }
 
-  Widget buildErrorWidget() {
+  Widget buildErrorWidget(userPreferences) {
     return WillPopScope(
       child: OfflineScreen(onPressedTryAgain: () {
-        webViewController?.reload();
+        userPreferences.webViewMode = false;
       }),
       onWillPop: () async {
         // print('will pop');
@@ -312,19 +344,24 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
     return int.tryParse(value) ?? null;
   }
 
-  Future<PositionResponse> getCurrentPosition(PositionOptions positionOptions) async {
+  Future<PositionResponse> getCurrentPosition(
+      PositionOptions positionOptions) async {
     PositionResponse positionResponse = PositionResponse();
 
     int? timeout = 30000;
     if (positionOptions.timeout! > 0) timeout = positionOptions.timeout;
 
     try {
-      LocationPermission geolocationStatus = await GeolocatorPlatform.instance.requestPermission();
+      LocationPermission geolocationStatus =
+          await GeolocatorPlatform.instance.requestPermission();
 
-      if (geolocationStatus == LocationPermission.always || geolocationStatus == LocationPermission.whileInUse) {
+      if (geolocationStatus == LocationPermission.always ||
+          geolocationStatus == LocationPermission.whileInUse) {
         positionResponse.position = await Future.any([
           Geolocator.getCurrentPosition(
-              desiredAccuracy: (positionOptions.enableHighAccuracy ? LocationAccuracy.best : LocationAccuracy.medium)),
+              desiredAccuracy: (positionOptions.enableHighAccuracy
+                  ? LocationAccuracy.best
+                  : LocationAccuracy.medium)),
           Future.delayed(Duration(milliseconds: timeout!), () {
             if (positionOptions.timeout! > 0) positionResponse.timedOut = true;
             return;
@@ -443,14 +480,20 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
     webViewController!.evaluateJavascript(source: javascript);
   }
 
-  void _geolocationGetCurrentPosition(int? flutterGeolocationIndex, PositionOptions positionOptions) async {
-    PositionResponse positionResponse = await getCurrentPosition(positionOptions);
+  void _geolocationGetCurrentPosition(
+      int? flutterGeolocationIndex, PositionOptions positionOptions) async {
+    PositionResponse positionResponse =
+        await getCurrentPosition(positionOptions);
 
-    _geolocationResponse(flutterGeolocationIndex, positionOptions, positionResponse, false);
+    _geolocationResponse(
+        flutterGeolocationIndex, positionOptions, positionResponse, false);
   }
 
   void _geolocationResponse(
-      int? flutterGeolocationIndex, PositionOptions positionOptions, PositionResponse positionResponse, bool watcher) {
+      int? flutterGeolocationIndex,
+      PositionOptions positionOptions,
+      PositionResponse positionResponse,
+      bool watcher) {
     if (positionResponse.position != null) {
       String javascript = '''
         function _flutterGeolocationResponse() {
@@ -477,11 +520,20 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
           '''
             },
             timestamp: ''' +
-          positionResponse.position!.timestamp!.millisecondsSinceEpoch.toString() +
+          positionResponse.position!.timestamp!.millisecondsSinceEpoch
+              .toString() +
           '''
           });''' +
-          (!watcher ? "  _flutterGeolocationSuccess[" + flutterGeolocationIndex.toString() + "] = null; " : "") +
-          (!watcher ? "  _flutterGeolocationError[" + flutterGeolocationIndex.toString() + "] = null; " : "") +
+          (!watcher
+              ? "  _flutterGeolocationSuccess[" +
+                  flutterGeolocationIndex.toString() +
+                  "] = null; "
+              : "") +
+          (!watcher
+              ? "  _flutterGeolocationError[" +
+                  flutterGeolocationIndex.toString() +
+                  "] = null; "
+              : "") +
           '''
           return true;
         };
@@ -504,8 +556,16 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                   flutterGeolocationIndex.toString() +
                   "]({code: 1, message: 'User denied Geolocationg', PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3}); ") +
           "}" +
-          (!watcher ? "  _flutterGeolocationSuccess[" + flutterGeolocationIndex.toString() + "] = null; " : "") +
-          (!watcher ? "  _flutterGeolocationError[" + flutterGeolocationIndex.toString() + "] = null; " : "") +
+          (!watcher
+              ? "  _flutterGeolocationSuccess[" +
+                  flutterGeolocationIndex.toString() +
+                  "] = null; "
+              : "") +
+          (!watcher
+              ? "  _flutterGeolocationError[" +
+                  flutterGeolocationIndex.toString() +
+                  "] = null; "
+              : "") +
           '''
           return true;
         };
@@ -522,14 +582,19 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
   ) {
     // init new strem
     var locationOptions = LocationSettings(
-        accuracy: (positionOptions.enableHighAccuracy ? LocationAccuracy.best : LocationAccuracy.medium),
+        accuracy: (positionOptions.enableHighAccuracy
+            ? LocationAccuracy.best
+            : LocationAccuracy.medium),
         distanceFilter: 10);
 
     webViewGPSPositionStreams[flutterGeolocationIndex] =
-        Geolocator.getPositionStream(locationSettings: locationOptions).listen((Position position) {
+        Geolocator.getPositionStream(locationSettings: locationOptions)
+            .listen((Position position) {
       // Send data to each warcher
-      PositionResponse positionResponse = PositionResponse()..position = position;
-      _geolocationResponse(flutterGeolocationIndex, positionOptions, positionResponse, true);
+      PositionResponse positionResponse = PositionResponse()
+        ..position = position;
+      _geolocationResponse(
+          flutterGeolocationIndex, positionOptions, positionResponse, true);
     });
   }
 
