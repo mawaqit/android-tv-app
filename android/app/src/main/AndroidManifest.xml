@@ -87,20 +87,6 @@
             </intent-filter>
 
     </receiver>
-    <receiver
-      android:name=".MyDeviceAdminReceiver"
-      android:label="androidtv"
-      android:permission="android.permission.BIND_DEVICE_ADMIN"
-      android:exported="true" >
-      <meta-data
-        android:name="android.app.device_admin"
-        android:resource="@xml/policies" />
-      <intent-filter>
-        <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-        <action android:name="android.app.action.PROFILE_PROVISIONING_COMPLETE"/>
-        <action android:name="android.intent.action.BOOT_COMPLETED"/>
-      </intent-filter>
-    </receiver>
     <meta-data
       android:name="google_analytics_adid_collection_enabled"
       android:value="false" />
