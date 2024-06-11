@@ -108,6 +108,24 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton.icon(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.focused)) {
+                      return const Color(0xFF490094); // Focus color
+                    }
+                    return null; // Use the default color
+                  },
+                ),
+                foregroundColor: MaterialStateProperty.resolveWith<Color?>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.focused)) {
+                      return Colors.white; // Text and icon color when focused
+                    }
+                    return null; // Use the default color
+                  },
+                ),
+              ),
               icon: const Icon(Icons.refresh),
               label: Text(S.of(context).scanAgain),
               onPressed: () async => _startScan(),
