@@ -123,24 +123,22 @@ private fun checkRoot(result: MethodChannel.Result) {
             false
         }
     }
-    private fun connectToWifi(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                val ssid = call.argument<String>("ssid")
-                val password = call.argument<String>("password")
-                var security = call.argument<String>("security")
+private fun connectToWifi(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+        try {
+            val ssid = call.argument<String>("ssid")
+            val password = call.argument<String>("password")
+            val security = if (password.isNullOrEmpty()) "open" else "wpa2"
 
-              
-            Log.i("SU_COMMAND", "Wifi Command output: cmd wifi connect-network $ssid wpa2 $password")
+            Log.i("SU_COMMAND", "Wifi Command output: cmd wifi connect-network $ssid $security $password")
 
-                executeCommand("cmd wifi connect-network $ssid wpa2 $password", result)
+            executeCommand("cmd wifi connect-network $ssid $security $password", result)
 
-            } catch (e: Exception) {
-                handleCommandException(e, result)
-            }
+        } catch (e: Exception) {
+            handleCommandException(e, result)
         }
     }
-
+}
     private fun executeCommand(command: String, result: MethodChannel.Result) {
         try {
             val suProcess = Runtime.getRuntime().exec("su")
