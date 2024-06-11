@@ -76,7 +76,7 @@ private fun checkRoot(result: MethodChannel.Result) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var REQUEST_OVERLAY_PERMISSIONS = 100
-        if (isRootAvailable() && !Settings.canDrawOverlays(getApplicationContext())) {
+        if (checkRoot() && !Settings.canDrawOverlays(getApplicationContext())) {
              try {
         val command = "appops set com.mawaqit.androidtv SYSTEM_ALERT_WINDOW allow"
         val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
@@ -93,14 +93,7 @@ private fun checkRoot(result: MethodChannel.Result) {
         }
     }
 
-    private fun isRootAvailable(): Boolean {
-        System.getenv("PATH")?.split(":")?.forEach { pathDir ->
-            if (File(pathDir, "su").exists()) {
-                return true
-            }
-        }
-        return false
-    }
+
   
  private fun setDeviceTimezone(call: MethodCall, result: MethodChannel.Result) {
     AsyncTask.execute {
