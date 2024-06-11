@@ -93,7 +93,6 @@ class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
               : Colors.black,
         ),
         const SizedBox(height: 10),
-
         Text(
           S.of(context).descWifi,
           textAlign: TextAlign.center,
@@ -175,8 +174,11 @@ class _AccessPointTileState extends State<_AccessPointTile> {
       });
       if (isSuccess) {
         _showToast(S.of(context).wifiSuccess);
+        Navigator.pop(context);
+        widget.onSelect?.call();
       } else {
         _showToast(S.of(context).wifiFailure);
+        Navigator.pop(context);
       }
     } on PlatformException catch (e) {
       _showToast(S.of(context).wifiFailure);
@@ -240,8 +242,6 @@ class _AccessPointTileState extends State<_AccessPointTile> {
                         widget.accessPoint.capabilities,
                         passwordController.text,
                       );
-                      Navigator.pop(context);
-                      widget.onSelect?.call();
                     } catch (e, stack) {
                       logger.e(e, stackTrace: stack);
                     }
