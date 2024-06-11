@@ -18,8 +18,10 @@ class _HomeLogoVersionState extends State<HomeLogoVersion> {
   int tapCount = 0;
 
   static const int _activationTapCount = 7;
-  static const String _activationMessage = "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية";
-  static const String _deactivationMessage = "You have deactivated the Abogabal secret menu 😎💪 رائع! لقد قمت بإلغاء تنشيط قائمة أبو جبل السرية";
+  static const String _activationMessage =
+      "You have activated the Abogabal secret menu 😎💪 رائع! لقد قمت بتنشيط قائمة أبو جبل السرية";
+  static const String _deactivationMessage =
+      "You have deactivated the Abogabal secret menu 😎💪 رائع! لقد قمت بإلغاء تنشيط قائمة أبو جبل السرية";
 
   void _handleTap() {
     final userPreferencesManager = Provider.of<UserPreferencesManager>(context, listen: false);
@@ -61,8 +63,7 @@ class _HomeLogoVersionState extends State<HomeLogoVersion> {
             heightFactor: .5,
             alignment: Alignment(.5, 0),
             child: Container(
-              padding:
-                  EdgeInsets.symmetric(horizontal: .5.vwr, vertical: .4.vh),
+              padding: EdgeInsets.symmetric(horizontal: .5.vwr, vertical: .4.vh),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.vertical(

@@ -38,8 +38,7 @@ class _SelectorWidgetState<T> extends State<SelectorWidget<T>> {
   bool showMenu = true;
   SelectorOption? _selectedOption;
 
-  List<SelectorOption> get activeOptions =>
-      _selectedOption?.subOptions ?? widget.options;
+  List<SelectorOption> get activeOptions => _selectedOption?.subOptions ?? widget.options;
 
   /// select option from the menu
   void selectOption(SelectorOption? value) {
@@ -109,10 +108,7 @@ class _SelectorWidgetState<T> extends State<SelectorWidget<T>> {
                 ],
               ),
             ),
-          )
-              .animate()
-              .slideY(begin: -1, duration: Duration(milliseconds: 500))
-              .addRepaintBoundary(),
+          ).animate().slideY(begin: -1, duration: Duration(milliseconds: 500)).addRepaintBoundary(),
         ),
       ],
     );

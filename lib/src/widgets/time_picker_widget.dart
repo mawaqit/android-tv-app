@@ -39,8 +39,7 @@ class __TimePickerState extends State<_TimePicker> {
   @override
   void initState() {
     super.initState();
-    selectedTime = DateTime.now().add(Duration(
-        hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
+    selectedTime = DateTime.now().add(Duration(hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
   }
 
   @override

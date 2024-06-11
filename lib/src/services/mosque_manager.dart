@@ -15,9 +15,9 @@ import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
-import 'package:mawaqit/src/services/mixins/random_hadith_mixin.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 
+import '../helpers/AppDate.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
 
@@ -28,12 +28,40 @@ const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(seconds: 140);
 
-class MosqueManager extends ChangeNotifier
-    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity, RandomHadithMixin {
+class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
   String? mosqueUUID;
+
+  bool _flashEnabled = false;
+  bool get flashEnabled => _flashEnabled;
+
+  void _updateFlashEnabled() {
+    if (mosque != null) {
+      final startDate = DateTime.tryParse(mosque!.flash?.startDate ?? 'x');
+      final endDate = DateTime.tryParse(mosque!.flash?.endDate ?? 'x');
+      final currentDate = AppDateTime.now();
+
+      DateTime? endOfDay;
+      if (endDate != null) {
+        endOfDay = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
+      }
+
+      if (startDate == null && endDate == null) {
+        _flashEnabled = true;
+      } else if (startDate != null && endDate == null) {
+        _flashEnabled = currentDate.isAfter(startDate) || currentDate.isAtSameMomentAs(startDate);
+      } else if (startDate == null && endDate != null) {
+        _flashEnabled = currentDate.isBefore(endOfDay!) || currentDate.isAtSameMomentAs(endOfDay);
+      } else if (startDate != null && endDate != null) {
+        _flashEnabled = currentDate.isAfter(startDate) && currentDate.isBefore(endOfDay!) ||
+            currentDate.isAtSameMomentAs(startDate) ||
+            currentDate.isAtSameMomentAs(endOfDay!);
+      }
+      notifyListeners();
+    }
+  }
 
   bool get loaded => mosque != null && times != null && mosqueConfig != null;
 
@@ -55,7 +83,6 @@ class MosqueManager extends ChangeNotifier
   Future<void> init() async {
     await Api.init();
     await loadFromLocale();
-    initState();
     listenToConnectivity();
     notifyListeners();
   }
@@ -86,7 +113,6 @@ class MosqueManager extends ChangeNotifier
   }
 
   Future<void> loadFromLocale() async {
-    // mosqueId = await sharedPref.read('mosqueId');
     mosqueUUID = await sharedPref.read('mosqueUUId');
     if (mosqueUUID != null) {
       await fetchMosque(mosqueUUID!);
@@ -120,7 +146,6 @@ class MosqueManager extends ChangeNotifier
         await Future.wait([
           AudioManager().precacheVoices(mosqueConfig!),
           preCacheImages(),
-          preCacheHadith(),
         ]);
       } catch (e, stack) {
         debugPrintStack(label: e.toString(), stackTrace: stack);
@@ -134,6 +159,7 @@ class MosqueManager extends ChangeNotifier
     _mosqueSubscription = mosqueStream.listen(
       (e) {
         mosque = e;
+        _updateFlashEnabled();
         notifyListeners();
       },
       onError: onItemError,

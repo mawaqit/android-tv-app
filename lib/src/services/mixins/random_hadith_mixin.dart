@@ -5,6 +5,7 @@ import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import '../../../i18n/AppLanguage.dart';
 
+@Deprecated('Use RandomHadithNotifier instead')
 mixin RandomHadithMixin on ChangeNotifier {
   abstract bool isOnline;
   abstract MosqueConfig? mosqueConfig;
@@ -36,18 +37,19 @@ mixin RandomHadithMixin on ChangeNotifier {
 
   /// [_hadith] is the hadith to be displayed
   String? _hadith;
+
   /// [hadith] getter
   get hadith => _hadith;
   AppLanguage appLanguage = AppLanguage();
 
   /// pre cache the random hadith file to be used in the hadith widget
-  Future<void> preCacheHadith() async {
-    await Api.cacheHadithXMLFiles(language: mosqueConfig?.hadithLang ?? 'ar');
-
-    /// fetch hadith for the first time
-    /// Delay it to keep the main thread free for the UI animations
-    Future.delayed(Duration(seconds: 5), _fetchHadith);
-  }
+  // Future<void> preCacheHadith() async {
+  //   await Api.cacheHadithXMLFiles(language: mosqueConfig?.hadithLang ?? 'ar');
+  //
+  //   /// fetch hadith for the first time
+  //   /// Delay it to keep the main thread free for the UI animations
+  //   Future.delayed(Duration(seconds: 5), _fetchHadith);
+  // }
 
   /// [_fetchHadith] will fetch the hadith from the hadith file
   /// and store it in [_hadith]
@@ -57,21 +59,17 @@ mixin RandomHadithMixin on ChangeNotifier {
     // Fetch the hadith language from shared preferences
     try {
       // Determine the language to use
-      String language =  _hadithLanguage.isNotEmpty
-          ? _hadithLanguage
-          : mosqueConfig?.hadithLang ?? 'ar';
+      String language = _hadithLanguage.isNotEmpty ? _hadithLanguage : mosqueConfig?.hadithLang ?? 'ar';
       _hadithLanguage = _hadithLanguage.replaceAll('_', '-');
       // Fetch the hadith
-      _hadith = isOnline
-          ? await Api.randomHadith(language: language)
-          : await Api.randomHadithCached(language: language);
+      _hadith =
+          isOnline ? await Api.randomHadith(language: language) : await Api.randomHadithCached(language: language);
 
       notifyListeners();
     } catch (e) {
       Logger().e('Error fetching Hadith: $e');
     }
   }
-
 
   /// [getRandomHadith] will return a random hadith from the hadith file
   /// Interface with the UI

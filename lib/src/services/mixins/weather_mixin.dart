@@ -19,14 +19,15 @@ mixin WeatherMixin on ChangeNotifier {
     if (mosque.uuid != null) {
       _weatherSubscription?.cancel().catchError((e) {});
 
-      _weatherSubscription = generateStream(Duration(hours: 1)).listen((event) => Api.getWeather(mosque.uuid!).then((value) {
-            weather = value;
-            notifyListeners();
-          }).catchError((e, stack) {
-            debugPrintStack(stackTrace: stack, label: e.toString());
-            weather = null;
-            notifyListeners();
-          }));
+      _weatherSubscription =
+          generateStream(Duration(hours: 1)).listen((event) => Api.getWeather(mosque.uuid!).then((value) {
+                weather = value;
+                notifyListeners();
+              }).catchError((e, stack) {
+                debugPrintStack(stackTrace: stack, label: e.toString());
+                weather = null;
+                notifyListeners();
+              }));
     }
   }
 

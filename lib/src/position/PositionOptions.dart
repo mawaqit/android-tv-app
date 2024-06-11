@@ -13,18 +13,14 @@ class PositionOptions {
   }
 
   bool isNull(dynamic value) {
-    return (value == null ||
-        value.toString() == 'null' ||
-        value.toString().isEmpty);
+    return (value == null || value.toString() == 'null' || value.toString().isEmpty);
   }
 
   bool parseBool(dynamic value) {
     if (value == null) return false;
     if (value is bool) return value;
     if (value is String)
-      return value.toLowerCase() == 'true' ||
-          value.toLowerCase() == 'success' ||
-          value.toLowerCase() == '1';
+      return value.toLowerCase() == 'true' || value.toLowerCase() == 'success' || value.toLowerCase() == '1';
     if (value is int) return value == 1;
 
     return false;
