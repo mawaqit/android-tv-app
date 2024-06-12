@@ -105,8 +105,7 @@ class __TimePickerState extends State<_TimePicker> {
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
     final today = mosqueProvider.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
-    final times =
-        mosqueProvider.times?.dayTimesStrings(today, salahOnly: false) ?? [];
+    final times = mosqueProvider.times?.dayTimesStrings(today, salahOnly: false) ?? [];
 
     return Column(
       mainAxisSize: MainAxisSize.min,
