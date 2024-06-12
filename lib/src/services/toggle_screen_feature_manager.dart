@@ -10,16 +10,21 @@ import '../data/data_source/device_info_data_source.dart';
 import '../helpers/TimeShiftManager.dart';
 
 class ToggleScreenFeature {
-  static const _scheduledTimersKey = 'scheduledTimers';
+  static final ToggleScreenFeature _instance = ToggleScreenFeature._internal();
+  factory ToggleScreenFeature() => _instance;
+  ToggleScreenFeature._internal();
 
-  static final _scheduledTimers = <String, List<Timer>>{};
-  TimeShiftManager timeShiftManager = TimeShiftManager();
+  static const String _scheduledTimersKey = 'scheduledTimers';
+  static final Map<String, List<Timer>> _scheduledTimers = {};
+
+  final TimeShiftManager timeShiftManager = TimeShiftManager();
 
   bool isBox() {
     return timeShiftManager.isLauncherInstalled;
   }
 
-  static void scheduleToggleScreen(List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) {
+  static Future<void> scheduleToggleScreen(
+      List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
     final instance = ToggleScreenFeature();
 
     for (String timeString in timeStrings) {
@@ -28,10 +33,10 @@ class ToggleScreenFeature {
       final minute = int.parse(parts[1]);
 
       final now = AppDateTime.now();
-      final scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
+      DateTime scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
 
       if (scheduledDateTime.isBefore(now)) {
-        scheduledDateTime.add(Duration(days: 1));
+        scheduledDateTime = scheduledDateTime.add(Duration(days: 1));
       }
 
       final beforeDelay = scheduledDateTime.difference(now) - Duration(minutes: beforeDelayMinutes);
@@ -39,19 +44,18 @@ class ToggleScreenFeature {
         continue;
       }
       final beforeTimer = Timer(beforeDelay, () {
-        instance.isBox() ? toggleBoxScreenOn() : toggleScreenOn();
+        instance.isBox() ? _toggleBoxScreenOn() : _toggleScreenOn();
       });
 
       final afterDelay = scheduledDateTime.difference(now) + Duration(minutes: afterDelayMinutes);
       final afterTimer = Timer(afterDelay, () {
-        instance.isBox() ? toggleBoxScreenOff() : toggleScreenOff();
+        instance.isBox() ? _toggleBoxScreenOff() : _toggleScreenOff();
       });
 
-      // Store the timers in the _scheduledTimers map
       _scheduledTimers[timeString] = [beforeTimer, afterTimer];
       print("triggers $_scheduledTimers");
     }
-    saveScheduledTimersToPrefs();
+    await _saveScheduledTimersToPrefs();
   }
 
   static Future<void> loadScheduledTimersFromPrefs() async {
@@ -70,10 +74,9 @@ class ToggleScreenFeature {
     }
   }
 
-  static Future<void> saveScheduledTimersToPrefs() async {
+  static Future<void> _saveScheduledTimersToPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Convert _scheduledTimers map to a JSON-serializable format
     final timersMap = _scheduledTimers.map((timeString, timers) {
       return MapEntry(
           timeString,
@@ -82,21 +85,16 @@ class ToggleScreenFeature {
           }).toList());
     });
 
-    // Save the timersMap to SharedPreferences
     await prefs.setString(_scheduledTimersKey, json.encode(timersMap));
   }
 
   static Future<void> toggleFeatureState(bool isActive) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Save the timersMap to SharedPreferences
     await prefs.setBool("activateToggleFeature", isActive);
   }
 
   static Future<bool> getToggleFeatureState() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Save the timersMap to SharedPreferences
     return prefs.getBool("activateToggleFeature") ?? false;
   }
 
@@ -108,12 +106,11 @@ class ToggleScreenFeature {
     });
     _scheduledTimers.clear();
 
-    // Clear the saved timers from SharedPreferences
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(_scheduledTimersKey);
   }
 
-  static Future<void> toggleScreenOn() async {
+  static Future<void> _toggleScreenOn() async {
     try {
       await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreenOn');
     } on PlatformException catch (e) {
@@ -121,7 +118,7 @@ class ToggleScreenFeature {
     }
   }
 
-  static Future<void> toggleBoxScreenOn() async {
+  static Future<void> _toggleBoxScreenOn() async {
     try {
       await MethodChannel('nativeMethodsChannel').invokeMethod('toggleBoxScreenOn');
     } on PlatformException catch (e) {
@@ -129,7 +126,7 @@ class ToggleScreenFeature {
     }
   }
 
-  static Future<void> toggleScreenOff() async {
+  static Future<void> _toggleScreenOff() async {
     try {
       await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreenOff');
     } on PlatformException catch (e) {
@@ -137,7 +134,7 @@ class ToggleScreenFeature {
     }
   }
 
-  static Future<void> toggleBoxScreenOff() async {
+  static Future<void> _toggleBoxScreenOff() async {
     try {
       await MethodChannel('nativeMethodsChannel').invokeMethod('toggleBoxScreenOff');
     } on PlatformException catch (e) {
@@ -154,8 +151,7 @@ class ToggleScreenFeature {
   static Future<void> saveScheduledEventsToLocale() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Convert the _scheduledTimers map to a JSON-serializable format
-    Map<String, dynamic> timersMap = {};
+    final Map<String, dynamic> timersMap = {};
     _scheduledTimers.forEach((key, value) {
       timersMap[key] = value.map((timer) {
         return {
@@ -165,11 +161,9 @@ class ToggleScreenFeature {
       }).toList();
     });
 
-    // Save the timersMap to SharedPreferences
     await prefs.setString('scheduledTimers', json.encode(timersMap));
-
     logger.d("Saving into local");
-    prefs.setBool("isEventsSet", true);
+    await prefs.setBool("isEventsSet", true);
   }
 
   static Future<void> setLastEventDate(DateTime date) async {
