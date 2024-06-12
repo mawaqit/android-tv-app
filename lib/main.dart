@@ -93,6 +93,7 @@ class MyApp extends StatelessWidget {
                     GlobalWidgetsLocalizations.delegate,
                     KurdishMaterialLocalizations.delegate,
                     KurdishWidgetLocalizations.delegate,
+                    KurdishCupertinoLocalizations.delegate
                   ],
                   supportedLocales: S.supportedLocales,
                   debugShowCheckedModeBanner: false,
