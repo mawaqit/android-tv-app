@@ -197,6 +197,7 @@
   "seeMore": "مشاهدة المزيد",
   "whatIsNew": "ما الجديد",
   "update": "تحديث",
-  "automaticUpdate": "تحديث تلقائي",
-  "automaticUpdateDescription": "تمكين التحديث التلقائي للحصول على أحدث الميزات والتحسينات"
+  "automaticUpdate": "إشعار التحديث",
+  "automaticUpdateDescription": "تمكين إشعار التحديث لتلقي أحدث الميزات والتحسينات",
+  "later": "لاحقاً"
 }

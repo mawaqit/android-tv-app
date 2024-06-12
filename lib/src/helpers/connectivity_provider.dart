@@ -15,15 +15,26 @@ class ConnectivityProvider extends StreamNotifier<ConnectivityStatus> {
   /// default time for checking connection is 2 seconds.
   @override
   Stream<ConnectivityStatus> build() {
-    return ref
-        .watch(
-          connectivityServiceProvider(
-            ConnectivityServiceParams(
-              interval: const Duration(seconds: 10),
-            ),
-          ),
-        )
-        .onStatusChange;
+    final internetChecker = InternetConnectionCheckerPlus.createInstance(
+      checkInterval: const Duration(seconds: 10),
+    );
+
+    return internetChecker.onStatusChange.transform(
+      StreamTransformer.fromHandlers(
+        handleDone: (sink) => sink.close(),
+        handleError: (error, stackTrace, sink) {
+          log('[internet_connectivity]: $error');
+          sink.add(ConnectivityStatus.disconnected);
+        },
+        handleData: (status, sink) {
+          if (status == InternetConnectionStatus.connected) {
+            sink.add(ConnectivityStatus.connected);
+          } else {
+            sink.add(ConnectivityStatus.disconnected);
+          }
+        },
+      ),
+    );
   }
 
   /// [checkInternetConnection] Check the internet connection status.
@@ -47,16 +58,15 @@ class ConnectivityProvider extends StreamNotifier<ConnectivityStatus> {
 ///
 /// This provider listens to the stream of connectivity status and transforms it to a stream of [ConnectivityStatus].
 final connectivityStreamProvider = StreamProvider<ConnectivityStatus>((ref) {
-  final internet = InternetConnectionCheckerPlus();
-  return internet.onStatusChange.transform(
+  final internetChecker = InternetConnectionCheckerPlus.createInstance(
+    checkInterval: const Duration(seconds: 10),
+  );
+
+  return internetChecker.onStatusChange.transform(
     StreamTransformer.fromHandlers(
-      handleDone: (sink) {
-        sink.close();
-      },
+      handleDone: (sink) => sink.close(),
       handleError: (error, stackTrace, sink) {
-        log(
-          '[internet_connectivity]: $error',
-        );
+        log('[internet_connectivity]: $error');
         sink.add(ConnectivityStatus.disconnected);
       },
       handleData: (status, sink) {

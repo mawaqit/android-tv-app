@@ -86,10 +86,10 @@ class _SplashScreen extends State<Splash> {
   }
 
   Future<Settings> _initSettings() async {
+    FeatureManagerProvider.initialize(context);
     await context.read<AppLanguage>().fetchLocale();
     await context.read<MosqueManager>().init().logPerformance("Mosque manager");
     final settingsManage = context.read<SettingsManager>();
-    FeatureManagerProvider.initialize(context);
     await settingsManage.init().logPerformance('Setting manager');
     return settingsManage.settings;
   }
