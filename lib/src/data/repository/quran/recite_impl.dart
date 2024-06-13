@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/data/data_source/quran/recite_remote_data_source.dart';
 import 'package:mawaqit/src/data/data_source/quran/reciter_local_data_source.dart';
+import 'package:mawaqit/src/domain/model/quran/audio_file_model.dart';
 
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 
@@ -57,6 +58,18 @@ class ReciteImpl implements ReciteRepository {
   List<ReciterModel> _sortReciters(List<ReciterModel> reciters) {
     reciters.sort((a, b) => a.name.compareTo(b.name));
     return reciters;
+  }
+
+  @override
+  Future<String> downloadAudio(AudioFileModel audioFile, Function(double p1) onProgress) async {
+    final downloadedList = await _remoteDataSource.downloadAudioFile(audioFile, onProgress);
+    final path = await _localDataSource.saveAudioFile(audioFile, downloadedList);
+    return path;
+  }
+
+  @override
+  Future<String> getAudioPath(AudioFileModel audioFile) async {
+    return await _localDataSource.getAudioFilePath(audioFile);
   }
 }
 

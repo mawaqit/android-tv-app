@@ -1,3 +1,4 @@
+import 'package:mawaqit/src/domain/model/quran/audio_file_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 
 abstract class ReciteRepository {
@@ -5,4 +6,8 @@ abstract class ReciteRepository {
     required int surahId,
     required String language,
   });
+
+  Future<String> downloadAudio(AudioFileModel audioFile, Function(double) onProgress);
+
+  Future<String> getAudioPath(AudioFileModel audioFile);
 }
