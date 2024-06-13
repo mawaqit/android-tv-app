@@ -199,5 +199,6 @@
   "update": "Update",
   "automaticUpdate": "Notify update",
   "automaticUpdateDescription": "Enable notify update to receive the latest features and improvements",
-  "later": "Later"
+  "later": "Later",
+  "checkInternetLegacyMode": "You must connect to internet to use the legacy mode"
 }
