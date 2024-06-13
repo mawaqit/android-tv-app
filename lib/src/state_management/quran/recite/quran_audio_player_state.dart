@@ -4,6 +4,8 @@ import 'package:just_audio/just_audio.dart';
 
 enum AudioPlayerState { playing, paused, stopped, seekNext, seekPrevious }
 
+enum DownloadState { downloading, downloaded, notDownloaded }
+
 @immutable
 class QuranAudioPlayerState extends Equatable {
   final AudioPlayer audioPlayer;
@@ -13,6 +15,8 @@ class QuranAudioPlayerState extends Equatable {
   final String reciterName;
   final bool isShuffled;
   final bool isRepeating;
+  final int downloadProgress;
+  final DownloadState downloadState;
 
   QuranAudioPlayerState({
     required this.audioPlayer,
@@ -20,8 +24,10 @@ class QuranAudioPlayerState extends Equatable {
     required this.surahName,
     required this.playerState,
     required this.reciterName,
+    this.downloadProgress = -1,
     this.isShuffled = false,
     this.isRepeating = false,
+    this.downloadState = DownloadState.notDownloaded,
   });
 
   QuranAudioPlayerState copyWith({
@@ -32,6 +38,8 @@ class QuranAudioPlayerState extends Equatable {
     String? reciterName,
     bool? isShuffled,
     bool? isRepeating,
+    int? downloadProgress,
+    DownloadState? downloadState,
   }) {
     return QuranAudioPlayerState(
       reciterName: reciterName ?? this.reciterName,
@@ -41,13 +49,16 @@ class QuranAudioPlayerState extends Equatable {
       surahName: surahName ?? this.surahName,
       playerState: playerState ?? this.playerState,
       isRepeating: isRepeating ?? this.isRepeating,
+      downloadProgress: downloadProgress ?? this.downloadProgress,
+      downloadState: downloadState ?? this.downloadState,
     );
   }
 
   @override
   String toString() {
     return 'QuranAudioPlayerState(audioPlayer: $audioPlayer, position: $position, surahName: $surahName, '
-        'playerState: $playerState, reciterName: $reciterName, isShuffled: $isShuffled, isRepeating: $isRepeating)';
+        'playerState: $playerState, reciterName: $reciterName, isShuffled: $isShuffled, isRepeating: $isRepeating, '
+        'downloadProgress: $downloadProgress, downloadState: $downloadState)';
   }
 
   @override
@@ -59,5 +70,7 @@ class QuranAudioPlayerState extends Equatable {
         playerState,
         isShuffled,
         isRepeating,
+        downloadProgress,
+        DownloadState
       ];
 }

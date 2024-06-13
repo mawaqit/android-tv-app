@@ -4,6 +4,8 @@ import 'dart:math' show Random;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mawaqit/src/data/repository/quran/recite_impl.dart';
+import 'package:mawaqit/src/domain/model/quran/audio_file_model.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_state.dart';
@@ -158,8 +160,76 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
       }
       return state.value!.copyWith(
         isRepeating: isRepeating,
+        downloadState: DownloadState.notDownloaded,
       );
     });
+  }
+
+  Future<void> downloadAndPlayAudio({
+    required String reciterId,
+    required String riwayahId,
+    required String surahId,
+    required String url,
+    required String filename,
+  }) async {
+    final audioRepository = await ref.read(reciteImplProvider.future);
+    final audioFileModel = AudioFileModel(
+      reciterId,
+      riwayahId,
+      surahId,
+      url,
+    );
+
+    state = AsyncLoading();
+    try {
+      final filePath = await audioRepository.downloadAudio(audioFileModel, (progress) {
+        state = AsyncData(
+          state.value!.copyWith(
+            downloadProgress: progress.toInt(),
+            downloadState: DownloadState.downloading,
+          ),
+        );
+      });
+
+      // Play the audio
+      await audioPlayer.setFilePath(filePath);
+      state = AsyncData(
+        state.value!.copyWith(
+          downloadState: DownloadState.downloaded,
+        ),
+      );
+    } catch (e) {
+      state = AsyncError(e, StackTrace.current);
+    }
+  }
+
+  Future<void> playLocalAudio({
+    required String reciterId,
+    required String riwayahId,
+    required String surahId,
+  }) async {
+    final audioRepository = await ref.read(reciteImplProvider.future);
+    final audioFileModel = AudioFileModel(
+      reciterId,
+      riwayahId,
+      surahId,
+      '',
+    );
+
+    state = AsyncLoading();
+    try {
+      final filePath = await audioRepository.getAudioPath(audioFileModel);
+      await audioPlayer.setFilePath(filePath);
+      await audioPlayer.play();
+
+      state = AsyncData(
+        state.value!.copyWith(
+          downloadState: DownloadState.notDownloaded,
+        ),
+      );
+    } catch (e) {
+      state = AsyncError(e, StackTrace.current);
+    }
   }
 
   Stream<Duration> get positionStream => audioPlayer.positionStream;
