@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/domain/model/quran/audio_file_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 
 import 'package:mawaqit/src/const/constants.dart';
@@ -58,6 +59,28 @@ class ReciteRemoteDataSource {
       return reciters;
     } else {
       throw FetchRecitersFailedException('Failed to fetch reciters', 'FETCH_RECITERS_ERROR');
+    }
+  }
+
+  Future<List<int>> downloadAudioFile(AudioFileModel audioFile, Function(double) onProgress) async {
+    try {
+      final response = await _dio.get<List<int>>(
+        audioFile.url,
+        options: Options(responseType: ResponseType.bytes),
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            onProgress((received / total) * 100);
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.data!;
+      } else {
+        throw FetchAudioFileFailedException('Failed to fetch audio file');
+      }
+    } catch (e) {
+      throw FetchAudioFileFailedException(e.toString());
     }
   }
 
