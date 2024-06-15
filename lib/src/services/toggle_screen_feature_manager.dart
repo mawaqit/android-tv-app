@@ -6,9 +6,6 @@ import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../data/data_source/device_info_data_source.dart';
-import '../helpers/TimeShiftManager.dart';
-
 class ToggleScreenFeature {
   static final ToggleScreenFeature _instance = ToggleScreenFeature._internal();
   factory ToggleScreenFeature() => _instance;
@@ -17,16 +14,8 @@ class ToggleScreenFeature {
   static const String _scheduledTimersKey = 'scheduledTimers';
   static final Map<String, List<Timer>> _scheduledTimers = {};
 
-  final TimeShiftManager timeShiftManager = TimeShiftManager();
-
-  bool isBox() {
-    return timeShiftManager.isLauncherInstalled;
-  }
-
   static Future<void> scheduleToggleScreen(
       List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
-    final instance = ToggleScreenFeature();
-
     for (String timeString in timeStrings) {
       final parts = timeString.split(':');
       final hour = int.parse(parts[0]);
@@ -44,16 +33,15 @@ class ToggleScreenFeature {
         continue;
       }
       final beforeTimer = Timer(beforeDelay, () {
-        instance.isBox() ? _toggleBoxScreenOn() : _toggleScreenOn();
+        _toggleBoxScreenOn();
       });
 
       final afterDelay = scheduledDateTime.difference(now) + Duration(minutes: afterDelayMinutes);
       final afterTimer = Timer(afterDelay, () {
-        instance.isBox() ? _toggleBoxScreenOff() : _toggleScreenOff();
+        _toggleBoxScreenOff();
       });
 
       _scheduledTimers[timeString] = [beforeTimer, afterTimer];
-      print("triggers $_scheduledTimers");
     }
     await _saveScheduledTimersToPrefs();
   }
@@ -110,25 +98,9 @@ class ToggleScreenFeature {
     await prefs.remove(_scheduledTimersKey);
   }
 
-  static Future<void> _toggleScreenOn() async {
-    try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreenOn');
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
   static Future<void> _toggleBoxScreenOn() async {
     try {
       await MethodChannel('nativeMethodsChannel').invokeMethod('toggleBoxScreenOn');
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
-  static Future<void> _toggleScreenOff() async {
-    try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleScreenOff');
     } on PlatformException catch (e) {
       logger.e(e);
     }

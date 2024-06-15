@@ -42,12 +42,7 @@ class MainActivity : FlutterActivity() {
         } else {
           result.error("InvalidArgument", "Feature argument is null", null)
         }
-      } else if (call.method == "toggleScreenOn") {
-       toggleScreenOn(call, result)
-      }
-       else if (call.method == "toggleScreenOff") {
-       toggleScreenOff(call, result)
-      }
+      } 
       
                else if (call.method == "checkRoot") {
         checkRoot(result)
@@ -120,38 +115,8 @@ private fun checkRoot(result: MethodChannel.Result) {
 
 
 
-private fun toggleScreenOn(call: MethodCall, result: MethodChannel.Result) {
-    AsyncTask.execute {
-        try {
-                  val commands = listOf(
-                    "input keyevent 82",
-                    "am start -W -n com.mawaqit.androidtv/.MainActivity"
-                )
-                                executeCommand(commands, result) // Lock the device
 
-          
-        } catch (e: Exception) {
-            handleCommandException(e, result)
-        }
-    }
-}
-private fun toggleBoxScreenOff(call: MethodCall, result: MethodChannel.Result) {
-    AsyncTask.execute {
-        try {
-                  val commands = listOf(
-                    "mount -o rw,remount /",
-                    "cd /sys/class/hdmi/hdmi/attr",
-                    "echo 0 > phy_power"
 
-                )
-                                executeCommand(commands, result) // Lock the device
-
-          
-        } catch (e: Exception) {
-            handleCommandException(e, result)
-        }
-    }
-}
 private fun toggleBoxScreenOn(call: MethodCall, result: MethodChannel.Result) {
     AsyncTask.execute {
         try {

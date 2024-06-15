@@ -245,7 +245,7 @@ class SettingScreen extends ConsumerWidget {
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
                   ),
-                  isDeviceRooted
+                  isDeviceRooted && timeShiftManager.isLauncherInstalled
                       ? Column(
                           children: [
                             Divider(),
