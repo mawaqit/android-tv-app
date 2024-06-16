@@ -3,15 +3,18 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:mawaqit/main.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ToggleScreenFeature {
   static final ToggleScreenFeature _instance = ToggleScreenFeature._internal();
+
   factory ToggleScreenFeature() => _instance;
+
   ToggleScreenFeature._internal();
 
-  static const String _scheduledTimersKey = 'scheduledTimers';
+  static const String _scheduledTimersKey = TurnOnOffTvConstant.kScheduledTimersKey;
   static final Map<String, List<Timer>> _scheduledTimers = {};
 
   static Future<void> scheduleToggleScreen(
@@ -67,10 +70,11 @@ class ToggleScreenFeature {
 
     final timersMap = _scheduledTimers.map((timeString, timers) {
       return MapEntry(
-          timeString,
-          timers.map((timer) {
-            return {'tick': timer.tick};
-          }).toList());
+        timeString,
+        timers.map((timer) {
+          return {'tick': timer.tick};
+        }).toList(),
+      );
     });
 
     await prefs.setString(_scheduledTimersKey, json.encode(timersMap));
@@ -78,12 +82,12 @@ class ToggleScreenFeature {
 
   static Future<void> toggleFeatureState(bool isActive) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("activateToggleFeature", isActive);
+    await prefs.setBool(TurnOnOffTvConstant.kActivateToggleFeature, isActive);
   }
 
   static Future<bool> getToggleFeatureState() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool("activateToggleFeature") ?? false;
+    return prefs.getBool(TurnOnOffTvConstant.kActivateToggleFeature) ?? false;
   }
 
   static Future<void> cancelAllScheduledTimers() async {
@@ -100,7 +104,8 @@ class ToggleScreenFeature {
 
   static Future<void> _toggleBoxScreenOn() async {
     try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleBoxScreenOn');
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
+          .invokeMethod(TurnOnOffTvConstant.kToggleBoxScreenOn);
     } on PlatformException catch (e) {
       logger.e(e);
     }
@@ -108,7 +113,8 @@ class ToggleScreenFeature {
 
   static Future<void> _toggleBoxScreenOff() async {
     try {
-      await MethodChannel('nativeMethodsChannel').invokeMethod('toggleBoxScreenOff');
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
+          .invokeMethod(TurnOnOffTvConstant.kToggleBoxScreenOff);
     } on PlatformException catch (e) {
       logger.e(e);
     }
@@ -117,7 +123,7 @@ class ToggleScreenFeature {
   static Future<bool> checkEventsScheduled() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     logger.d("value${prefs.getBool("isEventsSet")}");
-    return prefs.getBool("isEventsSet") ?? false;
+    return prefs.getBool(TurnOnOffTvConstant.kIsEventsSet) ?? false;
   }
 
   static Future<void> saveScheduledEventsToLocale() async {
@@ -133,19 +139,19 @@ class ToggleScreenFeature {
       }).toList();
     });
 
-    await prefs.setString('scheduledTimers', json.encode(timersMap));
+    await prefs.setString(TurnOnOffTvConstant.kScheduledTimersKey, json.encode(timersMap));
     logger.d("Saving into local");
-    await prefs.setBool("isEventsSet", true);
+    await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, true);
   }
 
   static Future<void> setLastEventDate(DateTime date) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('lastEventDate', date.toIso8601String());
+    await prefs.setString(TurnOnOffTvConstant.kLastEventDate, date.toIso8601String());
   }
 
   static Future<DateTime?> getLastEventDate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final lastEventDateString = prefs.getString('lastEventDate');
+    final lastEventDateString = prefs.getString(TurnOnOffTvConstant.kLastEventDate);
     if (lastEventDateString != null) {
       return DateTime.parse(lastEventDateString);
     } else {
