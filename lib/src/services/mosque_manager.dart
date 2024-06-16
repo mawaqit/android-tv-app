@@ -103,8 +103,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     try {
       final result = await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
       return result;
-    } catch (e) {
-      print('Error checking root access: $e');
+    } catch (e, stack) {
+      logger.e(e, stackTrace: stack);
       return false;
     }
   }
