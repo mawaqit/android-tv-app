@@ -133,12 +133,16 @@ private fun toggleBoxScreenOn(call: MethodCall, result: MethodChannel.Result) {
         }
     }
 }
-private fun toggleScreenOff(call: MethodCall, result: MethodChannel.Result) {
+private fun toggleBoxScreenOff(call: MethodCall, result: MethodChannel.Result) {
     AsyncTask.execute {
         try {
     
-                executeCommand(listOf("input keyevent 26"), result) // Lock the device
-            
+            val commands = listOf(
+                    "mount -o rw,remount /",
+                    "cd /sys/class/hdmi/hdmi/attr",
+                    "echo 0 > phy_power"
+                )
+                                executeCommand(commands, result)             
         } catch (e: Exception) {
             handleCommandException(e, result)
         }
