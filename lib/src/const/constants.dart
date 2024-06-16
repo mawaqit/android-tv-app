@@ -35,6 +35,7 @@ class TurnOnOffTvConstant {
   static const String kIsEventsSet = "isEventsSet";
   static const String kActivateToggleFeature = "activateToggleFeature";
   static const String kScheduledTimersKey = "scheduledTimers";
+
   /// native methods calls
   static const String kNativeMethodsChannel = "nativeMethodsChannel";
   static const String kCheckRoot = "checkRoot";
