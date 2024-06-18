@@ -28,9 +28,9 @@ class ScreenLockState extends Equatable {
   }
 
   List<Object> get props => [
-    selectedTime,
-    isActive,
-    selectedMinuteBefore,
-    selectedMinuteAfter,
-  ];
+        selectedTime,
+        isActive,
+        selectedMinuteBefore,
+        selectedMinuteAfter,
+      ];
 }
