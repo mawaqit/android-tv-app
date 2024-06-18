@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/main.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
@@ -37,6 +38,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   String? mosqueUUID;
 
   bool _flashEnabled = false;
+
   bool get flashEnabled => _flashEnabled;
 
   void _updateFlashEnabled() {
@@ -101,7 +103,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
 
   static Future<bool> checkRoot() async {
     try {
-      final result = await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
+      final result = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
+        TurnOnOffTvConstant.kCheckRoot,
+      );
       return result;
     } catch (e, stack) {
       logger.e(e, stackTrace: stack);

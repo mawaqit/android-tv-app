@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, WidgetRef, Consumer;
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
@@ -37,6 +38,7 @@ import 'home/widgets/show_check_internet_dialog.dart';
 class SettingScreen extends ConsumerWidget {
   SettingScreen({Key? key}) : super(key: key);
   bool isDeviceRooted = false;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder<void>(
@@ -53,7 +55,9 @@ class SettingScreen extends ConsumerWidget {
 
   static Future<bool> checkRoot() async {
     try {
-      final result = await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
+      final result = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
+        TurnOnOffTvConstant.kCheckRoot,
+      );
       return result;
     } catch (e, stack) {
       logger.e(e, stackTrace: stack);
