@@ -266,13 +266,13 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
           data: (value) => value.isRootedDevice,
         );
     log('isDeviceRooted: ${isDeviceRooted} - isLauncherInstalled: ${timeShiftManager.isLauncherInstalled}');
-    return isDeviceRooted /* && timeShiftManager.isLauncherInstalled */
+    return isDeviceRooted && timeShiftManager.isLauncherInstalled 
         ? Column(
             children: [
               Divider(),
               SizedBox(height: 10),
               Text(
-                "Device Settings",
+                S.of(context).deviceSettings,
                 style: theme.textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),

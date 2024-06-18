@@ -208,6 +208,7 @@
   "automaticUpdateDescription": "Enable notify update to receive the latest features and improvements",
   "later": "Later",
   "powerOnScreen":"Power on the screen",
-  "powerOffScreen":"Power off the screen"
+  "powerOffScreen":"Power off the screen",
+  "deviceSettings":"Device Settings"
 }
 
