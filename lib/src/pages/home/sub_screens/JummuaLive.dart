@@ -34,8 +34,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
   @override
   void initState() {
     invalidStreamUrl = context.read<MosqueManager>().mosque?.streamUrl == null;
-    final mosque = context.read<MosqueManager>().mosque!.streamUrl!;
-    log('JummuaLive: invalidStreamUrl: $invalidStreamUrl || $mosque');
+    log('JummuaLive: invalidStreamUrl: $invalidStreamUrl');
     super.initState();
   }
 
