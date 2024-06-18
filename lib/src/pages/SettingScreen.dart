@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
 
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, WidgetRef, Consumer;
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
@@ -17,14 +17,13 @@ import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart' hide Consumer;
 import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
 import '../../main.dart';
-import '../data/data_source/device_info_data_source.dart';
-import '../helpers/AppDate.dart';
 
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
@@ -34,53 +33,37 @@ import '../widgets/screen_lock_widget.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
-/// allow user to change the app settings
-class SettingScreen extends ConsumerWidget {
-  SettingScreen({Key? key}) : super(key: key);
-  bool isDeviceRooted = false;
+class SettingScreen extends ConsumerStatefulWidget {
+  const SettingScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FutureBuilder<void>(
-      future: _initializeTimeShiftManager(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return _buildSettingScreen(context, ref);
-        } else {
-          return SizedBox();
-        }
-      },
-    );
+  ConsumerState createState() => _SettingScreenState();
+}
+
+class _SettingScreenState extends ConsumerState<SettingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await TimeShiftManager().initializeTimes();
+      await ref.read(onBoardingProvider.notifier).isDeviceRooted();
+    });
   }
 
-  static Future<bool> checkRoot() async {
-    try {
-      final result = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
-        TurnOnOffTvConstant.kCheckRoot,
-      );
-      return result;
-    } catch (e) {
-      print('Error checking root access: $e');
-      return false;
-    }
-  }
-
-  Future<void> _initializeTimeShiftManager() async {
-    await TimeShiftManager().initializeTimes();
-    isDeviceRooted = await checkRoot();
+  @override
+  Widget build(BuildContext context) {
+    return _buildSettingScreen(context, ref);
   }
 
   Widget _buildSettingScreen(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
-    final mosqueProvider = context.watch<MosqueManager>();
     final userPreferences = context.watch<UserPreferencesManager>();
     final themeManager = context.watch<ThemeNotifier>();
     final String checkInternet = S.of(context).noInternet;
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
-    final today = mosqueProvider.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
     return ScreenWithAnimationWidget(
       animation: 'settings',
@@ -249,30 +232,7 @@ class SettingScreen extends ConsumerWidget {
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
                   ),
-                  isDeviceRooted && timeShiftManager.isLauncherInstalled
-                      ? Column(
-                          children: [
-                            Divider(),
-                            SizedBox(height: 10),
-                            Text(
-                              "Device Settings",
-                              style: theme.textTheme.headlineSmall,
-                              textAlign: TextAlign.center,
-                            ),
-                            _SettingItem(
-                              title: S.of(context).screenLock,
-                              subtitle: S.of(context).screenLockDesc,
-                              icon: Icon(Icons.power_settings_new, size: 35),
-                              onTap: () => showDialog(
-                                context: context,
-                                builder: (context) => ScreenLockModal(
-                                  timeShiftManager: timeShiftManager,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : SizedBox(),
+                  _screenLock(context, ref),
                 ],
               ),
             ),
@@ -280,6 +240,40 @@ class SettingScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Widget _screenLock(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final timeShiftManager = TimeShiftManager();
+    final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
+          orElse: () => false,
+          data: (value) => value.isRootedDevice,
+        );
+    log('isDeviceRooted: ${isDeviceRooted} - isLauncherInstalled: ${timeShiftManager.isLauncherInstalled}');
+    return isDeviceRooted && timeShiftManager.isLauncherInstalled
+        ? Column(
+            children: [
+              Divider(),
+              SizedBox(height: 10),
+              Text(
+                "Device Settings",
+                style: theme.textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+              _SettingItem(
+                title: S.of(context).screenLock,
+                subtitle: S.of(context).screenLockDesc,
+                icon: Icon(Icons.power_settings_new, size: 35),
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (context) => ScreenLockModal(
+                    timeShiftManager: timeShiftManager,
+                  ),
+                ),
+              ),
+            ],
+          )
+        : SizedBox();
   }
 }
 

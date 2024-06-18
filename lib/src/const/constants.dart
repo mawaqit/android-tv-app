@@ -41,4 +41,7 @@ class TurnOnOffTvConstant {
   static const String kCheckRoot = "checkRoot";
   static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
   static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
+
+  static const String kMinuteBeforeKey = 'selectedMinuteBefore';
+  static const String kMinuteAfterKey = 'selectedMinuteAfter';
 }
