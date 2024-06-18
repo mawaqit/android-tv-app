@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
+import 'package:mawaqit/src/state_management/screen_lock/screen_lock_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../i18n/l10n.dart';
@@ -27,7 +29,7 @@ class ScreenLockModal extends StatelessWidget {
   }
 }
 
-class _TimePicker extends StatefulWidget {
+class _TimePicker extends ConsumerStatefulWidget {
   final Function(DateTime) onTimeSelected;
 
   _TimePicker({required this.onTimeSelected});
@@ -36,68 +38,17 @@ class _TimePicker extends StatefulWidget {
   __TimePickerState createState() => __TimePickerState();
 }
 
-class __TimePickerState extends State<_TimePicker> {
+class __TimePickerState extends ConsumerState<_TimePicker> {
   final TimeShiftManager timeManager = TimeShiftManager();
   late DateTime selectedTime;
   bool value = false;
-  int _selectedMinuteBefore = 10;
-  int _selectedMinuteAfter = 10;
-  late SharedPreferences _prefs;
-
-  static const String _minuteBeforeKey = 'selectedMinuteBefore';
-  static const String _minuteAfterKey = 'selectedMinuteAfter';
 
   @override
   void initState() {
     super.initState();
     selectedTime = DateTime.now().add(Duration(hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
-    _initializePreferences();
-  }
-
-  Future<void> _initializePreferences() async {
-    _prefs = await SharedPreferences.getInstance();
-    bool isActive = await ToggleScreenFeature.getToggleFeatureState();
-
-    setState(() {
-      _selectedMinuteBefore = _prefs.getInt(_minuteBeforeKey) ?? 10;
-      _selectedMinuteAfter = _prefs.getInt(_minuteAfterKey) ?? 30;
-      value = isActive;
-    });
-  }
-
-  void _selectNextMinuteBefore() {
-    setState(() {
-      _selectedMinuteBefore = (_selectedMinuteBefore + 1) % 60;
-      if (_selectedMinuteBefore < 10) {
-        _selectedMinuteBefore = 10;
-      }
-    });
-  }
-
-  void _selectPreviousMinuteBefore() {
-    setState(() {
-      _selectedMinuteBefore = (_selectedMinuteBefore - 1 + 60) % 60;
-      if (_selectedMinuteBefore < 10) {
-        _selectedMinuteBefore = 59;
-      }
-    });
-  }
-
-  void _selectNextMinuteAfter() {
-    setState(() {
-      _selectedMinuteAfter = (_selectedMinuteAfter + 1) % 60;
-      if (_selectedMinuteAfter < 10) {
-        _selectedMinuteAfter = 10;
-      }
-    });
-  }
-
-  void _selectPreviousMinuteAfter() {
-    setState(() {
-      _selectedMinuteAfter = (_selectedMinuteAfter - 1 + 60) % 60;
-      if (_selectedMinuteAfter < 10) {
-        _selectedMinuteAfter = 59;
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(screenLockNotifierProvider.notifier);
     });
   }
 
@@ -144,6 +95,14 @@ class __TimePickerState extends State<_TimePicker> {
   }
 
   Widget _buildTimeConfiguration(BuildContext context, List<String> times) {
+    int selectedMinuteBefore = ref.watch(screenLockNotifierProvider).maybeWhen(
+          orElse: () => 10,
+          data: (data) => data.selectedMinuteBefore,
+        );
+    int selectedMinuteAfter = ref.watch(screenLockNotifierProvider).maybeWhen(
+      orElse: () => 10,
+      data: (data) => data.selectedMinuteAfter,
+    );
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -154,18 +113,18 @@ class __TimePickerState extends State<_TimePicker> {
           _buildTimeSelector(
             context,
             S.of(context).powerOnScreen,
-            _selectedMinuteBefore,
-            _selectNextMinuteBefore,
-            _selectPreviousMinuteBefore,
+            selectedMinuteBefore,
+            ref.read(screenLockNotifierProvider.notifier).selectNextMinuteBefore,
+            ref.read(screenLockNotifierProvider.notifier).selectPreviousMinuteBefore,
             S.of(context).before,
           ),
           const SizedBox(height: 16),
           _buildTimeSelector(
             context,
             S.of(context).powerOffScreen,
-            _selectedMinuteAfter,
-            _selectNextMinuteAfter,
-            _selectPreviousMinuteAfter,
+            selectedMinuteAfter,
+            ref.read(screenLockNotifierProvider.notifier).selectNextMinuteAfter,
+            ref.read(screenLockNotifierProvider.notifier).selectPreviousMinuteAfter,
             S.of(context).after,
           ),
         ],
@@ -177,8 +136,8 @@ class __TimePickerState extends State<_TimePicker> {
     BuildContext context,
     String label,
     int selectedMinute,
-    VoidCallback onIncrease,
-    VoidCallback onDecrease,
+    void Function(int) onIncrease,
+    void Function(int) onDecrease,
     String suffix,
   ) {
     return Column(
@@ -193,8 +152,8 @@ class __TimePickerState extends State<_TimePicker> {
             ),
             _MinuteSelector(
               selectedMinute: selectedMinute,
-              onIncrease: onIncrease,
-              onDecrease: onDecrease,
+              onIncrease: () => onIncrease(selectedMinute),
+              onDecrease: () => onDecrease(selectedMinute),
             ),
           ],
         ),
@@ -210,16 +169,7 @@ class __TimePickerState extends State<_TimePicker> {
   Widget _buildSaveButton(BuildContext context, List<String> times) {
     return OutlinedButton(
       onPressed: () async {
-        await ToggleScreenFeature.cancelAllScheduledTimers();
-        ToggleScreenFeature.toggleFeatureState(false);
-        ToggleScreenFeature.scheduleToggleScreen(
-          times,
-          _selectedMinuteBefore,
-          _selectedMinuteAfter,
-        );
-        ToggleScreenFeature.toggleFeatureState(true);
-        _prefs.setInt(_minuteBeforeKey, _selectedMinuteBefore);
-        _prefs.setInt(_minuteAfterKey, _selectedMinuteAfter);
+        await ref.read(screenLockNotifierProvider.notifier).saveSettings(times);
         Navigator.pop(context);
       },
       child: Text(S.current.ok),
