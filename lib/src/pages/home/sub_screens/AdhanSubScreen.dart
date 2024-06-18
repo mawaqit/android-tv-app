@@ -118,10 +118,8 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
             ),
           ),
           mosqueProvider.times!.isTurki
-              ? ResponsiveMiniSalahBarTurkishWidget(
-                  activeItem: mosqueProvider.salahIndex)
-              : ResponsiveMiniSalahBarWidget(
-                  activeItem: mosqueProvider.salahIndex),
+              ? ResponsiveMiniSalahBarTurkishWidget(activeItem: mosqueProvider.salahIndex)
+              : ResponsiveMiniSalahBarWidget(activeItem: mosqueProvider.salahIndex),
           SizedBox(height: 2.vh),
         ],
       ),

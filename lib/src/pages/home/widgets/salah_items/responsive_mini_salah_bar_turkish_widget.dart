@@ -27,15 +27,12 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
   @override
   Widget buildLandscape(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
-    final today = mosqueManager.useTomorrowTimes
-        ? AppDateTime.tomorrow()
-        : AppDateTime.now();
+    final today = mosqueManager.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
     final times = mosqueManager.times!.dayTimesStrings(today, salahOnly: false);
     final iqamas = mosqueManager.times!.dayIqamaStrings(today);
 
-    final isIqamaMoreImportant =
-        mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
+    final isIqamaMoreImportant = mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
     final iqamaEnabled = mosqueManager.mosqueConfig?.iqamaEnabled == true;
 
     final nextActiveSalah = mosqueManager.nextSalahIndex();
@@ -47,8 +44,6 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
           SalahItemWidget(
             time: times[0],
             withDivider: false,
-/*             iqama: '',
- */
             showIqama: iqamaEnabled,
             isIqamaMoreImportant: isIqamaMoreImportant,
           ),
@@ -57,8 +52,6 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
           SalahItemWidget(
             time: times[2],
             withDivider: false,
-/*             iqama: '',
- */
             showIqama: iqamaEnabled,
             isIqamaMoreImportant: isIqamaMoreImportant,
           ),
@@ -67,8 +60,7 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
           SalahItemWidget(
             time: times[3],
             isIqamaMoreImportant: isIqamaMoreImportant,
-            active: nextActiveSalah == 1 &&
-                (!AppDateTime.isFriday || mosqueManager.times?.jumua == null),
+            active: nextActiveSalah == 1 && (!AppDateTime.isFriday || mosqueManager.times?.jumua == null),
             iqama: isIqamaMoreImportant ? iqamas[1] : null,
             showIqama: iqamaEnabled,
             withDivider: false,
@@ -86,10 +78,7 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
             .mapIndexed((i, e) => Expanded(
                     child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 1.vw),
-                  child: e
-                      .animate(delay: Duration(milliseconds: 100 * i))
-                      .slideY(begin: 1)
-                      .fade(),
+                  child: e.animate(delay: Duration(milliseconds: 100 * i)).slideY(begin: 1).fade(),
                 )))
             .toList(),
       ),
@@ -107,8 +96,7 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
         ? times.dayTimesStrings(now.add(1.days), salahOnly: false)
         : times.dayTimesStrings(now, salahOnly: false);
     final iqamas = mosqueProvider.times!.dayIqamaStrings(now);
-    final isIqamaMoreImportant =
-        mosqueProvider.mosqueConfig!.iqamaMoreImportant == true;
+    final isIqamaMoreImportant = mosqueProvider.mosqueConfig!.iqamaMoreImportant == true;
     final turkishImask = todayTimes.length == 7 ? todayTimes.removeAt(0) : null;
     todayTimes.removeAt(0); // Remove the first element (Fajr)
 
@@ -157,16 +145,12 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
                   iqama: iqamas[0],
                   active: nextActiveIqama == 0,
                 ),
-              for (int index = 0;
-                  index < (turkishImask != null ? 2 : 3);
-                  index++)
+              for (int index = 0; index < (turkishImask != null ? 2 : 3); index++)
                 buildSalahItemWidget(
                   title: mosqueProvider.salahName(index),
                   time: todayTimes[index],
                   iqama: iqamas[index],
-                  active: index == 1
-                      ? nextActiveIqama == index
-                      : nextActiveIqama == index,
+                  active: index == 1 ? nextActiveIqama == index : nextActiveIqama == index,
                 ),
             ],
           ),
@@ -179,9 +163,7 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
                   title: mosqueProvider.salahName(index + 2),
                   time: todayTimes[index + 2],
                   iqama: iqamas[index + 2],
-                  active: (index + 2) == 1
-                      ? nextActiveIqama == (index + 2)
-                      : nextActiveIqama == (index + 2),
+                  active: (index + 2) == 1 ? nextActiveIqama == (index + 2) : nextActiveIqama == (index + 2),
                 ),
               ),
             )
@@ -194,9 +176,7 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
                   title: mosqueProvider.salahName(index + 3),
                   time: todayTimes[index + 3],
                   iqama: iqamas[index + 3],
-                  active: (index + 3) == 1
-                      ? nextActiveIqama == (index + 3)
-                      : nextActiveIqama == (index + 3),
+                  active: (index + 3) == 1 ? nextActiveIqama == (index + 3) : nextActiveIqama == (index + 3),
                 ),
               ),
             ),
