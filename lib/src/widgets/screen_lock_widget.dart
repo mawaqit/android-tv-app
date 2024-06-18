@@ -100,9 +100,9 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
           data: (data) => data.selectedMinuteBefore,
         );
     int selectedMinuteAfter = ref.watch(screenLockNotifierProvider).maybeWhen(
-      orElse: () => 10,
-      data: (data) => data.selectedMinuteAfter,
-    );
+          orElse: () => 10,
+          data: (data) => data.selectedMinuteAfter,
+        );
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
