@@ -22,23 +22,20 @@ class OnBoardingWifiSelector extends StatefulWidget {
 
 class _OnBoardingWifiSelectorState extends State<OnBoardingWifiSelector> {
   late List<WiFiAccessPoint> accessPoints = [];
-  StreamSubscription<List<WiFiAccessPoint>>? subscription;
   bool shouldCheckCan = true;
   bool _hasPermission = false;
 
-  bool get isStreaming => subscription != null;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _startScan();
     });
   }
 
   @override
   void dispose() {
-    subscription?.cancel();
     super.dispose();
   }
 
@@ -193,7 +190,7 @@ class _AccessPointTileState extends State<_AccessPointTile> {
       if (isSuccess) {
         _showToast(S.of(context).wifiSuccess);
         Navigator.pop(context);
-        widget.onSelect?.call();
+        widget.onSelect.call();
       } else {
         _showToast(S.of(context).wifiFailure);
         Navigator.pop(context);
