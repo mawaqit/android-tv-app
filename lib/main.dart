@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ProviderBase, ProviderContainer, ProviderObserver, ProviderScope;
@@ -92,6 +93,9 @@ class MyApp extends StatelessWidget {
                     GlobalCupertinoLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
+                    KurdishMaterialLocalizations.delegate,
+                    KurdishWidgetLocalizations.delegate,
+                    KurdishCupertinoLocalizations.delegate
                   ],
                   supportedLocales: S.supportedLocales,
                   debugShowCheckedModeBanner: false,
