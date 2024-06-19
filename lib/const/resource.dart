@@ -14,8 +14,7 @@ class R {
   static const String ASSETS_ANIMATIONS_LOTTIE_THEME_JSON = 'assets/animations/lottie/theme.json';
 
   /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\theme.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON =
-      'assets/animations/lottie/settings.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON = 'assets/animations/lottie/settings.json';
 
   /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\welcome.json)
   static const String ASSETS_ANIMATIONS_LOTTIE_WELCOME_JSON = 'assets/animations/lottie/welcome.json';

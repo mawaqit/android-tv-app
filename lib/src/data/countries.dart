@@ -514,12 +514,7 @@ class Countries {
     {
       'name': 'Greenland',
       'isoCode': 'GL',
-      'Timezone': [
-        'America/Nuuk',
-        'America/Danmarkshavn',
-        'America/Scoresbysund',
-        'America/Thule'
-      ]
+      'Timezone': ['America/Nuuk', 'America/Danmarkshavn', 'America/Scoresbysund', 'America/Thule']
     },
     {
       'name': 'Grenada',
@@ -599,12 +594,7 @@ class Countries {
     {
       'name': 'Indonesia',
       'isoCode': 'ID',
-      'Timezone': [
-        'Asia/Jakarta',
-        'Asia/Pontianak',
-        'Asia/Makassar',
-        'Asia/Jayapura'
-      ]
+      'Timezone': ['Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura']
     },
     {
       'name': 'Iran, Islamic Republic of Persian Gulf',

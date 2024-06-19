@@ -187,9 +187,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   ];
   static Future<bool> checkRoot() async {
     try {
-      final result =
-          await MethodChannel('nativeMethodsChannel')
-          .invokeMethod('checkRoot');
+      final result = await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
       return result;
     } catch (e) {
       print('Error checking root access: $e');
@@ -215,9 +213,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final activePage = _rootStatus
-        ? kioskModeonBoardingItems[currentScreen]
-        : onBoardingItems[currentScreen];
+    final activePage = _rootStatus ? kioskModeonBoardingItems[currentScreen] : onBoardingItems[currentScreen];
     final onBoardingState = ref.watch(onBoardingProvider);
     final appLanguage = Provider.of<AppLanguage>(context, listen: false);
 
@@ -280,9 +276,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                 ),
                 Spacer(flex: 2),
                 DotsIndicator(
-                  dotsCount: _rootStatus
-                      ? kioskModeonBoardingItems.length
-                      : onBoardingItems.length,
+                  dotsCount: _rootStatus ? kioskModeonBoardingItems.length : onBoardingItems.length,
                   position: currentScreen,
                   decorator: DotsDecorator(
                     size: const Size.square(9.0),

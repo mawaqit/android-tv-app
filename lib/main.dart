@@ -36,13 +36,12 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       tz.initializeTimeZones();
-            await Hive.initFlutter();
-  
+      await Hive.initFlutter();
+
       runApp(ProviderScope(
         child: MyApp(),
         observers: [RiverpodLogger()],
       ));
-
     },
   );
 }
