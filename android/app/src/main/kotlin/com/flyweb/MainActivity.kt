@@ -21,6 +21,14 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.app.admin.DevicePolicyManager
 import java.io.IOException
+import android.app.KeyguardManager
+import android.content.Context
+import java.io.BufferedReader
+import java.io.DataOutputStream
+import java.io.InputStreamReader
+import android.os.AsyncTask
+import android.util.Log
+
 class MainActivity : FlutterActivity() {
     private lateinit var mAdminComponentName: ComponentName
     private lateinit var mDevicePolicyManager: DevicePolicyManager
@@ -43,8 +51,6 @@ class MainActivity : FlutterActivity() {
                         }
                     }
                     "checkRoot" -> result.success(checkRoot())
-                    "toggleScreenOn" -> toggleScreenOn(call, result)
-                    "toggleScreenOff" -> toggleScreenOff(call, result)
                     "toggleBoxScreenOff" -> toggleBoxScreenOff(call, result)
                     "toggleBoxScreenOn" -> toggleBoxScreenOn(call, result)
                     "clearAppData" -> {
@@ -92,7 +98,7 @@ class MainActivity : FlutterActivity() {
         AsyncTask.execute {
             try {
                 val timezone = call.argument<String>("timezone")
-                executeCommand("service call alarm 3 s16 $timezone", result)
+                executeCommand(listOf("service call alarm 3 s16 $timezone"), result)
             } catch (e: Exception) {
                 handleCommandException(e, result)
             }
@@ -118,7 +124,7 @@ class MainActivity : FlutterActivity() {
 
                 Log.i("SU_COMMAND", "Wifi Command output: cmd wifi connect-network $ssid $security $password")
 
-                executeCommand("cmd wifi connect-network $ssid $security $password", result)
+                executeCommand(listOf("cmd wifi connect-network $ssid $security $password"), result)
 
             } catch (e: Exception) {
                 handleCommandException(e, result)
@@ -126,40 +132,9 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    private fun executeCommand(command: String, result: MethodChannel.Result) {
-        try {
-            val suProcess = Runtime.getRuntime().exec("su")
-            val os = DataOutputStream(suProcess.outputStream)
 
-            os.writeBytes(command + "\n")
-            os.flush()
-            os.close()
 
-            val output = BufferedReader(InputStreamReader(suProcess.inputStream)).readText()
-            val error = BufferedReader(InputStreamReader(suProcess.errorStream)).readText()
 
-            Log.i("SU_COMMAND", "Command output: $output")
-            Log.e("SU_COMMAND", "Command error: $error")
-
-            val exitCode = suProcess.waitFor()
-
-            if (exitCode != 0) {
-                Log.e("SU_COMMAND", "Command failed with exit code $exitCode.")
-                result.success(false)
-
-            } else {
-                Log.i("SU_COMMAND", "Command executed successfully.")
-                result.success(true)
-            }
-        } catch (e: Exception) {
-            handleCommandException(e, result)
-        }
-    }
-
-    private fun handleCommandException(e: Exception, result: MethodChannel.Result) {
-        Log.e("SU_COMMAND", "Exception while executing command: ${e.message}")
-        result.error("CMD_ERROR", "Exception while executing command", null)
-    }
 
     private fun clearDataRestart(): Boolean {
         return try {
@@ -176,19 +151,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    private fun toggleScreenOn(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                val commands = listOf(
-                    "input keyevent 82",
-                    "am start -W -n com.mawaqit.androidtv/.MainActivity"
-                )
-                executeCommands(commands, result) // Lock the device
-            } catch (e: Exception) {
-                handleCommandExceptions(e, result)
-            }
-        }
-    }
+
 
     private fun toggleBoxScreenOff(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
@@ -198,7 +161,7 @@ class MainActivity : FlutterActivity() {
                     "cd /sys/class/hdmi/hdmi/attr",
                     "echo 0 > phy_power"
                 )
-                executeCommands(commands, result) // Lock the device
+                executeCommand(commands, result) // Lock the device
             } catch (e: Exception) {
                 handleCommandExceptions(e, result)
             }
@@ -214,24 +177,16 @@ class MainActivity : FlutterActivity() {
                     "echo 1 > phy_power",
                     "am start -W -n com.mawaqit.androidtv/.MainActivity"
                 )
-                executeCommands(commands, result)
+                executeCommand(commands, result)
             } catch (e: Exception) {
                 handleCommandExceptions(e, result)
             }
         }
     }
 
-    private fun toggleScreenOff(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                executeCommands(listOf("input keyevent 26"), result) // Lock the device
-            } catch (e: Exception) {
-                handleCommandExceptions(e, result)
-            }
-        }
-    }
 
-    private fun executeCommands(commands: List<String>, result: MethodChannel.Result) {
+
+    private fun executeCommand(commands: List<String>, result: MethodChannel.Result) {
         try {
             Log.d("SU_COMMAND", "Executing commands: ${commands.joinToString(separator = " && ")}")
 
