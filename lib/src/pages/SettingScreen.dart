@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, WidgetRef, Consumer;
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
+
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
@@ -8,49 +13,53 @@ import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/pages/HijriAdjustmentsScreen.dart';
 import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
+import 'package:mawaqit/src/pages/TimezoneScreen.dart';
+import 'package:mawaqit/src/pages/WifiSelectorScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart' hide Consumer;
 import 'package:sizer/sizer.dart';
 
 import '../../i18n/AppLanguage.dart';
 import '../../main.dart';
+
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
 import '../state_management/app_update/app_update_notifier.dart';
 import '../state_management/random_hadith/random_hadith_notifier.dart';
+import '../widgets/screen_lock_widget.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 
-/// allow user to change the app settings
-class SettingScreen extends ConsumerWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+class SettingScreen extends ConsumerStatefulWidget {
+  const SettingScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FutureBuilder<void>(
-      future: _initializeTimeShiftManager(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return _buildSettingScreen(context, ref);
-        } else {
-          return SizedBox();
-        }
-      },
-    );
+  ConsumerState createState() => _SettingScreenState();
+}
+
+class _SettingScreenState extends ConsumerState<SettingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await TimeShiftManager().initializeTimes();
+      await ref.read(onBoardingProvider.notifier).isDeviceRooted();
+    });
   }
 
-  Future<void> _initializeTimeShiftManager() async {
-    await TimeShiftManager().initializeTimes();
+  @override
+  Widget build(BuildContext context) {
+    return _buildSettingScreen(context, ref);
   }
 
   Widget _buildSettingScreen(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
-    final mosqueProvider = context.watch<MosqueManager>();
     final userPreferences = context.watch<UserPreferencesManager>();
     final themeManager = context.watch<ThemeNotifier>();
     final String checkInternet = S.of(context).noInternet;
@@ -195,7 +204,9 @@ class SettingScreen extends ConsumerWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => TimePickerModal(timeShiftManager: timeShiftManager),
+                              builder: (context) => TimePickerModal(
+                                timeShiftManager: timeShiftManager,
+                              ),
                             );
                           },
                         )
@@ -223,6 +234,7 @@ class SettingScreen extends ConsumerWidget {
                     value: userPreferences.webViewMode,
                     onChanged: (value) => userPreferences.webViewMode = value,
                   ),
+                  _screenLock(context, ref),
                 ],
               ),
             ),
@@ -230,6 +242,54 @@ class SettingScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Widget _screenLock(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final timeShiftManager = TimeShiftManager();
+    final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
+          orElse: () => false,
+          data: (value) => value.isRootedDevice,
+        );
+    log('isDeviceRooted: ${isDeviceRooted} - isLauncherInstalled: ${timeShiftManager.isLauncherInstalled}');
+    return isDeviceRooted
+        ? Column(
+            children: [
+              Divider(),
+              SizedBox(height: 10),
+              Text(
+                S.of(context).deviceSettings,
+                style: theme.textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+              timeShiftManager.isLauncherInstalled
+                  ? _SettingItem(
+                      title: S.of(context).screenLock,
+                      subtitle: S.of(context).screenLockDesc,
+                      icon: Icon(Icons.power_settings_new, size: 35),
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (context) => ScreenLockModal(
+                          timeShiftManager: timeShiftManager,
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
+              _SettingItem(
+                title: S.of(context).appTimezone,
+                subtitle: S.of(context).descTimezone,
+                icon: Icon(Icons.timelapse, size: 35),
+                onTap: () => AppRouter.push(TimezoneScreen()),
+              ),
+              _SettingItem(
+                title: S.of(context).appWifi,
+                subtitle: S.of(context).descWifi,
+                icon: Icon(Icons.wifi, size: 35),
+                onTap: () => AppRouter.push(WifiSelectorScreen()),
+              ),
+            ],
+          )
+        : SizedBox();
   }
 }
 
