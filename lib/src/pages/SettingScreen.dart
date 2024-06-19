@@ -268,7 +268,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
           data: (value) => value.isRootedDevice,
         );
     log('isDeviceRooted: ${isDeviceRooted} - isLauncherInstalled: ${timeShiftManager.isLauncherInstalled}');
-    return isDeviceRooted && timeShiftManager.isLauncherInstalled
+    return isDeviceRooted
         ? Column(
             children: [
               Divider(),
@@ -278,17 +278,19 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 style: theme.textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
-              _SettingItem(
-                title: S.of(context).screenLock,
-                subtitle: S.of(context).screenLockDesc,
-                icon: Icon(Icons.power_settings_new, size: 35),
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => ScreenLockModal(
-                    timeShiftManager: timeShiftManager,
-                  ),
-                ),
-              ),
+              timeShiftManager.isLauncherInstalled
+                  ? _SettingItem(
+                      title: S.of(context).screenLock,
+                      subtitle: S.of(context).screenLockDesc,
+                      icon: Icon(Icons.power_settings_new, size: 35),
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (context) => ScreenLockModal(
+                          timeShiftManager: timeShiftManager,
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
               _SettingItem(
                 title: S.of(context).appTimezone,
                 subtitle: S.of(context).descTimezone,

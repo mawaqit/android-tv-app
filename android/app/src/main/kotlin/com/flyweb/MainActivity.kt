@@ -1,7 +1,5 @@
 package com.mawaqit.androidtv
 
-import android.os.AsyncTask
-import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
@@ -22,10 +20,6 @@ import android.os.Build.VERSION_CODES
 import android.app.admin.DevicePolicyManager
 import java.io.IOException
 import android.app.KeyguardManager
-import android.content.Context
-import java.io.BufferedReader
-import java.io.DataOutputStream
-import java.io.InputStreamReader
 import android.os.AsyncTask
 import android.util.Log
 
@@ -163,7 +157,7 @@ class MainActivity : FlutterActivity() {
                 )
                 executeCommand(commands, result) // Lock the device
             } catch (e: Exception) {
-                handleCommandExceptions(e, result)
+                handleCommandException(e, result)
             }
         }
     }
@@ -179,7 +173,7 @@ class MainActivity : FlutterActivity() {
                 )
                 executeCommand(commands, result)
             } catch (e: Exception) {
-                handleCommandExceptions(e, result)
+                handleCommandException(e, result)
             }
         }
     }
@@ -217,11 +211,11 @@ class MainActivity : FlutterActivity() {
             }
         } catch (e: Exception) {
             Log.e("SU_COMMAND", "Exception occurred: ${e.message}")
-            handleCommandExceptions(e, result)
+            handleCommandException(e, result)
         }
     }
 
-    private fun handleCommandExceptions(e: Exception, result: MethodChannel.Result) {
+    private fun handleCommandException(e: Exception, result: MethodChannel.Result) {
         result.error("Exception", "An exception occurred: $e", null)
     }
 }
