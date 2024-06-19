@@ -204,10 +204,10 @@ class MainActivity : FlutterActivity() {
 
             if (exitCode != 0) {
                 Log.e("SU_COMMAND", "Command failed with exit code $exitCode.")
-                result.error("CMD_ERROR", "Command failed", null)
+                result.success(false)
             } else {
                 Log.i("SU_COMMAND", "Command executed successfully.")
-                result.success("Command executed successfully.")
+                result.success(true)
             }
         } catch (e: Exception) {
             Log.e("SU_COMMAND", "Exception occurred: ${e.message}")
