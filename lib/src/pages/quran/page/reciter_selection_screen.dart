@@ -143,21 +143,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               scrollDirection: Axis.horizontal,
               itemCount: reciterNames.length,
               itemBuilder: (context, index) {
-                return Focus(
-                  focusNode: reciterFocusNode,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedReciterIndex = index;
-                      });
-                    },
-                    child: _reciterCard(index, reciterNames),
-                  ),
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedReciterIndex = index;
+                    });
+                  },
+                  child: _reciterCard(index, reciterNames),
                 );
               },
             ),
           ),
-          Positioned(
+          /*       Positioned(
             left: 0,
             top: 0,
             bottom: 0,
@@ -174,13 +171,13 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               icon: Icons.arrow_right,
               onPressed: () => _scrollReciterList(ScrollDirection.reverse),
             ),
-          ),
+          ), */
         ],
       ),
     );
   }
 
-  Widget _buildRoundedButton({required IconData icon, required VoidCallback onPressed}) {
+/*   Widget _buildRoundedButton({required IconData icon, required VoidCallback onPressed}) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -195,8 +192,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       ),
     );
   }
-
-  void _scrollReciterList(ScrollDirection direction) {
+ */
+/*   void _scrollReciterList(ScrollDirection direction) {
     log('scrollReciterList: $direction');
     final itemWidth = sizeOfContainerReciter + marginOfContainerReciter; // Item width + right margin
     double targetOffset;
@@ -214,7 +211,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       curve: Curves.easeInOut,
     );
   }
-
+ */
   Container _reciterCard(int index, List<ReciterModel> reciterNames) {
     return Container(
       width: 25.w,
@@ -385,6 +382,13 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         setState(() {
           selectedReciteTypeIndex = 0;
         });
+      
+      } else if (value.logicalKey == LogicalKeyboardKey.arrowDown) {
+        FocusScope.of(context).unfocus();
+        FocusScope.of(context).requestFocus(reciteTypeFocusNode);
+        setState(() {
+          selectedReciteTypeIndex = 0;
+        });
       }
     }
   }
@@ -424,13 +428,20 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             ),
           );
         }
+         else if (value.logicalKey == LogicalKeyboardKey.arrowUp) {
+          FocusScope.of(context).unfocus();
+          FocusScope.of(context).requestFocus(reciterFocusNode);
+          setState(() {
+            selectedReciteTypeIndex = 0;
+          });
+        }
       }
     }
   }
 
   void _animateToReciter(int index, LogicalKeyboardKey direction) {
     final itemWidth = sizeOfContainerReciter + marginOfContainerReciter; // Item width + right margin
-    final targetOffset = (index) * itemWidth;
+    final targetOffset = (index) * itemWidth * 1.5;
 
     _reciterScrollController.animateTo(
       targetOffset,
