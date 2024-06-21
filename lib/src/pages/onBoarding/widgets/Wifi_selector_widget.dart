@@ -205,7 +205,9 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
         _showToast(S.of(context).wifiSuccess);
         widget.onSelect?.call();
       }
-      if (next.hasError && !next.isRefreshing) {
+      if (next.value!.status == Status.error) {
+        Navigator.of(context).pop();
+
         _showToast(S.of(context).wifiFailure);
       }
     });

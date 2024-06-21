@@ -54,7 +54,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
         state = AsyncData(state.value!.copyWith(status: Status.connected));
       } else {
         logger.e("kiosk mode: wifi_scan: error: can't connect to wifi");
-        state = AsyncError("can't connect to wifi", StackTrace.current);
+        state = AsyncData(state.value!.copyWith(status: Status.error));
       }
     } on PlatformException catch (e, s) {
       logger.e("kiosk mode: wifi_scan: error: $e");

@@ -202,7 +202,7 @@ class MainActivity : FlutterActivity() {
             val exitCode = suProcess.waitFor()
             Log.d("SU_COMMAND", "Exit code: $exitCode")
 
-            if (exitCode != 0) {
+            if (exitCode != 0 || output.contains("Connection failed"))  {
                 Log.e("SU_COMMAND", "Command failed with exit code $exitCode.")
                 result.success(false)
             } else {
@@ -214,6 +214,8 @@ class MainActivity : FlutterActivity() {
             handleCommandException(e, result)
         }
     }
+
+
 
     private fun handleCommandException(e: Exception, result: MethodChannel.Result) {
         result.error("Exception", "An exception occurred: $e", null)
