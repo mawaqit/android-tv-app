@@ -177,41 +177,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     );
   }
 
-/*   Widget _buildRoundedButton({required IconData icon, required VoidCallback onPressed}) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        shape: const CircleBorder(),
-        backgroundColor: Colors.white.withOpacity(0.2),
-        fixedSize: Size(5.w, 5.w),
-      ),
-      child: Icon(
-        icon,
-        color: Colors.white,
-        size: 15.sp,
-      ),
-    );
-  }
- */
-/*   void _scrollReciterList(ScrollDirection direction) {
-    log('scrollReciterList: $direction');
-    final itemWidth = sizeOfContainerReciter + marginOfContainerReciter; // Item width + right margin
-    double targetOffset;
-    if (direction == ScrollDirection.forward) {
-      targetOffset =
-          (_reciterScrollController.offset - itemWidth).clamp(0.0, _reciterScrollController.position.maxScrollExtent);
-    } else {
-      targetOffset =
-          (_reciterScrollController.offset + itemWidth).clamp(0.0, _reciterScrollController.position.maxScrollExtent);
-    }
-
-    _reciterScrollController.animateTo(
-      targetOffset,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-  }
- */
   Container _reciterCard(int index, List<ReciterModel> reciterNames) {
     return Container(
       width: 25.w,
@@ -352,7 +317,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       if (reciterFocusNode.hasFocus) {
         _handleReciteKeyEvent(value, reciters);
       } else if (reciteTypeFocusNode.hasFocus) {
-        _handleReciteTypeKeyEvent(value, reciters);
+        _handleReciteTypeKeyEvent(value, reciters, reciters[selectedReciterIndex].moshaf);
       }
     }
   }
@@ -382,7 +347,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         setState(() {
           selectedReciteTypeIndex = 0;
         });
-      
+
       } else if (value.logicalKey == LogicalKeyboardKey.arrowDown) {
         FocusScope.of(context).unfocus();
         FocusScope.of(context).requestFocus(reciteTypeFocusNode);
@@ -393,7 +358,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     }
   }
 
-  void _handleReciteTypeKeyEvent(RawKeyEvent value, List<ReciterModel> reciters) {
+  void _handleReciteTypeKeyEvent(RawKeyEvent value, List<ReciterModel> reciters, List<MoshafModel> reciterTypes) {
     log('_handleReciteTypeKeyEvent: $value');
     if (value is RawKeyDownEvent) {
       if (reciteTypeFocusNode.hasFocus) {
@@ -418,8 +383,17 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           log('begin 1 selectedReciteTypeIndex: $selectedReciteTypeIndex');
 
           ref.read(reciteNotifierProvider.notifier).setSelectedMoshaf(
-                moshafModel: reciters[selectedReciterIndex].moshaf[selectedReciterIndex],
-              );
+            moshafModel: reciterTypes[selectedReciteTypeIndex],
+          );
+          log('quran:ui: selectedReciteTypeIndex: ${selectedReciterIndex} ${reciters}');
+          ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
+            reciterModel: reciters[selectedReciterIndex],
+          );
+
+          log('quran:ui: getSuwarByReciter: ${reciterTypes[selectedReciteTypeIndex]}');
+          ref.read(quranNotifierProvider.notifier).getSuwarByReciter(
+            selectedMoshaf: reciterTypes[selectedReciteTypeIndex],
+          );
           log('begin 3 selectedReciteTypeIndex: $selectedReciteTypeIndex');
           Navigator.push(
             context,
