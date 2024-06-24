@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
@@ -25,7 +24,7 @@ class FakeAnnouncement extends Announcement {
   static List<FakeAnnouncement> generateFakeAnnouncements(int count) {
     return List<FakeAnnouncement>.generate(
       count,
-          (index) => FakeAnnouncement(
+      (index) => FakeAnnouncement(
         id: index,
         title: 'Fake Announcement $index',
         content: 'This is the content of fake announcement $index.',
@@ -81,8 +80,6 @@ void main() {
 
       // Wait a bit more to see if any errors occur after disposal
       await Future.delayed(Duration(seconds: 2));
-
-
     });
 
     test('AnnouncementWorkflowNotifier state changes', () async {
