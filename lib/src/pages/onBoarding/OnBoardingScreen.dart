@@ -22,7 +22,7 @@ import '../../../i18n/l10n.dart';
 import '../../helpers/LocaleHelper.dart';
 import '../../state_management/on_boarding/on_boarding_notifier.dart';
 import '../../widgets/mawaqit_back_icon_button.dart';
-import 'widgets/Wifi_selector_widget.dart';
+import 'widgets/wifi_selector_widget.dart';
 import 'widgets/onboarding_screen_type.dart';
 
 class OnBoardingItem {
