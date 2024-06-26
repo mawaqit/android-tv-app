@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,7 +11,7 @@ import 'announcement_workflow_state.dart';
 import '../../../services/user_preferences_manager.dart';
 
 class AnnouncementWorkflowNotifier extends AsyncNotifier<AnnouncementWorkflowState> {
-  Timer? _periodicTimer;
+  // Timer? _periodicTimer;
   late SharedPreferences sharedPrefs;
 
   @override
@@ -147,8 +148,7 @@ class AnnouncementWorkflowNotifier extends AsyncNotifier<AnnouncementWorkflowSta
   }
 
   void _closeActivatedTimers() {
-    _periodicTimer?.cancel();
-    log('announcement: AnnouncementWorkflowNotifier: _closeActivatedTimers - timers disposed');
+    // _periodicTimer?.cancel();
   }
 }
 
