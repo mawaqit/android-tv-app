@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_notifier.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_state.dart';
 import 'package:provider/provider.dart';
@@ -24,12 +26,27 @@ class OnBoardingWifiSelector extends ConsumerStatefulWidget {
 }
 
 class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector> {
+
+  final TimeShiftManager _timeManager = TimeShiftManager();
+
   @override
   void initState() {
     super.initState();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (_timeManager.deviceModel == "MAWAQITBOX V2") {
+        await addLocationPermission();
+      }
       ref.read(wifiScanNotifierProvider.notifier);
     });
+  }
+
+  Future<void> addLocationPermission() async {
+    try {
+      await platform.invokeMethod('addLocationPermission');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: location permission: error: $e");
+    }
   }
 
   void _showToast(String message) {
@@ -199,14 +216,15 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
     final title = widget.accessPoint.ssid.isNotEmpty ? widget.accessPoint.ssid : S.of(context).noSSID;
     final signalIcon = widget.accessPoint.level >= -80 ? Icons.signal_wifi_4_bar : Icons.signal_wifi_0_bar;
     ref.listen(wifiScanNotifierProvider, (previous, next) {
-      if (next.hasValue && !next.isRefreshing && next.value!.status == Status.connected) {
-        Navigator.of(context).pop();
-
+      if (next.hasValue &&
+          !next.isRefreshing &&
+          next.value!.status == Status.connected) {
+ 
         _showToast(S.of(context).wifiSuccess);
         widget.onSelect?.call();
+ 
       }
       if (next.value!.status == Status.error) {
-        Navigator.of(context).pop();
 
         _showToast(S.of(context).wifiFailure);
       }
@@ -235,18 +253,21 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
                       onPressed: () {
                         setState(() {
                           _showPassword = !_showPassword;
-                        });
+                        }); 
                       },
                     ),
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () async {
+                    Navigator.of(context).pop();
+                
                     await ref.read(wifiScanNotifierProvider.notifier).connectToWifi(
                           widget.accessPoint.ssid,
                           widget.accessPoint.capabilities,
                           passwordController.text,
                         );
+
                   },
                   child: Text(S.of(context).connect),
                 ),
