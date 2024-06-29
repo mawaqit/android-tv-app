@@ -133,7 +133,7 @@ final reciteRemoteDataSourceProvider = Provider<ReciteRemoteDataSource>((ref) {
         interceptor: LogInterceptor(
           requestBody: true,
           responseBody: true,
-          logPrint: (l) => log('$l', name: 'API'),
+          // logPrint: (l) => log('$l', name: 'API'),
         ),
       ),
     ),
