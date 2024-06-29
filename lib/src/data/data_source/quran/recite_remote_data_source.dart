@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,13 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/module/dio_module.dart';
 
 import 'package:mawaqit/src/domain/error/recite_exception.dart';
+
+class _DownloadParams {
+  final String url;
+  final SendPort sendPort;
+
+  _DownloadParams(this.url, this.sendPort);
+}
 
 class ReciteRemoteDataSource {
   final Dio _dio;
@@ -62,26 +70,54 @@ class ReciteRemoteDataSource {
     }
   }
 
-  Future<List<int>> downloadAudioFile(AudioFileModel audioFile, Function(double) onProgress) async {
+  Future<List<int>> downloadAudioFile(
+    AudioFileModel audioFile,
+    Function(double) onProgress,
+  ) async {
+    final receivePort = ReceivePort();
+    await Isolate.spawn(_downloadAudioFileIsolate, _DownloadParams(audioFile.url, receivePort.sendPort));
+
+    List<int> downloadedList = [];
+    await for (final message in receivePort) {
+      if (message is Map) {
+        if (message.containsKey('progress')) {
+          onProgress(message['progress']);
+        } else if (message.containsKey('data')) {
+          downloadedList = message['data'];
+          break;
+        } else if (message.containsKey('error')) {
+          throw FetchAudioFileFailedException(message['error']);
+        }
+      }
+    }
+
+    return downloadedList;
+  }
+
+  static void _downloadAudioFileIsolate(_DownloadParams params) async {
+    final dio = Dio();
     try {
-      final response = await _dio.get<List<int>>(
-        audioFile.url,
+      final response = await dio.get<List<int>>(
+        params.url,
         options: Options(responseType: ResponseType.bytes),
         onReceiveProgress: (received, total) {
           if (total != -1) {
-            onProgress((received / total) * 100);
+            final progress = (received / total) * 100;
+            params.sendPort.send({'progress': progress});
           }
         },
       );
 
       if (response.statusCode == 200) {
-        return response.data!;
+        params.sendPort.send({'data': response.data!});
       } else {
-        throw FetchAudioFileFailedException('Failed to fetch audio file');
+        params.sendPort.send({'error': 'Failed to fetch audio file'});
       }
     } catch (e) {
-      throw FetchAudioFileFailedException(e.toString());
+      params.sendPort.send({'error': e.toString()});
     }
+
+    Isolate.exit();
   }
 
   static List<int> _convertSurahListToIntegers(String surahList) {

@@ -113,7 +113,8 @@ class FetchFavoriteRecitersException extends QuranException {
 
 class SaveFavoriteSurahByReciterException extends QuranException {
   SaveFavoriteSurahByReciterException(String message)
-      : super('Error occurred while saving favorite surah by reciter: $message', 'SAVE_FAVORITE_SURAH_BY_RECITER_ERROR');
+      : super(
+            'Error occurred while saving favorite surah by reciter: $message', 'SAVE_FAVORITE_SURAH_BY_RECITER_ERROR');
 }
 
 class SaveFavoriteReciterException extends QuranException {
@@ -123,7 +124,8 @@ class SaveFavoriteReciterException extends QuranException {
 
 class FetchFavoriteSurahsByReciterException extends QuranException {
   FetchFavoriteSurahsByReciterException(String message)
-      : super('Error occurred while fetching favorite surahs by reciter: $message', 'FETCH_FAVORITE_SURAHS_BY_RECITER_ERROR');
+      : super('Error occurred while fetching favorite surahs by reciter: $message',
+            'FETCH_FAVORITE_SURAHS_BY_RECITER_ERROR');
 }
 
 class DeleteFavoriteReciterException extends QuranException {

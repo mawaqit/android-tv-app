@@ -109,6 +109,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                         builder: (context) => ReciterSelectionScreen.withoutSurahName(),
                       ),
                     );
+
                     /// it navigates already by the menu at
                   },
                   isSelected: _selectedIndex == 1,

@@ -1,12 +1,15 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
 import 'package:mawaqit/src/state_management/quran/favorite/quran_favorite_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_state.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:shimmer/shimmer.dart';
@@ -14,6 +17,9 @@ import 'package:shimmer/shimmer.dart';
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_notifier.dart';
 import 'package:mawaqit/src/pages/quran/page/quran_player_screen.dart';
 import 'package:sizer/sizer.dart';
+
+import '../../../helpers/connectivity_provider.dart';
+import '../../../models/address_model.dart';
 
 class SurahSelectionScreen extends ConsumerStatefulWidget {
   final int reciterId;
@@ -42,9 +48,13 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     RawKeyboard.instance.addListener(_handleKeyEvent);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(quranFavoriteNotifierProvider.notifier).getFavoriteSuwar(
-            riwayatId: widget.riwayatId,
-            reciterId: widget.reciterId,
-          );
+        riwayatId: widget.riwayatId,
+        reciterId: widget.reciterId,
+      );
+      ref.read(quranPlayerNotifierProvider.notifier).getDownloadedSurahByReciterAndRiwayah(
+        reciterId: widget.reciterId.toString(),
+        riwayahId: widget.riwayatId.toString(),
+      );
     });
   }
 
@@ -77,20 +87,25 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                 Expanded(
                   child: quranState.when(
                     data: (data) {
-                      final favoriteSuwar = ref.watch(quranFavoriteNotifierProvider).maybeWhen(
-                            orElse: () => [],
-                            data: (favoriteData) {
-                              if (favoriteData.favoriteMoshafs == null ||
-                                  favoriteData.favoriteMoshafs!.moshafType != widget.riwayatId) {
-                                return [];
-                              } else {
-                                return data.suwar
-                                    .where((surah) => favoriteData.favoriteMoshafs!.surahList.contains(surah.id))
-                                    .toList();
-                              }
-                            },
-                          );
+                      final List<SurahModel> favoriteSuwar = ref.watch(quranFavoriteNotifierProvider).maybeWhen(
+                        orElse: () => [],
+                        data: (favoriteData) {
+                          if (favoriteData.favoriteMoshafs == null ||
+                              favoriteData.favoriteMoshafs!.moshafType != widget.riwayatId) {
+                            return [];
+                          } else {
+                            return data.suwar
+                                .where((surah) => favoriteData.favoriteMoshafs!.surahList.contains(surah.id))
+                                .toList();
+                          }
+                        },
+                      );
                       final unfavoriteSuwar = data.suwar.where((surah) => !favoriteSuwar.contains(surah)).toList();
+                      // Get the downloaded Surahs
+                      final downloadedSurahs = ref.watch(quranPlayerNotifierProvider).maybeWhen(
+                        orElse: () => <File>[],
+                        data: (playerState) => playerState.downloadedAudio,
+                      );
 
                       return GridView.builder(
                         padding: EdgeInsets.symmetric(horizontal: 3.w),
@@ -107,21 +122,53 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                               ? favoriteSuwar[index]
                               : unfavoriteSuwar[index - favoriteSuwar.length];
                           final isFavorite = favoriteSuwar.contains(surah);
+                          final downloadState = ref.watch(quranPlayerNotifierProvider);
+
+                          final isDownloaded = downloadedSurahs.any((file) {
+                            final fileName = file.path
+                                .split('/')
+                                .last;
+                            return fileName == '${surah.id}.mp3';
+                          });
+
+                          log('ui: SurahSelectionScreen: isDownloaded $isDownloaded ${surah.id}');
+
                           return SurahCard(
+                            downloadProgress: downloadState.maybeMap(
+                              orElse: () => 0,
+                              data: (downloadStat) =>
+                              downloadStat.value.currentDownloadAudio == surah.id
+                                  ? downloadStat.value.downloadProgress.toDouble() / 100
+                                  : 0,
+                            ),
+                            isDownloaded: isDownloaded,
+                            onDownloadTap: !isDownloaded
+                                ? () {
+                              final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
+                                orElse: () => null,
+                                data: (data) => data.selectedMoshaf,
+                              );
+                              ref.read(quranPlayerNotifierProvider.notifier).downloadAudio(
+                                reciterId: widget.reciterId.toString(),
+                                riwayahId: widget.riwayatId.toString(),
+                                surahId: surah.id,
+                                url: surah.getSurahUrl(moshaf!.server),
+                              );
+                            }
+                                : () {},
                             onFavoriteTap: () {
-                              log('quran: favorite: Favorite tap on index: $index');
                               if (isFavorite) {
                                 ref.read(quranFavoriteNotifierProvider.notifier).deleteFavoriteSuwar(
-                                      reciterId: widget.reciterId,
-                                      surahId: surah.id,
-                                      riwayatId: widget.riwayatId,
-                                    );
+                                  reciterId: widget.reciterId,
+                                  surahId: surah.id,
+                                  riwayatId: widget.riwayatId,
+                                );
                               } else {
                                 ref.read(quranFavoriteNotifierProvider.notifier).saveFavoriteSuwar(
-                                      reciterId: widget.reciterId,
-                                      surahId: surah.id,
-                                      riwayatId: widget.riwayatId,
-                                    );
+                                  reciterId: widget.reciterId,
+                                  surahId: surah.id,
+                                  riwayatId: widget.riwayatId,
+                                );
                               }
                             },
                             isFavorite: favoriteSuwar.contains(surah),
@@ -129,26 +176,36 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                             surahNumber: surah.id,
                             isSelected: index == selectedIndex,
                             onTap: () {
+                              ref.read(connectivityProvider.notifier).checkInternetConnection();
                               setState(() {
                                 selectedIndex = index;
                               });
-                              final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
-                                    orElse: () => null,
-                                    data: (data) => data.selectedMoshaf,
-                                  );
-                              log('Selected moshaf: $moshaf');
-                              ref.read(quranPlayerNotifierProvider.notifier).initialize(
-                                    moshaf: moshaf!,
-                                    surah: surah,
-                                    suwar: data.suwar,
-                                  );
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => QuranPlayerScreen(),
-                                ),
-                              );
-                              _scrollToSelectedItem();
+                              if ((ref
+                                  .read(connectivityProvider)
+                                  .hasValue &&
+                                  ref
+                                      .read(connectivityProvider)
+                                      .value == ConnectivityStatus.connected) || isDownloaded) {
+                                final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
+                                  orElse: () => null,
+                                  data: (data) => data.selectedMoshaf,
+                                );
+                                log('Selected moshaf: $moshaf');
+                                ref.read(quranPlayerNotifierProvider.notifier).initialize(
+                                  moshaf: moshaf!,
+                                  surah: surah,
+                                  reciterId: widget.reciterId.toString(),
+                                  suwar: data.suwar,
+                                  riwayahId: widget.riwayatId.toString(),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => QuranPlayerScreen(),
+                                  ),
+                                );
+                                _scrollToSelectedItem();
+                              }
                             },
                           );
                         },
@@ -207,9 +264,9 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
         _scrollToSelectedItem();
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
         final moshaf = ref.read(quranNotifierProvider).maybeWhen(
-              orElse: () => null,
-              data: (data) => data.suwar,
-            );
+          orElse: () => null,
+          data: (data) => data.suwar,
+        );
       }
     }
   }

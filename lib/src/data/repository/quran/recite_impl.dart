@@ -1,3 +1,8 @@
+import 'dart:io';
+import 'dart:isolate';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/data/data_source/quran/recite_remote_data_source.dart';
 import 'package:mawaqit/src/data/data_source/quran/reciter_local_data_source.dart';
@@ -70,6 +75,43 @@ class ReciteImpl implements ReciteRepository {
   @override
   Future<String> getAudioPath(AudioFileModel audioFile) async {
     return await _localDataSource.getAudioFilePath(audioFile);
+  }
+
+  @override
+  Future<List<File>> getDownloadedSurahByReciterAndRiwayah({
+    required String reciterId,
+    required String riwayahId,
+  }) async {
+    return _localDataSource.getDownloadedSurahByReciterAndRiwayah(
+      riwayahId: riwayahId,
+      reciterId: reciterId,
+    );
+  }
+
+  @override
+  Future<bool> isSurahDownloaded({
+    required String reciterId,
+    required String riwayahId,
+    required int surahNumber,
+  }) async {
+    return await _localDataSource.isSurahDownloaded(
+      reciterId: reciterId,
+      riwayahId: riwayahId,
+      surahNumber: surahNumber,
+    );
+  }
+
+  @override
+  Future<String> getLocalSurahPath({
+    required String reciterId,
+    required String riwayahId,
+    required String surahNumber,
+  }) async {
+    return await _localDataSource.getSurahPathWithExtension(
+      riwayahId: riwayahId,
+      surahNumber: surahNumber,
+      reciterId: reciterId,
+    );
   }
 }
 

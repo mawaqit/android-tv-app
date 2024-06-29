@@ -67,9 +67,9 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
 
   Container _reciterCard(int index, List<ReciterModel> reciterNames) {
     final isFavorite = ref.watch(quranFavoriteNotifierProvider).maybeWhen(
-      data: (reciter) => reciter.favoriteReciters.map((e) => e.id).contains(reciterNames[index].id),
-      orElse: () => false,
-    );
+          data: (reciter) => reciter.favoriteReciters.map((e) => e.id).contains(reciterNames[index].id),
+          orElse: () => false,
+        );
 
     return Container(
       width: 25.w,
@@ -78,9 +78,9 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
         borderRadius: BorderRadius.circular(10),
         border: selectedReciterIndex == index
             ? Border.all(
-          color: Colors.white,
-          width: 2,
-        )
+                color: Colors.white,
+                width: 2,
+              )
             : null,
       ),
       child: Stack(
@@ -136,12 +136,12 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
               onTap: () {
                 if (isFavorite) {
                   ref.read(quranFavoriteNotifierProvider.notifier).deleteFavoriteReciter(
-                    reciterId: reciterNames[index].id,
-                  );
+                        reciterId: reciterNames[index].id,
+                      );
                 } else {
                   ref.read(quranFavoriteNotifierProvider.notifier).saveFavoriteReciter(
-                    reciterId: reciterNames[index].id,
-                  );
+                        reciterId: reciterNames[index].id,
+                      );
                 }
               },
               child: Icon(

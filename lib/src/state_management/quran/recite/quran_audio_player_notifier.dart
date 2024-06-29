@@ -10,6 +10,10 @@ import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_state.dart';
 
+import 'package:mawaqit/src/helpers/connectivity_provider.dart';
+
+import '../../../models/address_model.dart';
+
 class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
   final AudioPlayer audioPlayer = AudioPlayer();
   late ConcatenatingAudioSource playlist;
@@ -32,6 +36,7 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
       position: Duration.zero,
       reciterName: '',
       surahName: '',
+      currentDownloadAudio: -1,
     );
   }
 
@@ -39,36 +44,59 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     required MoshafModel moshaf,
     required SurahModel surah,
     required List<SurahModel> suwar,
+    required String reciterId,
+    required String riwayahId,
   }) async {
     log('quran: QuranAudioPlayer: play audio: ${surah.name}, url ${surah.getSurahUrl(moshaf.server)}');
+    try {
+      final audioRepository = await ref.read(reciteImplProvider.future);
+      log('quran: QuranAudioPlayer: play download audio: ${suwar}');
+      List<AudioSource> audioSources = [];
 
-    playlist = ConcatenatingAudioSource(
-      shuffleOrder: DefaultShuffleOrder(),
-      children: suwar
-          .map(
-            (e) => AudioSource.uri(
-              Uri.parse(
-                e.getSurahUrl(moshaf.server),
-              ),
-            ),
-          )
-          .toList(),
-    );
-    index = suwar.indexOf(surah);
-    localSuwar = suwar;
-    await audioPlayer.setAudioSource(playlist, initialIndex: index);
-    log('quran: QuranAudioPlayer: initialized ${surah.name}, url ${surah.getSurahUrl(moshaf.server)}');
-    currentIndexSubscription = audioPlayer.currentIndexStream.listen((index) {
-      log('quran: QuranAudioPlayer: currentIndexStream called');
-      final index = audioPlayer.currentIndex ?? 0;
-      state = AsyncData(
-        state.value!.copyWith(
-          surahName: localSuwar[index].name,
-          playerState: AudioPlayerState.playing,
-          reciterName: moshaf.name,
-        ),
+      for (var s in suwar) {
+        bool isDownloaded = await audioRepository.isSurahDownloaded(
+          reciterId: reciterId,
+          riwayahId: riwayahId,
+          surahNumber: s.id,
+        );
+        ref.read(connectivityProvider.notifier).checkInternetConnection();
+
+        if (isDownloaded) {
+          String localPath = await audioRepository.getLocalSurahPath(
+            reciterId: reciterId,
+            surahNumber: surah.id.toString(),
+            riwayahId: riwayahId,
+          );
+          audioSources.add(AudioSource.uri(Uri.file(localPath)));
+          log('quran: QuranAudioPlayer: isDownload: ${surah.name}, path: ${localPath}');
+        } else if (ref.read(connectivityProvider).hasValue &&
+            ref.read(connectivityProvider).value == ConnectivityStatus.connected) {
+          audioSources.add(AudioSource.uri(Uri.parse(s.getSurahUrl(moshaf.server))));
+          log('quran: QuranAudioPlayer: isDownload: ${surah.name}, url: ${s.getSurahUrl(moshaf.server)}');
+        }
+      }
+      log('quran: QuranAudioPlayer: audio_source ${audioSources}');
+      playlist = ConcatenatingAudioSource(
+        children: audioSources,
       );
-    });
+      index = suwar.indexOf(surah);
+      localSuwar = suwar;
+      await audioPlayer.setAudioSource(playlist, initialIndex: index);
+      log('quran: QuranAudioPlayer: initialized ${surah.name}, url ${surah.getSurahUrl(moshaf.server)}');
+      currentIndexSubscription = audioPlayer.currentIndexStream.listen((index) {
+        log('quran: QuranAudioPlayer: currentIndexStream called');
+        final index = audioPlayer.currentIndex ?? 0;
+        state = AsyncData(
+          state.value!.copyWith(
+            surahName: localSuwar[index].name,
+            playerState: AudioPlayerState.playing,
+            reciterName: moshaf.name,
+          ),
+        );
+      });
+    } catch (e, s) {
+      state = AsyncError(e, s);
+    }
   }
 
   Future<void> play() async {
@@ -122,8 +150,11 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
 
   Future<void> seekToNext() async {
     try {
-      await audioPlayer.seekToNext();
-      log('quran: QuranAudioPlayer: seekToNext called');
+      if (audioPlayer.hasNext) {
+        await audioPlayer.seekToNext();
+        await _updatePlayerState();
+        log('quran: QuranAudioPlayer: seekToNext called');
+      }
     } catch (e, s) {
       log('quran: QuranAudioPlayer: seekToNext error: $e');
       state = AsyncError(e, s);
@@ -132,12 +163,29 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
 
   Future<void> seekToPrevious() async {
     try {
-      await audioPlayer.seekToPrevious();
-      log('quran: QuranAudioPlayer: seekToPrevious called');
+      if (audioPlayer.hasPrevious) {
+        await audioPlayer.seekToPrevious();
+        await _updatePlayerState();
+        log('quran: QuranAudioPlayer: seekToPrevious called');
+      }
     } catch (e, s) {
       log('quran: QuranAudioPlayer: seekToPrevious error: $e');
       state = AsyncError(e, s);
     }
+  }
+
+  Future<void> _updatePlayerState() async {
+    final index = audioPlayer.currentIndex ?? 0;
+    final duration = audioPlayer.duration;
+    final position = audioPlayer.position;
+
+    state = AsyncData(
+      state.value!.copyWith(
+        surahName: localSuwar[index].name,
+        playerState: audioPlayer.playing ? AudioPlayerState.playing : AudioPlayerState.paused,
+        position: position,
+      ),
+    );
   }
 
   Future<void> shuffle() async {
@@ -165,42 +213,70 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     });
   }
 
-  Future<void> downloadAndPlayAudio({
+  Future<void> downloadAudio({
     required String reciterId,
     required String riwayahId,
-    required String surahId,
+    required int surahId,
     required String url,
-    required String filename,
   }) async {
     final audioRepository = await ref.read(reciteImplProvider.future);
     final audioFileModel = AudioFileModel(
       reciterId,
       riwayahId,
-      surahId,
+      surahId.toString(),
       url,
     );
 
-    state = AsyncLoading();
+    state = AsyncData(
+      state.value!.copyWith(
+        downloadState: DownloadState.downloading,
+        currentDownloadAudio: surahId,
+      ),
+    );
+
     try {
       final filePath = await audioRepository.downloadAudio(audioFileModel, (progress) {
         state = AsyncData(
           state.value!.copyWith(
             downloadProgress: progress.toInt(),
+            downloadedIndex: surahId,
             downloadState: DownloadState.downloading,
           ),
         );
       });
 
-      // Play the audio
-      await audioPlayer.setFilePath(filePath);
+      getDownloadedSurahByReciterAndRiwayah(
+        riwayahId: riwayahId,
+        reciterId: reciterId,
+      );
+
       state = AsyncData(
         state.value!.copyWith(
+          downloadedIndex: surahId,
           downloadState: DownloadState.downloaded,
+          currentDownloadAudio: null,
         ),
       );
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
+  }
+
+  Future<void> getDownloadedSurahByReciterAndRiwayah({
+    required String reciterId,
+    required String riwayahId,
+  }) async {
+    final audioRepository = await ref.read(reciteImplProvider.future);
+    state = AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final downloadedAudioList = await audioRepository.getDownloadedSurahByReciterAndRiwayah(
+        reciterId: reciterId,
+        riwayahId: riwayahId,
+      );
+      return state.value!.copyWith(
+        downloadedAudio: downloadedAudioList,
+      );
+    });
   }
 
   Future<void> playLocalAudio({

@@ -283,11 +283,11 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 6, // Number of columns in the grid
-                childAspectRatio: 3/2, // Adjust the aspect ratio of grid items
+                childAspectRatio: 3 / 2, // Adjust the aspect ratio of grid items
               ),
               itemCount: totalPages,
               itemBuilder: (BuildContext context, int index) {
-                final isSelected = index == (quranIndex * 2 );
+                final isSelected = index == (quranIndex * 2);
                 return GestureDetector(
                   onTap: () {
                     _pageController.jumpToPage(index ~/ 2);

@@ -2,11 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:mawaqit/src/domain/model/quran/language_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 
-enum QuranMode {
-  reading,
-  listening,
-  none
-}
+enum QuranMode { reading, listening, none }
 
 class QuranState extends Equatable {
   final List<LanguageModel> languages;

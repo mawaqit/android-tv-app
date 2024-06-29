@@ -87,6 +87,11 @@ class FetchAudioFileFailedException extends ReciterException {
       : super('Error occurred while fetching audio file: $message', 'FETCH_AUDIO_FILE_ERROR');
 }
 
+class CheckSurahExistenceException extends ReciterException {
+  CheckSurahExistenceException(String message)
+      : super('Error occurred while saving audio file: $message', 'CHECK_SURAH_EXISTENCE_ERROR');
+}
+
 class SaveAudioFileException extends ReciterException {
   SaveAudioFileException(String message)
       : super('Error occurred while saving audio file: $message', 'SAVE_AUDIO_FILE_ERROR');
@@ -98,6 +103,10 @@ class FetchAudioFileException extends ReciterException {
 }
 
 class AudioFileNotFoundInCacheException extends ReciterException {
-  AudioFileNotFoundInCacheException()
-      : super('Audio file not found in cache', 'AUDIO_FILE_NOT_FOUND_IN_CACHE_ERROR');
+  AudioFileNotFoundInCacheException() : super('Audio file not found in cache', 'AUDIO_FILE_NOT_FOUND_IN_CACHE_ERROR');
+}
+
+class FetchLocalAudioFileException extends ReciterException {
+  FetchLocalAudioFileException(String message)
+      : super('Audio file not found in local $message', 'AUDIO_FILE_NOT_FOUND_LOCAL_ERROR');
 }

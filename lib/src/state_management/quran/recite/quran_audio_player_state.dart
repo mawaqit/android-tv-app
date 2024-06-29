@@ -1,12 +1,12 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 enum AudioPlayerState { playing, paused, stopped, seekNext, seekPrevious }
 
 enum DownloadState { downloading, downloaded, notDownloaded }
 
-@immutable
 class QuranAudioPlayerState extends Equatable {
   final AudioPlayer audioPlayer;
   final Duration position;
@@ -17,6 +17,9 @@ class QuranAudioPlayerState extends Equatable {
   final bool isRepeating;
   final int downloadProgress;
   final DownloadState downloadState;
+  final int downloadedIndex;
+  final List<File> downloadedAudio;
+  final int currentDownloadAudio;
 
   QuranAudioPlayerState({
     required this.audioPlayer,
@@ -24,8 +27,11 @@ class QuranAudioPlayerState extends Equatable {
     required this.surahName,
     required this.playerState,
     required this.reciterName,
+    required this.currentDownloadAudio,
+    this.downloadedAudio = const <File>[],
     this.downloadProgress = -1,
     this.isShuffled = false,
+    this.downloadedIndex = 0,
     this.isRepeating = false,
     this.downloadState = DownloadState.notDownloaded,
   });
@@ -39,18 +45,24 @@ class QuranAudioPlayerState extends Equatable {
     bool? isShuffled,
     bool? isRepeating,
     int? downloadProgress,
+    int? downloadedIndex,
     DownloadState? downloadState,
+    int? currentDownloadAudio,
+    List<File>? downloadedAudio,
   }) {
     return QuranAudioPlayerState(
       reciterName: reciterName ?? this.reciterName,
       audioPlayer: audioPlayer ?? this.audioPlayer,
       position: position ?? this.position,
+      downloadedIndex: downloadedIndex ?? this.downloadedIndex,
       isShuffled: isShuffled ?? this.isShuffled,
       surahName: surahName ?? this.surahName,
       playerState: playerState ?? this.playerState,
       isRepeating: isRepeating ?? this.isRepeating,
+      currentDownloadAudio: currentDownloadAudio ?? this.currentDownloadAudio,
       downloadProgress: downloadProgress ?? this.downloadProgress,
       downloadState: downloadState ?? this.downloadState,
+      downloadedAudio: downloadedAudio ?? this.downloadedAudio,
     );
   }
 
@@ -58,7 +70,8 @@ class QuranAudioPlayerState extends Equatable {
   String toString() {
     return 'QuranAudioPlayerState(audioPlayer: $audioPlayer, position: $position, surahName: $surahName, '
         'playerState: $playerState, reciterName: $reciterName, isShuffled: $isShuffled, isRepeating: $isRepeating, '
-        'downloadProgress: $downloadProgress, downloadState: $downloadState)';
+        'downloadProgress: $downloadProgress, downloadState: $downloadState, '
+        'currentDownloadAudio: $currentDownloadAudio)';
   }
 
   @override
@@ -69,8 +82,11 @@ class QuranAudioPlayerState extends Equatable {
         reciterName,
         playerState,
         isShuffled,
+        downloadedIndex,
         isRepeating,
         downloadProgress,
-        DownloadState
+        DownloadState,
+        downloadedAudio,
+        currentDownloadAudio
       ];
 }

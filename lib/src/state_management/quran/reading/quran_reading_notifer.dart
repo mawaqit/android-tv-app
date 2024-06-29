@@ -50,14 +50,15 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
   }
 
   Future<void> _loadAllSvgs() async {
-    final initialState = state.value ?? QuranReadingState(
-      currentJuz: 1,
-      currentSurah: 1,
-      currentPage: 0,
-      svgs: [],
-      isInitial: false,
-      totalPages: 0,
-    );
+    final initialState = state.value ??
+        QuranReadingState(
+          currentJuz: 1,
+          currentSurah: 1,
+          currentPage: 0,
+          svgs: [],
+          isInitial: false,
+          totalPages: 0,
+        );
 
     state = await AsyncValue.guard(() async {
       final svgPaths = await _loadAllPages();
