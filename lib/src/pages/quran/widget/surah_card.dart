@@ -13,7 +13,7 @@ class SurahCard extends ConsumerStatefulWidget {
   final bool isSelected;
   final VoidCallback onTap;
   final VoidCallback onFavoriteTap;
-  final VoidCallback onDownloadTap;
+  final VoidCallback? onDownloadTap;
   final bool isFavorite;
   final bool isDownloaded;
   final double downloadProgress;

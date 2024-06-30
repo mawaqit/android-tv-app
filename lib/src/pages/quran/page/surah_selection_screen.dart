@@ -10,6 +10,7 @@ import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
 import 'package:mawaqit/src/state_management/quran/favorite/quran_favorite_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/recite/download_audio_quran/download_audio_quran_notifier.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:shimmer/shimmer.dart';
@@ -106,25 +107,40 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     super.dispose();
   }
 
-  void _downloadAllSurahs() {
+  Future<void> _downloadAllSurahs() async {
     final quranState = ref.read(quranNotifierProvider);
-    quranState.maybeWhen(
-      data: (data) {
+    await quranState.maybeWhen(
+      data: (data) async {
         final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
               orElse: () => null,
               data: (data) => data.selectedMoshaf,
             );
-        for (var surah in data.suwar) {
-          ref.read(quranPlayerNotifierProvider.notifier).downloadAudio(
-                reciterId: widget.reciterId.toString(),
-                riwayahId: widget.riwayatId.toString(),
-                surahId: surah.id,
-                url: surah.getSurahUrl(moshaf!.server),
-              );
+        if (moshaf != null) {
+          await _downloadAllSuwar(
+            data.suwar,
+            widget.reciterId.toString(),
+            widget.riwayatId.toString(),
+            moshaf.server,
+          );
         }
       },
       orElse: () {},
     );
+  }
+
+  Future<void> _downloadAllSuwar(List<SurahModel> surahs, String reciterId, String riwayahId, String server) async {
+    final batchSize = 5; // Adjust based on your needs
+    for (var i = 0; i < surahs.length; i += batchSize) {
+      final batch = surahs.skip(i).take(batchSize);
+      await Future.wait(
+        batch.map((surah) => ref.read(quranPlayerNotifierProvider.notifier).downloadAudio(
+              reciterId: reciterId,
+              riwayahId: riwayahId,
+              surahId: surah.id,
+              url: surah.getSurahUrl(server),
+            )),
+      );
+    }
   }
 
   @override
@@ -178,10 +194,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                           );
                       final unfavoriteSuwar = data.suwar.where((surah) => !favoriteSuwar.contains(surah)).toList();
                       // Get the downloaded Surahs
-                      final downloadedSurahs = ref.watch(quranPlayerNotifierProvider).maybeWhen(
-                            orElse: () => <File>[],
-                            data: (playerState) => playerState.downloadedAudio,
-                          );
 
                       return GridView.builder(
                         padding: EdgeInsets.symmetric(horizontal: 3.w),
@@ -198,24 +210,23 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                               ? favoriteSuwar[index]
                               : unfavoriteSuwar[index - favoriteSuwar.length];
                           final isFavorite = favoriteSuwar.contains(surah);
-                          final downloadState = ref.watch(quranPlayerNotifierProvider);
-
-                          final isDownloaded = downloadedSurahs.any((file) {
-                            final fileName = file.path.split('/').last;
-                            return fileName == '${surah.id}.mp3';
-                          });
-
-                          log('ui: SurahSelectionScreen: isDownloaded $isDownloaded ${surah.id}');
-
+                          final isDownloaded = ref.watch(
+                            downloadStateProvider.select(
+                              (state) => state.downloadedSuwar[_getKey()]?.contains(surah.id) ?? false,
+                            ),
+                          );
                           return SurahCard(
-                            downloadProgress: downloadState.maybeMap(
-                              orElse: () => 0,
-                              data: (downloadStat) => downloadStat.value.currentDownloadAudio == surah.id
-                                  ? downloadStat.value.downloadProgress.toDouble() / 100
-                                  : 0,
+                            downloadProgress: ref.watch(
+                              downloadStateProvider.select(
+                                (state) => state.downloadProgress[_getKey()]?[surah.id] ?? 0,
+                              ),
                             ),
                             isDownloaded: isDownloaded,
-                            onDownloadTap: !isDownloaded
+                            onDownloadTap: ref.watch(
+                              downloadStateProvider.select(
+                                (state) => !(state.downloadedSuwar[_getKey()]?.contains(surah.id) ?? false),
+                              ),
+                            )
                                 ? () {
                                     final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
                                           orElse: () => null,
@@ -228,7 +239,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                                           url: surah.getSurahUrl(moshaf!.server),
                                         );
                                   }
-                                : () {},
+                                : null,
                             onFavoriteTap: () {
                               if (isFavorite) {
                                 ref.read(quranFavoriteNotifierProvider.notifier).deleteFavoriteSuwar(
@@ -280,6 +291,10 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
         ],
       ),
     );
+  }
+
+  String _getKey() {
+    return "${widget.reciterId}:${widget.riwayatId}";
   }
 
   void _handleKeyEvent(RawKeyEvent event) {
