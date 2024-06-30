@@ -47,7 +47,6 @@ class _SurahCardState extends ConsumerState<SurahCard> {
   @override
   Widget build(BuildContext context) {
     final isRTL = Directionality.of(context) == TextDirection.rtl;
-    log('downloading log: ${widget.downloadProgress}');
     return GestureDetector(
       onTap: widget.onTap,
       child: AnimatedContainer(
