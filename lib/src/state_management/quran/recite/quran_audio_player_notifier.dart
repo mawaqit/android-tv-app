@@ -13,7 +13,7 @@ import 'package:mawaqit/src/helpers/connectivity_provider.dart';
 
 import 'package:mawaqit/src/models/address_model.dart';
 
-import 'download_audio_quran/download_audio_quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/recite/download_audio_quran/download_audio_quran_notifier.dart';
 
 class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
   final AudioPlayer audioPlayer = AudioPlayer();
@@ -258,7 +258,7 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
             surahId,
           );
 
-      await getDownloadedSurahByReciterAndRiwayah(
+      await getDownloadedSuwarByReciterAndRiwayah(
         riwayahId: riwayahId,
         reciterId: reciterId,
       );
@@ -269,14 +269,14 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     }
   }
 
-  Future<void> getDownloadedSurahByReciterAndRiwayah({
+  Future<void> getDownloadedSuwarByReciterAndRiwayah({
     required String reciterId,
     required String riwayahId,
   }) async {
     final audioRepository = await ref.read(reciteImplProvider.future);
     state = AsyncLoading();
     try {
-      final downloadedAudioList = await audioRepository.getDownloadedSurahByReciterAndRiwayah(
+      final downloadedAudioList = await audioRepository.getDownloadedSuwarByReciterAndRiwayah(
         reciterId: reciterId,
         riwayahId: riwayahId,
       );

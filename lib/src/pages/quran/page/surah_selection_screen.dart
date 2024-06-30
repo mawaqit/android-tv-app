@@ -90,7 +90,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
             riwayatId: widget.riwayatId,
             reciterId: widget.reciterId,
           );
-      ref.read(quranPlayerNotifierProvider.notifier).getDownloadedSurahByReciterAndRiwayah(
+      ref.read(quranPlayerNotifierProvider.notifier).getDownloadedSuwarByReciterAndRiwayah(
             reciterId: widget.reciterId.toString(),
             riwayahId: widget.riwayatId.toString(),
           );

@@ -78,7 +78,7 @@ class ReciteImpl implements ReciteRepository {
   }
 
   @override
-  Future<List<File>> getDownloadedSurahByReciterAndRiwayah({
+  Future<List<File>> getDownloadedSuwarByReciterAndRiwayah({
     required String reciterId,
     required String riwayahId,
   }) async {
