@@ -269,6 +269,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                 context,
                 MaterialPageRoute(
                   builder: (context) => SurahSelectionScreen(
+                    reciter: reciters[selectedReciterIndex],
+                    riwayat: reciterTypes[selectedReciteTypeIndex],
                     reciterId: reciters[selectedReciterIndex].id,
                     riwayatId: reciterTypes[selectedReciteTypeIndex].moshafType,
                   ),
@@ -378,6 +380,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             context,
             MaterialPageRoute(
               builder: (context) => SurahSelectionScreen(
+                reciter: reciters[selectedReciterIndex],
+                riwayat: reciterTypes[selectedReciteTypeIndex],
                 reciterId: reciters[selectedReciterIndex].id,
                 riwayatId: reciterTypes[selectedReciteTypeIndex].moshafType,
               ),

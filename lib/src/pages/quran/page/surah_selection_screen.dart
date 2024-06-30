@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
+import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
@@ -26,9 +28,14 @@ class SurahSelectionScreen extends ConsumerStatefulWidget {
   final int reciterId;
   final int riwayatId;
 
+  final ReciterModel reciter;
+  final MoshafModel riwayat;
+
   const SurahSelectionScreen({
     super.key,
     required this.reciterId,
+    required this.reciter,
+    required this.riwayat,
     required this.riwayatId,
   });
 
@@ -107,42 +114,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     super.dispose();
   }
 
-  Future<void> _downloadAllSurahs() async {
-    final quranState = ref.read(quranNotifierProvider);
-    await quranState.maybeWhen(
-      data: (data) async {
-        final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
-              orElse: () => null,
-              data: (data) => data.selectedMoshaf,
-            );
-        if (moshaf != null) {
-          await _downloadAllSuwar(
-            data.suwar,
-            widget.reciterId.toString(),
-            widget.riwayatId.toString(),
-            moshaf.server,
-          );
-        }
-      },
-      orElse: () {},
-    );
-  }
-
-  Future<void> _downloadAllSuwar(List<SurahModel> surahs, String reciterId, String riwayahId, String server) async {
-    final batchSize = 5; // Adjust based on your needs
-    for (var i = 0; i < surahs.length; i += batchSize) {
-      final batch = surahs.skip(i).take(batchSize);
-      await Future.wait(
-        batch.map((surah) => ref.read(quranPlayerNotifierProvider.notifier).downloadAudio(
-              reciterId: reciterId,
-              riwayahId: riwayahId,
-              surahId: surah.id,
-              url: surah.getSurahUrl(server),
-            )),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final quranState = ref.watch(quranNotifierProvider);
@@ -156,7 +127,18 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
           Focus(
             focusNode: _downloadButtonFocusNode,
             child: IconButton(
-              onPressed: _downloadAllSurahs,
+              onPressed: () {
+                quranState.whenOrNull(
+                  data: (data) {
+                    ref.read(quranPlayerNotifierProvider.notifier).downloadAllSuwar(
+                          reciterId: widget.reciterId.toString(),
+                          riwayahId: widget.riwayatId.toString(),
+                          moshaf: widget.riwayat,
+                          suwar: data.suwar,
+                        );
+                  },
+                );
+              },
               icon: Icon(
                 Icons.download,
                 size: 16.sp,

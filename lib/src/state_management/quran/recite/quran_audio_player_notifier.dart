@@ -7,6 +7,7 @@ import 'package:mawaqit/src/data/repository/quran/recite_impl.dart';
 import 'package:mawaqit/src/domain/model/quran/audio_file_model.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_state.dart';
 
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
@@ -314,6 +315,40 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
       );
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
+    }
+  }
+
+  Future<void> downloadAllSuwar({
+    required String reciterId,
+    required String riwayahId,
+    required MoshafModel moshaf,
+    required List<SurahModel> suwar,
+  }) async {
+    try {
+      state = AsyncLoading();
+      await _downloadAllSuwar(
+        suwar,
+        reciterId,
+        riwayahId,
+        moshaf.server,
+      );
+    } catch (e, s) {
+      state = AsyncError(e, s);
+    }
+  }
+
+  Future<void> _downloadAllSuwar(List<SurahModel> surahs, String reciterId, String riwayahId, String server) async {
+    final batchSize = 5;
+    for (var i = 0; i < surahs.length; i += batchSize) {
+      final batch = surahs.skip(i).take(batchSize);
+      await Future.wait(
+        batch.map((surah) => downloadAudio(
+              reciterId: reciterId,
+              riwayahId: riwayahId,
+              surahId: surah.id,
+              url: surah.getSurahUrl(server),
+            )),
+      );
     }
   }
 
