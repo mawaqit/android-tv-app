@@ -56,6 +56,14 @@ class DownloadStateNotifier extends Notifier<DownloadAudioQuranState> {
       },
     );
   }
+
+  void setDownloadStatus(DownloadStatus status) {
+    state = state.copyWith(downloadStatus: status);
+  }
+
+  void resetDownloadStatus() {
+    state = state.copyWith(downloadStatus: DownloadStatus.idle);
+  }
 }
 
 final downloadStateProvider = NotifierProvider<DownloadStateNotifier, DownloadAudioQuranState>(

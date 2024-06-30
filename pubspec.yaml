@@ -131,6 +131,7 @@ dependencies:
   rxdart: ^0.27.7
   just_audio_background: ^0.0.1-beta.11
   percent_indicator: ^4.2.3
+  fluttertoast: ^8.2.5
 
 dev_dependencies:
   flutter_test:

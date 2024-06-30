@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
@@ -13,6 +15,7 @@ import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
 import 'package:mawaqit/src/state_management/quran/favorite/quran_favorite_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/download_audio_quran/download_audio_quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/recite/download_audio_quran/download_audio_quran_state.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:shimmer/shimmer.dart';
@@ -114,9 +117,32 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     super.dispose();
   }
 
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 3,
+      backgroundColor: Colors.black87,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final quranState = ref.watch(quranNotifierProvider);
+
+    ref.listen<DownloadAudioQuranState>(downloadStateProvider, (previous, next) {
+      if (next.downloadStatus == DownloadStatus.completed) {
+        showToast(S.of(context).downloadAllSuwarSuccessfully);
+        ref.read(downloadStateProvider.notifier).resetDownloadStatus();
+      } else if (next.downloadStatus == DownloadStatus.noNewDownloads) {
+        showToast(S.of(context).noSuwarDownload);
+        ref.read(downloadStateProvider.notifier).resetDownloadStatus();
+      }
+    });
+
     return QuranBackground(
       isSwitch: true,
       appBar: AppBar(
@@ -127,18 +153,18 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
           Focus(
             focusNode: _downloadButtonFocusNode,
             child: IconButton(
-              onPressed: () {
+              onPressed: ref.watch(downloadStateProvider).downloadStatus != DownloadStatus.downloading ? () {
                 quranState.whenOrNull(
                   data: (data) {
                     ref.read(quranPlayerNotifierProvider.notifier).downloadAllSuwar(
-                          reciterId: widget.reciterId.toString(),
-                          riwayahId: widget.riwayatId.toString(),
-                          moshaf: widget.riwayat,
-                          suwar: data.suwar,
-                        );
+                      reciterId: widget.reciterId.toString(),
+                      riwayahId: widget.riwayatId.toString(),
+                      moshaf: widget.riwayat,
+                      suwar: data.suwar,
+                    );
                   },
                 );
-              },
+              } : null,
               icon: Icon(
                 Icons.download,
                 size: 16.sp,

@@ -236,5 +236,7 @@
   },
   "chooseQuranPage": "Choose the page",
   "favoriteReciter": "Favorite Reciters",
-  "allReciters": "All Reciters"
+  "allReciters": "All Reciters",
+  "downloadAllSuwarSuccessfully": "All surahs downloaded successfully",
+  "noSuwarDownload": "No new suwars to download"
 }

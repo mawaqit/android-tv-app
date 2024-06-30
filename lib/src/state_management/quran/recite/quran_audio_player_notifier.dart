@@ -16,6 +16,8 @@ import 'package:mawaqit/src/models/address_model.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/download_audio_quran/download_audio_quran_notifier.dart';
 
+import 'download_audio_quran/download_audio_quran_state.dart';
+
 class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
   final AudioPlayer audioPlayer = AudioPlayer();
   late ConcatenatingAudioSource playlist;
@@ -326,30 +328,43 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
   }) async {
     try {
       state = AsyncLoading();
-      await _downloadAllSuwar(
+      final downloadedCount = await _downloadAllSuwar(
         suwar,
         reciterId,
         riwayahId,
         moshaf.server,
       );
+      state = AsyncData(state.value!);
+      if (downloadedCount > 0) {
+        ref.read(downloadStateProvider.notifier).setDownloadStatus(DownloadStatus.completed);
+      } else {
+        ref.read(downloadStateProvider.notifier).setDownloadStatus(DownloadStatus.noNewDownloads);
+      }
     } catch (e, s) {
       state = AsyncError(e, s);
     }
   }
 
-  Future<void> _downloadAllSuwar(List<SurahModel> surahs, String reciterId, String riwayahId, String server) async {
-    final batchSize = 5;
-    for (var i = 0; i < surahs.length; i += batchSize) {
-      final batch = surahs.skip(i).take(batchSize);
-      await Future.wait(
-        batch.map((surah) => downloadAudio(
-              reciterId: reciterId,
-              riwayahId: riwayahId,
-              surahId: surah.id,
-              url: surah.getSurahUrl(server),
-            )),
-      );
+  Future<int> _downloadAllSuwar(List<SurahModel> suwar, String reciterId, String riwayahId, String server) async {
+    final downloadedSuwars = ref.read(downloadStateProvider).downloadedSuwar;
+    int downloadedCount = 0;
+    for (final surah in suwar) {
+      if (!downloadedSuwars[_getDownloadKey(reciterId, riwayahId)]!.contains(surah.id)) {
+        ref.read(downloadStateProvider.notifier).setDownloadStatus(DownloadStatus.downloading);
+        await downloadAudio(
+          reciterId: reciterId,
+          riwayahId: riwayahId,
+          surahId: surah.id,
+          url: surah.getSurahUrl(server),
+        );
+        downloadedCount++;
+      }
     }
+    return downloadedCount;
+  }
+
+  String _getDownloadKey(String reciterId, String riwayatId) {
+    return "${reciterId}:${riwayatId}";
   }
 
   Stream<Duration> get positionStream => audioPlayer.positionStream;
