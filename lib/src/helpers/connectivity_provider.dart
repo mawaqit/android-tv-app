@@ -32,7 +32,9 @@ class ConnectivityProvider extends StreamNotifier<ConnectivityStatus> {
   Future<void> checkInternetConnection() async {
     state = AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final internet = InternetConnectionCheckerPlus();
+      final internet = InternetConnectionCheckerPlus.createInstance(
+        checkTimeout: Duration(seconds: 5)
+      );
       final status = await internet.hasConnection;
       if (status) {
         return ConnectivityStatus.connected;
