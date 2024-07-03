@@ -60,23 +60,13 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
   }
 
   Future<List<SvgPicture>> _loadSvgs() async {
-    try {
-      final mainDir = await getApplicationSupportDirectory();
-      final mainPath = mainDir.path;
-      final dir = Directory('$mainPath/quran');
-      final files = dir.listSync().where((file) => file.path.endsWith('.svg')).toList()
-        ..sort((a, b) => a.path.compareTo(b.path));
-
-      return files.map((file) => SvgPicture.file(file as File, color: Colors.black)).toList();
-    } catch (e) {
-      log('Error loading SVGs: $e');
-      return [];
-    }
+    final repository = await ref.read(quranReadingRepositoryProvider.future);
+    return repository.loadAllSvgs();
   }
 
   Future<QuranReadingState> _initState(Future<QuranReadingRepository> repository) async {
-    final svgs = await _loadSvgs();
     final quranReadingRepository = await repository;
+    final svgs = await _loadSvgs();
     final lastReadPage = await quranReadingRepository.getLastReadPage();
     log('riverpod get last page: $lastReadPage');
     final pageController = PageController(initialPage: (lastReadPage / 2).floor());
