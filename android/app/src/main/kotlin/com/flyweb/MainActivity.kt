@@ -52,6 +52,8 @@ class MainActivity : FlutterActivity() {
                     "toggleBoxScreenOn" -> toggleBoxScreenOn(call, result)
                     "connectToNetworkWPA" -> connectToNetworkWPA(call, result)
                     "addLocationPermission" -> addLocationPermission(call, result)
+                    "getNearbyWifiNetworks" -> getNearbyWifiNetworks()
+                    "grantFineLocationPermission" -> grantFineLocationPermission(call, result)
                     "sendDownArrowEvent" -> sendDownArrowEvent(call, result)
                     "clearAppData" -> {
                         val isSuccess = clearDataRestart()
@@ -113,7 +115,26 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
+fun getNearbyWifiNetworks() {
+    val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
+    if (!wifiManager.isWifiEnabled) {
+        wifiManager.isWifiEnabled = true
+    }
+
+    wifiManager.startScan()
+
+    val scanResults = wifiManager.scanResults
+            Log.d("scanResults","SSID: ${wifiManager.scanResults}")
+
+    scanResults.forEach { scanResult ->
+        val ssid = scanResult.SSID
+        val bssid = scanResult.BSSID
+        val capabilities = scanResult.capabilities
+        // Process the scan result as needed
+        Log.d("wiou","SSID: $ssid, BSSID: $bssid, Capabilities: $capabilities")
+    }
+}
     private fun isPackageInstalled(packageName: String?): Boolean {
         val packageManager = applicationContext.packageManager
         return try {
@@ -212,6 +233,19 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
                     "mount -o rw,remount /",
                     "cd /sys/class/hdmi/hdmi/attr",
                     "echo 0 > phy_power"
+                )
+                executeCommand(commands, result) // Lock the device
+            } catch (e: Exception) {
+                handleCommandException(e, result)
+            }
+        }
+    }
+    private fun grantFineLocationPermission(call: MethodCall, result: MethodChannel.Result) {
+        AsyncTask.execute {
+            try {
+                val commands = listOf(
+                    "pm grant com.mawaqit.androidtv android.permission.ACCESS_FINE_LOCATION",
+                   
                 )
                 executeCommand(commands, result) // Lock the device
             } catch (e: Exception) {

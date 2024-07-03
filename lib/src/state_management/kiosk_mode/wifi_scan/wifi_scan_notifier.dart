@@ -14,9 +14,9 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
 
   @override
   Future<WifiScanState> build() async {
-    if (_timeManager.deviceModel == "MAWAQITBOX V2") {
-      await addLocationPermission();
-    }
+    /* if (_timeManager.deviceModel == "MAWABOX") {
+  
+    } */
     _scan();
 
     return WifiScanState(
@@ -32,21 +32,19 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
       logger.e("kiosk mode: location permission: error: $e");
     }
   }
+  Future<void> scanNative() async {
+    try {
+      print("invoked here");
+      await platform.invokeMethod('getNearbyWifiNetworks');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: zdzdzd permission: error: $e");
+    }
+  }
 
   Future<void> _scan() async {
     state = AsyncLoading();
     try {
-      final can = await WiFiScan.instance.canStartScan();
-      if (can != CanStartScan.yes) {
-        logger.e("kiosk mode: wifi_scan: can't start scan");
-        return;
-      }
-      final canGetScannedResults =
-          await WiFiScan.instance.canGetScannedResults();
-      if (canGetScannedResults != CanGetScannedResults.yes) {
-        logger.e("kiosk mode: wifi_scan: can't get scanned results");
-        return;
-      }
+   
       final results = await WiFiScan.instance.getScannedResults();
       state = AsyncData(
         state.value!.copyWith(

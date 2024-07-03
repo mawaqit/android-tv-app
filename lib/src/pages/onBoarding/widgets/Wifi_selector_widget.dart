@@ -1,9 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_notifier.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_state.dart';
 import 'package:wifi_scan/wifi_scan.dart';
@@ -28,12 +31,36 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
     super.initState();
     
     WidgetsBinding.instance.addPostFrameCallback((_) async {
- 
+      await addLocationPermission();
+      await addFineLocationPermission();
       ref.read(wifiScanNotifierProvider.notifier);
     });
   }
 
+  Future<void> scanNative() async {
+    try {
+      print("invoked here");
+      await platform.invokeMethod('getNearbyWifiNetworks');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: zdzdzd permission: error: $e");
+    }
+  }
 
+  Future<void> addLocationPermission() async {
+    try {
+      await platform.invokeMethod('addLocationPermission');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: location permission: error: $e");
+    }
+  }
+
+  Future<void> addFineLocationPermission() async {
+    try {
+      await platform.invokeMethod('grantFineLocationPermission');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: location permission: error: $e");
+    }
+  }
   void _showToast(String message) {
     Fluttertoast.showToast(
       msg: message,
