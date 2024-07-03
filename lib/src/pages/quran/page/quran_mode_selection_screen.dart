@@ -50,8 +50,32 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
           _selectedIndex = 1;
         });
         _listeningFocusNode.requestFocus();
+      
+      } else if (event.logicalKey == LogicalKeyboardKey.select) {
+        if (_selectedIndex == 0) {
+          ref
+              .read(quranNotifierProvider.notifier)
+              .selectModel(QuranMode.reading);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuranReadingScreen(),
+            ),
+          );
+        } else {
+          ref
+              .read(quranNotifierProvider.notifier)
+              .selectModel(QuranMode.listening);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReciterSelectionScreen.withoutSurahName(),
+            ),
+          );
+        }
       }
     }
+      
   }
 
   @override
@@ -59,64 +83,75 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
     return RawKeyboardListener(
       focusNode: FocusNode(),
       onKey: _handleKeyEvent,
-      child: QuranBackground(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-        ),
-        screen: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 10.h),
-            SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildModeButton(
-                  context: context,
-                  text: S.of(context).readingMode,
-                  icon: Icons.menu_book,
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndex = 0;
-                    });
-                    ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QuranReadingScreen(),
-                      ),
-                    );
+      child: Shortcuts(
+        shortcuts: <LogicalKeySet, Intent>{
+          LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+        },
+        child: QuranBackground(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            systemOverlayStyle: SystemUiOverlayStyle.light,
+          ),
+          screen: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 10.h),
+              SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildModeButton(
+                    context: context,
+                    text: S.of(context).readingMode,
+                    icon: Icons.menu_book,
+                    onPressed: () {
+                      setState(() {
+                        _selectedIndex = 0;
+                      });
+                      ref
+                          .read(quranNotifierProvider.notifier)
+                          .selectModel(QuranMode.reading);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuranReadingScreen(),
+                        ),
+                      );
 
-                    /// it navigates already by the menu at
-                  },
-                  isSelected: _selectedIndex == 0,
-                  focusNode: _readingFocusNode,
-                ),
-                _buildModeButton(
-                  context: context,
-                  text: S.of(context).listeningMode,
-                  icon: Icons.headset,
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndex = 1;
-                    });
-                    ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ReciterSelectionScreen.withoutSurahName(),
-                      ),
-                    );
-                    /// it navigates already by the menu at
-                  },
-                  isSelected: _selectedIndex == 1,
-                  focusNode: _listeningFocusNode,
-                ),
-              ],
-            ),
-          ],
+                      /// it navigates already by the menu at
+                    },
+                    isSelected: _selectedIndex == 0,
+                    focusNode: _readingFocusNode,
+                  ),
+                  _buildModeButton(
+                    context: context,
+                    text: S.of(context).listeningMode,
+                    icon: Icons.headset,
+                    onPressed: () {
+                      setState(() {
+                        _selectedIndex = 1;
+                      });
+                      ref
+                          .read(quranNotifierProvider.notifier)
+                          .selectModel(QuranMode.listening);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ReciterSelectionScreen.withoutSurahName(),
+                        ),
+                      );
+
+                      /// it navigates already by the menu at
+                    },
+                    isSelected: _selectedIndex == 1,
+                    focusNode: _listeningFocusNode,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -139,7 +174,9 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
           width: 50.w,
           height: 20.h,
           decoration: ShapeDecoration(
-            color: isSelected ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.05),
+            color: isSelected
+                ? Colors.white.withOpacity(0.2)
+                : Colors.white.withOpacity(0.05),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
