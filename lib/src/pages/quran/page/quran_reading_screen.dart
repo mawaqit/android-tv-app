@@ -12,16 +12,9 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
-import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
-
-import 'package:mawaqit/src/pages/SplashScreen.dart';
-
-import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
-
-import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -44,6 +37,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await showDownloadQuranAlertDialog(context, ref);
+      ref.read(quranReadingNotifierProvider);
     });
   }
 
@@ -58,24 +52,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   @override
   Widget build(BuildContext context) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
-    ref.listen(quranReadingNotifierProvider, (previous, next) async {
-      if (next.hasValue && next.value!.isInitial) {
-        await Future.delayed(Duration(milliseconds: 500));
-        log('quran: QuranReadingScreen: Current page: ${next}');
-        _pageController.jumpToPage(
-          (next.value!.currentPage),
-        );
-        log('quran: QuranReadingScreen: Current page: final ${next}');
-      }
-    });
-
-    ref.listen(downloadQuranNotifierProvider, (previous, next) {
-      if (!next.hasValue || next.value is Success) {
-        log('quran: QuranReadingScreen: Downloaded quran');
-        ref.invalidate(quranReadingNotifierProvider);
-      }
-    });
-
     return Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: SizedBox(
@@ -103,16 +79,16 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         loading: () => Center(child: CircularProgressIndicator()),
         error: (error, s) => Center(child: Text('Error: $error')),
         data: (quranReadingState) {
-          log('quran: QuranReadingScreen: total ${quranReadingState.totalPages}, '
-              'currentPage: ${quranReadingState.currentPage}');
           return Stack(
             children: [
               PageView.builder(
                 reverse: true,
-                controller: _pageController,
+                controller: quranReadingState.pageController,
                 onPageChanged: (index) {
-                  quranIndex = index;
-                  ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
+                  final actualPage = index * 2;
+                  if (actualPage != quranReadingState.currentPage) {
+                    ref.read(quranReadingNotifierProvider.notifier).updatePage(actualPage);
+                  }
                 },
                 itemCount: (quranReadingState.totalPages / 2).ceil(),
                 itemBuilder: (context, index) {
@@ -188,15 +164,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   void _scrollPageList(ScrollDirection direction) {
     if (direction == ScrollDirection.forward) {
-      _pageController.previousPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.ease,
-      );
+      ref.read(quranReadingNotifierProvider.notifier).previousPage();
     } else {
-      _pageController.nextPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.ease,
-      );
+      ref.read(quranReadingNotifierProvider.notifier).nextPage();
     }
   }
 
