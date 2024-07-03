@@ -14,13 +14,17 @@ class OnBoardingTimeZoneSelector extends StatefulWidget {
   const OnBoardingTimeZoneSelector({Key? key, this.onSelect}) : super(key: key);
 
   @override
-  _OnBoardingTimeZoneSelectorState createState() => _OnBoardingTimeZoneSelectorState();
+  _OnBoardingTimeZoneSelectorState createState() =>
+      _OnBoardingTimeZoneSelectorState();
 }
 
-class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector> {
+class _OnBoardingTimeZoneSelectorState
+    extends State<OnBoardingTimeZoneSelector> {
   late List<Country> countriesList;
   late List<String> selectedCountryTimezones;
   final TextEditingController searchController = TextEditingController();
+  final FocusNode countryListFocusNode = FocusNode();
+  final FocusNode timezoneListFocusNode = FocusNode();
   int selectedCountryIndex = -1;
   int selectedTimezoneIndex = -1;
   bool isViewingTimezones = false;
@@ -35,13 +39,17 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
   @override
   void dispose() {
     searchController.dispose();
+    countryListFocusNode.dispose();
+    timezoneListFocusNode.dispose();
     super.dispose();
   }
 
   void _filterItems(String query) {
     setState(() {
-      countriesList =
-          Countries.list.where((country) => country.name.toLowerCase().contains(query.toLowerCase())).toList();
+      countriesList = Countries.list
+          .where((country) =>
+              country.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     });
   }
 
@@ -63,7 +71,8 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
             ),
             onSubmitted: (value) {
               _filterItems(value);
-              Navigator.of(context).pop(); // Close the dialog when search is submitted
+              Navigator.of(context)
+                  .pop(); // Close the dialog when search is submitted
             },
           ),
           actions: [
@@ -75,7 +84,8 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog when search is submitted
+                Navigator.of(context)
+                    .pop(); // Close the dialog when search is submitted
               },
               child: Text(S.of(context).search),
             ),
@@ -85,66 +95,93 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
     );
   }
 
+  KeyEventResult _handleKeyEvent(FocusNode focusNode, RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
+          event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        FocusScope.of(context).unfocus();
+        _simulateDownArrow();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
 
     return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          Text(
-            S.of(context).appTimezone,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 25.0,
-              fontWeight: FontWeight.w700,
-              color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Divider(
-            thickness: 1,
-            color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            S.of(context).descTimezone,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 15,
-              color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-            ),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton.icon(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.focused)) {
-                    return const Color(0xFF490094); // Focus color
-                  }
-                  return null; // Use the default color
-                },
-              ),
-              foregroundColor: MaterialStateProperty.resolveWith<Color?>(
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.focused)) {
-                    return Colors.white; // Text and icon color when focused
-                  }
-                  return null; // Use the default color
-                },
+      body: FocusScope(
+        node: FocusScopeNode(),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            Text(
+              S.of(context).appTimezone,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.w700,
+                color: themeData.brightness == Brightness.dark
+                    ? null
+                    : themeData.primaryColor,
               ),
             ),
-            onPressed: _showSearchDialog,
-            icon: Icon(Icons.search),
-            label: Text(S.of(context).searchCountries),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: isViewingTimezones ? _buildTimezoneList(context) : _buildCountryList(context),
-          ),
-        ],
+            const SizedBox(height: 10),
+            Divider(
+              thickness: 1,
+              color: themeData.brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              S.of(context).descTimezone,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 15,
+                color: themeData.brightness == Brightness.dark
+                    ? null
+                    : themeData.primaryColor,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.focused)) {
+                      return const Color(0xFF490094); // Focus color
+                    }
+                    return null; // Use the default color
+                  },
+                ),
+                foregroundColor: MaterialStateProperty.resolveWith<Color?>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.focused)) {
+                      return Colors.white; // Text and icon color when focused
+                    }
+                    return null; // Use the default color
+                  },
+                ),
+              ),
+              onPressed: _showSearchDialog,
+              icon: Icon(Icons.search),
+              label: Text(S.of(context).searchCountries),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: Focus(
+                focusNode: countryListFocusNode,
+                onKey: (node, event) => _handleKeyEvent(node, event),
+                child: isViewingTimezones
+                    ? _buildTimezoneList(context)
+                    : _buildCountryList(context),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -155,7 +192,8 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
       itemBuilder: (BuildContext context, int index) {
         var country = countriesList[index];
         return ListTile(
-          tileColor: selectedCountryIndex == index ? const Color(0xFF490094) : null,
+          tileColor:
+              selectedCountryIndex == index ? const Color(0xFF490094) : null,
           title: Text(country.name),
           onTap: () {
             setState(() {
@@ -164,6 +202,8 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
               selectedCountryTimezones = country.timezones;
               isViewingTimezones = true;
             });
+/*             FocusScope.of(context).requestFocus(timezoneListFocusNode);
+ */
           },
         );
       },
@@ -179,7 +219,8 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
         var now = tz.TZDateTime.now(location);
         var timeZoneOffset = now.timeZoneOffset;
         return ListTile(
-          tileColor: selectedTimezoneIndex == index ? const Color(0xFF490094) : null,
+          tileColor:
+              selectedTimezoneIndex == index ? const Color(0xFF490094) : null,
           title: Text('${_convertToGMTOffset(timeZoneOffset)} $timezone'),
           onTap: () async {
             setState(() {
@@ -195,7 +236,8 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
 
   Future<void> _setDeviceTimezone(String timezone) async {
     try {
-      bool isSuccess = await platform.invokeMethod('setDeviceTimezone', {"timezone": timezone});
+      bool isSuccess = await platform
+          .invokeMethod('setDeviceTimezone', {"timezone": timezone});
       if (isSuccess) {
         _showToast(S.of(context).timezoneSuccess);
       } else {
@@ -204,6 +246,14 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
     } on PlatformException catch (e) {
       logger.e(e);
       _showToast(S.of(context).timezoneFailure);
+    }
+  }
+
+  Future<void> _simulateDownArrow() async {
+    try {
+      await platform.invokeMethod('sendDownArrowEvent');
+    } on PlatformException catch (e) {
+      logger.e(e);
     }
   }
 

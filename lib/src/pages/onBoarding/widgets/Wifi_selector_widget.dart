@@ -1,18 +1,13 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
+import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_notifier.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_state.dart';
-import 'package:provider/provider.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 
-import '../../../../main.dart';
 
 const String nativeMethodsChannel = 'nativeMethodsChannel';
 
@@ -27,27 +22,17 @@ class OnBoardingWifiSelector extends ConsumerStatefulWidget {
 
 class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector> {
 
-  final TimeShiftManager _timeManager = TimeShiftManager();
 
   @override
   void initState() {
     super.initState();
     
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (_timeManager.deviceModel == "MAWAQITBOX V2") {
-        await addLocationPermission();
-      }
+ 
       ref.read(wifiScanNotifierProvider.notifier);
     });
   }
 
-  Future<void> addLocationPermission() async {
-    try {
-      await platform.invokeMethod('addLocationPermission');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: location permission: error: $e");
-    }
-  }
 
   void _showToast(String message) {
     Fluttertoast.showToast(
@@ -130,32 +115,19 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
                       state.hasPermission,
                     ),
               error: (error, s) {
-                _showToast('error happened');
-                return ElevatedButton.icon(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.focused)) {
-                          return const Color(0xFF490094); // Focus color
-                        }
-                        return null; // Use the default color
-                      },
-                    ),
-                    foregroundColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.focused)) {
-                          return Colors.white; // Text and icon color when focused
-                        }
-                        return null; // Use the default color
-                      },
-                    ),
-                  ),
-                  icon: const Icon(Icons.refresh),
-                  label: Text(S.of(context).scanAgain),
-                  onPressed: () async => await ref.read(wifiScanNotifierProvider.notifier).retry(),
-                );
-              },
-              loading: () => CircularProgressIndicator()),
+              _showToast('Error fetching access points');
+
+              return Container();
+            },
+            loading: () => Align(
+              child: SizedBox(
+                width: 10.vw,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -221,7 +193,6 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
           next.value!.status == Status.connected) {
  
         _showToast(S.of(context).wifiSuccess);
-        widget.onSelect?.call();
  
       }
       if (next.value!.status == Status.error) {
@@ -267,7 +238,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
                           widget.accessPoint.capabilities,
                           passwordController.text,
                         );
-
+ 
                   },
                   child: Text(S.of(context).connect),
                 ),

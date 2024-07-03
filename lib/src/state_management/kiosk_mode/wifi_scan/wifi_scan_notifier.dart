@@ -13,13 +13,24 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
   final TimeShiftManager _timeManager = TimeShiftManager();
 
   @override
-  WifiScanState build() {
+  Future<WifiScanState> build() async {
+    if (_timeManager.deviceModel == "MAWAQITBOX V2") {
+      await addLocationPermission();
+    }
     _scan();
 
     return WifiScanState(
       accessPoints: [],
       hasPermission: false,
     );
+  }
+
+  Future<void> addLocationPermission() async {
+    try {
+      await platform.invokeMethod('addLocationPermission');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: location permission: error: $e");
+    }
   }
 
   Future<void> _scan() async {
@@ -41,6 +52,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
         state.value!.copyWith(
           accessPoints: results,
           hasPermission: true,
+            status: Status.connecting
         ),
       );
     } catch (e, s) {
@@ -54,6 +66,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
     try {
       bool isSuccess = false;
       if (_timeManager.deviceModel == "MAWAQITBOX V2") {
+
         isSuccess = await platform.invokeMethod('connectToNetworkWPA', {
           "ssid": ssid,
           "password": password,
@@ -63,10 +76,9 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
           "ssid": ssid,
           "password": password,
         });
-      }
+      } 
       if (isSuccess) {
         logger.i("kiosk mode: wifi_scan: connected to wifi");
-        sleep(Duration(seconds: 5));
 
         state = AsyncData(state.value!.copyWith(status: Status.connected));
       } else {
@@ -80,7 +92,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
   }
 
   Future<void> retry() async {
-    state = AsyncLoading();
+    state = AsyncData(state.value!.copyWith(status: Status.connecting));
     await _scan();
   }
 }

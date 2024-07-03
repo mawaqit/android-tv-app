@@ -24,6 +24,7 @@ import android.os.AsyncTask
 import android.util.Log
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
+import 	android.net.ConnectivityManager
 
 class MainActivity : FlutterActivity() {
     private lateinit var mAdminComponentName: ComponentName
@@ -51,6 +52,7 @@ class MainActivity : FlutterActivity() {
                     "toggleBoxScreenOn" -> toggleBoxScreenOn(call, result)
                     "connectToNetworkWPA" -> connectToNetworkWPA(call, result)
                     "addLocationPermission" -> addLocationPermission(call, result)
+                    "sendDownArrowEvent" -> sendDownArrowEvent(call, result)
                     "clearAppData" -> {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
@@ -138,56 +140,55 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
-
-    fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                val networkSSID = call.argument<String>("ssid")
-                val password = call.argument<String>("password")
-                val conf = WifiConfiguration().apply {
-                    SSID = "\"$networkSSID\""
-                    status = WifiConfiguration.Status.ENABLED
-                    allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
-                    allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
-                    allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP)
-                    allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP)
-                    if (password.isNullOrEmpty()) {
-                        allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE)
-                    } else {
-                        preSharedKey = "\"$password\""
-                        allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
-                    }
+fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+        try {
+            val networkSSID = call.argument<String>("ssid")
+            val password = call.argument<String>("password")
+            val conf = WifiConfiguration().apply {
+                SSID = "\"$networkSSID\""
+                status = WifiConfiguration.Status.ENABLED
+                allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
+                allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
+                allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP)
+                allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP)
+                if (password.isNullOrEmpty()) {
+                    allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE)
+                } else {
+                    preSharedKey = "\"$password\""
+                    allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
                 }
-
-                Log.d("connectToNetworkWPA", "Connecting to SSID: ${conf.SSID}")
-
-                val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-                val networkId = wifiManager.addNetwork(conf)
-   val configuredNetworks = wifiManager.configuredNetworks
-        for (network in configuredNetworks) {
-            if (network.SSID != null && network.SSID == "\"$networkSSID\"") {
-                wifiManager.disconnect()
-                wifiManager.enableNetwork(network.networkId, true)
-                wifiManager.reconnect()
-                Log.d("re connecting", "${network.SSID} ${conf.preSharedKey}")
-                break
             }
-        }
-                if (networkId != -1) {
-              
-                 result.success(true)
 
-              }
-               else {
-                    Log.e("connectToNetworkWPA", "Failed to add network configuration")
-                    result.success(false)
-                }
-            } catch (ex: Exception) {
-                Log.e("connectToNetworkWPA", "Error connecting to network", ex)
+            Log.d("connectToNetworkWPA", "Connecting to SSID: ${conf.SSID}")
+
+            val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val networkId = wifiManager.addNetwork(conf)
+            wifiManager.disconnect()
+            wifiManager.enableNetwork(networkId, true)
+            wifiManager.reconnect()
+
+            // Wait for the connection to be established
+            var connectionAttempts = 0
+            while (wifiManager.getConnectionInfo().networkId == -1 && connectionAttempts < 3) {
+                Thread.sleep(500)
+                connectionAttempts++
+            }
+
+            val wifiInfo = wifiManager.getConnectionInfo()
+            if (wifiInfo.networkId != -1) {
+                Log.d("connectToNetworkWPA", "Connected to network:")
+                result.success(true)
+            } else {
+                Log.e("connectToNetworkWPA", "Failed to connect to network")
                 result.success(false)
             }
+        } catch (ex: Exception) {
+            Log.e("connectToNetworkWPA", "Error connecting to network", ex)
+            result.error("exception", ex.message, ex)
         }
     }
+}
 
     private fun clearDataRestart(): Boolean {
         return try {
@@ -227,6 +228,18 @@ class MainActivity : FlutterActivity() {
                     "cd /sys/class/hdmi/hdmi/attr",
                     "echo 1 > phy_power",
                     "am start -W -n com.mawaqit.androidtv/.MainActivity"
+                )
+                executeCommand(commands, result)
+            } catch (e: Exception) {
+                handleCommandException(e, result)
+            }
+        }
+    }
+    private fun sendDownArrowEvent(call: MethodCall, result: MethodChannel.Result) {
+        AsyncTask.execute {
+            try {
+                val commands = listOf(
+                "input keyevent 20"
                 )
                 executeCommand(commands, result)
             } catch (e: Exception) {
