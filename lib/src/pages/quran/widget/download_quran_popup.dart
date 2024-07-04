@@ -76,7 +76,8 @@ Future<void> progressQuran(BuildContext context, WidgetRef ref) async {
 Future<bool> showFirstTimePopup(BuildContext context) async {
   return await showDialog(
     context: context,
-    barrierDismissible: false,
+    barrierDismissible: true,
+    // barrierColor: Colors.transparent,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(S.of(context).downloadQuran),

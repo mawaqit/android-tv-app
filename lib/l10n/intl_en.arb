@@ -213,5 +213,7 @@
   "quranDownloaded": "Quran downloaded",
   "quranIsAlreadyDownloaded": "Quran is already downloaded",
   "chooseReciter": "Choose Reciter",
-  "reciteType": "Recite Type"
+  "reciteType": "Recite Type",
+  "readingMode": "I want to read",
+  "listeningMode": "I want to listen"
 }

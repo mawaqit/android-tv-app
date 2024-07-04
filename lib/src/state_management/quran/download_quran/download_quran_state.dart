@@ -1,4 +1,6 @@
 // download_quran_state.dart
+import 'package:equatable/equatable.dart';
+
 abstract class DownloadQuranState {
   const DownloadQuranState();
 }
@@ -22,10 +24,17 @@ class Downloading extends DownloadQuranState {
   }
 }
 
-class NoUpdate extends DownloadQuranState {
+class NoUpdate extends DownloadQuranState with EquatableMixin {
   final String version;
+  final String svgFolderPath;
 
-  const NoUpdate(this.version);
+  const NoUpdate({
+    required this.version,
+    required this.svgFolderPath,
+  });
+
+  @override
+  List<Object?> get props => [version, svgFolderPath];
 }
 
 class UpdateAvailable extends DownloadQuranState {
@@ -49,10 +58,17 @@ class Extracting extends DownloadQuranState {
   }
 }
 
-class Success extends DownloadQuranState {
+class Success extends DownloadQuranState with EquatableMixin {
   final String version;
+  final String svgFolderPath;
 
-  const Success(this.version);
+  const Success({
+    required this.version,
+    required this.svgFolderPath,
+  });
+
+  @override
+  List<Object?> get props => [version, svgFolderPath];
 }
 
 class Cancel extends DownloadQuranState {

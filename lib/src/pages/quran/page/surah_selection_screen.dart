@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/helpers/DateUtils.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
@@ -52,15 +51,13 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final timeNow =
-        context.select<MosqueManager, DateTime>((value) => value.mosqueDate());
-    final mosqueCountryCode = context.select<MosqueManager, String>(
-        (value) => value.mosque?.countryCode ?? '');
+    final timeNow = context.select<MosqueManager, DateTime>((value) => value.mosqueDate());
+    final mosqueCountryCode = context.select<MosqueManager, String>((value) => value.mosque?.countryCode ?? '');
     final lang = Localizations.localeOf(context).languageCode;
-    final georgianDate =
-        timeNow.formatIntoMawaqitFormat(local: '${lang}_$mosqueCountryCode');
+    final georgianDate = timeNow.formatIntoMawaqitFormat(local: '${lang}_$mosqueCountryCode');
     final quranState = ref.watch(quranNotifierProvider);
     return QuranBackground(
+      isSwitch: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -109,55 +106,45 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                 Expanded(
                   child: quranState.when(
                     data: (data) {
-                      return Shortcuts(
-                        shortcuts: <LogicalKeySet, Intent>{
-                          LogicalKeySet(LogicalKeyboardKey.select):
-                              const ActivateIntent(),
-                        },
-                        child: GridView.builder(
-                          padding: EdgeInsets.symmetric(horizontal: 3.w),
-                          controller: _scrollController,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: _crossAxisCount,
-                            childAspectRatio: 1.8,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                          ),
-                          itemCount: data.suwar.length,
-                          itemBuilder: (context, index) {
-                            return SurahCard(
-                              surahName: data.suwar[index].name,
-                              surahNumber: data.suwar[index].id,
-                              isSelected: index == selectedIndex,
-                              onTap: () {
-                                setState(() {
-                                  selectedIndex = index;
-                                });
-                                final moshaf =
-                                    ref.read(reciteNotifierProvider).maybeWhen(
-                                          orElse: () => null,
-                                          data: (data) => data.selectedMoshaf,
-                                        );
-                                log('Selected moshaf: $moshaf');
-                                ref
-                                    .read(quranPlayerNotifierProvider.notifier)
-                                    .initialize(
-                                      moshaf: moshaf!,
-                                      surah: data.suwar[index],
-                                      suwar: data.suwar,
-                                    );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => QuranPlayerScreen(),
-                                  ),
-                                );
-                                _scrollToSelectedItem();
-                              },
-                            );
-                          },
+                      return GridView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 3.w),
+                        controller: _scrollController,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: _crossAxisCount,
+                          childAspectRatio: 1.8,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
                         ),
+                        itemCount: data.suwar.length,
+                        itemBuilder: (context, index) {
+                          return SurahCard(
+                            surahName: data.suwar[index].name,
+                            surahNumber: data.suwar[index].id,
+                            isSelected: index == selectedIndex,
+                            onTap: () {
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                              final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
+                                    orElse: () => null,
+                                    data: (data) => data.selectedMoshaf,
+                                  );
+                              log('Selected moshaf: $moshaf');
+                              ref.read(quranPlayerNotifierProvider.notifier).initialize(
+                                    moshaf: moshaf!,
+                                    surah: data.suwar[index],
+                                    suwar: data.suwar,
+                                  );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QuranPlayerScreen(),
+                                ),
+                              );
+                              _scrollToSelectedItem();
+                            },
+                          );
+                        },
                       );
                     },
                     error: (error, stack) {
@@ -192,9 +179,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
   }
 
   void _handleKeyEvent(RawKeyEvent event) {
-    final List<SurahModel> surahs = ref
-        .read(quranNotifierProvider)
-        .maybeWhen(orElse: () => [], data: (data) => data.suwar);
+    final surahs = ref.read(quranNotifierProvider).maybeWhen(orElse: () => [], data: (data) => data.suwar);
 
     if (event is RawKeyDownEvent) {
       log('Key pressed: ${event.logicalKey}');
@@ -216,8 +201,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
           // _searchFocusNode.requestFocus();
         } else {
           setState(() {
-            selectedIndex = (selectedIndex - _crossAxisCount + surahs.length) %
-                surahs.length;
+            selectedIndex = (selectedIndex - _crossAxisCount + surahs.length) % surahs.length;
           });
           _scrollToSelectedItem();
         }
@@ -227,22 +211,12 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
         });
         _scrollToSelectedItem();
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
-        final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
+        final moshaf = ref.read(quranNotifierProvider).maybeWhen(
               orElse: () => null,
-              data: (data) => data.selectedMoshaf,
+              data: (data) => data.suwar,
             );
-        log('Selected moshaf: $moshaf');
-        ref.read(quranPlayerNotifierProvider.notifier).initialize(
-              moshaf: moshaf!,
-              surah: surahs[selectedIndex],
-              suwar: surahs,
-            );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuranPlayerScreen(),
-          ),
-        );
+        // String reciterServer = '${moshaf!.server}/00$selectedIndex.mp3';
+        // AudioSource source = AudioSource.uri(Uri.parse(reciterServer));
       }
     }
   }
@@ -272,12 +246,9 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
   }
 
   void _scrollToSelectedItem() {
-    final surahs = ref
-        .read(quranNotifierProvider)
-        .maybeWhen(orElse: () => [], data: (data) => data.suwar);
+    final surahs = ref.read(quranNotifierProvider).maybeWhen(orElse: () => [], data: (data) => data.suwar);
     final int rowIndex = selectedIndex ~/ _crossAxisCount;
-    final double itemHeight = _scrollController.position.maxScrollExtent /
-        ((surahs.length - 1) / _crossAxisCount);
+    final double itemHeight = _scrollController.position.maxScrollExtent / ((surahs.length - 1) / _crossAxisCount);
     final double targetOffset = rowIndex * itemHeight;
     _scrollController.animateTo(
       targetOffset,
