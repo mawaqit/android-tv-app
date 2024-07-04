@@ -29,7 +29,6 @@ abstract class RandomHadithConstant {
   static const String kHadithLanguage = "hadith_language";
   static const String kLastHadithXMLFetchLanguage = "last_hadith_xml_language";
 }
-<<<<<<<<< Temporary merge branch 1
 
 abstract class AnnouncementConstant {
   static const String kBoxName = "announcement";
@@ -48,5 +47,3 @@ abstract class QuranConstant {
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
 }
-=========
->>>>>>>>> Temporary merge branch 2
