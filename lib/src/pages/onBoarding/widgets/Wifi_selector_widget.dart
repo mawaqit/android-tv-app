@@ -1,21 +1,21 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';  
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
+import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_notifier.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_state.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 
-
 const String nativeMethodsChannel = 'nativeMethodsChannel';
 
 class OnBoardingWifiSelector extends ConsumerStatefulWidget {
-  const OnBoardingWifiSelector({Key? key, required this.onSelect}) : super(key: key);
+  const OnBoardingWifiSelector({Key? key, required this.onSelect})
+      : super(key: key);
 
   final void Function() onSelect;
 
@@ -23,28 +23,24 @@ class OnBoardingWifiSelector extends ConsumerStatefulWidget {
   _OnBoardingWifiSelectorState createState() => _OnBoardingWifiSelectorState();
 }
 
-class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector> {
-
-
+class _OnBoardingWifiSelectorState
+    extends ConsumerState<OnBoardingWifiSelector> {
+  final TimeShiftManager _timeManager = TimeShiftManager();
   @override
   void initState() {
     super.initState();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await addLocationPermission();
-      await addFineLocationPermission();
+      if (_timeManager.deviceModel == "MAWAQITBOX V2") {
+        await addLocationPermission();
+        await addFineLocationPermission();
+      }
+
       ref.read(wifiScanNotifierProvider.notifier);
     });
   }
 
-  Future<void> scanNative() async {
-    try {
-      print("invoked here");
-      await platform.invokeMethod('getNearbyWifiNetworks');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: zdzdzd permission: error: $e");
-    }
-  }
+
 
   Future<void> addLocationPermission() async {
     try {
@@ -61,6 +57,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
       logger.e("kiosk mode: location permission: error: $e");
     }
   }
+
   void _showToast(String message) {
     Fluttertoast.showToast(
       msg: message,
@@ -86,13 +83,17 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
           style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.w700,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark
+                ? null
+                : themeData.primaryColor,
           ),
         ),
         const SizedBox(height: 10),
         Divider(
           thickness: 1,
-          color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
+          color: themeData.brightness == Brightness.dark
+              ? Colors.white
+              : Colors.black,
         ),
         const SizedBox(height: 10),
         Text(
@@ -100,7 +101,9 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark
+                ? null
+                : themeData.primaryColor,
           ),
         ),
         SizedBox(height: 20),
@@ -128,20 +131,21 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
               ),
               icon: const Icon(Icons.refresh),
               label: Text(S.of(context).scanAgain),
-              onPressed: () async => await ref.read(wifiScanNotifierProvider.notifier).retry(),
+              onPressed: () async =>
+                  await ref.read(wifiScanNotifierProvider.notifier).retry(),
             ),
           ],
         ),
         SizedBox(height: 20),
         Expanded(
           child: wifiScanState.when(
-              data: (state) => state.accessPoints.isEmpty
-                  ? Text(S.of(context).noScannedResultsFound)
-                  : _buildAccessPointsList(
-                      state.accessPoints,
-                      state.hasPermission,
-                    ),
-              error: (error, s) {
+            data: (state) => state.accessPoints.isEmpty
+                ? Text(S.of(context).noScannedResultsFound)
+                : _buildAccessPointsList(
+                    state.accessPoints,
+                    state.hasPermission,
+                  ),
+            error: (error, s) {
               _showToast('Error fetching access points');
 
               return Container();
@@ -160,7 +164,8 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
     );
   }
 
-  Widget _buildAccessPointsList(List<WiFiAccessPoint> accessPoints, bool _hasPermission) {
+  Widget _buildAccessPointsList(
+      List<WiFiAccessPoint> accessPoints, bool _hasPermission) {
     return Container(
       padding: EdgeInsets.only(top: 5),
       child: ListView.builder(
@@ -212,18 +217,19 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
 
   @override
   Widget build(BuildContext context) {
-    final title = widget.accessPoint.ssid.isNotEmpty ? widget.accessPoint.ssid : S.of(context).noSSID;
-    final signalIcon = widget.accessPoint.level >= -80 ? Icons.signal_wifi_4_bar : Icons.signal_wifi_0_bar;
+    final title = widget.accessPoint.ssid.isNotEmpty
+        ? widget.accessPoint.ssid
+        : S.of(context).noSSID;
+    final signalIcon = widget.accessPoint.level >= -80
+        ? Icons.signal_wifi_4_bar
+        : Icons.signal_wifi_0_bar;
     ref.listen(wifiScanNotifierProvider, (previous, next) {
       if (next.hasValue &&
           !next.isRefreshing &&
           next.value!.status == Status.connected) {
- 
         _showToast(S.of(context).wifiSuccess);
- 
       }
       if (next.value!.status == Status.error) {
-
         _showToast(S.of(context).wifiFailure);
       }
     });
@@ -251,7 +257,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
                       onPressed: () {
                         setState(() {
                           _showPassword = !_showPassword;
-                        }); 
+                        });
                       },
                     ),
                   ),
@@ -259,13 +265,14 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
                 ElevatedButton(
                   onPressed: () async {
                     Navigator.of(context).pop();
-                
-                    await ref.read(wifiScanNotifierProvider.notifier).connectToWifi(
+
+                    await ref
+                        .read(wifiScanNotifierProvider.notifier)
+                        .connectToWifi(
                           widget.accessPoint.ssid,
                           widget.accessPoint.capabilities,
                           passwordController.text,
                         );
- 
                   },
                   child: Text(S.of(context).connect),
                 ),

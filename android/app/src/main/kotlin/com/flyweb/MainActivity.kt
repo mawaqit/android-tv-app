@@ -52,7 +52,6 @@ class MainActivity : FlutterActivity() {
                     "toggleBoxScreenOn" -> toggleBoxScreenOn(call, result)
                     "connectToNetworkWPA" -> connectToNetworkWPA(call, result)
                     "addLocationPermission" -> addLocationPermission(call, result)
-                    "getNearbyWifiNetworks" -> getNearbyWifiNetworks()
                     "grantFineLocationPermission" -> grantFineLocationPermission(call, result)
                     "sendDownArrowEvent" -> sendDownArrowEvent(call, result)
                     "clearAppData" -> {
@@ -115,26 +114,7 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
-fun getNearbyWifiNetworks() {
-    val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
-    if (!wifiManager.isWifiEnabled) {
-        wifiManager.isWifiEnabled = true
-    }
-
-    wifiManager.startScan()
-
-    val scanResults = wifiManager.scanResults
-            Log.d("scanResults","SSID: ${wifiManager.scanResults}")
-
-    scanResults.forEach { scanResult ->
-        val ssid = scanResult.SSID
-        val bssid = scanResult.BSSID
-        val capabilities = scanResult.capabilities
-        // Process the scan result as needed
-        Log.d("wiou","SSID: $ssid, BSSID: $bssid, Capabilities: $capabilities")
-    }
-}
     private fun isPackageInstalled(packageName: String?): Boolean {
         val packageManager = applicationContext.packageManager
         return try {

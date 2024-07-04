@@ -14,10 +14,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
 
   @override
   Future<WifiScanState> build() async {
-    /* if (_timeManager.deviceModel == "MAWABOX") {
-  
-    } */
-    _scan();
+    await _scan();
 
     return WifiScanState(
       accessPoints: [],
@@ -25,33 +22,28 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
     );
   }
 
-  Future<void> addLocationPermission() async {
-    try {
-      await platform.invokeMethod('addLocationPermission');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: location permission: error: $e");
-    }
-  }
-  Future<void> scanNative() async {
-    try {
-      print("invoked here");
-      await platform.invokeMethod('getNearbyWifiNetworks');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: zdzdzd permission: error: $e");
-    }
-  }
-
   Future<void> _scan() async {
     state = AsyncLoading();
     try {
-   
+      if (_timeManager.deviceModel != "MAWAQITBOX V2") {
+        final can = await WiFiScan.instance.canStartScan();
+        if (can != CanStartScan.yes) {
+          logger.e("kiosk mode: wifi_scan: can't start scan");
+          return;
+        }
+        final canGetScannedResults =
+            await WiFiScan.instance.canGetScannedResults();
+        if (canGetScannedResults != CanGetScannedResults.yes) {
+          logger.e("kiosk mode: wifi_scan: can't get scanned results");
+          return;
+        }
+      }
       final results = await WiFiScan.instance.getScannedResults();
       state = AsyncData(
         state.value!.copyWith(
-          accessPoints: results,
-          hasPermission: true,
-            status: Status.connecting
-        ),
+            accessPoints: results,
+            hasPermission: true,
+            status: Status.connecting),
       );
     } catch (e, s) {
       logger.e("kiosk mode: wifi_scan: error: $e");
@@ -64,7 +56,6 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
     try {
       bool isSuccess = false;
       if (_timeManager.deviceModel == "MAWAQITBOX V2") {
-
         isSuccess = await platform.invokeMethod('connectToNetworkWPA', {
           "ssid": ssid,
           "password": password,
@@ -74,7 +65,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
           "ssid": ssid,
           "password": password,
         });
-      } 
+      }
       if (isSuccess) {
         logger.i("kiosk mode: wifi_scan: connected to wifi");
 
