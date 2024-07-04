@@ -61,8 +61,6 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
         },
         useFajrAdhan: mosqueManager.salahIndex == 0,
       );
-    } else {
-      closeAdhanScreen();
     }
     super.initState();
   }
