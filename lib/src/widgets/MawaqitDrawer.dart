@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncValueX, ConsumerWidget, ProviderContainer, WidgetRef;
+import 'package:flutter_riverpod/flutter_riverpod.dart' show ConsumerWidget, WidgetRef, ProviderContainer;
 import 'package:flutter_svg/svg.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -22,15 +22,12 @@ import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
-import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:mawaqit/src/developer_mode/DrawerListTest.dart';
 import 'package:mawaqit/src/pages/SettingScreen.dart';
-import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
-import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
 import '../pages/quran/page/quran_mode_selection_screen.dart';
@@ -47,7 +44,9 @@ class MawaqitDrawer extends ConsumerWidget {
     final settings = Provider.of<SettingsManager>(context).settings;
     final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
+
     final theme = Theme.of(context);
+
     return Drawer(
       child: Stack(
         children: [
@@ -154,6 +153,7 @@ class MawaqitDrawer extends ConsumerWidget {
                     ),
                   )),
               Divider(),
+
               DrawerListTitle(
                   autoFocus: true,
                   icon: Icons.home,
@@ -163,6 +163,7 @@ class MawaqitDrawer extends ConsumerWidget {
                       AppRouter.popAndPush(WebScreen(settings.url), name: 'HomeScreen');
                     } else {
                       Navigator.pop(context);
+
                       goHome();
                     }
                   }),

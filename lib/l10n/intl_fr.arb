@@ -197,6 +197,7 @@
   "seeMore": "En savoir plus",
   "whatIsNew": "Quoi de neuf",
   "update": "Mettre à jour",
-  "automaticUpdate": "Mise à jour automatique",
-  "automaticUpdateDescription": "Activer la mise à jour automatique pour obtenir les dernières fonctionnalités et améliorations"
+  "automaticUpdate": "Notifier la mise à jour",
+  "automaticUpdateDescription": "Activer la notification de mise à jour pour recevoir les dernières fonctionnalités et améliorations",
+  "later": "Plus tard"
 }
