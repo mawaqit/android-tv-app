@@ -4,6 +4,9 @@
 class R {
   const R._();
 
+  /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\theme.json)
+  static const String ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON = 'assets/animations/lottie/settings.json';
+
   static const String ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON = 'assets/animations/lottie/language.json';
 
   static const String ASSETS_ANIMATIONS_LOTTIE_SEARCH_JSON = 'assets/animations/lottie/search.json';
