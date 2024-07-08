@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mawaqit/i18n/l10n.dart';  
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
@@ -34,13 +34,13 @@ class _OnBoardingWifiSelectorState
       if (_timeManager.deviceModel == "MAWAQITBOX V2") {
         await addLocationPermission();
         await addFineLocationPermission();
-      }
 
-      ref.read(wifiScanNotifierProvider.notifier);
+        await ref.read(wifiScanNotifierProvider.notifier).retry();
+      } else {
+        await ref.read(wifiScanNotifierProvider.notifier).retry();
+      }
     });
   }
-
-
 
   Future<void> addLocationPermission() async {
     try {
@@ -74,6 +74,7 @@ class _OnBoardingWifiSelectorState
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final wifiScanState = ref.watch(wifiScanNotifierProvider);
+    final FocusNode accessPointsFocusNode = FocusNode();
 
     return Column(
       children: [
@@ -141,10 +142,8 @@ class _OnBoardingWifiSelectorState
           child: wifiScanState.when(
             data: (state) => state.accessPoints.isEmpty
                 ? Text(S.of(context).noScannedResultsFound)
-                : _buildAccessPointsList(
-                    state.accessPoints,
-                    state.hasPermission,
-                  ),
+                : _buildAccessPointsList(state.accessPoints,
+                    state.hasPermission, accessPointsFocusNode),
             error: (error, s) {
               _showToast('Error fetching access points');
 
@@ -164,8 +163,25 @@ class _OnBoardingWifiSelectorState
     );
   }
 
-  Widget _buildAccessPointsList(
-      List<WiFiAccessPoint> accessPoints, bool _hasPermission) {
+  List<WiFiAccessPoint> _filterAccessPoints(
+      List<WiFiAccessPoint> accessPoints) {
+    final seenSSIDs = <String>{};
+    return accessPoints.where((ap) {
+      if (ap.ssid == "**Hidden SSID**") {
+        return true;
+      }
+      if (!seenSSIDs.contains(ap.ssid)) {
+        seenSSIDs.add(ap.ssid);
+        return true;
+      }
+      return false;
+    }).toList();
+  }
+
+  _buildAccessPointsList(
+      List<WiFiAccessPoint> accessPoints, bool _hasPermission, FocusNode node) {
+    final filteredAccessPoints = _filterAccessPoints(accessPoints);
+
     return Container(
       padding: EdgeInsets.only(top: 5),
       child: ListView.builder(
@@ -173,10 +189,11 @@ class _OnBoardingWifiSelectorState
           top: 5,
           bottom: 5,
         ),
-        itemCount: accessPoints.length,
+        itemCount: filteredAccessPoints.length,
         itemBuilder: (context, i) => _AccessPointTile(
+          focusNode: node,
           onSelect: widget.onSelect,
-          accessPoint: accessPoints[i],
+          accessPoint: filteredAccessPoints[i],
           hasPermission: _hasPermission,
         ),
       ),
@@ -188,9 +205,10 @@ class _AccessPointTile extends ConsumerStatefulWidget {
   final WiFiAccessPoint accessPoint;
   final bool hasPermission;
   final void Function() onSelect;
-
+  final FocusNode focusNode;
   _AccessPointTile({
     Key? key,
+    required this.focusNode,
     required this.onSelect,
     required this.accessPoint,
     required this.hasPermission,
@@ -233,50 +251,85 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
         _showToast(S.of(context).wifiFailure);
       }
     });
-    return ListTile(
-      visualDensity: VisualDensity.compact,
-      leading: Icon(signalIcon),
-      title: Text(title),
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => StatefulBuilder(
-          builder: (context, setState) => AlertDialog(
-            title: Text(title),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: passwordController,
-                  obscureText: !_showPassword,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).wifiPassword,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _showPassword ? Icons.visibility : Icons.visibility_off,
+    Future<void> _simulateTabPress() async {
+      try {
+        await platform.invokeMethod('sendTabKeyEvent');
+      } on PlatformException catch (e) {
+        logger.e(e);
+      }
+    }
+
+    Future<void> _simulateDownArrow() async {
+      try {
+        await platform.invokeMethod('sendDownArrowEvent');
+      } on PlatformException catch (e) {
+        logger.e(e);
+      }
+    }
+
+    KeyEventResult _handleKeyEvent(FocusNode focusNode, RawKeyEvent event) {
+      if (event is RawKeyDownEvent) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
+            event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+          _simulateTabPress();
+          _simulateDownArrow();
+
+          return KeyEventResult.handled;
+        }
+      }
+      return KeyEventResult.ignored;
+    }
+
+    return Focus(
+      focusNode: widget.focusNode,
+      onKey: (node, event) => _handleKeyEvent(node, event),
+      child: ListTile(
+        visualDensity: VisualDensity.compact,
+        leading: Icon(signalIcon),
+        title: Text(title),
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) => StatefulBuilder(
+            builder: (context, setState) => AlertDialog(
+              title: Text(title),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: passwordController,
+                    obscureText: !_showPassword,
+                    decoration: InputDecoration(
+                      labelText: S.of(context).wifiPassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _showPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _showPassword = !_showPassword;
+                          });
+                        },
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _showPassword = !_showPassword;
-                        });
-                      },
                     ),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
 
-                    await ref
-                        .read(wifiScanNotifierProvider.notifier)
-                        .connectToWifi(
-                          widget.accessPoint.ssid,
-                          widget.accessPoint.capabilities,
-                          passwordController.text,
-                        );
-                  },
-                  child: Text(S.of(context).connect),
-                ),
-              ],
+                      await ref
+                          .read(wifiScanNotifierProvider.notifier)
+                          .connectToWifi(
+                            widget.accessPoint.ssid,
+                            widget.accessPoint.capabilities,
+                            passwordController.text,
+                          );
+                    },
+                    child: Text(S.of(context).connect),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

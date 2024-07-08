@@ -14,7 +14,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
 
   @override
   Future<WifiScanState> build() async {
-    await _scan();
+    _scan();
 
     return WifiScanState(
       accessPoints: [],

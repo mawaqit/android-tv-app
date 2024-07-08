@@ -54,6 +54,7 @@ class MainActivity : FlutterActivity() {
                     "addLocationPermission" -> addLocationPermission(call, result)
                     "grantFineLocationPermission" -> grantFineLocationPermission(call, result)
                     "sendDownArrowEvent" -> sendDownArrowEvent(call, result)
+                    "sendTabKeyEvent" -> sendTabKeyEvent(call, result)
                     "clearAppData" -> {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
@@ -254,6 +255,18 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
             try {
                 val commands = listOf(
                 "input keyevent 20"
+                )
+                executeCommand(commands, result)
+            } catch (e: Exception) {
+                handleCommandException(e, result)
+            }
+        }
+    }
+    private fun sendTabKeyEvent(call: MethodCall, result: MethodChannel.Result) {
+        AsyncTask.execute {
+            try {
+                val commands = listOf(
+                "input keyevent 61"
                 )
                 executeCommand(commands, result)
             } catch (e: Exception) {
