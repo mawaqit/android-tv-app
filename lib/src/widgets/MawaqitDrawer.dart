@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -34,7 +35,6 @@ class MawaqitDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsManager>(context).settings;
-    final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
     final theme = Theme.of(context);

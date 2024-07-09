@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/main.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
@@ -16,15 +18,16 @@ import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
+import 'package:mawaqit/src/services/storage_manager.dart';
+import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/data_source/device_info_data_source.dart';
 import '../helpers/AppDate.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
-
-const kAfterAdhanHadithDuration = Duration(minutes: 1);
-const kAdhanBeforeFajrDuration = Duration(minutes: 10);
 
 const kAzkarDuration = const Duration(seconds: 140);
 
@@ -35,6 +38,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   String? mosqueUUID;
 
   bool _flashEnabled = false;
+
   bool get flashEnabled => _flashEnabled;
 
   void _updateFlashEnabled() {
@@ -68,10 +72,14 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   Mosque? mosque;
   Times? times;
   MosqueConfig? mosqueConfig;
-
+  bool isEventsSet = false;
   StreamSubscription? _mosqueSubscription;
   StreamSubscription? _timesSubscription;
   StreamSubscription? _configSubscription;
+  bool isDeviceRooted = false;
+  bool isToggleScreenActivated = false;
+  int minuteBefore = 0;
+  int minuteAfter = 0;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -80,10 +88,40 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     return 'https://mawaqit.net/$languageCode/id/${mosque?.id}?view=desktop';
   }
 
+  static const String _minuteBeforeKey = 'selectedMinuteBefore';
+  static const String _minuteAfterKey = 'selectedMinuteAfter';
+
+  static Future<int> getMinuteBefore() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_minuteBeforeKey) ?? 10;
+  }
+
+  static Future<int> getMinuteAfter() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_minuteAfterKey) ?? 10;
+  }
+
+  static Future<bool> checkRoot() async {
+    try {
+      final result = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
+        TurnOnOffTvConstant.kCheckRoot,
+      );
+      return result;
+    } catch (e, stack) {
+      logger.e(e, stackTrace: stack);
+      return false;
+    }
+  }
+
   Future<void> init() async {
     await Api.init();
     await loadFromLocale();
     listenToConnectivity();
+    isDeviceRooted = await checkRoot();
+    isToggleScreenActivated = await ToggleScreenFeature.getToggleFeatureState();
+    isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
+    minuteBefore = await getMinuteBefore();
+    minuteAfter = await getMinuteAfter();
     notifyListeners();
   }
 
@@ -91,10 +129,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   Future<void> setMosqueUUid(String uuid) async {
     try {
       await fetchMosque(uuid);
+      await ToggleScreenFeature.saveScheduledEventsToLocale();
 
       _saveToLocale();
-
-      // print("mosque url${mosque?.url}");
     } catch (e, stack) {
       debugPrintStack(stackTrace: stack);
     }
@@ -168,6 +205,31 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription = timesStream.listen(
       (e) {
         times = e;
+        final today = useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+        if (isDeviceRooted) {
+          if (isToggleScreenActivated) {
+            ToggleScreenFeature.getLastEventDate().then((lastEventDate) async {
+              if (lastEventDate != null && lastEventDate.day != today.day) {
+                isEventsSet = false; // Reset the flag if it's a new day
+                await ToggleScreenFeature.cancelAllScheduledTimers();
+                ToggleScreenFeature.toggleFeatureState(false);
+                ToggleScreenFeature.checkEventsScheduled().then((_) {
+                  if (!isEventsSet) {
+                    ToggleScreenFeature.scheduleToggleScreen(
+                      e.dayTimesStrings(today, salahOnly: false),
+                      minuteBefore,
+                      minuteAfter,
+                    );
+                    ToggleScreenFeature.toggleFeatureState(true);
+                    ToggleScreenFeature.setLastEventDate(today);
+                    isEventsSet = true;
+                  }
+                });
+              }
+            });
+          }
+        }
+
         notifyListeners();
       },
       onError: onItemError,

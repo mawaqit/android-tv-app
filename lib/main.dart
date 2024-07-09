@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ProviderBase, ProviderContainer, ProviderObserver, ProviderScope;
@@ -25,6 +26,7 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 final logger = Logger();
 
@@ -33,13 +35,13 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
+      tz.initializeTimeZones();
       await Hive.initFlutter();
-      runApp(
-        ProviderScope(
-          child: MyApp(),
-          observers: [RiverpodLogger()],
-        ),
-      );
+
+      runApp(ProviderScope(
+        child: MyApp(),
+        observers: [RiverpodLogger()],
+      ));
     },
   );
 }
@@ -90,6 +92,9 @@ class MyApp extends StatelessWidget {
                     GlobalCupertinoLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
+                    KurdishMaterialLocalizations.delegate,
+                    KurdishWidgetLocalizations.delegate,
+                    KurdishCupertinoLocalizations.delegate
                   ],
                   supportedLocales: S.supportedLocales,
                   debugShowCheckedModeBanner: false,
