@@ -12,14 +12,15 @@ import '../../../pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
   final TimeShiftManager _timeManager = TimeShiftManager();
 
-  @override
+@override
   Future<WifiScanState> build() async {
-    _scan();
-
-    return WifiScanState(
+    state = AsyncData(WifiScanState(
       accessPoints: [],
       hasPermission: false,
-    );
+      status: Status.connecting,
+    ));
+    await _scan();
+    return state.value!;
   }
 
   Future<void> _scan() async {
@@ -81,7 +82,15 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
   }
 
   Future<void> retry() async {
+    if (state.value != null) {
     state = AsyncData(state.value!.copyWith(status: Status.connecting));
+    } else {
+      state = AsyncData(WifiScanState(
+        accessPoints: [],
+        hasPermission: false,
+        status: Status.connecting,
+      ));
+    }
     await _scan();
   }
 }
