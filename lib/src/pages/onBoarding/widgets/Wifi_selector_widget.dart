@@ -31,12 +31,32 @@ class _OnBoardingWifiSelectorState
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await ref.read(wifiScanNotifierProvider.notifier).initializeScan();
-      });
+      if (_timeManager.deviceModel == "MAWAQITBOX V2") {
+        await addLocationPermission();
+        await addFineLocationPermission();
+
+        await ref.read(wifiScanNotifierProvider.notifier).retry();
+      } else {
+        await ref.read(wifiScanNotifierProvider.notifier).retry();
+      }
     });
   }
 
+  Future<void> addLocationPermission() async {
+    try {
+      await platform.invokeMethod('addLocationPermission');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: location permission: error: $e");
+    }
+  }
+
+  Future<void> addFineLocationPermission() async {
+    try {
+      await platform.invokeMethod('grantFineLocationPermission');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: location permission: error: $e");
+    }
+  }
 
   void _showToast(String message) {
     Fluttertoast.showToast(

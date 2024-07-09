@@ -12,48 +12,15 @@ import '../../../pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
   final TimeShiftManager _timeManager = TimeShiftManager();
 
-  @override
+@override
   Future<WifiScanState> build() async {
     state = AsyncData(WifiScanState(
       accessPoints: [],
       hasPermission: false,
       status: Status.connecting,
     ));
-    await initializeScan();
-    return state.value!;
-  }
-
-  Future<void> initializeScan() async {
-    await _requestPermissions();
-    await Future.delayed(Duration(seconds: 2));
     await _scan();
-    if (state.value!.accessPoints.isEmpty) {
-      await Future.delayed(Duration(seconds: 2));
-      await retry();
-    }
-  }
-
-  Future<void> _requestPermissions() async {
-    if (_timeManager.deviceModel == "MAWAQITBOX V2") {
-      await addLocationPermission();
-      await addFineLocationPermission();
-    }
-  }
-
-  Future<void> addLocationPermission() async {
-    try {
-      await platform.invokeMethod('addLocationPermission');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: location permission: error: $e");
-    }
-  }
-
-  Future<void> addFineLocationPermission() async {
-    try {
-      await platform.invokeMethod('grantFineLocationPermission');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: location permission: error: $e");
-    }
+    return state.value!;
   }
 
   Future<void> _scan() async {
