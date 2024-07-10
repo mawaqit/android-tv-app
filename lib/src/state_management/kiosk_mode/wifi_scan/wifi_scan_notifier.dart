@@ -26,6 +26,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
   Future<void> _scan() async {
     state = AsyncLoading();
     try {
+      if (_timeManager.deviceModel != "MAWAQITBOX V2") {
         final can = await WiFiScan.instance.canStartScan();
         if (can != CanStartScan.yes) {
           logger.e("kiosk mode: wifi_scan: can't start scan");
@@ -37,7 +38,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
           logger.e("kiosk mode: wifi_scan: can't get scanned results");
           return;
         }
-      
+      }
       final results = await WiFiScan.instance.getScannedResults();
       state = AsyncData(
         state.value!.copyWith(

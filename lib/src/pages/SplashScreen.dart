@@ -19,7 +19,6 @@ import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
-import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
@@ -102,21 +101,7 @@ class _SplashScreen extends State<Splash> {
 
     return res == null;
   }
-  Future<void> addLocationPermission() async {
-    try {
-      await platform.invokeMethod('addLocationPermission');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: location permission: error: $e");
-    }
-  }
 
-  Future<void> addFineLocationPermission() async {
-    try {
-      await platform.invokeMethod('grantFineLocationPermission');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: location permission: error: $e");
-    }
-  }
   /// navigates to first screen
   Future<void> _initApplication() async {
     try {
@@ -125,12 +110,7 @@ class _SplashScreen extends State<Splash> {
       var goBoarding = await loadBoarding();
       var mosqueManager = context.read<MosqueManager>();
       bool hasNoMosque = mosqueManager.mosqueUUID == null;
-      final TimeShiftManager _timeManager = TimeShiftManager();
 
-      if (_timeManager.deviceModel == "MAWAQITBOX V2") {
-        await addLocationPermission();
-        await addFineLocationPermission();
-      }
       /// waite for the animation if it is not loaded yet
       await animationFuture.future;
 
