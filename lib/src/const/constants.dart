@@ -30,6 +30,38 @@ abstract class RandomHadithConstant {
   static const String kLastHadithXMLFetchLanguage = "last_hadith_xml_language";
 }
 
+class TurnOnOffTvConstant {
+  static const String kLastEventDate = "lastEventDate";
+  static const String kIsEventsSet = "isEventsSet";
+  static const String kActivateToggleFeature = "activateToggleFeature";
+  static const String kScheduledTimersKey = "scheduledTimers";
+
+  /// native methods calls
+  static const String kNativeMethodsChannel = "nativeMethodsChannel";
+  static const String kCheckRoot = "checkRoot";
+  static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
+  static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
+
+  static const String kMinuteBeforeKey = 'selectedMinuteBefore';
+  static const String kMinuteAfterKey = 'selectedMinuteAfter';
+}
+
+abstract class AnnouncementConstant {
+  static const String kBoxName = "announcement";
+}
+
+abstract class MosqueManagerConstant {
+  static const String kMosqueUUID = "mosqueUUID";
+}
+
+abstract class QuranConstant {
+  static const String kQuranVersionLink = "'https://mawaqit.github.io/mawaqit-announcements/public/quran/config.json'";
+  static const String kQuranLocalVersion = 'quran_local_version';
+  static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
+  static const String kSurahBox = 'surah_box';
+  static const String kReciterBox = 'reciter_box';
+}
+
 abstract class AnnouncementConstant {
   static const String kBoxName = "announcement";
 }

@@ -29,10 +29,10 @@ class AppDateTime {
   static final DateTime _initialDebugTime = DateTime(
     _initialRealTime.year,
     _initialRealTime.month,
-    _initialRealTime.day - 50,
+    _initialRealTime.day,
     13,
+    48,
     00,
-    -10,
   );
 
   static final Duration _timeDifference = _initialDebugTime.difference(_initialRealTime);
