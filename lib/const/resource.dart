@@ -1,19 +1,26 @@
-/// Generate by [asset_generator](https://github.com/fluttercandies/flutter_asset_generator) library.
+/// Generate by [resource_generator](https://github.com/CaiJingLong/flutter_resource_generator) library.
 /// PLEASE DO NOT EDIT MANUALLY.
 // ignore_for_file: constant_identifier_names
 class R {
   const R._();
 
+  /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\language.json)
   static const String ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON = 'assets/animations/lottie/language.json';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\search.json)
   static const String ASSETS_ANIMATIONS_LOTTIE_SEARCH_JSON = 'assets/animations/lottie/search.json';
 
   static const String ASSETS_ANIMATIONS_LOTTIE_SETTINGS_JSON = 'assets/animations/lottie/settings.json';
 
   static const String ASSETS_ANIMATIONS_LOTTIE_THEME_JSON = 'assets/animations/lottie/theme.json';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\theme.json)
+  static const String ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON = 'assets/animations/lottie/settings.json';
+
+  /// ![preview](file://E:\Projects\android-tv\assets\animations\lottie\welcome.json)
   static const String ASSETS_ANIMATIONS_LOTTIE_WELCOME_JSON = 'assets/animations/lottie/welcome.json';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\animations\rive\mawaqit_logo_animation1.riv)
   static const String ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV =
       'assets/animations/rive/mawaqit_logo_animation1.riv';
 
@@ -21,8 +28,10 @@ class R {
 
   static const String ASSETS_BACKGROUNDS_SPLASH_SCREEN_5_PNG = 'assets/backgrounds/splash_screen_5.png';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\cfg\configuration.json)
   static const String ASSETS_CFG_CONFIGURATION_JSON = 'assets/cfg/configuration.json';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\cfg\settings.json)
   static const String ASSETS_CFG_SETTINGS_JSON = 'assets/cfg/settings.json';
 
   static const String ASSETS_ICON_DOWNLOAD_SVG = 'assets/icon/download.svg';
@@ -41,6 +50,7 @@ class R {
 
   static const String ASSETS_IMG_FLAG_AR_PNG = 'assets/img/flag/ar.png';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\img\flag\ba.png)
   static const String ASSETS_IMG_FLAG_BA_PNG = 'assets/img/flag/ba.png';
 
   static const String ASSETS_IMG_FLAG_BG_PNG = 'assets/img/flag/bg.png';
@@ -59,6 +69,7 @@ class R {
 
   static const String ASSETS_IMG_FLAG_EN_PNG = 'assets/img/flag/en.png';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\img\flag\es.png)
   static const String ASSETS_IMG_FLAG_ES_PNG = 'assets/img/flag/es.png';
 
   static const String ASSETS_IMG_FLAG_ET_PNG = 'assets/img/flag/et.png';
@@ -87,6 +98,7 @@ class R {
 
   static const String ASSETS_IMG_FLAG_ML_PNG = 'assets/img/flag/ml.png';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\img\flag\nl.png)
   static const String ASSETS_IMG_FLAG_NL_PNG = 'assets/img/flag/nl.png';
 
   static const String ASSETS_IMG_FLAG_NO_PNG = 'assets/img/flag/no.png';
@@ -107,6 +119,7 @@ class R {
 
   static const String ASSETS_IMG_FLAG_TA_PNG = 'assets/img/flag/ta.png';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\img\flag\tr.png)
   static const String ASSETS_IMG_FLAG_TR_PNG = 'assets/img/flag/tr.png';
 
   static const String ASSETS_IMG_FLAG_UK_PNG = 'assets/img/flag/uk.png';
@@ -121,12 +134,16 @@ class R {
 
   static const String ASSETS_SCRIPTS_CLEAN_JS = 'assets/scripts/clean.js';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\svg\mawaqit-logo-text-light.svg)
   static const String ASSETS_SVG_MAWAQIT_LOGO_TEXT_LIGHT_SVG = 'assets/svg/mawaqit-logo-text-light.svg';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\svg\mawaqit_logo_light.svg)
   static const String ASSETS_SVG_MAWAQIT_LOGO_LIGHT_SVG = 'assets/svg/mawaqit_logo_light.svg';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\svg\no-phone.svg)
   static const String ASSETS_SVG_NO_PHONE_SVG = 'assets/svg/no-phone.svg';
 
+  /// ![preview](file://E:\Projects\android-tv\assets\svg\no-wi-fi.svg)
   static const String ASSETS_SVG_NO_WI_FI_SVG = 'assets/svg/no-wi-fi.svg';
 
   static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_FAJR_MP3 = 'assets/voices/adhan/adhan-madina-fajr.mp3';

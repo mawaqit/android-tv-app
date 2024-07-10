@@ -30,6 +30,22 @@ abstract class RandomHadithConstant {
   static const String kLastHadithXMLFetchLanguage = "last_hadith_xml_language";
 }
 
+class TurnOnOffTvConstant {
+  static const String kLastEventDate = "lastEventDate";
+  static const String kIsEventsSet = "isEventsSet";
+  static const String kActivateToggleFeature = "activateToggleFeature";
+  static const String kScheduledTimersKey = "scheduledTimers";
+
+  /// native methods calls
+  static const String kNativeMethodsChannel = "nativeMethodsChannel";
+  static const String kCheckRoot = "checkRoot";
+  static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
+  static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
+
+  static const String kMinuteBeforeKey = 'selectedMinuteBefore';
+  static const String kMinuteAfterKey = 'selectedMinuteAfter';
+}
+
 abstract class AnnouncementConstant {
   static const String kBoxName = "announcement";
 }

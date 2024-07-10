@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/usecase/on_boarding_usecase.dart';
 import 'package:provider/provider.dart' as provider;
 
@@ -33,6 +35,21 @@ class OnBoardingNotifier extends AsyncNotifier<OnboardingState> {
       update((p0) => p0.copyWith(language: language));
       return state.value!;
     });
+  }
+
+  /// check if the device rooted or not
+  Future<void> isDeviceRooted() async {
+    state = AsyncLoading();
+    try {
+      final result = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
+        TurnOnOffTvConstant.kCheckRoot,
+      );
+      final newState = state.value!.copyWith(isRootedDevice: result);
+      state = AsyncValue.data(newState);
+    } catch (e) {
+      final newState = state.value!.copyWith(isRootedDevice: false);
+      state = AsyncValue.data(newState);
+    }
   }
 }
 

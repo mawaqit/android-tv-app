@@ -23,6 +23,7 @@ class MosqueConfig {
   final List<String>? adhanEnabledByPrayer;
   final bool? footer;
   final bool? iqamaMoreImportant;
+  final bool? showPrayerTimesOnMessageScreen;
   final String? timeDisplayFormat;
   final String? backgroundType;
   final String? backgroundMotif;
@@ -65,6 +66,7 @@ class MosqueConfig {
     required this.showCityInTitle,
     required this.showLogo,
     required this.adhanDuration,
+    required this.showPrayerTimesOnMessageScreen,
   });
 
   @override
@@ -98,6 +100,7 @@ class MosqueConfig {
           backgroundType == other.backgroundType &&
           backgroundMotif == other.backgroundMotif &&
           iqamaFullScreenCountdown == other.iqamaFullScreenCountdown &&
+          showPrayerTimesOnMessageScreen == other.showPrayerTimesOnMessageScreen &&
           theme == other.theme &&
           adhanDuration == adhanDuration);
 
@@ -130,6 +133,7 @@ class MosqueConfig {
       backgroundMotif.hashCode ^
       iqamaFullScreenCountdown.hashCode ^
       theme.hashCode ^
+      showPrayerTimesOnMessageScreen.hashCode ^
       adhanDuration.hashCode;
 
   @override
@@ -161,6 +165,7 @@ class MosqueConfig {
         ' backgroundMotif: $backgroundMotif,' +
         ' iqamaFullScreenCountdown: $iqamaFullScreenCountdown,' +
         ' theme: $theme,' +
+        ' showPrayerTimesOnMessageScreen: $showPrayerTimesOnMessageScreen,' +
         ' adhanDuration: $adhanDuration,' +
         '}';
   }
@@ -194,6 +199,7 @@ class MosqueConfig {
     String? backgroundType,
     String? backgroundMotif,
     bool? iqamaFullScreenCountdown,
+    bool? showPrayerTimesOnMessageScreen,
     String? theme,
     int? adhanDuration,
   }) {
@@ -227,6 +233,7 @@ class MosqueConfig {
         backgroundMotif: backgroundMotif ?? this.backgroundMotif,
         iqamaFullScreenCountdown: iqamaFullScreenCountdown ?? this.iqamaFullScreenCountdown,
         theme: theme ?? this.theme,
+        showPrayerTimesOnMessageScreen: showPrayerTimesOnMessageScreen ?? this.showPrayerTimesOnMessageScreen,
         adhanDuration: adhanDuration ?? this.adhanDuration);
   }
 
@@ -260,6 +267,7 @@ class MosqueConfig {
       'backgroundMotif': this.backgroundMotif,
       'iqamaFullScreenCountdown': this.iqamaFullScreenCountdown,
       'theme': this.theme,
+      'showPrayerTimesOnMessageScreen': this.showPrayerTimesOnMessageScreen,
       'adhanDuration': this.adhanDuration,
     };
   }
@@ -296,6 +304,7 @@ class MosqueConfig {
       iqamaFullScreenCountdown: map['iqamaFullScreenCountdown'],
       theme: map['theme'],
       adhanDuration: map['adhanDuration'],
+      showPrayerTimesOnMessageScreen: map['showPrayerTimesOnMessageScreen'],
     );
   }
 
