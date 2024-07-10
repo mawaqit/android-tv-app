@@ -106,6 +106,15 @@ class ThemeNotifier with ChangeNotifier {
     });
   }
 
+  static Gradient quranBackground() => LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xFF28262F),
+          Color(0xFF121117),
+        ],
+      );
+
   void setDarkMode() async {
     isLightTheme = false;
     StorageManager.saveData('themeMode', 'dark');

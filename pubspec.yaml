@@ -129,6 +129,13 @@ dependencies:
   flutter_kurdish_localization: ^1.0.8
 
 
+  # manage files and folders
+  flutter_archive: ^6.0.3
+  dart_mappable: ^4.2.2
+  json_annotation: ^4.9.0
+  shimmer: ^3.0.0
+  rxdart: ^0.27.7
+  just_audio_background: ^0.0.1-beta.11
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -136,11 +143,14 @@ dev_dependencies:
   # to get unused packages run
   # flutter pub run dependency_validator
   dependency_validator:
-  build_runner: ^2.1.4
+  build_runner: ^2.4.9
   http_mock_adapter: ^0.6.1
 
   flutter_lints: ^3.0.2
   hive_generator: ^2.0.1
+  mocktail: ^1.0.3
+  dart_mappable_builder: ^4.2.3
+  json_serializable: ^6.8.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -172,6 +182,8 @@ flutter:
     - assets/svg/
     - assets/voices/
     - assets/voices/adhan/
+    - assets/img/quran/
+    - assets/icon/
 
   fonts:
     - family: MawaqitIcons
