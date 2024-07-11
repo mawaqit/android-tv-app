@@ -26,6 +26,7 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 final logger = Logger();
 
@@ -34,13 +35,13 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
+      tz.initializeTimeZones();
       await Hive.initFlutter();
-      runApp(
-        ProviderScope(
-          child: MyApp(),
-          observers: [RiverpodLogger()],
-        ),
-      );
+
+      runApp(ProviderScope(
+        child: MyApp(),
+        observers: [RiverpodLogger()],
+      ));
     },
   );
 }

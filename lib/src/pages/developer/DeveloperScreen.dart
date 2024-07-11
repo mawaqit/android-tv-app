@@ -27,6 +27,8 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../main.dart';
+
 typedef ForcedScreen = ({WidgetBuilder builder, String name});
 
 typedef TestMosque = ({String name, String uuid});

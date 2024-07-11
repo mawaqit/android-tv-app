@@ -13,6 +13,7 @@ class OnboardingState extends Equatable {
   String mosqueId;
   MosqueMode mosqueMode;
   bool termsAccepted;
+  final bool isRootedDevice;
 
   OnboardingState({
     required this.language,
@@ -20,6 +21,7 @@ class OnboardingState extends Equatable {
     required this.mosqueId,
     required this.termsAccepted,
     required this.mosqueMode,
+    this.isRootedDevice = false,
   });
 
   factory OnboardingState.initial() {
@@ -29,6 +31,7 @@ class OnboardingState extends Equatable {
       orientation: Orientation.portrait,
       mosqueId: '',
       termsAccepted: false,
+      isRootedDevice: false,
     );
   }
 
@@ -38,16 +41,25 @@ class OnboardingState extends Equatable {
     String? mosqueId,
     bool? termsAccepted,
     MosqueMode? mosqueMode,
+    bool? isRootedDevice,
   }) {
     return OnboardingState(
       language: language ?? this.language,
       orientation: orientation ?? this.orientation,
       mosqueId: mosqueId ?? this.mosqueId,
       mosqueMode: mosqueMode ?? this.mosqueMode,
+      isRootedDevice: isRootedDevice ?? this.isRootedDevice,
       termsAccepted: termsAccepted ?? this.termsAccepted,
     );
   }
 
   @override
-  List<Object> get props => [language, orientation, mosqueId, termsAccepted, mosqueMode];
+  List<Object> get props => [
+        language,
+        orientation,
+        mosqueId,
+        termsAccepted,
+        mosqueMode,
+        isRootedDevice,
+      ];
 }
