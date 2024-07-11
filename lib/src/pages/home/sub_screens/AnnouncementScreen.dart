@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,8 +15,10 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../services/user_preferences_manager.dart';
 import '../../../state_management/workflow/announcement_workflow.dart';
 import '../../../state_management/workflow/workflow_notifier.dart';
+import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import '../widgets/workflows/announcement_workflow.dart';
 
@@ -37,8 +41,13 @@ class AnnouncementScreen extends ConsumerWidget {
     ref.listen(announcementWorkflowProvider, (prev, next) {
       if (next == WorkflowState.finished) onDone?.call();
     });
-
+    bool? showPrayerTimesOnMessageScreen =
+        context.select<MosqueManager, bool?>((mosque) => mosque.mosqueConfig!.showPrayerTimesOnMessageScreen);
+    bool announcementMode =
+        context.select<UserPreferencesManager, bool>((userPreference) => userPreference.announcementsOnly);
+    log('announcement: ui: showPrayerTimesOnMessageScreen $showPrayerTimesOnMessageScreen , announcementMode $announcementMode');
     if (announcements.isEmpty) return NormalHomeSubScreen();
+    final mosqueProvider = context.read<MosqueManager>();
 
     return Stack(
       alignment: Alignment.bottomCenter,
@@ -59,9 +68,26 @@ class AnnouncementScreen extends ConsumerWidget {
             child: AboveSalahBar(),
           ),
         ),
-        IgnorePointer(
-          child: Padding(padding: EdgeInsets.only(bottom: 1.5.vh), child: ResponsiveMiniSalahBarWidget()),
-        )
+
+        announcementMode
+            ? (showPrayerTimesOnMessageScreen ?? false
+                ? IgnorePointer(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 1.5.vh),
+                      child: mosqueProvider.times!.isTurki
+                          ? ResponsiveMiniSalahBarTurkishWidget()
+                          : ResponsiveMiniSalahBarWidget(),
+                    ),
+                  )
+                : const SizedBox.shrink())
+            : IgnorePointer(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 1.5.vh),
+                  child: mosqueProvider.times!.isTurki
+                      ? ResponsiveMiniSalahBarTurkishWidget()
+                      : ResponsiveMiniSalahBarWidget(),
+                ),
+              )
       ],
     );
   }

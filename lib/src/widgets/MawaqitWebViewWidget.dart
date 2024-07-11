@@ -22,6 +22,8 @@ import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../services/user_preferences_manager.dart';
+
 /// responsible for rendering a web-view for mawaqit
 class MawaqitWebViewWidget extends StatefulWidget {
   final String? path;
@@ -118,6 +120,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
     super.build(context);
     print(widget.path);
     final settings = Provider.of<SettingsManager>(context).settings;
+    final userPreferences = context.watch<UserPreferencesManager>();
 
     return Focus(
       autofocus: true,
@@ -136,7 +139,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
         fit: StackFit.expand,
         children: [
           if (hasError)
-            buildErrorWidget()
+            buildErrorWidget(userPreferences)
           else
             InAppWebView(
               key: ValueKey(widget.path),
@@ -284,10 +287,10 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
     );
   }
 
-  Widget buildErrorWidget() {
+  Widget buildErrorWidget(userPreferences) {
     return WillPopScope(
       child: OfflineScreen(onPressedTryAgain: () {
-        webViewController?.reload();
+        userPreferences.webViewMode = false;
       }),
       onWillPop: () async {
         // print('will pop');

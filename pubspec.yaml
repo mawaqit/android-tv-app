@@ -16,7 +16,8 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-version: 1.10.1+1
+version: 1.11.0+1
+
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -48,6 +49,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   flutter_spinkit: ^5.2.0
   page_transition: ^2.0.9
+  fluttertoast: ^8.0.8
   #modal_progress_hud: ^0.1.3
   flutter_inappwebview: ^5.7.2+3
 
@@ -101,6 +103,8 @@ dependencies:
   sizer: ^2.0.15
 
   timeago_flutter: ^3.4.0
+  timezone: 
+  wifi_scan: ^0.4.1
 
   #  media
   youtube_player_flutter: ^8.1.2
@@ -122,6 +126,8 @@ dependencies:
 
   # internet connectivity checker
   internet_connection_checker_plus: ^1.0.1
+  flutter_kurdish_localization: ^1.0.8
+
 
 dev_dependencies:
   flutter_test:
@@ -132,6 +138,7 @@ dev_dependencies:
   dependency_validator:
   build_runner: ^2.1.4
   http_mock_adapter: ^0.6.1
+
   flutter_lints: ^3.0.2
   hive_generator: ^2.0.1
 # For information on the generic Dart part of this file, see the

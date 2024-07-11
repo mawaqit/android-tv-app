@@ -28,10 +28,13 @@ import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '../helpers/AppDate.dart';
 import '../services/FeatureManager.dart';
+import 'onBoarding/widgets/onboarding_timezone_selector.dart';
+import '../services/storage_manager.dart';
 
 enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
 
@@ -48,6 +51,7 @@ class _SplashScreen extends State<Splash> {
 
   void initState() {
     super.initState();
+
     _initApplication().logPerformance('Init application');
   }
 
@@ -72,13 +76,22 @@ class _SplashScreen extends State<Splash> {
       await Future.delayed(Duration(seconds: 3));
       SystemChrome.restoreSystemUIOverlays();
     });
+    _saveScheduledEventsToLocale();
+  }
+
+  Future<void> _saveScheduledEventsToLocale() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    logger.d("Saving into local");
+
+    prefs.setBool("isEventsSet", false);
   }
 
   Future<Settings> _initSettings() async {
+    FeatureManagerProvider.initialize(context);
     await context.read<AppLanguage>().fetchLocale();
     await context.read<MosqueManager>().init().logPerformance("Mosque manager");
     final settingsManage = context.read<SettingsManager>();
-    FeatureManagerProvider.initialize(context);
     await settingsManage.init().logPerformance('Setting manager');
     return settingsManage.settings;
   }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
@@ -47,6 +48,7 @@ class TimeShiftManager {
 
   // Initialize time-related properties from shared preferences or current time.
   Future<void> initializeTimes() async {
+    log('Initializing TimeShiftManager...');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     _shift = prefs.getInt(_shiftKey) ?? 0;
