@@ -223,6 +223,9 @@
   "update": "Update",
   "automaticUpdate": "Notify update",
   "automaticUpdateDescription": "Enable notify update to receive the latest features and improvements",
+  "powerOnScreen":"Power on the screen",
+  "powerOffScreen":"Power off the screen",
+  "deviceSettings":"Device Settings",
   "later": "Later",
   "downloadQuran": "Download Quran",
   "quran": "Quran",
@@ -238,7 +241,6 @@
   "quranIsAlreadyDownloaded": "Quran is already downloaded",
   "chooseReciter": "Choose Reciter",
   "reciteType": "Recite Type",
-  "powerOnScreen":"Power on the screen",
-  "powerOffScreen":"Power off the screen",
-  "deviceSettings":"Device Settings"
+  "readingMode": "I want to read",
+  "listeningMode": "I want to listen"
 }

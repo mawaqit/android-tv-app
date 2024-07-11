@@ -103,7 +103,7 @@ dependencies:
   sizer: ^2.0.15
 
   timeago_flutter: ^3.4.0
-  timezone: 
+  timezone:
   wifi_scan: ^0.4.1
 
   #  media
@@ -127,7 +127,6 @@ dependencies:
   # internet connectivity checker
   internet_connection_checker_plus: ^1.0.1
   flutter_kurdish_localization: ^1.0.8
-
 
   # manage files and folders
   flutter_archive: ^6.0.3

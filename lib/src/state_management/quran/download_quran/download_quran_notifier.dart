@@ -29,7 +29,14 @@ class DownloadQuranNotifier extends AsyncNotifier<DownloadQuranState> {
       if (localVersion == null || remoteVersion != localVersion) {
         state = AsyncData(UpdateAvailable(remoteVersion));
       } else {
-        state = AsyncData(NoUpdate(remoteVersion));
+        final savePath = await getApplicationSupportDirectory();
+        final svgFolderPath = '${savePath.path}/quran';
+        state = AsyncData(
+          NoUpdate(
+            version: remoteVersion,
+            svgFolderPath: svgFolderPath,
+          ),
+        );
       }
     } catch (e, s) {
       state = AsyncError(e, s);
@@ -83,10 +90,21 @@ class DownloadQuranNotifier extends AsyncNotifier<DownloadQuranState> {
         await downloadQuranRepoImpl.deleteZipFile(remoteVersion);
 
         // Notify the success state with the new version
-        state = AsyncData(Success(remoteVersion));
+        state = AsyncData(
+          Success(
+            version: remoteVersion,
+            svgFolderPath: destinationDir.path,
+          ),
+        );
       } else {
-        // Notify that the Quran is already up to date
-        state = AsyncData(NoUpdate(remoteVersion));
+        final savePath = await getApplicationSupportDirectory();
+        final svgFolderPath = '${savePath.path}/quran';
+        state = AsyncData(
+          NoUpdate(
+            version: remoteVersion,
+            svgFolderPath: svgFolderPath,
+          ),
+        );
       }
     } on CancelDownloadException catch (e, s) {
       state = AsyncData(CancelDownload());

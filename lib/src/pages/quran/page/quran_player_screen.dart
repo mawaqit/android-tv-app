@@ -52,6 +52,7 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
         return true;
       },
       child: QuranBackground(
+        isSwitch: false,
         screen: quranPlayerState.maybeWhen(
           orElse: () {
             return const SizedBox();
