@@ -11,6 +11,7 @@ import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
 import '../../../state_management/random_hadith/random_hadith_notifier.dart';
+import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 
 class RandomHadithScreen extends ConsumerStatefulWidget {
   const RandomHadithScreen({Key? key, this.onDone}) : super(key: key);
@@ -72,7 +73,7 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
             },
           ),
         ),
-        ResponsiveMiniSalahBarWidget(),
+        mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 10),
       ],
     );
