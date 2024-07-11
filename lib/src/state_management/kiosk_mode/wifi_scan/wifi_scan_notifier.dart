@@ -5,13 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_state.dart';
+import 'package:wifi_hunter/wifi_hunter.dart';
+import 'package:wifi_hunter/wifi_hunter_result.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 
 import '../../../pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 
 class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
   final TimeShiftManager _timeManager = TimeShiftManager();
-  List<WiFiAccessPoint> secondResults = [];
+  WiFiHunterResult wiFiHunterResult = WiFiHunterResult();
   @override
   Future<WifiScanState> build() async {
     state = AsyncData(WifiScanState(
@@ -22,31 +24,21 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
     await _scan();
     return state.value!;
   }
-
+  
+  Future<void> huntWiFis() async {
+    try {} on PlatformException catch (exception) {
+      print(exception.toString());
+    }
+  }
   Future<void> _scan() async {
     state = AsyncLoading();
     try {
-      if (_timeManager.deviceModel != "MAWAQITBOX V2") {
-        final can = await WiFiScan.instance.canStartScan();
-        if (can != CanStartScan.yes) {
-          logger.e("kiosk mode: wifi_scan: can't start scan");
-          return;
-        }
-        final canGetScannedResults =
-            await WiFiScan.instance.canGetScannedResults();
-        if (canGetScannedResults != CanGetScannedResults.yes) {
-          logger.e("kiosk mode: wifi_scan: can't get scanned results");
-          return;
-        }
-      }
-      final results = await WiFiScan.instance.getScannedResults();
+     
+      final wiFiHunterResult = await WiFiHunter.huntWiFiNetworks;
 
-      if (results.isEmpty) {
-        secondResults = await WiFiScan.instance.getScannedResults();
-      }
       state = AsyncData(
         state.value!.copyWith(
-            accessPoints: secondResults,
+            accessPoints: wiFiHunterResult!.results,
             hasPermission: true,
             status: Status.connecting),
       );

@@ -9,6 +9,7 @@ import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_notifier.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_state.dart';
+import 'package:wifi_hunter/wifi_hunter_result.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 
 const String nativeMethodsChannel = 'nativeMethodsChannel';
@@ -31,14 +32,14 @@ class _OnBoardingWifiSelectorState
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (_timeManager.deviceModel == "MAWAQITBOX V2") {
+      if (_timeManager.deviceModel == "MAWAQITBOX V2") { 
         await addLocationPermission();
         await addFineLocationPermission();
 
         await ref.read(wifiScanNotifierProvider.notifier).retry();
       } else {
         await ref.read(wifiScanNotifierProvider.notifier).retry();
-      }
+      } 
     });
   }
 
@@ -163,8 +164,8 @@ class _OnBoardingWifiSelectorState
     );
   }
 
-  List<WiFiAccessPoint> _filterAccessPoints(
-      List<WiFiAccessPoint> accessPoints) {
+List<WiFiHunterResultEntry> _filterAccessPoints(
+      List<WiFiHunterResultEntry> accessPoints) {
     final seenSSIDs = <String>{};
     return accessPoints.where((ap) {
       if (ap.ssid == "**Hidden SSID**") {
@@ -179,7 +180,8 @@ class _OnBoardingWifiSelectorState
   }
 
   _buildAccessPointsList(
-      List<WiFiAccessPoint> accessPoints, bool _hasPermission, FocusNode node) {
+      List<WiFiHunterResultEntry> accessPoints,
+      bool _hasPermission, FocusNode node) {
     final filteredAccessPoints = _filterAccessPoints(accessPoints);
 
     return Container(
@@ -202,7 +204,7 @@ class _OnBoardingWifiSelectorState
 }
 
 class _AccessPointTile extends ConsumerStatefulWidget {
-  final WiFiAccessPoint accessPoint;
+  final WiFiHunterResultEntry accessPoint;
   final bool hasPermission;
   final void Function() onSelect;
   final FocusNode focusNode;
