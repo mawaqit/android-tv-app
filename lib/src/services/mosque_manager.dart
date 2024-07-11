@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/main.dart';
+import 'package:mawaqit/src/domain/model/failure/mosque/mosque_failure.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
@@ -169,6 +170,12 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
 
     /// if getting item returns an error
     onItemError(e, stack) {
+      if (e is MosqueFailure) {
+        mosque = null;
+        notifyListeners();
+        return;
+      }
+
       logger.e(e, stackTrace: stack);
 
       mosque = null;
