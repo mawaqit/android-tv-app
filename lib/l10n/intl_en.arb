@@ -224,8 +224,8 @@
   "automaticUpdate": "Notify update",
   "automaticUpdateDescription": "Enable notify update to receive the latest features and improvements",
   "later": "Later",
+  "checkInternetLegacyMode": "You must connect to internet to use the legacy mode",
   "powerOnScreen":"Power on the screen",
   "powerOffScreen":"Power off the screen",
   "deviceSettings":"Device Settings"
 }
-

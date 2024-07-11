@@ -63,6 +63,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     final userPreferences = context.watch<UserPreferencesManager>();
     final themeManager = context.watch<ThemeNotifier>();
     final String checkInternet = S.of(context).noInternet;
+    final String checkInternetLegacyMode = S.of(context).checkInternetLegacyMode;
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
@@ -232,7 +233,35 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
                     icon: Icon(Icons.online_prediction, size: 35),
                     value: userPreferences.webViewMode,
-                    onChanged: (value) => userPreferences.webViewMode = value,
+                    onChanged: (value) async {
+                      await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                      ref.watch(connectivityProvider).maybeWhen(
+                        orElse: () {
+                          showCheckInternetDialog(
+                            context: context,
+                            onRetry: () {
+                              AppRouter.pop();
+                            },
+                            title: checkInternet,
+                            content: checkInternetLegacyMode,
+                          );
+                        },
+                        data: (isConnectedToInternet) {
+                          if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                            showCheckInternetDialog(
+                              context: context,
+                              onRetry: () {
+                                AppRouter.pop();
+                              },
+                              title: checkInternet,
+                              content: checkInternetLegacyMode,
+                            );
+                          } else {
+                            userPreferences.webViewMode = value;
+                          }
+                        },
+                      );
+                    },
                   ),
                   _screenLock(context, ref),
                 ],
