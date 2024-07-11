@@ -26,20 +26,14 @@ class OnBoardingWifiSelector extends ConsumerStatefulWidget {
 
 class _OnBoardingWifiSelectorState
     extends ConsumerState<OnBoardingWifiSelector> {
-  final TimeShiftManager _timeManager = TimeShiftManager();
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (_timeManager.deviceModel == "MAWAQITBOX V2") { 
-        await addLocationPermission();
-        await addFineLocationPermission();
-
+    
         await ref.read(wifiScanNotifierProvider.notifier).retry();
-      } else {
-        await ref.read(wifiScanNotifierProvider.notifier).retry();
-      } 
+      
     });
   }
 

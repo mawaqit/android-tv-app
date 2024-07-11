@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:flutter/services.dart';
 import '../../../../i18n/l10n.dart';
@@ -28,10 +29,31 @@ class _OnBoardingTimeZoneSelectorState
   int selectedCountryIndex = -1;
   int selectedTimezoneIndex = -1;
   bool isViewingTimezones = false;
+  final TimeShiftManager _timeManager = TimeShiftManager();
+
+  Future<void> addLocationPermission() async {
+    try {
+      await platform.invokeMethod('addLocationPermission');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: location permission: error: $e");
+    }
+  }
+
+  Future<void> addFineLocationPermission() async {
+    try {
+      await platform.invokeMethod('grantFineLocationPermission');
+    } on PlatformException catch (e) {
+      logger.e("kiosk mode: location permission: error: $e");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await addLocationPermission();
+      await addFineLocationPermission();
+    });
     countriesList = Countries.list;
     selectedCountryTimezones = [];
   }
