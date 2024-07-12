@@ -3,14 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/helpers/DateUtils.dart';
-import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
-import 'package:provider/provider.dart';
-import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/pages/quran/widget/side_menu.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:shimmer/shimmer.dart';
@@ -51,10 +46,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final timeNow = context.select<MosqueManager, DateTime>((value) => value.mosqueDate());
-    final mosqueCountryCode = context.select<MosqueManager, String>((value) => value.mosque?.countryCode ?? '');
-    final lang = Localizations.localeOf(context).languageCode;
-    final georgianDate = timeNow.formatIntoMawaqitFormat(local: '${lang}_$mosqueCountryCode');
     final quranState = ref.watch(quranNotifierProvider);
     return QuranBackground(
       isSwitch: true,
@@ -62,13 +53,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.light,
-        title: Text(
-          georgianDate,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 15.sp,
-          ),
-        ),
       ),
       screen: Row(
         children: [
@@ -77,32 +61,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 24),
-                // SizedBox(height: 32),
-                // Focus(
-                //   debugLabel: 'Search Surahs',
-                //   focusNode: _searchFocusNode,
-                //   child: TextField(
-                //     readOnly: true,
-                //     autofocus: false,
-                //     cursorColor: Colors.white,
-                //     decoration: InputDecoration(
-                //       hintText: 'Search surahs...',
-                //       hintStyle: TextStyle(color: Colors.white70),
-                //       filled: true,
-                //       fillColor: Colors.white.withOpacity(0.2),
-                //       border: OutlineInputBorder(
-                //         borderRadius: BorderRadius.circular(30),
-                //         borderSide: BorderSide.none,
-                //       ),
-                //       focusedBorder: OutlineInputBorder(
-                //         borderRadius: BorderRadius.circular(30),
-                //         borderSide: BorderSide(color: Colors.white),
-                //       ),
-                //     ),
-                //     style: TextStyle(color: Colors.white),
-                //   ),
-                // ),
+                SizedBox(height: 10),
                 Expanded(
                   child: quranState.when(
                     data: (data) {
@@ -161,18 +120,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
               ],
             ),
           ),
-          quranState.when(
-            data: (data) => SideMenu(),
-            error: (error, stack) {
-              log('Error: $error\n$stack');
-              return Center(
-                child: Text(
-                  'Error: $error',
-                ),
-              );
-            },
-            loading: () => SideMenu(),
-          )
         ],
       ),
     );
