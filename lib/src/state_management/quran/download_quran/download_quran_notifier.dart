@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
 import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DownloadQuranNotifier extends AsyncNotifier<DownloadQuranState> {
@@ -88,8 +89,10 @@ class DownloadQuranNotifier extends AsyncNotifier<DownloadQuranState> {
 
         // Delete the downloaded ZIP file
         await downloadQuranRepoImpl.deleteZipFile(remoteVersion);
+        Future.microtask(() {
+          ref.invalidate(quranReadingNotifierProvider);
+        });        // Notify the success state with the new version
 
-        // Notify the success state with the new version
         state = AsyncData(
           Success(
             version: remoteVersion,
