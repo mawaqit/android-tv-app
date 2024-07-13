@@ -217,7 +217,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   child: IconButton(
                     icon: Icon(Icons.list, color: Colors.black.withOpacity(0.7)),
                     onPressed: () {
-                      _showPageSelector(context, quranReadingState.totalPages);
+                      _showPageSelector(context, quranReadingState.totalPages, quranReadingState.currentPage);
                     },
                   ),
                 ),
@@ -275,7 +275,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     return Directionality.of(context) == TextDirection.rtl ? Icons.arrow_back_ios : Icons.arrow_forward_ios;
   }
 
-  void _showPageSelector(BuildContext context, int totalPages) {
+  void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -292,18 +292,19 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             ),
           ),
           content: Container(
-            width: double.maxFinite, // Set a fixed height for the grid
+            width: double.maxFinite,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 6, // Number of columns in the grid
-                childAspectRatio: 3 / 2, // Adjust the aspect ratio of grid items
+                crossAxisCount: 6,
+                childAspectRatio: 3 / 2,
               ),
               itemCount: totalPages,
               itemBuilder: (BuildContext context, int index) {
-                final isSelected = index == (quranIndex * 2);
+                final isSelected = index == currentPage;
                 return GestureDetector(
                   onTap: () {
-                    ref.read(quranReadingNotifierProvider.notifier).updatePage(index ~/ 2);
+                    // Update to use the correct page number
+                    ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
                     Navigator.of(context).pop();
                   },
                   child: Container(
