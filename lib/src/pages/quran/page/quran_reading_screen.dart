@@ -130,25 +130,27 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     final rightPageIndex = leftPageIndex + 1;
                     return Stack(
                       children: [
-                        // Left Page
-                        if (leftPageIndex < quranReadingState.svgs.length)
+                        // Right Page (now on the left)
+                        if (rightPageIndex < quranReadingState.svgs.length)
                           Positioned(
                             left: 12.w,
                             top: 0,
                             bottom: 0,
                             right: MediaQuery.of(context).size.width / 2,
-                            child:
-                                _buildSvgPicture(quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length]),
+                            child: _buildSvgPicture(
+                              quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
+                            ),
                           ),
-                        // Right Page
-                        if (rightPageIndex < quranReadingState.svgs.length)
+                        // Left Page (now on the right)
+                        if (leftPageIndex < quranReadingState.svgs.length)
                           Positioned(
                             right: 12.w,
                             top: 0,
                             bottom: 0,
                             left: MediaQuery.of(context).size.width / 2,
                             child: _buildSvgPicture(
-                                quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length]),
+                              quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
+                            ),
                           ),
                       ],
                     );
@@ -194,8 +196,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       ),
                       child: Text(
                         S.of(context).quranReadingPage(
-                              quranReadingState.currentPage * 2 + 1,
-                              quranReadingState.currentPage * 2 + 2,
+                              quranReadingState.currentPage + 1, // Right page (now on the left)
+                              quranReadingState.currentPage + 2, // Left page (now on the right)
                               quranReadingState.totalPages,
                             ),
                         style: TextStyle(
@@ -264,7 +266,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       ),
     );
   }
-
 
   IconData _getBackIcon(BuildContext context) {
     return Directionality.of(context) == TextDirection.rtl ? Icons.arrow_forward_ios : Icons.arrow_back_ios;
