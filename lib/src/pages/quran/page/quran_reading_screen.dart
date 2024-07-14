@@ -128,31 +128,39 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   itemBuilder: (context, index) {
                     final leftPageIndex = index * 2;
                     final rightPageIndex = leftPageIndex + 1;
-                    return Stack(
-                      children: [
-                        // Right Page (now on the left)
-                        if (rightPageIndex < quranReadingState.svgs.length)
-                          Positioned(
-                            left: 12.w,
-                            top: 0,
-                            bottom: 0,
-                            right: MediaQuery.of(context).size.width / 2,
-                            child: _buildSvgPicture(
-                              quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
-                            ),
-                          ),
-                        // Left Page (now on the right)
-                        if (leftPageIndex < quranReadingState.svgs.length)
-                          Positioned(
-                            right: 12.w,
-                            top: 0,
-                            bottom: 0,
-                            left: MediaQuery.of(context).size.width / 2,
-                            child: _buildSvgPicture(
-                              quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
-                            ),
-                          ),
-                      ],
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        final pageWidth = constraints.maxWidth / 2;
+                        final pageHeight = constraints.maxHeight;
+                        final bottomPadding = pageHeight * 0.05; // 5% of screen height for bottom padding
+
+                        return Stack(
+                          children: [
+                            // Right Page (now on the left)
+                            if (rightPageIndex < quranReadingState.svgs.length)
+                              Positioned(
+                                left: 12.w,
+                                top: 0,
+                                bottom: bottomPadding,
+                                width: pageWidth * 0.9,
+                                child: _buildSvgPicture(
+                                  quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
+                                ),
+                              ),
+                            // Left Page (now on the right)
+                            if (leftPageIndex < quranReadingState.svgs.length)
+                              Positioned(
+                                right: 12.w,
+                                top: 0,
+                                bottom: bottomPadding,
+                                width: pageWidth * 0.9,
+                                child: _buildSvgPicture(
+                                  quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
+                                ),
+                              ),
+                          ],
+                        );
+                      },
                     );
                   },
                 ),
@@ -184,53 +192,48 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 ),
                 // Page Number
                 Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 5,
-                  child: Center(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        S.of(context).quranReadingPage(
-                              quranReadingState.currentPage + 1, // Right page (now on the left)
-                              quranReadingState.currentPage + 2, // Left page (now on the right)
-                              quranReadingState.totalPages,
-                            ),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8.sp,
-                          fontWeight: FontWeight.bold,
+                  left: 15.w,
+                  right: 15.w,
+                  bottom: 1.h,
+                  child: GestureDetector(
+                    onTap: () => _showPageSelector(
+                      context,
+                      quranReadingState.totalPages,
+                      quranReadingState.currentPage,
+                    ),
+                    child: Center(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          S.of(context).quranReadingPage(
+                                quranReadingState.currentPage + 1, // Right page (now on the left)
+                                quranReadingState.currentPage + 2, // Left page (now on the right)
+                                quranReadingState.totalPages,
+                              ),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 8.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                // Page Selector
-                Positioned(
-                  left: Directionality.of(context) != TextDirection.rtl ? 10 : null,
-                  right: Directionality.of(context) != TextDirection.ltr ? 10 : null,
-                  top: 10,
-                  child: IconButton(
-                    icon: Icon(Icons.list, color: Colors.black.withOpacity(0.7)),
-                    onPressed: () {
-                      _showPageSelector(context, quranReadingState.totalPages, quranReadingState.currentPage);
-                    },
-                  ),
-                ),
                 // back button
                 Positioned(
-                  left: Directionality.of(context) == TextDirection.rtl ? 10 : null,
-                  right: Directionality.of(context) == TextDirection.ltr ? 10 : null,
+                  left: Directionality.of(context) == TextDirection.ltr ? 10 : null,
+                  right: Directionality.of(context) == TextDirection.rtl ? 10 : null,
                   child: SwitchButton(
                     opacity: 0.7,
-                    iconSize: 15.sp,
-                    icon: Directionality.of(context) != TextDirection.ltr
+                    iconSize: 17.sp,
+                    icon: Directionality.of(context) == TextDirection.ltr
                         ? Icons.arrow_back_rounded
-                        : Icons.arrow_forward_rounded,
+                        : Icons.arrow_back_rounded,
                     onPressed: () {
                       log('quran: QuranReadingScreen: back');
                       Navigator.pop(context);
