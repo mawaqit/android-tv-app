@@ -231,9 +231,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   child: SwitchButton(
                     opacity: 0.7,
                     iconSize: 17.sp,
-                    icon: Directionality.of(context) == TextDirection.ltr
-                        ? Icons.arrow_back_rounded
-                        : Icons.arrow_back_rounded,
+                    icon: Icons.arrow_back_rounded,
                     onPressed: () {
                       log('quran: QuranReadingScreen: back');
                       Navigator.pop(context);
