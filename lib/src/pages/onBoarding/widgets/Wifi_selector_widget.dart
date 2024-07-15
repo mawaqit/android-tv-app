@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
@@ -37,31 +38,16 @@ class _OnBoardingWifiSelectorState
     });
   }
 
-  Future<void> addLocationPermission() async {
-    try {
-      await platform.invokeMethod('addLocationPermission');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: location permission: error: $e");
-    }
-  }
 
-  Future<void> addFineLocationPermission() async {
-    try {
-      await platform.invokeMethod('grantFineLocationPermission');
-    } on PlatformException catch (e) {
-      logger.e("kiosk mode: location permission: error: $e");
-    }
-  }
 
   void _showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.black,
-      textColor: Colors.white,
-      fontSize: 16.0,
+    showToast(
+      message,
+      context: context,
+      position: StyledToastPosition.bottom,
+      duration: Duration(seconds: 4),
+      curve: Curves.elasticOut,
+      reverseCurve: Curves.linear,
     );
   }
 
@@ -218,7 +204,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
   final TextEditingController passwordController = TextEditingController();
   bool _showPassword = false;
   void _showToast(String message) {
-    Fluttertoast.showToast(
+/*     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
@@ -226,6 +212,14 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
       backgroundColor: Colors.black,
       textColor: Colors.white,
       fontSize: 16.0,
+    ); */
+    showToast(
+      message,
+      context: context,
+      position: StyledToastPosition.bottom,
+      duration: Duration(seconds: 4),
+      curve: Curves.elasticOut,
+      reverseCurve: Curves.linear,
     );
   }
 

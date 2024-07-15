@@ -128,6 +128,7 @@ dependencies:
   internet_connection_checker_plus: ^1.0.1
   flutter_kurdish_localization: ^1.0.8
   wifi_hunter: ^1.1.1+2
+  flutter_styled_toast: ^2.2.1
 
 
 dev_dependencies:
