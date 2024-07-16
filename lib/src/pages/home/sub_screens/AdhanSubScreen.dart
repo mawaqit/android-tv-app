@@ -16,6 +16,7 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/mosque_header.dart';
+import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 
 class AdhanSubScreen extends StatefulWidget {
   const AdhanSubScreen({Key? key, this.onDone, this.forceAdhan = false}) : super(key: key);
@@ -116,7 +117,9 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
               ),
             ),
           ),
-          ResponsiveMiniSalahBarWidget(activeItem: mosqueProvider.salahIndex),
+          mosqueProvider.times!.isTurki
+              ? ResponsiveMiniSalahBarTurkishWidget(activeItem: mosqueProvider.salahIndex)
+              : ResponsiveMiniSalahBarWidget(activeItem: mosqueProvider.salahIndex),
           SizedBox(height: 2.vh),
         ],
       ),

@@ -13,6 +13,8 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
+
 class FajrWakeUpSubScreen extends StatefulWidget {
   const FajrWakeUpSubScreen({Key? key, this.onDone}) : super(key: key);
 
@@ -97,7 +99,7 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
               ),
             ),
           ),
-          ResponsiveMiniSalahBarWidget(),
+          mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget()
         ],
       ),
     );
