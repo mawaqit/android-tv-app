@@ -45,3 +45,21 @@ class TurnOnOffTvConstant {
   static const String kMinuteBeforeKey = 'selectedMinuteBefore';
   static const String kMinuteAfterKey = 'selectedMinuteAfter';
 }
+
+abstract class AnnouncementConstant {
+  static const String kBoxName = "announcement";
+}
+
+abstract class MosqueManagerConstant {
+  static const String kMosqueUUID = "mosqueUUID";
+}
+
+abstract class QuranConstant {
+  static const String kQuranVersionLink = "'https://mawaqit.github.io/mawaqit-announcements/public/quran/config.json'";
+  static const String kQuranLocalVersion = 'quran_local_version';
+  static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
+  static const String kSurahBox = 'surah_box';
+  static const String kReciterBox = 'reciter_box';
+  static const String kQuranModePref = 'quran_mode';
+  static const String kSavedCurrentPage = 'saved_current_page';
+}
