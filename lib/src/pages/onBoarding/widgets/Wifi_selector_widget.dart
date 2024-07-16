@@ -16,8 +16,7 @@ import 'package:wifi_scan/wifi_scan.dart';
 const String nativeMethodsChannel = 'nativeMethodsChannel';
 
 class OnBoardingWifiSelector extends ConsumerStatefulWidget {
-  const OnBoardingWifiSelector({Key? key, required this.onSelect})
-      : super(key: key);
+  const OnBoardingWifiSelector({Key? key, required this.onSelect}) : super(key: key);
 
   final void Function() onSelect;
 
@@ -25,20 +24,15 @@ class OnBoardingWifiSelector extends ConsumerStatefulWidget {
   _OnBoardingWifiSelectorState createState() => _OnBoardingWifiSelectorState();
 }
 
-class _OnBoardingWifiSelectorState
-    extends ConsumerState<OnBoardingWifiSelector> {
+class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector> {
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-    
-        await ref.read(wifiScanNotifierProvider.notifier).retry();
-      
+      await ref.read(wifiScanNotifierProvider.notifier).retry();
     });
   }
-
-
 
   void _showToast(String message) {
     showToast(
@@ -65,17 +59,13 @@ class _OnBoardingWifiSelectorState
           style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.w700,
-            color: themeData.brightness == Brightness.dark
-                ? null
-                : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ),
         const SizedBox(height: 10),
         Divider(
           thickness: 1,
-          color: themeData.brightness == Brightness.dark
-              ? Colors.white
-              : Colors.black,
+          color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
         ),
         const SizedBox(height: 10),
         Text(
@@ -83,9 +73,7 @@ class _OnBoardingWifiSelectorState
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15,
-            color: themeData.brightness == Brightness.dark
-                ? null
-                : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ),
         SizedBox(height: 20),
@@ -113,8 +101,7 @@ class _OnBoardingWifiSelectorState
               ),
               icon: const Icon(Icons.refresh),
               label: Text(S.of(context).scanAgain),
-              onPressed: () async =>
-                  await ref.read(wifiScanNotifierProvider.notifier).retry(),
+              onPressed: () async => await ref.read(wifiScanNotifierProvider.notifier).retry(),
             ),
           ],
         ),
@@ -123,8 +110,7 @@ class _OnBoardingWifiSelectorState
           child: wifiScanState.when(
             data: (state) => state.accessPoints.isEmpty
                 ? Text(S.of(context).noScannedResultsFound)
-                : _buildAccessPointsList(state.accessPoints,
-                    state.hasPermission, accessPointsFocusNode),
+                : _buildAccessPointsList(state.accessPoints, state.hasPermission, accessPointsFocusNode),
             error: (error, s) {
               _showToast('Error fetching access points');
 
@@ -143,8 +129,7 @@ class _OnBoardingWifiSelectorState
     );
   }
 
-List<WiFiHunterResultEntry> _filterAccessPoints(
-      List<WiFiHunterResultEntry> accessPoints) {
+  List<WiFiHunterResultEntry> _filterAccessPoints(List<WiFiHunterResultEntry> accessPoints) {
     final seenSSIDs = <String>{};
     return accessPoints.where((ap) {
       if (ap.ssid == "**Hidden SSID**") {
@@ -158,9 +143,7 @@ List<WiFiHunterResultEntry> _filterAccessPoints(
     }).toList();
   }
 
-  _buildAccessPointsList(
-      List<WiFiHunterResultEntry> accessPoints,
-      bool _hasPermission, FocusNode node) {
+  _buildAccessPointsList(List<WiFiHunterResultEntry> accessPoints, bool _hasPermission, FocusNode node) {
     final filteredAccessPoints = _filterAccessPoints(accessPoints);
 
     return Container(
@@ -224,16 +207,10 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
 
   @override
   Widget build(BuildContext context) {
-    final title = widget.accessPoint.ssid.isNotEmpty
-        ? widget.accessPoint.ssid
-        : S.of(context).noSSID;
-    final signalIcon = widget.accessPoint.level >= -80
-        ? Icons.signal_wifi_4_bar
-        : Icons.signal_wifi_0_bar;
+    final title = widget.accessPoint.ssid.isNotEmpty ? widget.accessPoint.ssid : S.of(context).noSSID;
+    final signalIcon = widget.accessPoint.level >= -80 ? Icons.signal_wifi_4_bar : Icons.signal_wifi_0_bar;
     ref.listen(wifiScanNotifierProvider, (previous, next) {
-      if (next.hasValue &&
-          !next.isRefreshing &&
-          next.value!.status == Status.connected) {
+      if (next.hasValue && !next.isRefreshing && next.value!.status == Status.connected) {
         _showToast(S.of(context).wifiSuccess);
       }
       if (next.value!.status == Status.error) {
@@ -258,8 +235,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
 
     KeyEventResult _handleKeyEvent(FocusNode focusNode, RawKeyEvent event) {
       if (event is RawKeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
-            event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowRight || event.logicalKey == LogicalKeyboardKey.arrowLeft) {
           _simulateTabPress();
           _simulateDownArrow();
 
@@ -291,9 +267,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
                       labelText: S.of(context).wifiPassword,
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _showPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          _showPassword ? Icons.visibility : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() {
@@ -307,9 +281,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
                     onPressed: () async {
                       Navigator.of(context).pop();
 
-                      await ref
-                          .read(wifiScanNotifierProvider.notifier)
-                          .connectToWifi(
+                      await ref.read(wifiScanNotifierProvider.notifier).connectToWifi(
                             widget.accessPoint.ssid,
                             widget.accessPoint.capabilities,
                             passwordController.text,

@@ -46,8 +46,7 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
   @override
   void initState() {
     super.initState();
-    selectedTime = DateTime.now().add(Duration(
-        hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
+    selectedTime = DateTime.now().add(Duration(hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(screenLockNotifierProvider.notifier);
       value = await ToggleScreenFeature.getToggleFeatureState();
@@ -60,11 +59,8 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
   @override
   Widget build(BuildContext context) {
     final mosqueProvider = context.watch<MosqueManager>();
-    final today = mosqueProvider.useTomorrowTimes
-        ? AppDateTime.tomorrow()
-        : AppDateTime.now();
-    final times =
-        mosqueProvider.times?.dayTimesStrings(today, salahOnly: false) ?? [];
+    final today = mosqueProvider.useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+    final times = mosqueProvider.times?.dayTimesStrings(today, salahOnly: false) ?? [];
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -122,12 +118,8 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
             context,
             S.of(context).powerOnScreen,
             selectedMinuteBefore,
-            ref
-                .read(screenLockNotifierProvider.notifier)
-                .selectNextMinuteBefore,
-            ref
-                .read(screenLockNotifierProvider.notifier)
-                .selectPreviousMinuteBefore,
+            ref.read(screenLockNotifierProvider.notifier).selectNextMinuteBefore,
+            ref.read(screenLockNotifierProvider.notifier).selectPreviousMinuteBefore,
             S.of(context).before,
           ),
           const SizedBox(height: 16),
@@ -136,9 +128,7 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
             S.of(context).powerOffScreen,
             selectedMinuteAfter,
             ref.read(screenLockNotifierProvider.notifier).selectNextMinuteAfter,
-            ref
-                .read(screenLockNotifierProvider.notifier)
-                .selectPreviousMinuteAfter,
+            ref.read(screenLockNotifierProvider.notifier).selectPreviousMinuteAfter,
             S.of(context).after,
           ),
         ],

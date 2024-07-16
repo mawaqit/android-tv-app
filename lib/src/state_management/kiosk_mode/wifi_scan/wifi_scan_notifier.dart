@@ -24,23 +24,20 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
     await _scan();
     return state.value!;
   }
-  
+
   Future<void> huntWiFis() async {
     try {} on PlatformException catch (exception) {
       print(exception.toString());
     }
   }
+
   Future<void> _scan() async {
     state = AsyncLoading();
     try {
-     
       final wiFiHunterResult = await WiFiHunter.huntWiFiNetworks;
 
       state = AsyncData(
-        state.value!.copyWith(
-            accessPoints: wiFiHunterResult!.results,
-            hasPermission: true,
-            status: Status.connecting),
+        state.value!.copyWith(accessPoints: wiFiHunterResult!.results, hasPermission: true, status: Status.connecting),
       );
     } catch (e, s) {
       logger.e("kiosk mode: wifi_scan: error: $e");
@@ -48,8 +45,7 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
     }
   }
 
-  Future<void> connectToWifi(
-      String ssid, String security, String password) async {
+  Future<void> connectToWifi(String ssid, String security, String password) async {
     try {
       bool isSuccess = false;
       if (_timeManager.deviceModel == "MAWAQITBOX V2") {
@@ -91,6 +87,4 @@ class WifiScanNotifier extends AsyncNotifier<WifiScanState> {
   }
 }
 
-final wifiScanNotifierProvider =
-    AsyncNotifierProvider<WifiScanNotifier, WifiScanState>(
-        WifiScanNotifier.new);
+final wifiScanNotifierProvider = AsyncNotifierProvider<WifiScanNotifier, WifiScanState>(WifiScanNotifier.new);
