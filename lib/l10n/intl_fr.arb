@@ -185,8 +185,8 @@
   "nl_ar": "Néerlandais et arabes",
   "connectToChangeHadith": "Veuillez vous connecter à Internet pour changer la langue des hadiths.",
   "retry": "Réessayez",
-  "timeSetting": "Configurer l'heure",
-  "timeSettingDesc": "Définir une heure personnalisée",
+  "timeSetting": "Paramétrage de l'heure",
+  "timeSettingDesc": "Définir un nom personnalisé",
   "selectedTime": "L'heure actuelle sélectionnée",
   "confirmation": "Valider",
   "confirmationMessage": "Êtes-vous sûr de vouloir utiliser l'heure de l'appareil ?",
@@ -223,8 +223,44 @@
   "update": "Mettre à jour",
   "automaticUpdate": "Notifier la mise à jour",
   "automaticUpdateDescription": "Activer la notification de mise à jour pour recevoir les dernières fonctionnalités et améliorations",
-  "later": "Plus tard",
+  "checkInternetLegacyMode": "Vous devez vous connecter à l'internet pour utiliser le mode \"legacy\".",
   "powerOnScreen": "Allumer l'écran",
   "powerOffScreen": "Éteindre l'écran",
-  "deviceSettings": "Paramètres de l'appareil"
+  "deviceSettings": "Paramètres de l'appareil",
+  "later": "Plus tard",
+  "downloadQuran": "Télécharger le Coran",
+  "quran": "Coran",
+  "askDownloadQuran": "Voulez-vous télécharger le Coran ?",
+  "download": "Télécharger",
+  "downloadingQuran": "Téléchargement du Coran",
+  "extractingQuran": "Extraction du Coran",
+  "updatedQuran": "Coran mis à jour",
+  "quranLatestVersion": "Le Coran est à jour",
+  "quranUpdatedVersion": "La version mise à jour du Coran est : {version}",
+  "quranIsUpdated": "Le Coran est mis à jour",
+  "quranDownloaded": "Le Coran est téléchargé",
+  "quranIsAlreadyDownloaded": "Le Coran est déjà téléchargé",
+  "chooseReciter": "Choisir un récitateur",
+  "reciteType": "Type de récitation",
+  "readingMode": "Je veux lire",
+  "listeningMode": "Je veux écouter",
+  "quranReadingPage": "Page {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Choisir une page"
 }
