@@ -132,7 +132,6 @@ class _OnBoardingWifiSelectorState
             },
             loading: () => Align(
               child: SizedBox(
-                width: 10.vw,
                 child: CircularProgressIndicator(
                   strokeWidth: 3,
                 ),
