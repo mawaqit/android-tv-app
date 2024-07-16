@@ -72,7 +72,7 @@ class QuranNotifier extends AsyncNotifier<QuranState> {
         final mode = shared.getString(QuranConstant.kQuranModePref);
         log('quran: QuranNotifier: getSelectedMode: 1 mode: $mode');
         final modeValue = QuranMode.values.firstWhere(
-              (element) => element.toString() == mode,
+          (element) => element.toString() == mode,
           orElse: () => QuranMode.none,
         );
         log('quran: QuranNotifier: getSelectedMode: 2 mode: $modeValue');

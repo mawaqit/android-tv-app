@@ -153,7 +153,6 @@ class MawaqitDrawer extends ConsumerWidget {
                     ),
                   )),
               Divider(),
-
               DrawerListTitle(
                   autoFocus: true,
                   icon: Icons.home,

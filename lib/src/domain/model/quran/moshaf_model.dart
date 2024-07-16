@@ -64,5 +64,4 @@ class MoshafModel {
   }();
 
   static MoshafModelMapper ensureInitialized() => MoshafModelMapper.ensureInitialized();
-
 }

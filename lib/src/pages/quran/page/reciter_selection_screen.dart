@@ -121,9 +121,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                   ref.watch(reciteNotifierProvider).when(
                         data: (reciter) {
                           log('quran:ui: selectedReciterIndex: $selectedReciterIndex, reciter: ${reciter.reciters.length}');
-                          return reciter.reciters.isNotEmpty ? _buildReciteTypeGrid(
-                            reciter.reciters[selectedReciterIndex].moshaf,
-                          ): _buildReciteTypeGridShimmer(true);
+                          return reciter.reciters.isNotEmpty
+                              ? _buildReciteTypeGrid(
+                                  reciter.reciters[selectedReciterIndex].moshaf,
+                                )
+                              : _buildReciteTypeGridShimmer(true);
                         },
                         loading: () => _buildReciteTypeGridShimmer(true),
                         error: (error, stackTrace) => Text('Error: $error'),

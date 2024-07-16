@@ -91,7 +91,7 @@ class DownloadQuranNotifier extends AsyncNotifier<DownloadQuranState> {
         await downloadQuranRepoImpl.deleteZipFile(remoteVersion);
         Future.microtask(() {
           ref.invalidate(quranReadingNotifierProvider);
-        });        // Notify the success state with the new version
+        }); // Notify the success state with the new version
 
         state = AsyncData(
           Success(

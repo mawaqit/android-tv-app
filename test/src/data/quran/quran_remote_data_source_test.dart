@@ -7,7 +7,9 @@ import 'package:mawaqit/src/helpers/directory_helper.dart';
 
 // Mock classes
 class MockDio extends Mock implements Dio {}
+
 class MockResponse extends Mock implements Response {}
+
 class MockDirectoryHelper extends Mock implements DirectoryHelper {}
 
 void main() {
@@ -51,32 +53,32 @@ void main() {
     test('should download quran successfully', () async {
       // Arrange
       when(() => mockDio.download(
-        any(),
-        any(),
-        onReceiveProgress: any(named: 'onReceiveProgress'),
-        cancelToken: any(named: 'cancelToken'),
-      )).thenAnswer((_) async => Response(requestOptions: RequestOptions()));
+            any(),
+            any(),
+            onReceiveProgress: any(named: 'onReceiveProgress'),
+            cancelToken: any(named: 'cancelToken'),
+          )).thenAnswer((_) async => Response(requestOptions: RequestOptions()));
 
       // Act
       await dataSource.downloadQuranWithProgress(versionName: 'quran_v1.0.0.zip');
 
       // Assert
       verify(() => mockDio.download(
-        'https://mawaqit.github.io/mawaqit-announcements/public/quran/quran_v1.0.0.zip',
-        '$testAppSupportPath/quran_zip/quran_v1.0.0.zip',
-        onReceiveProgress: any(named: 'onReceiveProgress'),
-        cancelToken: any(named: 'cancelToken'),
-      )).called(1);
+            'https://mawaqit.github.io/mawaqit-announcements/public/quran/quran_v1.0.0.zip',
+            '$testAppSupportPath/quran_zip/quran_v1.0.0.zip',
+            onReceiveProgress: any(named: 'onReceiveProgress'),
+            cancelToken: any(named: 'cancelToken'),
+          )).called(1);
     });
 
     test('should throw CancelDownloadException when download is cancelled', () async {
       // Arrange
       when(() => mockDio.download(
-        any(),
-        any(),
-        onReceiveProgress: any(named: 'onReceiveProgress'),
-        cancelToken: any(named: 'cancelToken'),
-      )).thenThrow(DioException(
+            any(),
+            any(),
+            onReceiveProgress: any(named: 'onReceiveProgress'),
+            cancelToken: any(named: 'cancelToken'),
+          )).thenThrow(DioException(
         type: DioExceptionType.cancel,
         requestOptions: RequestOptions(),
       ));
@@ -89,11 +91,11 @@ void main() {
     test('should throw UnknownException for other errors', () async {
       // Arrange
       when(() => mockDio.download(
-        any(),
-        any(),
-        onReceiveProgress: any(named: 'onReceiveProgress'),
-        cancelToken: any(named: 'cancelToken'),
-      )).thenThrow(Exception('Unknown error'));
+            any(),
+            any(),
+            onReceiveProgress: any(named: 'onReceiveProgress'),
+            cancelToken: any(named: 'cancelToken'),
+          )).thenThrow(Exception('Unknown error'));
 
       // Act & Assert
       expect(() => dataSource.downloadQuranWithProgress(versionName: 'quran_v1.0.0.zip'),

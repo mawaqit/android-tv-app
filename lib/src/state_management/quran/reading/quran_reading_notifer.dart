@@ -13,7 +13,7 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
   Future<QuranReadingState> build() async {
     final repository = ref.read(quranReadingRepositoryProvider.future);
     ref.onDispose(() {
-      if(state.hasValue){
+      if (state.hasValue) {
         state.value!.pageController.dispose();
       }
     });
