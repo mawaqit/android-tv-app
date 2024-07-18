@@ -12,6 +12,7 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
+import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
@@ -30,10 +31,13 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _leftSkipButtonFocusNode;
   late FocusNode _listeningModeFocusNode;
   late FocusNode _choosePageFocusNode;
+  final ScrollController _gridScrollController = ScrollController();
+  late GridObserverController _observerController;
 
   @override
   void initState() {
     super.initState();
+    _observerController = GridObserverController(controller: _gridScrollController);
     _backButtonFocusNode = FocusNode(debugLabel: 'node_backButton');
     _listeningModeFocusNode = FocusNode(debugLabel: 'node_listeningMode');
     _rightSkipButtonFocusNode = FocusNode(debugLabel: 'node_rightSkip');
@@ -50,6 +54,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   void dispose() {
     _listeningModeFocusNode.dispose();
     _rightSkipButtonFocusNode.dispose();
+    _gridScrollController.dispose();
+    _gridScrollController.dispose();
     _leftSkipButtonFocusNode.dispose();
     _backButtonFocusNode.dispose();
     _choosePageFocusNode.dispose();
@@ -86,8 +92,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             } else {
               _listeningModeFocusNode.requestFocus();
             }
-          } else if (event.logicalKey == LogicalKeyboardKey.select ||
-              event.logicalKey == LogicalKeyboardKey.enter) {
+          } else if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
             if (FocusScope.of(context).focusedChild == _choosePageFocusNode) {
               print('enter');
             }
@@ -228,10 +233,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                           ),
                           child: Text(
                             S.of(context).quranReadingPage(
-                              quranReadingState.currentPage + 1, // Right page (now on the left)
-                              quranReadingState.currentPage + 2, // Left page (now on the right)
-                              quranReadingState.totalPages,
-                            ),
+                                  quranReadingState.currentPage + 1, // Right page (now on the left)
+                                  quranReadingState.currentPage + 2, // Left page (now on the right)
+                                  quranReadingState.totalPages,
+                                ),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 8.sp,
@@ -289,8 +294,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     );
   }
 
-
   void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _observerController.jumpTo(index: currentPage);
+      print('jump to $currentPage');
+    });
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -308,37 +317,46 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           ),
           content: Container(
             width: double.maxFinite,
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 6,
-                childAspectRatio: 3 / 2,
+            height: 60.h, // Set a fixed height or use MediaQuery to calculate it
+            child: GridViewObserver(
+              controller: _observerController,
+              child: _quranPageGridView(totalPages, currentPage),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  GridView _quranPageGridView(int totalPages, int currentPage) {
+    return GridView.builder(
+      controller: _gridScrollController,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 6,
+        childAspectRatio: 3 / 2,
+      ),
+      itemCount: totalPages,
+      itemBuilder: (BuildContext context, int index) {
+        final isSelected = index == currentPage;
+        return InkWell(
+          focusNode: FocusNode(debugLabel: 'node_page_$index'),
+          onTap: () {
+            ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
+            Navigator.of(context).pop();
+          },
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isSelected ? Theme.of(context).focusColor : null,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Text(
+              '${index + 1}',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: isSelected ? FontWeight.bold : null,
+                color: isSelected ? Colors.white : null,
               ),
-              itemCount: totalPages,
-              itemBuilder: (BuildContext context, int index) {
-                final isSelected = index == currentPage;
-                return InkWell(
-                  focusNode: FocusNode(debugLabel: 'node_page_$index'),
-                  onTap: () {
-                    ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: isSelected ? Theme.of(context).focusColor : null,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      '${index + 1}',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: isSelected ? FontWeight.bold : null,
-                        color: isSelected ? Colors.white : null,
-                      ),
-                    ),
-                  ),
-                );
-              },
             ),
           ),
         );
@@ -346,4 +364,3 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     );
   }
 }
-
