@@ -6,6 +6,8 @@ class SwitchButton extends StatelessWidget {
   final VoidCallback onPressed;
   final double opacity;
   final double iconSize;
+  final FocusNode? focusNode;
+  final double splashFactorSize;
 
   const SwitchButton({
     super.key,
@@ -13,12 +15,16 @@ class SwitchButton extends StatelessWidget {
     required this.opacity,
     required this.onPressed,
     required this.iconSize,
+    this.focusNode,
+    this.splashFactorSize = 1.25,
   });
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      focusNode: focusNode,
       onPressed: onPressed,
+      splashRadius: iconSize * splashFactorSize,
       icon: Icon(
         icon,
         color: Colors.black.withOpacity(opacity),
