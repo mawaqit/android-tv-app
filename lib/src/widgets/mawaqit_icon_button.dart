@@ -5,9 +5,11 @@ class MawaqitIconButton extends StatefulWidget {
     Key? key,
     required this.icon,
     required this.label,
+    required this.focusNode,
     this.onPressed,
   }) : super(key: key);
   final IconData icon;
+  final FocusNode focusNode;
   final String label;
   final VoidCallback? onPressed;
   @override
@@ -15,20 +17,14 @@ class MawaqitIconButton extends StatefulWidget {
 }
 
 class _MawaqitIconButtonState extends State<MawaqitIconButton> {
-  late FocusNode _focusNode;
   bool focused = false;
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
-    _focusNode.requestFocus();
+    widget.focusNode.requestFocus();
   }
 
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +42,7 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
           child: Material(
             color: focused ? Color(0xFF490094) : theme.colorScheme.primary,
             child: InkWell(
-              focusNode: _focusNode,
+              focusNode: widget.focusNode,
               onTap: widget.onPressed,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
