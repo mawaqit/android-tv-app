@@ -70,24 +70,24 @@ class _OnBoardingTimeZoneSelectorState
 
   void _onSearchFocusChange() {
     if (!searchfocusNode.hasFocus) {
-      // This will be called when the search field loses focus (e.g., when keyboard is closed)
       _handleBackButton();
     }
   }
 
   void _handleBackButton() {
+    FocusScope.of(context).unfocus();
     FocusScope.of(context).requestFocus(countryListFocusNode);
     _selectFirstVisibleItem();
   }
   @override
   void dispose() {
     searchController.dispose();
-    countryListFocusNode.dispose();
-    timezoneListFocusNode.dispose();
+    /*  countryListFocusNode.dispose();
+    timezoneListFocusNode.dispose(); */
     _countryScrollController.dispose();
     _timezoneScrollController.dispose();
-    searchfocusNode.dispose();
-    searchfocusNode.removeListener(_onSearchFocusChange);
+    /*    searchfocusNode.dispose();
+    searchfocusNode.removeListener(_onSearchFocusChange); */
 
     super.dispose();
   }
@@ -220,9 +220,7 @@ Future<void> _setDeviceTimezoneAsync(String timezone) async {
       await _setDeviceTimezone(timezone);
       widget.onSelect?.call();
     } catch (e) {
-      // Handle any errors that might occur during timezone setting
       print('Error setting timezone: $e');
-      // Optionally, you can show an error message to the user here
     }
 }
 
@@ -293,36 +291,22 @@ Future<void> _setDeviceTimezoneAsync(String timezone) async {
                   ),
                 ),
                 const SizedBox(height: 20),
-                RawKeyboardListener(
-                  focusNode: FocusNode(),
-                  onKey: (RawKeyEvent event) {
-                    if (event is RawKeyDownEvent &&
-                        event.logicalKey == LogicalKeyboardKey.altLeft &&
-                        searchfocusNode.hasFocus) {
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: TextField(
+                    autofocus: true,
+                    focusNode: searchfocusNode,
+                    onSubmitted: (_) {
                       FocusScope.of(context).requestFocus(countryListFocusNode);
                       _selectFirstVisibleItem();
-
-                      return;
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: TextField(
-                      autofocus: true,
-                      focusNode: searchfocusNode,
-                      onSubmitted: (_) {
-                        FocusScope.of(context)
-                            .requestFocus(countryListFocusNode);
-                        _selectFirstVisibleItem();
-                      },
-                      controller: searchController,
-                      onChanged: _filterItems,
-                      decoration: InputDecoration(
-                        hintText: S.of(context).searchCountries,
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                    },
+                    controller: searchController,
+                    onChanged: _filterItems,
+                    decoration: InputDecoration(
+                      hintText: S.of(context).searchCountries,
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
