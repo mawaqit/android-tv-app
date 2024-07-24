@@ -64,8 +64,21 @@ class _OnBoardingTimeZoneSelectorState
     selectedCountryTimezones = [];
     _countryScrollController = ScrollController();
     _timezoneScrollController = ScrollController();
+    searchfocusNode.addListener(_onSearchFocusChange);
+
   }
 
+  void _onSearchFocusChange() {
+    if (!searchfocusNode.hasFocus) {
+      // This will be called when the search field loses focus (e.g., when keyboard is closed)
+      _handleBackButton();
+    }
+  }
+
+  void _handleBackButton() {
+    FocusScope.of(context).requestFocus(countryListFocusNode);
+    _selectFirstVisibleItem();
+  }
   @override
   void dispose() {
     searchController.dispose();
@@ -74,6 +87,8 @@ class _OnBoardingTimeZoneSelectorState
     _countryScrollController.dispose();
     _timezoneScrollController.dispose();
     searchfocusNode.dispose();
+    searchfocusNode.removeListener(_onSearchFocusChange);
+
     super.dispose();
   }
 
@@ -160,34 +175,12 @@ class _OnBoardingTimeZoneSelectorState
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.enter ||
           event.logicalKey == LogicalKeyboardKey.select) {
-        if (isViewingTimezones) {
-          if (selectedTimezoneIndex >= 0 &&
-              selectedTimezoneIndex < selectedCountryTimezones.length) {
-            _setDeviceTimezone(selectedCountryTimezones[selectedTimezoneIndex]);
-          }
-        } else {
-          if (selectedCountryIndex >= 0 &&
-              selectedCountryIndex < countriesList.length) {
-            var country = countriesList[selectedCountryIndex];
-            setState(() {
-              selectedCountryTimezones = country.timezones;
-              isViewingTimezones = true;
-              selectedTimezoneIndex = 0; // Set to 0 to select the first item
-              FocusScope.of(context).requestFocus(timezoneListFocusNode);
-            });
-            // Scroll to the first item
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _scrollToSelectedItem(
-                  _timezoneScrollController, selectedTimezoneIndex, 56.0);
-            });
-          }
-        }
+        _handleEnterKey();
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
           event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         setState(() {
           FocusScope.of(context).unfocus();
-
           FocusScope.of(context).requestFocus(widget.focusNode);
         });
         return KeyEventResult.handled;
@@ -195,6 +188,43 @@ class _OnBoardingTimeZoneSelectorState
     }
     return KeyEventResult.ignored;
   }
+
+  void _handleEnterKey() {
+    if (isViewingTimezones) {
+      if (selectedTimezoneIndex >= 0 &&
+          selectedTimezoneIndex < selectedCountryTimezones.length) {
+        _setDeviceTimezoneAsync(
+            selectedCountryTimezones[selectedTimezoneIndex]);
+      }
+    } else {
+      if (selectedCountryIndex >= 0 &&
+          selectedCountryIndex < countriesList.length) {
+        var country = countriesList[selectedCountryIndex];
+        setState(() {
+          selectedCountryTimezones = country.timezones;
+          isViewingTimezones = true;
+          selectedTimezoneIndex = 0; // Set to 0 to select the first item
+          FocusScope.of(context).requestFocus(timezoneListFocusNode);
+        });
+        // Scroll to the first item
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToSelectedItem(
+              _timezoneScrollController, selectedTimezoneIndex, 56.0);
+        });
+      }
+    }
+}
+
+Future<void> _setDeviceTimezoneAsync(String timezone) async {
+    try {
+      await _setDeviceTimezone(timezone);
+      widget.onSelect?.call();
+    } catch (e) {
+      // Handle any errors that might occur during timezone setting
+      print('Error setting timezone: $e');
+      // Optionally, you can show an error message to the user here
+    }
+}
 
   void _selectFirstVisibleItem() {
     setState(() {
@@ -218,85 +248,104 @@ class _OnBoardingTimeZoneSelectorState
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
 
-    return Shortcuts(
-      shortcuts: <LogicalKeySet, Intent>{
-        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+    return WillPopScope(
+      onWillPop: () async {
+        _handleBackButton();
+        return false; // Prevent default back button behavior
       },
-      child: Scaffold(
-        body: FocusScope(
-          node: FocusScopeNode(),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Text(
-                S.of(context).appTimezone,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.w700,
-                  color: themeData.brightness == Brightness.dark
-                      ? null
-                      : themeData.primaryColor,
+      child: Shortcuts(
+        shortcuts: <LogicalKeySet, Intent>{
+          LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+        },
+        child: Scaffold(
+          body: FocusScope(
+            node: FocusScopeNode(),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  S.of(context).appTimezone,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w700,
+                    color: themeData.brightness == Brightness.dark
+                        ? null
+                        : themeData.primaryColor,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Divider(
-                thickness: 1,
-                color: themeData.brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                S.of(context).descTimezone,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
+                const SizedBox(height: 10),
+                Divider(
+                  thickness: 1,
                   color: themeData.brightness == Brightness.dark
-                      ? null
-                      : themeData.primaryColor,
+                      ? Colors.white
+                      : Colors.black,
                 ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: TextField(
-                  autofocus: true,
-                  focusNode: searchfocusNode,
-                  onSubmitted: (_) {
-                    FocusScope.of(context).unfocus();
-                    FocusScope.of(context).requestFocus(countryListFocusNode);
-                    _selectFirstVisibleItem();
+                const SizedBox(height: 10),
+                Text(
+                  S.of(context).descTimezone,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: themeData.brightness == Brightness.dark
+                        ? null
+                        : themeData.primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                RawKeyboardListener(
+                  focusNode: FocusNode(),
+                  onKey: (RawKeyEvent event) {
+                    if (event is RawKeyDownEvent &&
+                        event.logicalKey == LogicalKeyboardKey.altLeft &&
+                        searchfocusNode.hasFocus) {
+                      FocusScope.of(context).requestFocus(countryListFocusNode);
+                      _selectFirstVisibleItem();
+
+                      return;
+                    }
                   },
-                  controller: searchController,
-                  onChanged: _filterItems,
-                  decoration: InputDecoration(
-                    hintText: S.of(context).searchCountries,
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: TextField(
+                      autofocus: true,
+                      focusNode: searchfocusNode,
+                      onSubmitted: (_) {
+                        FocusScope.of(context)
+                            .requestFocus(countryListFocusNode);
+                        _selectFirstVisibleItem();
+                      },
+                      controller: searchController,
+                      onChanged: _filterItems,
+                      decoration: InputDecoration(
+                        hintText: S.of(context).searchCountries,
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: Focus(
-                  focusNode: isViewingTimezones
-                      ? timezoneListFocusNode
-                      : countryListFocusNode,
-                  onFocusChange: (hasFocus) {
-                    if (hasFocus) {
-                      _selectFirstVisibleItem();
-                    }
-                  },
-                  onKey: (node, event) => _handleKeyEvent(node, event),
-                  child: isViewingTimezones
-                      ? _buildTimezoneList(context)
-                      : _buildCountryList(context),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: Focus(
+                    focusNode: isViewingTimezones
+                        ? timezoneListFocusNode
+                        : countryListFocusNode,
+                    onFocusChange: (hasFocus) {
+                      if (hasFocus) {
+                        _selectFirstVisibleItem();
+                      }
+                    },
+                    onKey: (node, event) => _handleKeyEvent(node, event),
+                    child: isViewingTimezones
+                        ? _buildTimezoneList(context)
+                        : _buildCountryList(context),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -367,13 +416,6 @@ class _OnBoardingTimeZoneSelectorState
     }
   }
 
-  Future<void> _simulateDownArrow() async {
-    try {
-      await platform.invokeMethod('sendDownArrowEvent');
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
 
   void _showToast(String message) {
     Fluttertoast.showToast(

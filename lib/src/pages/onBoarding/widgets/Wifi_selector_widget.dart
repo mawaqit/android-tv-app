@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/main.dart';
-import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_notifier.dart';
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_state.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:wifi_hunter/wifi_hunter_result.dart';
-import 'package:wifi_scan/wifi_scan.dart';
 
 const String nativeMethodsChannel = 'nativeMethodsChannel';
 
@@ -171,7 +165,7 @@ class _OnBoardingWifiSelectorState
         ),
         itemCount: filteredAccessPoints.length,
         itemBuilder: (context, i) => _AccessPointTile(
-          skipButtonFocusNode: widget.focusNode!,
+          skipButtonFocusNode: widget.focusNode ?? FocusNode(),
           focusNode: node,
           onSelect: widget.onSelect,
           accessPoint: filteredAccessPoints[i],
@@ -227,14 +221,12 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
           !next.isRefreshing &&
           next.value!.status == Status.connected) {
         _showToast(S.of(context).wifiSuccess);
+        widget.onSelect();
       }
       if (next.value!.status == Status.error) {
         _showToast(S.of(context).wifiFailure);
       }
     });
-
-
-
 
     KeyEventResult _handleKeyEvent(FocusNode focusNode, RawKeyEvent event) {
       if (event is RawKeyDownEvent) {
@@ -299,82 +291,128 @@ class WifiPasswordPage extends StatefulWidget {
 class _WifiPasswordPageState extends State<WifiPasswordPage> {
   final TextEditingController passwordController = TextEditingController();
   bool _showPassword = false;
+  final FocusNode connectButtonFocusNode = FocusNode();
+  final FocusNode passwordInputFocusNode = FocusNode();
+  Color _buttonColor = Colors.white; // Default color
+  Color _textColor = Colors.black; // Default color
+
+  @override
+  void initState() {
+    super.initState();
+
+    passwordInputFocusNode.addListener(_onSearchFocusChange);
+    connectButtonFocusNode.addListener(_onConnectButtonFocusChange);
+  }
+
+  void _onConnectButtonFocusChange() {
+    setState(() {
+      _buttonColor = connectButtonFocusNode.hasFocus
+          ? const Color(0xFF490094)
+          : Colors.white;
+      _textColor =
+          connectButtonFocusNode.hasFocus ? Colors.white : Colors.black;
+    });
+  }
+
+  void _onSearchFocusChange() {
+    if (!passwordInputFocusNode.hasFocus) {
+      FocusScope.of(context).requestFocus(connectButtonFocusNode);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return ScreenWithAnimationWidget(
-        animation: R.ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON,
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            Text(
-              S.of(context).appWifi,
-              style: TextStyle(
-                fontSize: 25.0,
-                fontWeight: FontWeight.w700,
-                color: themeData.brightness == Brightness.dark
-                    ? null
-                    : themeData.primaryColor,
+    return WillPopScope(
+      onWillPop: () async {
+        if (!connectButtonFocusNode.hasFocus) {
+          _onSearchFocusChange();
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: ScreenWithAnimationWidget(
+          hasBackButton: false,
+          animation: R.ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON,
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              Text(
+                S.of(context).appWifi,
+                style: TextStyle(
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.w700,
+                  color: themeData.brightness == Brightness.dark
+                      ? null
+                      : themeData.primaryColor,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Divider(
-              thickness: 1,
-              color: themeData.brightness == Brightness.dark
-                  ? Colors.white
-                  : Colors.black,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              widget.ssid,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
+              const SizedBox(height: 10),
+              Divider(
+                thickness: 1,
                 color: themeData.brightness == Brightness.dark
-                    ? null
-                    : themeData.primaryColor,
+                    ? Colors.white
+                    : Colors.black,
               ),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    onSubmitted: (_) {
-                      widget.onConnect(passwordController.text);
-                    },
-                    autofocus: true,
-                    controller: passwordController,
-                    obscureText: !_showPassword,
-                    decoration: InputDecoration(
-                      labelText: S.of(context).wifiPassword,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _showPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+              const SizedBox(height: 10),
+              Text(
+                widget.ssid,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: themeData.brightness == Brightness.dark
+                      ? null
+                      : themeData.primaryColor,
+                ),
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      focusNode: passwordInputFocusNode,
+                      onSubmitted: (_) {
+                        widget.onConnect(passwordController.text);
+                      },
+                      autofocus: true,
+                      controller: passwordController,
+                      obscureText: !_showPassword,
+                      decoration: InputDecoration(
+                        labelText: S.of(context).wifiPassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _showPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _showPassword = !_showPassword;
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _showPassword = !_showPassword;
-                          });
-                        },
                       ),
                     ),
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.onConnect(passwordController.text);
-                    },
-                    child: Text(S.of(context).connect),
-                  ),
-                ],
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      focusNode: connectButtonFocusNode,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _buttonColor,
+                        foregroundColor:
+                            _textColor, // This will change the text color
+                      ),
+                      onPressed: () {
+                        widget.onConnect(passwordController.text);
+                      },
+                      child: Text(S.of(context).connect),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ));
+            ],
+          )),
+    );
   }
 }
