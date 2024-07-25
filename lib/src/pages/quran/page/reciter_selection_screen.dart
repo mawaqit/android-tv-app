@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -9,28 +8,19 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
 import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
-
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
-
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
-
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
-
 import 'package:mawaqit/i18n/l10n.dart';
-
 import 'package:mawaqit/const/resource.dart';
-
-import 'package:mawaqit/src/pages/quran/widget/switch_button.dart';
-
-import '../../../state_management/quran/quran/quran_state.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
 
   const ReciterSelectionScreen({super.key, required this.surahName});
-
   const ReciterSelectionScreen.withoutSurahName({super.key}) : surahName = '';
 
   @override
@@ -53,7 +43,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(reciteNotifierProvider.notifier).getAllReciters();
-      FocusScope.of(context).requestFocus(reciterFocusNode);
+      if (mounted) {
+        FocusScope.of(context).requestFocus(reciterFocusNode);
+      }
     });
     RawKeyboard.instance.addListener(_handleKeyEvent);
   }
@@ -71,7 +63,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   @override
   Widget build(BuildContext context) {
     return QuranBackground(
-      // switchFocusNode: FocusNode(),
       isSwitch: true,
       floatingActionButtonFocusNode: floatingActionButtonFocusNode,
       appBar: AppBar(
@@ -106,10 +97,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ref.watch(reciteNotifierProvider).when(
-                        data: (reciter) => _buildReciterList(reciter.reciters),
-                        loading: () => _buildReciterListShimmer(true),
-                        error: (error, stackTrace) => Text('Error: $error'),
-                      ),
+                    data: (reciter) => _buildReciterList(reciter.reciters),
+                    loading: () => _buildReciterListShimmer(true),
+                    error: (error, stackTrace) => Text('Error: $error'),
+                  ),
                   SizedBox(height: 5.h),
                   Container(
                     width: double.infinity,
@@ -124,17 +115,16 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                     ),
                   ),
                   ref.watch(reciteNotifierProvider).when(
-                        data: (reciter) {
-                          log('quran:ui: selectedReciterIndex: $selectedReciterIndex, reciter: ${reciter.reciters.length}');
-                          return reciter.reciters.isNotEmpty
-                              ? _buildReciteTypeGrid(
-                                  reciter.reciters[selectedReciterIndex].moshaf,
-                                )
-                              : _buildReciteTypeGridShimmer(true);
-                        },
-                        loading: () => _buildReciteTypeGridShimmer(true),
-                        error: (error, stackTrace) => Text('Error: $error'),
-                      ),
+                    data: (reciter) {
+                      return reciter.reciters.isNotEmpty
+                          ? _buildReciteTypeGrid(
+                        reciter.reciters[selectedReciterIndex].moshaf,
+                      )
+                          : _buildReciteTypeGridShimmer(true);
+                    },
+                    loading: () => _buildReciteTypeGridShimmer(true),
+                    error: (error, stackTrace) => Text('Error: $error'),
+                  ),
                 ],
               ),
             ),
@@ -179,9 +169,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         borderRadius: BorderRadius.circular(10),
         border: selectedReciterIndex == index
             ? Border.all(
-                color: Colors.white,
-                width: 2,
-              )
+          color: Colors.white,
+          width: 2,
+        )
             : null,
       ),
       child: Container(
@@ -241,31 +231,29 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       ),
       itemCount: reciterTypes.length,
       itemBuilder: (context, index) {
+        FocusNode reciteTypeItemFocusNode = FocusNode();
         return Focus(
-          focusNode: reciteTypeFocusNode,
+          focusNode: reciteTypeItemFocusNode,
           child: GestureDetector(
             onTap: () async {
               final reciters = ref.read(reciteNotifierProvider).maybeWhen(
-                    data: (data) => data.reciters,
-                    orElse: () => [],
-                  );
+                data: (data) => data.reciters,
+                orElse: () => [],
+              );
               setState(() {
                 selectedReciteTypeIndex = index;
               });
-              log('quran:ui: selectedReciteTypeIndex: $selectedReciteTypeIndex');
 
               ref.read(reciteNotifierProvider.notifier).setSelectedMoshaf(
-                    moshafModel: reciterTypes[selectedReciteTypeIndex],
-                  );
-              log('quran:ui: selectedReciteTypeIndex: ${selectedReciterIndex} ${reciters}');
+                moshafModel: reciterTypes[selectedReciteTypeIndex],
+              );
               ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                    reciterModel: reciters[selectedReciterIndex],
-                  );
+                reciterModel: reciters[selectedReciterIndex],
+              );
 
-              log('quran:ui: getSuwarByReciter: ${reciterTypes[selectedReciteTypeIndex]}');
               ref.read(quranNotifierProvider.notifier).getSuwarByReciter(
-                    selectedMoshaf: reciterTypes[selectedReciteTypeIndex],
-                  );
+                selectedMoshaf: reciterTypes[selectedReciteTypeIndex],
+              );
 
               Navigator.push(
                 context,
@@ -300,14 +288,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   void _handleKeyEvent(RawKeyEvent value) {
     if (!mounted) return;
-    log('native_key_event $value');
-    if (value is RawKeyDownEvent && !value.repeat) {
+    if (value is RawKeyDownEvent) {
       final List<ReciterModel> reciters = ref.read(reciteNotifierProvider).maybeWhen(
-            data: (data) => data.reciters,
-            orElse: () => [],
-          );
-      // log('reciters: $reciters');
-      log('native_key_event: ${reciterFocusNode.hasFocus} || ${reciteTypeFocusNode.hasFocus}');
+        data: (data) => data.reciters,
+        orElse: () => [],
+      );
       if (reciterFocusNode.hasFocus) {
         _handleReciteKeyEvent(value, reciters);
       } else if (reciteTypeFocusNode.hasFocus) {
@@ -320,7 +305,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   void _handleReciteKeyEvent(RawKeyEvent value, List<ReciterModel> reciters) {
     if (!mounted) return;
-    log('_handleReciteKeyEvent: key_event: $value');
     if (value is RawKeyDownEvent) {
       if (value.logicalKey == LogicalKeyboardKey.arrowRight) {
         if (selectedReciterIndex < reciters.length - 1) {
@@ -330,7 +314,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           });
         }
       } else if (value.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        log('_handleReciteKeyEvent: selected_index: arrowLeft $selectedReciteTypeIndex');
         if (selectedReciterIndex > 0) {
           setState(() {
             selectedReciterIndex--;
@@ -338,7 +321,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           });
         }
       } else if (value.logicalKey == LogicalKeyboardKey.select) {
-        log('selected_logicalKey: ${reciters[selectedReciterIndex]}');
         FocusScope.of(context).unfocus();
         FocusScope.of(context).requestFocus(reciteTypeFocusNode);
         setState(() {
@@ -356,18 +338,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   void _handleReciteTypeKeyEvent(RawKeyEvent value, List<ReciterModel> reciters, List<MoshafModel> reciterTypes) {
     if (!mounted) return;
-    log('_handleReciteTypeKeyEvent: $value');
     if (value is RawKeyDownEvent) {
       if (reciteTypeFocusNode.hasFocus) {
         if (value.logicalKey == LogicalKeyboardKey.arrowRight) {
-          log('_handleKeyEvent: selected_index: arrowRight $selectedReciteTypeIndex || ${reciters[selectedReciterIndex].moshaf.length - 1}');
           if (selectedReciteTypeIndex < reciters[selectedReciterIndex].moshaf.length - 1) {
             setState(() {
               selectedReciteTypeIndex++;
             });
           }
         } else if (value.logicalKey == LogicalKeyboardKey.arrowLeft) {
-          log('_handleKeyEvent: selected_index: arrowLeft $selectedReciteTypeIndex');
           if (selectedReciteTypeIndex > 0) {
             setState(() {
               selectedReciteTypeIndex--;
@@ -377,21 +356,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           setState(() {
             selectedReciteTypeIndex = selectedReciteTypeIndex;
           });
-          log('begin 1 selectedReciteTypeIndex: $selectedReciteTypeIndex');
-
           ref.read(reciteNotifierProvider.notifier).setSelectedMoshaf(
-                moshafModel: reciterTypes[selectedReciteTypeIndex],
-              );
-          log('quran:ui: selectedReciteTypeIndex: ${selectedReciterIndex} ${reciters}');
+            moshafModel: reciterTypes[selectedReciteTypeIndex],
+          );
           ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                reciterModel: reciters[selectedReciterIndex],
-              );
-
-          log('quran:ui: getSuwarByReciter: ${reciterTypes[selectedReciteTypeIndex]}');
+            reciterModel: reciters[selectedReciterIndex],
+          );
           ref.read(quranNotifierProvider.notifier).getSuwarByReciter(
-                selectedMoshaf: reciterTypes[selectedReciteTypeIndex],
-              );
-          log('begin 3 selectedReciteTypeIndex: $selectedReciteTypeIndex');
+            selectedMoshaf: reciterTypes[selectedReciteTypeIndex],
+          );
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -413,15 +386,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   void _handleFloatingActionButtonKeyEvent(RawKeyEvent value) {
     if (!mounted) return;
-    log('_handleFloatingActionButtonKeyEvent: $value');
     if (value is RawKeyDownEvent) {
       if (value.logicalKey == LogicalKeyboardKey.arrowUp) {
-        // Move focus back to the ReciteType list
         FocusScope.of(context).requestFocus(reciteTypeFocusNode);
       } else if (value.logicalKey == LogicalKeyboardKey.select || value.logicalKey == LogicalKeyboardKey.enter) {
-        // Trigger the floating action button's onPressed action
         ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-        log('quran: QuranBackground: Switch to reading');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -433,7 +402,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   }
 
   void _animateToReciter(int index, LogicalKeyboardKey direction) {
-    final itemWidth = sizeOfContainerReciter + marginOfContainerReciter; // Item width + right margin
+    final itemWidth = sizeOfContainerReciter + marginOfContainerReciter;
     final targetOffset = (index) * itemWidth * 1.5;
 
     _reciterScrollController.animateTo(
