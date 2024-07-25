@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:timezone/standalone.dart' as tz;
@@ -34,6 +37,7 @@ class _OnBoardingTimeZoneSelectorState
   final TimeShiftManager _timeManager = TimeShiftManager();
   late ScrollController _countryScrollController;
   late ScrollController _timezoneScrollController;
+  late StreamSubscription<bool> keyboardSubscription;
 
   Future<void> addLocationPermission() async {
     try {
@@ -51,8 +55,6 @@ class _OnBoardingTimeZoneSelectorState
     }
   }
 
-
-
   @override
   void initState() {
     super.initState();
@@ -64,30 +66,25 @@ class _OnBoardingTimeZoneSelectorState
     selectedCountryTimezones = [];
     _countryScrollController = ScrollController();
     _timezoneScrollController = ScrollController();
-    searchfocusNode.addListener(_onSearchFocusChange);
+    var keyboardVisibilityController = KeyboardVisibilityController();
 
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        FocusScope.of(context).requestFocus(countryListFocusNode);
+        _selectFirstVisibleItem();
+      }
+    });
   }
 
-  void _onSearchFocusChange() {
-    if (!searchfocusNode.hasFocus) {
-      _handleBackButton();
-    }
-  }
-
-  void _handleBackButton() {
-    FocusScope.of(context).unfocus();
-    FocusScope.of(context).requestFocus(countryListFocusNode);
-    _selectFirstVisibleItem();
-  }
   @override
   void dispose() {
     searchController.dispose();
-    /*  countryListFocusNode.dispose();
-    timezoneListFocusNode.dispose(); */
+    countryListFocusNode.dispose();
+    timezoneListFocusNode.dispose();
     _countryScrollController.dispose();
     _timezoneScrollController.dispose();
-    /*    searchfocusNode.dispose();
-    searchfocusNode.removeListener(_onSearchFocusChange); */
+    searchfocusNode.dispose();
 
     super.dispose();
   }
@@ -213,16 +210,16 @@ class _OnBoardingTimeZoneSelectorState
         });
       }
     }
-}
+  }
 
-Future<void> _setDeviceTimezoneAsync(String timezone) async {
+  Future<void> _setDeviceTimezoneAsync(String timezone) async {
     try {
       await _setDeviceTimezone(timezone);
       widget.onSelect?.call();
     } catch (e) {
       print('Error setting timezone: $e');
     }
-}
+  }
 
   void _selectFirstVisibleItem() {
     setState(() {
@@ -246,90 +243,84 @@ Future<void> _setDeviceTimezoneAsync(String timezone) async {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
 
-    return WillPopScope(
-      onWillPop: () async {
-        _handleBackButton();
-        return false; // Prevent default back button behavior
+    return Shortcuts(
+      shortcuts: <LogicalKeySet, Intent>{
+        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
-      child: Shortcuts(
-        shortcuts: <LogicalKeySet, Intent>{
-          LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
-        },
-        child: Scaffold(
-          body: FocusScope(
-            node: FocusScopeNode(),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Text(
-                  S.of(context).appTimezone,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.w700,
-                    color: themeData.brightness == Brightness.dark
-                        ? null
-                        : themeData.primaryColor,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Divider(
-                  thickness: 1,
+      child: Scaffold(
+        body: FocusScope(
+          node: FocusScopeNode(),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Text(
+                S.of(context).appTimezone,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.w700,
                   color: themeData.brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black,
+                      ? null
+                      : themeData.primaryColor,
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  S.of(context).descTimezone,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: themeData.brightness == Brightness.dark
-                        ? null
-                        : themeData.primaryColor,
-                  ),
+              ),
+              const SizedBox(height: 10),
+              Divider(
+                thickness: 1,
+                color: themeData.brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                S.of(context).descTimezone,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: themeData.brightness == Brightness.dark
+                      ? null
+                      : themeData.primaryColor,
                 ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: TextField(
-                    autofocus: true,
-                    focusNode: searchfocusNode,
-                    onSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(countryListFocusNode);
-                      _selectFirstVisibleItem();
-                    },
-                    controller: searchController,
-                    onChanged: _filterItems,
-                    decoration: InputDecoration(
-                      hintText: S.of(context).searchCountries,
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextField(
+                  autofocus: true,
+                  focusNode: searchfocusNode,
+                  onSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(countryListFocusNode);
+                    _selectFirstVisibleItem();
+                  },
+                  controller: searchController,
+                  onChanged: _filterItems,
+                  decoration: InputDecoration(
+                    hintText: S.of(context).searchCountries,
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: Focus(
-                    focusNode: isViewingTimezones
-                        ? timezoneListFocusNode
-                        : countryListFocusNode,
-                    onFocusChange: (hasFocus) {
-                      if (hasFocus) {
-                        _selectFirstVisibleItem();
-                      }
-                    },
-                    onKey: (node, event) => _handleKeyEvent(node, event),
-                    child: isViewingTimezones
-                        ? _buildTimezoneList(context)
-                        : _buildCountryList(context),
-                  ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: Focus(
+                  focusNode: isViewingTimezones
+                      ? timezoneListFocusNode
+                      : countryListFocusNode,
+                  onFocusChange: (hasFocus) {
+                    if (hasFocus) {
+                      _selectFirstVisibleItem();
+                    }
+                  },
+                  onKey: (node, event) => _handleKeyEvent(node, event),
+                  child: isViewingTimezones
+                      ? _buildTimezoneList(context)
+                      : _buildCountryList(context),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -399,7 +390,6 @@ Future<void> _setDeviceTimezoneAsync(String timezone) async {
       _showToast(S.of(context).timezoneFailure);
     }
   }
-
 
   void _showToast(String message) {
     Fluttertoast.showToast(
