@@ -46,18 +46,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   double sizeOfContainerReciter = 15.w;
   double marginOfContainerReciter = 16;
   FocusNode floatingActionButtonFocusNode = FocusNode(debugLabel: 'Floating Action Button');
-  final ValueNotifier<bool> _isFabFocused = ValueNotifier<bool>(false);
   List<ReciterModel> reciters = [];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      log('FocusScope.of(context).requestFocus(reciterFocusNode)');
       ref.read(reciteNotifierProvider.notifier).getAllReciters();
       FocusScope.of(context).requestFocus(reciterFocusNode);
     });
-    floatingActionButtonFocusNode.addListener(_onFabFocusChange);
     RawKeyboard.instance.addListener(_handleKeyEvent);
   }
 
@@ -68,14 +65,12 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     reciteTypeFocusNode.dispose();
     floatingActionButtonFocusNode.dispose();
     _reciterScrollController.dispose();
-    floatingActionButtonFocusNode.removeListener(_onFabFocusChange);
-    _isFabFocused.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return  QuranBackground(
+    return QuranBackground(
       // switchFocusNode: FocusNode(),
       isSwitch: true,
       floatingActionButtonFocusNode: floatingActionButtonFocusNode,
@@ -111,10 +106,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ref.watch(reciteNotifierProvider).when(
-                    data: (reciter) => _buildReciterList(reciter.reciters),
-                    loading: () => _buildReciterListShimmer(true),
-                    error: (error, stackTrace) => Text('Error: $error'),
-                  ),
+                        data: (reciter) => _buildReciterList(reciter.reciters),
+                        loading: () => _buildReciterListShimmer(true),
+                        error: (error, stackTrace) => Text('Error: $error'),
+                      ),
                   SizedBox(height: 5.h),
                   Container(
                     width: double.infinity,
@@ -129,17 +124,17 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                     ),
                   ),
                   ref.watch(reciteNotifierProvider).when(
-                    data: (reciter) {
-                      log('quran:ui: selectedReciterIndex: $selectedReciterIndex, reciter: ${reciter.reciters.length}');
-                      return reciter.reciters.isNotEmpty
-                          ? _buildReciteTypeGrid(
-                        reciter.reciters[selectedReciterIndex].moshaf,
-                      )
-                          : _buildReciteTypeGridShimmer(true);
-                    },
-                    loading: () => _buildReciteTypeGridShimmer(true),
-                    error: (error, stackTrace) => Text('Error: $error'),
-                  ),
+                        data: (reciter) {
+                          log('quran:ui: selectedReciterIndex: $selectedReciterIndex, reciter: ${reciter.reciters.length}');
+                          return reciter.reciters.isNotEmpty
+                              ? _buildReciteTypeGrid(
+                                  reciter.reciters[selectedReciterIndex].moshaf,
+                                )
+                              : _buildReciteTypeGridShimmer(true);
+                        },
+                        loading: () => _buildReciteTypeGridShimmer(true),
+                        error: (error, stackTrace) => Text('Error: $error'),
+                      ),
                 ],
               ),
             ),
@@ -472,10 +467,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         },
       ),
     );
-  }
-
-  void _onFabFocusChange() {
-    _isFabFocused.value = floatingActionButtonFocusNode.hasFocus;
   }
 
   Widget _buildReciteTypeGridShimmer(bool isDarkMode) {
