@@ -15,12 +15,14 @@ class QuranBackground extends ConsumerWidget {
   final Widget screen;
   final AppBar? appBar;
   final bool isSwitch;
+  final FocusNode? floatingActionButtonFocusNode;
 
   const QuranBackground({
     super.key,
     required this.screen,
     this.isSwitch = false,
     this.appBar,
+    this.floatingActionButtonFocusNode,
   });
 
   @override
@@ -34,7 +36,10 @@ class QuranBackground extends ConsumerWidget {
                       width: 40.sp, // Set the desired width
                       height: 40.sp, // Set the desired height
                       child: FloatingActionButton(
-                        backgroundColor: Colors.black.withOpacity(.5),
+                        focusNode: floatingActionButtonFocusNode,
+                        backgroundColor: floatingActionButtonFocusNode?.hasFocus == true
+                            ? Colors.cyan
+                            : Colors.black.withOpacity(.5),
                         child: Icon(
                           Icons.menu_book,
                           color: Colors.white,
@@ -75,7 +80,10 @@ class QuranBackground extends ConsumerWidget {
                       width: 40.sp, // Set the desired width
                       height: 40.sp, // Set the desired height
                       child: FloatingActionButton(
-                        backgroundColor: Colors.black.withOpacity(.5),
+                        focusNode: floatingActionButtonFocusNode,
+                        backgroundColor: floatingActionButtonFocusNode?.hasFocus == true
+                            ? Colors.cyan
+                            : Colors.black.withOpacity(.5),
                         child: Icon(
                           Icons.menu_book,
                           color: Colors.white,
