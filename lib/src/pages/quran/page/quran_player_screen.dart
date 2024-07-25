@@ -40,13 +40,9 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
     super.dispose();
   }
 
-  Stream<SeekBarData> get _seekBarDataStream =>
-      rxdart.Rx.combineLatest2<Duration, Duration?, SeekBarData>(
+  Stream<SeekBarData> get _seekBarDataStream => rxdart.Rx.combineLatest2<Duration, Duration?, SeekBarData>(
           ref.read(quranPlayerNotifierProvider.notifier).positionStream,
-          ref
-              .read(quranPlayerNotifierProvider.notifier)
-              .audioPlayer
-              .durationStream, (
+          ref.read(quranPlayerNotifierProvider.notifier).audioPlayer.durationStream, (
         Duration position,
         Duration? duration,
       ) {
@@ -94,10 +90,7 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
                 Positioned(
                   child: _QuranPlayer(
                     backButtonFocusNode: backButtonFocusNode,
-                    isPlaying:
-                        quranPlayerState.playerState == AudioPlayerState.playing
-                            ? true
-                            : false,
+                    isPlaying: quranPlayerState.playerState == AudioPlayerState.playing ? true : false,
                     surahName: quranPlayerState.surahName,
                     surahType: quranPlayerState.reciterName,
                     seekBarDataStream: _seekBarDataStream,
@@ -227,8 +220,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             overlayRadius: 10,
                           ),
                           thumbColor: Colors.white,
-                          valueIndicatorShape:
-                              const PaddleSliderValueIndicatorShape(),
+                          valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
                         ),
                         child: MediaQuery(
                           data: MediaQueryData(
@@ -243,9 +235,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                               value: position.inSeconds.toDouble(),
                               max: duration.inSeconds.toDouble(),
                               onChanged: (value) {
-                                ref
-                                    .read(quranPlayerNotifierProvider.notifier)
-                                    .seekTo(Duration(seconds: value.toInt()));
+                                ref.read(quranPlayerNotifierProvider.notifier).seekTo(Duration(seconds: value.toInt()));
                               },
                             ),
                           ),
@@ -296,9 +286,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           actions: <Type, Action<Intent>>{
                             ActivateIntent: CallbackAction<ActivateIntent>(
                               onInvoke: (ActivateIntent intent) {
-                                ref
-                                    .read(quranPlayerNotifierProvider.notifier)
-                                    .shuffle();
+                                ref.read(quranPlayerNotifierProvider.notifier).shuffle();
                                 return null;
                               },
                             ),
@@ -308,24 +296,18 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: shuffleFocusNode.hasFocus
-                                  ? theme.primaryColor
-                                  : Colors.transparent,
+                              color: shuffleFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                               shape: BoxShape.circle,
                             ),
                             child: IconButton(
                               icon: SvgPicture.asset(
                                 R.ASSETS_ICON_SHUFFLE_SVG,
-                                color: data.isShuffled
-                                    ? Colors.white
-                                    : Colors.grey[800],
+                                color: data.isShuffled ? Colors.white : Colors.grey[800],
                                 width: 6.w,
                               ),
                               iconSize: 8.w,
                               onPressed: () {
-                                ref
-                                    .read(quranPlayerNotifierProvider.notifier)
-                                    .shuffle();
+                                ref.read(quranPlayerNotifierProvider.notifier).shuffle();
                               },
                             ),
                           ),
@@ -340,9 +322,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: leftFocusNode.hasFocus
-                              ? theme.primaryColor
-                              : Colors.transparent,
+                          color: leftFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
@@ -353,9 +333,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           ),
                           iconSize: 8.w,
                           onPressed: () {
-                            ref
-                                .read(quranPlayerNotifierProvider.notifier)
-                                .seekToPrevious();
+                            ref.read(quranPlayerNotifierProvider.notifier).seekToPrevious();
                           },
                         ),
                       ),
@@ -384,13 +362,9 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           iconSize: 10.w,
                           onPressed: () {
                             if (widget.isPlaying) {
-                              ref
-                                  .read(quranPlayerNotifierProvider.notifier)
-                                  .pause();
+                              ref.read(quranPlayerNotifierProvider.notifier).pause();
                             } else {
-                              ref
-                                  .read(quranPlayerNotifierProvider.notifier)
-                                  .play();
+                              ref.read(quranPlayerNotifierProvider.notifier).play();
                             }
                           },
                         ),
@@ -406,9 +380,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: rightFocusNode.hasFocus
-                              ? theme.primaryColor
-                              : Colors.transparent,
+                          color: rightFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
@@ -419,9 +391,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           ),
                           iconSize: 8.w,
                           onPressed: () {
-                            ref
-                                .read(quranPlayerNotifierProvider.notifier)
-                                .seekToNext();
+                            ref.read(quranPlayerNotifierProvider.notifier).seekToNext();
                           },
                         ),
                       ),
@@ -439,24 +409,18 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: repeatFocusNode.hasFocus
-                                  ? theme.primaryColor
-                                  : Colors.transparent,
+                              color: repeatFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                               shape: BoxShape.circle,
                             ),
                             child: IconButton(
                               icon: SvgPicture.asset(
                                 R.ASSETS_ICON_REPEAT_SVG,
-                                color: data.isRepeating
-                                    ? Colors.white
-                                    : Colors.grey[800],
+                                color: data.isRepeating ? Colors.white : Colors.grey[800],
                                 width: 6.w,
                               ),
                               iconSize: 8.w,
                               onPressed: () {
-                                ref
-                                    .read(quranPlayerNotifierProvider.notifier)
-                                    .repeat();
+                                ref.read(quranPlayerNotifierProvider.notifier).repeat();
                               },
                             ),
                           ),
@@ -483,19 +447,15 @@ class _BackgroundFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderMask(
       shaderCallback: (rect) {
-        return LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Colors.black.withOpacity(0.5),
-              Colors.black.withOpacity(0.0),
-            ],
-            stops: const [
-              0.0,
-              0.4,
-              0.6
-            ]).createShader(rect);
+        return LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+          Colors.black,
+          Colors.black.withOpacity(0.5),
+          Colors.black.withOpacity(0.0),
+        ], stops: const [
+          0.0,
+          0.4,
+          0.6
+        ]).createShader(rect);
       },
       blendMode: BlendMode.dstOut,
       child: Container(
