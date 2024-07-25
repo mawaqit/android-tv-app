@@ -127,7 +127,7 @@ dependencies:
   # internet connectivity checker
   internet_connection_checker_plus: ^1.0.1
   flutter_kurdish_localization: ^1.0.8
-
+  scrollview_observer: ^1.21.0
   # manage files and folders
   flutter_archive: ^6.0.3
   dart_mappable: ^4.2.2
