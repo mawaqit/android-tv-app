@@ -97,10 +97,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ref.watch(reciteNotifierProvider).when(
-                    data: (reciter) => _buildReciterList(reciter.reciters),
-                    loading: () => _buildReciterListShimmer(true),
-                    error: (error, stackTrace) => Text('Error: $error'),
-                  ),
+                        data: (reciter) => _buildReciterList(reciter.reciters),
+                        loading: () => _buildReciterListShimmer(true),
+                        error: (error, stackTrace) => Text('Error: $error'),
+                      ),
                   SizedBox(height: 5.h),
                   Container(
                     width: double.infinity,
@@ -115,16 +115,16 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                     ),
                   ),
                   ref.watch(reciteNotifierProvider).when(
-                    data: (reciter) {
-                      return reciter.reciters.isNotEmpty
-                          ? _buildReciteTypeGrid(
-                        reciter.reciters[selectedReciterIndex].moshaf,
-                      )
-                          : _buildReciteTypeGridShimmer(true);
-                    },
-                    loading: () => _buildReciteTypeGridShimmer(true),
-                    error: (error, stackTrace) => Text('Error: $error'),
-                  ),
+                        data: (reciter) {
+                          return reciter.reciters.isNotEmpty
+                              ? _buildReciteTypeGrid(
+                                  reciter.reciters[selectedReciterIndex].moshaf,
+                                )
+                              : _buildReciteTypeGridShimmer(true);
+                        },
+                        loading: () => _buildReciteTypeGridShimmer(true),
+                        error: (error, stackTrace) => Text('Error: $error'),
+                      ),
                 ],
               ),
             ),
@@ -169,9 +169,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         borderRadius: BorderRadius.circular(10),
         border: selectedReciterIndex == index
             ? Border.all(
-          color: Colors.white,
-          width: 2,
-        )
+                color: Colors.white,
+                width: 2,
+              )
             : null,
       ),
       child: Container(
@@ -237,23 +237,23 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           child: GestureDetector(
             onTap: () async {
               final reciters = ref.read(reciteNotifierProvider).maybeWhen(
-                data: (data) => data.reciters,
-                orElse: () => [],
-              );
+                    data: (data) => data.reciters,
+                    orElse: () => [],
+                  );
               setState(() {
                 selectedReciteTypeIndex = index;
               });
 
               ref.read(reciteNotifierProvider.notifier).setSelectedMoshaf(
-                moshafModel: reciterTypes[selectedReciteTypeIndex],
-              );
+                    moshafModel: reciterTypes[selectedReciteTypeIndex],
+                  );
               ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                reciterModel: reciters[selectedReciterIndex],
-              );
+                    reciterModel: reciters[selectedReciterIndex],
+                  );
 
               ref.read(quranNotifierProvider.notifier).getSuwarByReciter(
-                selectedMoshaf: reciterTypes[selectedReciteTypeIndex],
-              );
+                    selectedMoshaf: reciterTypes[selectedReciteTypeIndex],
+                  );
 
               Navigator.push(
                 context,
@@ -290,9 +290,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     if (!mounted) return;
     if (value is RawKeyDownEvent) {
       final List<ReciterModel> reciters = ref.read(reciteNotifierProvider).maybeWhen(
-        data: (data) => data.reciters,
-        orElse: () => [],
-      );
+            data: (data) => data.reciters,
+            orElse: () => [],
+          );
       if (reciterFocusNode.hasFocus) {
         _handleReciteKeyEvent(value, reciters);
       } else if (reciteTypeFocusNode.hasFocus) {
@@ -357,14 +357,14 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             selectedReciteTypeIndex = selectedReciteTypeIndex;
           });
           ref.read(reciteNotifierProvider.notifier).setSelectedMoshaf(
-            moshafModel: reciterTypes[selectedReciteTypeIndex],
-          );
+                moshafModel: reciterTypes[selectedReciteTypeIndex],
+              );
           ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-            reciterModel: reciters[selectedReciterIndex],
-          );
+                reciterModel: reciters[selectedReciterIndex],
+              );
           ref.read(quranNotifierProvider.notifier).getSuwarByReciter(
-            selectedMoshaf: reciterTypes[selectedReciteTypeIndex],
-          );
+                selectedMoshaf: reciterTypes[selectedReciteTypeIndex],
+              );
           Navigator.push(
             context,
             MaterialPageRoute(
