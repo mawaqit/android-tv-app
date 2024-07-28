@@ -32,10 +32,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   int selectedReciteTypeIndex = 0;
   FocusNode reciterFocusNode = FocusNode();
   FocusNode reciteTypeFocusNode = FocusNode();
+  late FocusNode floatingActionButtonFocusNode;
   final ScrollController _reciterScrollController = ScrollController();
   double sizeOfContainerReciter = 15.w;
   double marginOfContainerReciter = 16;
-  FocusNode floatingActionButtonFocusNode = FocusNode(debugLabel: 'Floating Action Button');
   List<ReciterModel> reciters = [];
 
   @override
@@ -47,6 +47,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         FocusScope.of(context).requestFocus(reciterFocusNode);
       }
     });
+    floatingActionButtonFocusNode = FocusNode(debugLabel: 'Floating Action Button');
+    reciterFocusNode = FocusNode(debugLabel: 'Reciter');
+    reciteTypeFocusNode = FocusNode(debugLabel: 'Recite Type');
     RawKeyboard.instance.addListener(_handleKeyEvent);
   }
 
@@ -304,7 +307,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   }
 
   void _handleReciteKeyEvent(RawKeyEvent value, List<ReciterModel> reciters) {
-    if (!mounted) return;
+    if (!mounted || reciters.isEmpty) return;
     if (value is RawKeyDownEvent) {
       if (value.logicalKey == LogicalKeyboardKey.arrowRight) {
         if (selectedReciterIndex < reciters.length - 1) {
@@ -337,7 +340,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   }
 
   void _handleReciteTypeKeyEvent(RawKeyEvent value, List<ReciterModel> reciters, List<MoshafModel> reciterTypes) {
-    if (!mounted) return;
+    if (!mounted || reciters.isEmpty || reciterTypes.isEmpty) return;
     if (value is RawKeyDownEvent) {
       if (reciteTypeFocusNode.hasFocus) {
         if (value.logicalKey == LogicalKeyboardKey.arrowRight) {

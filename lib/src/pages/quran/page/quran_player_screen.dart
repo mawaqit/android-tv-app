@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_player/seek_bar.dart';
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_notifier.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
@@ -50,6 +51,7 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
     return WillPopScope(
       onWillPop: () async {
         ref.read(quranPlayerNotifierProvider.notifier).stop();
+        ref.read(navigateIntoNewPageProvider.notifier).state = false;
         return true;
       },
       child: QuranBackground(
