@@ -175,19 +175,19 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
 
   void _handleSurahSelection(SurahModel selectedSurah) {
     final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
-      orElse: () => null,
-      data: (data) => data.selectedMoshaf,
-    );
+          orElse: () => null,
+          data: (data) => data.selectedMoshaf,
+        );
     final quranState = ref.read(quranNotifierProvider);
 
     quranState.maybeWhen(
       orElse: () {},
       data: (data) {
         ref.read(quranPlayerNotifierProvider.notifier).initialize(
-          moshaf: moshaf!,
-          surah: selectedSurah,
-          suwar: data.suwar,
-        );
+              moshaf: moshaf!,
+              surah: selectedSurah,
+              suwar: data.suwar,
+            );
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ref.read(navigateIntoNewPageProvider.notifier).state = true;
           Navigator.push(
