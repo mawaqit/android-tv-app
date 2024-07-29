@@ -82,14 +82,20 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
           LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
         },
         child: QuranBackground(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            systemOverlayStyle: SystemUiOverlayStyle.light,
-          ),
           screen: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Container(
+                alignment: AlignmentDirectional.centerStart,
+                child: ExcludeFocus(
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
               SizedBox(height: 10.h),
               SizedBox(height: 40),
               Row(
