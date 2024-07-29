@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
@@ -47,13 +48,15 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final quranState = ref.watch(quranNotifierProvider);
+    ref.listen(navigateIntoNewPageProvider, (previous, next) {
+      if (next) {
+        RawKeyboard.instance.removeListener(_handleKeyEvent);
+      } else {
+        RawKeyboard.instance.addListener(_handleKeyEvent);
+      }
+    });
     return QuranBackground(
-      isSwitch: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-      ),
+      isSwitch: false,
       screen: Row(
         children: [
           Expanded(
@@ -61,6 +64,14 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                ExcludeFocus(
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
                 SizedBox(height: 10),
                 Expanded(
                   child: quranState.when(
@@ -88,7 +99,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                                     orElse: () => null,
                                     data: (data) => data.selectedMoshaf,
                                   );
-                              log('Selected moshaf: $moshaf');
                               ref.read(quranPlayerNotifierProvider.notifier).initialize(
                                     moshaf: moshaf!,
                                     surah: data.suwar[index],
@@ -158,14 +168,39 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
         });
         _scrollToSelectedItem();
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
-        final moshaf = ref.read(quranNotifierProvider).maybeWhen(
-              orElse: () => null,
-              data: (data) => data.suwar,
-            );
-        // String reciterServer = '${moshaf!.server}/00$selectedIndex.mp3';
-        // AudioSource source = AudioSource.uri(Uri.parse(reciterServer));
+        _handleSurahSelection(surahs[selectedIndex]);
       }
     }
+  }
+
+  void _handleSurahSelection(SurahModel selectedSurah) {
+    final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
+          orElse: () => null,
+          data: (data) => data.selectedMoshaf,
+        );
+    final quranState = ref.read(quranNotifierProvider);
+
+    quranState.maybeWhen(
+      orElse: () {},
+      data: (data) {
+        ref.read(quranPlayerNotifierProvider.notifier).initialize(
+              moshaf: moshaf!,
+              surah: selectedSurah,
+              suwar: data.suwar,
+            );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref.read(navigateIntoNewPageProvider.notifier).state = true;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuranPlayerScreen(),
+            ),
+          ).then((_) {
+            ref.read(navigateIntoNewPageProvider.notifier).state = false;
+          });
+        });
+      },
+    );
   }
 
   Widget _buildShimmerGrid() {
@@ -204,3 +239,5 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     );
   }
 }
+
+final navigateIntoNewPageProvider = StateProvider.autoDispose<bool>((ref) => false);
