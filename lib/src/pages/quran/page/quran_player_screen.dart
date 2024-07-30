@@ -43,16 +43,16 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
   }
 
   Stream<SeekBarData> get _seekBarDataStream => rxdart.Rx.combineLatest2<Duration, Duration?, SeekBarData>(
-      ref.read(quranPlayerNotifierProvider.notifier).positionStream,
-      ref.read(quranPlayerNotifierProvider.notifier).audioPlayer.durationStream, (
-      Duration position,
-      Duration? duration,
+          ref.read(quranPlayerNotifierProvider.notifier).positionStream,
+          ref.read(quranPlayerNotifierProvider.notifier).audioPlayer.durationStream, (
+        Duration position,
+        Duration? duration,
       ) {
-    return SeekBarData(
-      position,
-      duration ?? Duration.zero,
-    );
-  });
+        return SeekBarData(
+          position,
+          duration ?? Duration.zero,
+        );
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -367,14 +367,14 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                         child: IconButton(
                           icon: widget.isPlaying
                               ? SvgPicture.asset(
-                            R.ASSETS_ICON_PAUSE_SVG,
-                            color: Colors.white,
-                          )
+                                  R.ASSETS_ICON_PAUSE_SVG,
+                                  color: Colors.white,
+                                )
                               : Icon(
-                            Icons.play_arrow,
-                            color: Colors.white,
-                            size: 8.w,
-                          ),
+                                  Icons.play_arrow,
+                                  color: Colors.white,
+                                  size: 8.w,
+                                ),
                           iconSize: 10.w,
                           onPressed: () {
                             if (widget.isPlaying) {
