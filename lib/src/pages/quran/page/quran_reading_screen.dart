@@ -52,13 +52,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   @override
   void dispose() {
-    _listeningModeFocusNode.dispose();
-    _rightSkipButtonFocusNode.dispose();
-    _gridScrollController.dispose();
-    _gridScrollController.dispose();
-    _leftSkipButtonFocusNode.dispose();
-    _backButtonFocusNode.dispose();
-    _choosePageFocusNode.dispose();
+    // _listeningModeFocusNode.dispose();
+    // _rightSkipButtonFocusNode.dispose();
+    // _gridScrollController.dispose();
+    // _leftSkipButtonFocusNode.dispose();
+    // _backButtonFocusNode.dispose();
+    // _choosePageFocusNode.dispose();
     super.dispose();
   }
 
