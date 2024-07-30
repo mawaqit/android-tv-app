@@ -32,6 +32,7 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(quranPlayerNotifierProvider.notifier).play();
+      backButtonFocusNode.requestFocus();
     });
   }
 
@@ -42,16 +43,16 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
   }
 
   Stream<SeekBarData> get _seekBarDataStream => rxdart.Rx.combineLatest2<Duration, Duration?, SeekBarData>(
-          ref.read(quranPlayerNotifierProvider.notifier).positionStream,
-          ref.read(quranPlayerNotifierProvider.notifier).audioPlayer.durationStream, (
-        Duration position,
-        Duration? duration,
+      ref.read(quranPlayerNotifierProvider.notifier).positionStream,
+      ref.read(quranPlayerNotifierProvider.notifier).audioPlayer.durationStream, (
+      Duration position,
+      Duration? duration,
       ) {
-        return SeekBarData(
-          position,
-          duration ?? Duration.zero,
-        );
-      });
+    return SeekBarData(
+      position,
+      duration ?? Duration.zero,
+    );
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +72,11 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
           systemOverlayStyle: SystemUiOverlayStyle.light,
           leading: Focus(
             focusNode: backButtonFocusNode,
+            onFocusChange: (hasFocus) {
+              if (hasFocus) {
+                log('Back button focused');
+              }
+            },
             child: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -319,6 +325,14 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                     Spacer(),
                     FocusableActionDetector(
                       focusNode: leftFocusNode,
+                      actions: <Type, Action<Intent>>{
+                        ActivateIntent: CallbackAction<ActivateIntent>(
+                          onInvoke: (ActivateIntent intent) {
+                            ref.read(quranPlayerNotifierProvider.notifier).seekToPrevious();
+                            return null;
+                          },
+                        ),
+                      },
                       onFocusChange: (hasFocus) {
                         setState(() {});
                       },
@@ -353,14 +367,14 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                         child: IconButton(
                           icon: widget.isPlaying
                               ? SvgPicture.asset(
-                                  R.ASSETS_ICON_PAUSE_SVG,
-                                  color: Colors.white,
-                                )
+                            R.ASSETS_ICON_PAUSE_SVG,
+                            color: Colors.white,
+                          )
                               : Icon(
-                                  Icons.play_arrow,
-                                  color: Colors.white,
-                                  size: 8.w,
-                                ),
+                            Icons.play_arrow,
+                            color: Colors.white,
+                            size: 8.w,
+                          ),
                           iconSize: 10.w,
                           onPressed: () {
                             if (widget.isPlaying) {
