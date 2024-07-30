@@ -32,6 +32,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   int selectedReciteTypeIndex = 0;
   FocusNode reciterFocusNode = FocusNode();
   FocusNode reciteTypeFocusNode = FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late FocusNode floatingActionButtonFocusNode;
   final ScrollController _reciterScrollController = ScrollController();
   double sizeOfContainerReciter = 15.w;
@@ -56,7 +57,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   @override
   void dispose() {
     RawKeyboard.instance.removeListener(_handleKeyEvent);
-    reciterFocusNode.dispose();
+    // reciterFocusNode.dispose();
     reciteTypeFocusNode.dispose();
     floatingActionButtonFocusNode.dispose();
     _reciterScrollController.dispose();
@@ -66,6 +67,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   @override
   Widget build(BuildContext context) {
     return QuranBackground(
+      key: _scaffoldKey,
       isSwitch: true,
       floatingActionButtonFocusNode: floatingActionButtonFocusNode,
       appBar: AppBar(

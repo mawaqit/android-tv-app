@@ -176,13 +176,16 @@ class MawaqitDrawer extends ConsumerWidget {
                   switch (state.value!.mode) {
                     case QuranMode.reading:
                       log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: reading');
+                      Navigator.pop(context);
                       AppRouter.push(QuranReadingScreen());
                       break;
                     case QuranMode.listening:
                       log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: listening');
+                      Navigator.pop(context);
                       AppRouter.push(ReciterSelectionScreen.withoutSurahName());
                       break;
                     case QuranMode.none:
+                      Navigator.pop(context);
                       AppRouter.push(QuranModeSelection());
                       break;
                   }
