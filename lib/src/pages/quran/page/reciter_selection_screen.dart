@@ -200,21 +200,29 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             SizedBox(
               width: double.infinity,
             ),
-            Image.asset(
-              R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
-              width: 17.w,
-              fit: BoxFit.fitWidth,
+            Expanded(
+              flex: 3,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  double imageSize = constraints.maxWidth * 0.7;
+                  return Image.asset(
+                    R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
+                    width: imageSize,
+                    height: imageSize,
+                    fit: BoxFit.contain,
+                  );
+                },
+              ),
             ),
-            Spacer(),
             Expanded(
               flex: 1,
               child: AutoSizeText(
                 reciterNames[index].name,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                minFontSize: 8,
-                maxFontSize: 12,
-                overflow: TextOverflow.ellipsis,
+                textAlign:  TextAlign.center,
+                maxLines: 1,
+                minFontSize: 12,
+                maxFontSize: 20,
+                overflow: TextOverflow.visible,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 4.sp,
