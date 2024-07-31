@@ -423,7 +423,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           );
         } else if (value.logicalKey == LogicalKeyboardKey.arrowUp) {
           FocusScope.of(context).unfocus();
-          reciterFocusNode.unfocus();
+          reciterFocusNode.requestFocus();
           setState(() {
             selectedReciteTypeIndex = 0;
           });
