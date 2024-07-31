@@ -313,10 +313,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             child: IconButton(
                               icon: SvgPicture.asset(
                                 R.ASSETS_ICON_SHUFFLE_SVG,
-                                color:
-                                    data.isShuffled || shuffleFocusNode.hasFocus
-                                        ? Colors.white
-                                        : Colors.grey[800],
+                                color: data.isShuffled || shuffleFocusNode.hasFocus ? Colors.white : Colors.grey[800],
                                 width: 6.w,
                               ),
                               iconSize: 8.w,
@@ -370,9 +367,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: playFocusNode.hasFocus
-                              ? theme.primaryColor
-                              : Colors.transparent,
+                          color: playFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
@@ -389,13 +384,9 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           iconSize: 10.w,
                           onPressed: () {
                             if (widget.isPlaying) {
-                              ref
-                                  .read(quranPlayerNotifierProvider.notifier)
-                                  .pause();
+                              ref.read(quranPlayerNotifierProvider.notifier).pause();
                             } else {
-                              ref
-                                  .read(quranPlayerNotifierProvider.notifier)
-                                  .play();
+                              ref.read(quranPlayerNotifierProvider.notifier).play();
                             }
                           },
                         ),
@@ -446,10 +437,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             child: IconButton(
                               icon: SvgPicture.asset(
                                 R.ASSETS_ICON_REPEAT_SVG,
-                                color:
-                                    data.isRepeating || repeatFocusNode.hasFocus
-                                        ? Colors.white
-                                        : Colors.grey[800],
+                                color: data.isRepeating || repeatFocusNode.hasFocus ? Colors.white : Colors.grey[800],
                                 width: 6.w,
                               ),
                               iconSize: 8.w,

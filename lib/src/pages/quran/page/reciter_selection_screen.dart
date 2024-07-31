@@ -174,10 +174,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         borderRadius: BorderRadius.circular(10),
         border: reciterFocusNode.hasFocus
             ? selectedReciterIndex == index
-            ? Border.all(
-                color: Colors.white,
-                width: 2,
-              )
+                ? Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  )
                 : null
             : null,
       ),
