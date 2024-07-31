@@ -146,7 +146,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
       }
       if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
         setState(() {
-          if(textDirection == TextDirection.ltr) {
+          if (textDirection == TextDirection.ltr) {
             selectedIndex = (selectedIndex + 1) % surahs.length;
           } else {
             selectedIndex = (selectedIndex - 1 + surahs.length) % surahs.length;
@@ -155,7 +155,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
         _scrollToSelectedItem();
       } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         setState(() {
-          if(textDirection == TextDirection.ltr) {
+          if (textDirection == TextDirection.ltr) {
             selectedIndex = (selectedIndex - 1) % surahs.length;
           } else {
             selectedIndex = (selectedIndex + 1 + surahs.length) % surahs.length;
