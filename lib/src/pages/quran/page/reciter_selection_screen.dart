@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +22,7 @@ class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
 
   const ReciterSelectionScreen({super.key, required this.surahName});
+
   const ReciterSelectionScreen.withoutSurahName({super.key}) : surahName = '';
 
   @override
@@ -57,9 +59,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   @override
   void dispose() {
     RawKeyboard.instance.removeListener(_handleKeyEvent);
-    // reciterFocusNode.dispose();
     reciteTypeFocusNode.dispose();
-    floatingActionButtonFocusNode.dispose();
+    // floatingActionButtonFocusNode.dispose();
     _reciterScrollController.dispose();
     super.dispose();
   }
@@ -205,19 +206,22 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               fit: BoxFit.fitWidth,
             ),
             Spacer(),
-            FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  reciterNames[index].name,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
+            Expanded(
+              flex: 1,
+              child: AutoSizeText(
+                reciterNames[index].name,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                minFontSize: 8,
+                maxFontSize: 12,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 4.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -298,30 +302,56 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             data: (data) => data.reciters,
             orElse: () => [],
           );
+      final textDirection = Directionality.of(context);
       if (reciterFocusNode.hasFocus) {
-        _handleReciteKeyEvent(value, reciters);
+        _handleReciteKeyEvent(
+          value,
+          reciters,
+          textDirection,
+        );
       } else if (reciteTypeFocusNode.hasFocus) {
-        _handleReciteTypeKeyEvent(value, reciters, reciters[selectedReciterIndex].moshaf);
+        _handleReciteTypeKeyEvent(
+          value,
+          reciters,
+          reciters[selectedReciterIndex].moshaf,
+          textDirection,
+        );
       } else if (floatingActionButtonFocusNode.hasFocus) {
         _handleFloatingActionButtonKeyEvent(value);
       }
     }
   }
 
-  void _handleReciteKeyEvent(RawKeyEvent value, List<ReciterModel> reciters) {
+  void _handleReciteKeyEvent(
+    RawKeyEvent value,
+    List<ReciterModel> reciters,
+    TextDirection textDirection,
+  ) {
     if (!mounted || reciters.isEmpty) return;
     if (value is RawKeyDownEvent) {
+      final isLtr = textDirection == TextDirection.ltr;
+
       if (value.logicalKey == LogicalKeyboardKey.arrowRight) {
-        if (selectedReciterIndex < reciters.length - 1) {
+        if (isLtr && selectedReciterIndex < reciters.length - 1) {
           setState(() {
             selectedReciterIndex++;
             _animateToReciter(selectedReciterIndex, value.logicalKey);
           });
-        }
-      } else if (value.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        if (selectedReciterIndex > 0) {
+        } else if (!isLtr && selectedReciterIndex > 0) {
           setState(() {
             selectedReciterIndex--;
+            _animateToReciter(selectedReciterIndex, value.logicalKey);
+          });
+        }
+      } else if (value.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        if (isLtr && selectedReciterIndex > 0) {
+          setState(() {
+            selectedReciterIndex--;
+            _animateToReciter(selectedReciterIndex, value.logicalKey);
+          });
+        } else if (!isLtr && selectedReciterIndex < reciters.length - 1) {
+          setState(() {
+            selectedReciterIndex++;
             _animateToReciter(selectedReciterIndex, value.logicalKey);
           });
         }
@@ -341,20 +371,35 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     }
   }
 
-  void _handleReciteTypeKeyEvent(RawKeyEvent value, List<ReciterModel> reciters, List<MoshafModel> reciterTypes) {
+  void _handleReciteTypeKeyEvent(
+    RawKeyEvent value,
+    List<ReciterModel> reciters,
+    List<MoshafModel> reciterTypes,
+    TextDirection textDirection,
+  ) {
     if (!mounted || reciters.isEmpty || reciterTypes.isEmpty) return;
     if (value is RawKeyDownEvent) {
+      final isLtr = textDirection == TextDirection.ltr;
+
       if (reciteTypeFocusNode.hasFocus) {
         if (value.logicalKey == LogicalKeyboardKey.arrowRight) {
-          if (selectedReciteTypeIndex < reciters[selectedReciterIndex].moshaf.length - 1) {
+          if (isLtr && selectedReciteTypeIndex < reciters[selectedReciterIndex].moshaf.length - 1) {
             setState(() {
               selectedReciteTypeIndex++;
             });
-          }
-        } else if (value.logicalKey == LogicalKeyboardKey.arrowLeft) {
-          if (selectedReciteTypeIndex > 0) {
+          } else if (!isLtr && selectedReciteTypeIndex > 0) {
             setState(() {
               selectedReciteTypeIndex--;
+            });
+          }
+        } else if (value.logicalKey == LogicalKeyboardKey.arrowLeft) {
+          if (isLtr && selectedReciteTypeIndex > 0) {
+            setState(() {
+              selectedReciteTypeIndex--;
+            });
+          } else if (!isLtr && selectedReciteTypeIndex < reciters[selectedReciterIndex].moshaf.length - 1) {
+            setState(() {
+              selectedReciteTypeIndex++;
             });
           }
         } else if (value.logicalKey == LogicalKeyboardKey.select) {
@@ -378,7 +423,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           );
         } else if (value.logicalKey == LogicalKeyboardKey.arrowUp) {
           FocusScope.of(context).unfocus();
-          FocusScope.of(context).requestFocus(reciterFocusNode);
+          reciterFocusNode.unfocus();
           setState(() {
             selectedReciteTypeIndex = 0;
           });
