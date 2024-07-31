@@ -218,7 +218,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               flex: 1,
               child: AutoSizeText(
                 reciterNames[index].name,
-                textAlign:  TextAlign.center,
+                textAlign: TextAlign.center,
                 maxLines: 1,
                 minFontSize: 12,
                 maxFontSize: 20,
