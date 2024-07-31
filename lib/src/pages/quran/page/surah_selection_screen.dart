@@ -137,6 +137,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
 
   void _handleKeyEvent(RawKeyEvent event) {
     final surahs = ref.read(quranNotifierProvider).maybeWhen(orElse: () => [], data: (data) => data.suwar);
+    final textDirection = Directionality.of(context);
 
     if (event is RawKeyDownEvent) {
       log('Key pressed: ${event.logicalKey}');
@@ -145,12 +146,20 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
       }
       if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
         setState(() {
-          selectedIndex = (selectedIndex + 1) % surahs.length;
+          if(textDirection == TextDirection.ltr) {
+            selectedIndex = (selectedIndex + 1) % surahs.length;
+          } else {
+            selectedIndex = (selectedIndex - 1 + surahs.length) % surahs.length;
+          }
         });
         _scrollToSelectedItem();
       } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         setState(() {
-          selectedIndex = (selectedIndex - 1 + surahs.length) % surahs.length;
+          if(textDirection == TextDirection.ltr) {
+            selectedIndex = (selectedIndex - 1) % surahs.length;
+          } else {
+            selectedIndex = (selectedIndex + 1 + surahs.length) % surahs.length;
+          }
         });
         _scrollToSelectedItem();
       } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
