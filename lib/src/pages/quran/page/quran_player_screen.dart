@@ -145,6 +145,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
   late final FocusNode shuffleFocusNode;
   late final FocusNode repeatFocusNode;
   late final FocusNode sliderFocusNode;
+  late final FocusNode playFocusNode;
   Color _sliderThumbColor = Colors.white;
 
   @override
@@ -154,6 +155,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
     rightFocusNode = FocusNode();
     shuffleFocusNode = FocusNode();
     repeatFocusNode = FocusNode();
+    playFocusNode = FocusNode();
     sliderFocusNode = FocusNode();
     sliderFocusNode.addListener(_setSliderThumbColor);
 
@@ -179,6 +181,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
     leftFocusNode.dispose();
     rightFocusNode.dispose();
     sliderFocusNode.dispose();
+    playFocusNode.dispose();
     super.dispose();
   }
 
@@ -310,7 +313,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             child: IconButton(
                               icon: SvgPicture.asset(
                                 R.ASSETS_ICON_SHUFFLE_SVG,
-                                color: data.isShuffled ? Colors.white : Colors.grey[800],
+                                color: data.isShuffled || shuffleFocusNode.hasFocus ? Colors.white : Colors.grey[800],
                                 width: 6.w,
                               ),
                               iconSize: 8.w,
@@ -357,13 +360,16 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                     SizedBox(
                       width: 2.w,
                     ),
-                    Material(
-                      color: Colors.transparent,
-                      shape: const CircleBorder(side: BorderSide.none),
-                      elevation: 15,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey[900],
-                        radius: 6.w,
+                    FocusableActionDetector(
+                      focusNode: playFocusNode,
+                      onFocusChange: (hasFocus) {
+                        setState(() {});
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: playFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
+                          shape: BoxShape.circle,
+                        ),
                         child: IconButton(
                           icon: widget.isPlaying
                               ? SvgPicture.asset(
@@ -431,7 +437,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             child: IconButton(
                               icon: SvgPicture.asset(
                                 R.ASSETS_ICON_REPEAT_SVG,
-                                color: data.isRepeating ? Colors.white : Colors.grey[800],
+                                color: data.isRepeating || repeatFocusNode.hasFocus ? Colors.white : Colors.grey[800],
                                 width: 6.w,
                               ),
                               iconSize: 8.w,

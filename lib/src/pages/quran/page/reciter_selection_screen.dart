@@ -172,11 +172,13 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       margin: EdgeInsets.only(right: marginOfContainerReciter),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        border: selectedReciterIndex == index
-            ? Border.all(
-                color: Colors.white,
-                width: 2,
-              )
+        border: reciterFocusNode.hasFocus
+            ? selectedReciterIndex == index
+                ? Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  )
+                : null
             : null,
       ),
       child: Container(
@@ -270,7 +272,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             child: Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: selectedReciteTypeIndex == index ? Colors.white.withOpacity(0.4) : Colors.white.withOpacity(0.2),
+                border: reciteTypeFocusNode.hasFocus
+                    ? selectedReciteTypeIndex == index
+                        ? Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          )
+                        : null
+                    : null,
+                color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
