@@ -149,7 +149,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
     sliderFocusNode.addListener(_setSliderThumbColor);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      leftFocusNode.requestFocus();
+      playFocusNode.requestFocus();
     });
   }
 
@@ -303,6 +303,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                               iconSize: 8.w,
                               onPressed: () {
                                 ref.read(quranPlayerNotifierProvider.notifier).shuffle();
+                                shuffleFocusNode.requestFocus();
                               },
                             ),
                           ),
@@ -344,6 +345,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           ),
                           iconSize: 8.w,
                           onPressed: () {
+                            leftFocusNode.requestFocus();
+
                             final notifier = ref.read(quranPlayerNotifierProvider.notifier);
                             if (directionality == TextDirection.ltr) {
                               notifier.seekToPrevious();
@@ -400,6 +403,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             } else {
                               notifier.play();
                             }
+                            playFocusNode.requestFocus();
                           },
                         ),
                       ),
@@ -439,6 +443,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           ),
                           iconSize: 8.w,
                           onPressed: () {
+                            rightFocusNode.requestFocus();
+
                             final notifier = ref.read(quranPlayerNotifierProvider.notifier);
                             if (directionality == TextDirection.ltr) {
                               notifier.seekToNext();
@@ -472,6 +478,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                               iconSize: 8.w,
                               onPressed: () {
                                 ref.read(quranPlayerNotifierProvider.notifier).repeat();
+                                repeatFocusNode.requestFocus();
                               },
                             ),
                           ),
