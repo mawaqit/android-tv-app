@@ -8,11 +8,11 @@ import 'package:mawaqit/src/state_management/quran/download_quran/download_quran
 
 Future<void> showDownloadQuranAlertDialog(BuildContext context, WidgetRef ref) async {
   final isFirstTime = true;
-  
+
   if (!context.mounted) return;
 
   await ref.read(downloadQuranNotifierProvider.notifier).checkForUpdate();
-  
+
   if (!context.mounted) return;
 
   final state = ref.watch(downloadQuranNotifierProvider);
@@ -25,7 +25,7 @@ Future<void> showDownloadQuranAlertDialog(BuildContext context, WidgetRef ref) a
 
   if (isNoUpdate && isFirstTime && context.mounted) {
     final shouldDownload = await showFirstTimePopup(context);
-    
+
     if (!context.mounted) return;
 
     if (shouldDownload) {
