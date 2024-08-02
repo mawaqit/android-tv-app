@@ -11,6 +11,7 @@ import 'package:mawaqit/const/resource.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_state.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
+import 'dart:math' as math;
 
 class QuranPlayerScreen extends ConsumerStatefulWidget {
   const QuranPlayerScreen({super.key});
@@ -390,10 +391,13 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                                   R.ASSETS_ICON_PAUSE_SVG,
                                   color: Colors.white,
                                 )
-                              : Icon(
-                                  Icons.play_arrow,
-                                  color: Colors.white,
-                                  size: 8.w,
+                              : Transform.rotate(
+                                  angle: directionality == TextDirection.rtl ? math.pi : 0,
+                                  child: Icon(
+                                    Icons.play_arrow,
+                                    color: Colors.white,
+                                    size: 8.w,
+                                  ),
                                 ),
                           iconSize: 10.w,
                           onPressed: () {
