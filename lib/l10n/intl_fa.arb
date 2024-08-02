@@ -244,7 +244,7 @@
   "reciteType": "نوع تلاوت",
   "readingMode": "من می خواهم مطالعه کنم",
   "listeningMode": "من میخواهم گوش کنم",
-  "quranReadingPage": "صفحه {چپ} - {راست} / {کل}",
+  "quranReadingPage": "صفحه {leftPage} - {rightPage} / {totalPages}",
   "@quranReadingPage": {
     "description": "Placeholder text for displaying Quran reading page numbers",
     "placeholders": {
