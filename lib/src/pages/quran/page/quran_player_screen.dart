@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,23 +7,19 @@ import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_player/seek_bar.dart';
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_notifier.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
-
 import 'package:mawaqit/const/resource.dart';
 import 'package:sizer/sizer.dart';
-
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_state.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 
 class QuranPlayerScreen extends ConsumerStatefulWidget {
-  const QuranPlayerScreen({
-    super.key,
-  });
+  const QuranPlayerScreen({super.key});
 
   @override
-  ConsumerState<QuranPlayerScreen> createState() => _SongScreenState();
+  ConsumerState<QuranPlayerScreen> createState() => _QuranPlayerScreenState();
 }
 
-class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
+class _QuranPlayerScreenState extends ConsumerState<QuranPlayerScreen> {
   final FocusNode backButtonFocusNode = FocusNode();
 
   @override
@@ -44,14 +39,9 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
 
   Stream<SeekBarData> get _seekBarDataStream => rxdart.Rx.combineLatest2<Duration, Duration?, SeekBarData>(
           ref.read(quranPlayerNotifierProvider.notifier).positionStream,
-          ref.read(quranPlayerNotifierProvider.notifier).audioPlayer.durationStream, (
-        Duration position,
-        Duration? duration,
-      ) {
-        return SeekBarData(
-          position,
-          duration ?? Duration.zero,
-        );
+          ref.read(quranPlayerNotifierProvider.notifier).audioPlayer.durationStream,
+          (Duration position, Duration? duration) {
+        return SeekBarData(position, duration ?? Duration.zero);
       });
 
   @override
@@ -64,7 +54,6 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
         return true;
       },
       child: QuranBackground(
-        // switchFocusNode: FocusNode(),
         isSwitch: false,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -98,7 +87,7 @@ class _SongScreenState extends ConsumerState<QuranPlayerScreen> {
                 Positioned(
                   child: _QuranPlayer(
                     backButtonFocusNode: backButtonFocusNode,
-                    isPlaying: quranPlayerState.playerState == AudioPlayerState.playing ? true : false,
+                    isPlaying: quranPlayerState.playerState == AudioPlayerState.playing,
                     surahName: quranPlayerState.surahName,
                     surahType: quranPlayerState.reciterName,
                     seekBarDataStream: _seekBarDataStream,
@@ -166,11 +155,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
 
   _setSliderThumbColor() {
     setState(() {
-      if (sliderFocusNode.hasFocus) {
-        _sliderThumbColor = Color(0xFF490094);
-      } else {
-        _sliderThumbColor = Colors.white;
-      }
+      _sliderThumbColor = sliderFocusNode.hasFocus ? Color(0xFF490094) : Colors.white;
     });
   }
 
@@ -188,6 +173,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
   @override
   Widget build(BuildContext context) {
     final quranState = ref.watch(quranPlayerNotifierProvider);
+    final directionality = Directionality.of(context);
     final theme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.all(3.w),
@@ -288,9 +274,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     quranState.maybeWhen(
-                      orElse: () {
-                        return const SizedBox();
-                      },
+                      orElse: () => const SizedBox(),
                       data: (data) {
                         return FocusableActionDetector(
                           focusNode: shuffleFocusNode,
@@ -328,10 +312,18 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                     Spacer(),
                     FocusableActionDetector(
                       focusNode: leftFocusNode,
-                      actions: <Type, Action<Intent>>{
+                      shortcuts: {
+                        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+                      },
+                      actions: {
                         ActivateIntent: CallbackAction<ActivateIntent>(
-                          onInvoke: (ActivateIntent intent) {
-                            ref.read(quranPlayerNotifierProvider.notifier).seekToPrevious();
+                          onInvoke: (intent) {
+                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                            if (directionality == TextDirection.ltr) {
+                              notifier.seekToPrevious();
+                            } else {
+                              notifier.seekToNext();
+                            }
                             return null;
                           },
                         ),
@@ -352,15 +344,34 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           ),
                           iconSize: 8.w,
                           onPressed: () {
-                            ref.read(quranPlayerNotifierProvider.notifier).seekToPrevious();
+                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                            if (directionality == TextDirection.ltr) {
+                              notifier.seekToPrevious();
+                            } else {
+                              notifier.seekToNext();
+                            }
                           },
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 2.w,
-                    ),
+                    SizedBox(width: 2.w),
                     FocusableActionDetector(
+                      shortcuts: {
+                        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+                      },
+                      actions: {
+                        ActivateIntent: CallbackAction<ActivateIntent>(
+                          onInvoke: (intent) {
+                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                            if (widget.isPlaying) {
+                              notifier.pause();
+                            } else {
+                              notifier.play();
+                            }
+                            return null;
+                          },
+                        ),
+                      },
                       focusNode: playFocusNode,
                       onFocusChange: (hasFocus) {
                         setState(() {});
@@ -383,22 +394,37 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                                 ),
                           iconSize: 10.w,
                           onPressed: () {
+                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
                             if (widget.isPlaying) {
-                              ref.read(quranPlayerNotifierProvider.notifier).pause();
+                              notifier.pause();
                             } else {
-                              ref.read(quranPlayerNotifierProvider.notifier).play();
+                              notifier.play();
                             }
                           },
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 2.w,
-                    ),
+                    SizedBox(width: 2.w),
                     FocusableActionDetector(
                       focusNode: rightFocusNode,
                       onFocusChange: (hasFocus) {
                         setState(() {});
+                      },
+                      shortcuts: {
+                        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+                      },
+                      actions: {
+                        ActivateIntent: CallbackAction<ActivateIntent>(
+                          onInvoke: (intent) {
+                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                            if (directionality == TextDirection.ltr) {
+                              notifier.seekToNext();
+                            } else {
+                              notifier.seekToPrevious();
+                            }
+                            return null;
+                          },
+                        ),
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -413,16 +439,19 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           ),
                           iconSize: 8.w,
                           onPressed: () {
-                            ref.read(quranPlayerNotifierProvider.notifier).seekToNext();
+                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                            if (directionality == TextDirection.ltr) {
+                              notifier.seekToNext();
+                            } else {
+                              notifier.seekToPrevious();
+                            }
                           },
                         ),
                       ),
                     ),
                     Spacer(),
                     quranState.maybeWhen(
-                      orElse: () {
-                        return const SizedBox();
-                      },
+                      orElse: () => const SizedBox(),
                       data: (data) {
                         return FocusableActionDetector(
                           focusNode: repeatFocusNode,
