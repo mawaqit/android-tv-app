@@ -160,7 +160,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
     sliderFocusNode.addListener(_setSliderThumbColor);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      leftFocusNode.requestFocus();
+      playFocusNode.requestFocus();
     });
   }
 
@@ -319,6 +319,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                               iconSize: 8.w,
                               onPressed: () {
                                 ref.read(quranPlayerNotifierProvider.notifier).shuffle();
+                                shuffleFocusNode.requestFocus();
                               },
                             ),
                           ),
@@ -353,6 +354,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           iconSize: 8.w,
                           onPressed: () {
                             ref.read(quranPlayerNotifierProvider.notifier).seekToPrevious();
+                            leftFocusNode.requestFocus();
                           },
                         ),
                       ),
@@ -388,6 +390,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             } else {
                               ref.read(quranPlayerNotifierProvider.notifier).play();
                             }
+                            playFocusNode.requestFocus();
                           },
                         ),
                       ),
@@ -414,6 +417,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           iconSize: 8.w,
                           onPressed: () {
                             ref.read(quranPlayerNotifierProvider.notifier).seekToNext();
+                            rightFocusNode.requestFocus();
                           },
                         ),
                       ),
@@ -443,6 +447,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                               iconSize: 8.w,
                               onPressed: () {
                                 ref.read(quranPlayerNotifierProvider.notifier).repeat();
+                                repeatFocusNode.requestFocus();
                               },
                             ),
                           ),
