@@ -8,37 +8,50 @@ import 'package:mawaqit/src/state_management/quran/download_quran/download_quran
 
 Future<void> showDownloadQuranAlertDialog(BuildContext context, WidgetRef ref) async {
   final isFirstTime = true;
+  
+  if (!context.mounted) return;
+
   await ref.read(downloadQuranNotifierProvider.notifier).checkForUpdate();
+  
+  if (!context.mounted) return;
+
   final state = ref.watch(downloadQuranNotifierProvider);
 
   final isNoUpdate = state.when(
-    data: (data) {
-      if (data is NoUpdate) {
-        return false;
-      } else {
-        return true;
-      }
-    },
+    data: (data) => data is! NoUpdate,
     error: (err, stack) => false,
     loading: () => false,
   );
 
-  if (isNoUpdate && isFirstTime) {
+  if (isNoUpdate && isFirstTime && context.mounted) {
     final shouldDownload = await showFirstTimePopup(context);
+    
+    if (!context.mounted) return;
+
     if (shouldDownload) {
-      state.when(
+      await state.when(
         data: (data) async {
           if (data is UpdateAvailable) {
             ref.read(downloadQuranNotifierProvider.notifier).download();
-            return progressQuran(context, ref);
-          } else {
+            if (context.mounted) {
+              return progressQuran(context, ref);
+            }
+          } else if (context.mounted) {
             await _alreadyUpdatedVersion(context, ref);
           }
         },
-        error: (err, stack) => _buildErrorPopup(context, err),
-        loading: () => CircularProgressIndicator(),
+        error: (err, stack) {
+          if (context.mounted) {
+            _buildErrorPopup(context, err);
+          }
+        },
+        loading: () {
+          if (context.mounted) {
+            return CircularProgressIndicator();
+          }
+        },
       );
-    } else {
+    } else if (context.mounted) {
       Navigator.pop(context);
     }
   }

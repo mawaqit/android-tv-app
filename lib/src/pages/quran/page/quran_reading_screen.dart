@@ -37,17 +37,34 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   @override
   void initState() {
     super.initState();
-    _observerController = GridObserverController(controller: _gridScrollController);
+    _observerController =
+        GridObserverController(controller: _gridScrollController);
     _backButtonFocusNode = FocusNode(debugLabel: 'node_backButton');
     _listeningModeFocusNode = FocusNode(debugLabel: 'node_listeningMode');
     _rightSkipButtonFocusNode = FocusNode(debugLabel: 'node_rightSkip');
     _leftSkipButtonFocusNode = FocusNode(debugLabel: 'node_leftSkip');
     _choosePageFocusNode = FocusNode(debugLabel: 'node_choosePage');
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await showDownloadQuranAlertDialog(context, ref);
-      ref.read(quranReadingNotifierProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _initializeQuranDownload();
+      }
     });
+  }
+
+  Future<void> _initializeQuranDownload() async {
+    if (!mounted) return;
+
+    try {
+      await showDownloadQuranAlertDialog(context, ref);
+      if (mounted) {
+        ref.read(quranReadingNotifierProvider);
+      }
+    } catch (e) {
+      if (mounted) {
+        log('[initialize_quran_download]: $e');
+      }
+    }
   }
 
   @override
@@ -61,7 +78,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     super.dispose();
   }
 
-  FloatingActionButtonLocation _getFloatingActionButtonLocation(BuildContext context) {
+  FloatingActionButtonLocation _getFloatingActionButtonLocation(
+      BuildContext context) {
     final TextDirection textDirection = Directionality.of(context);
     switch (textDirection) {
       case TextDirection.ltr:
@@ -86,12 +104,14 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
             _backButtonFocusNode.requestFocus();
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            if (FocusScope.of(context).focusedChild == _listeningModeFocusNode) {
+            if (FocusScope.of(context).focusedChild ==
+                _listeningModeFocusNode) {
               _choosePageFocusNode.requestFocus();
             } else {
               _listeningModeFocusNode.requestFocus();
             }
-          } else if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+          } else if (event.logicalKey == LogicalKeyboardKey.select ||
+              event.logicalKey == LogicalKeyboardKey.enter) {
             if (FocusScope.of(context).focusedChild == _choosePageFocusNode) {
               print('enter');
             }
@@ -115,11 +135,14 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
               size: 15.sp,
             ),
             onPressed: () async {
-              ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+              ref
+                  .read(quranNotifierProvider.notifier)
+                  .selectModel(QuranMode.listening);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ReciterSelectionScreen.withoutSurahName(),
+                  builder: (context) =>
+                      ReciterSelectionScreen.withoutSurahName(),
                 ),
               );
             },
@@ -132,12 +155,16 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             return Stack(
               children: [
                 PageView.builder(
-                  reverse: Directionality.of(context) == TextDirection.ltr ? true : false,
+                  reverse: Directionality.of(context) == TextDirection.ltr
+                      ? true
+                      : false,
                   controller: quranReadingState.pageController,
                   onPageChanged: (index) {
                     final actualPage = index * 2;
                     if (actualPage != quranReadingState.currentPage) {
-                      ref.read(quranReadingNotifierProvider.notifier).updatePage(actualPage);
+                      ref
+                          .read(quranReadingNotifierProvider.notifier)
+                          .updatePage(actualPage);
                     }
                   },
                   itemCount: (quranReadingState.totalPages / 2).ceil(),
@@ -148,7 +175,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       builder: (context, constraints) {
                         final pageWidth = constraints.maxWidth / 2;
                         final pageHeight = constraints.maxHeight;
-                        final bottomPadding = pageHeight * 0.05; // 5% of screen height for bottom padding
+                        final bottomPadding = pageHeight *
+                            0.05; // 5% of screen height for bottom padding
 
                         return Stack(
                           children: [
@@ -160,7 +188,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                                 bottom: bottomPadding,
                                 width: pageWidth * 0.9,
                                 child: _buildSvgPicture(
-                                  quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
+                                  quranReadingState.svgs[rightPageIndex %
+                                      quranReadingState.svgs.length],
                                 ),
                               ),
                             // Left Page (now on the right)
@@ -171,7 +200,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                                 bottom: bottomPadding,
                                 width: pageWidth * 0.9,
                                 child: _buildSvgPicture(
-                                  quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
+                                  quranReadingState.svgs[leftPageIndex %
+                                      quranReadingState.svgs.length],
                                 ),
                               ),
                           ],
@@ -225,15 +255,18 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                         ),
                         borderRadius: BorderRadius.circular(20),
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.4),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
                             S.of(context).quranReadingPage(
-                                  quranReadingState.currentPage + 1, // Right page (now on the left)
-                                  quranReadingState.currentPage + 2, // Left page (now on the right)
+                                  quranReadingState.currentPage +
+                                      1, // Right page (now on the left)
+                                  quranReadingState.currentPage +
+                                      2, // Left page (now on the right)
                                   quranReadingState.totalPages,
                                 ),
                             style: TextStyle(
@@ -249,8 +282,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 ),
                 // back button
                 Positioned(
-                  left: Directionality.of(context) == TextDirection.ltr ? 10 : null,
-                  right: Directionality.of(context) == TextDirection.rtl ? 10 : null,
+                  left: Directionality.of(context) == TextDirection.ltr
+                      ? 10
+                      : null,
+                  right: Directionality.of(context) == TextDirection.rtl
+                      ? 10
+                      : null,
                   child: SwitchButton(
                     focusNode: _backButtonFocusNode,
                     opacity: 0.7,
@@ -293,7 +330,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     );
   }
 
-  void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
+  void _showPageSelector(
+      BuildContext context, int totalPages, int currentPage) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _observerController.jumpTo(index: currentPage);
       print('jump to $currentPage');
@@ -316,7 +354,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           ),
           content: Container(
             width: double.maxFinite,
-            height: 60.h, // Set a fixed height or use MediaQuery to calculate it
+            height:
+                60.h, // Set a fixed height or use MediaQuery to calculate it
             child: GridViewObserver(
               controller: _observerController,
               child: _quranPageGridView(totalPages, currentPage),
