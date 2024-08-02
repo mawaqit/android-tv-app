@@ -200,7 +200,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   Future<void> initRootRequest() async {
     bool rootStatus = await checkRoot();
     setState(() {
-      _rootStatus = rootStatus;
+      _rootStatus = true;
     });
   }
 
