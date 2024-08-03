@@ -197,9 +197,10 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
   }
 
   Widget _buildErrorPopup(BuildContext context, Object error) {
+    final l10n = S.of(context);
     return AlertDialog(
       title: Text(S.of(context).error),
-      content: Text('An error occurred: $error'),
+      content: Text(l10n.error),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
