@@ -59,10 +59,11 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     currentIndexSubscription = audioPlayer.currentIndexStream.listen((index) {
       log('quran: QuranAudioPlayer: currentIndexStream called');
       final index = audioPlayer.currentIndex ?? 0;
+      final currentPlayerState = audioPlayer.playing ? AudioPlayerState.playing : AudioPlayerState.paused;
       state = AsyncData(
         state.value!.copyWith(
           surahName: localSuwar[index].name,
-          playerState: AudioPlayerState.playing,
+          playerState: currentPlayerState,
           reciterName: moshaf.name,
         ),
       );
