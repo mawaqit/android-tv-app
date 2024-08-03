@@ -67,7 +67,7 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
                 } else if (state is Success) {
                   return _buildSuccessPopup(context, state.version);
                 } else {
-                  return _buildInitialPopup(context, ref);
+                  return _buildInitialPopup(context);
                 }
               },
               loading: () => _buildCheckingPopup(context),
@@ -144,15 +144,16 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
     );
   }
 
-  Widget _buildInitialPopup(BuildContext context, WidgetRef ref) {
+  Widget _buildInitialPopup(BuildContext context) {
+    final l10n = S.of(context);
     return AlertDialog(
-      title: const Text('Checking for Updates'),
+      title: Text(l10n.checkingForUpdates),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const CircularProgressIndicator(),
           const SizedBox(height: 8),
-          const Text('Checking for updates...'),
+          Text('${l10n.checkingForUpdates}...'),
         ],
       ),
       actions: [
