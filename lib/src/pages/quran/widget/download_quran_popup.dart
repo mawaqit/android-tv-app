@@ -67,7 +67,7 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
                 } else if (state is Success) {
                   return _buildSuccessPopup(context, state.version);
                 } else {
-                  return _buildInitialPopup(context);
+                  return _buildInitialPopup(context,);
                 }
               },
               loading: () => _buildCheckingPopup(context),
@@ -93,6 +93,7 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
               child: Text(S.of(context).cancel),
             ),
             TextButton(
+              autofocus: true,
               onPressed: () => Navigator.pop(context, true),
               child: Text(S.of(context).download),
             ),
@@ -110,6 +111,7 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
       ),
       actions: [
         TextButton(
+          autofocus: true,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -189,6 +191,7 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
       content: Text(S.of(context).quranUpdatedVersion(version)),
       actions: [
         TextButton(
+          autofocus: true,
           onPressed: () => Navigator.pop(context),
           child: Text(S.of(context).ok),
         ),
