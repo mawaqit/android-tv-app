@@ -67,7 +67,9 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
                 } else if (state is Success) {
                   return _buildSuccessPopup(context, state.version);
                 } else {
-                  return _buildInitialPopup(context,);
+                  return _buildInitialPopup(
+                    context,
+                  );
                 }
               },
               loading: () => _buildCheckingPopup(context),
