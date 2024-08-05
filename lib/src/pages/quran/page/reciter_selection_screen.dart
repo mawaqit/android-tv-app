@@ -457,14 +457,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     if (value is RawKeyDownEvent) {
       if (value.logicalKey == LogicalKeyboardKey.arrowUp) {
         FocusScope.of(context).requestFocus(reciteTypeFocusNode);
-      } else if (value.logicalKey == LogicalKeyboardKey.select || value.logicalKey == LogicalKeyboardKey.enter) {
-        ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuranReadingScreen(),
-          ),
-        );
       }
     }
   }
