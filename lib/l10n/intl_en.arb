@@ -262,5 +262,6 @@
       }
     }
   },
-  "chooseQuranPage": "Choose the page"
+  "chooseQuranPage": "Choose the page",
+  "checkingForUpdates": "Checking for updates..."
 }
