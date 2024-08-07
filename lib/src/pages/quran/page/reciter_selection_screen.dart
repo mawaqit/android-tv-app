@@ -9,6 +9,8 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
 import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
+import 'package:mawaqit/src/state_management/widget_routing/current_widget_wrapper.dart';
+import 'package:mawaqit/src/state_management/widget_routing/current_widget_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
@@ -29,7 +31,8 @@ class ReciterSelectionScreen extends ConsumerStatefulWidget {
   createState() => _ReciterSelectionScreenState();
 }
 
-class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen> {
+class _ReciterSelectionScreenState
+    extends ConsumerState<ReciterSelectionScreen> {
   int selectedReciterIndex = 0;
   int selectedReciteTypeIndex = 0;
   FocusNode reciterFocusNode = FocusNode();
@@ -50,7 +53,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         FocusScope.of(context).requestFocus(reciterFocusNode);
       }
     });
-    floatingActionButtonFocusNode = FocusNode(debugLabel: 'Floating Action Button');
+    floatingActionButtonFocusNode =
+        FocusNode(debugLabel: 'Floating Action Button');
     reciterFocusNode = FocusNode(debugLabel: 'Reciter');
     reciteTypeFocusNode = FocusNode(debugLabel: 'Recite Type');
     RawKeyboard.instance.addListener(_handleKeyEvent);
@@ -67,75 +71,80 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   @override
   Widget build(BuildContext context) {
-    return QuranBackground(
-      key: _scaffoldKey,
-      isSwitch: true,
-      floatingActionButtonFocusNode: floatingActionButtonFocusNode,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          S.of(context).chooseReciter,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      screen: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ref.watch(reciteNotifierProvider).when(
-                        data: (reciter) => _buildReciterList(reciter.reciters),
-                        loading: () => _buildReciterListShimmer(true),
-                        error: (error, stackTrace) => Text('Error: $error'),
-                      ),
-                  SizedBox(height: 5.h),
-                  Container(
-                    width: double.infinity,
-                    child: Text(
-                      S.of(context).reciteType,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ref.watch(reciteNotifierProvider).when(
-                        data: (reciter) {
-                          return reciter.reciters.isNotEmpty
-                              ? _buildReciteTypeGrid(
-                                  reciter.reciters[selectedReciterIndex].moshaf,
-                                )
-                              : _buildReciteTypeGridShimmer(true);
-                        },
-                        loading: () => _buildReciteTypeGridShimmer(true),
-                        error: (error, stackTrace) => Text('Error: $error'),
-                      ),
-                ],
-              ),
+    return CurrentWidgetWrapper(
+      widgetName: 'QuranBackground',
+      child: QuranBackground(
+        key: _scaffoldKey,
+        isSwitch: true,
+        floatingActionButtonFocusNode: floatingActionButtonFocusNode,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            S.of(context).chooseReciter,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ],
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        screen: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ref.watch(reciteNotifierProvider).when(
+                          data: (reciter) =>
+                              _buildReciterList(reciter.reciters),
+                          loading: () => _buildReciterListShimmer(true),
+                          error: (error, stackTrace) => Text('Error: $error'),
+                        ),
+                    SizedBox(height: 5.h),
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        S.of(context).reciteType,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ref.watch(reciteNotifierProvider).when(
+                          data: (reciter) {
+                            return reciter.reciters.isNotEmpty
+                                ? _buildReciteTypeGrid(
+                                    reciter
+                                        .reciters[selectedReciterIndex].moshaf,
+                                  )
+                                : _buildReciteTypeGridShimmer(true);
+                          },
+                          loading: () => _buildReciteTypeGridShimmer(true),
+                          error: (error, stackTrace) => Text('Error: $error'),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -316,10 +325,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   void _handleKeyEvent(RawKeyEvent value) {
     if (!mounted) return;
     if (value is RawKeyDownEvent) {
-      final List<ReciterModel> reciters = ref.read(reciteNotifierProvider).maybeWhen(
-            data: (data) => data.reciters,
-            orElse: () => [],
-          );
+      final List<ReciterModel> reciters =
+          ref.read(reciteNotifierProvider).maybeWhen(
+                data: (data) => data.reciters,
+                orElse: () => [],
+              );
       final textDirection = Directionality.of(context);
       if (reciterFocusNode.hasFocus) {
         _handleReciteKeyEvent(
@@ -401,7 +411,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
       if (reciteTypeFocusNode.hasFocus) {
         if (value.logicalKey == LogicalKeyboardKey.arrowRight) {
-          if (isLtr && selectedReciteTypeIndex < reciters[selectedReciterIndex].moshaf.length - 1) {
+          if (isLtr &&
+              selectedReciteTypeIndex <
+                  reciters[selectedReciterIndex].moshaf.length - 1) {
             setState(() {
               selectedReciteTypeIndex++;
             });
@@ -415,7 +427,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             setState(() {
               selectedReciteTypeIndex--;
             });
-          } else if (!isLtr && selectedReciteTypeIndex < reciters[selectedReciterIndex].moshaf.length - 1) {
+          } else if (!isLtr &&
+              selectedReciteTypeIndex <
+                  reciters[selectedReciterIndex].moshaf.length - 1) {
             setState(() {
               selectedReciteTypeIndex++;
             });
@@ -484,7 +498,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             margin: EdgeInsets.only(right: marginOfContainerReciter),
             child: Shimmer.fromColors(
               baseColor: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
-              highlightColor: isDarkMode ? Colors.grey[700]! : Colors.grey[100]!,
+              highlightColor:
+                  isDarkMode ? Colors.grey[700]! : Colors.grey[100]!,
               child: Container(
                 decoration: BoxDecoration(
                   color: isDarkMode ? Colors.grey[900] : Colors.white,
