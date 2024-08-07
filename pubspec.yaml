@@ -81,7 +81,9 @@ dependencies:
   # STATE MANAGEMENT
   provider: ^6.0.5
   flutter_riverpod: ^2.3.6
-
+  wifi_hunter: ^1.1.1+2
+  flutter_styled_toast: ^2.2.1
+  flutter_keyboard_visibility: ^6.0.0
   auto_size_text: ^3.0.0
   flutter_animate: ^4.1.1+1
   marquee: ^2.2.3
