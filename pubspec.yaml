@@ -135,6 +135,7 @@ dependencies:
   shimmer: ^3.0.0
   rxdart: ^0.27.7
   just_audio_background: ^0.0.1-beta.11
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
