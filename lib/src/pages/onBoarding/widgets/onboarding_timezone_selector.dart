@@ -15,16 +15,13 @@ const platform = MethodChannel('nativeMethodsChannel');
 class OnBoardingTimeZoneSelector extends StatefulWidget {
   final void Function()? onSelect;
   final FocusNode? focusNode;
-  const OnBoardingTimeZoneSelector({Key? key, this.onSelect, this.focusNode})
-      : super(key: key);
+  const OnBoardingTimeZoneSelector({Key? key, this.onSelect, this.focusNode}) : super(key: key);
 
   @override
-  _OnBoardingTimeZoneSelectorState createState() =>
-      _OnBoardingTimeZoneSelectorState();
+  _OnBoardingTimeZoneSelectorState createState() => _OnBoardingTimeZoneSelectorState();
 }
 
-class _OnBoardingTimeZoneSelectorState
-    extends State<OnBoardingTimeZoneSelector> {
+class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector> {
   late List<Country> countriesList;
   late List<String> selectedCountryTimezones;
   final TextEditingController searchController = TextEditingController();
@@ -68,8 +65,7 @@ class _OnBoardingTimeZoneSelectorState
     _timezoneScrollController = ScrollController();
     var keyboardVisibilityController = KeyboardVisibilityController();
 
-    keyboardSubscription =
-        keyboardVisibilityController.onChange.listen((bool visible) {
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         FocusScope.of(context).requestFocus(countryListFocusNode);
         _selectFirstVisibleItem();
@@ -89,8 +85,7 @@ class _OnBoardingTimeZoneSelectorState
     super.dispose();
   }
 
-void _scrollToSelectedItem(
-      ScrollController controller, int selectedIndex, double itemHeight,
+  void _scrollToSelectedItem(ScrollController controller, int selectedIndex, double itemHeight,
       {double topPadding = 0}) {
     if (selectedIndex >= 0) {
       final listViewHeight = controller.position.viewportDimension;
@@ -104,8 +99,7 @@ void _scrollToSelectedItem(
 
       // If the item is in the bottom half of the list view, scroll a bit further to center it
       final centeringOffset = (listViewHeight / 2) - (itemHeight / 2);
-      final centeredScrollPosition =
-          (targetScrollPosition - centeringOffset).clamp(0.0, maxScrollExtent);
+      final centeredScrollPosition = (targetScrollPosition - centeringOffset).clamp(0.0, maxScrollExtent);
 
       controller.animateTo(
         centeredScrollPosition,
@@ -117,10 +111,8 @@ void _scrollToSelectedItem(
 
   void _filterItems(String query) {
     setState(() {
-      countriesList = Countries.list
-          .where((country) =>
-              country.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      countriesList =
+          Countries.list.where((country) => country.name.toLowerCase().contains(query.toLowerCase())).toList();
       selectedCountryIndex = -1; // Reset the selected index
     });
   }
@@ -132,16 +124,12 @@ void _scrollToSelectedItem(
           if (isViewingTimezones) {
             if (selectedTimezoneIndex < selectedCountryTimezones.length - 1) {
               selectedTimezoneIndex++;
-              _scrollToSelectedItem(
-                  _timezoneScrollController, selectedTimezoneIndex, 56.0,
-                  topPadding: 16.0);
+              _scrollToSelectedItem(_timezoneScrollController, selectedTimezoneIndex, 56.0, topPadding: 16.0);
             }
           } else {
             if (selectedCountryIndex < countriesList.length - 1) {
               selectedCountryIndex++;
-              _scrollToSelectedItem(
-                  _countryScrollController, selectedCountryIndex, 56.0,
-                  topPadding: 16.0);
+              _scrollToSelectedItem(_countryScrollController, selectedCountryIndex, 56.0, topPadding: 16.0);
             }
           }
         });
@@ -151,9 +139,7 @@ void _scrollToSelectedItem(
           if (isViewingTimezones) {
             if (selectedTimezoneIndex > 0) {
               selectedTimezoneIndex--;
-              _scrollToSelectedItem(
-                  _timezoneScrollController, selectedTimezoneIndex, 56.0,
-                  topPadding: 16.0);
+              _scrollToSelectedItem(_timezoneScrollController, selectedTimezoneIndex, 56.0, topPadding: 16.0);
             } else if (selectedTimezoneIndex == 0) {
               // Move focus back to country list
               isViewingTimezones = false;
@@ -162,9 +148,7 @@ void _scrollToSelectedItem(
           } else {
             if (selectedCountryIndex > 0) {
               selectedCountryIndex--;
-              _scrollToSelectedItem(
-                  _countryScrollController, selectedCountryIndex, 56.0,
-                  topPadding: 16.0);
+              _scrollToSelectedItem(_countryScrollController, selectedCountryIndex, 56.0, topPadding: 16.0);
             } else if (selectedCountryIndex == 0) {
               // Move focus back to search input
               FocusScope.of(context).requestFocus(searchfocusNode);
@@ -173,8 +157,7 @@ void _scrollToSelectedItem(
           }
         });
         return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.enter ||
-          event.logicalKey == LogicalKeyboardKey.select) {
+      } else if (event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.select) {
         _handleEnterKey();
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
@@ -191,14 +174,11 @@ void _scrollToSelectedItem(
 
   void _handleEnterKey() {
     if (isViewingTimezones) {
-      if (selectedTimezoneIndex >= 0 &&
-          selectedTimezoneIndex < selectedCountryTimezones.length) {
-        _setDeviceTimezoneAsync(
-            selectedCountryTimezones[selectedTimezoneIndex]);
+      if (selectedTimezoneIndex >= 0 && selectedTimezoneIndex < selectedCountryTimezones.length) {
+        _setDeviceTimezoneAsync(selectedCountryTimezones[selectedTimezoneIndex]);
       }
     } else {
-      if (selectedCountryIndex >= 0 &&
-          selectedCountryIndex < countriesList.length) {
+      if (selectedCountryIndex >= 0 && selectedCountryIndex < countriesList.length) {
         var country = countriesList[selectedCountryIndex];
         setState(() {
           selectedCountryTimezones = country.timezones;
@@ -208,9 +188,7 @@ void _scrollToSelectedItem(
         });
         // Scroll to the first item
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _scrollToSelectedItem(
-              _timezoneScrollController, selectedTimezoneIndex, 56.0,
-              topPadding: 16.0);
+          _scrollToSelectedItem(_timezoneScrollController, selectedTimezoneIndex, 56.0, topPadding: 16.0);
         });
       }
     }
@@ -230,16 +208,12 @@ void _scrollToSelectedItem(
       if (isViewingTimezones) {
         if (selectedCountryTimezones.isNotEmpty) {
           selectedTimezoneIndex = 0;
-          _scrollToSelectedItem(
-              _timezoneScrollController, selectedTimezoneIndex, 56.0,
-              topPadding: 16.0);
+          _scrollToSelectedItem(_timezoneScrollController, selectedTimezoneIndex, 56.0, topPadding: 16.0);
         }
       } else {
         if (countriesList.isNotEmpty && selectedCountryIndex == -1) {
           selectedCountryIndex = 0;
-          _scrollToSelectedItem(
-              _countryScrollController, selectedCountryIndex, 56.0,
-              topPadding: 16.0);
+          _scrollToSelectedItem(_countryScrollController, selectedCountryIndex, 56.0, topPadding: 16.0);
         }
       }
     });
@@ -265,17 +239,13 @@ void _scrollToSelectedItem(
                 style: TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.w700,
-                  color: themeData.brightness == Brightness.dark
-                      ? null
-                      : themeData.primaryColor,
+                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
                 ),
               ),
               const SizedBox(height: 10),
               Divider(
                 thickness: 1,
-                color: themeData.brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
+                color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
               ),
               const SizedBox(height: 10),
               Text(
@@ -283,9 +253,7 @@ void _scrollToSelectedItem(
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15,
-                  color: themeData.brightness == Brightness.dark
-                      ? null
-                      : themeData.primaryColor,
+                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
                 ),
               ),
               const SizedBox(height: 20),
@@ -312,18 +280,14 @@ void _scrollToSelectedItem(
               const SizedBox(height: 20),
               Expanded(
                 child: Focus(
-                  focusNode: isViewingTimezones
-                      ? timezoneListFocusNode
-                      : countryListFocusNode,
+                  focusNode: isViewingTimezones ? timezoneListFocusNode : countryListFocusNode,
                   onFocusChange: (hasFocus) {
                     if (hasFocus) {
                       _selectFirstVisibleItem();
                     }
                   },
                   onKey: (node, event) => _handleKeyEvent(node, event),
-                  child: isViewingTimezones
-                      ? _buildTimezoneList(context)
-                      : _buildCountryList(context),
+                  child: isViewingTimezones ? _buildTimezoneList(context) : _buildCountryList(context),
                 ),
               ),
             ],
@@ -338,12 +302,10 @@ void _scrollToSelectedItem(
       controller: _countryScrollController,
       itemCount: countriesList.length,
       padding: EdgeInsets.only(top: 16),
-
       itemBuilder: (BuildContext context, int index) {
         var country = countriesList[index];
         return ListTile(
-          tileColor:
-              selectedCountryIndex == index ? const Color(0xFF490094) : null,
+          tileColor: selectedCountryIndex == index ? const Color(0xFF490094) : null,
           title: Text(country.name),
           onTap: () {
             setState(() {
@@ -361,8 +323,7 @@ void _scrollToSelectedItem(
 
   Widget _buildTimezoneList(BuildContext context) {
     return ListView.builder(
-      padding: EdgeInsets.only(top: 16), 
-
+      padding: EdgeInsets.only(top: 16),
       controller: _timezoneScrollController,
       itemCount: selectedCountryTimezones.length,
       itemBuilder: (BuildContext context, int index) {
@@ -371,8 +332,7 @@ void _scrollToSelectedItem(
         var now = tz.TZDateTime.now(location);
         var timeZoneOffset = now.timeZoneOffset;
         return ListTile(
-          tileColor:
-              selectedTimezoneIndex == index ? const Color(0xFF490094) : null,
+          tileColor: selectedTimezoneIndex == index ? const Color(0xFF490094) : null,
           title: Text('${_convertToGMTOffset(timeZoneOffset)} $timezone'),
           onTap: () async {
             setState(() {
@@ -388,8 +348,7 @@ void _scrollToSelectedItem(
 
   Future<void> _setDeviceTimezone(String timezone) async {
     try {
-      bool isSuccess = await platform
-          .invokeMethod('setDeviceTimezone', {"timezone": timezone});
+      bool isSuccess = await platform.invokeMethod('setDeviceTimezone', {"timezone": timezone});
       if (isSuccess) {
         _showToast(S.of(context).timezoneSuccess);
       } else {

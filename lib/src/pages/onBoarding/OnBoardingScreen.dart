@@ -145,14 +145,12 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     ),
     OnBoardingItem(
         animation: 'settings',
-        widget: OnBoardingTimeZoneSelector(
-            onSelect: () => nextPage(2), focusNode: skipButtonFocusNode),
+        widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2), focusNode: skipButtonFocusNode),
         enablePreviousButton: true,
         skipPage: true),
     OnBoardingItem(
         animation: 'settings',
-        widget: OnBoardingWifiSelector(
-            onSelect: () => nextPage(3), focusNode: skipButtonFocusNode),
+        widget: OnBoardingWifiSelector(onSelect: () => nextPage(3), focusNode: skipButtonFocusNode),
         enablePreviousButton: true,
         skipPage: true),
     OnBoardingItem(
@@ -200,7 +198,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   Future<void> initRootRequest() async {
     bool rootStatus = await checkRoot();
     setState(() {
-      _rootStatus = true;
+      _rootStatus = rootStatus;
     });
   }
 
@@ -297,7 +295,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                 if (activePage.enableNextButton)
                   MawaqitIconButton(
                     focusNode: skipButtonFocusNode,
-
                     icon: Icons.arrow_forward_rounded,
                     label: S.of(context).next,
                     onPressed: () => nextPage(currentScreen + 1),

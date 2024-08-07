@@ -24,8 +24,6 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
     widget.focusNode.requestFocus();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

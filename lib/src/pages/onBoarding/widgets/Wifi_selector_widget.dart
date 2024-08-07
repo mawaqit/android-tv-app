@@ -12,9 +12,7 @@ import 'package:wifi_hunter/wifi_hunter_result.dart';
 const String nativeMethodsChannel = 'nativeMethodsChannel';
 
 class OnBoardingWifiSelector extends ConsumerStatefulWidget {
-  const OnBoardingWifiSelector(
-      {Key? key, required this.onSelect, this.focusNode})
-      : super(key: key);
+  const OnBoardingWifiSelector({Key? key, required this.onSelect, this.focusNode}) : super(key: key);
 
   final void Function() onSelect;
   final FocusNode? focusNode;
@@ -23,8 +21,7 @@ class OnBoardingWifiSelector extends ConsumerStatefulWidget {
   _OnBoardingWifiSelectorState createState() => _OnBoardingWifiSelectorState();
 }
 
-class _OnBoardingWifiSelectorState
-    extends ConsumerState<OnBoardingWifiSelector> {
+class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector> {
   @override
   void initState() {
     super.initState();
@@ -59,17 +56,13 @@ class _OnBoardingWifiSelectorState
           style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.w700,
-            color: themeData.brightness == Brightness.dark
-                ? null
-                : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ),
         const SizedBox(height: 10),
         Divider(
           thickness: 1,
-          color: themeData.brightness == Brightness.dark
-              ? Colors.white
-              : Colors.black,
+          color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
         ),
         const SizedBox(height: 10),
         Text(
@@ -77,9 +70,7 @@ class _OnBoardingWifiSelectorState
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15,
-            color: themeData.brightness == Brightness.dark
-                ? null
-                : themeData.primaryColor,
+            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ),
         SizedBox(height: 20),
@@ -107,8 +98,7 @@ class _OnBoardingWifiSelectorState
               ),
               icon: const Icon(Icons.refresh),
               label: Text(S.of(context).scanAgain),
-              onPressed: () async =>
-                  await ref.read(wifiScanNotifierProvider.notifier).retry(),
+              onPressed: () async => await ref.read(wifiScanNotifierProvider.notifier).retry(),
             ),
           ],
         ),
@@ -117,8 +107,7 @@ class _OnBoardingWifiSelectorState
           child: wifiScanState.when(
             data: (state) => state.accessPoints.isEmpty
                 ? Text(S.of(context).noScannedResultsFound)
-                : _buildAccessPointsList(state.accessPoints,
-                    state.hasPermission, accessPointsFocusNode),
+                : _buildAccessPointsList(state.accessPoints, state.hasPermission, accessPointsFocusNode),
             error: (error, s) {
               _showToast('Error fetching access points');
 
@@ -137,8 +126,7 @@ class _OnBoardingWifiSelectorState
     );
   }
 
-  List<WiFiHunterResultEntry> _filterAccessPoints(
-      List<WiFiHunterResultEntry> accessPoints) {
+  List<WiFiHunterResultEntry> _filterAccessPoints(List<WiFiHunterResultEntry> accessPoints) {
     final seenSSIDs = <String>{};
     return accessPoints.where((ap) {
       if (ap.ssid == "**Hidden SSID**") {
@@ -152,8 +140,7 @@ class _OnBoardingWifiSelectorState
     }).toList();
   }
 
-  _buildAccessPointsList(List<WiFiHunterResultEntry> accessPoints,
-      bool _hasPermission, FocusNode node) {
+  _buildAccessPointsList(List<WiFiHunterResultEntry> accessPoints, bool _hasPermission, FocusNode node) {
     final filteredAccessPoints = _filterAccessPoints(accessPoints);
 
     return Container(
@@ -209,30 +196,21 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
 
   @override
   Widget build(BuildContext context) {
-    final title = widget.accessPoint.ssid.isNotEmpty
-        ? widget.accessPoint.ssid
-        : S.of(context).noSSID;
-    final signalIcon = widget.accessPoint.level >= -80
-        ? Icons.signal_wifi_4_bar
-        : Icons.signal_wifi_0_bar;
+    final title = widget.accessPoint.ssid.isNotEmpty ? widget.accessPoint.ssid : S.of(context).noSSID;
+    final signalIcon = widget.accessPoint.level >= -80 ? Icons.signal_wifi_4_bar : Icons.signal_wifi_0_bar;
 
     ref.listen(wifiScanNotifierProvider, (previous, next) {
-      if (next.hasValue &&
-          !next.isRefreshing &&
-          next.value!.status == Status.connected) {
+      if (next.hasValue && !next.isRefreshing && next.value!.status == Status.connected) {
         _showToast(S.of(context).wifiSuccess);
-
       }
       if (next.value!.status == Status.error) {
         _showToast(S.of(context).wifiFailure);
-
       }
     });
 
     KeyEventResult _handleKeyEvent(FocusNode focusNode, RawKeyEvent event) {
       if (event is RawKeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
-            event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowRight || event.logicalKey == LogicalKeyboardKey.arrowLeft) {
           FocusScope.of(context).requestFocus(widget.skipButtonFocusNode);
 
           return KeyEventResult.handled;
@@ -255,9 +233,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
                 ssid: widget.accessPoint.ssid,
                 capabilities: widget.accessPoint.capabilities,
                 onConnect: (password) async {
-                  await ref
-                      .read(wifiScanNotifierProvider.notifier)
-                      .connectToWifi(
+                  await ref.read(wifiScanNotifierProvider.notifier).connectToWifi(
                         widget.accessPoint.ssid,
                         widget.accessPoint.capabilities,
                         password,
@@ -307,11 +283,8 @@ class _WifiPasswordPageState extends State<WifiPasswordPage> {
 
   void _onConnectButtonFocusChange() {
     setState(() {
-      _buttonColor = connectButtonFocusNode.hasFocus
-          ? const Color(0xFF490094)
-          : Colors.white;
-      _textColor =
-          connectButtonFocusNode.hasFocus ? Colors.white : Colors.black;
+      _buttonColor = connectButtonFocusNode.hasFocus ? const Color(0xFF490094) : Colors.white;
+      _textColor = connectButtonFocusNode.hasFocus ? Colors.white : Colors.black;
     });
   }
 
@@ -344,17 +317,13 @@ class _WifiPasswordPageState extends State<WifiPasswordPage> {
                 style: TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.w700,
-                  color: themeData.brightness == Brightness.dark
-                      ? null
-                      : themeData.primaryColor,
+                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
                 ),
               ),
               const SizedBox(height: 10),
               Divider(
                 thickness: 1,
-                color: themeData.brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
+                color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
               ),
               const SizedBox(height: 10),
               Text(
@@ -362,9 +331,7 @@ class _WifiPasswordPageState extends State<WifiPasswordPage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
-                  color: themeData.brightness == Brightness.dark
-                      ? null
-                      : themeData.primaryColor,
+                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
                 ),
               ),
               SizedBox(height: 20),
@@ -384,9 +351,7 @@ class _WifiPasswordPageState extends State<WifiPasswordPage> {
                         labelText: S.of(context).wifiPassword,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _showPassword
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                            _showPassword ? Icons.visibility : Icons.visibility_off,
                           ),
                           onPressed: () {
                             setState(() {
@@ -401,8 +366,7 @@ class _WifiPasswordPageState extends State<WifiPasswordPage> {
                       focusNode: connectButtonFocusNode,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _buttonColor,
-                        foregroundColor:
-                            _textColor, // This will change the text color
+                        foregroundColor: _textColor, // This will change the text color
                       ),
                       onPressed: () {
                         widget.onConnect(passwordController.text);
