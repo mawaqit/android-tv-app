@@ -8,6 +8,8 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
+
 class DuaaEftarScreen extends StatefulWidget {
   const DuaaEftarScreen({Key? key}) : super(key: key);
 
@@ -36,6 +38,7 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
   @override
   Widget build(BuildContext context) {
     final arabic = AppLocalizationsAr();
+    final mosqueProvider = context.read<MosqueManager>();
 
     return Column(
       children: [
@@ -48,7 +51,7 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
           ),
         ),
-        ResponsiveMiniSalahBarWidget(),
+        mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget()
       ],
     );
   }

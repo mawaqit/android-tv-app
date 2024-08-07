@@ -309,7 +309,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   DateTime activeJumuaaDate([DateTime? now]) {
     final nextFriday = nextFridayDate(now);
     if (times!.jumuaAsDuhr == true) return timesOfDay(nextFriday)[1].toTimeOfDay()!.toDate(nextFriday);
-    if (_isJumuaOrJumua2EmptyOrNull()) {
+    if (isJumuaOrJumua2EmptyOrNull()) {
       return nextFriday;
     }
 
@@ -317,7 +317,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return jumuaaTime!.toTimeOfDay()!.toDate(nextFriday); // parsing the value of juma to time of day and then to date
   }
 
-  bool _isJumuaOrJumua2EmptyOrNull() {
+  bool isJumuaOrJumua2EmptyOrNull() {
     return (times?.jumua ?? '').isEmpty && (times?.jumua2 ?? '').isEmpty;
   }
 

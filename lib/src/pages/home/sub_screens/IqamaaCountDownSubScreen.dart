@@ -14,6 +14,7 @@ import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/time_utils.dart';
+import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 
 class IqamaaCountDownSubScreen extends StatefulWidget {
   const IqamaaCountDownSubScreen({
@@ -115,7 +116,7 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
               ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
             }),
         Spacer(),
-        ResponsiveMiniSalahBarWidget(),
+        mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 1.vh),
       ],
     );
