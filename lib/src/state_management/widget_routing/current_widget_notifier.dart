@@ -8,7 +8,6 @@ class CurrentWidgetNotifier extends StateNotifier<String> {
   }
 }
 
-final currentWidgetProvider =
-    StateNotifierProvider<CurrentWidgetNotifier, String>((ref) {
+final currentWidgetProvider = StateNotifierProvider<CurrentWidgetNotifier, String>((ref) {
   return CurrentWidgetNotifier();
 });

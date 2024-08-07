@@ -13,8 +13,7 @@ class CurrentWidgetWrapper extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<CurrentWidgetWrapper> createState() =>
-      _CurrentWidgetWrapperState();
+  ConsumerState<CurrentWidgetWrapper> createState() => _CurrentWidgetWrapperState();
 }
 
 class _CurrentWidgetWrapperState extends ConsumerState<CurrentWidgetWrapper> {
@@ -22,9 +21,7 @@ class _CurrentWidgetWrapperState extends ConsumerState<CurrentWidgetWrapper> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(currentWidgetProvider.notifier)
-          .setCurrentWidget(widget.widgetName);
+      ref.read(currentWidgetProvider.notifier).setCurrentWidget(widget.widgetName);
     });
   }
 

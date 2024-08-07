@@ -49,8 +49,7 @@ class _AppWorkflowScreenState extends ConsumerState<AppWorkflowScreen> {
   }
 
   void _scheduleNextCheck() {
-    final mosqueManager =
-        provider.Provider.of<MosqueManager>(context, listen: false);
+    final mosqueManager = provider.Provider.of<MosqueManager>(context, listen: false);
     final now = AppDateTime.now();
     final times = mosqueManager.useTomorrowTimes
         ? mosqueManager.actualTimes(now.add(const Duration(days: 1)))
@@ -142,8 +141,8 @@ class _AppWorkflowScreenState extends ConsumerState<AppWorkflowScreen> {
           showInitial: () {
             final activeJumuaaDate = mosqueManager.activeJumuaaDate();
             if (now.isBefore(activeJumuaaDate)) return false;
-            return now.isBefore(activeJumuaaDate.add(Duration(
-                minutes: mosqueManager.mosqueConfig!.jumuaTimeout ?? 30)));
+            return now
+                .isBefore(activeJumuaaDate.add(Duration(minutes: mosqueManager.mosqueConfig!.jumuaTimeout ?? 30)));
           },
         ),
       ],
