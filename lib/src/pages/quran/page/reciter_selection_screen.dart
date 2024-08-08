@@ -9,6 +9,8 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
 import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
+import 'package:mawaqit/src/state_management/widget_routing/current_widget_wrapper.dart';
+import 'package:mawaqit/src/state_management/widget_routing/current_widget_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
@@ -67,75 +69,78 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   @override
   Widget build(BuildContext context) {
-    return QuranBackground(
-      key: _scaffoldKey,
-      isSwitch: true,
-      floatingActionButtonFocusNode: floatingActionButtonFocusNode,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          S.of(context).chooseReciter,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      screen: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ref.watch(reciteNotifierProvider).when(
-                        data: (reciter) => _buildReciterList(reciter.reciters),
-                        loading: () => _buildReciterListShimmer(true),
-                        error: (error, stackTrace) => Text('Error: $error'),
-                      ),
-                  SizedBox(height: 5.h),
-                  Container(
-                    width: double.infinity,
-                    child: Text(
-                      S.of(context).reciteType,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ref.watch(reciteNotifierProvider).when(
-                        data: (reciter) {
-                          return reciter.reciters.isNotEmpty
-                              ? _buildReciteTypeGrid(
-                                  reciter.reciters[selectedReciterIndex].moshaf,
-                                )
-                              : _buildReciteTypeGridShimmer(true);
-                        },
-                        loading: () => _buildReciteTypeGridShimmer(true),
-                        error: (error, stackTrace) => Text('Error: $error'),
-                      ),
-                ],
-              ),
+    return CurrentWidgetWrapper(
+      widgetName: 'QuranBackground',
+      child: QuranBackground(
+        key: _scaffoldKey,
+        isSwitch: true,
+        floatingActionButtonFocusNode: floatingActionButtonFocusNode,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            S.of(context).chooseReciter,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ],
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        screen: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ref.watch(reciteNotifierProvider).when(
+                          data: (reciter) => _buildReciterList(reciter.reciters),
+                          loading: () => _buildReciterListShimmer(true),
+                          error: (error, stackTrace) => Text('Error: $error'),
+                        ),
+                    SizedBox(height: 5.h),
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        S.of(context).reciteType,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ref.watch(reciteNotifierProvider).when(
+                          data: (reciter) {
+                            return reciter.reciters.isNotEmpty
+                                ? _buildReciteTypeGrid(
+                                    reciter.reciters[selectedReciterIndex].moshaf,
+                                  )
+                                : _buildReciteTypeGridShimmer(true);
+                          },
+                          loading: () => _buildReciteTypeGridShimmer(true),
+                          error: (error, stackTrace) => Text('Error: $error'),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
