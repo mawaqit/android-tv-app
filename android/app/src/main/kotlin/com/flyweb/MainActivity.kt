@@ -78,23 +78,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val REQUEST_OVERLAY_PERMISSIONS = 100
-        if (checkRoot() && !Settings.canDrawOverlays(applicationContext)) {
-            try {
-                val command = "appops set com.mawaqit.androidtv SYSTEM_ALERT_WINDOW allow"
-                val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
-                val outputStream = DataOutputStream(process.outputStream)
-                outputStream.writeBytes(command + "\n")
-                outputStream.flush()
-                outputStream.close()
-                process.waitFor()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
+
 
     private fun setDeviceTimezone(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
