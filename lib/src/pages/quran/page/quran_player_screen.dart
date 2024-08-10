@@ -135,6 +135,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
   late final FocusNode shuffleFocusNode;
   late final FocusNode repeatFocusNode;
   late final FocusNode sliderFocusNode;
+  late final FocusScopeNode volumeFocusNode;
   late final FocusNode playFocusNode;
   Color _sliderThumbColor = Colors.white;
 
@@ -145,6 +146,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
     rightFocusNode = FocusNode();
     shuffleFocusNode = FocusNode();
     repeatFocusNode = FocusNode();
+    volumeFocusNode = FocusScopeNode();
     playFocusNode = FocusNode();
     sliderFocusNode = FocusNode();
     sliderFocusNode.addListener(_setSliderThumbColor);
@@ -165,6 +167,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
     shuffleFocusNode.dispose();
     repeatFocusNode.dispose();
     leftFocusNode.dispose();
+    volumeFocusNode.dispose();
     rightFocusNode.dispose();
     sliderFocusNode.dispose();
     playFocusNode.dispose();
@@ -269,228 +272,299 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
             SizedBox(height: 4.h),
             FocusTraversalOrder(
               order: NumericFocusOrder(1),
-              child: Directionality(
-                textDirection: TextDirection.ltr,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    quranState.maybeWhen(
-                      orElse: () => const SizedBox(),
-                      data: (data) {
-                        return FocusableActionDetector(
-                          focusNode: shuffleFocusNode,
-                          actions: <Type, Action<Intent>>{
-                            ActivateIntent: CallbackAction<ActivateIntent>(
-                              onInvoke: (ActivateIntent intent) {
-                                ref.read(quranPlayerNotifierProvider.notifier).shuffle();
-                                return null;
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        quranState.maybeWhen(
+                          orElse: () => const SizedBox(),
+                          data: (data) {
+                            return FocusableActionDetector(
+                              focusNode: repeatFocusNode,
+                              onFocusChange: (hasFocus) {
+                                setState(() {});
                               },
-                            ),
-                          },
-                          onFocusChange: (hasFocus) {
-                            setState(() {});
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: shuffleFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: SvgPicture.asset(
-                                R.ASSETS_ICON_SHUFFLE_SVG,
-                                color: data.isShuffled || shuffleFocusNode.hasFocus ? Colors.white : Colors.grey[800],
-                                width: 6.w,
-                              ),
-                              iconSize: 8.w,
-                              onPressed: () {
-                                ref.read(quranPlayerNotifierProvider.notifier).shuffle();
-                                shuffleFocusNode.requestFocus();
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    Spacer(),
-                    FocusableActionDetector(
-                      focusNode: leftFocusNode,
-                      shortcuts: {
-                        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
-                      },
-                      actions: {
-                        ActivateIntent: CallbackAction<ActivateIntent>(
-                          onInvoke: (intent) {
-                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                            if (directionality == TextDirection.ltr) {
-                              notifier.seekToPrevious();
-                            } else {
-                              notifier.seekToNext();
-                            }
-                            return null;
-                          },
-                        ),
-                      },
-                      onFocusChange: (hasFocus) {
-                        setState(() {});
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: leftFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          icon: SvgPicture.asset(
-                            R.ASSETS_ICON_SKIP_PREVIOUS_SVG,
-                            color: Colors.white,
-                            width: 6.w,
-                          ),
-                          iconSize: 8.w,
-                          onPressed: () {
-                            leftFocusNode.requestFocus();
-
-                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                            if (directionality == TextDirection.ltr) {
-                              notifier.seekToPrevious();
-                            } else {
-                              notifier.seekToNext();
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 2.w),
-                    FocusableActionDetector(
-                      shortcuts: {
-                        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
-                      },
-                      actions: {
-                        ActivateIntent: CallbackAction<ActivateIntent>(
-                          onInvoke: (intent) {
-                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                            if (widget.isPlaying) {
-                              notifier.pause();
-                            } else {
-                              notifier.play();
-                            }
-                            return null;
-                          },
-                        ),
-                      },
-                      focusNode: playFocusNode,
-                      onFocusChange: (hasFocus) {
-                        setState(() {});
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: playFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          icon: widget.isPlaying
-                              ? SvgPicture.asset(
-                                  R.ASSETS_ICON_PAUSE_SVG,
-                                  color: Colors.white,
-                                )
-                              : Transform.rotate(
-                                  angle: directionality == TextDirection.rtl ? math.pi : 0,
-                                  child: Icon(
-                                    Icons.play_arrow,
-                                    color: Colors.white,
-                                    size: 8.w,
-                                  ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: repeatFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
+                                  shape: BoxShape.circle,
                                 ),
-                          iconSize: 10.w,
-                          onPressed: () {
-                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                            if (widget.isPlaying) {
-                              notifier.pause();
-                            } else {
-                              notifier.play();
-                            }
-                            playFocusNode.requestFocus();
-                          },
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 2.w),
-                    FocusableActionDetector(
-                      focusNode: rightFocusNode,
-                      onFocusChange: (hasFocus) {
-                        setState(() {});
-                      },
-                      shortcuts: {
-                        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
-                      },
-                      actions: {
-                        ActivateIntent: CallbackAction<ActivateIntent>(
-                          onInvoke: (intent) {
-                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                            if (directionality == TextDirection.ltr) {
-                              notifier.seekToNext();
-                            } else {
-                              notifier.seekToPrevious();
-                            }
-                            return null;
-                          },
-                        ),
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: rightFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          icon: SvgPicture.asset(
-                            R.ASSETS_ICON_SKIP_NEXT_SVG,
-                            color: Colors.white,
-                            width: 6.w,
-                          ),
-                          iconSize: 8.w,
-                          onPressed: () {
-                            rightFocusNode.requestFocus();
-
-                            final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                            if (directionality == TextDirection.ltr) {
-                              notifier.seekToNext();
-                            } else {
-                              notifier.seekToPrevious();
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    Spacer(),
-                    quranState.maybeWhen(
-                      orElse: () => const SizedBox(),
-                      data: (data) {
-                        return FocusableActionDetector(
-                          focusNode: repeatFocusNode,
-                          onFocusChange: (hasFocus) {
-                            setState(() {});
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: repeatFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: SvgPicture.asset(
-                                R.ASSETS_ICON_REPEAT_SVG,
-                                color: data.isRepeating || repeatFocusNode.hasFocus ? Colors.white : Colors.grey[800],
-                                width: 6.w,
+                                child: IconButton(
+                                  icon: SvgPicture.asset(
+                                    R.ASSETS_ICON_REPEAT_SVG,
+                                    color: data.isRepeating || repeatFocusNode.hasFocus
+                                        ? Colors.white
+                                        : Colors.grey[800],
+                                    width: 6.w,
+                                  ),
+                                  iconSize: 8.w,
+                                  onPressed: () {
+                                    ref.read(quranPlayerNotifierProvider.notifier).repeat();
+                                    repeatFocusNode.requestFocus();
+                                  },
+                                ),
                               ),
-                              iconSize: 8.w,
-                              onPressed: () {
-                                ref.read(quranPlayerNotifierProvider.notifier).repeat();
-                                repeatFocusNode.requestFocus();
+                            );
+                          },
+                        ),
+                        quranState.maybeWhen(
+                          orElse: () => const SizedBox(),
+                          data: (data) {
+                            return FocusableActionDetector(
+                              focusNode: shuffleFocusNode,
+                              actions: <Type, Action<Intent>>{
+                                ActivateIntent: CallbackAction<ActivateIntent>(
+                                  onInvoke: (ActivateIntent intent) {
+                                    ref.read(quranPlayerNotifierProvider.notifier).shuffle();
+                                    return null;
+                                  },
+                                ),
                               },
-                            ),
-                          ),
-                        );
-                      },
+                              onFocusChange: (hasFocus) {
+                                setState(() {});
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: shuffleFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: IconButton(
+                                  icon: SvgPicture.asset(
+                                    R.ASSETS_ICON_SHUFFLE_SVG,
+                                    color: data.isShuffled || shuffleFocusNode.hasFocus
+                                        ? Colors.white
+                                        : Colors.grey[800],
+                                    matchTextDirection: true,
+                                    width: 6.w,
+                                  ),
+                                  iconSize: 8.w,
+                                  onPressed: () {
+                                    ref.read(quranPlayerNotifierProvider.notifier).shuffle();
+                                    shuffleFocusNode.requestFocus();
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  FocusableActionDetector(
+                    focusNode: leftFocusNode,
+                    shortcuts: {
+                      LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+                    },
+                    actions: {
+                      ActivateIntent: CallbackAction<ActivateIntent>(
+                        onInvoke: (intent) {
+                          final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                          if (directionality == TextDirection.ltr) {
+                            notifier.seekToPrevious();
+                          } else {
+                            notifier.seekToNext();
+                          }
+                          return null;
+                        },
+                      ),
+                    },
+                    onFocusChange: (hasFocus) {
+                      setState(() {});
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: leftFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          R.ASSETS_ICON_SKIP_PREVIOUS_SVG,
+                          color: Colors.white,
+                          width: 6.w,
+                        ),
+                        iconSize: 8.w,
+                        onPressed: () {
+                          leftFocusNode.requestFocus();
+
+                          final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                          if (directionality == TextDirection.ltr) {
+                            notifier.seekToPrevious();
+                          } else {
+                            notifier.seekToNext();
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  FocusableActionDetector(
+                    shortcuts: {
+                      LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+                    },
+                    actions: {
+                      ActivateIntent: CallbackAction<ActivateIntent>(
+                        onInvoke: (intent) {
+                          final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                          if (widget.isPlaying) {
+                            notifier.pause();
+                          } else {
+                            notifier.play();
+                          }
+                          return null;
+                        },
+                      ),
+                    },
+                    focusNode: playFocusNode,
+                    onFocusChange: (hasFocus) {
+                      setState(() {});
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: playFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: widget.isPlaying
+                            ? SvgPicture.asset(
+                                R.ASSETS_ICON_PAUSE_SVG,
+                                color: Colors.white,
+                              )
+                            : Transform.rotate(
+                                angle: directionality == TextDirection.rtl ? math.pi : 0,
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.white,
+                                  size: 8.w,
+                                ),
+                              ),
+                        iconSize: 10.w,
+                        onPressed: () {
+                          final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                          if (widget.isPlaying) {
+                            notifier.pause();
+                          } else {
+                            notifier.play();
+                          }
+                          playFocusNode.requestFocus();
+                        },
+                      ),
+                    ),
+                  ),
+                  FocusableActionDetector(
+                    focusNode: rightFocusNode,
+                    onFocusChange: (hasFocus) {
+                      setState(() {});
+                    },
+                    shortcuts: {
+                      LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+                    },
+                    actions: {
+                      ActivateIntent: CallbackAction<ActivateIntent>(
+                        onInvoke: (intent) {
+                          final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                          if (directionality == TextDirection.ltr) {
+                            notifier.seekToNext();
+                          } else {
+                            notifier.seekToPrevious();
+                          }
+                          return null;
+                        },
+                      ),
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: rightFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          R.ASSETS_ICON_SKIP_NEXT_SVG,
+                          color: Colors.white,
+                          width: 6.w,
+                        ),
+                        iconSize: 8.w,
+                        onPressed: () {
+                          rightFocusNode.requestFocus();
+
+                          final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                          if (directionality == TextDirection.ltr) {
+                            notifier.seekToNext();
+                          } else {
+                            notifier.seekToPrevious();
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FocusScope(
+                          node: volumeFocusNode,
+                          onKeyEvent: (node, event) {
+                            if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                              sliderFocusNode.requestFocus();
+                              return KeyEventResult.handled;
+                            }
+                            else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                              playFocusNode.requestFocus();
+                              return KeyEventResult.handled;
+                            }
+                            else if (event.logicalKey == LogicalKeyboardKey.arrowLeft &&
+                                !quranState.value!.isVolumeOpened
+                            ) {
+                              playFocusNode.requestFocus();
+                              return KeyEventResult.handled;
+                            }
+                            return KeyEventResult.ignored;
+                          },
+                          child: Consumer(
+                            builder: (context, ref, child) {
+
+                              final playerState = ref.watch(quranPlayerNotifierProvider);
+                              return playerState.when(
+                                data: (state) {
+                                  if(state.isVolumeOpened) {
+                                    if(!volumeFocusNode.hasFocus){
+                                      ref.read(quranPlayerNotifierProvider.notifier).closeVolume();
+                                    }
+                                    return Slider(
+                                      value: state.volume,
+                                      onChanged: (newValue) {
+                                        ref.read(quranPlayerNotifierProvider.notifier).setVolume(newValue);
+                                      },
+                                      min: 0.0,
+                                      max: 1.0,
+                                    );
+                                  }
+                                  else{
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        color: volumeFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: IconButton(
+                                        icon:  Icon(Icons.volume_down,size: 35,),
+                                        onPressed: () {
+                                          ref.read(quranPlayerNotifierProvider.notifier).toggleVolume();                                      },
+                                      ),
+                                    );
+                                  }
+                                },
+                                loading: () => CircularProgressIndicator(),
+                                error: (error, stack) => Text('Error: $error'),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
