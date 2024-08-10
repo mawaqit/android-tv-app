@@ -3,6 +3,8 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 
+import 'package:mawaqit/src/helpers/CrashlyticsWrapper.dart';
+
 class MosqueSimpleTile extends StatefulWidget {
   const MosqueSimpleTile({
     Key? key,
@@ -54,15 +56,15 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
             autofocus: widget.autoFocus ?? false,
             focusColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
             onTap: () async {
-              if (loading || widget.onTap == null) return;
-
+              if (loading || widget.onTap == null || !mounted) return;
               try {
                 setState(() => loading = true);
                 await widget.onTap?.call();
                 setState(() => loading = false);
-              } catch (e) {
+              } catch (e,s) {
+                CrashlyticsWrapper.sendException(e, s);
                 setState(() => loading = false);
-                rethrow;
+                throw Exception('MosqueSimpleTile Error $e');
               }
             },
             child: Row(
