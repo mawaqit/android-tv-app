@@ -59,7 +59,6 @@ class _SplashScreen extends State<Splash> {
 
   Future<void> initApplicationUI() async {
     await GlobalConfiguration().loadFromAsset("configuration");
-   
 
     Hive.initFlutter();
 
@@ -118,8 +117,8 @@ class _SplashScreen extends State<Splash> {
       } else {
         AppRouter.pushReplacement(OfflineHomeScreen());
       }
-      generateStream(Duration(minutes: 10)).listen((event) =>
-          WakelockPlus.enable().catchError(CrashlyticsWrapper.sendException));
+      generateStream(Duration(minutes: 10))
+          .listen((event) => WakelockPlus.enable().catchError(CrashlyticsWrapper.sendException));
     } on DioError catch (e) {
       if (e.response == null) {
         print('no internet connection');
