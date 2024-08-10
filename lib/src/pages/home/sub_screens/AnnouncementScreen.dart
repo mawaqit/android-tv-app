@@ -22,8 +22,8 @@ import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import '../widgets/workflows/announcement_workflow.dart';
 
-/// show all announcements in one after another
-class AnnouncementScreen extends ConsumerWidget {
+/// show all announcements one after another
+class AnnouncementScreen extends ConsumerStatefulWidget {
   AnnouncementScreen({
     Key? key,
     this.onDone,
@@ -36,10 +36,17 @@ class AnnouncementScreen extends ConsumerWidget {
   final bool enableVideos;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final announcements = context.read<MosqueManager>().activeAnnouncements(enableVideos);
+  ConsumerState<AnnouncementScreen> createState() => _AnnouncementScreenState();
+}
+
+class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
+  Announcement? currentAnnouncement;
+
+  @override
+  Widget build(BuildContext context) {
+    final announcements = context.read<MosqueManager>().activeAnnouncements(widget.enableVideos);
     ref.listen(announcementWorkflowProvider, (prev, next) {
-      if (next == WorkflowState.finished) onDone?.call();
+      if (next == WorkflowState.finished) widget.onDone?.call();
     });
     bool? showPrayerTimesOnMessageScreen =
         context.select<MosqueManager, bool?>((mosque) => mosque.mosqueConfig!.showPrayerTimesOnMessageScreen);
@@ -55,12 +62,18 @@ class AnnouncementScreen extends ConsumerWidget {
         AnnouncementContinuesWorkFlowWidget(
           workFlowItems: announcements
               .map((e) => AnnouncementWorkFlowItem(
-                    builder: (context) => announcementWidgets(e),
+                    builder: (context) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        setState(() {
+                          currentAnnouncement = e;
+                        });
+                      });
+                      return announcementWidgets(e);
+                    },
                     duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
                   ))
               .toList(),
         ),
-        // announcementWidgets(),
         Align(
           alignment: Alignment.topCenter,
           child: Padding(
@@ -68,19 +81,17 @@ class AnnouncementScreen extends ConsumerWidget {
             child: AboveSalahBar(),
           ),
         ),
+        _buildPrayerTimesWidget(context, mosqueProvider, announcementMode, showPrayerTimesOnMessageScreen),
+      ],
+    );
+  }
 
-        announcementMode
-            ? (showPrayerTimesOnMessageScreen ?? false
-                ? IgnorePointer(
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 1.5.vh),
-                      child: mosqueProvider.times!.isTurki
-                          ? ResponsiveMiniSalahBarTurkishWidget()
-                          : ResponsiveMiniSalahBarWidget(),
-                    ),
-                  )
-                : const SizedBox.shrink())
-            : IgnorePointer(
+  Widget _buildPrayerTimesWidget(BuildContext context, MosqueManager mosqueProvider, bool announcementMode, bool? showPrayerTimesOnMessageScreen) {
+    final isImageAnnouncement = currentAnnouncement?.image != null;
+
+    return announcementMode
+        ? ((showPrayerTimesOnMessageScreen ?? false) && !isImageAnnouncement
+            ? IgnorePointer(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 1.5.vh),
                   child: mosqueProvider.times!.isTurki
@@ -88,8 +99,15 @@ class AnnouncementScreen extends ConsumerWidget {
                       : ResponsiveMiniSalahBarWidget(),
                 ),
               )
-      ],
-    );
+            : const SizedBox.shrink())
+        : IgnorePointer(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 1.5.vh),
+              child: mosqueProvider.times!.isTurki
+                  ? ResponsiveMiniSalahBarTurkishWidget()
+                  : ResponsiveMiniSalahBarWidget(),
+            ),
+          );
   }
 
   /// return the widget of the announcement based on its type
