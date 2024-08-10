@@ -61,7 +61,7 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
                 setState(() => loading = true);
                 await widget.onTap?.call();
                 setState(() => loading = false);
-              } catch (e,s) {
+              } catch (e, s) {
                 CrashlyticsWrapper.sendException(e, s);
                 setState(() => loading = false);
                 throw Exception('MosqueSimpleTile Error $e');
