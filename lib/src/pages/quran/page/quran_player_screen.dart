@@ -612,7 +612,13 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                                         shape: BoxShape.circle,
                                       ),
                                       child: IconButton(
-                                        icon: Icon(isRTL ? Icons.volume_down_rounded : Icons.volume_down, size: 18.sp),
+                                        icon: Transform.scale(
+                                          scaleX: isRTL ? -1 : 1,
+                                          child: Icon(
+                                            Icons.volume_down_rounded,
+                                            size: 18.sp,
+                                          ),
+                                        ),
                                         onPressed: () {
                                           volumeFocusNode.requestFocus();
                                           ref.read(quranPlayerNotifierProvider.notifier).toggleVolume();
