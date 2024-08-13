@@ -137,7 +137,9 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
   late final FocusNode sliderFocusNode;
   late final FocusScopeNode volumeFocusNode;
   late final FocusNode playFocusNode;
+
   Color _sliderThumbColor = Colors.white;
+  Color _volumeSliderThumbColor = Colors.white;
 
   @override
   void initState() {
@@ -150,6 +152,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
     playFocusNode = FocusNode();
     sliderFocusNode = FocusNode();
     sliderFocusNode.addListener(_setSliderThumbColor);
+    volumeFocusNode.addListener(_setVolumeSliderThumbColor);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       playFocusNode.requestFocus();
@@ -159,6 +162,12 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
   _setSliderThumbColor() {
     setState(() {
       _sliderThumbColor = sliderFocusNode.hasFocus ? Color(0xFF490094) : Colors.white;
+    });
+  }
+
+  _setVolumeSliderThumbColor() {
+    setState(() {
+      _volumeSliderThumbColor = volumeFocusNode.hasFocus ? Color(0xFF490094) : Colors.white;
     });
   }
 
@@ -395,13 +404,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                         iconSize: 8.w,
                         onPressed: () {
                           leftFocusNode.requestFocus();
-
                           final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                          if (directionality == TextDirection.ltr) {
-                            notifier.seekToPrevious();
-                          } else {
-                            notifier.seekToNext();
-                          }
+                          notifier.seekToPrevious();
                         },
                       ),
                     ),
@@ -494,13 +498,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                         iconSize: 8.w,
                         onPressed: () {
                           rightFocusNode.requestFocus();
-
                           final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                          if (directionality == TextDirection.ltr) {
-                            notifier.seekToNext();
-                          } else {
-                            notifier.seekToPrevious();
-                          }
+                          notifier.seekToNext();
                         },
                       ),
                     ),
@@ -600,6 +599,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                                 data: (state) {
                                   if (state.isVolumeOpened && volumeFocusNode.hasFocus) {
                                     return Slider(
+                                      thumbColor: _volumeSliderThumbColor,
                                       value: state.volume,
                                       onChanged: (newValue) {
                                         ref.read(quranPlayerNotifierProvider.notifier).setVolume(newValue);
