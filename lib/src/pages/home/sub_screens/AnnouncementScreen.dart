@@ -86,7 +86,8 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
     );
   }
 
-  Widget _buildPrayerTimesWidget(BuildContext context, MosqueManager mosqueProvider, bool announcementMode, bool? showPrayerTimesOnMessageScreen) {
+  Widget _buildPrayerTimesWidget(
+      BuildContext context, MosqueManager mosqueProvider, bool announcementMode, bool? showPrayerTimesOnMessageScreen) {
     final isImageAnnouncement = currentAnnouncement?.image != null;
 
     return announcementMode
@@ -102,12 +103,12 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
             : const SizedBox.shrink())
         : !isImageAnnouncement
             ? IgnorePointer(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 1.5.vh),
-              child: mosqueProvider.times!.isTurki
-                  ? ResponsiveMiniSalahBarTurkishWidget()
-                  : ResponsiveMiniSalahBarWidget(),
-            ),
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 1.5.vh),
+                  child: mosqueProvider.times!.isTurki
+                      ? ResponsiveMiniSalahBarTurkishWidget()
+                      : ResponsiveMiniSalahBarWidget(),
+                ),
               )
             : const SizedBox.shrink();
   }
