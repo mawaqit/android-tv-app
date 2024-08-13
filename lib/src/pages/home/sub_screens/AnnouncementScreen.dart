@@ -100,14 +100,16 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
                 ),
               )
             : const SizedBox.shrink())
-        : IgnorePointer(
+        : !isImageAnnouncement
+            ? IgnorePointer(
             child: Padding(
               padding: EdgeInsets.only(bottom: 1.5.vh),
               child: mosqueProvider.times!.isTurki
                   ? ResponsiveMiniSalahBarTurkishWidget()
                   : ResponsiveMiniSalahBarWidget(),
             ),
-          );
+              )
+            : const SizedBox.shrink();
   }
 
   /// return the widget of the announcement based on its type
