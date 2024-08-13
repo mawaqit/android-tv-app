@@ -70,11 +70,9 @@ dependencies:
 
   # TOOLS
   google_fonts: ^4.0.4
-  package_info_plus: ^3.0.3
   device_info_plus: ^9.0.2
   android_intent_plus: ^4.0.0
   global_configuration: ^2.0.0-nullsafety.1
-  wakelock: ^0.6.2
   path_provider: ^2.0.14
   uuid: ^3.0.5
 
@@ -137,6 +135,8 @@ dependencies:
   shimmer: ^3.0.0
   rxdart: ^0.27.7
   just_audio_background: ^0.0.1-beta.11
+  wakelock_plus: 1.1.4
+  wakelock_plus_platform_interface: 1.1.0
 
 dev_dependencies:
   flutter_test:
