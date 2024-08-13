@@ -474,7 +474,6 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                     actions: {
                       ActivateIntent: CallbackAction<ActivateIntent>(
                         onInvoke: (intent) {
-
                           final notifier = ref.read(quranPlayerNotifierProvider.notifier);
                           notifier.seekToNext();
                           return null;
@@ -482,7 +481,6 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                       ),
                     },
                     child: Container(
-
                       decoration: BoxDecoration(
                         color: rightFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                         shape: BoxShape.circle,

@@ -169,6 +169,7 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
       return state.value!.copyWith(isVolumeOpened: !state.value!.isVolumeOpened);
     });
   }
+
   Future<void> closeVolume() async {
     state = await AsyncValue.guard(() async {
       await Future.delayed(Duration(seconds: 0));
