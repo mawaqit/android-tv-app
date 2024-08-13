@@ -23,8 +23,7 @@ class ApiCacheInterceptor extends Interceptor {
   }
 
   @override
-  void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final cacheKey = getCacheKey(options);
     final cachedData = box.get(cacheKey);
 
@@ -45,8 +44,7 @@ class ApiCacheInterceptor extends Interceptor {
     final cacheKey = getCacheKey(err.requestOptions);
     final cachedData = box.get(cacheKey);
 
-    if (cachedData != null &&
-        err.requestOptions.extra['disableCache'] != true) {
+    if (cachedData != null && err.requestOptions.extra['disableCache'] != true) {
       final response = Response(
         data: cachedData['data'],
         headers: Headers.fromMap({'last-modified': cachedData['lastModified']}),
