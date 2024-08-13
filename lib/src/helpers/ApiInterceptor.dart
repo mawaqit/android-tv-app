@@ -1,44 +1,60 @@
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:hive/hive.dart';
 
 /// save the last modified value and send it with the next request
 /// The interceptor checks the cache before making a request and, if a valid
 /// cached response exists, modifies the request headers to include
 /// `If-Modified-Since`. This tells the server to return the resource only if
 /// it has been modified since the provided date, minimizing data transfer.
-class ApiCacheInterceptor extends DioCacheInterceptor {
-  final CacheStore store;
 
-  ApiCacheInterceptor(this.store) : super(options: CacheOptions(store: store, policy: CachePolicy.refresh));
+class ApiCacheInterceptor extends Interceptor {
+  static Box<dynamic>? _box;
 
-  String getCacheKey(RequestOptions options) => CacheOptions.defaultCacheKeyBuilder(options);
+  static Future<void> init() async {
+    if (_box != null) return;
 
-  @override
-  Future<void> onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
-    await store.get(getCacheKey(options)).then((value) {
-      // If a cached response exists and caching is not disabled for this request,
-      // set the 'If-Modified-Since' header for efficient data transfer.
-      print(value?.toResponse(options).statusCode);
-      if (value != null && options.extra['disableCache'] != true) {
-        options.headers['If-Modified-Since'] = value.lastModified;
-      }
-    });
+    _box = await Hive.openBox('apiCache');
+  }
 
-    super.onRequest(options, handler);
+  Box<dynamic> get box => _box!;
+
+  String getCacheKey(RequestOptions options) {
+    return options.uri.toString();
   }
 
   @override
-  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
-    /// use cache if the server returns 304 or no response
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
+    final cacheKey = getCacheKey(options);
+    final cachedData = box.get(cacheKey);
+
+    if (cachedData != null && options.extra['disableCache'] != true) {
+      final lastModified = cachedData['lastModified'];
+      if (lastModified != null) {
+        options.headers['If-Modified-Since'] = lastModified;
+      }
+    }
+
+    handler.next(options);
+  }
+
+  @override
+  void onError(DioError err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 404) return handler.next(err);
 
-    final value = await store.get(getCacheKey(err.requestOptions));
+    final cacheKey = getCacheKey(err.requestOptions);
+    final cachedData = box.get(cacheKey);
 
-    if (value != null && err.requestOptions.extra['disableCache'] != true)
-      return handler.resolve(value.toResponse(err.requestOptions));
+    if (cachedData != null &&
+        err.requestOptions.extra['disableCache'] != true) {
+      final response = Response(
+        data: cachedData['data'],
+        headers: Headers.fromMap({'last-modified': cachedData['lastModified']}),
+        statusCode: 200,
+        requestOptions: err.requestOptions,
+      );
+      return handler.resolve(response);
+    }
 
     return handler.next(err);
   }

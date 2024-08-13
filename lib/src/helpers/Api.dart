@@ -52,12 +52,12 @@ class Api {
     ),
   );
 
-  static final cacheStore = HiveCacheStore(null);
+  static final apiCacheInterceptor = ApiCacheInterceptor();
 
   static Future<void> init() async {
-    dio.interceptors.add(ApiCacheInterceptor(cacheStore));
-    dioStatic.interceptors.add(ApiCacheInterceptor(cacheStore));
-    dio.interceptors.add(JsonInterceptor());
+    await ApiCacheInterceptor.init();
+    dio.interceptors.add(apiCacheInterceptor);
+    dioStatic.interceptors.add(apiCacheInterceptor);
   }
 
   /// only change the base url
