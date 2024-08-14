@@ -612,6 +612,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                                         shape: BoxShape.circle,
                                       ),
                                       child: IconButton(
+                                        iconSize: 8.w,
                                         icon: Transform.scale(
                                           scaleX: isRTL ? -1 : 1,
                                           child: Icon(
