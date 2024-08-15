@@ -1,11 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
-
-/// save the last modified value and send it with the next request
-/// The interceptor checks the cache before making a request and, if a valid
-/// cached response exists, modifies the request headers to include
-/// `If-Modified-Since`. This tells the server to return the resource only if
-/// it has been modified since the provided date, minimizing data transfer.
+import 'package:mawaqit/main.dart';
 
 class ApiCacheInterceptor extends Interceptor {
   static Box<dynamic>? _box;
@@ -25,16 +20,42 @@ class ApiCacheInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final cacheKey = getCacheKey(options);
-    final cachedData = box.get(cacheKey);
-
-    if (cachedData != null && options.extra['disableCache'] != true) {
-      final lastModified = cachedData['lastModified'];
-      if (lastModified != null) {
-        options.headers['If-Modified-Since'] = lastModified;
+    try {
+      final cachedData = box.get(cacheKey);
+      logger.i('interceptor: onRequest: Cache key: $cacheKey - cachedData: $cachedData');
+      if (cachedData != null && options.extra['disableCache'] != true) {
+        logger.i('interceptor: onRequest: Cache key: disableCache $cacheKey - cachedData: $cachedData');
+        final lastModified = cachedData['lastModified'];
+        if (lastModified != null) {
+          options.headers['If-Modified-Since'] = lastModified;
+        }
       }
+    } catch (e) {
+      logger.e('interceptor: Error fetching from cache: $e');
     }
-
     handler.next(options);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) async {
+    try {
+      final cacheKey = getCacheKey(response.requestOptions);
+      if (response.statusCode == 200) {
+        cacheResponse(cacheKey, response);
+      }
+      logger.i('interceptor: onResponse: Cache key: $cacheKey - cachedData: $response');
+    } catch (e) {
+      logger.e('interceptor: Error caching response: $e');
+    }
+    handler.next(response);
+  }
+
+  void cacheResponse(String cacheKey, Response response) {
+    final cacheData = {
+      'data': response,
+      'lastModified': response.headers["Last-Modified"],
+    };
+    box.put(cacheKey, cacheData);
   }
 
   @override
