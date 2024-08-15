@@ -183,6 +183,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
           width: 50.w,
+          padding: EdgeInsets.all(16),
           height: 20.h,
           decoration: ShapeDecoration(
             color: isSelected ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.05),
@@ -199,12 +200,18 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                 color: Colors.white,
               ),
               SizedBox(height: 20),
-              Text(
-                text,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: isSelected ? 18.sp : 16.sp,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                  text,
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isSelected ? 18.sp : 16.sp,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
                 ),
               ),
             ],
