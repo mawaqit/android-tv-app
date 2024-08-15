@@ -40,16 +40,32 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
 
   void _handleKeyEvent(RawKeyEvent event) {
     if (event is RawKeyDownEvent) {
+      final isLtr = Directionality.of(context) == TextDirection.ltr ? true : false;
+
       if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        setState(() {
-          _selectedIndex = 0;
-        });
-        _readingFocusNode.requestFocus();
+        if (isLtr) {
+          setState(() {
+            _selectedIndex = 0;
+          });
+          _readingFocusNode.requestFocus();
+        } else {
+          setState(() {
+            _selectedIndex = 1;
+          });
+          _listeningFocusNode.requestFocus();
+        }
       } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        setState(() {
-          _selectedIndex = 1;
-        });
-        _listeningFocusNode.requestFocus();
+        if (isLtr) {
+          setState(() {
+            _selectedIndex = 1;
+          });
+          _listeningFocusNode.requestFocus();
+        } else {
+          setState(() {
+            _selectedIndex = 0;
+          });
+          _readingFocusNode.requestFocus();
+        }
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
         if (_selectedIndex == 0) {
           ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
