@@ -20,16 +20,19 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 import 'package:xml_parser/xml_parser.dart';
 
+import '../data/data_source/cache_local_data_source.dart';
 import '../domain/model/failure/mosque/mosque_failure.dart';
 import '../models/hijri_data_config_model.dart';
 import '../models/mosque.dart';
 import '../models/weather.dart';
-import 'api_interceptor/json_interceptor.dart';
 
 class Api {
   static final dio = Dio(
     BaseOptions(
       baseUrl: kBaseUrl,
+      validateStatus: (int? status) {
+        return status! >= 200 && status < 300 || status == 304;
+      },
       headers: {
         'Api-Access-Token': kApiToken,
         'accept': 'application/json',
@@ -52,10 +55,11 @@ class Api {
     ),
   );
 
-  static final apiCacheInterceptor = ApiCacheInterceptor();
-
   static Future<void> init() async {
-    await ApiCacheInterceptor.init();
+    /// suggestion to use ref of riverpod which is more consistent
+    final cacheStore = CacheLocalDataSource();
+    await cacheStore.init();
+    final apiCacheInterceptor = ApiCacheInterceptor(cacheStore);
     dio.interceptors.add(apiCacheInterceptor);
     dioStatic.interceptors.add(apiCacheInterceptor);
   }
