@@ -8,6 +8,7 @@ import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah
 import 'package:provider/provider.dart';
 
 import '../../../../i18n/AppLanguage.dart';
+import '../../../const/constants.dart';
 import '../../../helpers/StringUtils.dart';
 import '../../../services/mosque_manager.dart';
 import '../../../state_management/random_hadith/random_hadith_notifier.dart';
@@ -40,41 +41,51 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
     final hadithState = ref.watch(randomHadithNotifierProvider);
-    return Column(
+    return Stack(
       children: [
-        Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: AboveSalahBar(),
-        ),
-        Expanded(
-          // child: HadithWidget(
-          //   translatedText: context.watch<MosqueManager>().hadith,
-          //   textDirection: StringManager.getTextDirectionOfLocal(
-          //     Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
-          //   ),
-          // ),
-          child: hadithState.when(
-            data: (hadith) {
-              return HadithWidget(
-                translatedText: hadith.hadith,
-                textDirection: StringManager.getTextDirectionOfLocal(
-                  Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
-                ),
-              );
-            },
-            loading: () => Center(
-              child: CircularProgressIndicator(),
-            ),
-            error: (error, stackTrace) {
-              widget.onDone?.call();
-              return Center(
-                child: Text('Error: $error'),
-              );
-            },
+        Positioned.fill(
+          child: Image.asset(
+            kBackgroundAdhkar,
+            fit: BoxFit.cover,
           ),
         ),
-        mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
-        SizedBox(height: 10),
+        Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: AboveSalahBar(),
+            ),
+            Expanded(
+              // child: HadithWidget(
+              //   translatedText: context.watch<MosqueManager>().hadith,
+              //   textDirection: StringManager.getTextDirectionOfLocal(
+              //     Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
+              //   ),
+              // ),
+              child: hadithState.when(
+                data: (hadith) {
+                  return HadithWidget(
+                    translatedText: hadith.hadith,
+                    textDirection: StringManager.getTextDirectionOfLocal(
+                      Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
+                    ),
+                  );
+                },
+                loading: () => Center(
+                  child: CircularProgressIndicator(),
+                ),
+                error: (error, stackTrace) {
+                  widget.onDone?.call();
+                  return Center(
+                    child: Text('Error: $error'),
+                  );
+                },
+              ),
+            ),
+            mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
+            SizedBox(height: 10),
+          ],
+        ),
       ],
     );
   }

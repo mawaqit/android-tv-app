@@ -12,7 +12,7 @@ const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
-
+const kBackgroundAdhkar = 'assets/backgrounds/background-adhkar.jpg';
 const kGooglePlayId = 'com.mawaqit.androidtv';
 
 class CacheKey {

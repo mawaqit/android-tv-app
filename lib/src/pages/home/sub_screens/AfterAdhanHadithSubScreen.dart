@@ -8,6 +8,7 @@ import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
 import 'package:provider/provider.dart';
 
+import '../../../const/constants.dart';
 import '../../../services/audio_manager.dart';
 import '../../../services/mosque_manager.dart';
 import '../../../themes/UIShadows.dart';
@@ -60,11 +61,22 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return HadithWidget(
-      title: arTranslation.afterAdhanHadithTitle,
-      arabicText: arTranslation.afterSalahHadith,
-      translatedTitle: S.of(context).afterAdhanHadithTitle,
-      translatedText: S.of(context).afterSalahHadith,
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Image.asset(
+            kBackgroundAdhkar,
+            fit: BoxFit.cover,
+          ),
+        ),
+        HadithWidget(
+          maxHeight: 35,
+          title: arTranslation.afterAdhanHadithTitle,
+          arabicText: arTranslation.afterSalahHadith,
+          translatedTitle: S.of(context).afterAdhanHadithTitle,
+          translatedText: S.of(context).afterSalahHadith,
+        ),
+      ],
     );
   }
 }
