@@ -36,6 +36,15 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
   String getItem(AppLocalizations tr, int index) {
     return widget.isAfterAsrOrFajr
         ? [
+            tr.azkarList7,
+            tr.azkarList8,
+            tr.azkarList9,
+            tr.azkarList10,
+            tr.azkarList11,
+            tr.azkarList12,
+            tr.azkarList13,
+          ][index % 7]
+        : [
             // أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله
             tr.azkarList0,
 
@@ -55,15 +64,6 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
 
             // لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد
             tr.azkarList6,
-          ][index % 7]
-        : [
-            tr.azkarList7,
-            tr.azkarList8,
-            tr.azkarList9,
-            tr.azkarList10,
-            tr.azkarList11,
-            tr.azkarList12,
-            tr.azkarList13,
           ][index % 7];
   }
 
@@ -112,7 +112,9 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                 translatedText: translatedHadith,
               ),
             ),
-            mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
+            mosqueProvider.times!.isTurki
+                ? ResponsiveMiniSalahBarTurkishWidget()
+                : ResponsiveMiniSalahBarWidget(),
             SizedBox(height: 10),
           ],
         ),
