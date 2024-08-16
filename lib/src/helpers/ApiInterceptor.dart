@@ -47,7 +47,9 @@ class ApiCacheInterceptor extends Interceptor {
           final responseData = json.decode(cachedData['data']);
           final cachedResponse = Response(
             data: responseData,
-            headers: Headers.fromMap({'last-modified': [cachedData['lastModified']]}),
+            headers: Headers.fromMap({
+              'last-modified': [cachedData['lastModified']]
+            }),
             statusCode: 200,
             requestOptions: response.requestOptions,
           );

@@ -24,7 +24,7 @@ class CacheKey {
   static const String kHttpRequests = 'http_requests_cache';
 }
 
-class HttpHeaderConstant{
+class HttpHeaderConstant {
   // HTTP Header keys
   static const String kHeaderContentType = 'content-type';
   static const String kHeaderLastModified = 'Last-Modified';
