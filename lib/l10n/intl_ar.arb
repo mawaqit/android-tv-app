@@ -262,5 +262,6 @@
       }
     }
   },
-  "chooseQuranPage": "اختر الصفحة"
+  "chooseQuranPage": "اختر الصفحة",
+  "checkingForUpdates": "التحقق من وجود تحديث..."
 }
