@@ -21,6 +21,17 @@ class CacheKey {
   static const String kAutoUpdateChecking = 'auto_update_checking';
   static const String kIsUpdateDismissed = 'is_update_dismissed';
   static const String kUpdateDismissedVersion = 'update_dismissed_version';
+  static const String kHttpRequests = 'http_requests_cache';
+}
+
+class HttpHeaderConstant {
+  // HTTP Header keys
+  static const String kHeaderContentType = 'content-type';
+  static const String kHeaderLastModified = 'Last-Modified';
+  static const String kHeaderIfModifiedSince = 'If-Modified-Since';
+
+  // Content types
+  static const String kContentTypeApplicationJson = 'application/json';
 }
 
 abstract class RandomHadithConstant {
