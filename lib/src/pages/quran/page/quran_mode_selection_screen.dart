@@ -40,16 +40,32 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
 
   void _handleKeyEvent(RawKeyEvent event) {
     if (event is RawKeyDownEvent) {
+      final isLtr = Directionality.of(context) == TextDirection.ltr ? true : false;
+
       if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        setState(() {
-          _selectedIndex = 0;
-        });
-        _readingFocusNode.requestFocus();
+        if (isLtr) {
+          setState(() {
+            _selectedIndex = 0;
+          });
+          _readingFocusNode.requestFocus();
+        } else {
+          setState(() {
+            _selectedIndex = 1;
+          });
+          _listeningFocusNode.requestFocus();
+        }
       } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        setState(() {
-          _selectedIndex = 1;
-        });
-        _listeningFocusNode.requestFocus();
+        if (isLtr) {
+          setState(() {
+            _selectedIndex = 1;
+          });
+          _listeningFocusNode.requestFocus();
+        } else {
+          setState(() {
+            _selectedIndex = 0;
+          });
+          _readingFocusNode.requestFocus();
+        }
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
         if (_selectedIndex == 0) {
           ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
@@ -167,6 +183,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
           width: 50.w,
+          padding: EdgeInsets.all(16),
           height: 20.h,
           decoration: ShapeDecoration(
             color: isSelected ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.05),
@@ -183,12 +200,18 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                 color: Colors.white,
               ),
               SizedBox(height: 20),
-              Text(
-                text,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: isSelected ? 18.sp : 16.sp,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                  text,
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isSelected ? 18.sp : 16.sp,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
                 ),
               ),
             ],

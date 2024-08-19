@@ -163,6 +163,48 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     });
   }
 
+  Future<void> toggleVolume() async {
+    state = await AsyncValue.guard(() async {
+      await Future.delayed(Duration(seconds: 1));
+      return state.value!.copyWith(isVolumeOpened: !state.value!.isVolumeOpened);
+    });
+  }
+
+  Future<void> closeVolume() async {
+    state = await AsyncValue.guard(() async {
+      await Future.delayed(Duration(seconds: 0));
+      return state.value!.copyWith(isVolumeOpened: false);
+    });
+  }
+
+  Future<void> resetIsVolumeOpened() async {
+    state = await AsyncValue.guard(() async {
+      return state.value!.copyWith(isVolumeOpened: false);
+    });
+  }
+
+  Future<void> setVolume(double volume) async {
+    if (volume < 0.0) volume = 0.0;
+    if (volume > 1.0) volume = 1.0;
+
+    await audioPlayer.setVolume(volume);
+    state = AsyncData(
+      state.value!.copyWith(
+        volume: volume,
+      ),
+    );
+  }
+
+  Future<void> increaseVolume() async {
+    final newVolume = (state.value!.volume + 0.1).clamp(0.0, 1.0);
+    await setVolume(newVolume);
+  }
+
+  Future<void> decreaseVolume() async {
+    final newVolume = (state.value!.volume - 0.1).clamp(0.0, 1.0);
+    await setVolume(newVolume);
+  }
+
   Stream<Duration> get positionStream => audioPlayer.positionStream;
 }
 
