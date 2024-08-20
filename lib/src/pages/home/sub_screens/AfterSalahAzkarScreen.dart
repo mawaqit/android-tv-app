@@ -112,9 +112,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
                 translatedText: translatedHadith,
               ),
             ),
-            mosqueProvider.times!.isTurki
-                ? ResponsiveMiniSalahBarTurkishWidget()
-                : ResponsiveMiniSalahBarWidget(),
+            mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
             SizedBox(height: 10),
           ],
         ),
