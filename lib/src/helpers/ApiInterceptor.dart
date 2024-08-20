@@ -95,7 +95,7 @@ class ApiCacheInterceptor extends Interceptor {
     return contentType != null && contentType.contains(HttpHeaderConstant.kContentTypeApplicationJson);
   }
 
-  bool _isConnectionError(DioException err){
+  bool _isConnectionError(DioException err) {
     return err.type == DioExceptionType.connectionTimeout ||
         err.type == DioExceptionType.receiveTimeout ||
         err.type == DioExceptionType.sendTimeout ||
