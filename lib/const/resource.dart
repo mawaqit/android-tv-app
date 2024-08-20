@@ -24,6 +24,8 @@ class R {
       'assets/animations/rive/mawaqit_logo_animation1.riv';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/quran_background.png)
+  static const String ASSETS_BACKGROUNDS_BACKGROUND_ADHKAR_JPG = 'assets/backgrounds/background-adhkar.jpg';
+
   static const String ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG = 'assets/backgrounds/quran_background.png';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/splash_screen_5.png)
