@@ -6,6 +6,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -25,6 +26,7 @@ import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
+import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
@@ -32,18 +34,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../helpers/AppDate.dart';
+import '../helpers/connectivity_provider.dart';
+import '../models/address_model.dart';
 import '../services/FeatureManager.dart';
+import 'home/widgets/show_check_internet_dialog.dart';
 import 'onBoarding/widgets/onboarding_timezone_selector.dart';
 import '../services/storage_manager.dart';
 
 enum ErrorState { mosqueNotFound, noInternet, mosqueDataError }
 
-class Splash extends StatefulWidget {
+class Splash extends ConsumerStatefulWidget {
+  const Splash({super.key});
+
   @override
-  State<StatefulWidget> createState() => new _SplashScreen();
+  ConsumerState createState() => _SpashState();
 }
 
-class _SplashScreen extends State<Splash> {
+class _SpashState extends ConsumerState<Splash> {
   final animationFuture = Completer<void>();
 
   SharedPref sharedPref = SharedPref();
@@ -67,7 +74,19 @@ class _SplashScreen extends State<Splash> {
     HttpOverrides.global = MyHttpOverrides();
     FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
 
-    // hide status bar
+    await ref.read(connectivityProvider.notifier).checkInternetConnection();
+    ref.watch(connectivityProvider).maybeWhen(
+      orElse: () {
+      },
+      data: (isConnectedToInternet) {
+        if (isConnectedToInternet == ConnectivityStatus.connected) {
+          final hadithLangCode =
+              context.read<AppLanguage>().hadithLanguage == '' ? 'ar' : context.read<AppLanguage>().hadithLanguage;
+          context.read<AppLanguage>().setHadithLanguage(hadithLangCode);
+          ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
+        } else {}
+      },
+    );
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
       if (systemOverlaysAreVisible) return;

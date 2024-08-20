@@ -64,7 +64,28 @@ class ApiCacheInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (_isConnectionError(err)) {
+      final cacheKey = getCacheKey(err.requestOptions);
+      try {
+        final cachedData = await cacheManager.getCachedData(cacheKey);
+        if (cachedData != null) {
+          final responseData = json.decode(cachedData['data']);
+          final cachedResponse = Response(
+            data: responseData,
+            headers: Headers.fromMap({
+              'last-modified': [cachedData['lastModified']]
+            }),
+            statusCode: 200,
+            requestOptions: err.requestOptions,
+          );
+          return handler.resolve(cachedResponse);
+        }
+      } catch (e, s) {
+        logger.e('Error retrieving cached data: $e');
+        CrashlyticsWrapper.sendException(e, s);
+      }
+    }
     if (err.response?.statusCode == 404) return handler.next(err);
     return handler.next(err);
   }
@@ -72,6 +93,13 @@ class ApiCacheInterceptor extends Interceptor {
   bool _isJsonResponse(Response response) {
     final contentType = response.headers.value(HttpHeaderConstant.kHeaderContentType);
     return contentType != null && contentType.contains(HttpHeaderConstant.kContentTypeApplicationJson);
+  }
+
+  bool _isConnectionError(DioException err){
+    return err.type == DioExceptionType.connectionTimeout ||
+        err.type == DioExceptionType.receiveTimeout ||
+        err.type == DioExceptionType.sendTimeout ||
+        err.type == DioExceptionType.connectionError;
   }
 }
 
