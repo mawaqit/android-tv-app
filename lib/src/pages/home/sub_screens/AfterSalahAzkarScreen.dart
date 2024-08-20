@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
@@ -96,7 +97,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(kBackgroundAdhkar),
+          image: AssetImage(R.ASSETS_BACKGROUNDS_BACKGROUND_ADHKAR_JPG),
           fit: BoxFit.cover,
         ),
       ),

@@ -24,6 +24,8 @@ class R {
   static const String ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV =
       'assets/animations/rive/mawaqit_logo_animation1.riv';
 
+  static const String ASSETS_BACKGROUNDS_BACKGROUND_ADHKAR_JPG = 'assets/backgrounds/background-adhkar.jpg';
+
   static const String ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG = 'assets/backgrounds/quran_background.png';
 
   static const String ASSETS_BACKGROUNDS_SPLASH_SCREEN_5_PNG = 'assets/backgrounds/splash_screen_5.png';
