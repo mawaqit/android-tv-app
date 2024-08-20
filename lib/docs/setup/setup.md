@@ -1,5 +1,3 @@
----
-
 # Mawaqit Android TV
 
 ## Prerequisites
@@ -84,8 +82,6 @@ const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
    ```sh
    fgen
    ```
-
----
 
 ### Note:
 
