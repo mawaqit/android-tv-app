@@ -34,7 +34,7 @@ class _AppWorkflowScreenState extends ConsumerState<AppWorkflowScreen> {
   DateTime? _nextCheckTime;
   bool _hasExited = false;
   Timer? _debounceTimer;
-
+  DateTime? _lastExitTime;
   @override
   void initState() {
     super.initState();
@@ -70,16 +70,31 @@ class _AppWorkflowScreenState extends ConsumerState<AppWorkflowScreen> {
     _timer = Timer(_nextCheckTime!.difference(now), _checkQuranBackgroundExit);
   }
 
+  bool _shouldExit(DateTime now, List<DateTime> times) {
+    if (_lastExitTime == null) return true;
+
+    final lastPrayerTime = times.lastWhere((time) => time.isBefore(now), orElse: () => times.last);
+    final nextPrayerTime =
+        times.firstWhere((time) => time.isAfter(now), orElse: () => times.first.add(const Duration(days: 1)));
+
+    return now.isAfter(nextPrayerTime.subtract(const Duration(minutes: 10))) && _lastExitTime!.isBefore(lastPrayerTime);
+  }
+
   void _checkQuranBackgroundExit() {
     final now = AppDateTime.now();
     if (now.isAfter(_nextCheckTime!)) {
       final currentWidget = ref.read(currentWidgetProvider);
-      if (currentWidget == "QuranBackground" && !_hasExited) {
+      final mosqueManager = provider.Provider.of<MosqueManager>(context, listen: false);
+      final times = mosqueManager.useTomorrowTimes
+          ? mosqueManager.actualTimes(now.add(const Duration(days: 1)))
+          : mosqueManager.actualTimes(now);
+
+      if (currentWidget == "QuranBackground" && _shouldExit(now, times)) {
         _debounceTimer?.cancel();
         _debounceTimer = Timer(const Duration(seconds: 5), () {
-          if (!_hasExited) {
-            _hasExited = true;
+          if (_shouldExit(now, times)) {
             print("Exiting Quran mode");
+            _lastExitTime = now;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               AppRouter.pushReplacement(OfflineHomeScreen());
               ref.read(quranPlayerNotifierProvider.notifier).pause();
