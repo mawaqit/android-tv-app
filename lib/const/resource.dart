@@ -5,40 +5,32 @@ class R {
   const R._();
 
   /// ![preview](file:///Users/ds/mawaqit/assets/animations/lottie/language.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON =
-      'assets/animations/lottie/language.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON = 'assets/animations/lottie/language.json';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/animations/lottie/search.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_SEARCH_JSON =
-      'assets/animations/lottie/search.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_SEARCH_JSON = 'assets/animations/lottie/search.json';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/animations/lottie/settings.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_SETTINGS_JSON =
-      'assets/animations/lottie/settings.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_SETTINGS_JSON = 'assets/animations/lottie/settings.json';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/animations/lottie/theme.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_THEME_JSON =
-      'assets/animations/lottie/theme.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_THEME_JSON = 'assets/animations/lottie/theme.json';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/animations/lottie/welcome.json)
-  static const String ASSETS_ANIMATIONS_LOTTIE_WELCOME_JSON =
-      'assets/animations/lottie/welcome.json';
+  static const String ASSETS_ANIMATIONS_LOTTIE_WELCOME_JSON = 'assets/animations/lottie/welcome.json';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/animations/rive/mawaqit_logo_animation1.riv)
   static const String ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV =
       'assets/animations/rive/mawaqit_logo_animation1.riv';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/quran_background.png)
-  static const String ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG =
-      'assets/backgrounds/quran_background.png';
+  static const String ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG = 'assets/backgrounds/quran_background.png';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/splash_screen_5.png)
-  static const String ASSETS_BACKGROUNDS_SPLASH_SCREEN_5_PNG =
-      'assets/backgrounds/splash_screen_5.png';
+  static const String ASSETS_BACKGROUNDS_SPLASH_SCREEN_5_PNG = 'assets/backgrounds/splash_screen_5.png';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/cfg/configuration.json)
-  static const String ASSETS_CFG_CONFIGURATION_JSON =
-      'assets/cfg/configuration.json';
+  static const String ASSETS_CFG_CONFIGURATION_JSON = 'assets/cfg/configuration.json';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/cfg/settings.json)
   static const String ASSETS_CFG_SETTINGS_JSON = 'assets/cfg/settings.json';
@@ -62,8 +54,7 @@ class R {
   static const String ASSETS_ICON_SKIP_NEXT_SVG = 'assets/icon/skip_next.svg';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/icon/skip_previous.svg)
-  static const String ASSETS_ICON_SKIP_PREVIOUS_SVG =
-      'assets/icon/skip_previous.svg';
+  static const String ASSETS_ICON_SKIP_PREVIOUS_SVG = 'assets/icon/skip_previous.svg';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/img/flag/ar.png)
   static const String ASSETS_IMG_FLAG_AR_PNG = 'assets/img/flag/ar.png';
@@ -195,19 +186,16 @@ class R {
   static const String ASSETS_IMG_ICON_EXIT_PNG = 'assets/img/icon_exit.png';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/img/quran/default_avatar.png)
-  static const String ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG =
-      'assets/img/quran/default_avatar.png';
+  static const String ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG = 'assets/img/quran/default_avatar.png';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/scripts/clean.js)
   static const String ASSETS_SCRIPTS_CLEAN_JS = 'assets/scripts/clean.js';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/svg/mawaqit-logo-text-light.svg)
-  static const String ASSETS_SVG_MAWAQIT_LOGO_TEXT_LIGHT_SVG =
-      'assets/svg/mawaqit-logo-text-light.svg';
+  static const String ASSETS_SVG_MAWAQIT_LOGO_TEXT_LIGHT_SVG = 'assets/svg/mawaqit-logo-text-light.svg';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/svg/mawaqit_logo_light.svg)
-  static const String ASSETS_SVG_MAWAQIT_LOGO_LIGHT_SVG =
-      'assets/svg/mawaqit_logo_light.svg';
+  static const String ASSETS_SVG_MAWAQIT_LOGO_LIGHT_SVG = 'assets/svg/mawaqit_logo_light.svg';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/svg/no-phone.svg)
   static const String ASSETS_SVG_NO_PHONE_SVG = 'assets/svg/no-phone.svg';
@@ -216,22 +204,17 @@ class R {
   static const String ASSETS_SVG_NO_WI_FI_SVG = 'assets/svg/no-wi-fi.svg';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/adhan-madina-fajr.mp3)
-  static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_FAJR_MP3 =
-      'assets/voices/adhan/adhan-madina-fajr.mp3';
+  static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_FAJR_MP3 = 'assets/voices/adhan/adhan-madina-fajr.mp3';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/adhan-madina.mp3)
-  static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_MP3 =
-      'assets/voices/adhan/adhan-madina.mp3';
+  static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_MP3 = 'assets/voices/adhan/adhan-madina.mp3';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/bip.mp3)
-  static const String ASSETS_VOICES_ADHAN_BIP_MP3 =
-      'assets/voices/adhan/bip.mp3';
+  static const String ASSETS_VOICES_ADHAN_BIP_MP3 = 'assets/voices/adhan/bip.mp3';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/duaa_iftar.mp3)
-  static const String ASSETS_VOICES_DUAA_IFTAR_MP3 =
-      'assets/voices/duaa_iftar.mp3';
+  static const String ASSETS_VOICES_DUAA_IFTAR_MP3 = 'assets/voices/duaa_iftar.mp3';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/takbir-aid.mp3)
-  static const String ASSETS_VOICES_TAKBIR_AID_MP3 =
-      'assets/voices/takbir-aid.mp3';
+  static const String ASSETS_VOICES_TAKBIR_AID_MP3 = 'assets/voices/takbir-aid.mp3';
 }
