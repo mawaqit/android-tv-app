@@ -17,7 +17,7 @@ class AfterSalahAzkar extends StatefulWidget {
   AfterSalahAzkar({
     Key? key,
     this.onDone,
-    this.azkarTitle = 'أذكار بعد الصلاة',
+    this.azkarTitle = AzkarConstant.kAzkarAfterPrayer,
     this.isAfterAsrOrFajr = false,
   }) : super(key: key);
 
@@ -93,30 +93,28 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
     final arabicHadith = arabicItem(activeHadith);
     final mosqueProvider = context.read<MosqueManager>();
 
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Image.asset(
-            kBackgroundAdhkar,
-            fit: BoxFit.cover,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(kBackgroundAdhkar),
+          fit: BoxFit.cover,
         ),
-        Column(
-          children: [
-            SizedBox(height: 10),
-            AboveSalahBar(),
-            Expanded(
-              child: HadithWidget(
-                title: widget.azkarTitle,
-                arabicText: arabicHadith,
-                translatedText: translatedHadith,
-              ),
+      ),
+      child: Column(
+        children: [
+          SizedBox(height: 10),
+          AboveSalahBar(),
+          Expanded(
+            child: HadithWidget(
+              title: widget.azkarTitle,
+              arabicText: arabicHadith,
+              translatedText: translatedHadith,
             ),
-            mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
-            SizedBox(height: 10),
-          ],
-        ),
-      ],
+          ),
+          mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
+          SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }

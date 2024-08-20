@@ -61,22 +61,20 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Image.asset(
-            kBackgroundAdhkar,
-            fit: BoxFit.cover,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(kBackgroundAdhkar),
+          fit: BoxFit.cover,
         ),
-        HadithWidget(
-          maxHeight: 35,
-          title: arTranslation.afterAdhanHadithTitle,
-          arabicText: arTranslation.afterSalahHadith,
-          translatedTitle: S.of(context).afterAdhanHadithTitle,
-          translatedText: S.of(context).afterSalahHadith,
-        ),
-      ],
+      ),
+      child: HadithWidget(
+        maxHeight: 35,
+        title: arTranslation.afterAdhanHadithTitle,
+        arabicText: arTranslation.afterSalahHadith,
+        translatedTitle: S.of(context).afterAdhanHadithTitle,
+        translatedText: S.of(context).afterSalahHadith,
+      ),
     );
   }
 }

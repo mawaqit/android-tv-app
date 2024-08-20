@@ -41,52 +41,50 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
     final hadithState = ref.watch(randomHadithNotifierProvider);
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Image.asset(
-            kBackgroundAdhkar,
-            fit: BoxFit.cover,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(kBackgroundAdhkar),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: AboveSalahBar(),
           ),
-        ),
-        Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 8.0),
-              child: AboveSalahBar(),
-            ),
-            Expanded(
-              // child: HadithWidget(
-              //   translatedText: context.watch<MosqueManager>().hadith,
-              //   textDirection: StringManager.getTextDirectionOfLocal(
-              //     Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
-              //   ),
-              // ),
-              child: hadithState.when(
-                data: (hadith) {
-                  return HadithWidget(
-                    translatedText: hadith.hadith,
-                    textDirection: StringManager.getTextDirectionOfLocal(
-                      Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
-                    ),
-                  );
-                },
-                loading: () => Center(
-                  child: CircularProgressIndicator(),
-                ),
-                error: (error, stackTrace) {
-                  widget.onDone?.call();
-                  return Center(
-                    child: Text('Error: $error'),
-                  );
-                },
+          Expanded(
+            // child: HadithWidget(
+            //   translatedText: context.watch<MosqueManager>().hadith,
+            //   textDirection: StringManager.getTextDirectionOfLocal(
+            //     Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
+            //   ),
+            // ),
+            child: hadithState.when(
+              data: (hadith) {
+                return HadithWidget(
+                  translatedText: hadith.hadith,
+                  textDirection: StringManager.getTextDirectionOfLocal(
+                    Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
+                  ),
+                );
+              },
+              loading: () => Center(
+                child: CircularProgressIndicator(),
               ),
+              error: (error, stackTrace) {
+                widget.onDone?.call();
+                return Center(
+                  child: Text('Error: $error'),
+                );
+              },
             ),
-            mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
-            SizedBox(height: 10),
-          ],
-        ),
-      ],
+          ),
+          mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
+          SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }

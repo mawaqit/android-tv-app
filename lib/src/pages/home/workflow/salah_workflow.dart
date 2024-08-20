@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AfterSalahAzkarScreen.dart';
@@ -135,7 +136,8 @@ class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
         WorkFlowItem(
             duration: kAzkarDuration,
             builder: (context, next) => AfterSalahAzkar(
-                isAfterAsrOrFajr: true, azkarTitle: isFajrPray ? 'أذكار الصباح بعد الفجر' : 'أذكار المساء بعد العصر'),
+                isAfterAsrOrFajr: true,
+                azkarTitle: isFajrPray ? AzkarConstant.kAzkarSabahAfterPrayer : AzkarConstant.kAzkarAsrAfterPrayer),
             disabled: mosqueConfig.iqamaEnabled == false || (!isFajrPray && !isAsrPray)),
       ],
     );

@@ -74,3 +74,9 @@ abstract class QuranConstant {
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
 }
+
+abstract class AzkarConstant {
+  static const String kAzkarAfterPrayer = 'أذكار بعد الصلاة';
+  static const String kAzkarSabahAfterPrayer = 'أذكار الصباح بعد الفجر';
+  static const String kAzkarAsrAfterPrayer = 'أذكار المساء بعد العصر';
+}
