@@ -14,6 +14,7 @@ class HadithWidget extends StatelessWidget {
     this.translatedTitle,
     this.translatedText,
     this.textDirection,
+    this.maxHeight = 50,
     this.mainAxisAlignment = MainAxisAlignment.center,
     this.padding,
   }) : super(key: key);
@@ -38,6 +39,9 @@ class HadithWidget extends StatelessWidget {
 
   /// alignment of the item along the main axis
   final MainAxisAlignment mainAxisAlignment;
+
+  // Max height constraint
+  final double maxHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +104,7 @@ class HadithWidget extends StatelessWidget {
     return Flexible(
       fit: FlexFit.loose,
       child: Container(
-        constraints: BoxConstraints(maxHeight: 50.vh),
+        constraints: BoxConstraints(maxHeight: maxHeight.vh),
         child: Padding(
           key: ValueKey(text),
           padding: const EdgeInsets.symmetric(horizontal: 8.0),

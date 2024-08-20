@@ -12,7 +12,6 @@ const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
-
 const kGooglePlayId = 'com.mawaqit.androidtv';
 
 class CacheKey {
@@ -73,4 +72,10 @@ abstract class QuranConstant {
   static const String kReciterBox = 'reciter_box';
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
+}
+
+abstract class AzkarConstant {
+  static const String kAzkarAfterPrayer = 'أذكار بعد الصلاة';
+  static const String kAzkarSabahAfterPrayer = 'أذكار الصباح بعد الفجر';
+  static const String kAzkarAsrAfterPrayer = 'أذكار المساء بعد العصر';
 }

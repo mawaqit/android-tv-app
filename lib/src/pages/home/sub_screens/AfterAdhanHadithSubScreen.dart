@@ -2,12 +2,14 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
 import 'package:provider/provider.dart';
 
+import '../../../const/constants.dart';
 import '../../../services/audio_manager.dart';
 import '../../../services/mosque_manager.dart';
 import '../../../themes/UIShadows.dart';
@@ -60,11 +62,20 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return HadithWidget(
-      title: arTranslation.afterAdhanHadithTitle,
-      arabicText: arTranslation.afterSalahHadith,
-      translatedTitle: S.of(context).afterAdhanHadithTitle,
-      translatedText: S.of(context).afterSalahHadith,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(R.ASSETS_BACKGROUNDS_BACKGROUND_ADHKAR_JPG),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: HadithWidget(
+        maxHeight: 35,
+        title: arTranslation.afterAdhanHadithTitle,
+        arabicText: arTranslation.afterSalahHadith,
+        translatedTitle: S.of(context).afterAdhanHadithTitle,
+        translatedText: S.of(context).afterSalahHadith,
+      ),
     );
   }
 }
