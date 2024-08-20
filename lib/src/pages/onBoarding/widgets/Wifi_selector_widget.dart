@@ -308,7 +308,7 @@ class _WifiPasswordPageState extends State<WifiPasswordPage> {
       },
       child: ScreenWithAnimationWidget(
           hasBackButton: false,
-          animation: R.ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON,
+          animation: R.ASSETS_ANIMATIONS_LOTTIE_SETTINGS_JSON,
           child: Column(
             children: [
               SizedBox(height: 10),
