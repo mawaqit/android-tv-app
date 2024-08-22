@@ -83,7 +83,7 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
     final iqamas = mosqueProvider.times!.dayIqamaStrings(now);
     final isIqamaMoreImportant = mosqueProvider.mosqueConfig!.iqamaMoreImportant == true;
     final turkishImask = todayTimes.length == 7 ? todayTimes.removeAt(0) : null;
-    todayTimes.removeAt(0); // Remove the first element (Fajr)
+    todayTimes.removeAt(1); 
 
     // Helper function to generate SalahItemWidget
     Widget buildSalahItemWidget({
