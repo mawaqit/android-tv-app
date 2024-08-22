@@ -82,26 +82,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         return true;
       },
       child: KeyboardListener(
-        onKeyEvent: (event) {
-          if (event is KeyDownEvent) {
-            if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-              _rightSkipButtonFocusNode.requestFocus();
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-              _leftSkipButtonFocusNode.requestFocus();
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-              _backButtonFocusNode.requestFocus();
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-              if (FocusScope.of(context).focusedChild == _listeningModeFocusNode) {
-                _choosePageFocusNode.requestFocus();
-              } else {
-                _listeningModeFocusNode.requestFocus();
-              }
-            } else if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
-              if (FocusScope.of(context).focusedChild == _choosePageFocusNode) {}
-            }
-          }
-        },
-        focusNode: FocusNode(debugLabel: 'node_uranReadingScreen'),
+        onKeyEvent: _handleKeyEvent,
+        focusNode: FocusNode(debugLabel: 'node_quranReadingScreen'),
         autofocus: true,
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -130,7 +112,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           ),
           body: quranReadingState.when(
             loading: () => Center(child: CircularProgressIndicator()),
-            error: (error, s) => Center(child: Text('Error: $error')),
+            error: (error, s) {
+              final errorLocalized = S.of(context).error;
+              return Center(child: Text('$errorLocalized: $error'));
+            },
             data: (quranReadingState) {
               return Stack(
                 children: [
@@ -308,5 +293,25 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         );
       },
     );
+  }
+
+  void _handleKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+        _rightSkipButtonFocusNode.requestFocus();
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        _leftSkipButtonFocusNode.requestFocus();
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        _backButtonFocusNode.requestFocus();
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        if (FocusScope.of(context).focusedChild == _listeningModeFocusNode) {
+          _choosePageFocusNode.requestFocus();
+        } else {
+          _listeningModeFocusNode.requestFocus();
+        }
+      } else if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+        if (FocusScope.of(context).focusedChild == _choosePageFocusNode) {}
+      }
+    }
   }
 }
