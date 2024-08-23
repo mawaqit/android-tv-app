@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/domain/repository/quran/quran_reading_repository.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mawaqit/src/module/shared_preference_module.dart';
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:mawaqit/src/data/repository/quran/quran_reading_impl.dart';
 
@@ -20,7 +21,19 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     return _initState(repository);
   }
 
+  Future<void> _saveLastReadPage(int index) async {
+    try {
+      final quranRepository = await ref.read(quranReadingRepositoryProvider.future);
+      await quranRepository.saveLastReadPage(index);
+      log('quran: QuranReadingNotifier: Saved last read page: ${index}');
+    } catch (e, s) {
+      state = AsyncError(e, s);
+    }
+  }
+
+
   void nextPage() async {
+    log('quran: QuranReadingNotifier: nextPage:');
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
       final nextPage = currentState.currentPage + 2;
@@ -51,9 +64,11 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
       if (page >= 0 && page < currentState.totalPages) {
-        await _saveLastReadPage(page);
-        currentState.pageController.jumpToPage((page / 2).floor());
-        return currentState.copyWith(currentPage: page);
+        _saveLastReadPage(page);
+        return currentState.copyWith(
+          currentPage: page,
+          isInitial: false,
+        );
       }
       return currentState;
     });
@@ -61,7 +76,10 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
 
   Future<List<SvgPicture>> _loadSvgs() async {
     final repository = await ref.read(quranReadingRepositoryProvider.future);
-    return repository.loadAllSvgs();
+    final downloadQuranRiverpod = ref.read(downloadQuranNotifierProvider.notifier);
+    final mosqueModel = await downloadQuranRiverpod.getSelectedMoshaf();
+    print('quran: QuranReadingNotifier: _loadSvgs: mosqueModel: $mosqueModel');
+    return repository.loadAllSvgs(mosqueModel);
   }
 
   Future<QuranReadingState> _initState(Future<QuranReadingRepository> repository) async {
@@ -77,16 +95,6 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       svgs: svgs,
       pageController: pageController,
     );
-  }
-
-  Future<void> _saveLastReadPage(int index) async {
-    try {
-      final quranRepository = await ref.read(quranReadingRepositoryProvider.future);
-      await quranRepository.saveLastReadPage(index);
-      log('quran: QuranReadingNotifier: Saved last read page: ${index}');
-    } catch (e, s) {
-      state = AsyncError(e, s);
-    }
   }
 }
 

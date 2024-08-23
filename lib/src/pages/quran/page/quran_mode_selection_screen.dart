@@ -67,6 +67,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
           _readingFocusNode.requestFocus();
         }
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
+        print('quran: QuranModeSelection: _handleKeyEvent: select $_selectedIndex');
         if (_selectedIndex == 0) {
           ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
           Navigator.pushReplacement(

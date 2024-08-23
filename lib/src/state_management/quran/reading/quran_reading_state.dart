@@ -2,12 +2,27 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+enum MoshafType {
+  warsh,
+  hafs;
+
+  static MoshafType fromString(String value) {
+    return MoshafType.values.firstWhere(
+          (type) {
+            return type.name.toString().toLowerCase() == value.toString().toLowerCase();
+          },
+      orElse: () => throw ArgumentError('Invalid MoshafType: $value'),
+    );
+  }
+}
+
 class QuranReadingState extends Equatable {
   final int currentJuz;
   final int currentSurah;
   final int currentPage;
   final List<SvgPicture> svgs;
   final PageController pageController;
+  final MoshafType moshafType;
 
   QuranReadingState({
     required this.currentJuz,
@@ -15,18 +30,20 @@ class QuranReadingState extends Equatable {
     required this.currentPage,
     required this.svgs,
     required this.pageController,
+    this.moshafType = MoshafType.hafs,
   });
-
-  int get totalPages => svgs.length;
 
   QuranReadingState copyWith({
     int? currentJuz,
     int? currentSurah,
-    int? currentPage,
     List<SvgPicture>? svgs,
+    int? currentPage,
+    bool? isInitial,
+    MoshafType? moshafType,
     PageController? pageController,
   }) {
     return QuranReadingState(
+      moshafType: moshafType ?? this.moshafType,
       currentJuz: currentJuz ?? this.currentJuz,
       currentSurah: currentSurah ?? this.currentSurah,
       currentPage: currentPage ?? this.currentPage,
@@ -41,8 +58,11 @@ class QuranReadingState extends Equatable {
         currentSurah,
         currentPage,
         svgs,
-        totalPages,
+        moshafType,
+        pageController,
       ];
+
+  int get totalPages => svgs.length;
 
   @override
   String toString() {

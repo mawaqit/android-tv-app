@@ -291,5 +291,8 @@
     }
   },
   "chooseQuranPage": "Choose the page",
-  "checkingForUpdates": "Checking for updates..."
+  "checkingForUpdates": "Checking for updates...",
+  "chooseQuranType": "Choose quran",
+  "hafs": "Hafs",
+  "warsh": "Warsh"
 }

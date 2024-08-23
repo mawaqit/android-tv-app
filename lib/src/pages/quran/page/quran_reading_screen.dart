@@ -8,6 +8,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/switch_button.dart';
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
@@ -34,6 +36,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _listeningModeFocusNode;
   late FocusNode _choosePageFocusNode;
   final ScrollController _gridScrollController = ScrollController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -45,8 +48,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _choosePageFocusNode = FocusNode(debugLabel: 'node_choosePage');
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // ref.read(downloadQuranPopUpProvider.notifier).showDownloadQuranAlertDialog(context);
       ref.read(downloadQuranPopUpProvider.notifier).showDownloadQuranAlertDialog(context);
       ref.read(quranReadingNotifierProvider);
+      // await showDownloadQuranAlertDialog(context, ref, _scaffoldKey);
     });
   }
 
@@ -76,6 +81,14 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   @override
   Widget build(BuildContext context) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
+
+    ref.listen(downloadQuranNotifierProvider, (previous, next) {
+      if (!next.hasValue || next.value is Success) {
+        log('quran: QuranReadingScreen: Downloaded quran');
+        ref.invalidate(quranReadingNotifierProvider);
+      }
+    });
+
     return WillPopScope(
       onWillPop: () async {
         ref.read(downloadQuranPopUpProvider.notifier).dispose();

@@ -6,30 +6,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 import 'package:mawaqit/src/helpers/directory_helper.dart';
+import 'package:mawaqit/src/helpers/version_helper.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 
 class DownloadQuranRemoteDataSource {
   final Dio dio;
+  final QuranPathHelper quranPathHelper;
   CancelToken? cancelToken;
-  final String applicationSupportDirectoryPath;
 
   DownloadQuranRemoteDataSource({
     required this.dio,
-    required this.applicationSupportDirectoryPath,
+    required this.quranPathHelper,
     this.cancelToken,
   });
 
   /// [getRemoteQuranVersion] fetches the remote quran version
   Future<String> getRemoteQuranVersion({
-    String url = "https://mawaqit.github.io/mawaqit-announcements/public/quran/config.json",
+    required MoshafType moshafType,
   }) async {
     try {
       log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - start');
-      final version = await dio.get(url).then((value) {
-        return value.data['fileName'];
+      final parameterName = _getConfigurationParameters(moshafType);
+      log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - $parameterName');
+      final version = await dio.get(QuranConstant.quranMoshafConfigJsonUrl).then((value) {
+        log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - $value');
+        return value.data[parameterName];
       });
       log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - $version');
-      return version as String;
+      return VersionHelper.extractVersion(version);
     } catch (e) {
       throw FetchRemoteQuranVersionException(e.toString());
     }
@@ -37,21 +44,18 @@ class DownloadQuranRemoteDataSource {
 
   /// [downloadQuranWithProgress] downloads the quran zip file
   Future<void> downloadQuranWithProgress({
-    required String versionName,
-    String? applicationDirectoryPath,
-    String url = "https://mawaqit.github.io/mawaqit-announcements/public/quran/",
+    required String version,
+    required MoshafType moshafType,
     Function(double)? onReceiveProgress,
   }) async {
-    log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - start');
-    applicationDirectoryPath ??= applicationSupportDirectoryPath;
-
-    final filePath = '$applicationDirectoryPath/quran_zip/$versionName';
-    log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - filePath: $filePath');
+    log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - filePath: ${quranPathHelper.quranDirectoryPath}');
 
     try {
+      final url = _getUrlByMoshafType(moshafType, version);
+      log('downloadQuranWithProgress: url: ${url}');
       await dio.download(
-        '$url$versionName',
-        filePath,
+        url,
+        quranPathHelper.getQuranZipFilePath(version),
         onReceiveProgress: (received, total) {
           final progress = (received / total) * 100;
           // log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - progress: $progress');
@@ -62,19 +66,17 @@ class DownloadQuranRemoteDataSource {
     } on DioException catch (e) {
       if (e.type == DioExceptionType.cancel) {
         log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - download cancelled');
-        await DirectoryHelper.deleteFileIfExists(filePath);
         await DirectoryHelper.deleteDirectories([
-          '$applicationDirectoryPath/quran_zip',
-          '$applicationDirectoryPath/quran',
+          quranPathHelper.quranZipDirectoryPath,
+          quranPathHelper.quranDirectoryPath,
         ]);
         throw CancelDownloadException();
       }
       throw Exception('Error occurred while downloading quran: $e');
     } catch (e) {
-      await DirectoryHelper.deleteFileIfExists(filePath);
       await DirectoryHelper.deleteDirectories([
-        '$applicationDirectoryPath/quran_zip',
-        '$applicationDirectoryPath/quran',
+        quranPathHelper.quranZipDirectoryPath,
+        quranPathHelper.quranDirectoryPath,
       ]);
       throw UnknownException(e.toString());
     }
@@ -86,14 +88,38 @@ class DownloadQuranRemoteDataSource {
     cancelToken = CancelToken();
     log('quran: DownloadQuranRemoteDataSource: cancelDownload - download cancelled');
   }
+
+  String _getUrlByMoshafType(MoshafType moshafType, String version) {
+    log('type before: $moshafType and url: $version');
+    switch (moshafType) {
+      case MoshafType.warsh:
+        return '${QuranConstant.kQuranZipBaseUrl}warsh-v$version.zip';
+      case MoshafType.hafs:
+        String url = '${QuranConstant.kQuranZipBaseUrl}hafs-v$version.zip';
+        log('type: $moshafType and url: $url');
+        return url;
+    }
+  }
+
+  String _getConfigurationParameters(MoshafType moshafType) {
+    switch (moshafType) {
+      case MoshafType.warsh:
+        return 'warshFileName';
+      case MoshafType.hafs:
+        return 'hafsfileName';
+    }
+  }
 }
 
-final downloadQuranRemoteDataSourceProvider = FutureProvider<DownloadQuranRemoteDataSource>(
-  (ref) async {
-    final savePath = await getApplicationSupportDirectory();
+final downloadQuranRemoteDataSourceProvider = FutureProvider.family<DownloadQuranRemoteDataSource, MoshafType>(
+      (ref, type) async {
+    final quranPathHelper = QuranPathHelper(
+      applicationSupportDirectory: await getApplicationSupportDirectory(),
+      moshafType: type,
+    );
     final cancelToken = CancelToken();
     return DownloadQuranRemoteDataSource(
-      applicationSupportDirectoryPath: savePath.path,
+      quranPathHelper: quranPathHelper,
       cancelToken: cancelToken,
       dio: ref.read(dioProvider),
     );
@@ -101,7 +127,7 @@ final downloadQuranRemoteDataSourceProvider = FutureProvider<DownloadQuranRemote
 );
 
 final dioProvider = Provider(
-  (ref) => Dio(
+      (ref) => Dio(
     BaseOptions(
       baseUrl: kBaseUrl,
       headers: {

@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/module/shared_preference_module.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,16 +27,20 @@ class QuranReadingLocalDataSource {
     await sharedPreferences.setInt(QuranConstant.kSavedCurrentPage, lastReadingPage);
   }
 
-  Future<List<SvgPicture>> loadAllSvgs() async {
+  Future<List<SvgPicture>> loadAllSvgs(MoshafType moshafType) async {
     try {
-      final mainDir = await getApplicationSupportDirectory();
-      final mainPath = mainDir.path;
-      final dir = Directory('$mainPath/quran');
-      final files = dir.listSync().where((file) => file.path.endsWith('.svg')).toList()
+      final applicationSupportDirectory = await getApplicationSupportDirectory();
+      final quranPathHelper = QuranPathHelper(applicationSupportDirectory: applicationSupportDirectory,
+          moshafType: moshafType);
+      final dir = Directory(quranPathHelper.quranDirectoryPath);
+      print('quran: QuranReadingLocalDataSource: loadAllSvgs: Loading SVGs from ${dir.path}');
+      final files = dir.listSync().where((file) {
+        return file.path.endsWith('.svg') || file.path.endsWith('.svgz');
+      }).toList()
         ..sort((a, b) => a.path.compareTo(b.path));
 
       final svgList = await Future.wait(files.map((file) => _loadSvg(file.path)));
-
+      print('quran: QuranReadingLocalDataSource: loadAllSvgs: ${svgList.length} SVGs loaded');
       return svgList;
     } catch (e) {
       log('Error loading SVGs: $e');
@@ -50,6 +56,7 @@ class QuranReadingLocalDataSource {
       return SvgPicture.string('<svg></svg>'); // Return an empty SVG as fallback
     }
   }
+
 }
 
 final quranReadingLocalDataSourceProvider = FutureProvider<QuranReadingLocalDataSource>((ref) async {
