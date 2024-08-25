@@ -126,10 +126,10 @@ class DownloadQuranNotifier extends AsyncNotifier<DownloadQuranState> {
   }
 
   /// [cancelDownload] cancels the download
-  Future<void> cancelDownload() async {
+  Future<void> cancelDownload(MoshafType moshafType) async {
     try {
       state = AsyncLoading();
-      final downloadQuranRepoImpl = await ref.read(quranDownloadRepositoryProvider(MoshafType.warsh).future);
+      final downloadQuranRepoImpl = await ref.read(quranDownloadRepositoryProvider(moshafType).future);
       downloadQuranRepoImpl.cancelDownload();
       state = AsyncData(CancelDownload());
     } catch (e, s) {

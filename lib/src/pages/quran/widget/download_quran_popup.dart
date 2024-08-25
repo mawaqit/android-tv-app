@@ -13,7 +13,7 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
   Future<void> build() async {}
 
   void dispose() {
-    ref.read(downloadQuranNotifierProvider.notifier).cancelDownload();
+    ref.read(downloadQuranNotifierProvider.notifier).cancelDownload(selectedMoshafType);
   }
 
   Future<void> showDownloadQuranAlertDialog(BuildContext context) async {
@@ -29,7 +29,7 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
       if (confirmedDownload) {
         await _handleDownloadProcess(context, selectedMoshafType);
       } else {
-        Navigator.pop(context);
+        // Navigator.pop(context);
       }
     }
   }
@@ -44,6 +44,7 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
   Future<bool> _requestDownloadConfirmation(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -55,9 +56,9 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
   }
 
   Widget _buildQuranTypeSelectionDialog(
-      BuildContext context,
-      void Function(VoidCallback fn) setState,
-      ) {
+    BuildContext context,
+    void Function(VoidCallback fn) setState,
+  ) {
     return AlertDialog(
       title: Text(S.of(context).chooseQuranType),
       content: Column(
@@ -94,11 +95,11 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
   }
 
   Widget _buildMoshafTypeRadio(
-      BuildContext context, {
-        required String title,
-        required MoshafType value,
-        required void Function(VoidCallback fn) setState,
-      }) {
+    BuildContext context, {
+    required String title,
+    required MoshafType value,
+    required void Function(VoidCallback fn) setState,
+  }) {
     return RadioListTile<MoshafType>(
       title: Text(title),
       value: value,
@@ -115,13 +116,11 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
   }
 
   Future<void> _handleDownloadProcess(
-      BuildContext context,
-      MoshafType moshafType,
-      ) async {
+    BuildContext context,
+    MoshafType moshafType,
+  ) async {
     final notifier = ref.read(downloadQuranNotifierProvider.notifier);
-
     final state = ref.read(downloadQuranNotifierProvider);
-
     state.maybeWhen(
       data: (data) async {
         if (data is UpdateAvailable) {
@@ -142,6 +141,7 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
   Future<bool> _showConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(S.of(context).downloadQuran),
@@ -171,7 +171,17 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
           builder: (context, ref, _) {
             final downloadQuranState = ref.watch(downloadQuranNotifierProvider);
             return downloadQuranState.when(
-              data: (state) => _buildStatefulDialog(context, state),
+              data: (state) {
+                if (state is Downloading) {
+                  return _buildDownloadingPopup(context, state.progress);
+                } else if (state is Extracting) {
+                  return _buildExtractingPopup(context, state.progress);
+                } else if (state is Success) {
+                  return _buildSuccessPopup(context, state.version);
+                } else {
+                  return _buildInitialPopup(context);
+                }
+              },
               loading: () => _buildCheckingPopup(context),
               error: (error, stackTrace) => _buildErrorPopup(context, error),
             );
@@ -182,11 +192,11 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
   }
 
   Widget _buildStatefulDialog(BuildContext context, DownloadQuranState state) {
-    if(state is Downloading) {
+    if (state is Downloading) {
       return _buildDownloadingPopup(context, state.progress);
-    } else if(state is Extracting) {
+    } else if (state is Extracting) {
       return _buildExtractingPopup(context, state.progress);
-    } else if(state is Success) {
+    } else if (state is Success) {
       return _buildSuccessPopup(context, state.version);
     } else {
       return _buildInitialPopup(context);
@@ -224,8 +234,8 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            ref.read(downloadQuranNotifierProvider.notifier).cancelDownload();
+          onPressed: () async {
+            await ref.read(downloadQuranNotifierProvider.notifier).cancelDownload(selectedMoshafType);
             Navigator.pop(context);
           },
           autofocus: true,
@@ -287,11 +297,11 @@ class DownloadQuranPopup extends AsyncNotifier<void> {
   }
 
   Widget _buildSimpleDialog(
-      BuildContext context, {
-        required String title,
-        required Widget content,
-        List<Widget>? actions,
-      }) {
+    BuildContext context, {
+    required String title,
+    required Widget content,
+    List<Widget>? actions,
+  }) {
     return AlertDialog(
       title: Text(title),
       content: content,
