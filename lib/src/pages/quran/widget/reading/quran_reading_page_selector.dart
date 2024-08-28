@@ -72,12 +72,9 @@ class _QuranReadingPageSelectorState extends ConsumerState<QuranReadingPageSelec
           itemBuilder: (BuildContext context, int index) {
             final isSelected = index == widget.currentPage;
             return InkWell(
-              // focusNode: index == widget.currentPage ? _initialFocusNode : FocusNode(debugLabel: 'node_page_$index'),
-
               onTap: () {
-                // _scrollToIndex(index);
                 ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close the dialog after selection
               },
               child: Container(
                 alignment: Alignment.center,

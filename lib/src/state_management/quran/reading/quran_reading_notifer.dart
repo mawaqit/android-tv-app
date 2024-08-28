@@ -59,12 +59,14 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     });
   }
 
-  void updatePage(int page) async {
+  Future<void> updatePage(int page) async {
     log('quran: QuranReadingNotifier: updatePage: $page');
+
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
       if (page >= 0 && page < currentState.totalPages) {
-        _saveLastReadPage(page);
+        await _saveLastReadPage(page);
+        currentState.pageController.jumpToPage((page / 2).floor()); // Jump to the selected page
         return currentState.copyWith(
           currentPage: page,
           isInitial: false,
