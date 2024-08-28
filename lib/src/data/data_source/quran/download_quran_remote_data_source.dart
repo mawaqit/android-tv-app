@@ -112,7 +112,7 @@ class DownloadQuranRemoteDataSource {
 }
 
 final downloadQuranRemoteDataSourceProvider = FutureProvider.family<DownloadQuranRemoteDataSource, MoshafType>(
-      (ref, type) async {
+  (ref, type) async {
     final quranPathHelper = QuranPathHelper(
       applicationSupportDirectory: await getApplicationSupportDirectory(),
       moshafType: type,
@@ -127,7 +127,7 @@ final downloadQuranRemoteDataSourceProvider = FutureProvider.family<DownloadQura
 );
 
 final dioProvider = Provider(
-      (ref) => Dio(
+  (ref) => Dio(
     BaseOptions(
       baseUrl: kBaseUrl,
       headers: {

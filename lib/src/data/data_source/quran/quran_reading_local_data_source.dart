@@ -30,8 +30,8 @@ class QuranReadingLocalDataSource {
   Future<List<SvgPicture>> loadAllSvgs(MoshafType moshafType) async {
     try {
       final applicationSupportDirectory = await getApplicationSupportDirectory();
-      final quranPathHelper = QuranPathHelper(applicationSupportDirectory: applicationSupportDirectory,
-          moshafType: moshafType);
+      final quranPathHelper =
+          QuranPathHelper(applicationSupportDirectory: applicationSupportDirectory, moshafType: moshafType);
       final dir = Directory(quranPathHelper.quranDirectoryPath);
       print('quran: QuranReadingLocalDataSource: loadAllSvgs: Loading SVGs from ${dir.path}');
       final files = dir.listSync().where((file) {
@@ -56,7 +56,6 @@ class QuranReadingLocalDataSource {
       return SvgPicture.string('<svg></svg>'); // Return an empty SVG as fallback
     }
   }
-
 }
 
 final quranReadingLocalDataSourceProvider = FutureProvider<QuranReadingLocalDataSource>((ref) async {

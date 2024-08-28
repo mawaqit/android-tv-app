@@ -63,7 +63,7 @@ class DownloadQuranLocalDataSource {
 }
 
 final downloadQuranLocalDataSourceProvider = FutureProvider.family<DownloadQuranLocalDataSource, MoshafType>(
-      (ref, type) async {
+  (ref, type) async {
     final savePath = await getApplicationSupportDirectory();
     final sharedPref = await ref.read(sharedPreferenceModule.future);
     final quranPathHelper = QuranPathHelper(

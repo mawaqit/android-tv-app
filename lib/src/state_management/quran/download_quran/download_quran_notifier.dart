@@ -113,7 +113,7 @@ class DownloadQuranNotifier extends AsyncNotifier<DownloadQuranState> {
   Future<void> _saveSelectedMoshaf(MoshafType moshafType) async {
     final sharedPreference = await ref.read(sharedPreferenceModule.future);
     final success = await sharedPreference.setString(CacheKey.kSelectedMoshaf, moshafType.name.toString());
-    if(!success) {
+    if (!success) {
       throw Exception('Failed to save selected moshaf');
     }
   }
