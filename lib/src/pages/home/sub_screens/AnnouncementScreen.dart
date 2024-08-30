@@ -63,11 +63,11 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
           workFlowItems: announcements
               .map((e) => AnnouncementWorkFlowItem(
                     builder: (context) {
-                      if (!mounted) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
                         setState(() {
                           currentAnnouncement = e;
                         });
-                      }
+                      });
                       return announcementWidgets(e);
                     },
                     duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
