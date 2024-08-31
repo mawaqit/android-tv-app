@@ -76,6 +76,6 @@ abstract class QuranConstant {
 
 abstract class AzkarConstant {
   static const String kAzkarAfterPrayer = 'أذكار بعد الصلاة';
-  static const String kAzkarSabahAfterPrayer = 'أذكار الصباح بعد الفجر';
-  static const String kAzkarAsrAfterPrayer = 'أذكار المساء بعد العصر';
+  static const String kAzkarSabahAfterPrayer = 'أذكار الصباح';
+  static const String kAzkarAsrAfterPrayer = 'أذكار المساء';
 }
