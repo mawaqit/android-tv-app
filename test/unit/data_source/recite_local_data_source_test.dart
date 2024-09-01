@@ -74,4 +74,42 @@ void main() {
       expect(() => dataSource.saveReciters(reciters), throwsA(isA<SaveRecitersException>()));
     });
   });
+
+  group('getReciters', () {
+    test('Happy path: Successfully retrieves list of reciters', () async {
+      final reciters = [
+        createReciter(1, [1, 2, 3]),
+        createReciter(2, [1, 2, 3])
+      ];
+      when(() => mockBox.values).thenReturn(reciters);
+
+      final result = await dataSource.getReciters();
+
+      expect(result, equals(reciters));
+    });
+
+    test('Handles empty Hive box', () async {
+      when(() => mockBox.values).thenReturn([]);
+
+      final result = await dataSource.getReciters();
+
+      expect(result, isEmpty);
+    });
+
+    test('Handles very large number of reciters', () async {
+      final largeList = List.generate(10000, (index) => createReciter(index, [1, 2, 3]));
+      when(() => mockBox.values).thenReturn(largeList);
+
+      final result = await dataSource.getReciters();
+
+      expect(result.length, equals(10000));
+    });
+
+    test('Throws FetchRecitersException on corrupted data', () async {
+      when(() => mockBox.values).thenThrow(HiveError('Corrupted data'));
+
+      expect(() => dataSource.getReciters(), throwsA(isA<FetchRecitersException>()));
+    });
+  });
+
 }
