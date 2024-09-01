@@ -33,7 +33,6 @@ void main() {
   });
 
   group('DownloadQuranLocalDataSource', () {
-
     group('saveSvgFiles', () {
       test('should save SVG files to the correct directory', () async {
         // Arrange
