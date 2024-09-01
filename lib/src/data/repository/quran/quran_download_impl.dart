@@ -1,20 +1,25 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/data/data_source/quran/download_quran_remote_data_source.dart';
-import 'package:mawaqit/src/helpers/directory_helper.dart';
+import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/helpers/zip_extractor_helper.dart';
 
 import 'package:mawaqit/src/data/data_source/quran/download_quran_local_data_source.dart';
 
 import 'package:mawaqit/src/domain/repository/quran/quran_download_repository.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:path_provider/path_provider.dart';
 
 class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
   final DownloadQuranLocalDataSource localDataSource;
   final DownloadQuranRemoteDataSource remoteDataSource;
+  final QuranPathHelper quranPathHelper;
 
   QuranDownloadRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
+    required this.quranPathHelper,
   });
 
   /// [getLocalQuranVersion] fetches the local quran version
@@ -68,15 +73,23 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
 
   /// [deleteZipFile] deletes the zip file
   Future<void> _deleteZipFile(String zipFileName) async {
-    await localDataSource.deleteZipFile(zipFileName);
+    final zipFilePath = quranPathHelper.getQuranZipFilePath(zipFileName);
+    await localDataSource.deleteZipFile(
+      zipFileName,
+      File(zipFilePath),
+    );
   }
 }
 
 final quranDownloadRepositoryProvider = FutureProvider.family<QuranDownloadRepository, MoshafType>((ref, type) async {
   final localDataSource = await ref.read(downloadQuranLocalDataSourceProvider(type).future);
   final remoteDataSource = await ref.read(downloadQuranRemoteDataSourceProvider(type).future);
+  final directory = await getApplicationSupportDirectory();
+  final quranHelper = QuranPathHelper(applicationSupportDirectory: directory, moshafType: type);
+
   return QuranDownloadRepositoryImpl(
     localDataSource: localDataSource,
+    quranPathHelper: quranHelper,
     remoteDataSource: remoteDataSource,
   );
 });

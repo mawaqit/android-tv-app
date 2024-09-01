@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
-import 'package:mawaqit/src/helpers/directory_helper.dart';
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/module/shared_preference_module.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
@@ -33,12 +32,10 @@ class DownloadQuranLocalDataSource {
   }
 
   /// [deleteZipFile] deletes the existing svg files
-  Future<void> deleteZipFile(String zipFileName) async {
-    final zipFilePath = quranPathHelper.getQuranZipFilePath(zipFileName);
+  Future<void> deleteZipFile(String zipFileName, File zipFile) async {
     _setQuranVersion(zipFileName);
-    final zipFile = File(zipFilePath);
-    if (await zipFile.exists()) {
-      log('quran: DownloadQuranLocalDataSource: deleteZipFile - deleting $zipFilePath');
+    final isExist = await zipFile.exists();
+    if (isExist) {
       await zipFile.delete();
     }
   }
