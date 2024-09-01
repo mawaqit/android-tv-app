@@ -8,24 +8,17 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/domain/error/recite_exception.dart';
 
 class ReciteLocalDataSource {
-  final Box<List<ReciterModel>> _reciterBox;
+  final Box<ReciterModel> _reciterBox;
 
   ReciteLocalDataSource(this._reciterBox);
 
-  Future<void> saveRecitersBySurah(List<ReciterModel> reciters, int surahId) async {
-    try {
-      log('recite: ReciteLocalDataSource: saveReciters: ${reciters[0]} len ${reciters.length}');
-      await _reciterBox.putAll({surahId: reciters});
-    } catch (e) {
-      log('saveReciters: ${e.toString()}');
-      throw SaveRecitersException(e.toString());
-    }
-  }
 
   Future<void> saveReciters(List<ReciterModel> reciters) async {
     try {
       log('recite: ReciteLocalDataSource: saveReciters: ${reciters[0]} len ${reciters.length}');
-      await _reciterBox.put(0, reciters);
+      final reciterMap = {for (var r in reciters) r.id: r};
+
+      await _reciterBox.putAll(reciterMap);
     } catch (e) {
       log('saveReciters: ${e.toString()}');
       throw SaveRecitersException(e.toString());
@@ -34,28 +27,28 @@ class ReciteLocalDataSource {
 
   Future<List<ReciterModel>> getReciters() async {
     try {
-      final reciters = _reciterBox.get(0);
-      log('recite: ReciteLocalDataSource: getReciters: ${reciters?[0]}');
-      if (reciters != null) {
-        return reciters;
-      } else {
-        return [];
-      }
+      final reciters = _reciterBox.values.toList();
+      log('recite: ReciteLocalDataSource: getReciters: ${reciters[0]}');
+      return reciters;
     } catch (e) {
       throw FetchRecitersException(e.toString());
     }
   }
 
-  Future<List<ReciterModel>?> getReciterBySurah(int surahId) async {
+  Future<List<ReciterModel>> getReciterBySurah(int surahId) async {
     try {
-      final reciters = _reciterBox.get(surahId);
-      log('recite: ReciteLocalDataSource: getReciterBySurah: ${reciters?[0]}');
-      if (reciters != null) {
-        return reciters;
-      } else {
-        return null;
-      }
+      // Retrieve all reciters
+      final allReciters = _reciterBox.values.toList();
+
+      final recitersForSurah = allReciters.where((reciter) =>
+          reciter.moshaf.any((moshaf) => moshaf.surahList.contains(surahId))
+      ).toList();
+
+      log('recite: ReciteLocalDataSource: getReciterBySurah: Found ${recitersForSurah.length} reciters for surah $surahId');
+
+      return recitersForSurah;
     } catch (e) {
+      log('getReciterBySurah error: ${e.toString()}');
       throw FetchRecitersBySurahException(e.toString());
     }
   }
@@ -80,6 +73,6 @@ class ReciteLocalDataSource {
 }
 
 final reciteLocalDataSourceProvider = FutureProvider<ReciteLocalDataSource>((ref) async {
-  final reciterBox = await Hive.openBox<List<ReciterModel>>(QuranConstant.kReciterBox);
+  final reciterBox = await Hive.openBox<ReciterModel>(QuranConstant.kReciterBox);
   return ReciteLocalDataSource(reciterBox);
 });
