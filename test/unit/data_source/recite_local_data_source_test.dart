@@ -243,4 +243,26 @@ void main() {
       expect(() => dataSource.isRecitersCached(), throwsA(isA<CannotCheckRecitersCachedException>()));
     });
   });
+
+  group('General Hive-related issues', () {
+    test('Hive box is not initialized before use', () {
+      when(() => mockBox.values).thenThrow(HiveError('Box not opened'));
+
+      expect(() => dataSource.getReciters(), throwsA(isA<FetchRecitersException>()));
+    });
+
+    test('Hive box becomes corrupted', () {
+      when(() => mockBox.values).thenThrow(HiveError('Corrupted box'));
+
+      expect(() => dataSource.getReciters(), throwsA(isA<FetchRecitersException>()));
+    });
+
+    test('Disk space runs out during write operations', () {
+      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>()))
+          .thenThrow(HiveError('No space left on device'));
+
+      expect(() => dataSource.saveReciters([createReciter(1, [1, 2, 3])]),
+          throwsA(isA<SaveRecitersException>()));
+    });
+  });
 }
