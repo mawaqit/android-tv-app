@@ -21,6 +21,7 @@ class ReciteImpl implements ReciteRepository {
       return reciters;
     } catch (e) {
       final reciters = await _localDataSource.getReciters();
+      reciters.sort((a, b) => a.name.compareTo(b.name));
       return reciters;
     }
   }
