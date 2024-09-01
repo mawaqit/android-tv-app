@@ -9,8 +9,12 @@ import 'package:mawaqit/src/domain/error/recite_exception.dart';
 
 class ReciteLocalDataSource {
   final Box<ReciterModel> _reciterBox;
+  final Box<int> _favoriteReciterBox;
 
-  ReciteLocalDataSource(this._reciterBox);
+  ReciteLocalDataSource(
+    this._reciterBox,
+    this._favoriteReciterBox,
+  );
 
   Future<void> saveReciters(List<ReciterModel> reciters) async {
     try {
@@ -70,9 +74,49 @@ class ReciteLocalDataSource {
       throw CannotCheckRecitersCachedException(e.toString());
     }
   }
+
+  Future<void> addFavoriteReciter(int reciterId) async {
+    try {
+      await _favoriteReciterBox.add(reciterId);
+      log('recite: ReciteLocalDataSource: addFavoriteReciter: $reciterId');
+    } catch (e) {
+      log('addFavoriteReciter: ${e.toString()}');
+      throw AddFavoriteReciterException(e.toString());
+    }
+  }
+
+  Future<void> removeFavoriteReciter(int reciterId) async {
+    try {
+      final index = _favoriteReciterBox.values.toList().indexOf(reciterId);
+      if (index != -1) {
+        await _favoriteReciterBox.deleteAt(index);
+        log('recite: ReciteLocalDataSource: removeFavoriteReciter: $reciterId');
+      }
+    } catch (e) {
+      log('removeFavoriteReciter: ${e.toString()}');
+      throw RemoveFavoriteReciterException(e.toString());
+    }
+  }
+
+  Future<List<ReciterModel>> getFavoriteReciters() async {
+    try {
+      final favoriteReciterIds = _favoriteReciterBox.values.toList();
+      final favoriteReciters = _reciterBox.values.where((reciter) => favoriteReciterIds.contains(reciter.id)).toList();
+      log('recite: ReciteLocalDataSource: getFavoriteReciters: ${favoriteReciters.length}');
+      return favoriteReciters;
+    } catch (e) {
+      log('getFavoriteReciters: ${e.toString()}');
+      throw FetchFavoriteRecitersException(e.toString());
+    }
+  }
+
+  bool isFavoriteReciter(int reciterId) {
+    return _favoriteReciterBox.values.contains(reciterId);
+  }
 }
 
 final reciteLocalDataSourceProvider = FutureProvider<ReciteLocalDataSource>((ref) async {
   final reciterBox = await Hive.openBox<ReciterModel>(QuranConstant.kReciterBox);
-  return ReciteLocalDataSource(reciterBox);
+  final favoriteReciterBox = await Hive.openBox<int>(QuranConstant.kFavoriteReciterBox);
+  return ReciteLocalDataSource(reciterBox,favoriteReciterBox);
 });

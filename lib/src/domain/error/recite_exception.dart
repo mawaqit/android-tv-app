@@ -81,3 +81,18 @@ class FetchRecitersException extends ReciterException {
   FetchRecitersException(String message)
       : super('Error occurred while fetching reciters: $message', 'FETCH_RECITERS_ERROR');
 }
+
+class AddFavoriteReciterException implements Exception {
+  final String message;
+  AddFavoriteReciterException(this.message);
+}
+
+class RemoveFavoriteReciterException implements Exception {
+  final String message;
+  RemoveFavoriteReciterException(this.message);
+}
+
+class FetchFavoriteRecitersException implements Exception {
+  final String message;
+  FetchFavoriteRecitersException(this.message);
+}
