@@ -258,10 +258,12 @@ void main() {
     });
 
     test('Disk space runs out during write operations', () {
-      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>()))
-          .thenThrow(HiveError('No space left on device'));
+      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenThrow(HiveError('No space left on device'));
 
-      expect(() => dataSource.saveReciters([createReciter(1, [1, 2, 3])]),
+      expect(
+          () => dataSource.saveReciters([
+                createReciter(1, [1, 2, 3])
+              ]),
           throwsA(isA<SaveRecitersException>()));
     });
   });
