@@ -112,4 +112,135 @@ void main() {
     });
   });
 
+  group('getReciterBySurah', () {
+    test('Happy path: Successfully retrieves reciters for a given surah', () async {
+      final reciters = [
+        createReciter(1, [1, 2, 3]),
+        createReciter(2, [2, 3, 4]),
+        createReciter(3, [3, 4, 5]),
+      ];
+      when(() => mockBox.values).thenReturn(reciters);
+
+      final result = await dataSource.getReciterBySurah(3);
+
+      expect(result.length, equals(3));
+      expect(result.map((r) => r.id), containsAll([1, 2, 3]));
+    });
+
+    test('Handles invalid surah ID (negative number)', () async {
+      when(() => mockBox.values).thenReturn([]);
+
+      final result = await dataSource.getReciterBySurah(-1);
+
+      expect(result, isEmpty);
+    });
+
+    test('Handles invalid surah ID (larger than total number of surahs)', () async {
+      when(() => mockBox.values).thenReturn([]);
+
+      final result = await dataSource.getReciterBySurah(115); // Assuming 114 surahs in total
+
+      expect(result, isEmpty);
+    });
+
+    test('Handles no reciters found for the given surah ID', () async {
+      final reciters = [
+        createReciter(1, [1, 2, 3])
+      ];
+      when(() => mockBox.values).thenReturn(reciters);
+
+      final result = await dataSource.getReciterBySurah(4);
+
+      expect(result, isEmpty);
+    });
+
+    test('Handles all reciters having the given surah ID', () async {
+      final reciters = [
+        createReciter(1, [1, 2, 3]),
+        createReciter(2, [1, 2, 3]),
+        createReciter(3, [1, 2, 3]),
+      ];
+      when(() => mockBox.values).thenReturn(reciters);
+
+      final result = await dataSource.getReciterBySurah(2);
+
+      expect(result.length, equals(3));
+      expect(result.map((r) => r.id), containsAll([1, 2, 3]));
+    });
+
+    test('Handles surah ID existing in some moshaf but not others for the same reciter', () async {
+      final reciter = ReciterModel(1, 'Reciter 1', 'A', [
+        createMoshaf(1, [1, 2, 3]),
+        createMoshaf(2, [4, 5, 6]),
+      ]);
+      when(() => mockBox.values).thenReturn([reciter]);
+
+      final result1 = await dataSource.getReciterBySurah(2);
+      final result2 = await dataSource.getReciterBySurah(5);
+
+      expect(result1.length, equals(1));
+      expect(result2.length, equals(1));
+      expect(result1[0].id, equals(1));
+      expect(result2[0].id, equals(1));
+    });
+
+    test('Handles very large number of reciters or moshafs', () async {
+      final largeList = List.generate(10000, (index) => createReciter(index, List.generate(114, (i) => i + 1)));
+      when(() => mockBox.values).thenReturn(largeList);
+
+      final result = await dataSource.getReciterBySurah(50);
+
+      expect(result.length, equals(10000));
+    });
+  });
+
+  group('clearAllReciters', () {
+    test('Successfully clears all reciters', () async {
+      when(() => mockBox.clear()).thenAnswer((_) => Future.value(5)); // Assume 5 items were cleared
+
+      await dataSource.clearAllReciters();
+
+      verify(() => mockBox.clear()).called(1);
+    });
+
+    test('Clearing an already empty box', () async {
+      when(() => mockBox.clear()).thenAnswer((_) => Future.value(0)); // No items to clear
+
+      await dataSource.clearAllReciters();
+
+      verify(() => mockBox.clear()).called(1);
+    });
+
+    test('Interruption during the clearing process', () async {
+      when(() => mockBox.clear()).thenThrow(HiveError('Interrupted during clearing'));
+
+      expect(() => dataSource.clearAllReciters(), throwsA(isA<ClearAllRecitersException>()));
+    });
+  });
+
+  group('isRecitersCached', () {
+    test('Returns true when reciters are cached', () {
+      when(() => mockBox.isNotEmpty).thenReturn(true);
+
+      expect(dataSource.isRecitersCached(), isTrue);
+    });
+
+    test('Returns false when no reciters are cached', () {
+      when(() => mockBox.isNotEmpty).thenReturn(false);
+
+      expect(dataSource.isRecitersCached(), isFalse);
+    });
+
+    test('Box is not initialized or opened', () {
+      when(() => mockBox.isNotEmpty).thenThrow(HiveError('Box not opened'));
+
+      expect(() => dataSource.isRecitersCached(), throwsA(isA<CannotCheckRecitersCachedException>()));
+    });
+
+    test('Box is corrupted', () {
+      when(() => mockBox.isNotEmpty).thenThrow(HiveError('Corrupted box'));
+
+      expect(() => dataSource.isRecitersCached(), throwsA(isA<CannotCheckRecitersCachedException>()));
+    });
+  });
 }
