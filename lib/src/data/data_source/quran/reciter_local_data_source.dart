@@ -118,5 +118,5 @@ class ReciteLocalDataSource {
 final reciteLocalDataSourceProvider = FutureProvider<ReciteLocalDataSource>((ref) async {
   final reciterBox = await Hive.openBox<ReciterModel>(QuranConstant.kReciterBox);
   final favoriteReciterBox = await Hive.openBox<int>(QuranConstant.kFavoriteReciterBox);
-  return ReciteLocalDataSource(reciterBox,favoriteReciterBox);
+  return ReciteLocalDataSource(reciterBox, favoriteReciterBox);
 });

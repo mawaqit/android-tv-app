@@ -45,7 +45,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(reciteNotifierProvider.notifier).getAllReciters();
+      ref.read(reciteNotifierProvider.notifier);
       if (mounted) {
         FocusScope.of(context).requestFocus(reciterFocusNode);
       }
@@ -143,97 +143,109 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   Widget _buildReciterList(List<ReciterModel> reciterNames) {
     return Container(
       height: 16.h,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: ListView.builder(
-              controller: _reciterScrollController,
-              scrollDirection: Axis.horizontal,
-              itemCount: reciterNames.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedReciterIndex = index;
-                    });
-                  },
-                  child: _reciterCard(index, reciterNames),
-                );
-              },
-            ),
-          ),
-        ],
+      child: ListView.builder(
+        controller: _reciterScrollController,
+        scrollDirection: Axis.horizontal,
+        itemCount: reciterNames.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedReciterIndex = index;
+              });
+            },
+            child: _reciterCard(index, reciterNames),
+          );
+        },
       ),
     );
   }
 
-  Container _reciterCard(int index, List<ReciterModel> reciterNames) {
+  Widget _reciterCard(int index, List<ReciterModel> reciterNames) {
+    final reciter = reciterNames[index];
+    final isReciterFavorite = ref.read(reciteNotifierProvider.notifier).isReciterFavorite(reciter);
+
     return Container(
       width: 25.w,
       margin: EdgeInsets.only(right: marginOfContainerReciter),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        border: reciterFocusNode.hasFocus
-            ? selectedReciterIndex == index
-                ? Border.all(
-                    color: Colors.white,
-                    width: 2,
-                  )
-                : null
+        border: reciterFocusNode.hasFocus && selectedReciterIndex == index
+            ? Border.all(color: Colors.white, width: 2)
             : null,
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xFF490094),
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [
-              Colors.black.withOpacity(0.7),
-              Colors.transparent,
-            ],
-          ),
-        ),
-        alignment: Alignment.bottomLeft,
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-            ),
-            Expanded(
-              flex: 3,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  double imageSize = constraints.maxWidth * 0.7;
-                  return Image.asset(
-                    R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
-                    width: imageSize,
-                    height: imageSize,
-                    fit: BoxFit.contain,
-                  );
-                },
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Color(0xFF490094),
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.black.withOpacity(0.7),
+                  Colors.transparent,
+                ],
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: AutoSizeText(
-                reciterNames[index].name,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                minFontSize: 12,
-                maxFontSize: 20,
-                overflow: TextOverflow.visible,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 4.sp,
-                  fontWeight: FontWeight.bold,
+            alignment: Alignment.bottomLeft,
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Column(
+              children: [
+                SizedBox(width: double.infinity),
+                Expanded(
+                  flex: 3,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      double imageSize = constraints.maxWidth * 0.7;
+                      return Image.asset(
+                        R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
+                        width: imageSize,
+                        height: imageSize,
+                        fit: BoxFit.contain,
+                      );
+                    },
+                  ),
                 ),
+                Expanded(
+                  flex: 1,
+                  child: AutoSizeText(
+                    reciter.name,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    minFontSize: 12,
+                    maxFontSize: 20,
+                    overflow: TextOverflow.visible,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 4.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: GestureDetector(
+              onTap: () {
+                if (isReciterFavorite) {
+                  ref.read(reciteNotifierProvider.notifier).removeFavoriteReciter(reciter);
+                } else {
+                  ref.read(reciteNotifierProvider.notifier).addFavoriteReciter(reciter);
+                }
+              },
+              child: Icon(
+                isReciterFavorite ? Icons.favorite : Icons.favorite_border,
+                color: Colors.white,
+                size: 14.sp,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

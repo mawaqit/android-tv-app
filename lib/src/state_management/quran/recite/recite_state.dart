@@ -9,21 +9,25 @@ class ReciteState extends Equatable {
   final List<ReciterModel> reciters;
   final ReciterModel? selectedReciter;
   final MoshafModel? selectedMoshaf;
+  final List<ReciterModel> favoriteReciters;
 
   ReciteState({
     required this.reciters,
     this.selectedReciter,
+    this.favoriteReciters = const [],
     this.selectedMoshaf,
   });
 
   ReciteState copyWith({
     List<ReciterModel>? reciters,
+    List<ReciterModel>? favoriteReciters,
     ReciterModel? selectedReciter,
     MoshafModel? selectedMoshaf,
   }) {
     return ReciteState(
       reciters: reciters ?? this.reciters,
       selectedReciter: selectedReciter ?? this.selectedReciter,
+      favoriteReciters: favoriteReciters ?? this.favoriteReciters,
       selectedMoshaf: selectedMoshaf ?? this.selectedMoshaf,
     );
   }
