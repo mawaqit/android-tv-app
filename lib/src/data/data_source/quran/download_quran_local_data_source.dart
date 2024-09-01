@@ -22,12 +22,24 @@ class DownloadQuranLocalDataSource {
   Future<void> saveSvgFiles(List<File> svgFiles, MoshafType moshafType) async {
     final quranDirectory = quranPathHelper.quranDirectoryPath;
     log('quran: DownloadQuranLocalDataSource: saveSvgFiles - quranDirectory: $quranDirectory');
+
+    if (svgFiles.isEmpty) {
+      log('quran: DownloadQuranLocalDataSource: saveSvgFiles - No files to save');
+      return;
+    }
+
     for (final svgFile in svgFiles) {
       final fileName = svgFile.path.split('/').last;
       final destinationPath = '$quranDirectory/$fileName';
       log('quran: DownloadQuranLocalDataSource: saveSvgFiles - destinationPath: $destinationPath || fileName: $fileName');
-      await svgFile.copy(destinationPath);
-      log('quran: DownloadQuranLocalDataSource: saveSvgFiles - copied ${svgFile.path} to $destinationPath');
+
+      try {
+        await svgFile.copy(destinationPath);
+        log('quran: DownloadQuranLocalDataSource: saveSvgFiles - copied ${svgFile.path} to $destinationPath');
+      } catch (e) {
+        log('quran: DownloadQuranLocalDataSource: saveSvgFiles - Error copying file: $e');
+        rethrow;
+      }
     }
   }
 

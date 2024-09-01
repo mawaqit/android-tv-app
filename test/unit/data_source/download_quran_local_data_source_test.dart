@@ -20,6 +20,9 @@ void main() {
   late MockSharedPreferences mockSharedPreferences;
   late MockQuranPathHelper mockQuranPathHelper;
 
+  setUpAll(() {
+    registerFallbackValue(MockFile());
+  });
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
     mockQuranPathHelper = MockQuranPathHelper();
@@ -30,6 +33,7 @@ void main() {
   });
 
   group('DownloadQuranLocalDataSource', () {
+
     group('saveSvgFiles', () {
       test('should save SVG files to the correct directory', () async {
         // Arrange
@@ -51,17 +55,29 @@ void main() {
         verify(() => mockSvgFiles[1].copy('/path/to/quran/file2.svg')).called(1);
       });
 
-      // test('should handle empty list of SVG files', () async {
-      //   // Arrange
-      //   final mockSvgFiles = <File>[];
-      //   final mockDirectory = Directory('/path/to/quran');
-      //
-      //   // Act
-      //   await dataSource.saveSvgFiles(mockSvgFiles, MoshafType.hafs);
-      //
-      //   // Assert
-      //   verifyNever(() => any<MockFile>().copy(''));
-      // });
+      test('should handle empty list of SVG files', () async {
+        // Arrange
+        final mockSvgFiles = <File>[];
+        final mockFile = MockFile();
+        when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
+
+        // Act
+        await dataSource.saveSvgFiles(mockSvgFiles, MoshafType.hafs);
+
+        // Assert
+        verifyNever(() => mockFile.copy(any()));
+      });
+
+      test('should handle file copy exceptions', () async {
+        // Arrange
+        final mockSvgFile = MockFile();
+        when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
+        when(() => mockSvgFile.path).thenReturn('/temp/file1.svg');
+        when(() => mockSvgFile.copy(any())).thenThrow(Exception('Copy failed'));
+
+        // Act & Assert
+        expect(() => dataSource.saveSvgFiles([mockSvgFile], MoshafType.hafs), throwsException);
+      });
     });
 
     group('deleteZipFile', () {
