@@ -12,9 +12,9 @@ class ReciteLocalDataSource {
 
   ReciteLocalDataSource(this._reciterBox);
 
-
   Future<void> saveReciters(List<ReciterModel> reciters) async {
     try {
+      if (reciters.isEmpty) return;
       log('recite: ReciteLocalDataSource: saveReciters: ${reciters[0]} len ${reciters.length}');
       final reciterMap = {for (var r in reciters) r.id: r};
 
@@ -28,6 +28,7 @@ class ReciteLocalDataSource {
   Future<List<ReciterModel>> getReciters() async {
     try {
       final reciters = _reciterBox.values.toList();
+      if (reciters.isEmpty) return [];
       log('recite: ReciteLocalDataSource: getReciters: ${reciters[0]}');
       return reciters;
     } catch (e) {
@@ -40,9 +41,8 @@ class ReciteLocalDataSource {
       // Retrieve all reciters
       final allReciters = _reciterBox.values.toList();
 
-      final recitersForSurah = allReciters.where((reciter) =>
-          reciter.moshaf.any((moshaf) => moshaf.surahList.contains(surahId))
-      ).toList();
+      final recitersForSurah =
+          allReciters.where((reciter) => reciter.moshaf.any((moshaf) => moshaf.surahList.contains(surahId))).toList();
 
       log('recite: ReciteLocalDataSource: getReciterBySurah: Found ${recitersForSurah.length} reciters for surah $surahId');
 

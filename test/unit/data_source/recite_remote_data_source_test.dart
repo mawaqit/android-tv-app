@@ -437,7 +437,7 @@ void main() {
 
       expect(result.length, 1);
       expect(result[0].name, 'Reciter');
-      expect(result[0].letter , 'A');
+      expect(result[0].letter, 'A');
       expect(result[0].moshaf[0].name, 'Moshaf');
       expect(result[0].moshaf[0].server, 'http://example.com/');
     });
