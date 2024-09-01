@@ -15,11 +15,6 @@ class ReciteImpl implements ReciteRepository {
   @override
   Future<List<ReciterModel>> getAllReciters({required String language}) async {
     try {
-      if (_localDataSource.isRecitersCached()) {
-        final reciters = await _localDataSource.getReciters();
-        reciters.sort((a, b) => a.name.compareTo(b.name));
-        return reciters;
-      }
       final reciters = await _remoteDataSource.getReciters(language: language);
       reciters.sort((a, b) => a.name.compareTo(b.name));
       await _localDataSource.saveReciters(reciters);
