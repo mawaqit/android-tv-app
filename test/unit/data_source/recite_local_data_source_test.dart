@@ -7,14 +7,17 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockHiveBox extends Mock implements Box<ReciterModel> {}
+class MockHiveFavoriteBox extends Mock implements Box<int> {}
 
 void main() {
   late ReciteLocalDataSource dataSource;
   late MockHiveBox mockBox;
+  late MockHiveFavoriteBox mockFavoriteBox;
 
   setUp(() {
     mockBox = MockHiveBox();
-    dataSource = ReciteLocalDataSource(mockBox);
+    mockFavoriteBox = MockHiveFavoriteBox();
+    dataSource = ReciteLocalDataSource(mockBox, mockFavoriteBox);
   });
 
   MoshafModel createMoshaf(int id, List<int> surahList) {
