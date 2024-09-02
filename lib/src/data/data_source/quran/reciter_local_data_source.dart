@@ -52,7 +52,6 @@ class ReciteLocalDataSource {
 
       return recitersForSurah;
     } catch (e) {
-      log('getReciterBySurah error: ${e.toString()}');
       throw FetchRecitersBySurahException(e.toString());
     }
   }
