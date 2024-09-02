@@ -13,42 +13,17 @@ class ReciteImpl implements ReciteRepository {
   ReciteImpl(this._remoteDataSource, this._localDataSource);
 
   @override
-  Future<List<ReciterModel>> getRecitersBySurah({
-    required int surahId,
-    required String language,
-  }) async {
-    try {
-      final reciters = await _remoteDataSource.getReciters(
-        language: language,
-      );
-      await _localDataSource.saveRecitersBySurah(reciters, surahId);
-      return _filterBySurahId(reciters, surahId);
-    } catch (e) {
-      final reciters = await _localDataSource.getReciterBySurah(surahId);
-      return reciters ?? [];
-    }
-  }
-
   Future<List<ReciterModel>> getAllReciters({required String language}) async {
     try {
-      final reciters = await _remoteDataSource.getReciters(
-        language: language,
-      );
+      final reciters = await _remoteDataSource.getReciters(language: language);
+      reciters.sort((a, b) => a.name.compareTo(b.name));
       await _localDataSource.saveReciters(reciters);
       return reciters;
     } catch (e) {
       final reciters = await _localDataSource.getReciters();
+      reciters.sort((a, b) => a.name.compareTo(b.name));
       return reciters;
     }
-  }
-
-  /// there are multiple mushafs for each reciter and each mushaf has a list of surahs check if the surah is in the list of surahs
-  List<ReciterModel> _filterBySurahId(List<ReciterModel> reciters, int surahId) {
-    return reciters.where((reciter) {
-      return reciter.moshaf.any((moshaf) {
-        return moshaf.surahList.contains(surahId);
-      });
-    }).toList();
   }
 }
 

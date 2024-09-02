@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:meta/meta.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,9 +25,25 @@ class ReciteRemoteDataSource {
       );
       return reciters;
     } catch (e) {
-      throw FetchRecitersBySurahException(e.toString());
+      rethrow;
     }
   }
+
+  @visibleForTesting
+  Future<List<ReciterModel>> fetchReciters({
+    required String language,
+    int? reciterId,
+    int? rewayaId,
+    int? surahId,
+    String? lastUpdatedDate,
+  }) =>
+      _fetchReciters(
+        language: language,
+        reciterId: reciterId,
+        lastUpdatedDate: lastUpdatedDate,
+        rewayaId: rewayaId,
+        surahId: surahId,
+      );
 
   Future<List<ReciterModel>> _fetchReciters({
     required String language,
@@ -35,29 +52,33 @@ class ReciteRemoteDataSource {
     int? surahId,
     String? lastUpdatedDate,
   }) async {
-    final response = await _dio.get(
-      'reciters',
-      queryParameters: {
-        'language': language,
-        if (reciterId != null) 'reciter': reciterId,
-        if (rewayaId != null) 'rewaya': rewayaId,
-        if (surahId != null) 'sura': surahId,
-        if (lastUpdatedDate != null) 'last_updated_date': lastUpdatedDate,
-      },
-    );
+    try {
+      final response = await _dio.get(
+        'reciters',
+        queryParameters: {
+          'language': language,
+          if (reciterId != null) 'reciter': reciterId,
+          if (rewayaId != null) 'rewaya': rewayaId,
+          if (surahId != null) 'sura': surahId,
+          if (lastUpdatedDate != null) 'last_updated_date': lastUpdatedDate,
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final data = response.data;
-      data['reciters'].forEach((reciter) {
-        reciter['moshaf'].forEach((moshaf) {
-          moshaf['surah_list'] = _convertSurahListToIntegers(moshaf['surah_list']);
+      if (response.statusCode == 200) {
+        var data = response.data;
+        data['reciters'].forEach((reciter) {
+          reciter['moshaf'].forEach((moshaf) {
+            moshaf['surah_list'] = _convertSurahListToIntegers(moshaf['surah_list']);
+          });
         });
-      });
 
-      final reciters = List<ReciterModel>.from(data['reciters'].map((reciter) => ReciterModel.fromJson(reciter)));
-      return reciters;
-    } else {
-      throw FetchRecitersFailedException('Failed to fetch reciters', 'FETCH_RECITERS_ERROR');
+        final reciters = List<ReciterModel>.from(data['reciters'].map((reciter) => ReciterModel.fromJson(reciter)));
+        return reciters;
+      } else {
+        throw FetchRecitersFailedException('Failed to fetch reciters', 'FETCH_RECITERS_ERROR');
+      }
+    } catch (e) {
+      throw FetchRecitersFailedException(e.toString(), 'FETCH_RECITERS_ERROR');
     }
   }
 

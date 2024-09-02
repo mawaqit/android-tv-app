@@ -21,26 +21,6 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
     );
   }
 
-  Future<void> getRecitersBySurah({
-    required int surahId,
-    String? language,
-  }) async {
-    state = AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final reciteImpl = await ref.read(reciteImplProvider.future);
-      final sharedPreference = await ref.read(sharedPreferenceModule.future);
-      final languageCode = sharedPreference.getString('language_code') ?? 'en';
-      final mappedLanguage = LanguageHelper.mapLocaleWithQuran(languageCode);
-      final reciters = await reciteImpl.getRecitersBySurah(
-        surahId: surahId,
-        language: language ?? mappedLanguage,
-      );
-      return state.value!.copyWith(
-        reciters: reciters,
-      );
-    });
-  }
-
   Future<void> getAllReciters() async {
     state = AsyncLoading();
     state = await AsyncValue.guard(() async {
