@@ -33,7 +33,7 @@
   "installationGuide": "Guia de instalação",
   "drawerTitle": "MAWAQIT",
   "drawerDesc": "Connecting Muslims to Mosques",
-  "backendError": "Desculpe, não foi possível ligar ao servidor.\nPor favor, verifique o estado da ligação ou tente novamente mais tarde.",
+  "backendError": "Desculpe, não foi possível estabelecer ligação com o servidor.\nPor favor, verifique a sua ligação à Internet ou tente novamente mais tarde.",
   "selectWithMosqueId": "Experimente: 256, É o ID da 'Grande Mosquée de Paris'",
   "searchForMosque": "Que Mesquita procura? (ID, Nome, Cidade, Código Postal...)",
   "searchMosque": "Procure uma Mesquita",
@@ -98,30 +98,30 @@
   },
   "azkarList9": "Ó Allah! Amanheci, Invoco a Vós e aos anjos que carregam o Vosso Trono, e aos Vossos anjos e toda a Vossa criação para que sejam testemunhas que Vós Sois Allah; ninguém mais é digno da adoração exceto Vós; Sois Único; Não possuis parceiro; e que Muhammad (Que a paz e a misericórdia de Allah esteja sobre ele) é vosso Servo e Mensageiro. (quatro vezes) [E a noite dizer: \"Ó Allah! Anoiteceu, Invoco a Vós...\"]",
   "@azkarList9": {
-    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ (أربعَ مَرَّاتٍ). [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "Ó Allah! Conceda-me boa saúde no meu corpo, nos meus ouvidos e nos meus olhos. Ninguém exceto Vós é digno de adoração. Ó Allah! Peço refúgio da descrença e pobreza. Ó Allah! Peço Vossa proteção dos tormentos da sepultura; ninguém mais é digno de adoração exceto Vós. (três vezes)",
   "@azkarList10": {
-    "description": "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ (ثلاثَ مرَّاتٍ)"
+    "description": "|اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ |ثلاثَ مرَّاتٍ"
   },
   "azkarList11": "Allah é suficiente para mim, ninguém mais é digno da adoração exceto Ele, n’Ele coloquei a minha confiança e Ele é o Senhor do Trono Sublime. (sete vezes)",
   "@azkarList11": {
-    "description": "حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ (سَبْعَ مَرّاتٍ)"
+    "description": "|حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ |سَبْعَ مَرّاتٍ"
   },
   "azkarList12": "Estou de todo contente em crer Allah como meu Senhor, Islam como a minha religião e Muhammad (Que a paz e a misericórdia de Allah esteja sobre ele) como meu Profeta. (três vezes)",
   "@azkarList12": {
-    "description": "رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً (ثلاثَ مرَّاتٍ)"
+    "description": "|رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً |ثلاثَ مرَّاتٍ"
   },
   "azkarList13": "Ninguém mais é digno da adoração exceto Allah; Ele é o Único; Não possui nenhum parceiro; o Reinado a Ele pertence e todos os Louvores são para Ele. Ele possui poder sobre todas as coisas. (dez vezes)",
   "@azkarList13": {
-    "description": "لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ (عشرَ مرَّات)"
+    "description": "|لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ |عشرَ مرَّات"
   },
   "jumuaaScreenTitle": "Hora de Jumu'ah",
   "jumuaaHadith": "O Profeta ﷺ (Que a paz e a misericórdia de Allah esteja sobre ele) disse: \"Aquele que efectuar a ablução (Wudhu) correctamente e dirigir-se para a oração de Jumu’ah, ouvir o sermão (Khutbah) com atenção e em silêncio, todos os seus pequenos pecados entre aquela hora e o próximo Jumu’ah mais três dias (total 10 dias) serão perdoados. E aquele que durante o sermão brincar com uma pedra (ou seja, distrair-se), na realidade, interrompeu está recompensa.\"",
   "shuruk": "Nascer do Sol",
   "reset": "Reset",
   "mosqueNotFoundMessage": "Desculpe, a sua mesquita não foi encontrada, pode estar desativada ou temporariamente indisponível.",
-  "noInternetMessage": "Sem acesso à Internet. Por favor, verifique a sua ligação à Internet e tente novamente. O seu Wi-Fi ou Ethernet está ligado?",
+  "noInternetMessage": "Por favor, verifique a sua ligação à Internet e tente novamente. O seu Wi-Fi ou Ethernet está ligado?",
   "error": "ERRO",
   "mosqueErrorMessage": "Erro na Mesquita se você é um administrador da Mesquita, entre em contacto com o nosso suporte para corrigir o problema",
   "muharram": "Muharram",
