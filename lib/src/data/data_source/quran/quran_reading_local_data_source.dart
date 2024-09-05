@@ -29,19 +29,23 @@ class QuranReadingLocalDataSource {
 
   Future<List<SvgPicture>> loadAllSvgs(MoshafType moshafType) async {
     try {
-      final applicationSupportDirectory = await getApplicationSupportDirectory();
-      final quranPathHelper =
-          QuranPathHelper(applicationSupportDirectory: applicationSupportDirectory, moshafType: moshafType);
-      final dir = Directory(quranPathHelper.quranDirectoryPath);
-      print('quran: QuranReadingLocalDataSource: loadAllSvgs: Loading SVGs from ${dir.path}');
-      final files = dir.listSync().where((file) {
-        return file.path.endsWith('.svg') || file.path.endsWith('.svgz');
-      }).toList()
-        ..sort((a, b) => a.path.compareTo(b.path));
+      final dir = await getApplicationSupportDirectory();
+      final quranPathHelper = QuranPathHelper(
+        applicationSupportDirectory: dir,
+        moshafType: moshafType,
+      );
 
-      final svgList = await Future.wait(files.map((file) => _loadSvg(file.path)));
-      print('quran: QuranReadingLocalDataSource: loadAllSvgs: ${svgList.length} SVGs loaded');
-      return svgList;
+      final directory = Directory(quranPathHelper.quranDirectoryPath);
+      final files = directory.listSync().whereType<File>().toList();
+
+      // Sort the files based on their numeric names
+      files.sort((a, b) {
+        final aNumber = int.tryParse(a.path.split('/').last.split('.').first) ?? 0;
+        final bNumber = int.tryParse(b.path.split('/').last.split('.').first) ?? 0;
+        return aNumber.compareTo(bNumber);
+      });
+
+      return files.map((file) => SvgPicture.file(File(file.path))).toList();
     } catch (e) {
       log('Error loading SVGs: $e');
       return [];
