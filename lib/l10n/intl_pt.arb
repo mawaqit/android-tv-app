@@ -68,7 +68,7 @@
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
-  "azkarList2": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Procuro refúgio no Senhor dos humanos, 2. O Rei dos humanos, 3. O Deus dos humanos, 4. Contra o mal do murmurador que recua, 5. Que murmura nos peitos dos humanos, 6, dos jinns ou dos humanos».",
+  "azkarList2": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Procuro refúgio no Senhor dos humanos, 2. O Rei dos humanos, 3. O Deus dos humanos, 4. Contra o mal do murmurador que recua, 5. Que murmura nos peitos dos humanos, 6. dos jinns ou dos humanos».",
   "@azkarList2": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
   },
@@ -224,7 +224,7 @@
   "appTimezone": "Fuso horário da aplicação",
   "descTimezone": "Selecione o seu fuso horário para obter os horários das orações mais precisos.",
   "appWifi": "Ligar ao Wi-Fi",
-  "descWifi": "Por favor, ligue-se ao Wi-Fi preferência",
+  "descWifi": "Por favor, escolha o Wi-Fi preferência",
   "searchCountries": "Pesquisar países",
   "scanAgain": "Procurar novamente",
   "noScannedResultsFound": "Não foram encontrados pontos de acesso próximos",
