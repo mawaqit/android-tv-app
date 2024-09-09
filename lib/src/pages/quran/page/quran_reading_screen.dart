@@ -8,14 +8,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/switch_button.dart';
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
-import 'package:scrollview_observer/scrollview_observer.dart';
+
 import 'package:sizer/sizer.dart';
 
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
+
+import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -32,12 +36,11 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _listeningModeFocusNode;
   late FocusNode _choosePageFocusNode;
   final ScrollController _gridScrollController = ScrollController();
-  late GridObserverController _observerController;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _observerController = GridObserverController(controller: _gridScrollController);
     _backButtonFocusNode = FocusNode(debugLabel: 'node_backButton');
     _listeningModeFocusNode = FocusNode(debugLabel: 'node_listeningMode');
     _rightSkipButtonFocusNode = FocusNode(debugLabel: 'node_rightSkip');
@@ -45,8 +48,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _choosePageFocusNode = FocusNode(debugLabel: 'node_choosePage');
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // ref.read(downloadQuranPopUpProvider.notifier).showDownloadQuranAlertDialog(context);
       ref.read(downloadQuranPopUpProvider.notifier).showDownloadQuranAlertDialog(context);
       ref.read(quranReadingNotifierProvider);
+      // await showDownloadQuranAlertDialog(context, ref, _scaffoldKey);
     });
   }
 
@@ -76,34 +81,22 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   @override
   Widget build(BuildContext context) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
+
+    ref.listen(downloadQuranNotifierProvider, (previous, next) {
+      if (!next.hasValue || next.value is Success) {
+        log('quran: QuranReadingScreen: Downloaded quran');
+        ref.invalidate(quranReadingNotifierProvider);
+      }
+    });
+
     return WillPopScope(
       onWillPop: () async {
         ref.read(downloadQuranPopUpProvider.notifier).dispose();
         return true;
       },
       child: KeyboardListener(
-        onKeyEvent: (event) {
-          if (event is KeyDownEvent) {
-            if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-              _rightSkipButtonFocusNode.requestFocus();
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-              _leftSkipButtonFocusNode.requestFocus();
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-              _backButtonFocusNode.requestFocus();
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-              if (FocusScope.of(context).focusedChild == _listeningModeFocusNode) {
-                _choosePageFocusNode.requestFocus();
-              } else {
-                _listeningModeFocusNode.requestFocus();
-              }
-            } else if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
-              if (FocusScope.of(context).focusedChild == _choosePageFocusNode) {
-                print('enter');
-              }
-            }
-          }
-        },
-        focusNode: FocusNode(debugLabel: 'node_uranReadingScreen'),
+        onKeyEvent: _handleKeyEvent,
+        focusNode: FocusNode(debugLabel: 'node_quranReadingScreen'),
         autofocus: true,
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -132,7 +125,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           ),
           body: quranReadingState.when(
             loading: () => Center(child: CircularProgressIndicator()),
-            error: (error, s) => Center(child: Text('Error: $error')),
+            error: (error, s) {
+              final errorLocalized = S.of(context).error;
+              return Center(child: Text('$errorLocalized: $error'));
+            },
             data: (quranReadingState) {
               return Stack(
                 children: [
@@ -222,6 +218,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
+                          autofocus: true,
                           focusNode: _choosePageFocusNode,
                           onTap: () => _showPageSelector(
                             context,
@@ -237,8 +234,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                             ),
                             child: Text(
                               S.of(context).quranReadingPage(
-                                    quranReadingState.currentPage + 1, // Right page (now on the left)
-                                    quranReadingState.currentPage + 2, // Left page (now on the right)
+                                    quranReadingState.currentPage + 1,
+                                    quranReadingState.currentPage + 2,
                                     quranReadingState.totalPages,
                                   ),
                               style: TextStyle(
@@ -300,72 +297,35 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   }
 
   void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _observerController.jumpTo(index: currentPage);
-      print('jump to $currentPage');
-    });
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: SizedBox(
-            width: double.maxFinite,
-            child: Text(
-              S.of(context).chooseQuranPage,
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          content: Container(
-            width: double.maxFinite,
-            height: 60.h, // Set a fixed height or use MediaQuery to calculate it
-            child: GridViewObserver(
-              controller: _observerController,
-              child: _quranPageGridView(totalPages, currentPage),
-            ),
-          ),
+        return QuranReadingPageSelector(
+          currentPage: currentPage,
+          scrollController: _gridScrollController,
+          totalPages: totalPages,
         );
       },
     );
   }
 
-  GridView _quranPageGridView(int totalPages, int currentPage) {
-    return GridView.builder(
-      controller: _gridScrollController,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 6,
-        childAspectRatio: 3 / 2,
-      ),
-      itemCount: totalPages,
-      itemBuilder: (BuildContext context, int index) {
-        final isSelected = index == currentPage;
-        return InkWell(
-          focusNode: FocusNode(debugLabel: 'node_page_$index'),
-          onTap: () {
-            ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
-            Navigator.of(context).pop();
-          },
-          child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: isSelected ? Theme.of(context).focusColor : null,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Text(
-              '${index + 1}',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: isSelected ? FontWeight.bold : null,
-                color: isSelected ? Colors.white : null,
-              ),
-            ),
-          ),
-        );
-      },
-    );
+  void _handleKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+        _rightSkipButtonFocusNode.requestFocus();
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        _leftSkipButtonFocusNode.requestFocus();
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        _backButtonFocusNode.requestFocus();
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        if (FocusScope.of(context).focusedChild == _listeningModeFocusNode) {
+          _choosePageFocusNode.requestFocus();
+        } else {
+          _listeningModeFocusNode.requestFocus();
+        }
+      } else if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+        if (FocusScope.of(context).focusedChild == _choosePageFocusNode) {}
+      }
+    }
   }
 }
