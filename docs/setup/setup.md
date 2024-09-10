@@ -177,6 +177,4 @@ To generate the asset file, run:
 
 ```bash  
 fgen  
-```  
-  
----
+```
