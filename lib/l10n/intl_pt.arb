@@ -54,29 +54,29 @@
   "maghrib": "Magrib",
   "isha": "Ishá",
   "afterAdhanHadithTitle": "Duá depois de Azán",
-  "afterSalahHadith": "Ó Allah! Senhor deste chamamento perfeito e do Salah que lhe será oferecido, conceda a Muhammad (Que a paz e a misericórdia de Allah esteja sobre ele) a intercessão, graça e alta posição. Elevai-o ao lugar glorioso (Maqame-Mahmud), que lhe prometeste",
+  "afterSalahHadith": "Ó Allah! Senhor deste chamamento perfeito e do Salah que lhe será oferecido, conceda a Muhammad (Que a paz e a misericórdia de Allah esteja sobre ele) a intercessão, graça e alta posição. Elevai-o ao lugar glorioso (Maqame-Mahmud), que lhe prometeste.",
   "alIqama": "Jamaat",
   "alAdhan": "Azán",
   "turnOfPhones": "Por favor, coloque o seu telemóvel em Silêncio",
   "iqamaIn": "Jamaat em",
   "alAthkar": "Zikr",
-  "azkarList0": "Peço perdão a Allah, Peço perdão a Allah, Peço perdão a Allah, Ó Allah! Sois Aquele que concede a Paz e a Paz provém somente de Vós. Sois o Senhor da Bênção, Ó o Senhor da Majestade e Benevolência! Ó Allah! Ajuda-me na Tua recordação, no Teu agradecimento e na Tua boa adoração",
+  "azkarList0": "Peço perdão a Allah, Peço perdão a Allah, Peço perdão a Allah, Ó Allah! Sois Aquele que concede a Paz e a Paz provém somente de Vós. Sois o Senhor da Bênção, Ó o Senhor da Majestade e Benevolência! Ó Allah! Ajuda-me na Tua recordação, no Teu agradecimento e na Tua boa adoração.",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "Puro de todos os defeitos é Allah, todos os louvores são para Allah e Allah é o maior (33 vezes) Ninguém é digno de adoração excepto Allah, o Único, sem parceiro nenhum, somente a Ele pertence o reinado e somente para Ele são todas as glórias; todo o bem está no Seu poder e Ele tem o poder sobre todas as coisas",
+  "azkarList1": "Puro de todos os defeitos é Allah, todos os louvores são para Allah e Allah é o maior (33 vezes) Ninguém é digno de adoração excepto Allah, o Único, sem parceiro nenhum, somente a Ele pertence o reinado e somente para Ele são todas as glórias; todo o bem está no Seu poder e Ele tem o poder sobre todas as coisas.",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
-  "azkarList2": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Procuro refúgio no Senhor dos humanos, 2. O Rei dos humanos, 3. O Deus dos humanos, 4. Contra o mal do murmurador que recua, 5. Que murmura nos peitos dos humanos, 6. dos jinns ou dos humanos».",
+  "azkarList2": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Procuro refúgio no Senhor dos humanos, 2. O Rei dos humanos, 3. O Deus dos humanos, 4. Contra o mal do murmurador que recua, 5. Que murmura nos peitos dos humanos, 6. dos jinns ou dos humanos.»",
   "@azkarList2": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
   },
-  "azkarList3": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Procuro refúgio no Senhor da manhã, 2 Contra o mal que criou, 3. E contra o mal da escuridão quando entra, 4. E contra o mal das que sopram nos nós, 5. E contra o mal do invejoso quando inveja».",
+  "azkarList3": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Procuro refúgio no Senhor da manhã, 2 Contra o mal que criou, 3. E contra o mal da escuridão quando entra, 4. E contra o mal das que sopram nos nós, 5. E contra o mal do invejoso quando inveja.»",
   "@azkarList3": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
   },
-  "azkarList4": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Ele é Allah, o Único! 2 Allah é o Independente; 3. Não gerou e nem foi gerado; 4. E não há ninguém igual a Ele».",
+  "azkarList4": "Em nome de Deus, o Clemente, o Misericordioso 1. Diz: «Ele é Allah, o Único! 2 Allah é o Independente; 3. Não gerou e nem foi gerado; 4. E não há ninguém igual a Ele.»",
   "@azkarList4": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
   },
@@ -84,7 +84,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "Ninguém e digno de adoração exepto Allah, o Único, sem nenhum parceiro, somente a Ele pertence o reinado e somente para Ele são todos os louvores e Ele tem poder sobre todas as coisas. Ó Allah! Ninguém pode negar o que Você concede e ninguém pode conceder aquilo que Você retém; e a grandeza dos grandes será inútil para eles contra Si",
+  "azkarList6": "Ninguém e digno de adoração exepto Allah, o Único, sem nenhum parceiro, somente a Ele pertence o reinado e somente para Ele são todos os louvores e Ele tem poder sobre todas as coisas. Ó Allah! Ninguém pode negar o que Você concede e ninguém pode conceder aquilo que Você retém; e a grandeza dos grandes será inútil para eles contra Si.",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -185,7 +185,7 @@
   "landscape": "Horizontal",
   "landscapeBTNDescription": "A orientação horizontal é a mais recomendada para a aplicação mawaqit tv e para a maioria das mesquitas",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allah é Grande, Allah é Grande, Allah é Grande, ninguém mais é digno da adoração exceto Allah, Allah é Grande, Allah é Grande, e louvores para Allah",
+  "takbeerAleidText": "Allah é Grande, Allah é Grande, Allah é Grande, ninguém mais é digno da adoração exceto Allah, Allah é Grande, Allah é Grande, e louvores para Allah.",
   "settings": "Definições",
   "applicationModes": "Modo da aplicação",
   "ifYouAreFacingAnIssueWithTheAppActivateThis": "Se estiver a ter problemas com a aplicação, tente ativar esta opção",
@@ -291,5 +291,8 @@
     }
   },
   "chooseQuranPage": "Escolha a página",
-  "checkingForUpdates": "A verificar atualizações..."
+  "checkingForUpdates": "A verificar atualizações...",
+  "chooseQuranType": "Escolher Alcorão",
+  "hafs": "Hafs",
+  "warsh": "Warsh"
 }
