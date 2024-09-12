@@ -179,24 +179,6 @@ class ReciterCard extends ConsumerWidget {
               ],
             ),
           ),
-          Positioned(
-            top: 8,
-            right: 8,
-            child: GestureDetector(
-              onTap: () {
-                if (isReciterFavorite) {
-                  ref.read(reciteNotifierProvider.notifier).removeFavoriteReciter(reciter);
-                } else {
-                  ref.read(reciteNotifierProvider.notifier).addFavoriteReciter(reciter);
-                }
-              },
-              child: Icon(
-                isReciterFavorite ? Icons.favorite : Icons.favorite_border,
-                color: Colors.white,
-                size: 14.sp,
-              ),
-            ),
-          ),
         ],
       ),
     );

@@ -35,7 +35,6 @@ class _ReciteTypeGridViewState extends ConsumerState<ReciteTypeGridView> {
       ),
       itemCount: widget.reciterTypes.length,
       itemBuilder: (context, index) {
-        print('ReciteTypeGridView: ${FocusScope.of(context).hasFocus}');
         return InkWell(
           autofocus: FocusScope.of(context).hasFocus && index == 0,
           hoverColor: Colors.transparent,

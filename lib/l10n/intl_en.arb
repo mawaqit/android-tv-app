@@ -291,5 +291,7 @@
     }
   },
   "chooseQuranPage": "Choose the page",
-  "checkingForUpdates": "Checking for updates..."
+  "checkingForUpdates": "Checking for updates...",
+  "favorites": "Favorites",
+  "allReciters": "All Reciters"
 }

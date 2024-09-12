@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/pages/quran/widget/recite_type_grid_view.dart';
+import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:shimmer/shimmer.dart';
@@ -23,23 +27,27 @@ class ReciterSelectionScreen extends ConsumerStatefulWidget {
   createState() => _ReciterSelectionScreenState();
 }
 
-class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen> {
+class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int selectedReciterIndex = 0;
-  int selectedReciteTypeIndex = 0;
+
   final ScrollController _reciterScrollController = ScrollController();
   double sizeOfContainerReciter = 15.w;
   double marginOfContainerReciter = 16;
-  List<ReciterModel> reciters = [];
 
   late List<FocusNode> reciterFocusNodes;
 
-  late FocusNode favoriteFocusNode ;
+  late FocusNode favoriteFocusNode;
+
   late FocusNode changeReadingModeFocusNode;
 
   late FocusScopeNode reciteTypeFocusScopeNode;
   late FocusScopeNode reciteFocusScopeNode;
+
+  late FocusNode tabFocusNode;
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +62,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
     reciteTypeFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_type_focus_scope_node');
     reciteFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_focus_scope_node');
+
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -67,17 +77,20 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
     reciteTypeFocusScopeNode.dispose();
     reciteFocusScopeNode.dispose();
+
+    tabFocusNode.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return QuranBackground(
+    return Scaffold(
       key: _scaffoldKey,
-      isSwitch: true,
-      floatingActionButtonFocusNode: changeReadingModeFocusNode,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(0xFF28262F),
+        // bottomOpacity: 0,
+        // foregroundColor: ,
         elevation: 0,
         title: Text(
           S.of(context).chooseReciter,
@@ -97,7 +110,25 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               color: Colors.white,
             ),
             onPressed: () {
-              favoriteFocusNode.requestFocus();
+              ref.read(reciteNotifierProvider).maybeWhen(
+                    data: (data) {
+                      if (data.reciters.length > selectedReciterIndex) {
+                        // check first if it is favorite if not add it to favorite otherwise remove it
+                        final reciter = data.reciters[selectedReciterIndex];
+                        final isFavorite = data.favoriteReciters.contains(reciter);
+                        print('isFavorite: $isFavorite $reciter');
+                        if (isFavorite) {
+                          ref.read(reciteNotifierProvider.notifier).removeFavoriteReciter(reciter);
+                        } else {
+                          ref.read(reciteNotifierProvider.notifier).addFavoriteReciter(reciter);
+                        }
+                        return data.reciters;
+                      } else {
+                        return [];
+                      }
+                    },
+                    orElse: () => [],
+                  );
             },
           ),
         ],
@@ -112,23 +143,60 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             Navigator.pop(context);
           },
         ),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(
+              text: S.of(context).allReciters,
+              icon: Icon(Icons.list),
+            ),
+            Tab(
+              text: S.of(context).favorites,
+              icon: Icon(Icons.favorite),
+            ),
+          ],
+        ),
       ),
-      screen: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FocusScope(
-                    node: reciteFocusScopeNode,
-                    onKeyEvent: _handleReciteFocusScopeKeyEvent,
-                    child: ref.watch(reciteNotifierProvider).when(
-                          data: (reciter) {
-                            return ReciterListView(
-                            reciters: reciter.reciters,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(R.ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG),
+            fit: BoxFit.cover,
+          ),
+          gradient: ThemeNotifier.quranBackground(),
+        ),
+        // padding: EdgeInsets.only(top: 5.h),
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildReciterList(isAllReciters: true),
+            _buildReciterList(isAllReciters: false),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReciterList({required bool isAllReciters}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FocusScope(
+                  node: reciteFocusScopeNode,
+                  onKeyEvent: _handleReciteFocusScopeKeyEvent,
+                  child: ref.watch(reciteNotifierProvider).when(
+                        data: (reciter) {
+                          final displayReciters = isAllReciters ? reciter.reciters : reciter.favoriteReciters;
+                          return ReciterListView(
+                            reciters: displayReciters,
                             onReciterSelected: (index) {
                               setState(() {
                                 selectedReciterIndex = index;
@@ -136,46 +204,45 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                             },
                             selectedReciterIndex: selectedReciterIndex,
                           );
-                          },
-                          loading: () => _buildReciterListShimmer(true),
-                          error: (error, stackTrace) => Text('Error: $error'),
-                        ),
-                  ),
-                  SizedBox(height: 5.h),
-                  Container(
-                    width: double.infinity,
-                    child: Text(
-                      S.of(context).reciteType,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
+                        },
+                        loading: () => _buildReciterListShimmer(true),
+                        error: (error, stackTrace) => Text('Error: $error'),
                       ),
+                ),
+                SizedBox(height: 5.h),
+                Container(
+                  width: double.infinity,
+                  child: Text(
+                    S.of(context).reciteType,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  FocusScope(
-                    node: reciteTypeFocusScopeNode,
-                    onKeyEvent: _handleReciteTypeFocusScopeKeyEvent,
-                    child: ref.watch(reciteNotifierProvider).when(
-                          data: (reciter) {
-                            return reciter.reciters.isNotEmpty
-                                ? ReciteTypeGridView(
-                                    selectedReciterIndex: selectedReciterIndex,
-                                    reciterTypes: reciter.reciters[selectedReciterIndex].moshaf,
-                                  )
-                                : _buildReciteTypeGridShimmer(true);
-                          },
-                          loading: () => _buildReciteTypeGridShimmer(true),
-                          error: (error, stackTrace) => Text('Error: $error'),
-                        ),
-                  ),
-                ],
-              ),
+                ),
+                FocusScope(
+                  node: reciteTypeFocusScopeNode,
+                  onKeyEvent: _handleReciteTypeFocusScopeKeyEvent,
+                  child: ref.watch(reciteNotifierProvider).when(
+                        data: (reciter) {
+                          return reciter.reciters.isNotEmpty
+                              ? ReciteTypeGridView(
+                                  selectedReciterIndex: selectedReciterIndex,
+                                  reciterTypes: reciter.reciters[selectedReciterIndex].moshaf,
+                                )
+                              : _buildReciteTypeGridShimmer(true);
+                        },
+                        loading: () => _buildReciteTypeGridShimmer(true),
+                        error: (error, stackTrace) => Text('Error: $error'),
+                      ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -248,7 +315,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   KeyEventResult _handleReciteTypeFocusScopeKeyEvent(FocusNode node, KeyEvent event) {
     print('_handleReciteTypeFocusScopeKeyEvent: focus_scope_node: $node, event: $event');
-    if(event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
       reciteTypeFocusScopeNode.unfocus();
       reciteFocusScopeNode.requestFocus();
       debugDumpFocusTree();
