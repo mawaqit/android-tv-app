@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
@@ -10,20 +11,22 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/AppRouter.dart';
 import '../../../helpers/SharedPref.dart';
+import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 
-class MosqueInputId extends StatefulWidget {
+class MosqueInputId extends ConsumerStatefulWidget {
   const MosqueInputId({Key? key, this.onDone}) : super(key: key);
 
   final void Function()? onDone;
 
   @override
-  State<MosqueInputId> createState() => _MosqueInputIdState();
+  ConsumerState<MosqueInputId> createState() => _MosqueInputIdState();
 }
 
-class _MosqueInputIdState extends State<MosqueInputId> {
+class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
   final inputController = TextEditingController();
   Mosque? searchOutput;
   SharedPref sharedPref = SharedPref();
@@ -97,7 +100,11 @@ class _MosqueInputIdState extends State<MosqueInputId> {
                 autoFocus: true,
                 mosque: searchOutput!,
                 onTap: () {
-                  return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) {
+                  return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) async {
+                    final mosqueManager = context.read<MosqueManager>();
+                    final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
+                    ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
+
                     !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
                   }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {

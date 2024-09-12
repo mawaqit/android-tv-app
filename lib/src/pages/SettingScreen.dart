@@ -107,7 +107,6 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     subtitle: S.of(context).hadithLangDesc,
                     icon: Icon(Icons.language, size: 35),
                     onTap: () {
-                      context.read<AppLanguage>().getHadithLanguage();
                       AppRouter.push(
                         LanguageScreen(
                           isIconActivated: true,
