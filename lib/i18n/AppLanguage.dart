@@ -13,6 +13,7 @@ import '../src/services/mosque_manager.dart';
 /// It is a singleton class that can be accessed from anywhere in the app
 class AppLanguage extends ChangeNotifier {
   static final AppLanguage _instance = AppLanguage._internal();
+
   factory AppLanguage() {
     return _instance;
   }
@@ -127,6 +128,13 @@ class AppLanguage extends ChangeNotifier {
       notifyListeners();
       return _hadithLanguage;
     }
+  }
+
+  Future<void> saveHadithLanguage(String langCode) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(kHadithLanguage, langCode);
+    _hadithLanguage = langCode;
+    notifyListeners();
   }
 
   /// getters for the hadith language
