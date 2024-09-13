@@ -4,12 +4,16 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/config.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../src/services/mosque_manager.dart';
 
 /// [AppLanguage] is a class that handles the app language
 /// It is a singleton class that can be accessed from anywhere in the app
 class AppLanguage extends ChangeNotifier {
   static final AppLanguage _instance = AppLanguage._internal();
+
   factory AppLanguage() {
     return _instance;
   }
@@ -112,16 +116,25 @@ class AppLanguage extends ChangeNotifier {
 
   /// get the language of the hadith from shared preference
   /// if there is no language saved, return the api default language
-  Future<String?> getHadithLanguage() async {
+  Future<String> getHadithLanguage(MosqueManager mosqueManager) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? hadithLanguage = prefs.getString(kHadithLanguage);
     if (hadithLanguage != null) {
       _hadithLanguage = hadithLanguage;
       notifyListeners();
       return hadithLanguage;
+    } else {
+      _hadithLanguage = mosqueManager.mosqueConfig!.hadithLang ?? "ar";
+      notifyListeners();
+      return _hadithLanguage;
     }
+  }
+
+  Future<void> saveHadithLanguage(String langCode) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(kHadithLanguage, langCode);
+    _hadithLanguage = langCode;
     notifyListeners();
-    return null;
   }
 
   /// getters for the hadith language

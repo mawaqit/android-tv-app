@@ -50,6 +50,10 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await TimeShiftManager().initializeTimes();
       await ref.read(onBoardingProvider.notifier).isDeviceRooted();
+
+      final appLanguage = Provider.of<AppLanguage>(context, listen: false);
+      final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
+      await appLanguage.getHadithLanguage(mosqueManager);
     });
   }
 
@@ -107,7 +111,6 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     subtitle: S.of(context).hadithLangDesc,
                     icon: Icon(Icons.language, size: 35),
                     onTap: () {
-                      context.read<AppLanguage>().getHadithLanguage();
                       AppRouter.push(
                         LanguageScreen(
                           isIconActivated: true,
@@ -145,6 +148,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                                   ref
                                       .read(randomHadithNotifierProvider.notifier)
                                       .fetchAndCacheHadith(language: langCode);
+                                  context.read<AppLanguage>().saveHadithLanguage(langCode);
                                   AppRouter.pop();
                                 }
                               },
