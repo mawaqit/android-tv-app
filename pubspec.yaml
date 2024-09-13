@@ -135,7 +135,12 @@ dependencies:
 
   wakelock_plus: 1.1.4
   wakelock_plus_platform_interface: 1.1.0
-
+  flutter_background_service: ^5.0.9
+  audio_service: ^0.18.10
+  notification_overlay:
+    git:
+      url: https://github.com/ghassenbenzahra123/custom-android-tv-notification
+      ref: master
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -151,6 +156,7 @@ dev_dependencies:
   mocktail: ^1.0.3
   dart_mappable_builder: ^4.2.3
   json_serializable: ^6.8.0
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

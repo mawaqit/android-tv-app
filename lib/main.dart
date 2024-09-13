@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
@@ -24,23 +27,32 @@ import 'package:mawaqit/src/helpers/riverpod_sentry_provider_observer.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
+import 'package:mawaqit/src/services/background_service.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:notification_overlay/notification_overlay.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 final logger = Logger();
-
+@pragma("vm:entry-point")
 Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       final directory = await getApplicationDocumentsDirectory();
+      final bool isPermissionGranted =
+          await NotificationOverlay.checkOverlayPermission();
+      if (!isPermissionGranted) {
+        await NotificationOverlay.requestOverlayPermission();
+      }
+      await BackgroundService.initializeService();
+
       Hive.init(directory.path);
       tz.initializeTimeZones();
       Hive.registerAdapter(SurahModelAdapter());
@@ -59,7 +71,37 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    BackgroundService.setNotificationVisibility(true);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    BackgroundService().didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      BackgroundService.setNotificationVisibility(false);
+      BackgroundService.pauseBackgroundOperations();
+    } else {
+      BackgroundService.setNotificationVisibility(true);
+      BackgroundService.resumeBackgroundOperations();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

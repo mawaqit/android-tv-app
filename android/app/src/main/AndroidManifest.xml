@@ -9,6 +9,7 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
   <uses-feature android:name="android.hardware.faketouch" android:required="false"/>
   <uses-feature android:name="android.hardware.telephony" android:required="false"/>
@@ -17,6 +18,16 @@
   <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
   <uses-feature android:name="android.hardware.microphone" android:required="false"/>
   <uses-feature android:name="android.hardware.sensor" android:required="false"/>
+<!-- required -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+  <!-- foregroundServiceType: dataSync -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+  <!-- foregroundServiceType: remoteMessaging -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+
+
 
 
   <application
@@ -24,6 +35,24 @@
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:usesCleartextTraffic="true">
+    <service
+          android:name="id.flutter.flutter_background_service.BackgroundService"
+          android:foregroundServiceType="mediaPlayback"
+          >
+    </service>
+    <service android:name="com.ryanheise.audioservice.AudioService"
+     android:exported="true">
+      <intent-filter>
+        <action android:name="android.media.browse.MediaBrowserService" />
+      </intent-filter>
+    </service>
+
+    <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver" 
+     android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.MEDIA_BUTTON" />
+      </intent-filter>
+    </receiver> 
     <activity
       android:name=".MainActivity"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -32,6 +61,7 @@
       android:launchMode="singleTop"
       android:theme="@style/LaunchTheme"
       android:windowSoftInputMode="adjustResize">
+
       <!-- Specifies an Android theme to apply to this Activity as soon as
            the Android process has started. This theme is visible to the user
            while the Flutter UI initializes. After that, this theme continues

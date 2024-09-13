@@ -82,6 +82,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1' && (mosqueConfig?.adhanVoice?.isNotEmpty ?? false);
   }
 
+  bool get isAdhanVoiceEnabled => adhanVoiceEnable();
   int get salahIndex => (nextSalahIndex() - 1) % 5;
 
   bool get isImsakEnabled {
