@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/data/data_source/quran/recite_remote_data_source.dart';
 import 'package:mawaqit/src/data/data_source/quran/reciter_local_data_source.dart';
@@ -5,6 +7,8 @@ import 'package:mawaqit/src/data/data_source/quran/reciter_local_data_source.dar
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 
 import 'package:mawaqit/src/domain/repository/quran/recite_repository.dart';
+
+import '../../../domain/model/quran/audio_file_model.dart';
 
 class ReciteImpl implements ReciteRepository {
   final ReciteRemoteDataSource _remoteDataSource;
@@ -24,6 +28,28 @@ class ReciteImpl implements ReciteRepository {
       reciters.sort((a, b) => a.name.compareTo(b.name));
       return reciters;
     }
+  }
+
+
+  @override
+  Future<String> downloadAudio(
+      AudioFileModel audioFile, Function(double p1) onProgress) async {
+    final downloadedList =
+        await _remoteDataSource.downloadAudioFile(audioFile, onProgress);
+    final path =
+        await _localDataSource.saveAudioFile(audioFile, downloadedList);
+    return path;
+  }
+
+  @override
+  Future<List<File>> getDownloadedSuwarByReciterAndRiwayah({
+    required String reciterId,
+    required String riwayahId,
+  }) async {
+    return _localDataSource.getDownloadedSurahByReciterAndRiwayah(
+      riwayahId: riwayahId,
+      reciterId: reciterId,
+    );
   }
 }
 
