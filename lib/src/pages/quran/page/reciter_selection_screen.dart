@@ -234,6 +234,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                     ),
                   ),
                 ),
+                SizedBox(height: 2.h),
                 FocusScope(
                   node: reciteTypeFocusScopeNode,
                   onKeyEvent: _handleReciteTypeFocusScopeKeyEvent,
