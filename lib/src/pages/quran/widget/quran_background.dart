@@ -38,7 +38,7 @@ class QuranBackground extends ConsumerWidget {
                       child: FloatingActionButton(
                         focusNode: floatingActionButtonFocusNode,
                         focusColor: Theme.of(context).primaryColor,
-                        backgroundColor: Colors.black.withOpacity(.5) ,
+                        backgroundColor: Colors.black.withOpacity(.5),
                         child: Icon(
                           Icons.menu_book,
                           color: Colors.white,

@@ -65,7 +65,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             child: Builder(
               builder: (context) {
                 Focus.of(context).onKeyEvent = (node, event) {
-                  if(event is KeyDownEvent){
+                  if (event is KeyDownEvent) {
                     if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
                       if (index < widget.reciters.length - 1) {
                         widget.onReciterSelected(index + 1);
@@ -177,4 +177,3 @@ class ReciterCard extends ConsumerWidget {
     );
   }
 }
-

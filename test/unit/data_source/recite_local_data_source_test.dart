@@ -7,6 +7,7 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockHiveBox extends Mock implements Box<ReciterModel> {}
+
 class MockHiveFavoriteBox extends Mock implements Box<int> {}
 
 void main() {
@@ -343,7 +344,7 @@ void main() {
       verify(() => mockFavoriteBox.add(3)).called(1);
       verify(() => mockFavoriteBox.add(4)).called(1);
       verify(() => mockFavoriteBox.deleteAt(0)).called(1);
-      verify(() => mockFavoriteBox.deleteAt(1)).called(1);  // Changed from 0 to 1
+      verify(() => mockFavoriteBox.deleteAt(1)).called(1); // Changed from 0 to 1
     });
 
     test('Adding a favorite reciter that doesn\'t exist in the main reciter list', () async {
@@ -362,7 +363,6 @@ void main() {
       verify(() => mockFavoriteBox.add(999)).called(1);
       expect(favorites, isEmpty);
     });
-
 
     test('Updating a reciter in the main list and checking if it\'s reflected in favorites', () async {
       final oldReciter = ReciterModel(1, 'Reciter 1', 'A', []);
