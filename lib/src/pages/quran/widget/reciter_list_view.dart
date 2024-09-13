@@ -34,6 +34,21 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
       widget.reciters.length,
       (index) => FocusNode(debugLabel: 'reciter_focus_node_$index'),
     );
+    for (var node in _focusNodes) {
+      node.addListener(() => _handleFocusChange(node));
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_focusNodes.isNotEmpty) {
+        _focusNodes[0].requestFocus();
+      }
+    });
+  }
+
+  void _handleFocusChange(FocusNode node) {
+    if (node.hasFocus) {
+      widget.onReciterSelected(_focusNodes.indexOf(node));
+    }
   }
 
   @override
@@ -45,6 +60,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
     }
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,25 +80,6 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             },
             child: Builder(
               builder: (context) {
-                Focus.of(context).onKeyEvent = (node, event) {
-                  if (event is KeyDownEvent) {
-                    if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-                      if (index < widget.reciters.length - 1) {
-                        widget.onReciterSelected(index + 1);
-                        Focus.of(context).nextFocus();
-                      }
-                      return KeyEventResult.handled;
-                    } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-                      if (index > 0) {
-                        widget.onReciterSelected(index - 1);
-                        Focus.of(context).previousFocus();
-                      }
-                      return KeyEventResult.handled;
-                    }
-                    return KeyEventResult.ignored;
-                  }
-                  return KeyEventResult.ignored;
-                };
                 return ReciterCard(
                   reciter: widget.reciters[index],
                   // isSelected: index == widget.selectedReciterIndex,
