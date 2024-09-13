@@ -12,14 +12,11 @@ class ReciterListView extends ConsumerStatefulWidget {
   final Function(int) onReciterSelected;
   final int selectedReciterIndex;
 
-  // final List<FocusNode> reciterFocusNodes;
-
   const ReciterListView({
     super.key,
     required this.reciters,
     required this.onReciterSelected,
     required this.selectedReciterIndex,
-    // required this.reciterFocusNodes,
   });
 
   @override
@@ -51,7 +48,6 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
 
   @override
   Widget build(BuildContext context) {
-    print('ui rebuild upon');
     return Container(
       height: 16.h,
       child: ListView.builder(
@@ -118,7 +114,6 @@ class ReciterCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isReciterFavorite = ref.read(reciteNotifierProvider.notifier).isReciterFavorite(reciter);
     return Container(
       width: 25.w,
       margin: margin,
@@ -185,52 +180,3 @@ class ReciterCard extends ConsumerWidget {
   }
 }
 
-class FavoriteReciterCard extends StatelessWidget {
-  final ReciterModel reciter;
-  final VoidCallback onRemove;
-
-  const FavoriteReciterCard({
-    Key? key,
-    required this.reciter,
-    required this.onRemove,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 20.w,
-      margin: EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white.withOpacity(0.1),
-      ),
-      child: Stack(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: AssetImage(R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG),
-              ),
-              SizedBox(height: 8),
-              Text(
-                reciter.name,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 12.sp),
-              ),
-            ],
-          ),
-          Positioned(
-            top: 4,
-            right: 4,
-            child: IconButton(
-              icon: Icon(Icons.close, color: Colors.white),
-              onPressed: onRemove,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

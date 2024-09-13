@@ -1,20 +1,19 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/const/resource.dart';
-import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
+import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/recite_type_grid_view.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
-import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 
-import '../widget/reciter_list_view.dart';
+import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
 
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
@@ -36,16 +35,12 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   double sizeOfContainerReciter = 15.w;
   double marginOfContainerReciter = 16;
 
-  late List<FocusNode> reciterFocusNodes;
-
   late FocusNode favoriteFocusNode;
-
   late FocusNode changeReadingModeFocusNode;
 
   late FocusScopeNode reciteTypeFocusScopeNode;
   late FocusScopeNode reciteFocusScopeNode;
 
-  late FocusNode tabFocusNode;
   late TabController _tabController;
 
   @override
@@ -54,7 +49,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(reciteNotifierProvider.notifier);
-      // ref.read(provider).requestFocus();
     });
 
     changeReadingModeFocusNode = FocusNode(debugLabel: 'change_reading_mode_focus_node');
@@ -68,8 +62,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   @override
   void dispose() {
-    // RawKeyboard.instance.removeListener(_handleKeyEvent);
-    // floatingActionButtonFocusNode.dispose();
     _reciterScrollController.dispose();
 
     favoriteFocusNode.dispose();
@@ -78,7 +70,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     reciteTypeFocusScopeNode.dispose();
     reciteFocusScopeNode.dispose();
 
-    tabFocusNode.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -87,10 +78,31 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      floatingActionButton: SizedBox(
+        width: 40.sp, // Set the desired width
+        height: 40.sp, // Set the desired height
+        child: FloatingActionButton(
+          focusNode: changeReadingModeFocusNode,
+          focusColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.black.withOpacity(.5),
+          child: Icon(
+            Icons.menu_book,
+            color: Colors.white,
+            size: 15.sp,
+          ),
+          onPressed: () async {
+            ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => QuranReadingScreen(),
+              ),
+            );
+          },
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Color(0xFF28262F),
-        // bottomOpacity: 0,
-        // foregroundColor: ,
         elevation: 0,
         title: Text(
           S.of(context).chooseReciter,
@@ -314,11 +326,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   }
 
   KeyEventResult _handleReciteTypeFocusScopeKeyEvent(FocusNode node, KeyEvent event) {
-    print('_handleReciteTypeFocusScopeKeyEvent: focus_scope_node: $node, event: $event');
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
       reciteTypeFocusScopeNode.unfocus();
       reciteFocusScopeNode.requestFocus();
-      debugDumpFocusTree();
       return KeyEventResult.handled;
     } else if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
       reciteTypeFocusScopeNode.unfocus();
