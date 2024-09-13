@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/module/shared_preference_module.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,17 +27,25 @@ class QuranReadingLocalDataSource {
     await sharedPreferences.setInt(QuranConstant.kSavedCurrentPage, lastReadingPage);
   }
 
-  Future<List<SvgPicture>> loadAllSvgs() async {
+  Future<List<SvgPicture>> loadAllSvgs(MoshafType moshafType) async {
     try {
-      final mainDir = await getApplicationSupportDirectory();
-      final mainPath = mainDir.path;
-      final dir = Directory('$mainPath/quran');
-      final files = dir.listSync().where((file) => file.path.endsWith('.svg')).toList()
-        ..sort((a, b) => a.path.compareTo(b.path));
+      final dir = await getApplicationSupportDirectory();
+      final quranPathHelper = QuranPathHelper(
+        applicationSupportDirectory: dir,
+        moshafType: moshafType,
+      );
 
-      final svgList = await Future.wait(files.map((file) => _loadSvg(file.path)));
+      final directory = Directory(quranPathHelper.quranDirectoryPath);
+      final files = directory.listSync().whereType<File>().toList();
 
-      return svgList;
+      // Sort the files based on their numeric names
+      files.sort((a, b) {
+        final aNumber = int.tryParse(a.path.split('/').last.split('.').first) ?? 0;
+        final bNumber = int.tryParse(b.path.split('/').last.split('.').first) ?? 0;
+        return aNumber.compareTo(bNumber);
+      });
+
+      return files.map((file) => SvgPicture.file(File(file.path))).toList();
     } catch (e) {
       log('Error loading SVGs: $e');
       return [];
