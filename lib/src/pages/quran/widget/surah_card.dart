@@ -36,9 +36,7 @@ class _SurahCardState extends ConsumerState<SurahCard> {
       onTap: widget.onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: widget.isSelected
-              ? Colors.white.withOpacity(0.4)
-              : Colors.white.withOpacity(0.2),
+          color: widget.isSelected ? Colors.white.withOpacity(0.4) : Colors.white.withOpacity(0.2),
           borderRadius: BorderRadius.circular(14),
         ),
         child: Center(
@@ -48,8 +46,7 @@ class _SurahCardState extends ConsumerState<SurahCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (widget.downloadProgress > 0 &&
-                      widget.downloadProgress < 1)
+                  if (widget.downloadProgress > 0 && widget.downloadProgress < 1)
                     CircularPercentIndicator(
                       radius: 15.sp,
                       lineWidth: 3.sp,
@@ -65,9 +62,7 @@ class _SurahCardState extends ConsumerState<SurahCard> {
                     IconButton(
                       onPressed: widget.onDownloadTap,
                       icon: Icon(
-                        widget.isDownloaded
-                            ? Icons.download_done
-                            : Icons.download_rounded,
+                        widget.isDownloaded ? Icons.download_done : Icons.download_rounded,
                         color: Colors.white,
                         size: 16.sp,
                       ),

@@ -32,8 +32,39 @@ class ReciteLocalDataSource {
     }
   }
 
-  Future<String> saveAudioFile(
-      AudioFileModel audioFileModel, List<int> bytes) async {
+  Future<String> getSurahPathWithExtension({
+    required String reciterId,
+    required String riwayahId,
+    required String surahNumber,
+  }) async {
+    final Directory appDocDir = await getApplicationDocumentsDirectory();
+    final String surahPath = '${appDocDir.path}/$reciterId/$riwayahId/$surahNumber.mp3';
+    return surahPath;
+  }
+
+  Future<bool> isSurahDownloaded({
+    required String reciterId,
+    required String riwayahId,
+    required int surahNumber,
+  }) async {
+    try {
+      final surahFilePath = await getSurahPathWithExtension(
+        reciterId: reciterId,
+        riwayahId: riwayahId,
+        surahNumber: surahNumber.toString(),
+      );
+      final file = File(surahFilePath);
+      final exists = await file.exists();
+
+      log('ReciteLocalDataSource: isSurahDownloaded: Surah $surahNumber ${exists ? 'exists' : 'does not exist'} for reciter $reciterId and riwayah $riwayahId');
+      return exists;
+    } catch (e) {
+      log('ReciteLocalDataSource: error: isSurahDownloaded: ${e.toString()}');
+      throw CheckSurahExistenceException(e.toString());
+    }
+  }
+
+  Future<String> saveAudioFile(AudioFileModel audioFileModel, List<int> bytes) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
       final filePath = path.join(dir.path, audioFileModel.filePath);
@@ -48,7 +79,7 @@ class ReciteLocalDataSource {
       return filePath;
     } catch (e) {
       log('ReciteLocalDataSource: saveAudioFile: ${e.toString()}');
-      throw (e.toString());
+      throw SaveAudioFileException(e.toString());
     }
   }
 
@@ -68,10 +99,8 @@ class ReciteLocalDataSource {
       // Retrieve all reciters
       final allReciters = _reciterBox.values.toList();
 
-      final recitersForSurah = allReciters
-          .where((reciter) => reciter.moshaf
-              .any((moshaf) => moshaf.surahList.contains(surahId)))
-          .toList();
+      final recitersForSurah =
+          allReciters.where((reciter) => reciter.moshaf.any((moshaf) => moshaf.surahList.contains(surahId))).toList();
 
       log('recite: ReciteLocalDataSource: getReciterBySurah: Found ${recitersForSurah.length} reciters for surah $surahId');
 
@@ -116,8 +145,7 @@ class ReciteLocalDataSource {
     List<File> downloadedSuwar = [];
     try {
       // Get the application documents directory
-      final path =
-          await getSuwarFolderPath(reciterId: reciterId, riwayahId: riwayahId);
+      final path = await getSuwarFolderPath(reciterId: reciterId, riwayahId: riwayahId);
       // Check if the reciter's directory exists
       if (await Directory(path).exists()) {
         List<FileSystemEntity> files = await Directory(path).list().toList();
@@ -136,9 +164,7 @@ class ReciteLocalDataSource {
   }
 }
 
-final reciteLocalDataSourceProvider =
-    FutureProvider<ReciteLocalDataSource>((ref) async {
-  final reciterBox =
-      await Hive.openBox<ReciterModel>(QuranConstant.kReciterBox);
+final reciteLocalDataSourceProvider = FutureProvider<ReciteLocalDataSource>((ref) async {
+  final reciterBox = await Hive.openBox<ReciterModel>(QuranConstant.kReciterBox);
   return ReciteLocalDataSource(reciterBox);
 });

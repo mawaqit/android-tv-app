@@ -78,17 +78,14 @@ class ReciteRemoteDataSource {
         var data = response.data;
         data['reciters'].forEach((reciter) {
           reciter['moshaf'].forEach((moshaf) {
-            moshaf['surah_list'] =
-                _convertSurahListToIntegers(moshaf['surah_list']);
+            moshaf['surah_list'] = _convertSurahListToIntegers(moshaf['surah_list']);
           });
         });
 
-        final reciters = List<ReciterModel>.from(
-            data['reciters'].map((reciter) => ReciterModel.fromJson(reciter)));
+        final reciters = List<ReciterModel>.from(data['reciters'].map((reciter) => ReciterModel.fromJson(reciter)));
         return reciters;
       } else {
-        throw FetchRecitersFailedException(
-            'Failed to fetch reciters', 'FETCH_RECITERS_ERROR');
+        throw FetchRecitersFailedException('Failed to fetch reciters', 'FETCH_RECITERS_ERROR');
       }
     } catch (e) {
       throw FetchRecitersFailedException(e.toString(), 'FETCH_RECITERS_ERROR');
@@ -130,8 +127,7 @@ class ReciteRemoteDataSource {
     Function(double) onProgress,
   ) async {
     final receivePort = ReceivePort();
-    await Isolate.spawn(_downloadAudioFileIsolate,
-        _DownloadParams(audioFile.url, receivePort.sendPort));
+    await Isolate.spawn(_downloadAudioFileIsolate, _DownloadParams(audioFile.url, receivePort.sendPort));
 
     List<int> downloadedList = [];
     await for (final message in receivePort) {

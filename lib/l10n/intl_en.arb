@@ -294,5 +294,9 @@
   "checkingForUpdates": "Checking for updates...",
   "chooseQuranType": "Choose quran",
   "hafs": "Hafs",
-  "warsh": "Warsh"
-}
+  "warsh": "Warsh",
+  "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
+  "noSuwarDownload": "No new suwars to download",
+  "connectDownloadQuran":"Please connect to Internet to download",
+  "playInOnlineModeQuran": "Please connect to internet to play"
+  }

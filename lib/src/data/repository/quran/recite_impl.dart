@@ -30,14 +30,36 @@ class ReciteImpl implements ReciteRepository {
     }
   }
 
+  @override
+  Future<String> getLocalSurahPath({
+    required String reciterId,
+    required String riwayahId,
+    required String surahNumber,
+  }) async {
+    return await _localDataSource.getSurahPathWithExtension(
+      riwayahId: riwayahId,
+      surahNumber: surahNumber,
+      reciterId: reciterId,
+    );
+  }
 
   @override
-  Future<String> downloadAudio(
-      AudioFileModel audioFile, Function(double p1) onProgress) async {
-    final downloadedList =
-        await _remoteDataSource.downloadAudioFile(audioFile, onProgress);
-    final path =
-        await _localDataSource.saveAudioFile(audioFile, downloadedList);
+  Future<bool> isSurahDownloaded({
+    required String reciterId,
+    required String riwayahId,
+    required int surahNumber,
+  }) async {
+    return await _localDataSource.isSurahDownloaded(
+      reciterId: reciterId,
+      riwayahId: riwayahId,
+      surahNumber: surahNumber,
+    );
+  }
+
+  @override
+  Future<String> downloadAudio(AudioFileModel audioFile, Function(double p1) onProgress) async {
+    final downloadedList = await _remoteDataSource.downloadAudioFile(audioFile, onProgress);
+    final path = await _localDataSource.saveAudioFile(audioFile, downloadedList);
     return path;
   }
 

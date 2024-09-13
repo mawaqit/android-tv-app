@@ -13,11 +13,9 @@ class AudioFileModel {
 
   String get filePath => '$reciterId/$riwayahId/$surahId.mp3';
 
-  factory AudioFileModel.fromJson(Map<String, dynamic> map) =>
-      _ensureContainer.fromMap<AudioFileModel>(map);
+  factory AudioFileModel.fromJson(Map<String, dynamic> map) => _ensureContainer.fromMap<AudioFileModel>(map);
 
-  factory AudioFileModel.fromString(String json) =>
-      _ensureContainer.fromJson<AudioFileModel>(json);
+  factory AudioFileModel.fromString(String json) => _ensureContainer.fromJson<AudioFileModel>(json);
 
   Map<String, dynamic> toJson() {
     return _ensureContainer.toMap(this);
@@ -30,9 +28,7 @@ class AudioFileModel {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            _ensureContainer.isEqual(this, other));
+    return identical(this, other) || (runtimeType == other.runtimeType && _ensureContainer.isEqual(this, other));
   }
 
   @override
@@ -40,8 +36,7 @@ class AudioFileModel {
     return _ensureContainer.hash(this);
   }
 
-  AudioFileModelCopyWith<AudioFileModel, AudioFileModel, AudioFileModel>
-      get copyWith {
+  AudioFileModelCopyWith<AudioFileModel, AudioFileModel, AudioFileModel> get copyWith {
     return _AudioFileModelCopyWithImpl(this, $identity, $identity);
   }
 
@@ -50,6 +45,5 @@ class AudioFileModel {
     return MapperContainer.globals;
   }();
 
-  static AudioFileModelMapper ensureInitialized() =>
-      AudioFileModelMapper.ensureInitialized();
+  static AudioFileModelMapper ensureInitialized() => AudioFileModelMapper.ensureInitialized();
 }

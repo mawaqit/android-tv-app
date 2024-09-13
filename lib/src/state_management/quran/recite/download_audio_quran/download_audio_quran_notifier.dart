@@ -12,8 +12,7 @@ class DownloadStateNotifier extends Notifier<DownloadAudioQuranState> {
     return "$reciterId:$riwayahId";
   }
 
-  Future<void> updateDownloadProgress(
-      String reciterId, String riwayahId, int surahId, double progress) async {
+  Future<void> updateDownloadProgress(String reciterId, String riwayahId, int surahId, double progress) async {
     final key = _getKey(reciterId, riwayahId);
     final currentProgress = state.downloadProgress[key] ?? {};
     state = state.copyWith(
@@ -28,8 +27,7 @@ class DownloadStateNotifier extends Notifier<DownloadAudioQuranState> {
     );
   }
 
-  Future<void> markAsDownloaded(
-      String reciterId, String riwayahId, int surahId) async {
+  Future<void> markAsDownloaded(String reciterId, String riwayahId, int surahId) async {
     final key = _getKey(reciterId, riwayahId);
     final currentDownloaded = state.downloadedSuwar[key] ?? {};
     final currentProgress = state.downloadProgress[key] ?? {};
@@ -44,15 +42,12 @@ class DownloadStateNotifier extends Notifier<DownloadAudioQuranState> {
       },
       currentDownloadingSurah: {
         ...state.currentDownloadingSurah,
-        key: state.currentDownloadingSurah[key] == surahId
-            ? null
-            : state.currentDownloadingSurah[key],
+        key: state.currentDownloadingSurah[key] == surahId ? null : state.currentDownloadingSurah[key],
       },
     );
   }
 
-  Future<void> initializeDownloadedSuwar(
-      String reciterId, String riwayahId, Set<int> downloadedSuwar) async {
+  Future<void> initializeDownloadedSuwar(String reciterId, String riwayahId, Set<int> downloadedSuwar) async {
     final key = _getKey(reciterId, riwayahId);
     state = state.copyWith(
       downloadedSuwar: {
@@ -71,7 +66,6 @@ class DownloadStateNotifier extends Notifier<DownloadAudioQuranState> {
   }
 }
 
-final downloadStateProvider =
-    NotifierProvider<DownloadStateNotifier, DownloadAudioQuranState>(
+final downloadStateProvider = NotifierProvider<DownloadStateNotifier, DownloadAudioQuranState>(
   DownloadStateNotifier.new,
 );

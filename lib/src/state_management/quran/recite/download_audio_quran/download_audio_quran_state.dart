@@ -23,8 +23,7 @@ class DownloadAudioQuranState {
       downloadProgress: downloadProgress ?? this.downloadProgress,
       downloadedSuwar: downloadedSuwar ?? this.downloadedSuwar,
       downloadStatus: downloadStatus ?? this.downloadStatus,
-      currentDownloadingSurah:
-          currentDownloadingSurah ?? this.currentDownloadingSurah,
+      currentDownloadingSurah: currentDownloadingSurah ?? this.currentDownloadingSurah,
     );
   }
 }
