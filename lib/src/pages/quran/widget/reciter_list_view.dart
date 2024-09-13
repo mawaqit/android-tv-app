@@ -61,7 +61,6 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
