@@ -59,13 +59,11 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             focusNode: _focusNodes[index],
             focusColor: Colors.transparent,
             onTap: () {
-              print('reciter: reciter card $index tapped');
               widget.onReciterSelected(index);
               _focusNodes[index].requestFocus();
             },
             child: Builder(
               builder: (context) {
-                print('reciter card $index rebuild ${Focus.of(context).toStringDeep()} ___ ${Focus.of(context).hasFocus} ___ ${index}');
                 Focus.of(context).onKeyEvent = (node, event) {
                   if(event is KeyDownEvent){
                     if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
