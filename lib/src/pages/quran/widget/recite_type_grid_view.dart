@@ -10,11 +10,9 @@ class ReciteTypeGridView extends ConsumerStatefulWidget {
   const ReciteTypeGridView({
     super.key,
     required this.reciterTypes,
-    required this.selectedReciterIndex,
   });
 
   final List<MoshafModel> reciterTypes;
-  final int selectedReciterIndex;
   @override
   ConsumerState createState() => _ReciteTypeGridViewState();
 }
@@ -44,23 +42,19 @@ class _ReciteTypeGridViewState extends ConsumerState<ReciteTypeGridView> {
               selectedReciteTypeIndex = index;
             });
             // Perform actions related to the selected recite type
-            final reciters = ref.read(reciteNotifierProvider).maybeWhen(
-                  data: (data) => data.reciters,
-                  orElse: () => [],
-                );
             ref.read(reciteNotifierProvider.notifier).setSelectedMoshaf(
                   moshafModel: widget.reciterTypes[selectedReciteTypeIndex],
                 );
-            ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                  reciterModel: reciters[widget.selectedReciterIndex],
-                );
+
             ref.read(quranNotifierProvider.notifier).getSuwarByReciter(
                   selectedMoshaf: widget.reciterTypes[selectedReciteTypeIndex],
                 );
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SurahSelectionScreen(),
+                builder: (context) => SurahSelectionScreen(
+                  selectedMoshaf: widget.reciterTypes[selectedReciteTypeIndex],
+                ),
               ),
             );
           },

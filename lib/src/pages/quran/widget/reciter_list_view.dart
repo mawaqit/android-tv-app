@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -9,14 +10,10 @@ import 'package:sizer/sizer.dart';
 
 class ReciterListView extends ConsumerStatefulWidget {
   final List<ReciterModel> reciters;
-  final Function(int) onReciterSelected;
-  final int selectedReciterIndex;
 
   const ReciterListView({
     super.key,
     required this.reciters,
-    required this.onReciterSelected,
-    required this.selectedReciterIndex,
   });
 
   @override
@@ -47,7 +44,9 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
 
   void _handleFocusChange(FocusNode node) {
     if (node.hasFocus) {
-      widget.onReciterSelected(_focusNodes.indexOf(node));
+      ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
+            reciterModel: widget.reciters[_focusNodes.indexOf(node)],
+          );
     }
   }
 
@@ -64,7 +63,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 16.h,
+      height: widget.reciters.isNotEmpty ? 16.h : 0,
       child: ListView.builder(
         controller: _reciterScrollController,
         scrollDirection: Axis.horizontal,
@@ -74,8 +73,9 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             focusNode: _focusNodes[index],
             focusColor: Colors.transparent,
             onTap: () {
-              widget.onReciterSelected(index);
-              _focusNodes[index].requestFocus();
+              ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
+                    reciterModel: widget.reciters[index],
+                  );
             },
             child: Builder(
               builder: (context) {

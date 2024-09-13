@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/const/resource.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/recite_type_grid_view.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -28,8 +31,6 @@ class ReciterSelectionScreen extends ConsumerStatefulWidget {
 
 class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  int selectedReciterIndex = 0;
 
   final ScrollController _reciterScrollController = ScrollController();
   double sizeOfContainerReciter = 15.w;
@@ -76,6 +77,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   @override
   Widget build(BuildContext context) {
+    print('ReciterSelectionScreen build');
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButton: SizedBox(
@@ -123,21 +125,37 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             ),
             onPressed: () {
               ref.read(reciteNotifierProvider).maybeWhen(
-                    data: (data) {
-                      if (data.reciters.length > selectedReciterIndex) {
-                        // check first if it is favorite if not add it to favorite otherwise remove it
-                        final reciter = data.reciters[selectedReciterIndex];
-                        final isFavorite = data.favoriteReciters.contains(reciter);
-                        print('isFavorite: $isFavorite $reciter');
-                        if (isFavorite) {
-                          ref.read(reciteNotifierProvider.notifier).removeFavoriteReciter(reciter);
-                        } else {
-                          ref.read(reciteNotifierProvider.notifier).addFavoriteReciter(reciter);
-                        }
-                        return data.reciters;
-                      } else {
-                        return [];
-                      }
+                    data: (reciterState) {
+                      return reciterState.selectedReciter.fold(
+                        () => null,
+                        (selectedReciter) async {
+                          final notifier = ref.read(reciteNotifierProvider.notifier);
+
+                          if (notifier.isReciterFavorite(selectedReciter)) {
+                            await notifier.removeFavoriteReciter(selectedReciter);
+                            Fluttertoast.showToast(
+                              msg: S.of(context).reciterRemovedFromFavorites(selectedReciter.name),
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,
+                              fontSize: 10.sp,
+                            );
+                          } else {
+                            await notifier.addFavoriteReciter(selectedReciter);
+                            Fluttertoast.showToast(
+                              msg: S.of(context).reciterAddedToFavorites(selectedReciter.name),
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,
+                              fontSize: 10.sp,
+                            );
+                          }
+                        },
+                      );
                     },
                     orElse: () => [],
                   );
@@ -192,6 +210,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   }
 
   Widget _buildReciterList({required bool isAllReciters}) {
+    print('ReciterSelectionScreen isAllReciters: $isAllReciters');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -209,47 +228,61 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                           final displayReciters = isAllReciters ? reciter.reciters : reciter.favoriteReciters;
                           return ReciterListView(
                             reciters: displayReciters,
-                            onReciterSelected: (index) {
-                              setState(() {
-                                selectedReciterIndex = index;
-                              });
-                            },
-                            selectedReciterIndex: selectedReciterIndex,
                           );
                         },
                         loading: () => _buildReciterListShimmer(true),
                         error: (error, stackTrace) => Text('Error: $error'),
                       ),
                 ),
-                SizedBox(height: 5.h),
                 Container(
                   width: double.infinity,
-                  child: Text(
-                    S.of(context).reciteType,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                FocusScope(
-                  node: reciteTypeFocusScopeNode,
-                  onKeyEvent: _handleReciteTypeFocusScopeKeyEvent,
-                  child: ref.watch(reciteNotifierProvider).when(
-                        data: (reciter) {
-                          return reciter.reciters.isNotEmpty
-                              ? ReciteTypeGridView(
-                                  selectedReciterIndex: selectedReciterIndex,
-                                  reciterTypes: reciter.reciters[selectedReciterIndex].moshaf,
-                                )
-                              : _buildReciteTypeGridShimmer(true);
-                        },
-                        loading: () => _buildReciteTypeGridShimmer(true),
-                        error: (error, stackTrace) => Text('Error: $error'),
+                  child: Column(
+                    children: [
+                      FocusScope(
+                        node: reciteTypeFocusScopeNode,
+                        onKeyEvent: _handleReciteTypeFocusScopeKeyEvent,
+                        child: ref.watch(reciteNotifierProvider).when(
+                              data: (reciterState) {
+                                if (reciterState.favoriteReciters.isEmpty && !isAllReciters) {
+                                  return Container(
+                                    margin: EdgeInsets.only(top: 2.h),
+                                    child: Text(
+                                      S.of(context).noFavoriteReciters,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return Column(
+                                  children: [
+                                    SizedBox(height:5.h),
+                                    Text(
+                                      S.of(context).reciteType,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 2.h),
+                                    reciterState.selectedReciter.fold(
+                                      () => Container(),
+                                      (selectedReciter) => ReciteTypeGridView(
+                                        reciterTypes: selectedReciter.moshaf,
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                              loading: () => _buildReciteTypeGridShimmer(true),
+                              error: (error, stackTrace) => Text('Error: $error'),
+                            ),
                       ),
+                    ],
+                  ),
                 ),
               ],
             ),

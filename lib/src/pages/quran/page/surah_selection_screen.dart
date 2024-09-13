@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
@@ -16,7 +17,10 @@ import 'package:mawaqit/src/pages/quran/page/quran_player_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class SurahSelectionScreen extends ConsumerStatefulWidget {
+  final MoshafModel selectedMoshaf;
+
   const SurahSelectionScreen({
+    required this.selectedMoshaf,
     super.key,
   });
 
@@ -100,7 +104,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                                     data: (data) => data.selectedMoshaf,
                                   );
                               ref.read(quranPlayerNotifierProvider.notifier).initialize(
-                                    moshaf: moshaf!,
+                                    moshaf: widget.selectedMoshaf,
                                     surah: data.suwar[index],
                                     suwar: data.suwar,
                                   );
@@ -193,7 +197,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
       orElse: () {},
       data: (data) {
         ref.read(quranPlayerNotifierProvider.notifier).initialize(
-              moshaf: moshaf!,
+              moshaf: widget.selectedMoshaf,
               surah: selectedSurah,
               suwar: data.suwar,
             );

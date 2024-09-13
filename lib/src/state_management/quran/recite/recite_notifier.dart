@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/data/repository/quran/recite_impl.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_state.dart';
 
@@ -12,6 +16,7 @@ import 'package:mawaqit/src/helpers/language_helper.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
+import 'package:sizer/sizer.dart';
 
 class ReciteNotifier extends AsyncNotifier<ReciteState> {
   @override
@@ -29,7 +34,7 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
   }) {
     state = AsyncData(
       state.value!.copyWith(
-        selectedReciter: reciterModel,
+        selectedReciter: Option.of(reciterModel),
       ),
     );
   }
@@ -39,7 +44,7 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
   }) {
     state = AsyncData(
       state.value!.copyWith(
-        selectedMoshaf: moshafModel,
+        selectedMoshaf: Option.of(moshafModel),
       ),
     );
   }
