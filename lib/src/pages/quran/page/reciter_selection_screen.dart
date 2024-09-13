@@ -277,7 +277,22 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                                   ],
                                 );
                               },
-                              loading: () => _buildReciteTypeGridShimmer(true),
+                              loading: () {
+                                return Column(children: [
+                                  SizedBox(height: 3.h),
+                                  Text(
+                                    S.of(context).reciteType,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  _buildReciteTypeGridShimmer(true),
+                                ]);
+                              },
                               error: (error, stackTrace) => Text('Error: $error'),
                             ),
                       ),
