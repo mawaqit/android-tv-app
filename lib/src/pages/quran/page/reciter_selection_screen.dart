@@ -257,7 +257,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                                 }
                                 return Column(
                                   children: [
-                                    SizedBox(height:5.h),
+                                    SizedBox(height: 3.h),
                                     Text(
                                       S.of(context).reciteType,
                                       textAlign: TextAlign.center,
