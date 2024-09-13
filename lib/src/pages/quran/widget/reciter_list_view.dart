@@ -76,6 +76,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
               ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
                     reciterModel: widget.reciters[index],
                   );
+              _focusNodes[index].requestFocus();
             },
             child: Builder(
               builder: (context) {
