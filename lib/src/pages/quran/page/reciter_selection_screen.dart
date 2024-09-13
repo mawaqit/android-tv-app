@@ -77,7 +77,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   @override
   Widget build(BuildContext context) {
-    print('ReciterSelectionScreen build');
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButton: SizedBox(
@@ -115,50 +114,64 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           ),
         ),
         actions: [
-          IconButton(
-            focusNode: favoriteFocusNode,
-            focusColor: Theme.of(context).primaryColor,
-            splashRadius: 14.sp,
-            icon: Icon(
-              favoriteFocusNode.hasFocus ? Icons.favorite : Icons.favorite_border,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              ref.read(reciteNotifierProvider).maybeWhen(
-                    data: (reciterState) {
-                      return reciterState.selectedReciter.fold(
-                        () => null,
-                        (selectedReciter) async {
-                          final notifier = ref.read(reciteNotifierProvider.notifier);
+          Consumer(
+            builder: (context, ref, child) {
+              return IconButton(
+                focusNode: favoriteFocusNode,
+                focusColor: Theme.of(context).primaryColor,
+                splashRadius: 14.sp,
+                icon: ref.watch(reciteNotifierProvider).maybeWhen(
+                      data: (reciterState) {
+                        return reciterState.selectedReciter.fold(
+                          () => Icon(Icons.favorite_border, color: Colors.white),
+                          (selectedReciter) => Icon(
+                            ref.read(reciteNotifierProvider.notifier).isReciterFavorite(selectedReciter)
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                      orElse: () => Icon(Icons.favorite_border, color: Colors.white),
+                    ),
+                onPressed: () {
+                  ref.read(reciteNotifierProvider).maybeWhen(
+                        data: (reciterState) {
+                          return reciterState.selectedReciter.fold(
+                            () => null,
+                            (selectedReciter) async {
+                              final notifier = ref.read(reciteNotifierProvider.notifier);
 
-                          if (notifier.isReciterFavorite(selectedReciter)) {
-                            await notifier.removeFavoriteReciter(selectedReciter);
-                            Fluttertoast.showToast(
-                              msg: S.of(context).reciterRemovedFromFavorites(selectedReciter.name),
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.black,
-                              textColor: Colors.white,
-                              fontSize: 10.sp,
-                            );
-                          } else {
-                            await notifier.addFavoriteReciter(selectedReciter);
-                            Fluttertoast.showToast(
-                              msg: S.of(context).reciterAddedToFavorites(selectedReciter.name),
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.black,
-                              textColor: Colors.white,
-                              fontSize: 10.sp,
-                            );
-                          }
+                              if (notifier.isReciterFavorite(selectedReciter)) {
+                                await notifier.removeFavoriteReciter(selectedReciter);
+                                Fluttertoast.showToast(
+                                  msg: S.of(context).reciterRemovedFromFavorites(selectedReciter.name),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 10.sp,
+                                );
+                              } else {
+                                await notifier.addFavoriteReciter(selectedReciter);
+                                Fluttertoast.showToast(
+                                  msg: S.of(context).reciterAddedToFavorites(selectedReciter.name),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 10.sp,
+                                );
+                              }
+                            },
+                          );
                         },
+                        orElse: () => null,
                       );
-                    },
-                    orElse: () => [],
-                  );
+                },
+              );
             },
           ),
         ],
@@ -175,6 +188,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         ),
         bottom: TabBar(
           controller: _tabController,
+          indicatorColor: Colors.white,
           tabs: [
             Tab(
               text: S.of(context).allReciters,
