@@ -11,6 +11,7 @@ import 'package:mawaqit/src/models/mosqueConfig.dart';
 
 import '../../const/resource.dart';
 import '../../main.dart';
+import 'audio_stream_offline_manager.dart';
 
 class AudioManager extends ChangeNotifier {
   String bipLink = "$kStaticFilesUrl/mp3/bip.mp3";
@@ -33,7 +34,6 @@ class AudioManager extends ChangeNotifier {
 
   String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
-
     if (mosqueConfig!.adhanVoice?.isNotEmpty ?? false) {
       adhanLink = "$kStaticFilesUrl/mp3/${mosqueConfig.adhanVoice!}.mp3";
     }
@@ -116,7 +116,8 @@ class AudioManager extends ChangeNotifier {
     VoidCallback? onDone,
   }) async {
     try {
-      await player.setUrl(url);
+      final file = await getFile(url, enableCache: enableCache);
+      await player.setAudioSource(JustAudioBytesSource(file));
       player.play();
       player.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
