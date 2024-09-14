@@ -15,7 +15,7 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 
 class ReciteNotifier extends AsyncNotifier<ReciteState> {
-  Option<List<ReciterModel>> _cachedReciters = None();
+  // Option<List<ReciterModel>> _cachedReciters = None();
 
   @override
   build() async {
@@ -122,12 +122,17 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
 
   Future<List<ReciterModel>> _getRemoteReciters() async {
     state = AsyncLoading();
-    final reciteImpl = await ref.read(reciteImplProvider.future);
-    final sharedPreference = await ref.read(sharedPreferenceModule.future);
-    final languageCode = sharedPreference.getString('language_code') ?? 'en';
-    final mappedLanguage = LanguageHelper.mapLocaleWithQuran(languageCode);
-    final reciters = await reciteImpl.getAllReciters(language: mappedLanguage);
-    return reciters;
+    try{
+      final reciteImpl = await ref.read(reciteImplProvider.future);
+      final sharedPreference = await ref.read(sharedPreferenceModule.future);
+      final languageCode = sharedPreference.getString('language_code') ?? 'en';
+      final mappedLanguage = LanguageHelper.mapLocaleWithQuran(languageCode);
+      final reciters = await reciteImpl.getAllReciters(language: mappedLanguage);
+      return reciters;
+    } catch (e, s) {
+      state = AsyncError(e, s);
+      rethrow;
+    }
   }
 
   Future<List<ReciterModel>> _getAllReciters(List<ReciterModel> favorite, List<ReciterModel> reciters) async {
