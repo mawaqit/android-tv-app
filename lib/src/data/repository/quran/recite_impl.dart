@@ -45,6 +45,11 @@ class ReciteImpl implements ReciteRepository {
   bool isFavoriteReciter(int reciterId) {
     return _localDataSource.isFavoriteReciter(reciterId);
   }
+
+  @override
+  Future<void> clearAllReciters() async {
+    await _localDataSource.clearAllReciters();
+  }
 }
 
 final reciteImplProvider = FutureProvider<ReciteImpl>((ref) async {

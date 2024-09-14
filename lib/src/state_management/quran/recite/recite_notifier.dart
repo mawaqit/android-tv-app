@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/data/repository/quran/recite_impl.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_state.dart';
@@ -16,15 +13,22 @@ import 'package:mawaqit/src/helpers/language_helper.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
-import 'package:sizer/sizer.dart';
 
 class ReciteNotifier extends AsyncNotifier<ReciteState> {
+  Option<List<ReciterModel>> _cachedReciters = None();
+
   @override
   build() async {
+    ref.onDispose(() async {
+      final reciteImpl = await ref.read(reciteImplProvider.future);
+      await reciteImpl.clearAllReciters();
+    });
+
+    final reciters = await _getRemoteReciters();
     final favoriteReciters = await _loadFavoriteReciters();
-    final reciters = await _getAllReciters(favoriteReciters);
+    final aggregatedReciters = await _getAllReciters(favoriteReciters, reciters);
     return ReciteState(
-      reciters: reciters,
+      reciters: aggregatedReciters,
       favoriteReciters: favoriteReciters,
     );
   }
@@ -116,14 +120,41 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
     }
   }
 
-  Future<List<ReciterModel>> _getAllReciters(List<ReciterModel> favorite) async {
+  Future<List<ReciterModel>> _getRemoteReciters() async {
     state = AsyncLoading();
+    final reciteImpl = await ref.read(reciteImplProvider.future);
+    final sharedPreference = await ref.read(sharedPreferenceModule.future);
+    final languageCode = sharedPreference.getString('language_code') ?? 'en';
+    final mappedLanguage = LanguageHelper.mapLocaleWithQuran(languageCode);
+    final reciters = await reciteImpl.getAllReciters(language: mappedLanguage);
+    return reciters;
+  }
+
+  Future<List<ReciterModel>> _getReciters() async {
+    return _cachedReciters.fold(
+      () async {
+        state = const AsyncLoading();
+        try {
+          final reciteImpl = await ref.read(reciteImplProvider.future);
+          final sharedPreference = await ref.read(sharedPreferenceModule.future);
+          final languageCode = sharedPreference.getString('language_code') ?? 'en';
+          final mappedLanguage = LanguageHelper.mapLocaleWithQuran(languageCode);
+          final remoteList = await reciteImpl.getAllReciters(language: mappedLanguage);
+          _cachedReciters = Some(remoteList);
+          return remoteList;
+        } catch (e, s) {
+          state = AsyncError(e, s);
+          rethrow;
+        }
+      },
+      (reciterList) {
+        return reciterList;
+      },
+    );
+  }
+
+  Future<List<ReciterModel>> _getAllReciters(List<ReciterModel> favorite, List<ReciterModel> reciters) async {
     try {
-      final reciteImpl = await ref.read(reciteImplProvider.future);
-      final sharedPreference = await ref.read(sharedPreferenceModule.future);
-      final languageCode = sharedPreference.getString('language_code') ?? 'en';
-      final mappedLanguage = LanguageHelper.mapLocaleWithQuran(languageCode);
-      final reciters = await reciteImpl.getAllReciters(language: mappedLanguage);
       // Sort reciters: favorites first, then the rest
       final sortedReciters = [
         ...favorite,

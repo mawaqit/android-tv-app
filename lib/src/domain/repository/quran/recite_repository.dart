@@ -6,4 +6,5 @@ abstract class ReciteRepository {
   Future<void> removeFavoriteReciter(int reciterId);
   Future<List<ReciterModel>> getFavoriteReciters();
   bool isFavoriteReciter(int reciterId);
+  Future<void> clearAllReciters();
 }
