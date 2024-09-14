@@ -122,7 +122,7 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
 
   Future<List<ReciterModel>> _getRemoteReciters() async {
     state = AsyncLoading();
-    try{
+    try {
       final reciteImpl = await ref.read(reciteImplProvider.future);
       final sharedPreference = await ref.read(sharedPreferenceModule.future);
       final languageCode = sharedPreference.getString('language_code') ?? 'en';
