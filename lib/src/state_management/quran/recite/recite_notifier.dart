@@ -130,29 +130,6 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
     return reciters;
   }
 
-  Future<List<ReciterModel>> _getReciters() async {
-    return _cachedReciters.fold(
-      () async {
-        state = const AsyncLoading();
-        try {
-          final reciteImpl = await ref.read(reciteImplProvider.future);
-          final sharedPreference = await ref.read(sharedPreferenceModule.future);
-          final languageCode = sharedPreference.getString('language_code') ?? 'en';
-          final mappedLanguage = LanguageHelper.mapLocaleWithQuran(languageCode);
-          final remoteList = await reciteImpl.getAllReciters(language: mappedLanguage);
-          _cachedReciters = Some(remoteList);
-          return remoteList;
-        } catch (e, s) {
-          state = AsyncError(e, s);
-          rethrow;
-        }
-      },
-      (reciterList) {
-        return reciterList;
-      },
-    );
-  }
-
   Future<List<ReciterModel>> _getAllReciters(List<ReciterModel> favorite, List<ReciterModel> reciters) async {
     try {
       // Sort reciters: favorites first, then the rest
