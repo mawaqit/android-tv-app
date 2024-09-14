@@ -25,6 +25,31 @@ class ReciteImpl implements ReciteRepository {
       return reciters;
     }
   }
+
+  @override
+  Future<void> addFavoriteReciter(int reciterId) async {
+    await _localDataSource.addFavoriteReciter(reciterId);
+  }
+
+  @override
+  Future<void> removeFavoriteReciter(int reciterId) async {
+    await _localDataSource.removeFavoriteReciter(reciterId);
+  }
+
+  @override
+  Future<List<ReciterModel>> getFavoriteReciters() async {
+    return await _localDataSource.getFavoriteReciters();
+  }
+
+  @override
+  bool isFavoriteReciter(int reciterId) {
+    return _localDataSource.isFavoriteReciter(reciterId);
+  }
+
+  @override
+  Future<void> clearAllReciters() async {
+    await _localDataSource.clearAllReciters();
+  }
 }
 
 final reciteImplProvider = FutureProvider<ReciteImpl>((ref) async {

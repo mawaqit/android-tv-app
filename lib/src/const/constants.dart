@@ -73,6 +73,7 @@ abstract class QuranConstant {
   static const String kReciterBox = 'reciter_box';
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
+  static const String kFavoriteReciterBox = 'favorite_reciter_box';
   static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/config.json';
 }
 
