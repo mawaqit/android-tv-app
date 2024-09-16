@@ -294,5 +294,31 @@
   "checkingForUpdates": "A verificar atualizações...",
   "chooseQuranType": "Escolher Alcorão",
   "hafs": "Hafs",
-  "warsh": "Warsh"
+  "warsh": "Warsh",
+  "favorites": "Favoritos",
+  "allReciters": "Todos os Recitadores",
+  "reciterAddedToFavorites": "Recitador {name} adicionado aos favoritos",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Recitador {name} removido dos favoritos",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "Sem recitadores favoritos. Tente adicionar um à lista.",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  }
 }
