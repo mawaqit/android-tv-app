@@ -52,11 +52,11 @@ class RandomHadithImpl implements RandomHadithRepository {
   @override
   Future<String> getRandomHadith({required String language}) async {
     log('random_hadith: RandomHadithImpl: Fetching random Hadith');
-
     final hadithLanguageLocal = sharedPreferences.getString(RandomHadithConstant.kHadithLanguage);
     log('random_hadith: RandomHadithImpl: Stored language: $hadithLanguageLocal');
-    if (hadithLanguageLocal != null) {
-      language = hadithLanguageLocal;
+
+    if (language != hadithLanguageLocal) {
+      language = language;
     }
 
     language = RandomHadithHelper.changeLanguageFormat(language);
@@ -126,7 +126,7 @@ class RandomHadithImpl implements RandomHadithRepository {
 
     bool isFetchNeeded = true;
 
-    if (lastRunTime != null && lastRunLanguage != null) {
+    if (lastRunTime != null && lastRunLanguage != language) {
       final lastRunDate = DateTime.fromMillisecondsSinceEpoch(lastRunTime);
       final now = AppDateTime.now();
       isFetchNeeded = now.difference(lastRunDate).inDays >= 1 || lastRunLanguage != language;

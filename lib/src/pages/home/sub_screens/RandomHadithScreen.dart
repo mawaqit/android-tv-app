@@ -30,10 +30,11 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
   @override
   void initState() {
     log('random_hadith: RandomHadithScreen initState');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final hadith =
-          context.read<AppLanguage>().hadithLanguage == '' ? 'ar' : context.read<AppLanguage>().hadithLanguage;
-      ref.read(randomHadithNotifierProvider.notifier).getRandomHadith(language: hadith);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final mosqueManager = context.read<MosqueManager>();
+      ref
+          .read(randomHadithNotifierProvider.notifier)
+          .getRandomHadith(language: mosqueManager.mosqueConfig!.hadithLang ?? 'ar');
     });
     super.initState();
   }
