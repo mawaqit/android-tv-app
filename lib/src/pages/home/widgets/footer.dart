@@ -9,8 +9,7 @@ import 'FlashWidget.dart';
 import 'HomeLogoVersion.dart';
 import 'MosqueInformationWidget.dart';
 
-const kFooterQrLink =
-    'https://mawaqit.net/static/images/store-qrcode.png?4.89.2';
+const kFooterQrLink = 'https://mawaqit.net/static/images/store-qrcode.png?4.89.2';
 
 class Footer extends StatelessWidget {
   const Footer({Key? key}) : super(key: key);
@@ -32,9 +31,7 @@ class Footer extends StatelessWidget {
           ),
         Container(
           height: 10.vr,
-          color: mosque?.flash?.content.isEmpty != false
-              ? null
-              : Colors.black.withOpacity(.3),
+          color: mosque?.flash?.content.isEmpty != false ? null : Colors.black.withOpacity(.3),
           padding: EdgeInsets.symmetric(horizontal: .3.vw, vertical: .5.vw),
           child: Directionality(
             textDirection: TextDirection.ltr,
