@@ -21,7 +21,6 @@ class CacheKey {
   static const String kIsUpdateDismissed = 'is_update_dismissed';
   static const String kUpdateDismissedVersion = 'update_dismissed_version';
   static const String kHttpRequests = 'http_requests_cache';
-  static const String kSelectedMoshaf = 'selected_moshaf';
 }
 
 class HttpHeaderConstant {
@@ -67,7 +66,9 @@ abstract class MosqueManagerConstant {
 
 abstract class QuranConstant {
   static const String kQuranZipBaseUrl = "https://cdn.mawaqit.net/quran/";
-  static const String kQuranLocalVersion = 'quran_local_version';
+  static const String kHafsQuranLocalVersion = 'hafs_quran_local_version';
+  static const String kWarshQuranLocalVersion = 'warsh_quran_local_version';
+  static const String kSelectedMoshafType = 'selected_moshaf_type';
   static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
   static const String kSurahBox = 'surah_box';
   static const String kReciterBox = 'reciter_box';
