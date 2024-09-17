@@ -208,12 +208,19 @@ class _ImageAnnouncement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image(
-      image: MawaqitNetworkImageProvider(image, onError: onError),
-      fit: BoxFit.fill,
-      width: double.infinity,
-      height: double.infinity,
-    ).animate().slideX().addRepaintBoundary();
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    return isPortrait
+        ? Image(
+            image: MawaqitNetworkImageProvider(image, onError: onError),
+            fit: BoxFit.fitWidth,
+            width: double.infinity,
+          ).animate().slideX().addRepaintBoundary()
+        : Image(
+            image: MawaqitNetworkImageProvider(image, onError: onError),
+            fit: BoxFit.fill,
+            width: double.infinity,
+            height: double.infinity,
+          ).animate().slideX().addRepaintBoundary();
   }
 }
 
