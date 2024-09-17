@@ -179,6 +179,7 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
       ],
     );
   }
+
   Widget _buildChooseDownloadMoshaf(BuildContext context) {
     return AlertDialog(
       title: Text(S.of(context).chooseQuranType),

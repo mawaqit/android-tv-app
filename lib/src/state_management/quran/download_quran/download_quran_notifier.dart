@@ -26,7 +26,7 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
         if (isDownloaded) {
           final state = await checkForUpdate(moshafType);
           return state;
-         } else {
+        } else {
           return NeededDownloadedQuran();
         }
       },

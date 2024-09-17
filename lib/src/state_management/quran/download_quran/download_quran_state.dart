@@ -70,7 +70,6 @@ class Success extends DownloadQuranState with EquatableMixin {
   final String svgFolderPath;
   final MoshafType moshafType;
 
-
   const Success({
     required this.version,
     required this.svgFolderPath,

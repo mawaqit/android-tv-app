@@ -89,7 +89,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       if (!next.hasValue || next.value is Success) {
         ref.invalidate(quranReadingNotifierProvider);
       }
-      if(next.value is NeededDownloadedQuran ||next.value is Downloading || next.value is Extracting){
+      if (next.value is NeededDownloadedQuran || next.value is Downloading || next.value is Extracting) {
         showDialog(
           context: context,
           builder: (context) => DownloadQuranDialog(),

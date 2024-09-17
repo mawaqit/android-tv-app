@@ -14,11 +14,8 @@ class DownloadQuranLocalDataSource {
   final QuranPathHelper quranPathHelper;
   final MoshafType moshafType;
 
-  DownloadQuranLocalDataSource({
-    required this.sharedPreference,
-    required this.quranPathHelper,
-    required this.moshafType
-  });
+  DownloadQuranLocalDataSource(
+      {required this.sharedPreference, required this.quranPathHelper, required this.moshafType});
 
   /// [saveSvgFiles] saves the zip file to the local storage
   Future<void> saveSvgFiles(List<File> svgFiles, MoshafType moshafType) async {
@@ -67,7 +64,7 @@ class DownloadQuranLocalDataSource {
   }
 
   Future<bool> isQuranDownloaded(MoshafType moshafType) async {
-    try{
+    try {
       final dir = await getApplicationSupportDirectory();
       final quranPathHelper = QuranPathHelper(
         applicationSupportDirectory: dir,
@@ -90,7 +87,7 @@ class DownloadQuranLocalDataSource {
   String _getConstantByMoshafType() {
     return switch (moshafType) {
       MoshafType.warsh => QuranConstant.kWarshQuranLocalVersion,
-      MoshafType.hafs =>  QuranConstant.kHafsQuranLocalVersion,
+      MoshafType.hafs => QuranConstant.kHafsQuranLocalVersion,
     };
   }
 }
