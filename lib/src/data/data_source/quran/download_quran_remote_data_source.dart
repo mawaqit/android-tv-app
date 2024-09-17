@@ -7,7 +7,7 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 import 'package:mawaqit/src/helpers/directory_helper.dart';
 import 'package:mawaqit/src/helpers/version_helper.dart';
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
@@ -30,12 +30,12 @@ class DownloadQuranRemoteDataSource {
     try {
       log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - start');
       final parameterName = _getConfigurationParameters(moshafType);
-      log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - $parameterName');
+      log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - parameterName $parameterName');
       final version = await dio.get(QuranConstant.quranMoshafConfigJsonUrl).then((value) {
-        log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - $value');
+        // log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - $value');
         return value.data[parameterName];
       });
-      log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - $version');
+      log('quran: DownloadQuranRemoteDataSource: getRemoteQuranVersion - version $version');
       return VersionHelper.extractVersion(version);
     } catch (e) {
       throw FetchRemoteQuranVersionException(e.toString());

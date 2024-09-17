@@ -1,4 +1,4 @@
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 
 abstract class QuranDownloadRepository {
   Future<String?> getLocalQuranVersion({
@@ -18,4 +18,6 @@ abstract class QuranDownloadRepository {
   });
 
   void cancelDownload();
+
+  Future<bool> isQuranDownloaded(MoshafType moshafType);
 }

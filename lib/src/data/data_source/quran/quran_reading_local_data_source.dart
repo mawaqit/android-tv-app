@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/module/shared_preference_module.dart';
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

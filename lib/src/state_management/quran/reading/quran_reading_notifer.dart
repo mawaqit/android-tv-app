@@ -2,10 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/const/constants.dart';
+import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:mawaqit/src/domain/repository/quran/quran_reading_repository.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/src/module/shared_preference_module.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:mawaqit/src/data/repository/quran/quran_reading_impl.dart';
 
@@ -75,27 +79,31 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     });
   }
 
-  Future<List<SvgPicture>> _loadSvgs() async {
-    final repository = await ref.read(quranReadingRepositoryProvider.future);
-    final downloadQuranRiverpod = ref.read(downloadQuranNotifierProvider.notifier);
-    final mosqueModel = await downloadQuranRiverpod.getSelectedMoshaf();
-    print('quran: QuranReadingNotifier: _loadSvgs: mosqueModel: $mosqueModel');
-    return repository.loadAllSvgs(mosqueModel);
-  }
-
   Future<QuranReadingState> _initState(Future<QuranReadingRepository> repository) async {
     final quranReadingRepository = await repository;
-    final svgs = await _loadSvgs();
-    final lastReadPage = await quranReadingRepository.getLastReadPage();
-    log('riverpod get last page: $lastReadPage');
-    final pageController = PageController(initialPage: (lastReadPage / 2).floor());
-    return QuranReadingState(
-      currentJuz: 1,
-      currentSurah: 1,
-      currentPage: lastReadPage,
-      svgs: svgs,
-      pageController: pageController,
+    final mosqueModel = await ref.read(moshafTypeNotifierProvider.future);
+    return mosqueModel.selectedMoshaf.fold(
+      () {
+        throw Exception('No MoshafType');
+      },
+      (moshaf) async {
+        final svgs = await _loadSvgs(moshafType: moshaf);
+        final lastReadPage = await quranReadingRepository.getLastReadPage();
+        final pageController = PageController(initialPage: (lastReadPage / 2).floor());
+        return QuranReadingState(
+          currentJuz: 1,
+          currentSurah: 1,
+          currentPage: lastReadPage,
+          svgs: svgs,
+          pageController: pageController,
+        );
+      },
     );
+  }
+
+  Future<List<SvgPicture>> _loadSvgs({required MoshafType moshafType}) async {
+    final repository = await ref.read(quranReadingRepositoryProvider.future);
+    return repository.loadAllSvgs(moshafType);
   }
 }
 

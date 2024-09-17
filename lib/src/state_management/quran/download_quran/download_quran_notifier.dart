@@ -1,142 +1,120 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/const/constants.dart';
 
 import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
 import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/helpers/version_helper.dart';
-import 'package:mawaqit/src/module/shared_preference_module.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 
-class DownloadQuranNotifier extends AsyncNotifier<DownloadQuranState> {
+class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState> {
   @override
-  FutureOr<DownloadQuranState> build() {
-    return Initial();
+  FutureOr<DownloadQuranState> build() async {
+    return await checkDownloadedQuran();
   }
 
-  /// [checkForUpdate] checks for the Quran update
-  ///
-  /// If the Quran is not downloaded or the remote version is different from the local version,
-  Future<void> checkForUpdate(MoshafType moshafType) async {
-    try {
-      state = AsyncLoading();
+  Future<DownloadQuranState> checkDownloadedQuran() async {
+    state = const AsyncData(CheckingDownloadedQuran());
+    final mosqueModel = await ref.read(moshafTypeNotifierProvider.future);
+    return mosqueModel.selectedMoshaf.fold(
+      () => NeededDownloadedQuran(),
+      (moshafType) async {
+        final isDownloaded = await checkDownloaded(moshafType);
+        if (isDownloaded) {
+          final state = await checkForUpdate(moshafType);
+          return state;
+         } else {
+          return NeededDownloadedQuran();
+        }
+      },
+    );
+  }
 
+  Future<DownloadQuranState> checkForUpdate(MoshafType moshafType) async {
+    state = const AsyncData(CheckingUpdate());
+    try {
       final downloadQuranRepoImpl = await ref.read(quranDownloadRepositoryProvider(moshafType).future);
       final localVersion = await downloadQuranRepoImpl.getLocalQuranVersion(moshafType: moshafType);
       final remoteVersion = await downloadQuranRepoImpl.getRemoteQuranVersion(moshafType: moshafType);
+
       if (localVersion == null || VersionHelper.isNewer(remoteVersion, localVersion)) {
-        state = AsyncData(UpdateAvailable(remoteVersion));
+        return UpdateAvailable(remoteVersion);
       } else {
         final savePath = await getApplicationSupportDirectory();
         final quranPathHelper = QuranPathHelper(
           applicationSupportDirectory: savePath,
-          moshafType: MoshafType.warsh,
+          moshafType: moshafType,
         );
-        state = AsyncData(
-          NoUpdate(
-            version: remoteVersion,
-            svgFolderPath: quranPathHelper.quranDirectoryPath,
-          ),
+        return NoUpdate(
+          moshafType: moshafType,
+          version: remoteVersion,
+          svgFolderPath: quranPathHelper.quranDirectoryPath,
         );
       }
     } catch (e, s) {
-      state = AsyncError(e, s);
+      rethrow;
     }
   }
 
-  /// [download] downloads the Quran and extracts it
-  Future<void> download(MoshafType moshafType) async {
+  Future<void> downloadQuran(MoshafType moshafType) async {
+    state = const AsyncLoading();
     try {
-      // Notify that the update check has started
-      state = AsyncLoading();
-
       final downloadQuranRepoImpl = await ref.read(quranDownloadRepositoryProvider(moshafType).future);
-      final localVersion = await downloadQuranRepoImpl.getLocalQuranVersion(moshafType: moshafType);
       final remoteVersion = await downloadQuranRepoImpl.getRemoteQuranVersion(moshafType: moshafType);
 
-      _saveSelectedMoshaf(moshafType);
+      await downloadQuranRepoImpl.downloadQuran(
+        version: remoteVersion,
+        moshafType: moshafType,
+        onReceiveProgress: (progress) {
+          state = AsyncData(Downloading(progress));
+        },
+        onExtractProgress: (progress) {
+          state = AsyncData(Extracting(progress));
+        },
+      );
 
-      if (localVersion == null || remoteVersion != localVersion) {
-        // Notify that the download has started
-        state = AsyncData(Downloading(0));
+      final savePath = await getApplicationSupportDirectory();
+      final quranPathHelper = QuranPathHelper(
+        applicationSupportDirectory: savePath,
+        moshafType: moshafType,
+      );
 
-        // Download the Quran
-        await downloadQuranRepoImpl.downloadQuran(
+      state = AsyncData(
+        Success(
+          moshafType: moshafType,
           version: remoteVersion,
-          moshafType: moshafType,
-          onReceiveProgress: (progress) {
-            state = AsyncData(Downloading(progress));
-          },
-          onExtractProgress: (progress) {
-            state = AsyncData(Extracting(progress));
-          },
-        );
-
-        final savePath = await getApplicationSupportDirectory();
-
-        final quranPathHelper = QuranPathHelper(
-          applicationSupportDirectory: savePath,
-          moshafType: moshafType,
-        );
-        // Notify the success state with the new version
-        state = AsyncData(
-          Success(
-            version: remoteVersion,
-            svgFolderPath: quranPathHelper.quranDirectoryPath,
-          ),
-        );
-      } else {
-        final dir = await getApplicationSupportDirectory();
-        final quranPathHelper = QuranPathHelper(
-          applicationSupportDirectory: dir,
-          moshafType: moshafType,
-        );
-        state = AsyncData(
-          NoUpdate(
-            version: remoteVersion,
-            svgFolderPath: quranPathHelper.quranDirectoryPath,
-          ),
-        );
-      }
-    } on CancelDownloadException catch (e, s) {
-      state = AsyncData(CancelDownload());
+          svgFolderPath: quranPathHelper.quranDirectoryPath,
+        ),
+      );
     } catch (e, s) {
-      state = AsyncError(e, s);
+      if (e is CancelDownloadException) {
+        state = const AsyncData(CancelDownload());
+      } else {
+        state = AsyncError(e, s);
+      }
     }
   }
 
-  /// using shared preference
-  /// to save the selected moshaf
-  Future<void> _saveSelectedMoshaf(MoshafType moshafType) async {
-    final sharedPreference = await ref.read(sharedPreferenceModule.future);
-    final success = await sharedPreference.setString(CacheKey.kSelectedMoshaf, moshafType.name.toString());
-    if (!success) {
-      throw Exception('Failed to save selected moshaf');
-    }
-  }
-
-  Future<MoshafType> getSelectedMoshaf() async {
-    final sharedPreference = await ref.read(sharedPreferenceModule.future);
-    final moshaf = sharedPreference.getString(CacheKey.kSelectedMoshaf) ?? MoshafType.warsh.name.toString();
-    MoshafType moshafType = MoshafType.fromString(moshaf);
-    return moshafType;
-  }
-
-  /// [cancelDownload] cancels the download
   Future<void> cancelDownload(MoshafType moshafType) async {
     try {
-      state = AsyncLoading();
       final downloadQuranRepoImpl = await ref.read(quranDownloadRepositoryProvider(moshafType).future);
       downloadQuranRepoImpl.cancelDownload();
-      state = AsyncData(CancelDownload());
+      state = const AsyncData(CancelDownload());
     } catch (e, s) {
       state = AsyncError(e, s);
     }
   }
+
+  Future<bool> checkDownloaded(MoshafType moshafType) async {
+    final downloadQuranRepoImpl = await ref.read(quranDownloadRepositoryProvider(moshafType).future);
+    return downloadQuranRepoImpl.isQuranDownloaded(moshafType);
+  }
+
+// MoshafType
 }
 
 final downloadQuranNotifierProvider =
-    AsyncNotifierProvider<DownloadQuranNotifier, DownloadQuranState>(DownloadQuranNotifier.new);
+    AutoDisposeAsyncNotifierProvider<DownloadQuranNotifier, DownloadQuranState>(DownloadQuranNotifier.new);

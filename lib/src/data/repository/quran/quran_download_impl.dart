@@ -8,7 +8,7 @@ import 'package:mawaqit/src/helpers/zip_extractor_helper.dart';
 import 'package:mawaqit/src/data/data_source/quran/download_quran_local_data_source.dart';
 
 import 'package:mawaqit/src/domain/repository/quran/quran_download_repository.dart';
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
@@ -27,7 +27,7 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
   Future<String?> getLocalQuranVersion({
     required MoshafType moshafType,
   }) async {
-    final version = localDataSource.getQuranVersion();
+    final version = localDataSource.getQuranVersion(moshafType);
     return version;
   }
 
@@ -69,6 +69,11 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
   @override
   Future<void> cancelDownload() async {
     remoteDataSource.cancelDownload();
+  }
+
+  @override
+  Future<bool> isQuranDownloaded(MoshafType moshafType) async {
+    return localDataSource.isQuranDownloaded(moshafType);
   }
 
   /// [deleteZipFile] deletes the zip file

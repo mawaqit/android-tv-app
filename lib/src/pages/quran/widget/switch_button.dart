@@ -21,14 +21,24 @@ class SwitchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return InkWell(
       focusNode: focusNode,
-      onPressed: onPressed,
-      splashRadius: iconSize * splashFactorSize,
-      icon: Icon(
-        icon,
-        color: Colors.black.withOpacity(opacity),
-        size: iconSize,
+      focusColor: Theme.of(context).focusColor,
+      onTap: onPressed,
+      customBorder: CircleBorder(),
+      child: Container(
+        padding: EdgeInsets.all(8.sp),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.black.withOpacity(0.2),
+        ),
+        child: Center(
+          child: Icon(
+            icon,
+            color: Colors.white.withOpacity(opacity),
+            size: iconSize,
+          ),
+        ),
       ),
     );
   }
