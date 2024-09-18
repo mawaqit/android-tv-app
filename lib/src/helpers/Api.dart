@@ -25,6 +25,7 @@ import '../domain/model/failure/mosque/mosque_failure.dart';
 import '../models/hijri_data_config_model.dart';
 import '../models/mosque.dart';
 import '../models/weather.dart';
+import 'api_interceptor/retry_request_interceptor.dart';
 
 class Api {
   static final dio = Dio(
@@ -62,6 +63,8 @@ class Api {
     final apiCacheInterceptor = ApiCacheInterceptor(cacheStore);
     dio.interceptors.add(apiCacheInterceptor);
     dioStatic.interceptors.add(apiCacheInterceptor);
+    dio.interceptors.add(RetryOnConnectionInterceptor(dio: dio));
+
   }
 
   /// only change the base url
