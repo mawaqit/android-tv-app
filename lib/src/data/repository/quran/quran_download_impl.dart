@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/data/data_source/quran/download_quran_remote_data_source.dart';
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/helpers/zip_extractor_helper.dart';
@@ -9,7 +10,10 @@ import 'package:mawaqit/src/data/data_source/quran/download_quran_local_data_sou
 
 import 'package:mawaqit/src/domain/repository/quran/quran_download_repository.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
+import 'package:mawaqit/src/module/shared_preference_module.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
   final DownloadQuranLocalDataSource localDataSource;
@@ -24,7 +28,7 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
 
   /// [getLocalQuranVersion] fetches the local quran version
   @override
-  Future<String?> getLocalQuranVersion({
+  Future<Option<String>> getLocalQuranVersion({
     required MoshafType moshafType,
   }) async {
     final version = localDataSource.getQuranVersion(moshafType);
@@ -51,6 +55,8 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
       destinationDirPath: localDataSource.quranPathHelper.quranDirectoryPath,
       changeProgress: onExtractProgress,
     );
+
+    await localDataSource.setQuranVersion(version, moshafType);
 
     await _deleteZipFile(version);
   }

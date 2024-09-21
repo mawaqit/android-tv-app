@@ -29,20 +29,7 @@ class MoshafSelector extends ConsumerWidget {
             return InkWell(
               focusNode: focusNode,
               onTap: () async {
-                await ref.read(moshafTypeNotifierProvider.notifier).switchMoshafType();
-                final quranType = ref.read(moshafTypeNotifierProvider);
-                quranType.maybeWhen(
-                  orElse: () {},
-                  data: (state) {
-                    state.selectedMoshaf.fold(
-                      () => null,
-                      (selectedMoshaf) {
-                        log('quran: MoshafSelector: Downloading Quran: ${selectedMoshaf}');
-                        return ref.read(downloadQuranNotifierProvider.notifier).downloadQuran(selectedMoshaf);
-                      },
-                    );
-                  },
-                );
+                await ref.read(downloadQuranNotifierProvider.notifier).switchMoshaf();
               },
               borderRadius: BorderRadius.circular(20),
               child: Container(

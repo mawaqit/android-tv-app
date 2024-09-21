@@ -48,14 +48,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _leftSkipButtonFocusNode = FocusNode(debugLabel: 'left_skip_node');
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // showDialog(
-      //   context: context,
-      //   builder: (context) => DownloadQuranDialog(),
-      // );
-      showDialog(
-        context: context,
-        builder: (context) => DownloadQuranDialog(),
-      );
       ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
     });
@@ -84,14 +76,34 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   @override
   Widget build(BuildContext context) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
-    ref.listen(downloadQuranNotifierProvider, (previous, next) {
-      // log('quran: QuranReadingScreen: downloadQuranNotifierProvider: previous: $previous, next: $next');
+    ref.listen(downloadQuranNotifierProvider, (previous, next) async {
       if (!next.hasValue || next.value is Success) {
         ref.invalidate(quranReadingNotifierProvider);
       }
-      if (next.value is NeededDownloadedQuran || next.value is Downloading || next.value is Extracting) {
-        showDialog(
+
+      // don't show dialog for them
+      if (next.hasValue &&
+          (next.value is NoUpdate ||
+              next.value is CheckingDownloadedQuran ||
+              next.value is CheckingUpdate ||
+              next.value is CancelDownload)) {
+        return;
+      }
+
+      if (previous!.hasValue && previous.value != next.value) {
+        // Perform an action based on the new status
+        print('Status changed: ${previous} && $next');
+      }
+
+      print(
+          'next state: $next 2 canpop: ${!Navigator.canPop(context)} || _isThereCurrentDialogShowing: ${_isThereCurrentDialogShowing(context)}');
+
+      if (!_isThereCurrentDialogShowing(context)) {
+        print(
+            'next state: $next 2 canpop: ${!Navigator.canPop(context)}|| _isThereCurrentDialogShowing: ${_isThereCurrentDialogShowing(context)}');
+        await showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (context) => DownloadQuranDialog(),
         );
       }
@@ -335,4 +347,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     }
     return KeyEventResult.ignored;
   }
+
+  _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
 }

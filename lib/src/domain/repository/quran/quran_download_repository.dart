@@ -1,7 +1,8 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 
 abstract class QuranDownloadRepository {
-  Future<String?> getLocalQuranVersion({
+  Future<Option<String>> getLocalQuranVersion({
     required MoshafType moshafType,
   });
 

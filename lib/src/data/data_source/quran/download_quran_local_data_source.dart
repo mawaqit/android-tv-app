@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/module/shared_preference_module.dart';
@@ -44,23 +45,21 @@ class DownloadQuranLocalDataSource {
 
   /// [deleteZipFile] deletes the existing svg files
   Future<void> deleteZipFile(String zipFileName, File zipFile) async {
-    _setQuranVersion(zipFileName);
     final isExist = await zipFile.exists();
     if (isExist) {
       await zipFile.delete();
     }
   }
 
+  /// [setQuranVersion] sets the quran version
+  Future<void> setQuranVersion(String version, MoshafType moshafType) async {
+    _setQuranVersion(version);
+  }
+
   /// [getQuranVersion] fetches the quran version
-  String? getQuranVersion(MoshafType moshafType) {
+  Option<String> getQuranVersion(MoshafType moshafType) {
     final version = sharedPreference.getString(_getConstantByMoshafType());
-    if (version != null) {
-      log('quran: DownloadQuranLocalDataSource: getQuranVersion - checkSVGs: $version');
-      return version;
-    } else {
-      log('quran: DownloadQuranLocalDataSource: getQuranVersion - checkSVGs: $version');
-      return null;
-    }
+    return Option.fromNullable(version);
   }
 
   Future<bool> isQuranDownloaded(MoshafType moshafType) async {

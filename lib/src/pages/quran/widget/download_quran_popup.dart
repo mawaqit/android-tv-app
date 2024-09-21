@@ -33,39 +33,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // ref.listen(downloadQuranNotifierProvider, (previous, next) {
-    //   print('NeededDownloadedQuran test 1 $next');
-    //
-    //   if (next.hasValue) {
-    //     // switch (next.value!) {
-    //     //   NeededDownloadedQuran() => _buildChooseDownloadMoshaf(context),
-    //     // // Downloading() => _buildDownloadingDialog(context, state),
-    //     // // Extracting() => _buildExtractingDialog(context, state),
-    //     // // Success() => _buildSuccessDialog(context, state),
-    //     // // NoUpdate() => _buildNoUpdateDialog(context, state),
-    //     //   CancelDownload() => _buildCancelledDialog(context),
-    //     //   Initial() => _buildCancelledDialog(context),
-    //     //   _ => Container(),
-    //     // }
-    //     showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) {
-    //         final downloadState = next.value!;
-    //         return switch (downloadState) {
-    //           NeededDownloadedQuran() => _buildChooseDownloadMoshaf(context),
-    //           Downloading() => _buildDownloadingDialog(context, next.value as Downloading),
-    //           // Extracting() => _buildExtractingDialog(context, state),
-    //           // Success() => _buildSuccessDialog(context, state),
-    //           // NoUpdate() => _buildNoUpdateDialog(context, state),
-    //           CancelDownload() => _buildCancelledDialog(context),
-    //           Initial() => _buildCancelledDialog(context),
-    //           _ => Container(),
-    //         };
-    //       },
-    //     );
-    //   }
-    // });
-
     final state = ref.watch(downloadQuranNotifierProvider);
     return state.when(
       data: (data) => _buildContent(context, data),
@@ -82,7 +49,7 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
       Downloading() => _buildDownloadingDialog(context, state),
       Extracting() => _buildExtractingDialog(context, state),
       Success() => _buildSuccessDialog(context, state),
-      NoUpdate() => _buildNoUpdateDialog(context, state),
+      // NoUpdate() => _buildNoUpdateDialog(context, state),
       _ => Container(),
       // DownloadQuranState() => null,
     };
@@ -129,11 +96,12 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
                   data: (state) {
                     state.selectedMoshaf.fold(() {
                       return null;
-                    }, (selectedMoshaf) {
-                      return notifier.cancelDownload(selectedMoshaf);
+                    }, (selectedMoshaf) async {
+                      return await notifier.cancelDownload(selectedMoshaf);
                     });
                   },
                 );
+            Navigator.pop(context);
           },
           child: Text(S.of(context).cancel),
         ),
@@ -202,14 +170,16 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context, false),
+          onPressed: () {
+            Navigator.pop(context);
+          },
           child: Text(S.of(context).cancel),
         ),
         TextButton(
           autofocus: true,
           onPressed: () async {
+            Navigator.pop(context);
             await ref.read(downloadQuranNotifierProvider.notifier).downloadQuran(selectedMoshafType);
-            Navigator.pop(context, true);
           },
           child: Text(S.of(context).download),
         ),

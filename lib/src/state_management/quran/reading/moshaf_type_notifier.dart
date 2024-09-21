@@ -18,7 +18,7 @@ class MoshafTypeNotifier extends AsyncNotifier<MoshafState> {
 
     state.maybeWhen(
       data: (data) => data.selectedMoshaf.fold(
-        () => sharedPref.setString(QuranConstant.kSelectedMoshafType, MoshafType.warsh.toString()),
+        () => null,
         (moshafType) {
           final newMoshafType = moshafType == MoshafType.hafs ? MoshafType.warsh : MoshafType.hafs;
           state = AsyncData(
@@ -49,6 +49,7 @@ class MoshafTypeNotifier extends AsyncNotifier<MoshafState> {
   Future<MoshafState> _getInitialState() async {
     final sharedPref = await ref.read(sharedPreferenceModule.future);
     final moshafType = sharedPref.getString(QuranConstant.kSelectedMoshafType);
+
     final moshafTypeOption =
         moshafType == null ? Option<MoshafType>.none() : Option.of(MoshafType.fromString(moshafType));
 
