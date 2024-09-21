@@ -27,7 +27,7 @@
   "mosqueIdIsNotValid": "Sajnálom, a {mosqueId} nem érvényes mecsetazonosító",
   "selectMosqueId": "Kérjük, add meg a mecseted azonosítóját",
   "mawaqitWelcome": "Üdvözöljük a MAWAQIT-ban",
-  "mawaqitDesc": "Asszalámu 'Alaikum, és Bárak Alláhu fíkum, hogy a MAWAQIT-ot, a világ első és #1 intelligens mecsethálózatát választottad, amelyet 2016 óta több millió muszlim használ világszerte 85+ országban.\n\nA legfejlettebb Smart Mosque Display-t biztosítjuk Neked, amely több eszközön (mobil, okosóra, TV képernyő) is elérhető, anélkül, hogy személyes adatait gyűjtenénk vagy megosztanánk.\n\nKérünk, hogy támogasd ezt az áldott projektet itt : https://donate.mawaqit.net\n\nNonprofit szervezet vagyunk, és ez a projekt egy \"Waqf fí Sabíli Allah\" (Allahért dedikált adomány).\n\nA ti adományaitok biztosítják, hogy ez a projekt bárki számára és bárhol elérhető legyen, teljesen INGYENESEN, HIRDETÉS MENTESEN, és HAVI FELIRATKOZÁS nélkül.\n\nEz a projekt nem jöhetne létre Allah segítsége nélkül, amely összehozott egy tehetséges és szenvedélyes önkéntesekből álló lelkes közösséget, akik éjjel-nappal azon dolgoznak, hogy a lehető legjobb szolgáltatást nyújtsák Nektek, és napi 24 órában, a hét minden napján elérhetővé tegyék számotokra a legmodernebb rendszert.\n\nKérjük, fontoljátok meg az adományozást, hogy ez az áldott projekt tovább működhessen. Bárak Alláhu fíkum a folyamatos bizalmatokért és támogatásotokért.",
+  "mawaqitDesc": "Asszalámu 'Alaikum, és Bárak Alláhu fíkum, hogy a MAWAQIT-ot, a világ első és #1 intelligens mecsethálózatát választottad, amelyet 2016 óta több millió muszlim használ világszerte 85+ országban.\n\nA legfejlettebb Smart Mosque Display-t biztosítjuk Neked, amely több eszközön (mobil, okosóra, TV képernyő) is elérhető, anélkül, hogy személyes adataid gyűjtenénk vagy megosztanánk.\n\nKérünk, hogy támogasd ezt az áldott projektet itt : https://donate.mawaqit.net\n\nNonprofit szervezet vagyunk, és ez a projekt egy \"Waqf fí Sabíli Allah\" (Allahért dedikált adomány).\n\nA ti adományaitok biztosítják, hogy ez a projekt bárki számára és bárhol elérhető legyen, teljesen INGYENESEN, HIRDETÉS MENTESEN, és HAVI FELIRATKOZÁS nélkül.\n\nEz a projekt nem jöhetne létre Allah segítsége nélkül, amely összehozott egy tehetséges és szenvedélyes önkéntesekből álló lelkes közösséget, akik éjjel-nappal azon dolgoznak, hogy a lehető legjobb szolgáltatást nyújtsák Nektek, és napi 24 órában, a hét minden napján elérhetővé tegyék számotokra a legmodernebb rendszert.\n\nKérjük, fontoljátok meg az adományozást, hogy ez az áldott projekt tovább működhessen. Bárak Alláhu fíkum a folyamatos bizalmatokért és támogatásotokért.",
   "privacyPolicy": "Adatvédelmi szabályzat",
   "termsOfService": "Szolgáltatási feltételek",
   "installationGuide": "Telepítési útmutató",
@@ -38,7 +38,7 @@
   "searchForMosque": "Melyik mecsetet keresed? (azonosító, név, város, irányítószám...)",
   "searchMosque": "Mecset keresése",
   "mosqueNameError": "Add meg a mecset nevét",
-  "slugError": "Érvénytelen mecset azonosító ",
+  "slugError": "Érvénytelen mecsetazonosító ",
   "doYouKnowMosqueId": "Ismered a létesítmény azonosítóját vagy a mecset azonosítóját?",
   "yes": "Igen",
   "no": "Nem",
@@ -54,17 +54,17 @@
   "maghrib": "Maghrib (Naplementi ima)",
   "isha": "'Ishá (Esti ima)",
   "afterAdhanHadithTitle": "Az imára hívás (adhán) utáni fohász",
-  "afterSalahHadith": "Ó Allah! e tökéletes hívás (da'wah) és az előírt ima (asz-szalát) Ura, add meg Muhammadnek a waszílah-t (egy különleges hely a paradicsomban) és a kiválóságot, és emeld őt fel egy dicséretes rangra (a közbenjárás joga), amelyet megígértél neki.",
+  "afterSalahHadith": "Ó Allah! E tökéletes hívás (da'wah) és az előírt ima (asz-szalát) Ura, add meg Muhammadnek a waszílah-t (egy különleges hely a Paradicsomban) és a kiválóságot, és emeld őt fel egy dicséretes rangra (a közbenjárás joga), amelyet megígértél neki.",
   "alIqama": "Al Iqáma (az ima kezdete)",
   "alAdhan": "Al Adhán (az imára hívás)",
   "turnOfPhones": "Kérjük, kapcsoljátok telefonjaitokat néma üzemmódba",
   "iqamaIn": "Al Iqáma (az ima kezdete) in",
   "alAthkar": "Allah emlegetései",
-  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah Allahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram Allahumma A`inni `ala dhikrika wa chukrika wa husni `ibadatik",
+  "azkarList0": "Bűnbocsánatot kérek Allahtól (háromszor).\nÓ Allah! Te vagy a Béke, és Tőled van a béke. Áldott vagy, Ó Magasztos és Méltóságteljes. Ó Allah! Segíts nekem, hogy megemlékezzek Rólad, hálás legyek Neked, és jól szolgáljalak Téged! ",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "Magasztaltassék Allah (Szubhán Allah), és Hála Allahnak (Alhamdulilláh), és Allah a leghatalmasabb (Alláhu Akbar) (mindegyiket 33 alkalommal), Nincs más jogosan imádható isten Allah-on kívül, Ő egyedül létezik, nincs Neki társa, Övé a tulajdon és Övé a hála és Ő minden dologra képes",
+  "azkarList1": "Magasztaltassék Allah (Szubhán Allah), és Hála Allahnak (Alhamdulilláh), és Allah a leghatalmasabb (Alláhu Akbar) (mindegyiket 33-szor), Nincs más jogosan imádható isten Allahon kívül, Ő egyedül létezik, nincs Neki társa, Övé a tulajdon és Övé a hála és Ő minden dologra képes.",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -84,7 +84,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "Nincs más jogosan imádható isten Allah-on kívül, Ő egyedül létezik, nincs Neki társa, Övé a tulajdon és Övé a hála és Ő minden dologra képes. Ó Allah! senki sem képes megakadályozni attól, amit Te adsz, és senki sem képes megadni azt, amit Te megakadályozol. Nem használ a hatalommal bíró embernek a hatalma, mivel Tőled származik (minden) hatalom",
+  "azkarList6": "Nincs más jogosan imádható isten Allahon kívül, Ő egyedül létezik, nincs Neki társa, Övé a tulajdon és Őt illeti a hála és Ő minden dologra képes. Ó Allah! senki sem képes visszatartani attól, amit Te adsz, és senki sem képes megadni azt, amit Te megakadályozol. Nem használ a hatalommal bíró embernek a hatalma, mivel Tőled származik (minden) hatalom.",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -92,7 +92,7 @@
   "@azkarList7": {
     "description": "اللهم أنت ربي، لا إله إلا أنت، خلقتني وأنا عبدُك, وأنا على عهدِك ووعدِك ما استطعتُ، أعوذ بك من شر ما صنعتُ، أبوءُ لَكَ بنعمتكَ عَلَيَّ، وأبوء بذنبي، فاغفر لي، فإنه لا يغفرُ الذنوب إلا أنت"
   },
-  "azkarList8": "Reggelre keltünk és reggel eme idejében (is) Allahoz tartozik minden tulajdon, és minden hála és dicséret Allah-ot illeti, nincs más jogosan imádható isten Allah-on kívül, Ő egyedül létezik, nincs Neki társa, Övé a tulajdon és Övé a hála és Ő minden dologra képes. Uram, kérek Tőled minden jót, ami ebben a napban van és minden jót, ami utána következik. És menedéket keresek Nálad minden gonosztól, ami ebben az napban van és minden rossztól, ami utána jön. Uram, menedéket keresek nálad a lustaságtól, és az időskor tehetetlenségétől. Uram, menedéket keresek nálad a tűz kínzásától és a sírbani büntetéstől",
+  "azkarList8": "Reggelre keltünk és reggel eme idejében (is) Allahoz tartozik minden tulajdon, és minden hála és dicséret Allahot illeti, nincs más jogosan imádható isten Allahon kívül, Ő egyedül létezik, nincs Neki társa, Övé a tulajdon és Őt illeti a hála és Ő minden dologra képes. Uram, kérek Tőled minden jót, ami ebben a napban van és minden jót, ami utána következik. És menedéket keresek Nálad minden gonosztól, ami ebben az napban van és minden rossztól, ami utána jön. Uram, menedéket keresek nálad a lustaságtól, és az időskor tehetetlenségétől. Uram, menedéket keresek nálad a tűz kínzásától és a sírbani büntetéstől",
   "@azkarList8": {
     "description": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر"
   },
@@ -104,20 +104,20 @@
   "@azkarList10": {
     "description": "|اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ |ثلاثَ مرَّاتٍ"
   },
-  "azkarList11": "Elégséges számomra Allah, nincs más jogosan imádható isten csak Ő, rábízom magam és Ő a hatalmas Trónnak a Rabb-ja |ismételd hétszer|",
+  "azkarList11": "Elégséges számomra Allah, nincs más jogosan imádható isten csak Ő, rábízom magam és Ő a hatalmas Trónnak a Rabb-ja (Teremtő és Gondviselő) |ismételd hétszer|",
   "@azkarList11": {
     "description": "|حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ |سَبْعَ مَرّاتٍ"
   },
-  "azkarList12": "Megelégedettséggel elfogadom Allah-ot Uramnak, az iszlámot vallásomnak és Muhammad-et (Allah áldása és békéje legyen vele) Prófátámnak |ismételd háromszor|",
+  "azkarList12": "Megelégedettséggel elfogadom Allahot Uramnak, az iszlámot vallásomnak és Muhammadet (Allah áldása és békéje legyen vele) Prófátámnak |ismételd háromszor|",
   "@azkarList12": {
     "description": "|رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً |ثلاثَ مرَّاتٍ"
   },
-  "azkarList13": "Nincs más jogosan imádható isten Allah-on kívül, Ő egyedül létezik, nincs Neki társa, Övé a tulajdon és az Övé a hála és Ő minden dologra képes |ismételd tízszer|",
+  "azkarList13": "Nincs más jogosan imádható isten Allahon kívül, Ő egyedül létezik, nincs Neki társa, Övé a tulajdon és az Övé a hála és Ő minden dologra képes |ismételd tízszer|",
   "@azkarList13": {
     "description": "|لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ |عشرَ مرَّات"
   },
   "jumuaaScreenTitle": "Pénteki imaidő",
-  "jumuaaHadith": "A Próféta (Allah békéje és áldása legyen vele) azt mondta: “Aki tökéletesen elvégzi a wudu'-t (tisztálkodást), majd elmegy a pénteki imára, leül és csendben hallgatja (a szónoklatot), annak megbocsáttatik az, ami az adott idő és a következő péntek között történt, plusz három nap. És aki megérinti a kavicsokat, az bizony Laghá-t (haszontalan cselekvést) követett el\"",
+  "jumuaaHadith": "A Próféta (Allah békéje és áldása legyen vele) azt mondta: “Aki tökéletesen elvégzi a wudu'-t (tisztálkodást), majd elmegy a pénteki imára, leül és csendben hallgatja (a szónoklatot), annak Allah megbocsátja azt, ami az adott idő és a következő péntek között történt, plusz három nap. És aki megérinti a kavicsokat, az bizony Laghá-t (haszontalan cselekvést) követett el\"",
   "shuruk": "Napfelkelte",
   "reset": "Visszaállítás",
   "mosqueNotFoundMessage": "Sajnáljuk, de a mecsetét nem találtuk meg, lehet, hogy hiányzik vagy ideiglenesen le van tiltva.",
@@ -136,7 +136,7 @@
   "shawwal": "Sawwál",
   "dhuAlqidah": "Dhul- Qa'dah",
   "dhuAlhijjah": "Dhul- Hiddzsah",
-  "duaaBetweenSalahAndAdhan": "Anasz ibn Málik azt mondta: Azt mondta Allah Küldötte (Allah békéje és áldása legyen vele): Az adhan és az iqama közötti fohász nem kerül elutasításra.",
+  "duaaBetweenSalahAndAdhan": "Anasz ibn Málik azt mondta: Azt mondta Allah Küldötte (Allah békéje és áldása legyen vele): Az adhan és az iqama közötti fohászt Allah nem utasítja el.",
   "salatKhayrMinaNawm": "Az ima jobb, mint az alvás",
   "salatElEid": "Ünnepi ima",
   "webView": "Legacy mód engedélyezése",
@@ -148,7 +148,7 @@
   "afterAdhanHadith": "Imára hívás (adhán) utáni Hadith",
   "afterSalahAzkar": "Allah emlegetése az ima után (adhkár)",
   "iqama": "Ima kezdete",
-  "randomHadith": "Véletlen Hadith",
+  "randomHadith": "Tetszőleges Hadith",
   "announcement": "Közlemények",
   "jumuaaLive": "Pénteki ima [élő közvetítés]",
   "showSecondaryScreen": "Használd másodlagos képernyőként (Hirdetésekhez)",
@@ -156,7 +156,7 @@
   "duaaRemainder": "Fohász emlékeztető",
   "fajrWakeUp": "Hajnali imához ébresztés",
   "changeLanguage": "Nyelv módosítása",
-  "forceScreen": "Erőszak képernyő",
+  "forceScreen": "Képernyőtájolás ",
   "clear": "Tiszta",
   "changeTheme": "Téma módosítása",
   "next": "Következő",
@@ -175,7 +175,7 @@
   "secondaryScreenExplanation": "Egy másodlagos imateremben (például a női teremben vagy egy másik emeleten) ez a képernyő mutatja a pénteki ima élő közvetítését",
   "mainScreenExplanation": "A fő mecsetteremben ez a képernyő nem mutatja a pénteki ima élő közvetítését",
   "normalModeExplanation": "Az imaidőket és a hirdetéseket tartalmazó normál képernyőt fogja megjeleníteni.",
-  "announcementOnlyModeExplanation": "Mindig a hírdetéseket fogja megjeleníteni",
+  "announcementOnlyModeExplanation": "Mindig a hirdetéseket fogja megjeleníteni",
   "orientation": "Tájolás",
   "selectYourMawaqitTvAppOrientation": "Válaszd ki a mawaqit tv alkalmazás tájolását",
   "deviceDefault": "Eszköz alapértelmezett",
@@ -194,7 +194,7 @@
   "backoffice_default": "Backoffice alapbeállítások",
   "recommended": "Ajánlott",
   "sabah": "Reggel",
-  "randomHadithLanguage": "Véletlenszerű hadith nyelv",
+  "randomHadithLanguage": "Tetszőleges hadith nyelv",
   "en": "angol",
   "fr": "francia",
   "ar": "arab",
@@ -235,7 +235,7 @@
   "close": "Bezárás",
   "search": "Keresés",
   "wifiSuccess": "Sikeresen csatlakozott a WiFi-hez.",
-  "wifiFailure": "Nem sikerült csatlakozni a Wifihez.",
+  "wifiFailure": "Nem sikerült csatlakozni a Wifi-hez.",
   "timezoneSuccess": "Időzóna sikeresen beállítva.",
   "timezoneFailure": "Nem sikerült beállítani az időzónát.",
   "screenLock": "Képernyő be/ki kapcsolás",
@@ -250,7 +250,7 @@
   "whatIsNew": "Újdonságok",
   "update": "Frissítés",
   "automaticUpdate": "Értesítés a frissítésekről",
-  "automaticUpdateDescription": "Engedélyezd az értesítés a frissítésekről-t, hogy megkapd a legújabb funkciókat és fejlesztéseket",
+  "automaticUpdateDescription": "Engedélyezd az \"értesítés a frissítésekről\"-t, hogy megkapd a legújabb funkciókat és fejlesztéseket",
   "checkInternetLegacyMode": "A hagyományos (legacy) üzemmód használatához csatlakozz az internethez ",
   "powerOnScreen": "Kapcsold be a képernyőt",
   "powerOffScreen": "Kapcsold ki a képernyőt",
