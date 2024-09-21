@@ -236,7 +236,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        autofocus: true,
+                        autofocus: _isThereCurrentDialogShowing(context),
                         // focusNode: _choosePageFocusNode,
                         onTap: () => _showPageSelector(
                           context,
