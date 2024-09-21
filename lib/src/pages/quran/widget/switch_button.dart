@@ -8,6 +8,7 @@ class SwitchButton extends StatelessWidget {
   final double iconSize;
   final FocusNode? focusNode;
   final double splashFactorSize;
+  final bool isAutofocus;
 
   const SwitchButton({
     super.key,
@@ -15,6 +16,7 @@ class SwitchButton extends StatelessWidget {
     required this.opacity,
     required this.onPressed,
     required this.iconSize,
+    this.isAutofocus = false,
     this.focusNode,
     this.splashFactorSize = 1.25,
   });
@@ -23,6 +25,7 @@ class SwitchButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       focusNode: focusNode,
+      autofocus: isAutofocus,
       focusColor: Theme.of(context).focusColor,
       onTap: onPressed,
       customBorder: CircleBorder(),

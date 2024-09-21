@@ -9,7 +9,6 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/moshaf_selector.dart';
 
-// import 'package:mawaqit/src/pages/quran/widget/reading/moshaf_selector.dart';
 import 'package:mawaqit/src/pages/quran/widget/switch_button.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
@@ -17,7 +16,6 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 
 import 'package:sizer/sizer.dart';
 
@@ -37,6 +35,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   late FocusNode _rightSkipButtonFocusNode;
   late FocusNode _leftSkipButtonFocusNode;
+  late FocusNode _backButtonFocusNode;
+  late FocusNode _choosePageFocusNode;
 
   final ScrollController _gridScrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -46,6 +46,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     super.initState();
     _rightSkipButtonFocusNode = FocusNode(debugLabel: 'right_skip_node');
     _leftSkipButtonFocusNode = FocusNode(debugLabel: 'left_skip_node');
+    _backButtonFocusNode = FocusNode(debugLabel: 'back_button_node');
+    _choosePageFocusNode = FocusNode(debugLabel: 'choose_page_node');
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
@@ -57,6 +59,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   void dispose() {
     _leftSkipButtonFocusNode.dispose();
     _rightSkipButtonFocusNode.dispose();
+    _backButtonFocusNode.dispose();
+    _choosePageFocusNode.dispose();
 
     super.dispose();
   }
@@ -236,8 +240,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        autofocus: _isThereCurrentDialogShowing(context),
-                        // focusNode: _choosePageFocusNode,
+                        focusNode: _choosePageFocusNode,
                         onTap: () => _showPageSelector(
                           context,
                           quranReadingState.totalPages,
@@ -282,6 +285,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   start: 10,
                   textDirection: Directionality.of(context),
                   child: SwitchButton(
+                    isAutofocus: !_isThereCurrentDialogShowing(context),
+                    focusNode: _backButtonFocusNode,
                     opacity: 0.7,
                     iconSize: 17.sp,
                     splashFactorSize: 0.9,
@@ -342,6 +347,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         _leftSkipButtonFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        _backButtonFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        _choosePageFocusNode.requestFocus();
         return KeyEventResult.handled;
       }
     }
