@@ -29,9 +29,7 @@ class RetryOnConnectionInterceptor extends Interceptor {
     return err.error is SocketException ||
         err.error is HandshakeException ||
         (err.error is HttpException &&
-            (err.error as HttpException)
-                .message
-                .contains('Connection closed before full header was received'));
+            (err.error as HttpException).message.contains('Connection closed before full header was received'));
   }
 }
 
@@ -65,8 +63,7 @@ class DioHttpRequestRetrier {
             listFormat: requestOptions.listFormat,
             maxRedirects: requestOptions.maxRedirects,
             method: requestOptions.method,
-            receiveDataWhenStatusError:
-                requestOptions.receiveDataWhenStatusError,
+            receiveDataWhenStatusError: requestOptions.receiveDataWhenStatusError,
             requestEncoder: requestOptions.requestEncoder,
             responseDecoder: requestOptions.responseDecoder,
             responseType: requestOptions.responseType,
@@ -76,8 +73,7 @@ class DioHttpRequestRetrier {
       } catch (e) {
         retries++;
         if (retries >= maxRetries) rethrow;
-        await Future.delayed(
-            Duration(seconds: 1 * retries)); // Add a delay before retrying
+        await Future.delayed(Duration(seconds: 1 * retries)); // Add a delay before retrying
       }
     }
     throw DioException(

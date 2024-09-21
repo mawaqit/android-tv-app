@@ -64,7 +64,6 @@ class Api {
     dio.interceptors.add(apiCacheInterceptor);
     dioStatic.interceptors.add(apiCacheInterceptor);
     dio.interceptors.add(RetryOnConnectionInterceptor(dio: dio));
-
   }
 
   /// only change the base url
