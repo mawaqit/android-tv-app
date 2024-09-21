@@ -52,7 +52,7 @@ class MoshafTypeNotifier extends AsyncNotifier<MoshafState> {
     final isFirstTime = sharedPref.getBool(QuranConstant.kIsFirstTime) ?? true; // Add this line
 
     final moshafTypeOption =
-    moshafType == null ? Option<MoshafType>.none() : Option.of(MoshafType.fromString(moshafType));
+        moshafType == null ? Option<MoshafType>.none() : Option.of(MoshafType.fromString(moshafType));
 
     final hafsVersion = sharedPref.getString(QuranConstant.kHafsQuranLocalVersion);
     final warshVersion = sharedPref.getString(QuranConstant.kWarshQuranLocalVersion);

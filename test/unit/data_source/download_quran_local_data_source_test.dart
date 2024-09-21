@@ -10,8 +10,11 @@ import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:fpdart/fpdart.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
+
 class MockQuranPathHelper extends Mock implements QuranPathHelper {}
+
 class MockFile extends Mock implements File {}
+
 class MockDirectory extends Mock implements Directory {}
 
 void main() {

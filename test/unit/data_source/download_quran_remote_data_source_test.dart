@@ -70,7 +70,7 @@ void main() {
         );
 
         expect(
-              () => dataSource.getRemoteQuranVersion(moshafType: MoshafType.hafs),
+          () => dataSource.getRemoteQuranVersion(moshafType: MoshafType.hafs),
           throwsA(isA<FetchRemoteQuranVersionException>()),
         );
       });
@@ -81,7 +81,7 @@ void main() {
         when(() => mockDio.get(any())).thenAnswer((_) async => mockResponse);
 
         expect(
-              () => dataSource.getRemoteQuranVersion(moshafType: MoshafType.hafs),
+          () => dataSource.getRemoteQuranVersion(moshafType: MoshafType.hafs),
           throwsA(isA<FetchRemoteQuranVersionException>()),
         );
       });
@@ -96,11 +96,11 @@ void main() {
         when(() => mockQuranPathHelper.getQuranZipFilePath(any())).thenReturn('/path/to/quran.zip');
         when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
         when(() => mockDio.download(
-          any(),
-          any(),
-          onReceiveProgress: any(named: 'onReceiveProgress'),
-          cancelToken: any(named: 'cancelToken'),
-        )).thenAnswer((_) async => MockResponse());
+              any(),
+              any(),
+              onReceiveProgress: any(named: 'onReceiveProgress'),
+              cancelToken: any(named: 'cancelToken'),
+            )).thenAnswer((_) async => MockResponse());
 
         await dataSource.downloadQuranWithProgress(
           version: version,
@@ -108,11 +108,11 @@ void main() {
         );
 
         verify(() => mockDio.download(
-          expectedUrl,
-          '/path/to/quran.zip',
-          onReceiveProgress: any(named: 'onReceiveProgress'),
-          cancelToken: any(named: 'cancelToken'),
-        )).called(1);
+              expectedUrl,
+              '/path/to/quran.zip',
+              onReceiveProgress: any(named: 'onReceiveProgress'),
+              cancelToken: any(named: 'cancelToken'),
+            )).called(1);
       });
 
       test('throws CancelDownloadException when cancelled', () async {
@@ -121,11 +121,11 @@ void main() {
 
         when(() => mockQuranPathHelper.getQuranZipFilePath(any())).thenReturn('/path/to/quran.zip');
         when(() => mockDio.download(
-          any(),
-          any(),
-          onReceiveProgress: any(named: 'onReceiveProgress'),
-          cancelToken: any(named: 'cancelToken'),
-        )).thenThrow(DioException(
+              any(),
+              any(),
+              onReceiveProgress: any(named: 'onReceiveProgress'),
+              cancelToken: any(named: 'cancelToken'),
+            )).thenThrow(DioException(
           type: DioExceptionType.cancel,
           requestOptions: RequestOptions(),
         ));
@@ -133,7 +133,7 @@ void main() {
         when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
 
         expect(
-              () => dataSource.downloadQuranWithProgress(
+          () => dataSource.downloadQuranWithProgress(
             version: version,
             moshafType: moshafType,
           ),
@@ -147,16 +147,16 @@ void main() {
 
         when(() => mockQuranPathHelper.getQuranZipFilePath(any())).thenReturn('/path/to/quran.zip');
         when(() => mockDio.download(
-          any(),
-          any(),
-          onReceiveProgress: any(named: 'onReceiveProgress'),
-          cancelToken: any(named: 'cancelToken'),
-        )).thenThrow(Exception('Unexpected error'));
+              any(),
+              any(),
+              onReceiveProgress: any(named: 'onReceiveProgress'),
+              cancelToken: any(named: 'cancelToken'),
+            )).thenThrow(Exception('Unexpected error'));
         when(() => mockQuranPathHelper.quranZipDirectoryPath).thenReturn('/path/to/zip');
         when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
 
         expect(
-              () => dataSource.downloadQuranWithProgress(
+          () => dataSource.downloadQuranWithProgress(
             version: version,
             moshafType: moshafType,
           ),
@@ -173,11 +173,11 @@ void main() {
         when(() => mockQuranPathHelper.getQuranZipFilePath(any())).thenReturn('/path/to/quran.zip');
         when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
         when(() => mockDio.download(
-          any(),
-          any(),
-          onReceiveProgress: any(named: 'onReceiveProgress'),
-          cancelToken: any(named: 'cancelToken'),
-        )).thenAnswer((invocation) async {
+              any(),
+              any(),
+              onReceiveProgress: any(named: 'onReceiveProgress'),
+              cancelToken: any(named: 'cancelToken'),
+            )).thenAnswer((invocation) async {
           final onReceiveProgress = invocation.namedArguments[#onReceiveProgress] as void Function(int, int);
           onReceiveProgress(50, 100); // Simulate 50% progress
           return MockResponse();

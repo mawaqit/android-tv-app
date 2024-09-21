@@ -24,8 +24,8 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
     }
 
     return moshafModel.selectedMoshaf.fold(
-          () => _handleNoSelectedMoshaf(moshafModel),
-          (moshafType) => _handleSelectedMoshaf(moshafType),
+      () => _handleNoSelectedMoshaf(moshafModel),
+      (moshafType) => _handleSelectedMoshaf(moshafType),
     );
   }
 
