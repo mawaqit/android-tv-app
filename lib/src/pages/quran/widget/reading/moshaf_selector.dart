@@ -10,8 +10,13 @@ import 'package:sizer/sizer.dart';
 
 class MoshafSelector extends ConsumerWidget {
   final FocusNode focusNode;
+  final bool isAutofocus;
 
-  const MoshafSelector({super.key, required this.focusNode});
+  const MoshafSelector({
+    super.key,
+    required this.focusNode,
+    this.isAutofocus = false,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,6 +32,7 @@ class MoshafSelector extends ConsumerWidget {
               MoshafType.hafs => S.of(context).warsh,
             };
             return InkWell(
+              autofocus: isAutofocus,
               focusNode: focusNode,
               onTap: () async {
                 await ref.read(downloadQuranNotifierProvider.notifier).switchMoshaf();

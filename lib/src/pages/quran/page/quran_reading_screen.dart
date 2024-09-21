@@ -36,7 +36,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _rightSkipButtonFocusNode;
   late FocusNode _leftSkipButtonFocusNode;
   late FocusNode _backButtonFocusNode;
-  late FocusNode _choosePageFocusNode;
+  late FocusNode _switchQuranFocusNode;
 
   final ScrollController _gridScrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -47,7 +47,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _rightSkipButtonFocusNode = FocusNode(debugLabel: 'right_skip_node');
     _leftSkipButtonFocusNode = FocusNode(debugLabel: 'left_skip_node');
     _backButtonFocusNode = FocusNode(debugLabel: 'back_button_node');
-    _choosePageFocusNode = FocusNode(debugLabel: 'choose_page_node');
+    _switchQuranFocusNode = FocusNode(debugLabel: 'switch_quran_node');
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
@@ -60,7 +60,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _leftSkipButtonFocusNode.dispose();
     _rightSkipButtonFocusNode.dispose();
     _backButtonFocusNode.dispose();
-    _choosePageFocusNode.dispose();
+    _switchQuranFocusNode.dispose();
 
     super.dispose();
   }
@@ -240,7 +240,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        focusNode: _choosePageFocusNode,
+                        autofocus: false,
                         onTap: () => _showPageSelector(
                           context,
                           quranReadingState.totalPages,
@@ -276,7 +276,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   left: 10,
                   bottom: 1.h,
                   child: MoshafSelector(
-                    focusNode: FocusNode(),
+                    isAutofocus: !_isThereCurrentDialogShowing(context),
+                    focusNode: _switchQuranFocusNode,
                   ),
                 ),
 
@@ -285,7 +286,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   start: 10,
                   textDirection: Directionality.of(context),
                   child: SwitchButton(
-                    isAutofocus: !_isThereCurrentDialogShowing(context),
                     focusNode: _backButtonFocusNode,
                     opacity: 0.7,
                     iconSize: 17.sp,
@@ -352,7 +352,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         _backButtonFocusNode.requestFocus();
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        _choosePageFocusNode.requestFocus();
+        _switchQuranFocusNode.requestFocus();
         return KeyEventResult.handled;
       }
     }
