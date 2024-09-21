@@ -49,9 +49,10 @@ class MoshafTypeNotifier extends AsyncNotifier<MoshafState> {
   Future<MoshafState> _getInitialState() async {
     final sharedPref = await ref.read(sharedPreferenceModule.future);
     final moshafType = sharedPref.getString(QuranConstant.kSelectedMoshafType);
+    final isFirstTime = sharedPref.getBool(QuranConstant.kIsFirstTime) ?? true; // Add this line
 
     final moshafTypeOption =
-        moshafType == null ? Option<MoshafType>.none() : Option.of(MoshafType.fromString(moshafType));
+    moshafType == null ? Option<MoshafType>.none() : Option.of(MoshafType.fromString(moshafType));
 
     final hafsVersion = sharedPref.getString(QuranConstant.kHafsQuranLocalVersion);
     final warshVersion = sharedPref.getString(QuranConstant.kWarshQuranLocalVersion);
@@ -63,7 +64,14 @@ class MoshafTypeNotifier extends AsyncNotifier<MoshafState> {
       hafsVersion: hafsVersionOption,
       warshVersion: warshVersionOption,
       selectedMoshaf: moshafTypeOption,
+      isFirstTime: isFirstTime, // Add this line
     );
+  }
+
+  Future<void> setNotFirstTime() async {
+    final sharedPref = await ref.read(sharedPreferenceModule.future);
+    await sharedPref.setBool(QuranConstant.kIsFirstTime, false);
+    state = AsyncData(state.value!.copyWith(isFirstTime: false));
   }
 }
 

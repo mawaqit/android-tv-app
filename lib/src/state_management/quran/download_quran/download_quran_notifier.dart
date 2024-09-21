@@ -19,9 +19,13 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
     state = const AsyncData(CheckingDownloadedQuran());
     final moshafModel = await ref.read(moshafTypeNotifierProvider.future);
 
+    if (moshafModel.isFirstTime) {
+      return const NeededDownloadedQuran();
+    }
+
     return moshafModel.selectedMoshaf.fold(
-      () => _handleNoSelectedMoshaf(moshafModel),
-      (moshafType) => _handleSelectedMoshaf(moshafType),
+          () => _handleNoSelectedMoshaf(moshafModel),
+          (moshafType) => _handleSelectedMoshaf(moshafType),
     );
   }
 
@@ -80,6 +84,9 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
     state = const AsyncLoading();
     try {
       final downloadState = await _downloadQuran(moshafType);
+      if (downloadState is Success) {
+        await ref.read(moshafTypeNotifierProvider.notifier).setNotFirstTime();
+      }
       state = AsyncData(downloadState);
     } catch (e, s) {
       state = AsyncError(e, s);
@@ -102,6 +109,8 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
       applicationSupportDirectory: savePath,
       moshafType: moshafType,
     );
+
+    await ref.read(moshafTypeNotifierProvider.notifier).setNotFirstTime();
 
     return Success(
       moshafType: moshafType,
