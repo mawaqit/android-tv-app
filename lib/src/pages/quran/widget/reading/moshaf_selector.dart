@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.dart';
-import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:sizer/sizer.dart';
 
 class MoshafSelector extends ConsumerWidget {
@@ -20,7 +18,7 @@ class MoshafSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final moshafTypeState = ref.read(moshafTypeNotifierProvider);
+    final moshafTypeState = ref.watch(moshafTypeNotifierProvider);
     return moshafTypeState.maybeWhen(
       orElse: () => Container(),
       data: (state) {
@@ -35,7 +33,18 @@ class MoshafSelector extends ConsumerWidget {
               autofocus: isAutofocus,
               focusNode: focusNode,
               onTap: () async {
-                await ref.read(downloadQuranNotifierProvider.notifier).switchMoshaf();
+                final downloadNotifier = ref.read(downloadQuranNotifierProvider.notifier);
+                final isDownloaded = await downloadNotifier
+                    .checkDownloaded(selectedMoshaf == MoshafType.hafs ? MoshafType.warsh : MoshafType.hafs);
+
+                if (isDownloaded) {
+                  await downloadNotifier.switchMoshaf();
+                } else {
+                  final shouldSwitch = await _showDownloadConfirmationDialog(context, moshafName);
+                  if (shouldSwitch) {
+                    await downloadNotifier.switchMoshaf();
+                  }
+                }
               },
               borderRadius: BorderRadius.circular(20),
               child: Container(
@@ -61,5 +70,32 @@ class MoshafSelector extends ConsumerWidget {
         );
       },
     );
+  }
+
+  Future<bool> _showDownloadConfirmationDialog(BuildContext context, String moshafName) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(S.of(context).switchQuranType(moshafName)),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(S.of(context).cancel),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                TextButton(
+                  autofocus: true,
+                  child: Text(S.of(context).download),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 }
