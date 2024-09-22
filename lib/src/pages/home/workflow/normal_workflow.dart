@@ -11,7 +11,6 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
-
 const _HadithDuration = Duration(seconds: 90);
 const _HadithRepeatDuration = Duration(minutes: 4);
 const _AnnouncementRepeatDuration = Duration(minutes: 8);

@@ -52,7 +52,7 @@ class RandomHadithImpl implements RandomHadithRepository {
   Future<String> getRandomHadith({required String language}) async {
     log('random_hadith: RandomHadithImpl: Fetching random Hadith');
 
-    final hadithLanguageLocal = sharedPreferences.getString(RandomHadithConstant.kHadithLanguage) ??  language;
+    final hadithLanguageLocal = sharedPreferences.getString(RandomHadithConstant.kHadithLanguage) ?? language;
     log('random_hadith: RandomHadithImpl: hadithLanguageLocal: $language || $hadithLanguageLocal');
 
     language = RandomHadithHelper.changeLanguageFormat(hadithLanguageLocal);
