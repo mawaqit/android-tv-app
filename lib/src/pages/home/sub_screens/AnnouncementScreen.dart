@@ -59,71 +59,71 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
     return OrientationBuilder(
       builder: (context, orientation) {
         final isImageAnnouncement = currentAnnouncement?.image != null;
-        return switch(orientation){
+        return switch (orientation) {
           Orientation.portrait => Column(
-            children: [
-              SizedBox(height: 1.h),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 1.vh),
-                  child: AboveSalahBar(),
+              children: [
+                SizedBox(height: 1.h),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1.vh),
+                    child: AboveSalahBar(),
+                  ),
                 ),
-              ),
-              Flexible(
-                flex: 7,
-                child: AnnouncementContinuesWorkFlowWidget(
+                Flexible(
+                  flex: 7,
+                  child: AnnouncementContinuesWorkFlowWidget(
+                    workFlowItems: announcements
+                        .map((e) => AnnouncementWorkFlowItem(
+                              builder: (context) {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  setState(() {
+                                    currentAnnouncement = e;
+                                  });
+                                });
+                                return announcementWidgets(e);
+                              },
+                              duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
+                            ))
+                        .toList(),
+                  ),
+                ),
+                Flexible(
+                  flex: isImageAnnouncement ? 0 : 3,
+                  child: _buildPrayerTimesWidget(
+                      context, mosqueProvider, announcementMode, showPrayerTimesOnMessageScreen),
+                ),
+                SizedBox(height: 1.h),
+              ],
+            ),
+          Orientation.landscape => Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                AnnouncementContinuesWorkFlowWidget(
                   workFlowItems: announcements
                       .map((e) => AnnouncementWorkFlowItem(
-                    builder: (context) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        setState(() {
-                          currentAnnouncement = e;
-                        });
-                      });
-                      return announcementWidgets(e);
-                    },
-                    duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
-                  ))
+                            builder: (context) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                setState(() {
+                                  currentAnnouncement = e;
+                                });
+                              });
+                              return announcementWidgets(e);
+                            },
+                            duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
+                          ))
                       .toList(),
                 ),
-              ),
-              Flexible(
-                flex: isImageAnnouncement ? 0 : 3,
-                child:
-                _buildPrayerTimesWidget(context, mosqueProvider, announcementMode, showPrayerTimesOnMessageScreen),
-              ),
-              SizedBox(height: 1.h),
-            ],
-          ),
-          Orientation.landscape =>  Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              AnnouncementContinuesWorkFlowWidget(
-                workFlowItems: announcements
-                    .map((e) => AnnouncementWorkFlowItem(
-                  builder: (context) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      setState(() {
-                        currentAnnouncement = e;
-                      });
-                    });
-                    return announcementWidgets(e);
-                  },
-                  duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
-                ))
-                    .toList(),
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 1.vh),
-                  child: AboveSalahBar(),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1.vh),
+                    child: AboveSalahBar(),
+                  ),
                 ),
-              ),
-              _buildPrayerTimesWidget(context, mosqueProvider, announcementMode, showPrayerTimesOnMessageScreen),
-            ],
-          ),
+                _buildPrayerTimesWidget(context, mosqueProvider, announcementMode, showPrayerTimesOnMessageScreen),
+              ],
+            ),
         };
       },
     );
