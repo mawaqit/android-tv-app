@@ -53,7 +53,6 @@ class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
         context.select<MosqueManager, bool?>((mosque) => mosque.mosqueConfig!.showPrayerTimesOnMessageScreen);
     bool announcementMode =
         context.select<UserPreferencesManager, bool>((userPreference) => userPreference.announcementsOnly);
-    log('announcement: ui: showPrayerTimesOnMessageScreen $showPrayerTimesOnMessageScreen , announcementMode $announcementMode');
     if (announcements.isEmpty) return NormalHomeSubScreen();
     final mosqueProvider = context.read<MosqueManager>();
 
