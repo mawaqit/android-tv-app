@@ -271,6 +271,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     ),
                   ),
                 ),
+
                 /// moshaf selector
                 Positioned(
                   left: 10,
