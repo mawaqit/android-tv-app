@@ -29,39 +29,42 @@ class MoshafSelector extends ConsumerWidget {
               MoshafType.warsh => S.of(context).hafs,
               MoshafType.hafs => S.of(context).warsh,
             };
-            return InkWell(
-              autofocus: isAutofocus,
-              focusNode: focusNode,
-              onTap: () async {
-                final downloadNotifier = ref.read(downloadQuranNotifierProvider.notifier);
-                final isDownloaded = await downloadNotifier
-                    .checkDownloaded(selectedMoshaf == MoshafType.hafs ? MoshafType.warsh : MoshafType.hafs);
+            return Material(
+              color: Colors.transparent,
+              child: InkWell(
+                autofocus: isAutofocus,
+                focusNode: focusNode,
+                onTap: () async {
+                  final downloadNotifier = ref.read(downloadQuranNotifierProvider.notifier);
+                  final isDownloaded = await downloadNotifier
+                      .checkDownloaded(selectedMoshaf == MoshafType.hafs ? MoshafType.warsh : MoshafType.hafs);
 
-                if (isDownloaded) {
-                  await downloadNotifier.switchMoshaf();
-                } else {
-                  final shouldSwitch = await _showDownloadConfirmationDialog(context, moshafName);
-                  if (shouldSwitch) {
+                  if (isDownloaded) {
                     await downloadNotifier.switchMoshaf();
+                  } else {
+                    final shouldSwitch = await _showDownloadConfirmationDialog(context, moshafName);
+                    if (shouldSwitch) {
+                      await downloadNotifier.switchMoshaf();
+                    }
                   }
-                }
-              },
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                  child: Text(
-                    S.of(context).switchQuranType(moshafName),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.bold,
+                },
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: Text(
+                      S.of(context).switchQuranType(moshafName),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
               ),

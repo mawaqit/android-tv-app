@@ -203,6 +203,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     );
                   },
                 ),
+
                 Positioned(
                   right: 10,
                   top: 0,
@@ -270,7 +271,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     ),
                   ),
                 ),
-
                 /// moshaf selector
                 Positioned(
                   left: 10,
@@ -288,7 +288,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   child: SwitchButton(
                     focusNode: _backButtonFocusNode,
                     opacity: 0.7,
-                    iconSize: 17.sp,
+                    iconSize: 14.sp,
                     splashFactorSize: 0.9,
                     icon: Icons.arrow_back_rounded,
                     onPressed: () {
