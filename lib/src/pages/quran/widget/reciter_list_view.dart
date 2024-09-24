@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -141,11 +142,25 @@ class ReciterCard extends ConsumerWidget {
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       double imageSize = constraints.maxWidth * 0.7;
-                      return Image.asset(
-                        R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
-                        width: imageSize,
-                        height: imageSize,
-                        fit: BoxFit.contain,
+                      Widget buildAssetImage() {
+                        return Image.asset(
+                          R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
+                          width: imageSize,
+                          height: imageSize,
+                          fit: BoxFit.contain,
+                        );
+                      }
+
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: CachedNetworkImage(
+                          imageUrl: 'https://cdn.mawaqit.net/quran/reciters-pictures/${reciter.id}.jpg',
+                          width: imageSize,
+                          height: imageSize,
+                          fit: BoxFit.contain,
+                          placeholder: (context, url) => buildAssetImage(),
+                          errorWidget: (context, url, error) => buildAssetImage(),
+                        ),
                       );
                     },
                   ),
