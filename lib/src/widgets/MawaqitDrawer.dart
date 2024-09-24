@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show ConsumerWidget, WidgetRef, ProviderContainer;
 import 'package:flutter_svg/svg.dart';
 import 'package:launch_review/launch_review.dart';
@@ -91,7 +92,7 @@ class MawaqitDrawer extends ConsumerWidget {
                                 ),
                                 padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
                               ),
-                              onPressed: () => exit(0),
+                              onPressed: () => SystemNavigator.pop(),
                               icon: Container(
                                 padding: EdgeInsets.all(5),
                                 decoration: BoxDecoration(
