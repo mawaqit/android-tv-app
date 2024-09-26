@@ -50,16 +50,19 @@ class DownloadQuranRemoteDataSource {
   }) async {
     log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - filePath: ${quranPathHelper.quranDirectoryPath}');
 
+    cancelToken = CancelToken();
+
     try {
       final url = _getUrlByMoshafType(moshafType, version);
-      log('downloadQuranWithProgress: url: ${url}');
+      log('downloadQuranWithProgress: url: $url');
       await dio.download(
         url,
         quranPathHelper.getQuranZipFilePath(version),
         onReceiveProgress: (received, total) {
-          final progress = (received / total) * 100;
-          // log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - progress: $progress');
-          onReceiveProgress?.call(progress);
+          if (total != -1) {
+            final progress = (received / total) * 100;
+            onReceiveProgress?.call(progress);
+          }
         },
         cancelToken: cancelToken,
       );
@@ -82,11 +85,11 @@ class DownloadQuranRemoteDataSource {
     }
   }
 
-  /// [cancelDownload] cancels the download
   void cancelDownload() {
-    cancelToken?.cancel();
-    cancelToken = CancelToken();
-    log('quran: DownloadQuranRemoteDataSource: cancelDownload - download cancelled');
+    if (cancelToken != null && !cancelToken!.isCancelled) {
+      cancelToken!.cancel();
+      log('quran: DownloadQuranRemoteDataSource: cancelDownload - download cancelled');
+    }
   }
 
   String _getUrlByMoshafType(MoshafType moshafType, String version) {

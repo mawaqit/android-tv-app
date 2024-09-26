@@ -12,10 +12,15 @@ import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.
 import 'package:path_provider/path_provider.dart';
 
 class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState> {
+  bool _isCancelled = false;
+
   @override
   FutureOr<DownloadQuranState> build() => checkDownloadedQuran();
 
   Future<DownloadQuranState> checkDownloadedQuran() async {
+    if (_isCancelled) {
+      return const CancelDownload();
+    }
     state = const AsyncData(CheckingDownloadedQuran());
     final moshafModel = await ref.read(moshafTypeNotifierProvider.future);
 
@@ -81,13 +86,16 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
   }
 
   Future<void> downloadQuran(MoshafType moshafType) async {
+    _isCancelled = false;
     state = const AsyncLoading();
     try {
       final downloadState = await _downloadQuran(moshafType);
       if (downloadState is Success) {
         await ref.read(moshafTypeNotifierProvider.notifier).setNotFirstTime();
       }
-      state = AsyncData(downloadState);
+      if (downloadState is! CancelDownload) {
+        state = AsyncData(downloadState);
+      }
     } catch (e, s) {
       state = AsyncError(e, s);
     }
@@ -100,8 +108,16 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
     await downloadQuranRepoImpl.downloadQuran(
       version: remoteVersion,
       moshafType: moshafType,
-      onReceiveProgress: (progress) => state = AsyncData(Downloading(progress)),
-      onExtractProgress: (progress) => state = AsyncData(Extracting(progress)),
+      onReceiveProgress: (progress) {
+        if (!_isCancelled) {
+          state = AsyncData(Downloading(progress));
+        }
+      },
+      onExtractProgress: (progress) {
+        if (!_isCancelled) {
+          state = AsyncData(Extracting(progress));
+        }
+      },
     );
 
     final savePath = await getApplicationSupportDirectory();
@@ -152,6 +168,7 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
     try {
       final downloadQuranRepoImpl = await ref.read(quranDownloadRepositoryProvider(moshafType).future);
       downloadQuranRepoImpl.cancelDownload();
+      _isCancelled = true;
       state = const AsyncData(CancelDownload());
     } catch (e, s) {
       state = AsyncError(e, s);
