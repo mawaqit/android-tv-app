@@ -149,12 +149,19 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// return -1 in case of issue(invalid times format)
   int nextIqamaIndex() {
     final now = mosqueDate();
-    final nextIqama = actualIqamaTimes().firstWhere(
+    final iqamaTimes = actualIqamaTimes();
+
+    // Adjust the last prayer time (Isha) to be on the next day if it's at midnight
+    if (iqamaTimes.last.hour == 0 && iqamaTimes.last.minute == 0) {
+      iqamaTimes[iqamaTimes.length - 1] = iqamaTimes.last.add(Duration(days: 1));
+    }
+
+    final nextIqama = iqamaTimes.firstWhere(
       (element) => element.isAfter(now),
-      orElse: () => actualIqamaTimes().first,
+      orElse: () => iqamaTimes.first,
     );
 
-    return actualIqamaTimes().indexOf(nextIqama);
+    return iqamaTimes.indexOf(nextIqama);
   }
 
   /// return the upcoming salah index

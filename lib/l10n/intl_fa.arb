@@ -236,7 +236,7 @@
   "extractingQuran": "در حال استخراج قرآن",
   "updatedQuran": " قران بروز شد ",
   "quranLatestVersion": "قران بروزرسانی شده است",
-  "quranUpdatedVersion": "نسخه به روز شده قرآن: {نسخه}",
+  "quranUpdatedVersion": "نسخه به روز شده قرآن: {version}",
   "quranIsUpdated": "قرآن به روز می شود",
   "quranDownloaded": " قرآن دانلود شد ",
   "quranIsAlreadyDownloaded": "قرآن قبلا دانلود شده است",
@@ -262,5 +262,6 @@
       }
     }
   },
-  "chooseQuranPage": "صفحه را انتخاب کنید"
+  "chooseQuranPage": "صفحه را انتخاب کنید",
+  "checkingForUpdates": "Checking for updates..."
 }

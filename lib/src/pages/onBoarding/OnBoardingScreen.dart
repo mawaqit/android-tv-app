@@ -22,7 +22,7 @@ import '../../../i18n/l10n.dart';
 import '../../helpers/LocaleHelper.dart';
 import '../../state_management/on_boarding/on_boarding_notifier.dart';
 import '../../widgets/mawaqit_back_icon_button.dart';
-import 'widgets/Wifi_selector_widget.dart';
+import 'widgets/wifi_selector_widget.dart';
 import 'widgets/onboarding_screen_type.dart';
 
 class OnBoardingItem {
@@ -32,7 +32,7 @@ class OnBoardingItem {
   final bool enablePreviousButton;
   final bool skipPage;
   final bool Function()? skip;
-
+  late FocusNode skipButtonFocusNode;
   OnBoardingItem({
     required this.animation,
     this.widget,
@@ -56,7 +56,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   final sharedPref = SharedPref();
   int currentScreen = 0;
   bool _rootStatus = false;
-
+  late FocusNode skipButtonFocusNode = FocusNode();
   late List<OnBoardingItem> onBoardingItems = [
     OnBoardingItem(
       animation: 'language',
@@ -145,12 +145,12 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     ),
     OnBoardingItem(
         animation: 'settings',
-        widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2)),
+        widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2), focusNode: skipButtonFocusNode),
         enablePreviousButton: true,
         skipPage: true),
     OnBoardingItem(
         animation: 'settings',
-        widget: OnBoardingWifiSelector(onSelect: () => nextPage(3)),
+        widget: OnBoardingWifiSelector(onSelect: () => nextPage(3), focusNode: skipButtonFocusNode),
         enablePreviousButton: true,
         skipPage: true),
     OnBoardingItem(
@@ -294,12 +294,14 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                   ),
                 if (activePage.enableNextButton)
                   MawaqitIconButton(
+                    focusNode: skipButtonFocusNode,
                     icon: Icons.arrow_forward_rounded,
                     label: S.of(context).next,
                     onPressed: () => nextPage(currentScreen + 1),
                   ),
                 if (activePage.skipPage)
                   MawaqitIconButton(
+                    focusNode: skipButtonFocusNode,
                     icon: Icons.arrow_forward_rounded,
                     label: S.of(context).skip,
                     onPressed: () => nextPage(currentScreen + 1),

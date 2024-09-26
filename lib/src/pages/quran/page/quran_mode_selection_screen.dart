@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +7,6 @@ import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:sizer/sizer.dart';
-
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
 class QuranModeSelection extends ConsumerStatefulWidget {
@@ -23,33 +20,49 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
   int _selectedIndex = 0;
   late FocusNode _readingFocusNode;
   late FocusNode _listeningFocusNode;
+  late FocusNode _mainFocusNode;
 
   @override
   void initState() {
     super.initState();
     _readingFocusNode = FocusNode();
     _listeningFocusNode = FocusNode();
+    _mainFocusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _mainFocusNode.requestFocus();
+    });
   }
 
   @override
   void dispose() {
     _readingFocusNode.dispose();
     _listeningFocusNode.dispose();
+    _mainFocusNode.dispose();
     super.dispose();
   }
 
   void _handleKeyEvent(RawKeyEvent event) {
     if (event is RawKeyDownEvent) {
+      final isLtr = Directionality.of(context) == TextDirection.ltr;
+
       if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         setState(() {
-          _selectedIndex = 0;
+          _selectedIndex = isLtr ? 0 : 1;
         });
-        _readingFocusNode.requestFocus();
+        if (isLtr) {
+          _readingFocusNode.requestFocus();
+        } else {
+          _listeningFocusNode.requestFocus();
+        }
       } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
         setState(() {
-          _selectedIndex = 1;
+          _selectedIndex = isLtr ? 1 : 0;
         });
-        _listeningFocusNode.requestFocus();
+        if (isLtr) {
+          _listeningFocusNode.requestFocus();
+        } else {
+          _readingFocusNode.requestFocus();
+        }
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
         if (_selectedIndex == 0) {
           ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
@@ -75,21 +88,27 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
   @override
   Widget build(BuildContext context) {
     return RawKeyboardListener(
-      focusNode: FocusNode(),
+      focusNode: _mainFocusNode,
       onKey: _handleKeyEvent,
       child: Shortcuts(
         shortcuts: <LogicalKeySet, Intent>{
           LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
         },
         child: QuranBackground(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            systemOverlayStyle: SystemUiOverlayStyle.light,
-          ),
           screen: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Container(
+                alignment: AlignmentDirectional.centerStart,
+                child: ExcludeFocus(
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
               SizedBox(height: 10.h),
               SizedBox(height: 40),
               Row(
@@ -110,8 +129,6 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                           builder: (context) => QuranReadingScreen(),
                         ),
                       );
-
-                      /// it navigates already by the menu at
                     },
                     isSelected: _selectedIndex == 0,
                     focusNode: _readingFocusNode,
@@ -131,8 +148,6 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                           builder: (context) => ReciterSelectionScreen.withoutSurahName(),
                         ),
                       );
-
-                      /// it navigates already by the menu at
                     },
                     isSelected: _selectedIndex == 1,
                     focusNode: _listeningFocusNode,
@@ -161,6 +176,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
           width: 50.w,
+          padding: EdgeInsets.all(16),
           height: 20.h,
           decoration: ShapeDecoration(
             color: isSelected ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.05),
@@ -177,12 +193,18 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                 color: Colors.white,
               ),
               SizedBox(height: 20),
-              Text(
-                text,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: isSelected ? 18.sp : 16.sp,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                  text,
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isSelected ? 18.sp : 16.sp,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
                 ),
               ),
             ],

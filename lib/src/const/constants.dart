@@ -12,7 +12,6 @@ const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
-
 const kGooglePlayId = 'com.mawaqit.androidtv';
 
 class CacheKey {
@@ -21,6 +20,18 @@ class CacheKey {
   static const String kAutoUpdateChecking = 'auto_update_checking';
   static const String kIsUpdateDismissed = 'is_update_dismissed';
   static const String kUpdateDismissedVersion = 'update_dismissed_version';
+  static const String kHttpRequests = 'http_requests_cache';
+  static const String kSelectedMoshaf = 'selected_moshaf';
+}
+
+class HttpHeaderConstant {
+  // HTTP Header keys
+  static const String kHeaderContentType = 'content-type';
+  static const String kHeaderLastModified = 'Last-Modified';
+  static const String kHeaderIfModifiedSince = 'If-Modified-Since';
+
+  // Content types
+  static const String kContentTypeApplicationJson = 'application/json';
 }
 
 abstract class RandomHadithConstant {
@@ -55,11 +66,19 @@ abstract class MosqueManagerConstant {
 }
 
 abstract class QuranConstant {
-  static const String kQuranVersionLink = "'https://mawaqit.github.io/mawaqit-announcements/public/quran/config.json'";
+  static const String kQuranZipBaseUrl = "https://cdn.mawaqit.net/quran/";
   static const String kQuranLocalVersion = 'quran_local_version';
   static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
   static const String kSurahBox = 'surah_box';
   static const String kReciterBox = 'reciter_box';
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
+  static const String kFavoriteReciterBox = 'favorite_reciter_box';
+  static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/config.json';
+}
+
+abstract class AzkarConstant {
+  static const String kAzkarAfterPrayer = 'أذكار بعد الصلاة';
+  static const String kAzkarSabahAfterPrayer = 'أذكار الصباح';
+  static const String kAzkarAsrAfterPrayer = 'أذكار المساء';
 }

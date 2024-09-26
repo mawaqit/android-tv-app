@@ -16,7 +16,7 @@ class TimezoneScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenWithAnimationWidget(
-      animation: R.ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON,
+      animation: R.ASSETS_ANIMATIONS_LOTTIE_SETTINGS_JSON,
       child: OnBoardingTimeZoneSelector(onSelect: AppRouter.pop),
     );
   }

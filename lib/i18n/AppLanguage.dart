@@ -3,13 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/config.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../src/services/mosque_manager.dart';
 
 /// [AppLanguage] is a class that handles the app language
 /// It is a singleton class that can be accessed from anywhere in the app
 class AppLanguage extends ChangeNotifier {
   static final AppLanguage _instance = AppLanguage._internal();
+
   factory AppLanguage() {
     return _instance;
   }
@@ -17,7 +22,6 @@ class AppLanguage extends ChangeNotifier {
   AppLanguage._internal();
 
   /// [kHadithLanguage] key stored in the shared preference
-  static const String kHadithLanguage = 'hadith_language';
   String _hadithLanguage = "";
   Locale _appLocale = Locale('en', '');
 
@@ -106,22 +110,23 @@ class AppLanguage extends ChangeNotifier {
   Future<void> setHadithLanguage(String language) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     _hadithLanguage = language;
-    await prefs.setString(kHadithLanguage, language);
+    await prefs.setString(RandomHadithConstant.kHadithLanguage, language);
     notifyListeners();
   }
 
   /// get the language of the hadith from shared preference
   /// if there is no language saved, return the api default language
-  Future<String?> getHadithLanguage() async {
+  Future<String> getHadithLanguage(MosqueManager mosqueManager) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? hadithLanguage = prefs.getString(kHadithLanguage);
+    final String? hadithLanguage = prefs.getString(RandomHadithConstant.kHadithLanguage);
     if (hadithLanguage != null) {
       _hadithLanguage = hadithLanguage;
       notifyListeners();
       return hadithLanguage;
+    } else {
+      _hadithLanguage = mosqueManager.mosqueConfig!.hadithLang ?? "ar";
+      return mosqueManager.mosqueConfig!.hadithLang ?? "ar";
     }
-    notifyListeners();
-    return null;
   }
 
   /// getters for the hadith language

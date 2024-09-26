@@ -13,6 +13,7 @@ import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/WorkFlowWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../services/user_preferences_manager.dart';
@@ -22,8 +23,8 @@ import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import '../widgets/workflows/announcement_workflow.dart';
 
-/// show all announcements in one after another
-class AnnouncementScreen extends ConsumerWidget {
+/// show all announcements one after another
+class AnnouncementScreen extends ConsumerStatefulWidget {
   AnnouncementScreen({
     Key? key,
     this.onDone,
@@ -36,51 +37,105 @@ class AnnouncementScreen extends ConsumerWidget {
   final bool enableVideos;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final announcements = context.read<MosqueManager>().activeAnnouncements(enableVideos);
+  ConsumerState<AnnouncementScreen> createState() => _AnnouncementScreenState();
+}
+
+class _AnnouncementScreenState extends ConsumerState<AnnouncementScreen> {
+  Announcement? currentAnnouncement;
+
+  @override
+  Widget build(BuildContext context) {
+    final announcements = context.read<MosqueManager>().activeAnnouncements(widget.enableVideos);
     ref.listen(announcementWorkflowProvider, (prev, next) {
-      if (next == WorkflowState.finished) onDone?.call();
+      if (next == WorkflowState.finished) widget.onDone?.call();
     });
     bool? showPrayerTimesOnMessageScreen =
         context.select<MosqueManager, bool?>((mosque) => mosque.mosqueConfig!.showPrayerTimesOnMessageScreen);
     bool announcementMode =
         context.select<UserPreferencesManager, bool>((userPreference) => userPreference.announcementsOnly);
-    log('announcement: ui: showPrayerTimesOnMessageScreen $showPrayerTimesOnMessageScreen , announcementMode $announcementMode');
     if (announcements.isEmpty) return NormalHomeSubScreen();
     final mosqueProvider = context.read<MosqueManager>();
 
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        AnnouncementContinuesWorkFlowWidget(
-          workFlowItems: announcements
-              .map((e) => AnnouncementWorkFlowItem(
-                    builder: (context) => announcementWidgets(e),
-                    duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
-                  ))
-              .toList(),
-        ),
-        // announcementWidgets(),
-        Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 1.vh),
-            child: AboveSalahBar(),
-          ),
-        ),
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final isImageAnnouncement = currentAnnouncement?.image != null;
+        return switch (orientation) {
+          Orientation.portrait => Column(
+              children: [
+                SizedBox(height: 1.h),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1.vh),
+                    child: AboveSalahBar(),
+                  ),
+                ),
+                Flexible(
+                  flex: 7,
+                  child: AnnouncementContinuesWorkFlowWidget(
+                    workFlowItems: announcements
+                        .map((e) => AnnouncementWorkFlowItem(
+                              builder: (context) {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  setState(() {
+                                    currentAnnouncement = e;
+                                  });
+                                });
+                                return announcementWidgets(e);
+                              },
+                              duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
+                            ))
+                        .toList(),
+                  ),
+                ),
+                Flexible(
+                  flex: isImageAnnouncement ? 0 : 3,
+                  child: _buildPrayerTimesWidget(
+                      context, mosqueProvider, announcementMode, showPrayerTimesOnMessageScreen),
+                ),
+                SizedBox(height: 1.h),
+              ],
+            ),
+          Orientation.landscape => Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                AnnouncementContinuesWorkFlowWidget(
+                  workFlowItems: announcements
+                      .map((e) => AnnouncementWorkFlowItem(
+                            builder: (context) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                setState(() {
+                                  currentAnnouncement = e;
+                                });
+                              });
+                              return announcementWidgets(e);
+                            },
+                            duration: e.video != null ? null : Duration(seconds: e.duration ?? 30),
+                          ))
+                      .toList(),
+                ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1.vh),
+                    child: AboveSalahBar(),
+                  ),
+                ),
+                _buildPrayerTimesWidget(context, mosqueProvider, announcementMode, showPrayerTimesOnMessageScreen),
+              ],
+            ),
+        };
+      },
+    );
+  }
 
-        announcementMode
-            ? (showPrayerTimesOnMessageScreen ?? false
-                ? IgnorePointer(
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 1.5.vh),
-                      child: mosqueProvider.times!.isTurki
-                          ? ResponsiveMiniSalahBarTurkishWidget()
-                          : ResponsiveMiniSalahBarWidget(),
-                    ),
-                  )
-                : const SizedBox.shrink())
-            : IgnorePointer(
+  Widget _buildPrayerTimesWidget(
+      BuildContext context, MosqueManager mosqueProvider, bool announcementMode, bool? showPrayerTimesOnMessageScreen) {
+    final isImageAnnouncement = currentAnnouncement?.image != null;
+
+    return announcementMode
+        ? ((showPrayerTimesOnMessageScreen ?? false) && !isImageAnnouncement
+            ? IgnorePointer(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 1.5.vh),
                   child: mosqueProvider.times!.isTurki
@@ -88,17 +143,32 @@ class AnnouncementScreen extends ConsumerWidget {
                       : ResponsiveMiniSalahBarWidget(),
                 ),
               )
-      ],
-    );
+            : const SizedBox.shrink())
+        : !isImageAnnouncement
+            ? IgnorePointer(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 1.5.vh),
+                  child: mosqueProvider.times!.isTurki
+                      ? ResponsiveMiniSalahBarTurkishWidget()
+                      : ResponsiveMiniSalahBarWidget(),
+                ),
+              )
+            : const SizedBox.shrink();
   }
 
   /// return the widget of the announcement based on its type
   Widget announcementWidgets(Announcement activeAnnouncement, {VoidCallback? nextAnnouncement}) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     if (activeAnnouncement.content != null) {
-      return _TextAnnouncement(
-        content: activeAnnouncement.content!,
-        title: activeAnnouncement.title,
-      );
+      return isPortrait
+          ? _TextAnnouncement.portrait(
+              title: activeAnnouncement.title,
+              content: activeAnnouncement.content!,
+            )
+          : _TextAnnouncement.landscape(
+              title: activeAnnouncement.title,
+              content: activeAnnouncement.content!,
+            );
     } else if (activeAnnouncement.image != null) {
       return _ImageAnnouncement(
         image: activeAnnouncement.image!,
@@ -117,51 +187,127 @@ class AnnouncementScreen extends ConsumerWidget {
 }
 
 class _TextAnnouncement extends StatelessWidget {
-  const _TextAnnouncement({Key? key, required this.title, required this.content}) : super(key: key);
+  const _TextAnnouncement._internal({
+    Key? key,
+    required this.title,
+    required this.content,
+    required this.isPortrait,
+  }) : super(key: key);
+
+  factory _TextAnnouncement.portrait({
+    Key? key,
+    required String title,
+    required String content,
+  }) {
+    return _TextAnnouncement._internal(
+      key: key,
+      title: title,
+      content: content,
+      isPortrait: true,
+    );
+  }
+
+  factory _TextAnnouncement.landscape({
+    Key? key,
+    required String title,
+    required String content,
+  }) {
+    return _TextAnnouncement._internal(
+      key: key,
+      title: title,
+      content: content,
+      isPortrait: false,
+    );
+  }
 
   final String title;
   final String content;
+  final bool isPortrait;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      key: ValueKey("$content $title"),
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Column(
-        children: [
-          // title
-          SizedBox(height: 10.vh),
-          Text(
-            title ?? '',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              shadows: kAnnouncementTextShadow,
-              fontSize: 50,
-              fontWeight: FontWeight.bold,
-              color: Colors.amber,
-              letterSpacing: 1,
-            ),
-          ).animate().slide().addRepaintBoundary(),
-          // content
-          SizedBox(height: 3.vh),
-          Expanded(
-            child: AutoSizeText(
-              content,
-              stepGranularity: 1,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                shadows: kAnnouncementTextShadow,
-                fontSize: 8.vwr,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 1,
+    return switch (isPortrait) {
+      false => Padding(
+          key: ValueKey("$content $title"),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            children: [
+              // title
+              SizedBox(height: 10.vh),
+              Text(
+                title ?? '',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  shadows: kAnnouncementTextShadow,
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber,
+                  letterSpacing: 1,
+                ),
+              ).animate().slide().addRepaintBoundary(),
+              // content
+              SizedBox(height: 3.vh),
+              Expanded(
+                child: AutoSizeText(
+                  content,
+                  stepGranularity: 1,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    shadows: kAnnouncementTextShadow,
+                    fontSize: 8.vwr,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1,
+                  ),
+                ).animate().fade(delay: 500.milliseconds).addRepaintBoundary(),
               ),
-            ).animate().fade(delay: 500.milliseconds).addRepaintBoundary(),
+              SizedBox(height: 20.vh),
+            ],
           ),
-          SizedBox(height: 20.vh),
-        ],
-      ),
-    );
+        ),
+      true => Padding(
+          key: ValueKey("$content $title"),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            children: [
+              Spacer(flex: 1),
+              Flexible(
+                flex: 2,
+                fit: FlexFit.tight,
+                child: AutoSizeText(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    shadows: kAnnouncementTextShadow,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.amber,
+                    letterSpacing: 1,
+                  ),
+                ).animate().slide().addRepaintBoundary(),
+              ),
+              Flexible(
+                flex: 10,
+                child: AutoSizeText(
+                  content,
+                  stepGranularity: 1,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    shadows: kAnnouncementTextShadow,
+                    fontSize: 30.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1,
+                  ),
+                  maxLines: 10,
+                  minFontSize: 10,
+                ).animate().fade(delay: 500.milliseconds).addRepaintBoundary(),
+              ),
+              Spacer(flex: 1),
+            ],
+          ),
+        ),
+    };
   }
 
   get kAnnouncementTextShadow => [
@@ -187,12 +333,19 @@ class _ImageAnnouncement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image(
-      image: MawaqitNetworkImageProvider(image, onError: onError),
-      fit: BoxFit.fill,
-      width: double.infinity,
-      height: double.infinity,
-    ).animate().slideX().addRepaintBoundary();
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    return isPortrait
+        ? Image(
+            image: MawaqitNetworkImageProvider(image, onError: onError),
+            fit: BoxFit.fitWidth,
+            width: double.infinity,
+          ).animate().slideX().addRepaintBoundary()
+        : Image(
+            image: MawaqitNetworkImageProvider(image, onError: onError),
+            fit: BoxFit.fill,
+            width: double.infinity,
+            height: double.infinity,
+          ).animate().slideX().addRepaintBoundary();
   }
 }
 

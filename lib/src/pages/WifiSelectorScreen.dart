@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/const/resource.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/Wifi_selector_widget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/wifi_selector_widget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 
@@ -17,7 +17,7 @@ class WifiSelectorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenWithAnimationWidget(
-      animation: R.ASSETS_ANIMATIONS_LOTTIE_CONFIG_JSON,
+      animation: R.ASSETS_ANIMATIONS_LOTTIE_SETTINGS_JSON,
       child: OnBoardingWifiSelector(onSelect: AppRouter.pop),
     );
   }

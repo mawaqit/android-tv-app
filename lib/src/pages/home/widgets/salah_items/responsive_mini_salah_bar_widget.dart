@@ -83,7 +83,7 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
     final iqamas = mosqueProvider.times!.dayIqamaStrings(now);
     final isIqamaMoreImportant = mosqueProvider.mosqueConfig!.iqamaMoreImportant == true;
     final turkishImask = todayTimes.length == 7 ? todayTimes.removeAt(0) : null;
-    todayTimes.removeAt(0); // Remove the first element (Fajr)
+    todayTimes.removeAt(1);
 
     // Helper function to generate SalahItemWidget
     Widget buildSalahItemWidget({
@@ -93,10 +93,10 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
       required bool active,
     }) {
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 1.vw),
         child: SizedBox(
-          width: MediaQuery.of(context).size.width / 4,
-          height: 60.0,
+          width: 22.vw,
+          height: 12.vh,
           child: SalahItemWidget(
             title: title,
             time: time,
@@ -113,10 +113,10 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 1.vh),
+      padding: EdgeInsets.symmetric(horizontal: 1.vw),
       child: Wrap(
-        spacing: 5.vh,
-        runSpacing: 2.vw,
+        spacing: 2.vw,
+        runSpacing: 2.vh,
         crossAxisAlignment: WrapCrossAlignment.center,
         alignment: WrapAlignment.center,
         children: [

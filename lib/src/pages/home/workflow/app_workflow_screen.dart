@@ -48,11 +48,11 @@ class AppWorkflowScreen extends StatelessWidget {
               builder: (context, next) => SalahWorkflowScreen(onDone: next),
               repeatingDuration: 1.days,
 
-              dateTime: elem.add(-5.minutes),
+              dateTime: elem,
 
               /// auto start Workflow if user starts the app during the Salah time
               /// give 4 minute for the salah and 2 for azkar
-              showInitial: () => now.isAfter(elem.add(-5.minutes)) && now.isBefore(iqama[index].add(6.minutes)),
+              showInitial: () => now.isAfter(elem) && now.isBefore(iqama[index].add(6.minutes)),
 
               // dateTime: e,
               // disable Duhr if it's Friday

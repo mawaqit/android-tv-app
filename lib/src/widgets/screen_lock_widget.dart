@@ -47,8 +47,12 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
   void initState() {
     super.initState();
     selectedTime = DateTime.now().add(Duration(hours: timeManager.shift, minutes: timeManager.shiftInMinutes));
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(screenLockNotifierProvider.notifier);
+      value = await ToggleScreenFeature.getToggleFeatureState();
+      setState(() {
+        value = value;
+      });
     });
   }
 

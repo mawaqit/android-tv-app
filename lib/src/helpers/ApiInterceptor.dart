@@ -1,45 +1,109 @@
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/main.dart';
+import 'package:mawaqit/src/const/constants.dart';
+import 'package:mawaqit/src/helpers/CrashlyticsWrapper.dart';
+import 'dart:convert';
 
-/// save the last modified value and send it with the next request
-/// The interceptor checks the cache before making a request and, if a valid
-/// cached response exists, modifies the request headers to include
-/// `If-Modified-Since`. This tells the server to return the resource only if
-/// it has been modified since the provided date, minimizing data transfer.
-class ApiCacheInterceptor extends DioCacheInterceptor {
-  final CacheStore store;
+import 'package:mawaqit/src/data/data_source/cache_local_data_source.dart';
 
-  ApiCacheInterceptor(this.store) : super(options: CacheOptions(store: store, policy: CachePolicy.refresh));
+class ApiCacheInterceptor extends Interceptor {
+  final CacheLocalDataSource cacheManager;
 
-  String getCacheKey(RequestOptions options) => CacheOptions.defaultCacheKeyBuilder(options);
+  ApiCacheInterceptor(this.cacheManager);
 
-  @override
-  Future<void> onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
-    await store.get(getCacheKey(options)).then((value) {
-      // If a cached response exists and caching is not disabled for this request,
-      // set the 'If-Modified-Since' header for efficient data transfer.
-      print(value?.toResponse(options).statusCode);
-      if (value != null && options.extra['disableCache'] != true) {
-        options.headers['If-Modified-Since'] = value.lastModified;
-      }
-    });
-
-    super.onRequest(options, handler);
+  String getCacheKey(RequestOptions options) {
+    return options.uri.toString();
   }
 
   @override
-  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
-    /// use cache if the server returns 304 or no response
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    final cacheKey = getCacheKey(options);
+    try {
+      final cachedData = await cacheManager.getCachedData(cacheKey);
+      if (cachedData != null && options.extra['disableCache'] != true) {
+        final lastModified = cachedData['lastModified'];
+        if (lastModified != null) {
+          options.headers[HttpHeaderConstant.kHeaderIfModifiedSince] = lastModified;
+        }
+      }
+    } catch (e, s) {
+      logger.e('interceptor: Error handling request: $e');
+      CrashlyticsWrapper.sendException(e, s);
+    }
+    handler.next(options);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) async {
+    try {
+      final cacheKey = getCacheKey(response.requestOptions);
+
+      if (response.statusCode == 200 && _isJsonResponse(response)) {
+        await cacheManager.cacheResponse(cacheKey, response);
+      } else if (response.statusCode == 304) {
+        final cachedData = await cacheManager.getCachedData(cacheKey);
+        if (cachedData != null) {
+          final responseData = json.decode(cachedData['data']);
+          final cachedResponse = Response(
+            data: responseData,
+            headers: Headers.fromMap({
+              'last-modified': [cachedData['lastModified']]
+            }),
+            statusCode: 200,
+            requestOptions: response.requestOptions,
+          );
+          return handler.resolve(cachedResponse);
+        }
+      }
+    } catch (e, s) {
+      CrashlyticsWrapper.sendException(e, s);
+      return handler.reject(DioError(requestOptions: response.requestOptions, error: e));
+    }
+    handler.next(response);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (_isConnectionError(err)) {
+      final cacheKey = getCacheKey(err.requestOptions);
+      try {
+        final cachedData = await cacheManager.getCachedData(cacheKey);
+        if (cachedData != null) {
+          final responseData = json.decode(cachedData['data']);
+          final cachedResponse = Response(
+            data: responseData,
+            headers: Headers.fromMap({
+              'last-modified': [cachedData['lastModified']]
+            }),
+            statusCode: 200,
+            requestOptions: err.requestOptions,
+          );
+          return handler.resolve(cachedResponse);
+        }
+      } catch (e, s) {
+        logger.e('Error retrieving cached data: $e');
+        CrashlyticsWrapper.sendException(e, s);
+      }
+    }
     if (err.response?.statusCode == 404) return handler.next(err);
-
-    final value = await store.get(getCacheKey(err.requestOptions));
-
-    if (value != null && err.requestOptions.extra['disableCache'] != true)
-      return handler.resolve(value.toResponse(err.requestOptions));
-
     return handler.next(err);
   }
+
+  bool _isJsonResponse(Response response) {
+    final contentType = response.headers.value(HttpHeaderConstant.kHeaderContentType);
+    return contentType != null && contentType.contains(HttpHeaderConstant.kContentTypeApplicationJson);
+  }
+
+  bool _isConnectionError(DioException err) {
+    return err.type == DioExceptionType.connectionTimeout ||
+        err.type == DioExceptionType.receiveTimeout ||
+        err.type == DioExceptionType.sendTimeout ||
+        err.type == DioExceptionType.connectionError;
+  }
 }
+
+final apiCacheInterceptorProvider = FutureProvider<ApiCacheInterceptor>((ref) async {
+  final cacheLocalDataSource = await ref.read(cacheLocalDataSourceProvider.future);
+  return ApiCacheInterceptor(cacheLocalDataSource);
+});
