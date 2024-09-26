@@ -85,7 +85,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
                   reciter: widget.reciters[index],
                   // isSelected: index == widget.selectedReciterIndex,
                   isSelected: Focus.of(context).hasFocus,
-                  margin: EdgeInsets.only(right: 16),
+                  margin: EdgeInsets.only(right: 20),
                 );
               },
             ),
@@ -117,74 +117,74 @@ class ReciterCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10),
         border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
       ),
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Color(0xFF490094),
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Colors.black.withOpacity(0.7),
-                  Colors.transparent,
-                ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // CachedNetworkImage with different sizes for online and offline images
+            CachedNetworkImage(
+              imageUrl: 'https://cdn.mawaqit.net/quran/reciters-pictures/${reciter.id}.jpg',
+              fit: BoxFit.cover,
+              placeholder: (context, url) => _buildOfflineImage(), // Use a smaller image
+              errorWidget: (context, url, error) => _buildOfflineImage(), // Use a smaller image on error
+            ),
+            // Gradient overlay
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withOpacity(1),
+                    Colors.black.withOpacity(0.5),
+                    Colors.transparent,
+                  ],
+                  stops: [0.0, 0.3, 0.4],
+                ),
               ),
             ),
-            alignment: Alignment.bottomLeft,
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: Column(
-              children: [
-                SizedBox(width: double.infinity),
-                Expanded(
-                  flex: 3,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      double imageSize = constraints.maxWidth * 0.7;
-                      Widget buildAssetImage() {
-                        return Image.asset(
-                          R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
-                          width: imageSize,
-                          height: imageSize,
-                          fit: BoxFit.contain,
-                        );
-                      }
-
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: CachedNetworkImage(
-                          imageUrl: 'https://cdn.mawaqit.net/quran/reciters-pictures/${reciter.id}.jpg',
-                          width: imageSize,
-                          height: imageSize,
-                          fit: BoxFit.contain,
-                          placeholder: (context, url) => buildAssetImage(),
-                          errorWidget: (context, url, error) => buildAssetImage(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: AutoSizeText(
-                    reciter.name,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    minFontSize: 12,
-                    maxFontSize: 20,
-                    overflow: TextOverflow.visible,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 4.sp,
-                      fontWeight: FontWeight.bold,
+            // Name at the bottom
+            Positioned(
+              left: 8,
+              right: 8,
+              bottom: 8,
+              child: AutoSizeText(
+                reciter.name,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                minFontSize: 10,
+                maxFontSize: 14,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(1, 1),
+                      blurRadius: 3,
+                      color: Colors.black.withOpacity(0.5),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Helper method to build a smaller offline image
+  Widget _buildOfflineImage() {
+    return Center(
+      child: Container(
+        width: 24.w,
+        height: 24.w,
+        padding: EdgeInsets.only(bottom: 2.h),
+        child: Image.asset(
+          R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
