@@ -152,10 +152,10 @@ class SalahItemWidget extends StatelessOrientationWidget {
                   fontSize: titleFont,
                   shadows: kHomeTextShadow,
                   color: Colors.white,
-                  height: 1.5,
+                  height: 1.2,
                 ),
               ),
-            SizedBox(height: 1.vh),
+            SizedBox(height: 0.5.vh),
             if (time.trim().isEmpty)
               Icon(Icons.dnd_forwardslash, size: 6.vwr)
             else

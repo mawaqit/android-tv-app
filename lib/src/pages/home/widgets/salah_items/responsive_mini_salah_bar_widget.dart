@@ -93,10 +93,10 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
       required bool active,
     }) {
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 1.vw),
         child: SizedBox(
-          width: MediaQuery.of(context).size.width / 4,
-          height: 60.0,
+          width: 22.vw,
+          height: 12.vh,
           child: SalahItemWidget(
             title: title,
             time: time,
@@ -113,10 +113,10 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 1.vh),
+      padding: EdgeInsets.symmetric(horizontal: 1.vw),
       child: Wrap(
-        spacing: 5.vh,
-        runSpacing: 2.vw,
+        spacing: 2.vw,
+        runSpacing: 2.vh,
         crossAxisAlignment: WrapCrossAlignment.center,
         alignment: WrapAlignment.center,
         children: [
