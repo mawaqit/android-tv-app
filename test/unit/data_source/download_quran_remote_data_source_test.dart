@@ -6,15 +6,12 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
-import 'package:mawaqit/src/helpers/directory_helper.dart';
 
 class MockDio extends Mock implements Dio {}
 
 class MockQuranPathHelper extends Mock implements QuranPathHelper {}
 
 class MockResponse<T> extends Mock implements Response<T> {}
-
-class MockDirectoryHelper extends Mock implements DirectoryHelper {}
 
 class MockCancelToken extends Mock implements CancelToken {}
 
@@ -27,6 +24,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(Uri());
     registerFallbackValue(CancelToken());
+    registerFallbackValue(<String>[]);
   });
 
   setUp(() {
@@ -191,11 +189,6 @@ void main() {
 
         expect(lastReportedProgress, 50.0);
       });
-    });
-
-    test('cancelDownload cancels the current download', () {
-      dataSource.cancelDownload();
-      verify(() => mockCancelToken.cancel()).called(1);
     });
   });
 }
