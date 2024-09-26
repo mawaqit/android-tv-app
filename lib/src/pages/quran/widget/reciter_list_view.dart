@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
@@ -124,7 +125,7 @@ class ReciterCard extends ConsumerWidget {
           children: [
             // CachedNetworkImage with different sizes for online and offline images
             CachedNetworkImage(
-              imageUrl: 'https://cdn.mawaqit.net/quran/reciters-pictures/${reciter.id}.jpg',
+              imageUrl: '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
               fit: BoxFit.cover,
               placeholder: (context, url) => _buildOfflineImage(), // Use a smaller image
               errorWidget: (context, url, error) => _buildOfflineImage(), // Use a smaller image on error
