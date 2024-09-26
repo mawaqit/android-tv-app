@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -89,7 +90,7 @@ class _OfflineScreenState extends State<OfflineScreen> {
           ),
           SizedBox(height: 16),
           new TextButton(
-            onPressed: () => exit(0),
+            onPressed: () => SystemNavigator.pop(),
             child: new Text(S.of(context).ok),
           ),
         ],
