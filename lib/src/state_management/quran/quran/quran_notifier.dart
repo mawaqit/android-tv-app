@@ -86,3 +86,8 @@ class QuranNotifier extends AsyncNotifier<QuranState> {
 }
 
 final quranNotifierProvider = AsyncNotifierProvider<QuranNotifier, QuranState>(QuranNotifier.new);
+final suwarProvider = Provider<List<dynamic>>((ref) {
+  final quranState = ref.watch(quranNotifierProvider);
+  return quranState.value?.suwar ?? [];
+});
+final selectedStartPageProvider = StateProvider<int?>((ref) => null);

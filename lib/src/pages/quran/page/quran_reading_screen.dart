@@ -23,6 +23,71 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 
+class QuranSurahFilter extends ConsumerStatefulWidget {
+  const QuranSurahFilter({Key? key}) : super(key: key);
+
+  @override
+  _QuranSurahFilterState createState() => _QuranSurahFilterState();
+}
+
+class _QuranSurahFilterState extends ConsumerState<QuranSurahFilter> {
+  String? selectedSurah;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(quranNotifierProvider.notifier).getSuwarByLanguage();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final suwarState = ref.watch(quranNotifierProvider);
+
+    return SizedBox(
+      height: 120, // Adjust this value as needed
+      child: suwarState.when(
+        loading: () => Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Error: $err')),
+        data: (quranState) {
+          final suwar = quranState.suwar;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButton<String>(
+                isExpanded: true,
+                hint: Text('Select a Surah'),
+                value: selectedSurah,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedSurah = newValue;
+                    final startPage = suwar.firstWhere((surah) => surah.name == newValue).startPage;
+                    ref.read(selectedStartPageProvider.notifier).state = startPage;
+                  });
+                },
+                items: suwar.map<DropdownMenuItem<String>>((surah) {
+                  return DropdownMenuItem<String>(
+                    value: surah.name,
+                    child: Text(surah.name),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 20),
+              Consumer(
+                builder: (context, ref, _) {
+                  final startPage = ref.watch(selectedStartPageProvider);
+                  return startPage != null ? Text('Start page: $startPage') : SizedBox.shrink();
+                },
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
 
@@ -52,6 +117,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
+      ref.read(quranNotifierProvider.notifier).getSuwarByLanguage();
     });
   }
 
@@ -203,7 +269,35 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     );
                   },
                 ),
-
+                Positioned(
+                  left: 15.w,
+                  right: 15.w,
+                  top: 1.h,
+                  child: Center(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => _showSurahSelector(context, quranReadingState.currentPage),
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            "Select Surah",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 8.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 Positioned(
                   right: 10,
                   top: 0,
@@ -303,6 +397,87 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           },
         ),
       ),
+    );
+  }
+
+  void _showSurahSelector(BuildContext context, int currentPage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Select Surah",
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          content: Container(
+            width: double.maxFinite,
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: Consumer(
+              builder: (context, ref, _) {
+                final suwarState = ref.watch(quranNotifierProvider);
+
+                return suwarState.when(
+                  loading: () => Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Center(child: Text('Error: $err')),
+                  data: (quranState) {
+                    final suwar = quranState.suwar;
+
+                    return StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                        return GridView.builder(
+                          controller: _gridScrollController,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            childAspectRatio: 2.5 / 1,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                          ),
+                          itemCount: suwar.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final surah = suwar[index + 1];
+                            final page = surah.startPage % 2 == 0 ? surah.startPage - 1 : surah.startPage;
+                            return InkWell(
+                              onTap: () {
+                                ref.read(quranReadingNotifierProvider.notifier).updatePage(page);
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                height: 40,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6.0),
+                                  border: Border.all(
+                                    color: Theme.of(context).dividerColor,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Text(
+                                  "${surah.id}- ${surah.name}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
