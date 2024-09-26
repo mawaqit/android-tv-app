@@ -297,7 +297,7 @@
   "warsh": "Warsh(način učenja)",
   "favorites": "Favoriti",
   "allReciters": "Svi učači",
-  "reciterAddedToFavorites": "\"Učač {ime} je dodat u omiljene",
+  "reciterAddedToFavorites": "\"Učač {name} je dodat u omiljene",
   "@reciterAddedToFavorites": {
     "description": "Message shown when a reciter is added to favorites",
     "placeholders": {
@@ -307,7 +307,7 @@
       }
     }
   },
-  "reciterRemovedFromFavorites": "Učač {ime} uklonjen iz grupu omiljenih",
+  "reciterRemovedFromFavorites": "Učač {name} uklonjen iz grupu omiljenih",
   "@reciterRemovedFromFavorites": {
     "description": "Message shown when a reciter is removed from favorites",
     "placeholders": {
