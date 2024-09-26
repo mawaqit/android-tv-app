@@ -297,7 +297,7 @@
   "warsh": "वारश",
   "favorites": "पसंदीदा",
   "allReciters": "सभी पाठक",
-  "reciterAddedToFavorites": "वाचक {नाम} को पसंदीदा में जोड़ा गया",
+  "reciterAddedToFavorites": "वाचक {name} को पसंदीदा में जोड़ा गया",
   "@reciterAddedToFavorites": {
     "description": "Message shown when a reciter is added to favorites",
     "placeholders": {
@@ -307,7 +307,7 @@
       }
     }
   },
-  "reciterRemovedFromFavorites": "वाचक {नाम} को पसंदीदा से हटा दिया गया",
+  "reciterRemovedFromFavorites": "वाचक {name} को पसंदीदा से हटा दिया गया",
   "@reciterRemovedFromFavorites": {
     "description": "Message shown when a reciter is removed from favorites",
     "placeholders": {
