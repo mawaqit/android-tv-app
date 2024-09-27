@@ -563,7 +563,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                   ),
                   SizedBox(height: 16),
                   new TextButton(
-                    onPressed: () => exit(0),
+                    onPressed: () => SystemNavigator.pop(),
                     child: new Text(S.of(context).ok),
                   ),
                 ],

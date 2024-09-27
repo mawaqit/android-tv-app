@@ -20,6 +20,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart' hide Consumer;
 import 'package:sizer/sizer.dart';
@@ -50,6 +51,10 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await TimeShiftManager().initializeTimes();
       await ref.read(onBoardingProvider.notifier).isDeviceRooted();
+
+      final appLanguage = Provider.of<AppLanguage>(context, listen: false);
+      final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
+      await appLanguage.getHadithLanguage(mosqueManager);
     });
   }
 
@@ -100,14 +105,16 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     title: S.of(context).languages,
                     subtitle: S.of(context).descLang,
                     icon: Icon(Icons.language, size: 35),
-                    onTap: () => AppRouter.push(LanguageScreen()),
+                    onTap: () {
+                      ref.invalidate(reciteNotifierProvider);
+                      AppRouter.push(LanguageScreen());
+                    },
                   ),
                   _SettingItem(
                     title: S.of(context).randomHadithLanguage,
                     subtitle: S.of(context).hadithLangDesc,
                     icon: Icon(Icons.language, size: 35),
                     onTap: () {
-                      context.read<AppLanguage>().getHadithLanguage();
                       AppRouter.push(
                         LanguageScreen(
                           isIconActivated: true,
@@ -142,9 +149,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                                   );
                                 } else {
                                   context.read<AppLanguage>().setHadithLanguage(langCode);
-                                  ref
-                                      .read(randomHadithNotifierProvider.notifier)
-                                      .fetchAndCacheHadith(language: langCode);
+                                  ref.read(randomHadithNotifierProvider.notifier).setHadithLanguage(langCode);
                                   AppRouter.pop();
                                 }
                               },

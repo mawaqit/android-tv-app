@@ -16,7 +16,7 @@ class MosqueInformationWidget extends StatelessWidget {
     // String bank = "${mosque?.} ";
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.5.vh),
+      padding: EdgeInsets.symmetric(vertical: 1.5.vh),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

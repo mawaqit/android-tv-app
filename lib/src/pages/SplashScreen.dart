@@ -74,18 +74,6 @@ class _SpashState extends ConsumerState<Splash> {
     HttpOverrides.global = MyHttpOverrides();
     FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
 
-    await ref.read(connectivityProvider.notifier).checkInternetConnection();
-    ref.watch(connectivityProvider).maybeWhen(
-          orElse: () {},
-          data: (isConnectedToInternet) {
-            if (isConnectedToInternet == ConnectivityStatus.connected) {
-              final hadithLangCode =
-                  context.read<AppLanguage>().hadithLanguage == '' ? 'ar' : context.read<AppLanguage>().hadithLanguage;
-              context.read<AppLanguage>().setHadithLanguage(hadithLangCode);
-              ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
-            } else {}
-          },
-        );
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
       if (systemOverlaysAreVisible) return;

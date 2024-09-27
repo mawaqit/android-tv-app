@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart';
 import 'package:flutter/services.dart';
 
+import '../data/data_source/device_info_data_source.dart';
 import 'Api.dart';
 
 // TimeShiftManager is a singleton class responsible for managing time adjustments,
@@ -50,6 +51,7 @@ class TimeShiftManager {
   Future<void> initializeTimes() async {
     log('Initializing TimeShiftManager...');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isBoxOrAndroidTV = await DeviceInfoDataSource().isBoxOrAndroidTV();
 
     _shift = prefs.getInt(_shiftKey) ?? 0;
     _shiftedhours = prefs.getInt(_shiftedhoursKey) ?? 0;
@@ -57,9 +59,9 @@ class TimeShiftManager {
 
     _previousTime = DateTime.parse(prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String());
     _timeSetFromHour = prefs.getBool(_timeSetFromHourKey) ?? false;
-
-    _isLauncherInstalled = await _isPackageInstalled("com.mawaqit.launcher");
-
+    if (isBoxOrAndroidTV) {
+      _isLauncherInstalled = await _isPackageInstalled("com.mawaqit.launcher");
+    }
     try {
       final userData = await Api.prepareUserData();
       if (userData != null) {

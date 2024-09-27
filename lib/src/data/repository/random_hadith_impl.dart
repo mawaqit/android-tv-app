@@ -11,7 +11,6 @@ import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/services/connectivity_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../main.dart';
 import '../data_source/random_hadith_remote_data_source.dart';
 
 /// [RandomHadithImpl] Implementation of the RandomHadithRepository.
@@ -53,22 +52,19 @@ class RandomHadithImpl implements RandomHadithRepository {
   Future<String> getRandomHadith({required String language}) async {
     log('random_hadith: RandomHadithImpl: Fetching random Hadith');
 
-    final hadithLanguageLocal = sharedPreferences.getString(RandomHadithConstant.kHadithLanguage);
-    log('random_hadith: RandomHadithImpl: Stored language: $hadithLanguageLocal');
-    if (hadithLanguageLocal != null) {
-      language = hadithLanguageLocal;
-    }
+    final hadithLanguageLocal = sharedPreferences.getString(RandomHadithConstant.kHadithLanguage) ?? language;
+    log('random_hadith: RandomHadithImpl: hadithLanguageLocal: $language || $hadithLanguageLocal');
 
-    language = RandomHadithHelper.changeLanguageFormat(language);
+    language = RandomHadithHelper.changeLanguageFormat(hadithLanguageLocal);
     log('random_hadith: RandomHadithImpl: Formatted language: $language');
 
     final isConnected = await connectivityService.connectionStatus == ConnectivityStatus.connected;
     log('random_hadith: RandomHadithImpl: Internet connection status: $isConnected');
 
     if (isConnected) {
-      return await _handleOnlineMode(language);
+      return await _handleOnlineMode(hadithLanguageLocal);
     } else {
-      return await _handleOfflineMode(language);
+      return await _handleOfflineMode(hadithLanguageLocal);
     }
   }
 

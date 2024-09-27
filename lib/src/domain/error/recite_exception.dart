@@ -82,6 +82,21 @@ class FetchRecitersException extends ReciterException {
       : super('Error occurred while fetching reciters: $message', 'FETCH_RECITERS_ERROR');
 }
 
+class AddFavoriteReciterException implements Exception {
+  final String message;
+  AddFavoriteReciterException(this.message);
+}
+
+class RemoveFavoriteReciterException implements Exception {
+  final String message;
+  RemoveFavoriteReciterException(this.message);
+}
+
+class FetchFavoriteRecitersException implements Exception {
+  final String message;
+  FetchFavoriteRecitersException(this.message);
+}
+
 class FetchAudioFileFailedException extends ReciterException {
   FetchAudioFileFailedException(String message)
       : super('Error occurred while fetching audio file: $message', 'FETCH_AUDIO_FILE_ERROR');

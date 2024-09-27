@@ -8,13 +8,17 @@ import 'package:mocktail/mocktail.dart';
 
 class MockHiveBox extends Mock implements Box<ReciterModel> {}
 
+class MockHiveFavoriteBox extends Mock implements Box<int> {}
+
 void main() {
   late ReciteLocalDataSource dataSource;
   late MockHiveBox mockBox;
+  late MockHiveFavoriteBox mockFavoriteBox;
 
   setUp(() {
     mockBox = MockHiveBox();
-    dataSource = ReciteLocalDataSource(mockBox);
+    mockFavoriteBox = MockHiveFavoriteBox();
+    dataSource = ReciteLocalDataSource(mockBox, mockFavoriteBox);
   });
 
   MoshafModel createMoshaf(int id, List<int> surahList) {
@@ -265,6 +269,121 @@ void main() {
                 createReciter(1, [1, 2, 3])
               ]),
           throwsA(isA<SaveRecitersException>()));
+    });
+  });
+
+  group('Favorite Reciter', () {
+    test('Adding the same reciter as a favorite multiple times', () async {
+      final reciter = ReciterModel(1, 'Reciter 1', 'A', []);
+
+      when(() => mockFavoriteBox.add(any())).thenAnswer((_) async => 0);
+      when(() => mockFavoriteBox.values).thenReturn([1]);
+      when(() => mockBox.values).thenReturn([reciter]);
+
+      await dataSource.addFavoriteReciter(1);
+      await dataSource.addFavoriteReciter(1);
+
+      verify(() => mockFavoriteBox.add(1)).called(2);
+      expect(dataSource.isFavoriteReciter(1), isTrue);
+
+      final favorites = await dataSource.getFavoriteReciters();
+      expect(favorites, hasLength(1));
+      expect(favorites.first.id, equals(1));
+    });
+
+    test('Removing a favorite reciter that doesn\'t exist', () async {
+      when(() => mockFavoriteBox.values).thenReturn([]);
+      when(() => mockFavoriteBox.deleteAt(any())).thenAnswer((_) async {});
+
+      await dataSource.removeFavoriteReciter(999);
+
+      verifyNever(() => mockFavoriteBox.deleteAt(any()));
+    });
+
+    test('Removing a favorite reciter multiple times', () async {
+      final favoriteList = [1];
+
+      when(() => mockFavoriteBox.values).thenAnswer((_) => favoriteList);
+      when(() => mockFavoriteBox.deleteAt(any())).thenAnswer((_) async {
+        favoriteList.removeAt(0);
+      });
+
+      await dataSource.removeFavoriteReciter(1);
+      await dataSource.removeFavoriteReciter(1);
+
+      verify(() => mockFavoriteBox.deleteAt(any())).called(1);
+      expect(favoriteList, isEmpty);
+    });
+
+    test('Adding multiple favorite reciters simultaneously', () async {
+      when(() => mockFavoriteBox.add(any())).thenAnswer((_) async => 0);
+
+      await Future.wait([
+        dataSource.addFavoriteReciter(1),
+        dataSource.addFavoriteReciter(2),
+        dataSource.addFavoriteReciter(3),
+      ]);
+
+      verify(() => mockFavoriteBox.add(1)).called(1);
+      verify(() => mockFavoriteBox.add(2)).called(1);
+      verify(() => mockFavoriteBox.add(3)).called(1);
+    });
+
+    test('Adding and removing favorite reciters simultaneously', () async {
+      when(() => mockFavoriteBox.add(any())).thenAnswer((_) async => 0);
+      when(() => mockFavoriteBox.values).thenReturn([1, 2]);
+      when(() => mockFavoriteBox.deleteAt(any())).thenAnswer((_) async {});
+
+      await Future.wait([
+        dataSource.addFavoriteReciter(3),
+        dataSource.removeFavoriteReciter(1),
+        dataSource.addFavoriteReciter(4),
+        dataSource.removeFavoriteReciter(2),
+      ]);
+
+      verify(() => mockFavoriteBox.add(3)).called(1);
+      verify(() => mockFavoriteBox.add(4)).called(1);
+      verify(() => mockFavoriteBox.deleteAt(0)).called(1);
+      verify(() => mockFavoriteBox.deleteAt(1)).called(1); // Changed from 0 to 1
+    });
+
+    test('Adding a favorite reciter that doesn\'t exist in the main reciter list', () async {
+      // Mock adding to favorite box
+      when(() => mockFavoriteBox.add(any())).thenAnswer((_) async => 0);
+
+      // Mock favorite box values
+      when(() => mockFavoriteBox.values).thenReturn([999]);
+
+      // Mock main reciter box to be empty
+      when(() => mockBox.values).thenReturn([]);
+
+      await dataSource.addFavoriteReciter(999);
+      final favorites = await dataSource.getFavoriteReciters();
+
+      verify(() => mockFavoriteBox.add(999)).called(1);
+      expect(favorites, isEmpty);
+    });
+
+    test('Updating a reciter in the main list and checking if it\'s reflected in favorites', () async {
+      final oldReciter = ReciterModel(1, 'Reciter 1', 'A', []);
+      final updatedReciter = ReciterModel(1, 'Updated Reciter 1', 'B', []);
+
+      // Mock the main reciter box
+      when(() => mockBox.values).thenReturn([oldReciter]);
+      when(() => mockBox.putAll(any())).thenAnswer((_) => Future<void>.value());
+
+      // Mock the favorite box
+      when(() => mockFavoriteBox.values).thenReturn([1]);
+
+      await dataSource.saveReciters([updatedReciter]);
+
+      // Update the mock to return the updated reciter
+      when(() => mockBox.values).thenReturn([updatedReciter]);
+
+      final favorites = await dataSource.getFavoriteReciters();
+
+      expect(favorites.first.name, equals('Updated Reciter 1'));
+      expect(favorites.first.letter, equals('B'));
     });
   });
 }
