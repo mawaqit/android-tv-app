@@ -183,7 +183,7 @@ class ReciterCard extends ConsumerWidget {
         height: 24.w,
         padding: EdgeInsets.only(bottom: 2.h),
         child: Image.asset(
-          R.ASSETS_IMG_QURAN_DEFAULT_AVATAR_PNG,
+          R.ASSETS_SVG_RECITER_ICON_PNG,
           fit: BoxFit.contain,
         ),
       ),
