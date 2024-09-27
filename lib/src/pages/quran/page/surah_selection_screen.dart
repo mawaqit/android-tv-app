@@ -151,7 +151,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.arrow_back),
-                    focusColor: Colors.green,
                     onPressed: () {
                       Navigator.pop(context);
                     },
