@@ -1,60 +1,50 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:mawaqit/src/state_management/quran/recite/download_audio_quran/download_audio_quran_state.dart';
 
-class DownloadStateNotifier extends Notifier<DownloadAudioQuranState> {
+class DownloadStateNotifier extends FamilyNotifier<DownloadAudioQuranState, DownloadStateProviderParameter> {
   @override
-  DownloadAudioQuranState build() {
-    return DownloadAudioQuranState();
-  }
-
-  String _getKey(String reciterId, String riwayahId) {
-    return "$reciterId:$riwayahId";
-  }
-
-  Future<void> updateDownloadProgress(String reciterId, String riwayahId, int surahId, double progress) async {
-    final key = _getKey(reciterId, riwayahId);
-    final currentProgress = state.downloadProgress[key] ?? {};
-    state = state.copyWith(
-      downloadProgress: {
-        ...state.downloadProgress,
-        key: {...currentProgress, surahId: progress},
-      },
-      currentDownloadingSurah: {
-        ...state.currentDownloadingSurah,
-        key: surahId,
-      },
+  DownloadAudioQuranState build(DownloadStateProviderParameter arg) {
+    return DownloadAudioQuranState(
+      reciterId: arg.reciterId,
+      moshafId: arg.moshafId,
     );
   }
 
-  Future<void> markAsDownloaded(String reciterId, String riwayahId, int surahId) async {
-    final key = _getKey(reciterId, riwayahId);
-    final currentDownloaded = state.downloadedSuwar[key] ?? {};
-    final currentProgress = state.downloadProgress[key] ?? {};
+  void setCurrentReciterMoshaf(String reciterId, String moshafId) {
     state = state.copyWith(
-      downloadedSuwar: {
-        ...state.downloadedSuwar,
-        key: {...currentDownloaded, surahId},
-      },
-      downloadProgress: {
-        ...state.downloadProgress,
-        key: {...currentProgress}..remove(surahId),
-      },
-      currentDownloadingSurah: {
-        ...state.currentDownloadingSurah,
-        key: state.currentDownloadingSurah[key] == surahId ? null : state.currentDownloadingSurah[key],
-      },
+      reciterId: reciterId,
+      moshafId: moshafId,
     );
   }
 
-  Future<void> initializeDownloadedSuwar(String reciterId, String riwayahId, Set<int> downloadedSuwar) async {
-    final key = _getKey(reciterId, riwayahId);
+  Future<void> updateDownloadProgress(int surahId, double progress) async {
+    final updatedDownloadingSuwar = List<SurahDownloadInfo>.from(state.downloadingSuwar);
+    final index = updatedDownloadingSuwar.indexWhere((info) => info.surahId == surahId);
+    if (index != -1) {
+      updatedDownloadingSuwar[index] = SurahDownloadInfo(surahId: surahId, progress: progress);
+    } else {
+      updatedDownloadingSuwar.add(SurahDownloadInfo(surahId: surahId, progress: progress));
+    }
+
     state = state.copyWith(
-      downloadedSuwar: {
-        ...state.downloadedSuwar,
-        key: downloadedSuwar,
-      },
+      downloadingSuwar: updatedDownloadingSuwar,
+      currentDownloadingSurah: surahId,
     );
+  }
+
+  Future<void> markAsDownloaded(int surahId) async {
+    final updatedDownloadedSuwar = Set<int>.from(state.downloadedSuwar)..add(surahId);
+    final updatedDownloadingSuwar = state.downloadingSuwar.where((info) => info.surahId != surahId).toList();
+
+    state = state.copyWith(
+      downloadedSuwar: updatedDownloadedSuwar,
+      downloadingSuwar: updatedDownloadingSuwar,
+      currentDownloadingSurah: state.currentDownloadingSurah == surahId ? null : state.currentDownloadingSurah,
+    );
+  }
+
+  Future<void> initializeDownloadedSuwar(Set<int> downloadedSuwar) async {
+    state = state.copyWith(downloadedSuwar: downloadedSuwar);
   }
 
   void setDownloadStatus(DownloadStatus status) {
@@ -66,6 +56,28 @@ class DownloadStateNotifier extends Notifier<DownloadAudioQuranState> {
   }
 }
 
-final downloadStateProvider = NotifierProvider<DownloadStateNotifier, DownloadAudioQuranState>(
+class DownloadStateProviderParameter {
+  final String reciterId;
+  final String moshafId;
+
+  DownloadStateProviderParameter({
+    required this.reciterId,
+    required this.moshafId,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is DownloadStateProviderParameter &&
+              runtimeType == other.runtimeType &&
+              reciterId == other.reciterId &&
+              moshafId == other.moshafId;
+
+  @override
+  int get hashCode => reciterId.hashCode ^ moshafId.hashCode;
+}
+
+final downloadStateProvider =
+    NotifierProviderFamily<DownloadStateNotifier, DownloadAudioQuranState, DownloadStateProviderParameter>(
   DownloadStateNotifier.new,
 );

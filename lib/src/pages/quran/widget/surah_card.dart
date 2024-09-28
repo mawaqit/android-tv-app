@@ -94,7 +94,6 @@ class _SurahCardState extends ConsumerState<SurahCard> with SingleTickerProvider
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 color: Colors.white,
-
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -127,28 +126,7 @@ class _SurahCardState extends ConsumerState<SurahCard> with SingleTickerProvider
   }
 
   Widget _buildDownloadTag() {
-    if (widget.isDownloaded) {
-      return Container();
-    } else if (widget.downloadProgress > 0 && widget.downloadProgress < 1) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(14),
-            bottomLeft: Radius.circular(14),
-          ),
-        ),
-        child: Text(
-          '${(widget.downloadProgress * 100).toInt()}%',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 10.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      );
-    } else {
+    if (widget.isDownloaded && widget.downloadProgress == 0) {
       return InkWell(
         onTap: widget.onDownloadTap,
         child: Container(
@@ -170,6 +148,30 @@ class _SurahCardState extends ConsumerState<SurahCard> with SingleTickerProvider
           ),
         ),
       );
+    } else if (!widget.isDownloaded && widget.downloadProgress > 0 && widget.downloadProgress < 1) {
+      return InkWell(
+        onTap: widget.onDownloadTap,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 5.sp, vertical: 2.sp),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.6),
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(14),
+              bottomLeft: Radius.circular(14),
+            ),
+          ),
+          child: Text(
+            '${(widget.downloadProgress * 100).toInt()}%',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 8.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container();
     }
   }
 }

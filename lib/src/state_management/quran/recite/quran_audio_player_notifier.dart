@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:math' show Random;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
@@ -40,10 +39,6 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     );
   }
 
-  String _getDownloadKey(String reciterId, String moshafId) {
-    return "${reciterId}:${moshafId}";
-  }
-
   Future<void> downloadAudio({
     required String reciterId,
     required String moshafId,
@@ -58,23 +53,20 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
       url,
     );
 
-    ref.read(downloadStateProvider.notifier).updateDownloadProgress(reciterId, moshafId, surahId, 0);
+    final downloadStateNotifier = ref.read(
+      downloadStateProvider(
+        DownloadStateProviderParameter(reciterId: reciterId, moshafId: moshafId),
+      ).notifier,
+    );
+
+    downloadStateNotifier.updateDownloadProgress(surahId, 0);
 
     try {
       await audioRepository.downloadAudio(audioFileModel, (progress) {
-        ref.read(downloadStateProvider.notifier).updateDownloadProgress(
-              reciterId,
-              moshafId,
-              surahId,
-              progress / 100,
-            );
+        downloadStateNotifier.updateDownloadProgress(surahId, progress / 100);
       });
 
-      ref.read(downloadStateProvider.notifier).markAsDownloaded(
-            reciterId,
-            moshafId,
-            surahId,
-          );
+      downloadStateNotifier.markAsDownloaded(surahId);
 
       await getDownloadedSuwarByReciterAndRiwayah(
         moshafId: moshafId,
@@ -114,11 +106,21 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     String moshafId,
     String server,
   ) async {
-    final downloadedSuwars = ref.read(downloadStateProvider).downloadedSuwar;
+    final downloadStateNotifier = ref.read(
+      downloadStateProvider(
+        DownloadStateProviderParameter(reciterId: reciterId, moshafId: moshafId),
+      ).notifier,
+    );
+
     int downloadedCount = 0;
     for (final surah in suwar) {
-      if (!downloadedSuwars[_getDownloadKey(reciterId, moshafId)]!.contains(surah.id)) {
-        ref.read(downloadStateProvider.notifier).setDownloadStatus(DownloadStatus.downloading);
+      final downloadState = ref.read(
+        downloadStateProvider(
+          DownloadStateProviderParameter(reciterId: reciterId, moshafId: moshafId),
+        ),
+      );
+      if (!downloadState.downloadedSuwar.contains(surah.id)) {
+        downloadStateNotifier.setDownloadStatus(DownloadStatus.downloading);
         await downloadAudio(
           reciterId: reciterId,
           moshafId: moshafId,
@@ -146,10 +148,17 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
         moshaf.server,
       );
       state = AsyncData(state.value!);
+
+      final downloadStateNotifier = ref.read(
+        downloadStateProvider(
+          DownloadStateProviderParameter(reciterId: reciterId, moshafId: moshafId),
+        ).notifier,
+      );
+
       if (downloadedCount > 0) {
-        ref.read(downloadStateProvider.notifier).setDownloadStatus(DownloadStatus.completed);
+        downloadStateNotifier.setDownloadStatus(DownloadStatus.completed);
       } else {
-        ref.read(downloadStateProvider.notifier).setDownloadStatus(DownloadStatus.noNewDownloads);
+        downloadStateNotifier.setDownloadStatus(DownloadStatus.noNewDownloads);
       }
     } catch (e, s) {
       state = AsyncError(e, s);
@@ -168,10 +177,14 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
         moshafId: moshafId,
       );
 
-      // Initialize the download state with the downloaded surahs
       final downloadedSurahIds =
           downloadedAudioList.map((file) => int.parse(file.path.split('/').last.split('.').first)).toSet();
-      ref.read(downloadStateProvider.notifier).initializeDownloadedSuwar(reciterId, moshafId, downloadedSurahIds);
+
+      final downloadStateNotifier = ref.read(downloadStateProvider(
+        DownloadStateProviderParameter(reciterId: reciterId, moshafId: moshafId),
+      ).notifier);
+
+      downloadStateNotifier.initializeDownloadedSuwar(downloadedSurahIds);
     } catch (e, s) {
       state = AsyncError(e, s);
     }

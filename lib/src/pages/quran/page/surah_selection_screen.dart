@@ -46,15 +46,14 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
   int selectedIndex = 0;
   final int _crossAxisCount = 4;
   final ScrollController _scrollController = ScrollController();
-  late FocusNode _searchFocusNode;
-  FocusNode _downloadButtonFocusNode = FocusNode();
   Timer? _debounceTimer;
   bool _isNavigating = false;
+
+
 
   @override
   void initState() {
     super.initState();
-    _searchFocusNode = FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(quranPlayerNotifierProvider.notifier).getDownloadedSuwarByReciterAndRiwayah(
             reciterId: widget.reciterId,
@@ -65,7 +64,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
 
   @override
   void dispose() {
-    _searchFocusNode = FocusNode();
     _scrollController.dispose();
     super.dispose();
   }
@@ -115,17 +113,85 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final downloadNotifierParameter = DownloadStateProviderParameter(
+      reciterId: widget.reciterId,
+      moshafId: widget.selectedMoshaf.id.toString(),
+    );
+
     final quranState = ref.watch(quranNotifierProvider);
-    ref.listen<DownloadAudioQuranState>(downloadStateProvider, (previous, next) {
+    ref.listen<DownloadAudioQuranState>(
+        downloadStateProvider(
+            downloadNotifierParameter
+        ), (previous, next) {
       if (next.downloadStatus == DownloadStatus.completed) {
         showToast(S.of(context).downloadAllSuwarSuccessfully);
-        ref.read(downloadStateProvider.notifier).resetDownloadStatus();
+        ref
+            .read(
+              downloadStateProvider(
+                  downloadNotifierParameter
+              ).notifier,
+            )
+            .resetDownloadStatus();
       } else if (next.downloadStatus == DownloadStatus.noNewDownloads) {
         showToast(S.of(context).noSuwarDownload);
-        ref.read(downloadStateProvider.notifier).resetDownloadStatus();
+        ref
+            .read(downloadStateProvider(
+            downloadNotifierParameter
+            ).notifier)
+            .resetDownloadStatus();
       }
     });
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF28262F),
+        elevation: 0,
+        actions: [
+          IconButton(
+            splashRadius: 12.sp,
+            iconSize: 14.sp,
+            focusColor: Theme.of(context).primaryColor,
+            onPressed: ref
+                        .watch(
+                          downloadStateProvider(
+                              downloadNotifierParameter
+                          ),
+                        )
+                        .downloadStatus !=
+                    DownloadStatus.downloading
+                ? () async {
+                    await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                    if (ref.read(connectivityProvider).value == ConnectivityStatus.connected) {
+                      quranState.whenOrNull(
+                        data: (data) {
+                          ref.read(quranPlayerNotifierProvider.notifier).downloadAllSuwar(
+                                reciterId: widget.reciterId.toString(),
+                                moshaf: widget.selectedMoshaf,
+                                moshafId: widget.selectedMoshaf.id.toString(),
+                                suwar: data.suwar,
+                              );
+                        },
+                      );
+                    } else {
+                      showToast(S.of(context).connectDownloadQuran);
+                    }
+                  }
+                : null,
+            icon: Icon(
+              Icons.download,
+            ),
+          )
+        ],
+        leading: IconButton(
+          splashRadius: 12.sp,
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -142,43 +208,42 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  IconButton(
-                    onPressed: ref
-                        .watch(downloadStateProvider)
-                        .downloadStatus != DownloadStatus.downloading
-                        ? () async {
-                      await ref.read(connectivityProvider.notifier).checkInternetConnection();
-                      if (ref
-                          .read(connectivityProvider)
-                          .value == ConnectivityStatus.connected) {
-                        quranState.whenOrNull(
-                          data: (data) {
-                            ref.read(quranPlayerNotifierProvider.notifier).downloadAllSuwar(
-                              reciterId: widget.reciterId.toString(),
-                              moshaf: widget.selectedMoshaf,
-                              moshafId: widget.selectedMoshaf.id.toString(),
-                              suwar: data.suwar,
-                            );
-                          },
-                        );
-                      } else {
-                        showToast(S
-                            .of(context)
-                            .connectDownloadQuran);
-                      }
-                    }
-                        : null,
-                    icon: Icon(
-                      Icons.download,
-                      size: 16.sp,
-                    ),
-                  ),
+                  // IconButton(
+                  //   icon: Icon(Icons.arrow_back),
+                  //   onPressed: () {
+                  //     Navigator.pop(context);
+                  //   },
+                  // ),
+                  // Material(
+                  //   borderRadius: BorderRadius.circular(25.sp),
+                  //   color: Colors.white.withOpacity(0.2),
+                  //   child: InkWell(
+                  //     onTap: ref.watch(downloadStateProvider).downloadStatus != DownloadStatus.downloading
+                  //         ? () async {
+                  //             await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                  //             if (ref.read(connectivityProvider).value == ConnectivityStatus.connected) {
+                  //               quranState.whenOrNull(
+                  //                 data: (data) {
+                  //                   ref.read(quranPlayerNotifierProvider.notifier).downloadAllSuwar(
+                  //                         reciterId: widget.reciterId.toString(),
+                  //                         moshaf: widget.selectedMoshaf,
+                  //                         moshafId: widget.selectedMoshaf.id.toString(),
+                  //                         suwar: data.suwar,
+                  //                       );
+                  //                 },
+                  //               );
+                  //             } else {
+                  //               showToast(S.of(context).connectDownloadQuran);
+                  //             }
+                  //           }
+                  //         : null,
+                  //     focusColor: Theme.of(context).primaryColor,
+                  //     child: Icon(
+                  //       Icons.download,
+                  //       size: 22.sp,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               SizedBox(height: 10),
@@ -196,24 +261,25 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                       ),
                       itemCount: data.suwar.length,
                       itemBuilder: (context, index) {
-                        final isDownloaded = ref.watch(
-                          downloadStateProvider.select(
-                                (state) => state.downloadedSuwar[_getKey()]?.contains(data.suwar[index].id) ?? false,
+                        final downloadState = ref.watch(
+                          downloadStateProvider(
+                              downloadNotifierParameter
                           ),
                         );
+                        final reciterMoshafState = downloadState;
+
+                        final isDownloaded = reciterMoshafState.downloadedSuwar.contains(data.suwar[index].id);
+                        final downloadProgress = reciterMoshafState.downloadingSuwar
+                            .firstWhere(
+                              (info) => info.surahId == data.suwar[index].id,
+                          orElse: () => SurahDownloadInfo(surahId: data.suwar[index].id, progress: 0.0),
+                        )
+                            .progress;
                         return SurahCard(
                           index: index,
-                          isDownloaded: !isDownloaded,
-                          downloadProgress: ref.watch(
-                            downloadStateProvider.select(
-                              (state) => state.downloadProgress[_getKey()]?[data.suwar[index].id] ?? 0,
-                            ),
-                          ),
-                          onDownloadTap: ref.watch(
-                            downloadStateProvider.select(
-                              (state) => !(state.downloadedSuwar[_getKey()]?.contains(data.suwar[index].id) ?? false),
-                            ),
-                          )
+                          isDownloaded: isDownloaded,
+                          downloadProgress: downloadProgress,
+                          onDownloadTap: !isDownloaded
                               ? () async {
                                   await ref.read(connectivityProvider.notifier).checkInternetConnection();
                                   if (ref.read(connectivityProvider).value == ConnectivityStatus.connected) {

@@ -1,29 +1,53 @@
 enum DownloadStatus { idle, downloading, completed, noNewDownloads }
 
+class SurahDownloadInfo {
+  final int surahId;
+  final double progress;
+
+  SurahDownloadInfo({required this.surahId, required this.progress});
+
+  @override
+  String toString() => 'SurahDownloadInfo(surahId: $surahId, progress: $progress)';
+}
+
 class DownloadAudioQuranState {
-  final Map<String, Map<int, double>> downloadProgress;
-  final Map<String, Set<int>> downloadedSuwar;
-  final Map<String, int?> currentDownloadingSurah;
+  final String reciterId;
+  final String moshafId;
+  final List<SurahDownloadInfo> downloadingSuwar;
+  final Set<int> downloadedSuwar;
+  final int? currentDownloadingSurah;
   final DownloadStatus downloadStatus;
 
   DownloadAudioQuranState({
-    this.downloadProgress = const {},
+    this.reciterId = '',
+    this.moshafId = '',
+    this.downloadingSuwar = const [],
     this.downloadedSuwar = const {},
-    this.currentDownloadingSurah = const {},
+    this.currentDownloadingSurah,
     this.downloadStatus = DownloadStatus.idle,
   });
 
   DownloadAudioQuranState copyWith({
-    Map<String, Map<int, double>>? downloadProgress,
-    Map<String, Set<int>>? downloadedSuwar,
-    Map<String, int?>? currentDownloadingSurah,
+    String? reciterId,
+    String? moshafId,
+    List<SurahDownloadInfo>? downloadingSuwar,
+    Set<int>? downloadedSuwar,
+    int? currentDownloadingSurah,
     DownloadStatus? downloadStatus,
   }) {
     return DownloadAudioQuranState(
-      downloadProgress: downloadProgress ?? this.downloadProgress,
+      reciterId: reciterId ?? this.reciterId,
+      moshafId: moshafId ?? this.moshafId,
+      downloadingSuwar: downloadingSuwar ?? this.downloadingSuwar,
       downloadedSuwar: downloadedSuwar ?? this.downloadedSuwar,
-      downloadStatus: downloadStatus ?? this.downloadStatus,
       currentDownloadingSurah: currentDownloadingSurah ?? this.currentDownloadingSurah,
+      downloadStatus: downloadStatus ?? this.downloadStatus,
     );
   }
+
+  @override
+  String toString() => 'DownloadAudioQuranState(reciterId: $reciterId, '
+      'moshafId: $moshafId, '
+      'downloadingSuwar: $downloadingSuwar, downloadedSuwar: $downloadedSuwar, '
+      'currentDownloadingSurah: $currentDownloadingSurah, downloadStatus: $downloadStatus)';
 }
