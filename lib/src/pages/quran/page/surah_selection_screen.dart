@@ -119,26 +119,17 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     );
 
     final quranState = ref.watch(quranNotifierProvider);
-    ref.listen<DownloadAudioQuranState>(
-        downloadStateProvider(
-            downloadNotifierParameter
-        ), (previous, next) {
+    ref.listen<DownloadAudioQuranState>(downloadStateProvider(downloadNotifierParameter), (previous, next) {
       if (next.downloadStatus == DownloadStatus.completed) {
         showToast(S.of(context).downloadAllSuwarSuccessfully);
         ref
             .read(
-              downloadStateProvider(
-                  downloadNotifierParameter
-              ).notifier,
+              downloadStateProvider(downloadNotifierParameter).notifier,
             )
             .resetDownloadStatus();
       } else if (next.downloadStatus == DownloadStatus.noNewDownloads) {
         showToast(S.of(context).noSuwarDownload);
-        ref
-            .read(downloadStateProvider(
-            downloadNotifierParameter
-            ).notifier)
-            .resetDownloadStatus();
+        ref.read(downloadStateProvider(downloadNotifierParameter).notifier).resetDownloadStatus();
       }
     });
     return Scaffold(
@@ -152,9 +143,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
             focusColor: Theme.of(context).primaryColor,
             onPressed: ref
                         .watch(
-                          downloadStateProvider(
-                              downloadNotifierParameter
-                          ),
+                          downloadStateProvider(downloadNotifierParameter),
                         )
                         .downloadStatus !=
                     DownloadStatus.downloading
@@ -262,9 +251,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                       itemCount: data.suwar.length,
                       itemBuilder: (context, index) {
                         final downloadState = ref.watch(
-                          downloadStateProvider(
-                              downloadNotifierParameter
-                          ),
+                          downloadStateProvider(downloadNotifierParameter),
                         );
                         final reciterMoshafState = downloadState;
 
@@ -272,8 +259,8 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                         final downloadProgress = reciterMoshafState.downloadingSuwar
                             .firstWhere(
                               (info) => info.surahId == data.suwar[index].id,
-                          orElse: () => SurahDownloadInfo(surahId: data.suwar[index].id, progress: 0.0),
-                        )
+                              orElse: () => SurahDownloadInfo(surahId: data.suwar[index].id, progress: 0.0),
+                            )
                             .progress;
                         return SurahCard(
                           index: index,

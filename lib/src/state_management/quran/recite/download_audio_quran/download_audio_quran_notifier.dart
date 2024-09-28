@@ -68,10 +68,10 @@ class DownloadStateProviderParameter {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is DownloadStateProviderParameter &&
-              runtimeType == other.runtimeType &&
-              reciterId == other.reciterId &&
-              moshafId == other.moshafId;
+      other is DownloadStateProviderParameter &&
+          runtimeType == other.runtimeType &&
+          reciterId == other.reciterId &&
+          moshafId == other.moshafId;
 
   @override
   int get hashCode => reciterId.hashCode ^ moshafId.hashCode;

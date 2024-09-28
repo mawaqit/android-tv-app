@@ -121,55 +121,55 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                 focusColor: Theme.of(context).primaryColor,
                 splashRadius: 14.sp,
                 icon: ref.watch(reciteNotifierProvider).maybeWhen(
-                  data: (reciterState) {
-                    return reciterState.selectedReciter.fold(
+                      data: (reciterState) {
+                        return reciterState.selectedReciter.fold(
                           () => Icon(Icons.favorite_border, color: Colors.white),
                           (selectedReciter) => Icon(
-                        ref.read(reciteNotifierProvider.notifier).isReciterFavorite(selectedReciter)
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color: Colors.white,
-                      ),
-                    );
-                  },
-                  orElse: () => Icon(Icons.favorite_border, color: Colors.white),
-                ),
+                            ref.read(reciteNotifierProvider.notifier).isReciterFavorite(selectedReciter)
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                      orElse: () => Icon(Icons.favorite_border, color: Colors.white),
+                    ),
                 onPressed: () {
                   ref.read(reciteNotifierProvider).maybeWhen(
-                    data: (reciterState) {
-                      return reciterState.selectedReciter.fold(
+                        data: (reciterState) {
+                          return reciterState.selectedReciter.fold(
                             () => null,
                             (selectedReciter) async {
-                          final notifier = ref.read(reciteNotifierProvider.notifier);
+                              final notifier = ref.read(reciteNotifierProvider.notifier);
 
-                          if (notifier.isReciterFavorite(selectedReciter)) {
-                            await notifier.removeFavoriteReciter(selectedReciter);
-                            Fluttertoast.showToast(
-                              msg: S.of(context).reciterRemovedFromFavorites(selectedReciter.name),
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.black,
-                              textColor: Colors.white,
-                              fontSize: 10.sp,
-                            );
-                          } else {
-                            await notifier.addFavoriteReciter(selectedReciter);
-                            Fluttertoast.showToast(
-                              msg: S.of(context).reciterAddedToFavorites(selectedReciter.name),
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.black,
-                              textColor: Colors.white,
-                              fontSize: 10.sp,
-                            );
-                          }
+                              if (notifier.isReciterFavorite(selectedReciter)) {
+                                await notifier.removeFavoriteReciter(selectedReciter);
+                                Fluttertoast.showToast(
+                                  msg: S.of(context).reciterRemovedFromFavorites(selectedReciter.name),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 10.sp,
+                                );
+                              } else {
+                                await notifier.addFavoriteReciter(selectedReciter);
+                                Fluttertoast.showToast(
+                                  msg: S.of(context).reciterAddedToFavorites(selectedReciter.name),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 10.sp,
+                                );
+                              }
+                            },
+                          );
                         },
+                        orElse: () => null,
                       );
-                    },
-                    orElse: () => null,
-                  );
                 },
               );
             },
@@ -238,15 +238,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                   node: reciteFocusScopeNode,
                   onKeyEvent: _handleReciteFocusScopeKeyEvent,
                   child: ref.watch(reciteNotifierProvider).when(
-                    data: (reciter) {
-                      final displayReciters = isAllReciters ? reciter.reciters : reciter.favoriteReciters;
-                      return ReciterListView(
-                        reciters: displayReciters,
-                      );
-                    },
-                    loading: () => _buildReciterListShimmer(true),
-                    error: (error, stackTrace) => Text('Error: $error'),
-                  ),
+                        data: (reciter) {
+                          final displayReciters = isAllReciters ? reciter.reciters : reciter.favoriteReciters;
+                          return ReciterListView(
+                            reciters: displayReciters,
+                          );
+                        },
+                        loading: () => _buildReciterListShimmer(true),
+                        error: (error, stackTrace) => Text('Error: $error'),
+                      ),
                 ),
                 Container(
                   width: double.infinity,
@@ -256,59 +256,59 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                         node: reciteTypeFocusScopeNode,
                         onKeyEvent: _handleReciteTypeFocusScopeKeyEvent,
                         child: ref.watch(reciteNotifierProvider).when(
-                          data: (reciterState) {
-                            if (reciterState.favoriteReciters.isEmpty && !isAllReciters) {
-                              return Container(
-                                margin: EdgeInsets.only(top: 2.h),
-                                child: Text(
-                                  S.of(context).noFavoriteReciters,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                  ),
-                                ),
-                              );
-                            }
-                            return Column(
-                              children: [
-                                SizedBox(height: 3.h),
-                                Text(
-                                  S.of(context).reciteType,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 2.h),
-                                reciterState.selectedReciter.fold(
+                              data: (reciterState) {
+                                if (reciterState.favoriteReciters.isEmpty && !isAllReciters) {
+                                  return Container(
+                                    margin: EdgeInsets.only(top: 2.h),
+                                    child: Text(
+                                      S.of(context).noFavoriteReciters,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return Column(
+                                  children: [
+                                    SizedBox(height: 3.h),
+                                    Text(
+                                      S.of(context).reciteType,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 2.h),
+                                    reciterState.selectedReciter.fold(
                                       () => Container(),
                                       (selectedReciter) => ReciteTypeGridView(
-                                    reciterTypes: selectedReciter.moshaf,
+                                        reciterTypes: selectedReciter.moshaf,
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                              loading: () {
+                                return Column(children: [
+                                  SizedBox(height: 3.h),
+                                  Text(
+                                    S.of(context).reciteType,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                )
-                              ],
-                            );
-                          },
-                          loading: () {
-                            return Column(children: [
-                              SizedBox(height: 3.h),
-                              Text(
-                                S.of(context).reciteType,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 2.h),
-                              _buildReciteTypeGridShimmer(true),
-                            ]);
-                          },
-                          error: (error, stackTrace) => Text('Error: $error'),
-                        ),
+                                  SizedBox(height: 2.h),
+                                  _buildReciteTypeGridShimmer(true),
+                                ]);
+                              },
+                              error: (error, stackTrace) => Text('Error: $error'),
+                            ),
                       ),
                     ],
                   ),
