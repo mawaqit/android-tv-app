@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
@@ -28,18 +29,13 @@ import '../../../state_management/quran/recite/download_audio_quran/download_aud
 import '../../../state_management/quran/recite/download_audio_quran/download_audio_quran_state.dart';
 
 class SurahSelectionScreen extends ConsumerStatefulWidget {
-  final int reciterId;
-  final int riwayatId;
-
-  final ReciterModel reciter;
-  final MoshafModel riwayat;
+  final MoshafModel selectedMoshaf;
+  final String reciterId;
 
   const SurahSelectionScreen({
     super.key,
+    required this.selectedMoshaf,
     required this.reciterId,
-    required this.reciter,
-    required this.riwayat,
-    required this.riwayatId,
   });
 
   @override
@@ -59,10 +55,12 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
   void initState() {
     super.initState();
     _searchFocusNode = FocusNode();
-    ref.read(quranPlayerNotifierProvider.notifier).getDownloadedSuwarByReciterAndRiwayah(
-          reciterId: widget.reciterId.toString(),
-          riwayahId: widget.riwayatId.toString(),
-        );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(quranPlayerNotifierProvider.notifier).getDownloadedSuwarByReciterAndRiwayah(
+            reciterId: widget.reciterId,
+            moshafId: widget.selectedMoshaf.id.toString(),
+          );
+    });
   }
 
   @override
@@ -95,16 +93,11 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
   }
 
   void _navigateToQuranPlayerScreen(BuildContext context, SurahModel surah, List<SurahModel> suwar) {
-    final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
-          orElse: () => null,
-          data: (data) => data.selectedMoshaf,
-        );
     ref.read(quranPlayerNotifierProvider.notifier).initialize(
-          moshaf: moshaf!,
+          moshaf: widget.selectedMoshaf,
           surah: surah,
-          reciterId: widget.reciterId.toString(),
           suwar: suwar,
-          riwayahId: widget.riwayatId.toString(),
+          reciterId: widget.reciterId,
         );
     Navigator.push(
       context,
@@ -117,7 +110,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
   }
 
   String _getKey() {
-    return "${widget.reciterId}:${widget.riwayatId}";
+    return "${widget.reciterId}:${widget.selectedMoshaf.id.toString()}";
   }
 
   @override
@@ -156,8 +149,30 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                     },
                   ),
                   IconButton(
-                    onPressed: ref.watch(downloadStateProvider).downloadStatus != DownloadStatus.downloading
-                        ? () async {}
+                    onPressed: ref
+                        .watch(downloadStateProvider)
+                        .downloadStatus != DownloadStatus.downloading
+                        ? () async {
+                      await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                      if (ref
+                          .read(connectivityProvider)
+                          .value == ConnectivityStatus.connected) {
+                        quranState.whenOrNull(
+                          data: (data) {
+                            ref.read(quranPlayerNotifierProvider.notifier).downloadAllSuwar(
+                              reciterId: widget.reciterId.toString(),
+                              moshaf: widget.selectedMoshaf,
+                              moshafId: widget.selectedMoshaf.id.toString(),
+                              suwar: data.suwar,
+                            );
+                          },
+                        );
+                      } else {
+                        showToast(S
+                            .of(context)
+                            .connectDownloadQuran);
+                      }
+                    }
                         : null,
                     icon: Icon(
                       Icons.download,
@@ -176,19 +191,19 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: _crossAxisCount,
                         childAspectRatio: 1.8,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15,
                       ),
                       itemCount: data.suwar.length,
                       itemBuilder: (context, index) {
                         final isDownloaded = ref.watch(
                           downloadStateProvider.select(
-                            (state) => state.downloadedSuwar[_getKey()]?.contains(data.suwar[index].id) ?? false,
+                                (state) => state.downloadedSuwar[_getKey()]?.contains(data.suwar[index].id) ?? false,
                           ),
                         );
                         return SurahCard(
                           index: index,
-                          isDownloaded: isDownloaded,
+                          isDownloaded: !isDownloaded,
                           downloadProgress: ref.watch(
                             downloadStateProvider.select(
                               (state) => state.downloadProgress[_getKey()]?[data.suwar[index].id] ?? 0,
@@ -202,15 +217,11 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                               ? () async {
                                   await ref.read(connectivityProvider.notifier).checkInternetConnection();
                                   if (ref.read(connectivityProvider).value == ConnectivityStatus.connected) {
-                                    final moshaf = ref.read(reciteNotifierProvider).maybeWhen(
-                                          orElse: () => null,
-                                          data: (data) => data.selectedMoshaf,
-                                        );
                                     ref.read(quranPlayerNotifierProvider.notifier).downloadAudio(
-                                          reciterId: widget.reciterId.toString(),
-                                          riwayahId: widget.riwayatId.toString(),
+                                          reciterId: widget.reciterId,
+                                          moshafId: widget.selectedMoshaf.id.toString(),
                                           surahId: data.suwar[index].id,
-                                          url: data.suwar[index].getSurahUrl(moshaf!.server),
+                                          url: data.suwar[index].getSurahUrl(widget.selectedMoshaf.server),
                                         );
                                   } else {
                                     showToast(S.of(context).connectDownloadQuran);

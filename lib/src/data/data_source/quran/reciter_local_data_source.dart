@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -37,29 +38,29 @@ class ReciteLocalDataSource {
 
   Future<String> getSurahPathWithExtension({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
     required String surahNumber,
   }) async {
     final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String surahPath = '${appDocDir.path}/$reciterId/$riwayahId/$surahNumber.mp3';
+    final String surahPath = '${appDocDir.path}/$reciterId/$moshafId/$surahNumber.mp3';
     return surahPath;
   }
 
   Future<bool> isSurahDownloaded({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
     required int surahNumber,
   }) async {
     try {
       final surahFilePath = await getSurahPathWithExtension(
         reciterId: reciterId,
-        riwayahId: riwayahId,
+        moshafId: moshafId,
         surahNumber: surahNumber.toString(),
       );
       final file = File(surahFilePath);
       final exists = await file.exists();
 
-      log('ReciteLocalDataSource: isSurahDownloaded: Surah $surahNumber ${exists ? 'exists' : 'does not exist'} for reciter $reciterId and riwayah $riwayahId');
+      log('ReciteLocalDataSource: isSurahDownloaded: Surah $surahNumber ${exists ? 'exists' : 'does not exist'} for reciter $reciterId and riwayah $moshafId');
       return exists;
     } catch (e) {
       log('ReciteLocalDataSource: error: isSurahDownloaded: ${e.toString()}');
@@ -172,21 +173,21 @@ class ReciteLocalDataSource {
 
   Future<String> getSuwarFolderPath({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
   }) async {
     final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String reciterPath = '${appDocDir.path}/$reciterId/$riwayahId';
+    final String reciterPath = '${appDocDir.path}/$reciterId/$moshafId';
     return reciterPath;
   }
 
   Future<List<File>> getDownloadedSurahByReciterAndRiwayah({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
   }) async {
     List<File> downloadedSuwar = [];
     try {
       // Get the application documents directory
-      final path = await getSuwarFolderPath(reciterId: reciterId, riwayahId: riwayahId);
+      final path = await getSuwarFolderPath(reciterId: reciterId, moshafId: moshafId);
       // Check if the reciter's directory exists
       if (await Directory(path).exists()) {
         List<FileSystemEntity> files = await Directory(path).list().toList();

@@ -40,31 +40,31 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     );
   }
 
-  String _getDownloadKey(String reciterId, String riwayatId) {
-    return "${reciterId}:${riwayatId}";
+  String _getDownloadKey(String reciterId, String moshafId) {
+    return "${reciterId}:${moshafId}";
   }
 
   Future<void> downloadAudio({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
     required int surahId,
     required String url,
   }) async {
     final audioRepository = await ref.read(reciteImplProvider.future);
     final audioFileModel = AudioFileModel(
       reciterId,
-      riwayahId,
+      moshafId,
       surahId.toString(),
       url,
     );
 
-    ref.read(downloadStateProvider.notifier).updateDownloadProgress(reciterId, riwayahId, surahId, 0);
+    ref.read(downloadStateProvider.notifier).updateDownloadProgress(reciterId, moshafId, surahId, 0);
 
     try {
       await audioRepository.downloadAudio(audioFileModel, (progress) {
         ref.read(downloadStateProvider.notifier).updateDownloadProgress(
               reciterId,
-              riwayahId,
+              moshafId,
               surahId,
               progress / 100,
             );
@@ -72,12 +72,12 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
 
       ref.read(downloadStateProvider.notifier).markAsDownloaded(
             reciterId,
-            riwayahId,
+            moshafId,
             surahId,
           );
 
       await getDownloadedSuwarByReciterAndRiwayah(
-        riwayahId: riwayahId,
+        moshafId: moshafId,
         reciterId: reciterId,
       );
 
@@ -108,15 +108,20 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     }
   }
 
-  Future<int> _downloadAllSuwar(List<SurahModel> suwar, String reciterId, String riwayahId, String server) async {
+  Future<int> _downloadAllSuwar(
+    List<SurahModel> suwar,
+    String reciterId,
+    String moshafId,
+    String server,
+  ) async {
     final downloadedSuwars = ref.read(downloadStateProvider).downloadedSuwar;
     int downloadedCount = 0;
     for (final surah in suwar) {
-      if (!downloadedSuwars[_getDownloadKey(reciterId, riwayahId)]!.contains(surah.id)) {
+      if (!downloadedSuwars[_getDownloadKey(reciterId, moshafId)]!.contains(surah.id)) {
         ref.read(downloadStateProvider.notifier).setDownloadStatus(DownloadStatus.downloading);
         await downloadAudio(
           reciterId: reciterId,
-          riwayahId: riwayahId,
+          moshafId: moshafId,
           surahId: surah.id,
           url: surah.getSurahUrl(server),
         );
@@ -128,7 +133,7 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
 
   Future<void> downloadAllSuwar({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
     required MoshafModel moshaf,
     required List<SurahModel> suwar,
   }) async {
@@ -137,7 +142,7 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
       final downloadedCount = await _downloadAllSuwar(
         suwar,
         reciterId,
-        riwayahId,
+        moshafId,
         moshaf.server,
       );
       state = AsyncData(state.value!);
@@ -153,20 +158,20 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
 
   Future<void> getDownloadedSuwarByReciterAndRiwayah({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
   }) async {
     final audioRepository = await ref.read(reciteImplProvider.future);
     state = AsyncLoading();
     try {
       final downloadedAudioList = await audioRepository.getDownloadedSuwarByReciterAndRiwayah(
         reciterId: reciterId,
-        riwayahId: riwayahId,
+        moshafId: moshafId,
       );
 
       // Initialize the download state with the downloaded surahs
       final downloadedSurahIds =
           downloadedAudioList.map((file) => int.parse(file.path.split('/').last.split('.').first)).toSet();
-      ref.read(downloadStateProvider.notifier).initializeDownloadedSuwar(reciterId, riwayahId, downloadedSurahIds);
+      ref.read(downloadStateProvider.notifier).initializeDownloadedSuwar(reciterId, moshafId, downloadedSurahIds);
     } catch (e, s) {
       state = AsyncError(e, s);
     }
@@ -177,7 +182,6 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     required SurahModel surah,
     required List<SurahModel> suwar,
     required String reciterId,
-    required String riwayahId,
   }) async {
     try {
       final audioRepository = await ref.read(reciteImplProvider.future);
@@ -187,7 +191,7 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
       for (var s in suwar) {
         bool isDownloaded = await audioRepository.isSurahDownloaded(
           reciterId: reciterId,
-          riwayahId: riwayahId,
+          moshafId: moshaf.id.toString(),
           surahNumber: s.id,
         );
 
@@ -195,7 +199,7 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
           String localPath = await audioRepository.getLocalSurahPath(
             reciterId: reciterId,
             surahNumber: s.id.toString(),
-            riwayahId: riwayahId,
+            moshafId: moshaf.id.toString(),
           );
           audioSources.add(AudioSource.uri(Uri.file(localPath)));
           localSuwar.add(s);

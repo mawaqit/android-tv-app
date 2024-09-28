@@ -5,13 +5,13 @@ part 'audio_file_model.mapper.dart';
 @MappableClass()
 class AudioFileModel {
   final String reciterId;
-  final String riwayahId;
+  final String moshafId;
   final String surahId;
   final String url;
 
-  AudioFileModel(this.reciterId, this.riwayahId, this.surahId, this.url);
+  AudioFileModel(this.reciterId, this.moshafId, this.surahId, this.url);
 
-  String get filePath => '$reciterId/$riwayahId/$surahId.mp3';
+  String get filePath => '$reciterId/$moshafId/$surahId.mp3';
 
   factory AudioFileModel.fromJson(Map<String, dynamic> map) => _ensureContainer.fromMap<AudioFileModel>(map);
 

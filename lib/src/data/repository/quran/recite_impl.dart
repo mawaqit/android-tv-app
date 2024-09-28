@@ -58,11 +58,11 @@ class ReciteImpl implements ReciteRepository {
   @override
   Future<String> getLocalSurahPath({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
     required String surahNumber,
   }) async {
     return await _localDataSource.getSurahPathWithExtension(
-      riwayahId: riwayahId,
+      moshafId: moshafId,
       surahNumber: surahNumber,
       reciterId: reciterId,
     );
@@ -71,12 +71,12 @@ class ReciteImpl implements ReciteRepository {
   @override
   Future<bool> isSurahDownloaded({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
     required int surahNumber,
   }) async {
     return await _localDataSource.isSurahDownloaded(
       reciterId: reciterId,
-      riwayahId: riwayahId,
+      moshafId: moshafId,
       surahNumber: surahNumber,
     );
   }
@@ -91,10 +91,10 @@ class ReciteImpl implements ReciteRepository {
   @override
   Future<List<File>> getDownloadedSuwarByReciterAndRiwayah({
     required String reciterId,
-    required String riwayahId,
+    required String moshafId,
   }) async {
     return _localDataSource.getDownloadedSurahByReciterAndRiwayah(
-      riwayahId: riwayahId,
+      moshafId: moshafId,
       reciterId: reciterId,
     );
   }
