@@ -49,8 +49,6 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
   Timer? _debounceTimer;
   bool _isNavigating = false;
 
-
-
   @override
   void initState() {
     super.initState();
