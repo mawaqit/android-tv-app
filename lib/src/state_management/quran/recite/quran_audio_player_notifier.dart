@@ -16,7 +16,7 @@ import 'download_audio_quran/download_audio_quran_state.dart';
 
 class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
   final AudioPlayer audioPlayer = AudioPlayer();
-  late ConcatenatingAudioSource playlist;
+  ConcatenatingAudioSource playlist = ConcatenatingAudioSource(children: []);
   int index = 0;
   List<SurahModel> localSuwar = [];
   late StreamSubscription<int?> currentIndexSubscription;
@@ -229,7 +229,8 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
         throw Exception('No audio sources available');
       }
 
-      playlist = ConcatenatingAudioSource(children: audioSources);
+      playlist.clear();
+      playlist.addAll(audioSources);
       index = localSuwar.indexOf(surah);
       await audioPlayer.setAudioSource(playlist, initialIndex: index);
 
