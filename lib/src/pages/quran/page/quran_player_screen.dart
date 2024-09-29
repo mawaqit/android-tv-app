@@ -60,20 +60,13 @@ class _QuranPlayerScreenState extends ConsumerState<QuranPlayerScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          leading: Focus(
-            focusNode: backButtonFocusNode,
-            onFocusChange: (hasFocus) {
-              if (hasFocus) {
-                log('Back button focused');
-              }
+          leading: InkWell(
+            borderRadius: BorderRadius.circular(20.sp),
+            child: Icon(Icons.arrow_back),
+            onTap: () {
+              ref.read(quranPlayerNotifierProvider.notifier).stop();
+              Navigator.of(context).pop();
             },
-            child: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                ref.read(quranPlayerNotifierProvider.notifier).stop();
-                Navigator.of(context).pop();
-              },
-            ),
           ),
         ),
         screen: quranPlayerState.maybeWhen(
