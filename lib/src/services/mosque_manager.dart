@@ -201,7 +201,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _mosqueSubscription = mosqueStream.listen(
       (e) async {
         mosque = e;
-        await prefs.setBool('hasCachedMosque', true);
+        await prefs.setBool(MosqueManagerConstant.hasCachedMosque, true);
         _updateFlashEnabled();
         notifyListeners();
       },
