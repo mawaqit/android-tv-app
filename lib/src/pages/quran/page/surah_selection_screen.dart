@@ -5,13 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
-import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/pages/quran/widget/surah_card.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
-import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_notifier.dart';
@@ -21,7 +18,6 @@ import 'package:sizer/sizer.dart';
 import '../../../../const/resource.dart';
 import '../../../../i18n/l10n.dart';
 import '../../../domain/model/quran/moshaf_model.dart';
-import '../../../domain/model/quran/reciter_model.dart';
 import '../../../helpers/connectivity_provider.dart';
 import '../../../models/address_model.dart';
 import '../../../services/theme_manager.dart';
@@ -98,7 +94,11 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => QuranPlayerScreen(),
+        builder: (context) => QuranPlayerScreen(
+          reciterId: widget.reciterId,
+          selectedMoshaf: widget.selectedMoshaf,
+          surah: surah,
+        ),
       ),
     ).then((_) {
       _isNavigating = false;
