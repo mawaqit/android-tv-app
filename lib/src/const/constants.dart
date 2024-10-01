@@ -63,7 +63,7 @@ abstract class AnnouncementConstant {
 
 abstract class MosqueManagerConstant {
   static const String kMosqueUUID = "mosqueUUID";
-  static const String hasCachedMosque = "hasCachedMosque";
+  static const String khasCachedMosque = "hasCachedMosque";
 }
 
 abstract class QuranConstant {
