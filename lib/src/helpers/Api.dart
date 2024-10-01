@@ -17,6 +17,7 @@ import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 import 'package:xml_parser/xml_parser.dart';
 
@@ -106,16 +107,26 @@ class Api {
   static Future<Mosque> getMosque(String id) async {
     try {
       final response = await dio.get(
-        '/3.0/mosque/$id/info',
+        '/3.0/mosque/4545454516/info',
       );
       return Mosque.fromMap(response.data);
     } on DioException catch (e) {
       // error 404
       if (e.response != null && e.response?.statusCode == 404) {
         log('Mosque not found');
+        _handleMosqueNotFound();
         throw MosqueNotFoundFailure();
       }
       rethrow;
+    }
+  }
+
+  static Future<void> _handleMosqueNotFound() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(MosqueManagerConstant.hasCachedMosque, false);
+    } catch (e) {
+      log('Failed to update SharedPreferences: $e');
     }
   }
 

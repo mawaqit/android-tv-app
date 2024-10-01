@@ -174,7 +174,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     /// if getting item returns an error
     onItemError(e, stack) {
       logger.e(e, stackTrace: stack);
-      bool hasCachedMosque = prefs.getBool(MosqueManagerConstant.hasCachedMosque) ?? false;
+      bool hasCachedMosque = prefs.getBool(MosqueManagerConstant.khasCachedMosque) ?? false;
       if (!hasCachedMosque) {
         mosque = null;
         notifyListeners();
@@ -201,7 +201,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _mosqueSubscription = mosqueStream.listen(
       (e) async {
         mosque = e;
-        await prefs.setBool(MosqueManagerConstant.hasCachedMosque, true);
+        await prefs.setBool(MosqueManagerConstant.khasCachedMosque, true);
         _updateFlashEnabled();
         notifyListeners();
       },
