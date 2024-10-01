@@ -124,7 +124,7 @@ class Api {
   static Future<void> _handleMosqueNotFound() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool(MosqueManagerConstant.hasCachedMosque, false);
+      await prefs.setBool(MosqueManagerConstant.khasCachedMosque, false);
     } catch (e) {
       log('Failed to update SharedPreferences: $e');
     }
