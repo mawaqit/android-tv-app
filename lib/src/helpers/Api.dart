@@ -107,7 +107,7 @@ class Api {
   static Future<Mosque> getMosque(String id) async {
     try {
       final response = await dio.get(
-        '/3.0/mosque/4545454516/info',
+        '/3.0/mosque/$id/info',
       );
       return Mosque.fromMap(response.data);
     } on DioException catch (e) {
