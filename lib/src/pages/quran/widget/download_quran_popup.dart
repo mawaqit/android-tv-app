@@ -90,6 +90,7 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
         TextButton(
           autofocus: true,
           onPressed: () {
+            Navigator.pop(context);
             final notifier = ref.read(downloadQuranNotifierProvider.notifier);
             ref.read(moshafTypeNotifierProvider).maybeWhen(
                   orElse: () {},
@@ -101,7 +102,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
                     });
                   },
                 );
-            Navigator.pop(context);
           },
           child: Text(S.of(context).cancel),
         ),
