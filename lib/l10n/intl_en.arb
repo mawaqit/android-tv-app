@@ -321,22 +321,23 @@
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
   },
-  "noReciterSearchResult": "No results found for your search. Try a new reciter",
-  "searchForReciter": "Search for a reciter",
-  "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
-  "noSuwarDownload": "No new suwars to download",
-  "connectDownloadQuran":"Please connect to Internet to download",
-  "playInOnlineModeQuran": "Please connect to internet to play",
-  "downloaded": "Downloaded",
-  "switchQuranType": "Switch to {name}",
-  "@switchQuranType": {
-    "description": "Message shown when a reciter is added to favorites",
-    "placeholders": {
-      "name": {
-        "type": "String",
-        "example": "Warsh"
-      }
-    }
-  },
-  "surahSelector":"Select Surah"
+    "noReciterSearchResult": "No results found for your search. Try a new reciter",
+    "searchForReciter": "Search for a reciter",
+      "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
+      "noSuwarDownload": "No new suwars to download",
+      "connectDownloadQuran":"Please connect to Internet to download",
+      "playInOnlineModeQuran": "Please connect to internet to play",
+      "downloaded": "Downloaded",
+      "switchQuranType": "Switch to {name}",
+      "@switchQuranType": {
+        "description": "Message shown when a reciter is added to favorites",
+        "placeholders": {
+          "name": {
+            "type": "String",
+            "example": "Warsh"
+          }
+        }
+      },
+      "surahSelector":"Select Surah"
+
 }
