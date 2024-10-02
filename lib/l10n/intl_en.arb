@@ -320,5 +320,8 @@
   "noFavoriteReciters": "No favorite reciters. Try adding one to the list",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
+  },
+    "noReciterSearchResult": "No results found for your search. Try a new reciter",
+    "searchForReciter": "Search for a reciter"
+
 }

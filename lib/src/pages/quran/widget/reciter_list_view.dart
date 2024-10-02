@@ -12,10 +12,12 @@ import 'package:sizer/sizer.dart';
 
 class ReciterListView extends ConsumerStatefulWidget {
   final List<ReciterModel> reciters;
+  final int initialFocusIndex;
 
   const ReciterListView({
     super.key,
     required this.reciters,
+    this.initialFocusIndex = 0,
   });
 
   @override
@@ -38,8 +40,8 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_focusNodes.isNotEmpty) {
-        _focusNodes[0].requestFocus();
+      if (_focusNodes.isNotEmpty && widget.initialFocusIndex < _focusNodes.length) {
+        _focusNodes[widget.initialFocusIndex].requestFocus();
       }
     });
   }
