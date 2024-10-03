@@ -13,7 +13,7 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
-import 'package:mawaqit/src/enum/connectivity_status.dart';
+import 'package:mawaqit/src/domain/model/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
