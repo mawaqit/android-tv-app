@@ -34,7 +34,6 @@ void main() {
     dataSource = DownloadQuranRemoteDataSource(
       dio: mockDio,
       quranPathHelper: mockQuranPathHelper,
-      cancelToken: mockCancelToken,
     );
   });
 
@@ -103,6 +102,8 @@ void main() {
         await dataSource.downloadQuranWithProgress(
           version: version,
           moshafType: moshafType,
+          onReceiveProgress: (progress) {},
+          cancelToken: mockCancelToken,
         );
 
         verify(() => mockDio.download(
@@ -119,11 +120,11 @@ void main() {
 
         when(() => mockQuranPathHelper.getQuranZipFilePath(any())).thenReturn('/path/to/quran.zip');
         when(() => mockDio.download(
-              any(),
-              any(),
-              onReceiveProgress: any(named: 'onReceiveProgress'),
-              cancelToken: any(named: 'cancelToken'),
-            )).thenThrow(DioException(
+          any(),
+          any(),
+          onReceiveProgress: any(named: 'onReceiveProgress'),
+          cancelToken: any(named: 'cancelToken'),
+        )).thenThrow(DioException(
           type: DioExceptionType.cancel,
           requestOptions: RequestOptions(),
         ));
@@ -131,11 +132,13 @@ void main() {
         when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
 
         expect(
-          () => dataSource.downloadQuranWithProgress(
+              () => dataSource.downloadQuranWithProgress(
             version: version,
+            onReceiveProgress: (progress) {},
+            cancelToken: mockCancelToken,
             moshafType: moshafType,
           ),
-          throwsA(isA<CancelDownloadException>()),
+          throwsA(isA<DioException>().having((e) => e.type, 'type', DioExceptionType.cancel)),
         );
       });
 
@@ -145,20 +148,22 @@ void main() {
 
         when(() => mockQuranPathHelper.getQuranZipFilePath(any())).thenReturn('/path/to/quran.zip');
         when(() => mockDio.download(
-              any(),
-              any(),
-              onReceiveProgress: any(named: 'onReceiveProgress'),
-              cancelToken: any(named: 'cancelToken'),
-            )).thenThrow(Exception('Unexpected error'));
+          any(),
+          any(),
+          onReceiveProgress: any(named: 'onReceiveProgress'),
+          cancelToken: any(named: 'cancelToken'),
+        )).thenThrow(Exception('Unexpected error'));
         when(() => mockQuranPathHelper.quranZipDirectoryPath).thenReturn('/path/to/zip');
         when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
 
         expect(
-          () => dataSource.downloadQuranWithProgress(
+              () => dataSource.downloadQuranWithProgress(
             version: version,
             moshafType: moshafType,
+            onReceiveProgress: (progress) {},
+            cancelToken: mockCancelToken,
           ),
-          throwsA(isA<UnknownException>()),
+          throwsA(isA<Exception>().having((e) => e.toString(), 'message', 'Exception: Unexpected error')),
         );
       });
 
@@ -185,8 +190,8 @@ void main() {
           version: version,
           moshafType: moshafType,
           onReceiveProgress: (progress) => lastReportedProgress = progress,
+          cancelToken: mockCancelToken,
         );
-
         expect(lastReportedProgress, 50.0);
       });
     });
