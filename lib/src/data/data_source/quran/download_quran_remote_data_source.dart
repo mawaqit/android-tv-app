@@ -68,6 +68,7 @@ class DownloadQuranRemoteDataSource {
           quranPathHelper.quranZipDirectoryPath,
           quranPathHelper.quranDirectoryPath,
         ]);
+        throw CancelDownloadException();
       }
       rethrow;
     }

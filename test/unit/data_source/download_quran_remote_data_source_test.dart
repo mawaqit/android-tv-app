@@ -138,7 +138,7 @@ void main() {
             cancelToken: mockCancelToken,
             moshafType: moshafType,
           ),
-          throwsA(isA<DioException>().having((e) => e.type, 'type', DioExceptionType.cancel)),
+          throwsA(isA<CancelDownloadException>()),
         );
       });
 

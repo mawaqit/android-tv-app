@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
 import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
+import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/helpers/version_helper.dart';
@@ -100,8 +101,6 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
   }
 
   Future<void> downloadQuran(MoshafType moshafType) async {
-    _isCancelled = false;
-    _cancelToken = CancelToken();
     state = const AsyncLoading();
     try {
       final downloadState = await _downloadQuran(moshafType);
@@ -112,6 +111,9 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
         state = AsyncData(downloadState);
       }
     } catch (e, s) {
+      if (e is CancelDownloadException) {
+        return;
+      }
       state = AsyncError(e, s);
     }
   }
@@ -182,6 +184,9 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
         state = AsyncData(downloadState);
       }
     } catch (e, s) {
+      if (e is CancelDownloadException) {
+        return;
+      }
       state = AsyncError(e, s);
     }
   }
@@ -200,6 +205,7 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
       _isCancelled = true;
       state = const AsyncData(CancelDownload());
       _cancelToken = CancelToken();
+      await Future.delayed(const Duration(milliseconds: 500));
     } catch (e, s) {
       state = AsyncError(e, s);
     }
