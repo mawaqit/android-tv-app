@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 
@@ -18,7 +19,7 @@ abstract class QuranDownloadRepository {
     required dynamic Function(double) onExtractProgress,
   });
 
-  void cancelDownload();
+  void cancelDownload(CancelToken cancelToken);
 
   Future<bool> isQuranDownloaded(MoshafType moshafType);
 }

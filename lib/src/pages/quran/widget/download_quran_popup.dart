@@ -89,16 +89,16 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
       actions: [
         TextButton(
           autofocus: true,
-          onPressed: () {
-            Navigator.pop(context);
+          onPressed: () async {
             final notifier = ref.read(downloadQuranNotifierProvider.notifier);
             ref.read(moshafTypeNotifierProvider).maybeWhen(
                   orElse: () {},
-                  data: (state) {
+                  data: (state) async {
                     state.selectedMoshaf.fold(() {
                       return null;
                     }, (selectedMoshaf) async {
-                      return await notifier.cancelDownload(selectedMoshaf);
+                      await notifier.cancelDownload(selectedMoshaf); // Await cancellation
+                      Navigator.pop(context); // Close dialog after cancel completes
                     });
                   },
                 );

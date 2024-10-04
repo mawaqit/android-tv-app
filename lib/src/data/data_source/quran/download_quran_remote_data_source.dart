@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
@@ -15,12 +16,10 @@ import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 class DownloadQuranRemoteDataSource {
   final Dio dio;
   final QuranPathHelper quranPathHelper;
-  CancelToken? cancelToken;
 
   DownloadQuranRemoteDataSource({
     required this.dio,
     required this.quranPathHelper,
-    this.cancelToken,
   });
 
   /// [getRemoteQuranVersion] fetches the remote quran version
@@ -46,50 +45,38 @@ class DownloadQuranRemoteDataSource {
   Future<void> downloadQuranWithProgress({
     required String version,
     required MoshafType moshafType,
-    Function(double)? onReceiveProgress,
+    required Function(double) onReceiveProgress,
+    required CancelToken cancelToken,
   }) async {
-    log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - filePath: ${quranPathHelper.quranDirectoryPath}');
-
-    cancelToken = CancelToken();
-
     try {
       final url = _getUrlByMoshafType(moshafType, version);
-      log('downloadQuranWithProgress: url: $url');
       await dio.download(
         url,
         quranPathHelper.getQuranZipFilePath(version),
+        deleteOnError: true,
         onReceiveProgress: (received, total) {
           if (total != -1) {
             final progress = (received / total) * 100;
-            onReceiveProgress?.call(progress);
+            onReceiveProgress(progress);
           }
         },
         cancelToken: cancelToken,
       );
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.cancel) {
-        log('quran: DownloadQuranRemoteDataSource: downloadQuranWithProgress - download cancelled');
+    } catch (e) {
+      if (e is DioException && e.type == DioExceptionType.cancel) {
         await DirectoryHelper.deleteDirectories([
           quranPathHelper.quranZipDirectoryPath,
           quranPathHelper.quranDirectoryPath,
         ]);
-        throw CancelDownloadException();
       }
-      throw Exception('Error occurred while downloading quran: $e');
-    } catch (e) {
-      await DirectoryHelper.deleteDirectories([
-        quranPathHelper.quranZipDirectoryPath,
-        quranPathHelper.quranDirectoryPath,
-      ]);
-      throw UnknownException(e.toString());
+      rethrow;
     }
   }
 
-  void cancelDownload() {
-    if (cancelToken != null && !cancelToken!.isCancelled) {
-      cancelToken!.cancel();
-      log('quran: DownloadQuranRemoteDataSource: cancelDownload - download cancelled');
-    }
+
+  void cancelDownload(CancelToken cancelToken) {
+    cancelToken.cancel();
+    log('quran: checkDownloaded: cancelDownload  ${cancelToken.hashCode}');
   }
 
   String _getUrlByMoshafType(MoshafType moshafType, String version) {
@@ -114,16 +101,28 @@ class DownloadQuranRemoteDataSource {
   }
 }
 
-final downloadQuranRemoteDataSourceProvider = FutureProvider.family<DownloadQuranRemoteDataSource, MoshafType>(
-  (ref, type) async {
+class DownloadQuranRemoteDataSourceProviderParameter extends Equatable {
+  final MoshafType moshafType;
+  final CancelToken cancelToken;
+
+  DownloadQuranRemoteDataSourceProviderParameter({
+    required this.moshafType,
+    required this.cancelToken,
+  });
+
+  @override
+  List<Object> get props => [moshafType, cancelToken];
+}
+
+final downloadQuranRemoteDataSourceProvider =
+    FutureProvider.family<DownloadQuranRemoteDataSource, DownloadQuranRemoteDataSourceProviderParameter>(
+  (ref, para) async {
     final quranPathHelper = QuranPathHelper(
       applicationSupportDirectory: await getApplicationSupportDirectory(),
-      moshafType: type,
+      moshafType: para.moshafType,
     );
-    final cancelToken = CancelToken();
     return DownloadQuranRemoteDataSource(
       quranPathHelper: quranPathHelper,
-      cancelToken: cancelToken,
       dio: ref.read(dioProvider),
     );
   },
