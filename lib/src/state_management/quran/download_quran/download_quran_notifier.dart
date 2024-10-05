@@ -6,8 +6,10 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
 import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
+import 'package:mawaqit/src/helpers/connectivity_provider.dart';
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/helpers/version_helper.dart';
+import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/moshaf_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.dart';
@@ -64,18 +66,46 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
   Future<DownloadQuranState> checkForUpdate(MoshafType moshafType) async {
     state = const AsyncData(CheckingUpdate());
     try {
-      final downloadQuranRepoImpl = await ref.read(quranDownloadRepositoryProvider(
-        QuranDownloadRepositoryProviderParameter(
-          moshafType: moshafType,
-          cancelToken: _cancelToken,
-        ),
-      ).future);
+      final downloadQuranRepoImpl = await ref.read(
+        quranDownloadRepositoryProvider(
+          QuranDownloadRepositoryProviderParameter(
+            moshafType: moshafType,
+            cancelToken: _cancelToken,
+          ),
+        ).future,
+      );
       final localVersionOption = await downloadQuranRepoImpl.getLocalQuranVersion(moshafType: moshafType);
-      final remoteVersion = await downloadQuranRepoImpl.getRemoteQuranVersion(moshafType: moshafType);
 
-      return localVersionOption.fold(
-        () => UpdateAvailable(remoteVersion),
-        (localVersion) => _compareVersions(moshafType, localVersion, remoteVersion),
+      final connectivityState = ref.read(connectivityProvider);
+      return connectivityState.maybeWhen(
+        orElse: () async {
+          final remoteVersion = await downloadQuranRepoImpl.getRemoteQuranVersion(moshafType: moshafType);
+          return localVersionOption.fold(
+                () => UpdateAvailable(remoteVersion),
+                (localVersion) => _compareVersions(moshafType, localVersion, remoteVersion),
+          );
+        },
+        data: (connectivity) async {
+          if(connectivity == ConnectivityStatus.connected) {
+            final remoteVersion = await downloadQuranRepoImpl.getRemoteQuranVersion(moshafType: moshafType);
+
+            return localVersionOption.fold(
+              () => UpdateAvailable(remoteVersion),
+              (localVersion) => _compareVersions(moshafType, localVersion, remoteVersion),
+            );
+          } else {
+            final savePath = await getApplicationSupportDirectory();
+            final quranPathHelper = QuranPathHelper(
+              applicationSupportDirectory: savePath,
+              moshafType: moshafType,
+            );
+            return NoUpdate(
+              moshafType: moshafType,
+              version: '',
+              svgFolderPath: quranPathHelper.quranDirectoryPath,
+            );
+          }
+        },
       );
     } catch (e, s) {
       state = AsyncError(e, s);
@@ -172,10 +202,10 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
         if (updateState is NoUpdate || updateState is Success) {
           await moshafTypeNotifier.switchMoshafType();
           state = AsyncData(updateState);
-          ref.invalidate(quranReadingNotifierProvider);
+          Future.microtask(() => ref.invalidate(quranReadingNotifierProvider));
         } else {
           state = AsyncData(updateState);
-          ref.invalidate(quranReadingNotifierProvider);
+          Future.microtask(() => ref.invalidate(quranReadingNotifierProvider));
         }
       } else {
         // Switch the Moshaf type before downloading
