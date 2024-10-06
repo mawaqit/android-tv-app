@@ -8,7 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/elements/RaisedGradientButton.dart';
-import 'package:mawaqit/src/enum/connectivity_status.dart';
+import 'package:mawaqit/src/domain/model/connectivity_status.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
