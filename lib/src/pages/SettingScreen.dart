@@ -149,10 +149,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                                   );
                                 } else {
                                   context.read<AppLanguage>().setHadithLanguage(langCode);
-                                  ref
-                                      .read(randomHadithNotifierProvider.notifier)
-                                      .fetchAndCacheHadith(language: langCode);
-                                  context.read<AppLanguage>().saveHadithLanguage(langCode);
+                                  ref.read(randomHadithNotifierProvider.notifier).setHadithLanguage(langCode);
                                   AppRouter.pop();
                                 }
                               },

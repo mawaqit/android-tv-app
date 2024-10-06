@@ -13,7 +13,7 @@
   "closeApp": "Mbyll aplikacionin!",
   "quit": "Dilni!",
   "forceStaging": "Kalo në skenë",
-  "disableStaging": "Kalo te produksioni",
+  "disableStaging": "Kalo në modalitetin e prodhimit",
   "sureCloseApp": "Jeni i sigurt që dëshironi të dilni nga aplikacioni?",
   "ok": "Në rregull",
   "cancel": "ANULO",
@@ -48,7 +48,7 @@
   "offline": "Jashtë linje",
   "imsak": "Imsaku",
   "jumua": "E Xhuma",
-  "duhr": "Mesditë",
+  "duhr": "Dreka",
   "fajr": "Sabahu",
   "asr": "Ikindia ",
   "maghrib": "Akshami ",
@@ -88,8 +88,36 @@
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
+  "azkarList7": "O Allah! Ti je Zoti im! Askush nuk meriton të adhurohet, përveç Teje! Ti më krijove dhe unë jam robi Yt! Unë do t’i qëndroj besnik besës dhe premtimit që të kam dhënë, sa të mundem! Kërkoj që të më mbrosh nga e keqja që vjen si pasojë e asaj që kam bërë! Të jam mirënjohës për të gjitha mirësitë që më ke bërë dhe i pranoj gjynahet e mia, prandaj më fal, sepse, në të vërtetë, gjynahet nuk i fal askush tjetër, përveç Teje!\n\n“Kush e thotë këtë në mbrëmje duke qenë i bindur në të dhe vdes po atë natë do të jetë prej banorëve të Xhennetit, poashtu edhe në mëngjes”\n\nBuhariu 7/150",
+  "@azkarList7": {
+    "description": "اللهم أنت ربي، لا إله إلا أنت، خلقتني وأنا عبدُك, وأنا على عهدِك ووعدِك ما استطعتُ، أعوذ بك من شر ما صنعتُ، أبوءُ لَكَ بنعمتكَ عَلَيَّ، وأبوء بذنبي، فاغفر لي، فإنه لا يغفرُ الذنوب إلا أنت"
+  },
+  "azkarList8": "E arritëm mëngjesin, e gjithë pasuria i takon Allahut. Falënderimi është për Allahun, nuk ka të adhuruar me të drejtë përveç Allahut i Cili është Një dhe i Pashoq. Atij i takon sundimi dhe falënderimi, Ai është i Plotfuqishëm mbi çdo gjë. O Zot, prej Teje e kërkoj të mirën e kësaj dite dhe të ditëve tjera dhe prej Teje e kërkoj mbrojtjen nga e liga e kësaj dite dhe e ditëve tjera. O Zot, kërkoj mbrojtjen Tënde nga përtacia dhe mendjemadhësia. O Zot, më mbro nga dënimi i zjarrit dhe nga dënimi i varrit.",
+  "@azkarList8": {
+    "description": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر"
+  },
+  "azkarList9": "E arritëm mëngjesin në natyrshmërinë Islame, në fjalën e sinqertë (fjala: LA ILAHE IL-LALL-LLAH), në fenë e Pejgamberit tonë, Muhammedit dhe në popullin (fenë) e babait tonë Ibrahimit, i cili ka qenë besimdrejtë, musliman e nuk ka qenë prej mushrikëve (idhujtarëve).",
+  "@azkarList9": {
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
+  },
+  "azkarList10": "O Zoti im, më jep shëndet në trupin tim, O Zoti im, më jep shëndet në të dëgjuarit tim, O Zoti im, më jep shëndet në të pamurit tim. S'ka të adhuruar tjetër përveç Teje. O Zoti im, kërkoj mbrojtjen Tënde nga kufri (mosbesimi) e varfëria dhe kërkoj mbrojtjen Tënde nga dënimi i varrit. S'ka të adhuruar tjetër përveç Teje.",
+  "@azkarList10": {
+    "description": "|اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ |ثلاثَ مرَّاتٍ"
+  },
+  "azkarList11": "Më mjafton mua All-llahu; s'ka të adhuruar tjetër përveç Tij. Tek Ai jam mbështetur dhe Ai është Zoti i Arshit të Madh.\n\n\"Kush e thotë këtë në mëngjes dhe në mbrëmje shtatë herë i mjafton për atë që e brengos çështja e kësaj bote dhe e ahiretit.\"",
+  "@azkarList11": {
+    "description": "|حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ |سَبْعَ مَرّاتٍ"
+  },
+  "azkarList12": "Jam i kënaqur që Zoti im është All-llahu, feja ime është Islami dhe Pejgamberi im Muhammedi(ﷺ).\n\n\"Kush e thotë këtë çdo mëngjes dhe mbrëmje tri herë është obligim i All-llahut që ta kënaq atë ditën e Kijametit.\"",
+  "@azkarList12": {
+    "description": "|رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً |ثلاثَ مرَّاتٍ"
+  },
+  "azkarList13": "La ilahe il-lAll-llahu vahdehu la sherike leh, lehul-Mulku ve lehul-hamdu ve huve ala kul-li shejin kadir (100 herë në mëngjes).\n\nS'ka të adhuruar përveç All-llahut, Një dhe i pashoq, Atij i takon sundimi dhe lavdërimi. Ai është i plotfuqishëm mbi çdo send.",
+  "@azkarList13": {
+    "description": "|لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ |عشرَ مرَّات"
+  },
   "jumuaaScreenTitle": "Koha e Xhumase",
-  "jumuaaHadith": "Profeti (salallahu ‘alejhi wa salam) ka thenë\n « Kush merr abdes dhe e persos abdesin pastaj vjen per në xhuma dhe degjon me kujdes (hytben) dhe hesht (nuk flet) do ti falen atij gjynahet cfar ka ndermjet xhumase deri në xhumanë tjeter gjithashtu tre ditë shtese",
+  "jumuaaHadith": "Profeti ﷺ ka thenë\n « Kush merr abdes dhe e persos abdesin pastaj vjen per në xhuma dhe degjon me kujdes (hytben) dhe hesht (nuk flet) do ti falen atij gjynahet cfar ka ndermjet xhumase deri në xhumanë tjeter gjithashtu tre ditë shtese",
   "shuruk": "Lindja e diellit",
   "reset": "Rivendosur",
   "mosqueNotFoundMessage": "Na vjen keq, xhamia juaj nuk u gjet, ose mund të mungojë ose mund të jetë e çaktivizuar përkohësisht.",
@@ -98,17 +126,17 @@
   "mosqueErrorMessage": "Gabim në xhami nëse jeni administrator i xhamisë, kontaktoni mbështetjen tonë për të rregulluar këtë problem",
   "muharram": "Muharrem",
   "safar": "Safer",
-  "rabiAlawwal": "Rabi' al-Awwal",
-  "rabiAlthani": "Rabi' al-Thani",
+  "rabiAlawwal": "Rebiul-Evel",
+  "rabiAlthani": "Rebiu-Thani",
   "jumadaAlula": "Xhumadel Ula",
   "jumadaAlakhirah": "Xhumadel Ahire",
   "rajab": "Rexheb",
   "shaban": "Shaban",
   "ramadan": "Ramazan",
   "shawwal": "Sheval",
-  "dhuAlqidah": "Dhu al-Qi'dah",
-  "dhuAlhijjah": "Dhu al-Qi'dah",
-  "duaaBetweenSalahAndAdhan": "Enes bin Malik ka thënë: I Dërguari i Allahut (salallahu alejhi ue selem) ka thënë: Lutja nuk kthehet ndërmjet ezanit dhe ikametit.",
+  "dhuAlqidah": "Dhul-Kade",
+  "dhuAlhijjah": "Dhul-Hixhe",
+  "duaaBetweenSalahAndAdhan": "Enes bin Malik ka thënë: I Dërguari i Allahut (salallahu alejhi ue selem) ka thënë: Lutja nuk refuzohet ndërmjet ezanit dhe ikametit.",
   "salatKhayrMinaNawm": "Namazi është më i mire se gjumi",
   "salatElEid": "Namazi i Bajramit",
   "webView": "Aktivizo modalitetin bazik",
@@ -159,7 +187,7 @@
   "eidMubarak": "Gëzuar Bajramin!",
   "takbeerAleidText": "Allahu Akber, Allahu Akber, Allahu Akber, la ilahe il-la Allah, Allahu Akber, Allahu Akber, ve lillahi el-hamd",
   "settings": "Settings",
-  "applicationModes": "Mënyrat e aplikimit",
+  "applicationModes": "Mënyra e aplikimit",
   "ifYouAreFacingAnIssueWithTheAppActivateThis": "Nëse keni probleme me aplikacionin, përpiquni ta aktivizoni këtë opsion",
   "hijriAdjustments": "Rregullimet sipas hixhretit",
   "hijriAdjustmentsDescription": "Rregulloni datën hixhri në vend në pajisjen tuaj. Kjo nuk do të ndikojë në cilësimet e xhamisë në internet",
@@ -185,19 +213,112 @@
   "nl_ar": "Dutch & Arabic",
   "connectToChangeHadith": "Lidhu me internetin për të ndryshuar hadithin.",
   "retry": "Provo përseri",
-  "timeSetting": "Konfiguro kohën",
-  "timeSettingDesc": "Cakto një kohë të personalizuar",
+  "timeSetting": "Konfigurimi i kohës",
+  "timeSettingDesc": "Vendosni një emër të personalizuar",
   "selectedTime": "Koha aktuale e zgjedhur",
   "confirmation": "Konfirmimi",
   "confirmationMessage": "Je i sigurt që dëshiron të përdorësh kohën e pajisjes?",
   "useDeviceTime": "Përdorni kohën e pajisjes",
   "selectTime": "Zgjidh kohën",
   "previous": "Pas",
+  "appTimezone": "Zona kohore e aplikacionit",
+  "descTimezone": "Zgjidhni zonën tuaj kohore për të marrë kohët e sakta të lutjes.",
+  "appWifi": "Lidhu me wifi",
+  "descWifi": "Lidhu me Wi-Fi të preferuar",
+  "searchCountries": "Kërko vendet",
+  "scanAgain": "Skano përsëri",
+  "noScannedResultsFound": "Nuk u gjet asnjë pikë aksesi afër",
+  "connect": "Lidhu",
+  "wifiPassword": "Fjalëkalimi",
+  "skip": "Anashkalo",
+  "noSSID": "**SSID e fshehur**",
+  "close": "Mbylle",
+  "search": "Kërko",
+  "wifiSuccess": "U lidh me sukses me Wi-Fi.",
+  "wifiFailure": "Lidhja me Wi-Fi dështoi.",
+  "timezoneSuccess": "Zona kohore u caktua me sukses.",
+  "timezoneFailure": "Vendosja e zonës kohore dështoi.",
+  "screenLock": "Ekrani on/off",
+  "screenLockConfig": "Konfiguro ndezjen/fikjen e ekranit",
+  "screenLockMode": "Modaliteti i ndezjes/fikjes së ekranit",
+  "screenLockDesc": "Ndez/fike televizorin para dhe pas çdo lutjeje për të kursyer energji",
+  "screenLockDesc2": "Kjo veçori ndiz/fik pajisjen para dhe pas çdo ezani të namazit",
+  "before": "minuta para çdo kohe të namazit",
+  "after": "minuta pas çdo kohe të namazit",
   "updateAvailable": "Përditësimi në Dispozicion",
   "seeMore": "Shihni më tepër",
   "whatIsNew": "Çfarë risish ka",
   "update": "Update",
   "automaticUpdate": "Njoftimi i përditësimit",
   "automaticUpdateDescription": "Aktivizo njoftimin për Update për të marrë veçoritë dhe përmirësimet më të fundit",
-  "later": "Më vonë"
+  "checkInternetLegacyMode": "Duhet të lidheni me internetin për të përdorur modalitetin e vjetër",
+  "powerOnScreen": "Ndizni ekranin",
+  "powerOffScreen": "Fikni ekranin",
+  "deviceSettings": "Cilësimet e pajisjes",
+  "later": "Më vonë",
+  "downloadQuran": "Sistemet e pajisjeve",
+  "quran": "Kurani",
+  "askDownloadQuran": "Dëshironi të shkarkoni Kuranin?",
+  "download": "Shkarkoni",
+  "downloadingQuran": "Shkarkimi i Kuranit",
+  "extractingQuran": "Nxjerrja e Kuranit",
+  "updatedQuran": "Kurani i përditësuar",
+  "quranLatestVersion": "Kurani është i përditësuar",
+  "quranUpdatedVersion": "Versioni i përditësuar i Kuranit është: {version}",
+  "quranIsUpdated": "Kurani është përditësuar",
+  "quranDownloaded": "Kurani u shkarkua",
+  "quranIsAlreadyDownloaded": "Kurani është shkarkuar tashmë",
+  "chooseReciter": "Zgjidhni Recituesin",
+  "reciteType": "Lloji i recitimit",
+  "readingMode": "I want to read",
+  "listeningMode": "Unë dua të dëgjoj",
+  "quranReadingPage": "Faqja {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Zgjidhni faqen",
+  "checkingForUpdates": "Po kontrollon për përditësime...",
+  "chooseQuranType": "Zgjidhni Kuranin",
+  "hafs": "Hafs",
+  "warsh": "Versh",
+  "favorites": "Të preferuarat",
+  "allReciters": "Të gjithë Recituesit",
+  "reciterAddedToFavorites": "Recituesi {name} u shtua në të preferuarat",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Recituesi {name} u hoq nga të preferuarat",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "Nuk ka recitues të preferuar. Provoni të shtoni një në listë",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  }
 }
