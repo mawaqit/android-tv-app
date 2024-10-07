@@ -47,6 +47,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _portraitModeSwitchQuranFocusNode;
   late FocusNode _portraitModePageSelectorFocusNode;
 
+
   final ScrollController _gridScrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -62,6 +63,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeBackButtonFocusNode = FocusNode(debugLabel: '_portraitModeBackButtonFocusNode');
     _portraitModeSwitchQuranFocusNode = FocusNode(debugLabel: '_portraitModeSwitchQuranFocusNode');
     _portraitModePageSelectorFocusNode = FocusNode(debugLabel: '_portraitModePageSelectorFocusNode');
+
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
@@ -118,6 +120,38 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
 
     final userPrefs = context.watch<UserPreferencesManager>();
+    ref.listen(downloadQuranNotifierProvider, (previous, next) async {
+      if (!next.hasValue || next.value is Success) {
+        ref.invalidate(quranReadingNotifierProvider);
+      }
+
+      // don't show dialog for them
+      if (next.hasValue &&
+          (next.value is NoUpdate ||
+              next.value is CheckingDownloadedQuran ||
+              next.value is CheckingUpdate ||
+              next.value is CancelDownload)) {
+        return;
+      }
+
+      if (previous!.hasValue && previous.value != next.value) {
+        // Perform an action based on the new status
+        print('Status changed: ${previous} && $next');
+      }
+
+      print(
+          'next state: $next 2 canpop: ${!Navigator.canPop(context)} || _isThereCurrentDialogShowing: ${_isThereCurrentDialogShowing(context)}');
+
+      if (!_isThereCurrentDialogShowing(context)) {
+        print(
+            'next state: $next 2 canpop: ${!Navigator.canPop(context)}|| _isThereCurrentDialogShowing: ${_isThereCurrentDialogShowing(context)}');
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => DownloadQuranDialog(),
+        );
+      }
+    });
 
     _leftSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
     _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
@@ -452,6 +486,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           },
         );
       },
+
     );
   }
 
@@ -531,6 +566,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     }
     return KeyEventResult.ignored;
   }
+
 
   _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
 }

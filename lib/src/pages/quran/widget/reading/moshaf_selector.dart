@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
+import 'package:mawaqit/src/helpers/connectivity_provider.dart';
+import 'package:mawaqit/src/helpers/no_internet_toast.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.dart';
 import 'package:sizer/sizer.dart';
+
+
 
 class MoshafSelector extends ConsumerWidget {
   final FocusNode focusNode;
@@ -42,7 +46,8 @@ class MoshafSelector extends ConsumerWidget {
                   if (isDownloaded) {
                     await downloadNotifier.switchMoshaf();
                   } else {
-                    final shouldSwitch = await _showDownloadConfirmationDialog(context, moshafName);
+
+                    final shouldSwitch = await _showDownloadConfirmationDialog(context, moshafName, ref);
                     if (shouldSwitch) {
                       await downloadNotifier.switchMoshaf();
                     }
@@ -75,7 +80,8 @@ class MoshafSelector extends ConsumerWidget {
     );
   }
 
-  Future<bool> _showDownloadConfirmationDialog(BuildContext context, String moshafName) async {
+
+  Future<bool> _showDownloadConfirmationDialog(BuildContext context, String moshafName, WidgetRef ref) async {
     return await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
@@ -91,8 +97,20 @@ class MoshafSelector extends ConsumerWidget {
                 TextButton(
                   autofocus: true,
                   child: Text(S.of(context).download),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
+
+                  onPressed: () async {
+                    await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                    final connectivityStatus = ref.watch(connectivityProvider);
+                    connectivityStatus.maybeWhen(
+                      orElse: () {},
+                      data: (connectivityStatus) {
+                        if (connectivityStatus == ConnectivityStatus.connected) {
+                          Navigator.of(context).pop(true);
+                        } else {
+                          NoInternetToast.show(S.of(context).noInternet);
+                        }
+                      },
+                    );
                   },
                 ),
               ],

@@ -12,17 +12,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mawaqit/const/resource.dart';
 //import 'package:location/location.dart' hide LocationAccuracy;
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/domain/model/position/PositionResponse.dart';
 import 'package:mawaqit/src/elements/Loader.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/pages/OfflineScreen.dart';
-import 'package:mawaqit/src/position/PositionOptions.dart';
-import 'package:mawaqit/src/position/PositionResponse.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../services/user_preferences_manager.dart';
+import 'package:mawaqit/src/domain/model/position/PositionOptions.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 
 /// responsible for rendering a web-view for mawaqit
 class MawaqitWebViewWidget extends StatefulWidget {
@@ -563,7 +563,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                   ),
                   SizedBox(height: 16),
                   new TextButton(
-                    onPressed: () => exit(0),
+                    onPressed: () => SystemNavigator.pop(),
                     child: new Text(S.of(context).ok),
                   ),
                 ],
