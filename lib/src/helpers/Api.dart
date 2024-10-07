@@ -17,6 +17,7 @@ import 'package:mawaqit/src/models/times.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 import 'package:xml_parser/xml_parser.dart';
 
@@ -113,9 +114,19 @@ class Api {
       // error 404
       if (e.response != null && e.response?.statusCode == 404) {
         log('Mosque not found');
+        _handleMosqueNotFound();
         throw MosqueNotFoundFailure();
       }
       rethrow;
+    }
+  }
+
+  static Future<void> _handleMosqueNotFound() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(MosqueManagerConstant.khasCachedMosque, false);
+    } catch (e) {
+      log('Failed to update SharedPreferences: $e');
     }
   }
 
