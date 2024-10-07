@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 
 class QuranPathHelper {
   final Directory applicationSupportDirectory;
