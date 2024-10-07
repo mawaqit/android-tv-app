@@ -55,7 +55,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
       ref.read(quranNotifierProvider.notifier).getSuwarByLanguage();
-
     });
   }
 

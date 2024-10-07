@@ -17,7 +17,6 @@ class DownloadQuranDialog extends ConsumerStatefulWidget {
   _DownloadQuranDialogState createState() => _DownloadQuranDialogState();
 }
 
-
 class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
   MoshafType selectedMoshafType = MoshafType.hafs;
 
@@ -33,7 +32,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
     final notifier = ref.read(downloadQuranNotifierProvider.notifier);
     // notifier.checkForUpdate(notifier.selectedMoshafType);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +218,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
   // }
 
   Widget _buildErrorDialog(BuildContext context, Object error) {
-
     if (error is CancelDownloadException) {
       return SizedBox();
     }

@@ -75,7 +75,6 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
     }
   }
 
-
   Future<void> _cleanupAfterCancellation(String version) async {
     await DirectoryHelper.deleteDirectories([
       quranPathHelper.quranZipDirectoryPath,
@@ -98,11 +97,6 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
   @override
   Future<void> cancelDownload(CancelToken cancelToken) async {
     remoteDataSource.cancelDownload(cancelToken);
-  }
-
-  @override
-  Future<bool> isQuranDownloaded(MoshafType moshafType) async {
-    return localDataSource.isQuranDownloaded(moshafType);
   }
 
   @override
