@@ -139,7 +139,7 @@ class _SurahCardState extends ConsumerState<SurahCard> with SingleTickerProvider
             ),
           ),
           child: Text(
-            S.of(context).download,
+            S.of(context).downloaded,
             style: TextStyle(
               color: Colors.white,
               fontSize: 8.sp,
