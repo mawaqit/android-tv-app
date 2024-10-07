@@ -40,6 +40,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _switchQuranFocusNode;
   late FocusNode _autoScrollButtonFocusNode;
   late FocusNode _fontSizeButtonFocusNode;
+
   final ScrollController _gridScrollController = ScrollController();
   final ScrollController _scrollController = ScrollController();
 
@@ -61,10 +62,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _leftSkipButtonFocusNode = FocusNode(debugLabel: 'left_skip_node');
     _backButtonFocusNode = FocusNode(debugLabel: 'back_button_node');
     _switchQuranFocusNode = FocusNode(debugLabel: 'switch_quran_node');
+
     _autoScrollButtonFocusNode = FocusNode(debugLabel: 'node_autoScroll');
     _fontSizeButtonFocusNode = FocusNode(debugLabel: 'node_fontSize');
 
     _startHideTimer();
+
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
@@ -200,6 +203,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     setState(() {
       _fontSize = _fontSize + 0.2;
       if (_fontSize > _maxFontSize) _fontSize = 1.0;
+
     });
   }
 
@@ -273,7 +277,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
     _leftSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
     _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
+
     _autoScrollButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNodeAutoScroll(node, event);
+
 
     return WillPopScope(
       onWillPop: () async {
@@ -528,6 +534,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
               );
             },
           ),
+
         ),
       ),
     );
@@ -613,6 +620,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     }
     return KeyEventResult.ignored;
   }
+
 
   KeyEventResult _handleSwitcherFocusGroupNodeAutoScroll(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {

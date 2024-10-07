@@ -18,7 +18,7 @@ abstract class QuranDownloadRepository {
     required dynamic Function(double) onExtractProgress,
   });
 
-  void cancelDownload();
+  void cancelDownload(CancelToken cancelToken);
 
   Future<bool> isQuranDownloaded(MoshafType moshafType);
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/config.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +22,6 @@ class AppLanguage extends ChangeNotifier {
   AppLanguage._internal();
 
   /// [kHadithLanguage] key stored in the shared preference
-  static const String kHadithLanguage = 'hadith_language';
   String _hadithLanguage = "";
   Locale _appLocale = Locale('en', '');
 
@@ -110,7 +110,7 @@ class AppLanguage extends ChangeNotifier {
   Future<void> setHadithLanguage(String language) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     _hadithLanguage = language;
-    await prefs.setString(kHadithLanguage, language);
+    await prefs.setString(RandomHadithConstant.kHadithLanguage, language);
     notifyListeners();
   }
 
@@ -118,23 +118,15 @@ class AppLanguage extends ChangeNotifier {
   /// if there is no language saved, return the api default language
   Future<String> getHadithLanguage(MosqueManager mosqueManager) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? hadithLanguage = prefs.getString(kHadithLanguage);
+    final String? hadithLanguage = prefs.getString(RandomHadithConstant.kHadithLanguage);
     if (hadithLanguage != null) {
       _hadithLanguage = hadithLanguage;
       notifyListeners();
       return hadithLanguage;
     } else {
       _hadithLanguage = mosqueManager.mosqueConfig!.hadithLang ?? "ar";
-      notifyListeners();
-      return _hadithLanguage;
+      return mosqueManager.mosqueConfig!.hadithLang ?? "ar";
     }
-  }
-
-  Future<void> saveHadithLanguage(String langCode) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(kHadithLanguage, langCode);
-    _hadithLanguage = langCode;
-    notifyListeners();
   }
 
   /// getters for the hadith language

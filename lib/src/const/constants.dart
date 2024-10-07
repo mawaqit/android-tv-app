@@ -62,6 +62,7 @@ abstract class AnnouncementConstant {
 
 abstract class MosqueManagerConstant {
   static const String kMosqueUUID = "mosqueUUID";
+  static const String khasCachedMosque = "hasCachedMosque";
 }
 
 abstract class QuranConstant {
@@ -77,6 +78,7 @@ abstract class QuranConstant {
   static const String kFavoriteReciterBox = 'favorite_reciter_box';
   static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/config.json';
   static const String kIsFirstTime = 'is_first_time_quran';
+  static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
 }
 
 abstract class AzkarConstant {
