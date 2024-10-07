@@ -1,5 +1,6 @@
 // download_quran_state.dart
 import 'package:equatable/equatable.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 
 abstract class DownloadQuranState {
   const DownloadQuranState();
@@ -11,6 +12,10 @@ class Initial extends DownloadQuranState {
 
 class CheckingUpdate extends DownloadQuranState {
   const CheckingUpdate();
+}
+
+class CheckingDownloadedQuran extends DownloadQuranState {
+  const CheckingDownloadedQuran();
 }
 
 class Downloading extends DownloadQuranState {
@@ -27,10 +32,12 @@ class Downloading extends DownloadQuranState {
 class NoUpdate extends DownloadQuranState with EquatableMixin {
   final String version;
   final String svgFolderPath;
+  final MoshafType moshafType;
 
   const NoUpdate({
     required this.version,
     required this.svgFolderPath,
+    required this.moshafType,
   });
 
   @override
@@ -61,10 +68,12 @@ class Extracting extends DownloadQuranState {
 class Success extends DownloadQuranState with EquatableMixin {
   final String version;
   final String svgFolderPath;
+  final MoshafType moshafType;
 
   const Success({
     required this.version,
     required this.svgFolderPath,
+    required this.moshafType,
   });
 
   @override
@@ -73,4 +82,15 @@ class Success extends DownloadQuranState with EquatableMixin {
 
 class Cancel extends DownloadQuranState {
   const Cancel();
+}
+
+class NeededDownloadedQuran extends DownloadQuranState {
+  const NeededDownloadedQuran();
+}
+
+class Error extends DownloadQuranState {
+  final Object error;
+  final StackTrace stackTrace;
+
+  const Error(this.error, this.stackTrace);
 }

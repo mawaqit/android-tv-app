@@ -1,7 +1,9 @@
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 
 abstract class QuranDownloadRepository {
-  Future<String?> getLocalQuranVersion({
+  Future<Option<String>> getLocalQuranVersion({
     required MoshafType moshafType,
   });
 
@@ -17,5 +19,7 @@ abstract class QuranDownloadRepository {
     required dynamic Function(double) onExtractProgress,
   });
 
-  void cancelDownload();
+  void cancelDownload(CancelToken cancelToken);
+
+  Future<bool> isQuranDownloaded(MoshafType moshafType);
 }

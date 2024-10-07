@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
+import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
@@ -13,6 +15,7 @@ class ReciteTypeGridView extends ConsumerStatefulWidget {
   });
 
   final List<MoshafModel> reciterTypes;
+
   @override
   ConsumerState createState() => _ReciteTypeGridViewState();
 }
@@ -49,11 +52,20 @@ class _ReciteTypeGridViewState extends ConsumerState<ReciteTypeGridView> {
             ref.read(quranNotifierProvider.notifier).getSuwarByReciter(
                   selectedMoshaf: widget.reciterTypes[selectedReciteTypeIndex],
                 );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SurahSelectionScreen(
-                  selectedMoshaf: widget.reciterTypes[selectedReciteTypeIndex],
+
+            final Option<ReciterModel> selectedReciterId = ref.watch(reciteNotifierProvider).maybeWhen(
+                  orElse: () => none(),
+                  data: (reciterState) => reciterState.selectedReciter,
+                );
+            selectedReciterId.fold(
+              () => null,
+              (reciter) => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SurahSelectionScreen(
+                    reciterId: reciter.id.toString(),
+                    selectedMoshaf: widget.reciterTypes[selectedReciteTypeIndex],
+                  ),
                 ),
               ),
             );
