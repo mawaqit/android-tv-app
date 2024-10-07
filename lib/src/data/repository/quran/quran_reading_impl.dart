@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mawaqit/src/domain/repository/quran/quran_reading_repository.dart';
 
 import 'package:mawaqit/src/data/data_source/quran/quran_reading_local_data_source.dart';
-import 'package:mawaqit/src/helpers/quran_path_helper.dart';
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 
 class QuranReadingImpl implements QuranReadingRepository {
   final QuranReadingLocalDataSource localDataSource;

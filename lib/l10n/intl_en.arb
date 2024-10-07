@@ -320,5 +320,15 @@
   "noFavoriteReciters": "No favorite reciters. Try adding one to the list",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
+  },
+  "switchQuranType": "Switch to {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
   }
 }
