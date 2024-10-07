@@ -4,8 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
 import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
-
-
 import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
@@ -147,11 +145,8 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
         return;
       }
       state = AsyncError(e, s);
-      return Error(e, s);
     }
   }
-
-
 
   Future<DownloadQuranState> _downloadQuran(MoshafType moshafType) async {
     final downloadQuranRepoImpl = await ref.read(
@@ -226,8 +221,6 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
     }
   }
 
-
-
   Future<void> cancelDownload(MoshafType moshafType) async {
     try {
       final downloadQuranRepoImpl = await ref.read(
@@ -249,7 +242,6 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
   }
 
   Future<bool> checkDownloaded(MoshafType moshafType) async {
-
     final downloadQuranRepoImpl = await ref.read(
       quranDownloadRepositoryProvider(
         QuranDownloadRepositoryProviderParameter(

@@ -9,7 +9,6 @@ import 'package:mawaqit/src/state_management/quran/download_quran/download_quran
 import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.dart';
 import 'package:sizer/sizer.dart';
 
-
 import 'package:mawaqit/src/models/address_model.dart';
 
 class MoshafSelector extends ConsumerWidget {
@@ -48,7 +47,6 @@ class MoshafSelector extends ConsumerWidget {
                   if (isDownloaded) {
                     await downloadNotifier.switchMoshaf();
                   } else {
-
                     final shouldSwitch = await _showDownloadConfirmationDialog(context, moshafName, ref);
                     if (shouldSwitch) {
                       await downloadNotifier.switchMoshaf();
@@ -82,7 +80,6 @@ class MoshafSelector extends ConsumerWidget {
     );
   }
 
-
   Future<bool> _showDownloadConfirmationDialog(BuildContext context, String moshafName, WidgetRef ref) async {
     return await showDialog<bool>(
           context: context,
@@ -99,7 +96,6 @@ class MoshafSelector extends ConsumerWidget {
                 TextButton(
                   autofocus: true,
                   child: Text(S.of(context).download),
-
                   onPressed: () async {
                     await ref.read(connectivityProvider.notifier).checkInternetConnection();
                     final connectivityStatus = ref.watch(connectivityProvider);

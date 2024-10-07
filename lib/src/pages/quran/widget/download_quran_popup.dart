@@ -15,7 +15,6 @@ class DownloadQuranDialog extends ConsumerStatefulWidget {
   _DownloadQuranDialogState createState() => _DownloadQuranDialogState();
 }
 
-
 class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
   MoshafType selectedMoshafType = MoshafType.hafs;
 
@@ -31,7 +30,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
     final notifier = ref.read(downloadQuranNotifierProvider.notifier);
     // notifier.checkForUpdate(notifier.selectedMoshafType);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +87,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
           Text('${state.progress.toStringAsFixed(2)}%'),
         ],
       ),
-
       actions: [
         TextButton(
           autofocus: true,

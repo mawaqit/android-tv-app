@@ -68,7 +68,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
     _startHideTimer();
 
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
@@ -203,7 +202,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     setState(() {
       _fontSize = _fontSize + 0.2;
       if (_fontSize > _maxFontSize) _fontSize = 1.0;
-
     });
   }
 
@@ -279,7 +277,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
 
     _autoScrollButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNodeAutoScroll(node, event);
-
 
     return WillPopScope(
       onWillPop: () async {
@@ -534,7 +531,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
               );
             },
           ),
-
         ),
       ),
     );
@@ -620,7 +616,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     }
     return KeyEventResult.ignored;
   }
-
 
   KeyEventResult _handleSwitcherFocusGroupNodeAutoScroll(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 

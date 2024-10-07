@@ -104,11 +104,6 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
     return localDataSource.isQuranDownloaded(moshafType);
   }
 
-  @override
-  Future<bool> isQuranDownloaded(MoshafType moshafType) async {
-    return localDataSource.isQuranDownloaded(moshafType);
-  }
-
   /// [deleteZipFile] deletes the zip file
   Future<void> _deleteZipFile(String zipFileName) async {
     final zipFilePath = quranPathHelper.getQuranZipFilePath(zipFileName);
