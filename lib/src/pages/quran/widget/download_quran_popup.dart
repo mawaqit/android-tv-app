@@ -217,7 +217,7 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
   // }
 
   Widget _buildErrorDialog(BuildContext context, Object error) {
-    if(error is CancelDownloadException) {
+    if (error is CancelDownloadException) {
       return SizedBox();
     }
     return AlertDialog(

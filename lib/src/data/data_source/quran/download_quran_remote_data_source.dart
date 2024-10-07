@@ -74,7 +74,6 @@ class DownloadQuranRemoteDataSource {
     }
   }
 
-
   void cancelDownload(CancelToken cancelToken) {
     cancelToken.cancel();
     log('quran: checkDownloaded: cancelDownload  ${cancelToken.hashCode}');

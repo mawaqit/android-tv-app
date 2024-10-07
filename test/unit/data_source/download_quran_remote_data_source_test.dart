@@ -120,11 +120,11 @@ void main() {
 
         when(() => mockQuranPathHelper.getQuranZipFilePath(any())).thenReturn('/path/to/quran.zip');
         when(() => mockDio.download(
-          any(),
-          any(),
-          onReceiveProgress: any(named: 'onReceiveProgress'),
-          cancelToken: any(named: 'cancelToken'),
-        )).thenThrow(DioException(
+              any(),
+              any(),
+              onReceiveProgress: any(named: 'onReceiveProgress'),
+              cancelToken: any(named: 'cancelToken'),
+            )).thenThrow(DioException(
           type: DioExceptionType.cancel,
           requestOptions: RequestOptions(),
         ));
@@ -132,7 +132,7 @@ void main() {
         when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
 
         expect(
-              () => dataSource.downloadQuranWithProgress(
+          () => dataSource.downloadQuranWithProgress(
             version: version,
             onReceiveProgress: (progress) {},
             cancelToken: mockCancelToken,
@@ -148,16 +148,16 @@ void main() {
 
         when(() => mockQuranPathHelper.getQuranZipFilePath(any())).thenReturn('/path/to/quran.zip');
         when(() => mockDio.download(
-          any(),
-          any(),
-          onReceiveProgress: any(named: 'onReceiveProgress'),
-          cancelToken: any(named: 'cancelToken'),
-        )).thenThrow(Exception('Unexpected error'));
+              any(),
+              any(),
+              onReceiveProgress: any(named: 'onReceiveProgress'),
+              cancelToken: any(named: 'cancelToken'),
+            )).thenThrow(Exception('Unexpected error'));
         when(() => mockQuranPathHelper.quranZipDirectoryPath).thenReturn('/path/to/zip');
         when(() => mockQuranPathHelper.quranDirectoryPath).thenReturn('/path/to/quran');
 
         expect(
-              () => dataSource.downloadQuranWithProgress(
+          () => dataSource.downloadQuranWithProgress(
             version: version,
             moshafType: moshafType,
             onReceiveProgress: (progress) {},

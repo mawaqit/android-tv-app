@@ -24,12 +24,11 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
   final QuranPathHelper quranPathHelper;
   final CancelToken cancelToken;
 
-  QuranDownloadRepositoryImpl({
-    required this.localDataSource,
-    required this.remoteDataSource,
-    required this.quranPathHelper,
-    required this.cancelToken
-  });
+  QuranDownloadRepositoryImpl(
+      {required this.localDataSource,
+      required this.remoteDataSource,
+      required this.quranPathHelper,
+      required this.cancelToken});
 
   /// [getLocalQuranVersion] fetches the local quran version
   @override
@@ -83,7 +82,6 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
     ]);
     await _deleteZipFile(version);
   }
-
 
   /// [getRemoteQuranVersion] fetches the remote quran version
   @override
