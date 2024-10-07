@@ -145,10 +145,8 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
         return;
       }
       state = AsyncError(e, s);
-      return Error(e, s);
     }
   }
-
 
   Future<DownloadQuranState> _downloadQuran(MoshafType moshafType) async {
     final downloadQuranRepoImpl = await ref.read(
@@ -223,7 +221,6 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
     }
   }
 
-
   Future<void> cancelDownload(MoshafType moshafType) async {
     try {
       final downloadQuranRepoImpl = await ref.read(
@@ -244,6 +241,7 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
     }
   }
 
+  Future<bool> checkDownloaded(MoshafType moshafType) async {
     final downloadQuranRepoImpl = await ref.read(
       quranDownloadRepositoryProvider(
         QuranDownloadRepositoryProviderParameter(

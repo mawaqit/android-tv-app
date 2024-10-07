@@ -47,7 +47,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _portraitModeSwitchQuranFocusNode;
   late FocusNode _portraitModePageSelectorFocusNode;
 
-
   final ScrollController _gridScrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -63,7 +62,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeBackButtonFocusNode = FocusNode(debugLabel: '_portraitModeBackButtonFocusNode');
     _portraitModeSwitchQuranFocusNode = FocusNode(debugLabel: '_portraitModeSwitchQuranFocusNode');
     _portraitModePageSelectorFocusNode = FocusNode(debugLabel: '_portraitModePageSelectorFocusNode');
-
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
@@ -486,7 +484,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           },
         );
       },
-
     );
   }
 
@@ -566,7 +563,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     }
     return KeyEventResult.ignored;
   }
-
 
   _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
 }

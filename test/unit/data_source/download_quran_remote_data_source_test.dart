@@ -7,7 +7,6 @@ import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 import 'package:mawaqit/src/helpers/quran_path_helper.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 
-
 class MockDio extends Mock implements Dio {}
 
 class MockQuranPathHelper extends Mock implements QuranPathHelper {}
