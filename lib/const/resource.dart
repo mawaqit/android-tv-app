@@ -205,6 +205,9 @@ class R {
   /// ![preview](file:///Users/ds/mawaqit/assets/svg/no-wi-fi.svg)
   static const String ASSETS_SVG_NO_WI_FI_SVG = 'assets/svg/no-wi-fi.svg';
 
+  /// ![preview](file:///Users/ds/mawaqit/assets/svg/reciter_icon.png)
+  static const String ASSETS_SVG_RECITER_ICON_PNG = 'assets/svg/reciter_icon.png';
+
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/adhan-madina-fajr.mp3)
   static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_FAJR_MP3 = 'assets/voices/adhan/adhan-madina-fajr.mp3';
 

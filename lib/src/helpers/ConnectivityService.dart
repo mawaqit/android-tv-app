@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:mawaqit/src/enum/connectivity_status.dart';
+import 'package:mawaqit/src/domain/model/connectivity_status.dart';
 
 class ConnectivityService {
   StreamController<ConnectivityStatus> connectionStatusController = StreamController<ConnectivityStatus>();

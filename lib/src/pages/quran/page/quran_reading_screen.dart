@@ -55,6 +55,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
       ref.read(quranNotifierProvider.notifier).getSuwarByLanguage();
+
     });
   }
 
@@ -263,6 +264,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     onPressed: () => _scrollPageList(ScrollDirection.reverse),
                   ),
                 ),
+
                 // Page Number
                 Positioned(
                   left: 15.w,
