@@ -320,5 +320,20 @@
   "noFavoriteReciters": "Nenhum recitador favorito. Tente adicionando um à lista",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
+  },
+  "downloadAllSuwarSuccessfully": "O alcorão inteiro foi baixado",
+  "noSuwarDownload": "Sem suwars novos para baixar",
+  "connectDownloadQuran": "Conecte-se à internet para baixar",
+  "playInOnlineModeQuran": "Conecte-se à internet para jogar",
+  "downloaded": "Baixado",
+  "switchQuranType": "Mudar para {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
   }
 }
