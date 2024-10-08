@@ -93,9 +93,7 @@ class Footer extends StatelessWidget {
 
   Widget _buildQrCodeSection(Mosque mosque, TextDirection textDirection) {
     return Container(
-      margin: textDirection == TextDirection.ltr
-          ? EdgeInsets.only(right: 2.w)
-          : EdgeInsets.only(left: 2.w),
+      margin: textDirection == TextDirection.ltr ? EdgeInsets.only(right: 2.w) : EdgeInsets.only(left: 2.w),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
