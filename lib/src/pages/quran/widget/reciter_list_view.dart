@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:logger/logger.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
@@ -127,8 +130,13 @@ class ReciterCard extends ConsumerWidget {
             CachedNetworkImage(
               imageUrl: '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
               fit: BoxFit.cover,
-              placeholder: (context, url) => _buildOfflineImage(), // Use a smaller image
-              errorWidget: (context, url, error) => _buildOfflineImage(), // Use a smaller image on error
+              placeholder: (context, url) => _buildOfflineImage(),
+              errorWidget: (context, url, error) => _buildOfflineImage(),
+              errorListener: (object) {
+                if(object is HttpException) {
+                  Logger().e('Error loading image: ${object.message},');
+                }
+              },
             ),
             // Gradient overlay
             Container(
