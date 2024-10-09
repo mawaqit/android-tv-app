@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
@@ -13,6 +14,9 @@ import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_select
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_widgets.dart';
+
+import '../../../state_management/quran/download_quran/download_quran_state.dart';
+import '../widget/download_quran_popup.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -86,7 +90,46 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   Widget build(BuildContext context) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
     final userPrefs = context.watch<UserPreferencesManager>();
+    ref.listen(downloadQuranNotifierProvider, (previous, next) async {
+      if (!next.hasValue || next.value is Success) {
+        ref.invalidate(quranReadingNotifierProvider);
+      }
 
+      // don't show dialog for them
+      if (next.hasValue &&
+          (next.value is NoUpdate ||
+              next.value is CheckingDownloadedQuran ||
+              next.value is CheckingUpdate ||
+              next.value is CancelDownload)) {
+        return;
+      }
+
+      if (previous!.hasValue && previous.value != next.value) {
+        // Perform an action based on the new status
+        print('Status changed: ${previous} && $next');
+      }
+
+      print(
+          'next state: $next 2 canpop: ${!Navigator.canPop(context)} || _isThereCurrentDialogShowing: ${_isThereCurrentDialogShowing(context)}');
+
+      if (!_isThereCurrentDialogShowing(context)) {
+        print(
+            'next state: $next 2 canpop: ${!Navigator.canPop(context)}|| _isThereCurrentDialogShowing: ${_isThereCurrentDialogShowing(context)}');
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => DownloadQuranDialog(),
+        );
+      }
+    });
+
+    _leftSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
+    _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
+    _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event);
+    _switchScreenViewFocusNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event);
+    _portraitModeBackButtonFocusNode.onKeyEvent = (node, event) => _handlePageScrollUpFocusGroupNode(node, event);
+    _portraitModeSwitchQuranFocusNode.onKeyEvent = (node, event) => _handlePageScrollUpFocusGroupNode(node, event);
+    _portraitModePageSelectorFocusNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event);
     return OrientationBuilder(
       builder: (context, orientation) {
         final isPortrait = orientation == Orientation.portrait;
@@ -243,6 +286,47 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       default:
         return FloatingActionButtonLocation.endFloat;
     }
+  }
+
+  KeyEventResult _handleSwitcherFocusGroupNode(FocusNode node, KeyEvent event) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+        _rightSkipButtonFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        _leftSkipButtonFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        _backButtonFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        _switchQuranFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
+  KeyEventResult _handlePageScrollDownFocusGroupNode(FocusNode node, KeyEvent event) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        _scrollPageList(ScrollDirection.reverse);
+
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
+  KeyEventResult _handlePageScrollUpFocusGroupNode(FocusNode node, KeyEvent event) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        _scrollPageList(ScrollDirection.forward);
+
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
   }
 
   bool _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
