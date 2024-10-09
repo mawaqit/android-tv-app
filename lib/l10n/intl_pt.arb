@@ -324,7 +324,7 @@
   "downloadAllSuwarSuccessfully": "O alcorão inteiro foi baixado",
   "noSuwarDownload": "Sem suwars novos para baixar",
   "connectDownloadQuran": "Conecte-se à internet para baixar",
-  "playInOnlineModeQuran": "Conecte-se à internet para jogar",
+  "playInOnlineModeQuran": "Conecte-se à internet para reproduzir",
   "downloaded": "Baixado",
   "switchQuranType": "Mudar para {name}",
   "@switchQuranType": {
