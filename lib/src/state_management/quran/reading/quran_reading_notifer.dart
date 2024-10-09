@@ -56,9 +56,8 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
       final previousPage = isPortrait ? currentState.currentPage : currentState.currentPage - 2;
-      final nextPage = isPortrait ? previousPage - 1 : previousPage - 2;
-      if (nextPage >= 0) {
-        await _saveLastReadPage(nextPage);
+      if (previousPage >= 0) {
+        await _saveLastReadPage(previousPage);
         currentState.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         return currentState.copyWith(currentPage: previousPage);
       }
