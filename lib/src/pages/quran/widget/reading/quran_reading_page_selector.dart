@@ -47,6 +47,7 @@ class _QuranReadingPageSelectorState extends ConsumerState<QuranReadingPageSelec
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return AlertDialog(
       title: SizedBox(
         width: double.maxFinite,
@@ -65,7 +66,7 @@ class _QuranReadingPageSelectorState extends ConsumerState<QuranReadingPageSelec
         child: GridView.builder(
           controller: widget.scrollController,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 6,
+            crossAxisCount: isPortrait ? 4 : 6,
             childAspectRatio: 3 / 2,
           ),
           itemCount: widget.totalPages,
@@ -73,7 +74,9 @@ class _QuranReadingPageSelectorState extends ConsumerState<QuranReadingPageSelec
             final isSelected = index == widget.currentPage;
             return InkWell(
               onTap: () {
-                ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
+                isPortrait
+                    ? ref.read(quranReadingNotifierProvider.notifier).updatePage(index, isPortairt: true)
+                    : ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
                 Navigator.of(context).pop(); // Close the dialog after selection
               },
               child: Container(
