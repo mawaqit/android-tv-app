@@ -32,8 +32,7 @@ void showSurahSelector(BuildContext context, int currentPage) {
                 error: (err, stack) => Center(child: Text('Error: $err')),
                 data: (quranState) {
                   final suwar = quranState.suwar;
-                  final currentSurahIndex =
-                      suwar.indexWhere((element) => element.name == quranState.currentSurahName) ;
+                  final currentSurahIndex = suwar.indexWhere((element) => element.name == quranState.currentSurahName);
 
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     controller.scrollToIndex(currentSurahIndex, preferPosition: AutoScrollPosition.begin);
