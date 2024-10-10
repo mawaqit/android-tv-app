@@ -28,10 +28,8 @@ class AutoScrollNotifier extends StateNotifier<AutoScrollState> {
   void startAutoScroll() {
     _autoScrollTimer?.cancel();
     _autoScrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
-      if (scrollController.position.pixels <
-          scrollController.position.maxScrollExtent) {
-        scrollController.jumpTo(
-            scrollController.position.pixels + (state.autoScrollSpeed * 2));
+      if (scrollController.position.pixels < scrollController.position.maxScrollExtent) {
+        scrollController.jumpTo(scrollController.position.pixels + (state.autoScrollSpeed * 2));
       } else {
         stopAutoScroll();
       }
@@ -81,7 +79,6 @@ class AutoScrollNotifier extends StateNotifier<AutoScrollState> {
   }
 }
 
-final autoScrollProvider =
-    StateNotifierProvider<AutoScrollNotifier, AutoScrollState>((ref) {
+final autoScrollProvider = StateNotifierProvider<AutoScrollNotifier, AutoScrollState>((ref) {
   return AutoScrollNotifier();
 });
