@@ -4,8 +4,11 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 import 'package:sizer/sizer.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
-void showSurahSelector(BuildContext context, int currentPage, ScrollController gridScrollController) {
+void showSurahSelector(BuildContext context, int currentPage) {
+  final AutoScrollController controller = AutoScrollController();
+
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -29,8 +32,15 @@ void showSurahSelector(BuildContext context, int currentPage, ScrollController g
                 error: (err, stack) => Center(child: Text('Error: $err')),
                 data: (quranState) {
                   final suwar = quranState.suwar;
+                  final currentSurahIndex =
+                      suwar.indexWhere((element) => element.name == quranState.currentSurahName) ;
+
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    controller.scrollToIndex(currentSurahIndex, preferPosition: AutoScrollPosition.begin);
+                  });
+
                   return GridView.builder(
-                    controller: gridScrollController,
+                    controller: controller,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4,
                       childAspectRatio: 2.5 / 1,
@@ -41,31 +51,36 @@ void showSurahSelector(BuildContext context, int currentPage, ScrollController g
                     itemBuilder: (BuildContext context, int index) {
                       final surah = suwar[index];
                       final page = surah.startPage % 2 == 0 ? surah.startPage - 1 : surah.startPage;
-                      return InkWell(
-                        autofocus: index == 0,
-                        onTap: () {
-                          ref.read(quranReadingNotifierProvider.notifier).updatePage(page);
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          height: 40.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6.0),
-                            border: Border.all(
-                              color: Theme.of(context).dividerColor,
-                              width: 1,
+                      return AutoScrollTag(
+                        key: ValueKey(index),
+                        controller: controller,
+                        index: index,
+                        child: InkWell(
+                          autofocus: index == currentSurahIndex,
+                          onTap: () {
+                            ref.read(quranReadingNotifierProvider.notifier).updatePage(page);
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            height: 40.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              border: Border.all(
+                                color: Theme.of(context).dividerColor,
+                                width: 1,
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            "${surah.id}- ${surah.name}",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.normal,
+                            child: Text(
+                              "${surah.id}- ${surah.name}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
                             ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
                           ),
                         ),
                       );

@@ -215,7 +215,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       child: InkWell(
                         onTap: () {
                           ref.read(quranReadingNotifierProvider.notifier).getAllSuwarPage();
-                          showSurahSelector(context, quranReadingState.currentPage, _gridScrollController);
+                          showSurahSelector(context, quranReadingState.currentPage);
                         },
                         borderRadius: BorderRadius.circular(20),
                         child: Container(

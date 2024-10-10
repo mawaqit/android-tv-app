@@ -141,6 +141,9 @@ dependencies:
   # functional programming
   fpdart: ^1.1.0
 
+  # automatic scrolling
+  scroll_to_index: ^3.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
