@@ -1,9 +1,7 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
-import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/domain/repository/quran/quran_reading_repository.dart';
@@ -139,11 +137,6 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
   }
 
   String _getCurrentSurahName(int currentPage, List<SurahModel> suwar) {
-    print('quran: QuranReadingNotifier: _getCurrentSurahName: currentPage: $currentPage | ${suwar.getRange(
-      suwar.length - 5,
-      suwar.length,
-    )}');
-
     int left = 0;
     int right = suwar.length - 1;
 
