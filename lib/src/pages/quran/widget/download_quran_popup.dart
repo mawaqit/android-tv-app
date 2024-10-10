@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
@@ -217,9 +216,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
   // }
 
   Widget _buildErrorDialog(BuildContext context, Object error) {
-    if (error is CancelDownloadException) {
-      return SizedBox();
-    }
     return AlertDialog(
       title: Text(S.of(context).error),
       content: Text(error.toString()),
