@@ -11,6 +11,7 @@ import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/moshaf_selector.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/switch_button.dart';
+import 'package:mawaqit/src/state_management/quran/auto_scroll_quran/autoscroll_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
@@ -42,18 +43,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _fontSizeButtonFocusNode;
 
   final ScrollController _gridScrollController = ScrollController();
-  final ScrollController _scrollController = ScrollController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool _isAutoScrolling = false;
-  bool _isSinglePageView = false;
-  double _autoScrollSpeed = 1.0;
-  Timer? _autoScrollTimer;
-  bool _showSpeedControl = false;
-  double _fontSize = 1.0;
-  double _maxFontSize = 3.0;
-  Timer? _hideTimer;
-  bool _isVisible = true;
+
 
   @override
   void initState() {
@@ -66,24 +58,15 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _autoScrollButtonFocusNode = FocusNode(debugLabel: 'node_autoScroll');
     _fontSizeButtonFocusNode = FocusNode(debugLabel: 'node_fontSize');
 
-    _startHideTimer();
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
-    });
-  }
-
-  void _startHideTimer() {
-    _hideTimer?.cancel();
-    _hideTimer = Timer(Duration(seconds: 12), () {
-      setState(() {
-        _isVisible = false;
-      });
+      ref.read(autoScrollProvider.notifier).startHideTimer();
     });
   }
 
   Widget _buildSpeedControl() {
+    final autoScrollState = ref.watch(autoScrollProvider);
     return Positioned(
       bottom: 155,
       right: 20,
@@ -98,32 +81,22 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           children: [
             _buildControlButton(
               Icons.add,
-              () {
-                setState(() {
-                  _autoScrollSpeed = (_autoScrollSpeed + 0.1).clamp(0.1, 5.0);
-                  if (_isAutoScrolling) {
-                    _startAutoScroll();
-                  }
-                });
-              },
+              () => ref
+                  .read(autoScrollProvider.notifier)
+                  .changeSpeed(autoScrollState.autoScrollSpeed + 0.1),
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8),
               child: Text(
-                '${_autoScrollSpeed.toStringAsFixed(1)}x',
+                '${autoScrollState.autoScrollSpeed.toStringAsFixed(1)}x',
                 style: TextStyle(color: Colors.white, fontSize: 12.sp),
               ),
             ),
             _buildControlButton(
               Icons.remove,
-              () {
-                setState(() {
-                  _autoScrollSpeed = (_autoScrollSpeed - 0.1).clamp(0.1, 5.0);
-                  if (_isAutoScrolling) {
-                    _startAutoScroll();
-                  }
-                });
-              },
+              () => ref
+                  .read(autoScrollProvider.notifier)
+                  .changeSpeed(autoScrollState.autoScrollSpeed - 0.1),
             ),
           ],
         ),
@@ -150,7 +123,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
               width: 70,
               height: 50,
               decoration: BoxDecoration(
-                color: hasFocus ? Theme.of(context).primaryColor : Colors.transparent,
+                color: hasFocus
+                    ? Theme.of(context).primaryColor
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(25),
               ),
               child: Icon(
@@ -165,67 +140,18 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     );
   }
 
-  void _toggleAutoScroll() {
-    setState(() {
-      _isSinglePageView = !_isSinglePageView;
-      _isAutoScrolling = _isSinglePageView;
-      _showSpeedControl = _isSinglePageView;
-      if (_isAutoScrolling) {
-        _startAutoScroll();
-      } else {
-        _stopAutoScroll();
-      }
-    });
-  }
-
-  void _startAutoScroll() {
-    _autoScrollTimer?.cancel();
-    _autoScrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
-      if (_scrollController.position.pixels < _scrollController.position.maxScrollExtent) {
-        _scrollController.jumpTo(_scrollController.position.pixels + (_autoScrollSpeed * 2));
-      } else {
-        _stopAutoScroll();
-      }
-    });
-  }
-
-  void _stopAutoScroll() {
-    _autoScrollTimer?.cancel();
-    _autoScrollTimer = null;
-    setState(() {
-      _isAutoScrolling = false;
-      _showSpeedControl = false;
-    });
-  }
-
-  void _changeFontSize() {
-    setState(() {
-      _fontSize = _fontSize + 0.2;
-      if (_fontSize > _maxFontSize) _fontSize = 1.0;
-    });
-  }
-
   @override
   void dispose() {
     _leftSkipButtonFocusNode.dispose();
     _rightSkipButtonFocusNode.dispose();
     _backButtonFocusNode.dispose();
     _switchQuranFocusNode.dispose();
-    _autoScrollButtonFocusNode.dispose();
-    _fontSizeButtonFocusNode.dispose();
-    _hideTimer?.cancel();
 
     super.dispose();
   }
 
-  void _showControls() {
-    setState(() {
-      _isVisible = true;
-    });
-    _startHideTimer();
-  }
-
-  FloatingActionButtonLocation _getFloatingActionButtonLocation(BuildContext context) {
+  FloatingActionButtonLocation _getFloatingActionButtonLocation(
+      BuildContext context) {
     final TextDirection textDirection = Directionality.of(context);
     switch (textDirection) {
       case TextDirection.ltr:
@@ -240,6 +166,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   @override
   Widget build(BuildContext context) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
+    final autoScrollState = ref.watch(autoScrollProvider);
+
     ref.listen(downloadQuranNotifierProvider, (previous, next) async {
       if (!next.hasValue || next.value is Success) {
         ref.invalidate(quranReadingNotifierProvider);
@@ -273,25 +201,29 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       }
     });
 
-    _leftSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
-    _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
+    _leftSkipButtonFocusNode.onKeyEvent =
+        (node, event) => _handleSwitcherFocusGroupNode(node, event);
+    _rightSkipButtonFocusNode.onKeyEvent =
+        (node, event) => _handleSwitcherFocusGroupNode(node, event);
 
-    _autoScrollButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNodeAutoScroll(node, event);
+    _autoScrollButtonFocusNode.onKeyEvent =
+        (node, event) => _handleSwitcherFocusGroupNodeAutoScroll(node, event);
 
     return WillPopScope(
       onWillPop: () async {
         return true;
       },
       child: GestureDetector(
-        onTap: _showControls,
+        onTap: () => ref.read(autoScrollProvider.notifier).showControls(),
         child: Scaffold(
           key: _scaffoldKey,
           backgroundColor: Colors.white,
-          floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
+          floatingActionButtonLocation:
+              _getFloatingActionButtonLocation(context),
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _isVisible && _isSinglePageView
+              autoScrollState.isVisible && autoScrollState.isSinglePageView
                   ? SizedBox(
                       width: 30.sp,
                       height: 30.sp,
@@ -304,7 +236,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                           color: Colors.white,
                           size: 15.sp,
                         ),
-                        onPressed: _changeFontSize,
+                        onPressed: () => ref
+                            .read(autoScrollProvider.notifier)
+                            .changeFontSize(),
                       ),
                     )
                   : SizedBox(),
@@ -315,20 +249,25 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 child: FloatingActionButton(
                   heroTag: 'autoScrollButton',
                   focusNode: _autoScrollButtonFocusNode,
-                  backgroundColor: _isSinglePageView ? Colors.red : Colors.black.withOpacity(.3),
+                  backgroundColor: autoScrollState.isSinglePageView
+                      ? Colors.red
+                      : Colors.black.withOpacity(.3),
                   child: Icon(
-                    _isSinglePageView ? Icons.pause : Icons.play_arrow,
+                    autoScrollState.isSinglePageView
+                        ? Icons.pause
+                        : Icons.play_arrow,
                     color: Colors.white,
                     size: 15.sp,
                   ),
-                  onPressed: _toggleAutoScroll,
+                  onPressed: () =>
+                      ref.read(autoScrollProvider.notifier).toggleAutoScroll(),
                 ),
               ),
               SizedBox(height: 10),
-              !_isSinglePageView
+              !autoScrollState.isSinglePageView
                   ? SizedBox(
-                      width: 30.sp, // Set the desired width
-                      height: 30.sp, //
+                      width: 30.sp, 
+                      height: 30.sp, 
                       child: FloatingActionButton(
                         // focusNode: _listeningModeFocusNode,
                         backgroundColor: Colors.black.withOpacity(.3),
@@ -338,11 +277,14 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                           size: 15.sp,
                         ),
                         onPressed: () async {
-                          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+                          ref
+                              .read(quranNotifierProvider.notifier)
+                              .selectModel(QuranMode.listening);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ReciterSelectionScreen.withoutSurahName(),
+                              builder: (context) =>
+                                  ReciterSelectionScreen.withoutSurahName(),
                             ),
                           );
                         },
@@ -360,25 +302,35 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             data: (quranReadingState) {
               return Stack(
                 children: [
-                  _isSinglePageView
+                  autoScrollState.isSinglePageView
                       ? ListView.builder(
-                          controller: _scrollController,
+                          controller: ref
+                              .read(autoScrollProvider.notifier)
+                              .scrollController,
                           itemCount: quranReadingState.svgs.length,
                           itemBuilder: (context, index) {
                             return Column(
                               children: [
-                                _buildSinglePage(quranReadingState.svgs[quranReadingState.currentPage], context),
+                                _buildSinglePage(
+                                    quranReadingState
+                                        .svgs[quranReadingState.currentPage],
+                                    context),
                               ],
                             );
                           },
                         )
                       : PageView.builder(
-                          reverse: Directionality.of(context) == TextDirection.ltr ? true : false,
+                          reverse:
+                              Directionality.of(context) == TextDirection.ltr
+                                  ? true
+                                  : false,
                           controller: quranReadingState.pageController,
                           onPageChanged: (index) {
                             final actualPage = index * 2;
                             if (actualPage != quranReadingState.currentPage) {
-                              ref.read(quranReadingNotifierProvider.notifier).updatePage(actualPage);
+                              ref
+                                  .read(quranReadingNotifierProvider.notifier)
+                                  .updatePage(actualPage);
                             }
                           },
                           itemCount: (quranReadingState.totalPages / 2).ceil(),
@@ -389,30 +341,37 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                               builder: (context, constraints) {
                                 final pageWidth = constraints.maxWidth / 2;
                                 final pageHeight = constraints.maxHeight;
-                                final bottomPadding = pageHeight * 0.05; // 5% of screen height for bottom padding
+                                final bottomPadding = pageHeight *
+                                    0.05; 
 
                                 return Stack(
                                   children: [
                                     // Right Page (now on the left)
-                                    if (rightPageIndex < quranReadingState.svgs.length)
+                                    if (rightPageIndex <
+                                        quranReadingState.svgs.length)
                                       Positioned(
                                         left: 12.w,
                                         top: 0,
                                         bottom: bottomPadding,
                                         width: pageWidth * 0.9,
                                         child: _buildSvgPicture(
-                                          quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
+                                          quranReadingState.svgs[
+                                              rightPageIndex %
+                                                  quranReadingState
+                                                      .svgs.length],
                                         ),
                                       ),
                                     // Left Page (now on the right)
-                                    if (leftPageIndex < quranReadingState.svgs.length)
+                                    if (leftPageIndex <
+                                        quranReadingState.svgs.length)
                                       Positioned(
                                         right: 12.w,
                                         top: 0,
                                         bottom: bottomPadding,
                                         width: pageWidth * 0.9,
                                         child: _buildSvgPicture(
-                                          quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
+                                          quranReadingState.svgs[leftPageIndex %
+                                              quranReadingState.svgs.length],
                                         ),
                                       ),
                                   ],
@@ -421,9 +380,11 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                             );
                           },
                         ),
-                  if (_showSpeedControl && _isVisible) _buildSpeedControl(),
+                  if (autoScrollState.isVisible &&
+                      autoScrollState.isSinglePageView)
+                    _buildSpeedControl(),
 
-                  !_isSinglePageView
+                  !autoScrollState.isSinglePageView
                       ? Positioned(
                           right: 10,
                           top: 0,
@@ -432,14 +393,16 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                             focusNode: _rightSkipButtonFocusNode,
                             opacity: 0.7,
                             iconSize: 14.sp,
-                            icon: Directionality.of(context) == TextDirection.ltr
-                                ? Icons.arrow_forward_ios
-                                : Icons.arrow_back_ios,
-                            onPressed: () => _scrollPageList(ScrollDirection.forward),
+                            icon:
+                                Directionality.of(context) == TextDirection.ltr
+                                    ? Icons.arrow_forward_ios
+                                    : Icons.arrow_back_ios,
+                            onPressed: () =>
+                                _scrollPageList(ScrollDirection.forward),
                           ),
                         )
                       : SizedBox(),
-                  !_isSinglePageView
+                  !autoScrollState.isSinglePageView
                       ? Positioned(
                           left: 10,
                           top: 0,
@@ -448,15 +411,17 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                             focusNode: _leftSkipButtonFocusNode,
                             opacity: 0.7,
                             iconSize: 14.sp,
-                            icon: Directionality.of(context) != TextDirection.ltr
-                                ? Icons.arrow_forward_ios
-                                : Icons.arrow_back_ios,
-                            onPressed: () => _scrollPageList(ScrollDirection.reverse),
+                            icon:
+                                Directionality.of(context) != TextDirection.ltr
+                                    ? Icons.arrow_forward_ios
+                                    : Icons.arrow_back_ios,
+                            onPressed: () =>
+                                _scrollPageList(ScrollDirection.reverse),
                           ),
                         )
                       : SizedBox(),
                   // Page Number
-                  !_isSinglePageView
+                  !autoScrollState.isSinglePageView
                       ? Positioned(
                           left: 15.w,
                           right: 15.w,
@@ -473,7 +438,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
                                   decoration: BoxDecoration(
                                     color: Colors.black.withOpacity(0.4),
                                     borderRadius: BorderRadius.circular(20),
@@ -498,7 +464,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       : SizedBox(),
 
                   /// moshaf selector
-                  !_isSinglePageView
+                  !autoScrollState.isSinglePageView
                       ? Positioned(
                           left: 10,
                           bottom: 1.h,
@@ -510,7 +476,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       : SizedBox(),
 
                   /// back button
-                  !_isSinglePageView
+                  !autoScrollState.isSinglePageView
                       ? Positioned.directional(
                           start: 10,
                           textDirection: Directionality.of(context),
@@ -537,9 +503,13 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   }
 
   Widget _buildSinglePage(SvgPicture svgPicture, BuildContext context) {
+    final autoScrollState = ref.watch(autoScrollProvider);
+
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final double scaledWidth = constraints.maxWidth * _fontSize;
+
+        final double scaledWidth =
+            constraints.maxWidth * autoScrollState.fontSize;
 
         final double scaledHeight = scaledWidth;
 
@@ -585,7 +555,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     );
   }
 
-  void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
+  void _showPageSelector(
+      BuildContext context, int totalPages, int currentPage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -617,13 +588,16 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     return KeyEventResult.ignored;
   }
 
-  KeyEventResult _handleSwitcherFocusGroupNodeAutoScroll(FocusNode node, KeyEvent event) {
+  KeyEventResult _handleSwitcherFocusGroupNodeAutoScroll(
+      FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.arrowUp && node == _autoScrollButtonFocusNode) {
-        _showControls();
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
+          node == _autoScrollButtonFocusNode) {
+        ref.read(autoScrollProvider.notifier).showControls();
         _fontSizeButtonFocusNode.requestFocus();
         return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown && node == _fontSizeButtonFocusNode) {
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
+          node == _fontSizeButtonFocusNode) {
         _autoScrollButtonFocusNode.requestFocus();
         return KeyEventResult.handled;
       }
@@ -631,5 +605,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     return KeyEventResult.ignored;
   }
 
-  _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
+  _isThereCurrentDialogShowing(BuildContext context) =>
+      ModalRoute.of(context)?.isCurrent != true;
 }
