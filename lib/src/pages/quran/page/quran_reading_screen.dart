@@ -1,22 +1,27 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
-import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
-import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
-import 'package:provider/provider.dart';
-import 'package:sizer/sizer.dart';
-import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
-import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
-import 'package:mawaqit/src/services/user_preferences_manager.dart';
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_widgets.dart';
 
-import '../../../state_management/quran/download_quran/download_quran_state.dart';
-import '../widget/download_quran_popup.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
+
+import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:provider/provider.dart' as provider;
+
+import 'package:sizer/sizer.dart';
+
+import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
+
+import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -76,6 +81,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeBackButtonFocusNode.dispose();
     _portraitModeSwitchQuranFocusNode.dispose();
     _portraitModePageSelectorFocusNode.dispose();
+    super.dispose();
   }
 
   void _toggleOrientation(UserPreferencesManager userPrefs) {
