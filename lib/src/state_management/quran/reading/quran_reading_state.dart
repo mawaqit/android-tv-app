@@ -10,6 +10,7 @@ class QuranReadingState extends Equatable {
   final List<SvgPicture> svgs;
   final PageController pageController;
   final List<SurahModel> suwar;
+  final String currentSurahName;
 
   QuranReadingState({
     required this.currentJuz,
@@ -18,6 +19,7 @@ class QuranReadingState extends Equatable {
     required this.svgs,
     required this.pageController,
     required this.suwar,
+    required this.currentSurahName,
   });
 
   QuranReadingState copyWith({
@@ -28,6 +30,7 @@ class QuranReadingState extends Equatable {
     bool? isInitial,
     PageController? pageController,
     List<SurahModel>? suwar,
+    String? currentSurahName,
   }) {
     return QuranReadingState(
       currentJuz: currentJuz ?? this.currentJuz,
@@ -36,6 +39,7 @@ class QuranReadingState extends Equatable {
       svgs: svgs ?? this.svgs,
       pageController: pageController ?? this.pageController,
       suwar: suwar ?? this.suwar,
+      currentSurahName: currentSurahName ?? this.currentSurahName,
     );
   }
 
@@ -47,6 +51,7 @@ class QuranReadingState extends Equatable {
         svgs,
         pageController,
         suwar,
+        currentSurahName,
       ];
 
   int get totalPages => svgs.length;

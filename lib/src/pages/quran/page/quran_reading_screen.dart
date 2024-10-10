@@ -226,7 +226,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            S.of(context).surahSelector,
+                            quranReadingState.currentSurahName,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 8.sp,

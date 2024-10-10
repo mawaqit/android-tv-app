@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/data/repository/quran/quran_download_impl.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
+import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/domain/repository/quran/quran_reading_repository.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/src/module/shared_preference_module.dart';
@@ -25,23 +26,16 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     return _initState(repository);
   }
 
-  Future<void> _saveLastReadPage(int index) async {
-    try {
-      final quranRepository = await ref.read(quranReadingRepositoryProvider.future);
-      await quranRepository.saveLastReadPage(index);
-    } catch (e, s) {
-      state = AsyncError(e, s);
-    }
-  }
-
   void nextPage() async {
+    log('quran: QuranReadingNotifier: nextPage:');
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
       final nextPage = currentState.currentPage + 2;
       if (nextPage < currentState.totalPages) {
         await _saveLastReadPage(nextPage);
         currentState.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-        return currentState.copyWith(currentPage: nextPage);
+        final newSurahName = _getCurrentSurahName(nextPage, currentState.suwar);
+        return currentState.copyWith(currentPage: nextPage, currentSurahName: newSurahName);
       }
       return currentState;
     });
@@ -54,7 +48,8 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       if (previousPage >= 0) {
         await _saveLastReadPage(previousPage);
         currentState.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-        return currentState.copyWith(currentPage: previousPage);
+        final newSurahName = _getCurrentSurahName(previousPage, currentState.suwar);
+        return currentState.copyWith(currentPage: previousPage, currentSurahName: newSurahName);
       }
       return currentState;
     });
@@ -67,10 +62,12 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       final currentState = state.value!;
       if (page >= 0 && page < currentState.totalPages) {
         await _saveLastReadPage(page);
-        currentState.pageController.jumpToPage((page / 2).floor()); // Jump to the selected page
+        currentState.pageController.jumpToPage((page / 2).floor());
+        final newSurahName = _getCurrentSurahName(page, currentState.suwar);
         return currentState.copyWith(
           currentPage: page,
           isInitial: false,
+          currentSurahName: newSurahName,
         );
       }
       return currentState;
@@ -95,6 +92,16 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     });
   }
 
+  Future<List<SurahModel>> getAllSuwar() async {
+    final sharedPref = await ref.read(sharedPreferenceModule.future);
+    final language = sharedPref.getString(SettingsConstant.kLanguageCode) ?? 'en';
+    await ref.read(quranNotifierProvider.notifier).getSuwarByLanguage(languageCode: language);
+    return ref.read(quranNotifierProvider).maybeWhen(
+          orElse: () => [],
+          data: (quranState) => quranState.suwar,
+        );
+  }
+
   Future<QuranReadingState> _initState(Future<QuranReadingRepository> repository) async {
     final quranReadingRepository = await repository;
     final mosqueModel = await ref.read(moshafTypeNotifierProvider.future);
@@ -106,16 +113,56 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
         final svgs = await _loadSvgs(moshafType: moshaf);
         final lastReadPage = await quranReadingRepository.getLastReadPage();
         final pageController = PageController(initialPage: (lastReadPage / 2).floor());
+        final suwar = await getAllSuwar();
+        final initialSurahName = _getCurrentSurahName(lastReadPage, suwar);
         return QuranReadingState(
           currentJuz: 1,
           currentSurah: 1,
-          suwar: [],
+          suwar: suwar,
           currentPage: lastReadPage,
           svgs: svgs,
           pageController: pageController,
+          currentSurahName: initialSurahName,
         );
       },
     );
+  }
+
+  Future<void> _saveLastReadPage(int index) async {
+    try {
+      final quranRepository = await ref.read(quranReadingRepositoryProvider.future);
+      await quranRepository.saveLastReadPage(index);
+      log('quran: QuranReadingNotifier: Saved last read page: $index');
+    } catch (e, s) {
+      state = AsyncError(e, s);
+    }
+  }
+
+  String _getCurrentSurahName(int currentPage, List<SurahModel> suwar) {
+    print('quran: QuranReadingNotifier: _getCurrentSurahName: currentPage: $currentPage | ${suwar.getRange(
+      suwar.length - 5,
+      suwar.length,
+    )}');
+
+    int left = 0;
+    int right = suwar.length - 1;
+
+    while (left <= right) {
+      int mid = left + (right - left) ~/ 2;
+
+      if (currentPage + 1 >= suwar[mid].startPage &&
+          (mid == suwar.length - 1 || currentPage + 1 < suwar[mid + 1].startPage)) {
+        return suwar[mid].name;
+      }
+
+      if (currentPage + 1 < suwar[mid].startPage) {
+        right = mid - 1;
+      } else {
+        left = mid + 1;
+      }
+    }
+
+    return "";
   }
 
   Future<List<SvgPicture>> _loadSvgs({required MoshafType moshafType}) async {
