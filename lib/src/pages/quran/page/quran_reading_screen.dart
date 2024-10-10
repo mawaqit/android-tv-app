@@ -23,6 +23,8 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 
+import '../widget/reading/quran_surah_selector.dart';
+
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
 
@@ -52,6 +54,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
+      ref.read(quranNotifierProvider.notifier).getSuwarByLanguage();
     });
   }
 
@@ -203,6 +206,37 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     );
                   },
                 ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 0.5.h),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          ref.read(quranReadingNotifierProvider.notifier).getAllSuwarPage();
+                          showSurahSelector(context, quranReadingState.currentPage);
+                        },
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            quranReadingState.currentSurahName,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 8.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
 
                 Positioned(
                   right: 10,
@@ -232,6 +266,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     onPressed: () => _scrollPageList(ScrollDirection.reverse),
                   ),
                 ),
+
                 // Page Number
                 Positioned(
                   left: 15.w,

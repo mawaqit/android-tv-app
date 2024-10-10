@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
+
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
 import 'package:mawaqit/src/helpers/no_internet_toast.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';

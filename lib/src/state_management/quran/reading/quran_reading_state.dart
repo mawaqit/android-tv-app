@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 
 class QuranReadingState extends Equatable {
   final int currentJuz;
@@ -8,6 +9,8 @@ class QuranReadingState extends Equatable {
   final int currentPage;
   final List<SvgPicture> svgs;
   final PageController pageController;
+  final List<SurahModel> suwar;
+  final String currentSurahName;
 
   QuranReadingState({
     required this.currentJuz,
@@ -15,6 +18,8 @@ class QuranReadingState extends Equatable {
     required this.currentPage,
     required this.svgs,
     required this.pageController,
+    required this.suwar,
+    required this.currentSurahName,
   });
 
   QuranReadingState copyWith({
@@ -24,6 +29,8 @@ class QuranReadingState extends Equatable {
     int? currentPage,
     bool? isInitial,
     PageController? pageController,
+    List<SurahModel>? suwar,
+    String? currentSurahName,
   }) {
     return QuranReadingState(
       currentJuz: currentJuz ?? this.currentJuz,
@@ -31,6 +38,8 @@ class QuranReadingState extends Equatable {
       currentPage: currentPage ?? this.currentPage,
       svgs: svgs ?? this.svgs,
       pageController: pageController ?? this.pageController,
+      suwar: suwar ?? this.suwar,
+      currentSurahName: currentSurahName ?? this.currentSurahName,
     );
   }
 
@@ -41,6 +50,8 @@ class QuranReadingState extends Equatable {
         currentPage,
         svgs,
         pageController,
+        suwar,
+        currentSurahName,
       ];
 
   int get totalPages => svgs.length;
