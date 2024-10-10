@@ -42,7 +42,7 @@ void showSurahSelector(BuildContext context, int currentPage, ScrollController g
                       final surah = suwar[index];
                       final page = surah.startPage % 2 == 0 ? surah.startPage - 1 : surah.startPage;
                       return InkWell(
-                        autofocus:  index == 0,
+                        autofocus: index == 0,
                         onTap: () {
                           ref.read(quranReadingNotifierProvider.notifier).updatePage(page);
                           Navigator.of(context).pop();
