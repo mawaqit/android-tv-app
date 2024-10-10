@@ -209,12 +209,15 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 Positioned(
                   left: 15.w,
                   right: 15.w,
-                  top: 1.h,
+                  top: 0.5.h,
                   child: Center(
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () => showSurahSelector(context, quranReadingState.currentPage, _gridScrollController),
+                        onTap: () {
+                          ref.read(quranReadingNotifierProvider.notifier).getAllSuwarPage();
+                          showSurahSelector(context, quranReadingState.currentPage, _gridScrollController);
+                        },
                         borderRadius: BorderRadius.circular(20),
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

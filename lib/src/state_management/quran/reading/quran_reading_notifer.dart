@@ -8,7 +8,7 @@ import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:mawaqit/src/domain/repository/quran/quran_reading_repository.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/src/module/shared_preference_module.dart';
-import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:mawaqit/src/data/repository/quran/quran_reading_impl.dart';
@@ -29,14 +29,12 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     try {
       final quranRepository = await ref.read(quranReadingRepositoryProvider.future);
       await quranRepository.saveLastReadPage(index);
-      log('quran: QuranReadingNotifier: Saved last read page: ${index}');
     } catch (e, s) {
       state = AsyncError(e, s);
     }
   }
 
   void nextPage() async {
-    log('quran: QuranReadingNotifier: nextPage:');
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
       final nextPage = currentState.currentPage + 2;
@@ -79,6 +77,24 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     });
   }
 
+  Future<void> getAllSuwarPage() async {
+    state = AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final sharedPref = await ref.read(sharedPreferenceModule.future);
+      final language = sharedPref.getString(SettingsConstant.kLanguageCode) ?? 'en';
+      await ref.read(quranNotifierProvider.notifier).getSuwarByLanguage(languageCode: language);
+      return ref.read(quranNotifierProvider).maybeWhen(
+        orElse: () {
+          return state.value!;
+        },
+        data: (quranState) {
+          final suwar = quranState.suwar;
+          return state.value!.copyWith(suwar: suwar);
+        },
+      );
+    });
+  }
+
   Future<QuranReadingState> _initState(Future<QuranReadingRepository> repository) async {
     final quranReadingRepository = await repository;
     final mosqueModel = await ref.read(moshafTypeNotifierProvider.future);
@@ -93,6 +109,7 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
         return QuranReadingState(
           currentJuz: 1,
           currentSurah: 1,
+          suwar: [],
           currentPage: lastReadPage,
           svgs: svgs,
           pageController: pageController,
