@@ -337,5 +337,6 @@
         "example": "Warsh"
       }
     }
-  }
+  },
+  "surahSelector":"Select Surah"
 }
