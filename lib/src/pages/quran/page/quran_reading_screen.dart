@@ -206,11 +206,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     );
                   },
                 ),
-                Positioned(
-                  left: 15.w,
-                  right: 15.w,
-                  top: 0.5.h,
-                  child: Center(
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 0.5.h),
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
@@ -238,6 +237,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     ),
                   ),
                 ),
+
                 Positioned(
                   right: 10,
                   top: 0,
