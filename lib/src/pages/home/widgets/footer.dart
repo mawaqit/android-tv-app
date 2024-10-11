@@ -29,7 +29,7 @@ class Footer extends StatelessWidget {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final showMosqueInfo = !isPortrait && mosque.flash == null && mosqueConfig.footer == true;
     final qrCodeSection = Expanded(
-      flex: showMosqueInfo ? 2: 1,
+      flex: showMosqueInfo ? 2 : 1,
       child: Row(
         children: [
           _buildQrCodeSection(mosque, textDirection),
