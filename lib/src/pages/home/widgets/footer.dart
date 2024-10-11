@@ -28,11 +28,13 @@ class Footer extends StatelessWidget {
 
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final showMosqueInfo = !isPortrait && mosque.flash == null && mosqueConfig.footer == true;
-
-    final qrCodeSection = Row(
-      children: [
-        _buildQrCodeSection(mosque, textDirection),
-      ],
+    final qrCodeSection = Expanded(
+      flex: showMosqueInfo ? 2: 1,
+      child: Row(
+        children: [
+          _buildQrCodeSection(mosque, textDirection),
+        ],
+      ),
     );
 
     final mosqueInfoSection = Expanded(
@@ -80,6 +82,7 @@ class Footer extends StatelessWidget {
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 qrCodeSection,
                 middleSection,
@@ -95,7 +98,6 @@ class Footer extends StatelessWidget {
   Widget _buildQrCodeSection(Mosque mosque, TextDirection textDirection) {
     return Container(
       margin: textDirection == TextDirection.ltr ? EdgeInsets.only(right: 2.w) : EdgeInsets.only(left: 2.w),
-      width: 8.w,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
