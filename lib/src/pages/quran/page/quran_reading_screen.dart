@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -59,11 +58,11 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _leftSkipButtonFocusNode = FocusNode(debugLabel: 'left_skip_node');
     _backButtonFocusNode = FocusNode(debugLabel: 'back_button_node');
     _switchQuranFocusNode = FocusNode(debugLabel: 'switch_quran_node');
-    _switchQuranModeNode = FocusNode(debugLabel: 'switchQuranModeNode');
-    _switchScreenViewFocusNode = FocusNode(debugLabel: 'switchScreenViewFocusNode');
-    _portraitModeBackButtonFocusNode = FocusNode(debugLabel: '_portraitModeBackButtonFocusNode');
-    _portraitModeSwitchQuranFocusNode = FocusNode(debugLabel: '_portraitModeSwitchQuranFocusNode');
-    _portraitModePageSelectorFocusNode = FocusNode(debugLabel: '_portraitModePageSelectorFocusNode');
+    _switchQuranModeNode = FocusNode(debugLabel: 'switch_quran_mode_node');
+    _switchScreenViewFocusNode = FocusNode(debugLabel: 'switch_screen_view_node');
+    _portraitModeBackButtonFocusNode = FocusNode(debugLabel: 'portrait_mode_back_button_node');
+    _portraitModeSwitchQuranFocusNode = FocusNode(debugLabel: 'portrait_mode_switch_quran_node');
+    _portraitModePageSelectorFocusNode = FocusNode(debugLabel: 'portrait_mode_page_selector_node');
   }
 
   @override
@@ -112,15 +111,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
       if (previous!.hasValue && previous.value != next.value) {
         // Perform an action based on the new status
-        print('Status changed: ${previous} && $next');
       }
 
-      print(
-          'next state: $next 2 canpop: ${!Navigator.canPop(context)} || _isThereCurrentDialogShowing: ${_isThereCurrentDialogShowing(context)}');
-
       if (!_isThereCurrentDialogShowing(context)) {
-        print(
-            'next state: $next 2 canpop: ${!Navigator.canPop(context)}|| _isThereCurrentDialogShowing: ${_isThereCurrentDialogShowing(context)}');
         await showDialog(
           context: context,
           barrierDismissible: false,
@@ -136,6 +129,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeBackButtonFocusNode.onKeyEvent = (node, event) => _handlePageScrollUpFocusGroupNode(node, event);
     _portraitModeSwitchQuranFocusNode.onKeyEvent = (node, event) => _handlePageScrollUpFocusGroupNode(node, event);
     _portraitModePageSelectorFocusNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event);
+
     return OrientationBuilder(
       builder: (context, orientation) {
         final isPortrait = orientation == Orientation.portrait;
