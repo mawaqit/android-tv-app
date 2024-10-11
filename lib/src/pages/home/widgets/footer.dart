@@ -28,6 +28,7 @@ class Footer extends StatelessWidget {
 
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final showMosqueInfo = !isPortrait && mosque.flash == null && mosqueConfig.footer == true;
+
     final qrCodeSection = Row(
       children: [
         _buildQrCodeSection(mosque, textDirection),
@@ -47,7 +48,7 @@ class Footer extends StatelessWidget {
     final logoVersionSection = Expanded(
       flex: 2,
       child: Align(
-        alignment: AlignmentDirectional.centerEnd,
+        alignment: AlignmentDirectional.bottomEnd,
         child: HomeLogoVersion(),
       ),
     );
@@ -73,7 +74,7 @@ class Footer extends StatelessWidget {
             child: FlashWidget(),
           ),
         Container(
-          height: 8.h,
+          height: 6.5.h,
           color: mosque.flash?.content.isEmpty != false ? null : Colors.black.withOpacity(.3),
           padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.5.h),
           child: Directionality(
@@ -94,6 +95,7 @@ class Footer extends StatelessWidget {
   Widget _buildQrCodeSection(Mosque mosque, TextDirection textDirection) {
     return Container(
       margin: textDirection == TextDirection.ltr ? EdgeInsets.only(right: 2.w) : EdgeInsets.only(left: 2.w),
+      width: 8.w,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +104,7 @@ class Footer extends StatelessWidget {
             "ID ${mosque.id}",
             textDirection: TextDirection.ltr,
             style: TextStyle(
-              fontSize: 8.sp,
+              fontSize: 6.sp,
               color: Colors.white,
               fontWeight: FontWeight.bold,
               shadows: kAfterAdhanTextShadow,
