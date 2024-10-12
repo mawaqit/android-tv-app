@@ -43,11 +43,12 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   late FocusScopeNode reciteTypeFocusScopeNode;
   late FocusScopeNode reciteFocusScopeNode;
-  late FocusScopeNode _searchReciterFocusNode;
+
+  // late FocusScopeNode _searchReciterFocusNode;
 
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
@@ -63,7 +64,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     reciteFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_focus_scope_node');
 
     _tabController = TabController(length: 2, vsync: this);
-    _searchReciterFocusNode = FocusScopeNode(debugLabel: '_searchReciterFocusNode');
+    // _searchReciterFocusNode = FocusScopeNode(debugLabel: '_searchReciterFocusNode');
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -78,16 +79,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     reciteFocusScopeNode.dispose();
 
     _tabController.dispose();
-    _searchReciterFocusNode.dispose();
+    // _searchReciterFocusNode.dispose();
     _searchController.dispose();
-    _searchReciterFocusNode.dispose();
+    // _searchReciterFocusNode.dispose();
     super.dispose();
   }
 
   void _onSearchChanged() {
-    setState(() {
-      _searchQuery = _searchController.text;
-    });
+    final isAllReciters = _tabController.index == 0;
+    ref.read(reciteNotifierProvider.notifier).setSearchQuery(_searchController.text, isAllReciters);
   }
 
   @override
@@ -258,34 +258,28 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         Padding(
           padding: EdgeInsets.all(10),
           child: Container(
-            height: 50,
-            child: FocusScope(
-              node: _searchReciterFocusNode,
-              onKeyEvent: _handleSwitcherFocusGroupNode,
-              child: TextField(
-                controller: _searchController,
-                onSubmitted: (_) {
-                  final reciter = ref.read(reciteNotifierProvider).value;
-                  if (reciter != null) {
-                    final displayReciters = isAllReciters ? reciter.reciters : reciter.favoriteReciters;
-                    final filteredReciters = _filterReciters(displayReciters);
-
-                    if (filteredReciters.isNotEmpty) {
-                      _focusAndSelectFirstReciter(filteredReciters);
-                    }
-                  }
-                },
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: S.of(context).searchForReciter,
-                  hintStyle: TextStyle(color: Colors.white70),
-                  prefixIcon: Icon(Icons.search, color: Colors.white70),
-                  filled: true,
-                  fillColor: Colors.white24,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
+            child: TextField(
+              controller: _searchController,
+              onSubmitted: (_) {
+                // final reciter = ref.read(reciteNotifierProvider).value;
+                // if (reciter != null) {
+                //   final displayReciters = isAllReciters ? reciter.reciters : reciter.favoriteReciters;
+                //   final filteredReciters = _filterReciters(displayReciters);
+                //   if (filteredReciters.isNotEmpty) {
+                //   }
+                // }
+                FocusScope.of(context).requestFocus(reciteFocusScopeNode);
+              },
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: S.of(context).searchForReciter,
+                hintStyle: TextStyle(color: Colors.white70),
+                prefixIcon: Icon(Icons.search, color: Colors.white70),
+                filled: true,
+                fillColor: Colors.white24,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
                 ),
               ),
             ),
@@ -294,9 +288,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         Expanded(
           child: ref.watch(reciteNotifierProvider).when(
                 data: (reciter) {
-                  final displayReciters = isAllReciters ? reciter.reciters : reciter.favoriteReciters;
-                  final filteredReciters = _filterReciters(displayReciters);
-
+                  final displayReciters = isAllReciters ? reciter.filteredReciters : reciter.filteredFavoriteReciters;
                   return CustomScrollView(
                     slivers: [
                       if (!isAllReciters && reciter.favoriteReciters.isEmpty)
@@ -312,7 +304,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                             ),
                           ),
                         )
-                      else if (filteredReciters.isEmpty)
+                      else if (displayReciters.isEmpty)
                         SliverToBoxAdapter(
                           child: Center(
                             child: Text(
@@ -331,7 +323,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                             node: reciteFocusScopeNode,
                             onKeyEvent: _handleReciteFocusScopeKeyEvent,
                             child: ReciterListView(
-                              reciters: filteredReciters,
+                              reciters: displayReciters,
                               initialFocusIndex: 0,
                             ),
                           ),
@@ -339,7 +331,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                       SliverToBoxAdapter(
                         child: SizedBox(height: 3.h),
                       ),
-                      if (filteredReciters.isNotEmpty) ...[
+                      ...[
                         SliverToBoxAdapter(
                           child: Text(
                             S.of(context).reciteType,
@@ -376,13 +368,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         ),
       ],
     );
-  }
-
-  List<ReciterModel> _filterReciters(List<ReciterModel> reciters) {
-    if (_searchQuery.length <= 2) {
-      return reciters;
-    }
-    return reciters.where((reciter) => reciter.name.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
   }
 
   Widget _buildReciterListShimmer(bool isDarkMode) {
@@ -437,19 +422,19 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     );
   }
 
-  KeyEventResult _handleSwitcherFocusGroupNode(FocusNode node, KeyEvent event) {
-    if (event is KeyDownEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        _searchReciterFocusNode.unfocus();
-        reciteFocusScopeNode.requestFocus();
-      }
-      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        _searchReciterFocusNode.unfocus();
-        favoriteFocusNode.requestFocus();
-      }
-    }
-    return KeyEventResult.ignored;
-  }
+  // KeyEventResult _handleSwitcherFocusGroupNode(FocusNode node, KeyEvent event) {
+  //   if (event is KeyDownEvent) {
+  //     if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+  //       _searchReciterFocusNode.unfocus();
+  //       reciteFocusScopeNode.requestFocus();
+  //     }
+  //     if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+  //       _searchReciterFocusNode.unfocus();
+  //       favoriteFocusNode.requestFocus();
+  //     }
+  //   }
+  //   return KeyEventResult.ignored;
+  // }
 
   KeyEventResult _handleReciteFocusScopeKeyEvent(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {
