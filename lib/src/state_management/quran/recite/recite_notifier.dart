@@ -45,8 +45,9 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
   }
 
   Future<void> _updateFilteredReciters(String query, bool isAllReciters) async {
+    final currentState = state.value;
+    if (currentState == null) return;
     state = await AsyncValue.guard(() async {
-      final currentState = state.value!;
       if (isAllReciters) {
         final filteredReciters = _filterReciters(currentState.reciters, query);
         return currentState.copyWith(filteredReciters: filteredReciters);
