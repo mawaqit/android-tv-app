@@ -12,12 +12,10 @@ import 'package:sizer/sizer.dart';
 
 class ReciterListView extends ConsumerStatefulWidget {
   final List<ReciterModel> reciters;
-  final int initialFocusIndex;
 
   const ReciterListView({
     super.key,
     required this.reciters,
-    this.initialFocusIndex = 0,
   });
 
   @override
@@ -33,24 +31,19 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
     super.initState();
     _focusNodes = List.generate(
       widget.reciters.length,
-      (index) => FocusNode(debugLabel: 'reciter_focus_node_$index'),
+          (index) => FocusNode(debugLabel: 'reciter_focus_node_$index'),
     );
     for (var node in _focusNodes) {
       node.addListener(() => _handleFocusChange(node));
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_focusNodes.isNotEmpty && widget.initialFocusIndex < _focusNodes.length) {
-        _focusNodes[widget.initialFocusIndex].requestFocus();
-      }
-    });
   }
 
   void _handleFocusChange(FocusNode node) {
     if (node.hasFocus) {
       ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-            reciterModel: widget.reciters[_focusNodes.indexOf(node)],
-          );
+        reciterModel: widget.reciters[_focusNodes.indexOf(node)],
+      );
     }
   }
 
@@ -78,8 +71,8 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             focusColor: Colors.transparent,
             onTap: () {
               ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                    reciterModel: widget.reciters[index],
-                  );
+                reciterModel: widget.reciters[index],
+              );
               _focusNodes[index].requestFocus();
             },
             child: Builder(
