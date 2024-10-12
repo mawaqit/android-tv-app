@@ -305,6 +305,14 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           prefixIcon: Icon(Icons.search, color: Colors.white70),
           filled: true,
           fillColor: Colors.white24,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white, width: 1.0),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,

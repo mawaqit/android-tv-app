@@ -31,19 +31,18 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
     super.initState();
     _focusNodes = List.generate(
       widget.reciters.length,
-          (index) => FocusNode(debugLabel: 'reciter_focus_node_$index'),
+      (index) => FocusNode(debugLabel: 'reciter_focus_node_$index'),
     );
     for (var node in _focusNodes) {
       node.addListener(() => _handleFocusChange(node));
     }
-
   }
 
   void _handleFocusChange(FocusNode node) {
     if (node.hasFocus) {
       ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-        reciterModel: widget.reciters[_focusNodes.indexOf(node)],
-      );
+            reciterModel: widget.reciters[_focusNodes.indexOf(node)],
+          );
     }
   }
 
@@ -71,8 +70,8 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             focusColor: Colors.transparent,
             onTap: () {
               ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                reciterModel: widget.reciters[index],
-              );
+                    reciterModel: widget.reciters[index],
+                  );
               _focusNodes[index].requestFocus();
             },
             child: Builder(
