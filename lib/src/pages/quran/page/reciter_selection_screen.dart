@@ -43,7 +43,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   late FocusScopeNode reciteTypeFocusScopeNode;
   late FocusScopeNode reciteFocusScopeNode;
 
-  // late FocusScopeNode _searchReciterFocusNode;
+  late FocusScopeNode _searchReciterFocusNode;
 
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
@@ -63,7 +63,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     reciteFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_focus_scope_node');
 
     _tabController = TabController(length: 2, vsync: this);
-    // _searchReciterFocusNode = FocusScopeNode(debugLabel: '_searchReciterFocusNode');
+    _searchReciterFocusNode = FocusScopeNode(debugLabel: '_searchReciterFocusNode');
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -80,7 +80,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     _tabController.dispose();
     // _searchReciterFocusNode.dispose();
     _searchController.dispose();
-    // _searchReciterFocusNode.dispose();
+    _searchReciterFocusNode.dispose();
     super.dispose();
   }
 
@@ -279,43 +279,67 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     );
   }
 
+  Future<bool> _handleWillPop(BuildContext context) async {
+    if (FocusScope.of(context).focusedChild == _searchReciterFocusNode) {
+      final isEmptyList = ref.read(reciteNotifierProvider).maybeWhen(
+            data: (reciter) => reciter.filteredReciters.isEmpty,
+            orElse: () => false,
+          );
+      if (isEmptyList) {
+        FocusScope.of(context).requestFocus(favoriteFocusNode);
+      } else {
+        FocusScope.of(context).requestFocus(reciteFocusScopeNode);
+        if (reciteFocusScopeNode.children.isNotEmpty) {
+          reciteFocusScopeNode.children.first.requestFocus();
+        }
+      }
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Widget _buildSearchField() {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: TextField(
-        controller: _searchController,
-        onSubmitted: (_) {
-          final isEmptyList = ref.read(reciteNotifierProvider).maybeWhen(
-                data: (reciter) => reciter.filteredReciters.isEmpty,
-                orElse: () => false,
-              );
-          if (isEmptyList) {
-            FocusScope.of(context).requestFocus(favoriteFocusNode);
-          } else {
-            FocusScope.of(context).requestFocus(reciteFocusScopeNode);
-            if (reciteFocusScopeNode.children.isNotEmpty) {
-              reciteFocusScopeNode.children.first.requestFocus();
+    return WillPopScope(
+      onWillPop: () => _handleWillPop(context),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: TextField(
+          focusNode: _searchReciterFocusNode,
+          controller: _searchController,
+          onSubmitted: (_) {
+            final isEmptyList = ref.read(reciteNotifierProvider).maybeWhen(
+                  data: (reciter) => reciter.filteredReciters.isEmpty,
+                  orElse: () => false,
+                );
+            if (isEmptyList) {
+              FocusScope.of(context).requestFocus(favoriteFocusNode);
+            } else {
+              FocusScope.of(context).requestFocus(reciteFocusScopeNode);
+              if (reciteFocusScopeNode.children.isNotEmpty) {
+                reciteFocusScopeNode.children.first.requestFocus();
+              }
             }
-          }
-        },
-        style: TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          hintText: S.of(context).searchForReciter,
-          hintStyle: TextStyle(color: Colors.white70),
-          prefixIcon: Icon(Icons.search, color: Colors.white70),
-          filled: true,
-          fillColor: Colors.white24,
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white, width: 1.0),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
+          },
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: S.of(context).searchForReciter,
+            hintStyle: TextStyle(color: Colors.white70),
+            prefixIcon: Icon(Icons.search, color: Colors.white70),
+            filled: true,
+            fillColor: Colors.white24,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white, width: 1.0),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+            ),
           ),
         ),
       ),
