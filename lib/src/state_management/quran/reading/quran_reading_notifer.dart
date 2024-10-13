@@ -114,6 +114,7 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
         throw Exception('No MoshafType');
       },
       (moshaf) async {
+        state = AsyncLoading();
         final svgs = await _loadSvgs(moshafType: moshaf);
         final lastReadPage = await quranReadingRepository.getLastReadPage();
         final pageController = PageController(initialPage: (lastReadPage / 2).floor());

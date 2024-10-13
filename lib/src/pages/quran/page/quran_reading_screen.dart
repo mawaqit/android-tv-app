@@ -154,8 +154,13 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   Widget _buildBody(
       AsyncValue<QuranReadingState> quranReadingState, bool isPortrait, UserPreferencesManager userPrefs) {
+    final color = Theme.of(context).primaryColor;
     return quranReadingState.when(
-      loading: () => Center(child: CircularProgressIndicator()),
+      loading: () => Center(
+        child: CircularProgressIndicator(
+          color: color,
+        ),
+      ),
       error: (error, s) {
         final errorLocalized = S.of(context).error;
         return Center(child: Text('$errorLocalized: $error'));
