@@ -80,7 +80,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeBackButtonFocusNode.dispose();
     _portraitModeSwitchQuranFocusNode.dispose();
     _portraitModePageSelectorFocusNode.dispose();
-    super.dispose();
   }
 
   void _toggleOrientation(UserPreferencesManager userPrefs) {
@@ -222,6 +221,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           size: isPortrait ? 20.sp : 15.sp,
         ),
         onPressed: () => _toggleOrientation(userPrefs),
+        heroTag: null,
       ),
     );
   }
@@ -250,6 +250,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             ),
           );
         },
+        heroTag: null,
       ),
     );
   }
@@ -309,9 +310,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   KeyEventResult _handlePageScrollDownFocusGroupNode(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown && isPortrait) {
         _scrollPageList(ScrollDirection.reverse);
-
         return KeyEventResult.handled;
       }
     }
