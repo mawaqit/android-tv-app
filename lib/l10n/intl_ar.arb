@@ -320,5 +320,23 @@
   "noFavoriteReciters": "لا يوجد مقرئون مفضلون. حاول إضافة واحد إلى القائمة",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
+  },
+  "noReciterSearchResult": "لم يتم العثور على نتائج لبحثك",
+  "searchForReciter": "ابحث عن قارئ",
+  "downloadAllSuwarSuccessfully": "تم تحميل القرآن بالكامل",
+  "noSuwarDownload": "لا يوجد سور لتحميلها",
+  "connectDownloadQuran": "الرجاء الاتصال بالإنترنت لتنزيل القرآن",
+  "playInOnlineModeQuran": "الرجاء الاتصال بالإنترنت لتشغيل القرآن",
+  "downloaded": "تم التحميل",
+  "switchQuranType": "انتقل إلى {name}",
+  "@switchQuranType": {
+    "description": "رسالة تظهر عند إضافة قارئ إلى المفضلة",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "ورش"
+      }
+    }
+  },
+  "surahSelector": "اختر السورة"
 }
