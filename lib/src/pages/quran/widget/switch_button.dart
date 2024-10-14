@@ -33,12 +33,12 @@ class SwitchButton extends StatelessWidget {
         padding: EdgeInsets.all(8.sp),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.black.withOpacity(0.2),
+          color: Colors.transparent,
         ),
         child: Center(
           child: Icon(
             icon,
-            color: Colors.white.withOpacity(opacity),
+            color: Colors.black,
             size: iconSize,
           ),
         ),
