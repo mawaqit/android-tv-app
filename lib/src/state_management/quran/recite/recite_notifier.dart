@@ -16,12 +16,14 @@ import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 
 class ReciteNotifier extends AsyncNotifier<ReciteState> {
   // Option<List<ReciterModel>> _cachedReciters = None();
+  Timer? _debounce;
 
   @override
   build() async {
     ref.onDispose(() async {
       final reciteImpl = await ref.read(reciteImplProvider.future);
       await reciteImpl.clearAllReciters();
+      _debounce?.cancel();
     });
 
     final reciters = await _getRemoteReciters();
@@ -30,7 +32,37 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
     return ReciteState(
       reciters: aggregatedReciters,
       favoriteReciters: favoriteReciters,
+      filteredReciters: aggregatedReciters,
+      filteredFavoriteReciters: favoriteReciters,
     );
+  }
+
+  void setSearchQuery(String query, bool isAllReciters) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      _updateFilteredReciters(query.toLowerCase(), isAllReciters);
+    });
+  }
+
+  Future<void> _updateFilteredReciters(String query, bool isAllReciters) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+    state = await AsyncValue.guard(() async {
+      if (isAllReciters) {
+        final filteredReciters = _filterReciters(currentState.reciters, query);
+        return currentState.copyWith(filteredReciters: filteredReciters);
+      } else {
+        final filteredFavoriteReciters = _filterReciters(currentState.favoriteReciters, query);
+        return currentState.copyWith(filteredFavoriteReciters: filteredFavoriteReciters);
+      }
+    });
+  }
+
+  List<ReciterModel> _filterReciters(List<ReciterModel> reciters, String query) {
+    if (query.length <= 2) {
+      return reciters;
+    }
+    return reciters.where((reciter) => reciter.name.toLowerCase().contains(query)).toList();
   }
 
   void setSelectedReciter({

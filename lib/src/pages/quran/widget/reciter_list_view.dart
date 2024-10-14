@@ -36,12 +36,6 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
     for (var node in _focusNodes) {
       node.addListener(() => _handleFocusChange(node));
     }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_focusNodes.isNotEmpty) {
-        _focusNodes[0].requestFocus();
-      }
-    });
   }
 
   void _handleFocusChange(FocusNode node) {
