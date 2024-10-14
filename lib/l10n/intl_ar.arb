@@ -322,7 +322,7 @@
     "description": "Message shown when there are no favorite reciters"
   },
   "noReciterSearchResult": "لم يتم العثور على نتائج لبحثك",
-  "searchForReciter": "Search for a reciter",
+  "searchForReciter": "ابحث عن قارئ",
   "downloadAllSuwarSuccessfully": "تم تحميل القرآن بالكامل",
   "noSuwarDownload": "لا يوجد سور لتحميلها",
   "connectDownloadQuran": "الرجاء الاتصال بالإنترنت لتنزيل القرآن",
