@@ -335,7 +335,7 @@
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
   },
-    "noReciterSearchResult": "No results found for your search. Try a new reciter",
+    "noReciterSearchResult": "No results found for your search",
     "searchForReciter": "Search for a reciter",
   "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
   "noSuwarDownload": "No new suwars to download",
