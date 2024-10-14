@@ -24,6 +24,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(Uri());
     registerFallbackValue(CancelToken());
+
     registerFallbackValue(<String>[]);
   });
 

@@ -290,6 +290,20 @@
       }
     }
   },
+  "quranReadingPagePortrait": "Page {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "Choose the page",
   "checkingForUpdates": "Checking for updates...",
   "chooseQuranType": "Choose quran",
@@ -326,7 +340,7 @@
   "connectDownloadQuran":"Please connect to Internet to download",
   "playInOnlineModeQuran": "Please connect to internet to play",
   "downloaded": "Downloaded",
-  "switchQuranType": "Switch to {name}",
+  "switchQuranType": "Go to {name}",
   "@switchQuranType": {
     "description": "Message shown when a reciter is added to favorites",
     "placeholders": {
@@ -335,5 +349,6 @@
         "example": "Warsh"
       }
     }
-  }
+  },
+  "surahSelector":"Select Surah"
 }
