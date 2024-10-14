@@ -86,7 +86,3 @@ abstract class AzkarConstant {
   static const String kAzkarSabahAfterPrayer = 'أذكار الصباح';
   static const String kAzkarAsrAfterPrayer = 'أذكار المساء';
 }
-
-abstract class SettingsConstant {
-  static const String kLanguageCode = 'language_code';
-}
