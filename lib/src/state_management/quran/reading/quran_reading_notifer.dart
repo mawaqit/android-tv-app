@@ -24,13 +24,15 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     return _initState(repository);
   }
 
-  void nextPage() async {
+  void nextPage({bool isPortrait = false}) async {
     log('quran: QuranReadingNotifier: nextPage:');
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
-      final nextPage = currentState.currentPage + 2;
+      final currentPage = currentState.currentPage;
+      final nextPage = isPortrait ? currentPage + 1 : currentPage + 2;
       if (nextPage < currentState.totalPages) {
         await _saveLastReadPage(nextPage);
+
         currentState.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         final newSurahName = _getCurrentSurahName(nextPage, currentState.suwar);
         return currentState.copyWith(currentPage: nextPage, currentSurahName: newSurahName);
@@ -39,10 +41,11 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     });
   }
 
-  void previousPage() async {
+  void previousPage({bool isPortrait = false}) async {
+    log('quran: QuranReadingNotifier: nextPage:');
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
-      final previousPage = currentState.currentPage - 2;
+      final previousPage = isPortrait ? currentState.currentPage : currentState.currentPage - 2;
       if (previousPage >= 0) {
         await _saveLastReadPage(previousPage);
         currentState.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
@@ -53,15 +56,18 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     });
   }
 
-  Future<void> updatePage(int page) async {
+  Future<void> updatePage(int page, {bool isPortairt = false}) async {
     log('quran: QuranReadingNotifier: updatePage: $page');
 
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
       if (page >= 0 && page < currentState.totalPages) {
         await _saveLastReadPage(page);
-        currentState.pageController.jumpToPage((page / 2).floor());
+        !isPortairt
+            ? currentState.pageController.jumpToPage((page / 2).floor())
+            : currentState.pageController.jumpToPage(page); // Jump to the selected page
         final newSurahName = _getCurrentSurahName(page, currentState.suwar);
+
         return currentState.copyWith(
           currentPage: page,
           isInitial: false,
