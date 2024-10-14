@@ -290,6 +290,20 @@
       }
     }
   },
+  "quranReadingPagePortrait": "Página {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "Escolher a página",
   "checkingForUpdates": "Verificando por atualizações...",
   "chooseQuranType": "Selecionar alcorão",
@@ -321,12 +335,14 @@
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
   },
+  "noReciterSearchResult": "Nenhum resultado encontrado para sua busca",
+  "searchForReciter": "Buscar recitador",
   "downloadAllSuwarSuccessfully": "O alcorão inteiro foi baixado",
   "noSuwarDownload": "Sem suwars novos para baixar",
   "connectDownloadQuran": "Conecte-se à internet para baixar",
   "playInOnlineModeQuran": "Conecte-se à internet para reproduzir",
   "downloaded": "Baixado",
-  "switchQuranType": "Mudar para {name}",
+  "switchQuranType": "Ir a {name}",
   "@switchQuranType": {
     "description": "Message shown when a reciter is added to favorites",
     "placeholders": {
