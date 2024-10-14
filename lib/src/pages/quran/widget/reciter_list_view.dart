@@ -29,6 +29,10 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
   @override
   void initState() {
     super.initState();
+    _initializeFocusNodes();
+  }
+
+  void _initializeFocusNodes() {
     _focusNodes = List.generate(
       widget.reciters.length,
       (index) => FocusNode(debugLabel: 'reciter_focus_node_$index'),
@@ -38,21 +42,37 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
     }
   }
 
+  @override
+  void didUpdateWidget(ReciterListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.reciters.length != oldWidget.reciters.length) {
+      _disposeFocusNodes();
+      _initializeFocusNodes();
+    }
+  }
+
+  void _disposeFocusNodes() {
+    for (var node in _focusNodes) {
+      node.removeListener(() => _handleFocusChange(node));
+      node.dispose();
+    }
+  }
+
   void _handleFocusChange(FocusNode node) {
     if (node.hasFocus) {
-      ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-            reciterModel: widget.reciters[_focusNodes.indexOf(node)],
-          );
+      final index = _focusNodes.indexOf(node);
+      if (index >= 0 && index < widget.reciters.length) {
+        ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
+              reciterModel: widget.reciters[index],
+            );
+      }
     }
   }
 
   @override
   void dispose() {
     _reciterScrollController.dispose();
-
-    for (var element in _focusNodes) {
-      element.dispose();
-    }
+    _disposeFocusNodes();
     super.dispose();
   }
 
@@ -65,6 +85,9 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
         scrollDirection: Axis.horizontal,
         itemCount: widget.reciters.length,
         itemBuilder: (context, index) {
+          if (index >= _focusNodes.length) {
+            return SizedBox(); // Return an empty widget if the index is out of bounds
+          }
           return InkWell(
             focusNode: _focusNodes[index],
             focusColor: Colors.transparent,
@@ -78,7 +101,6 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
               builder: (context) {
                 return ReciterCard(
                   reciter: widget.reciters[index],
-                  // isSelected: index == widget.selectedReciterIndex,
                   isSelected: Focus.of(context).hasFocus,
                   margin: EdgeInsets.only(right: 20),
                 );
