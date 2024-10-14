@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_widgets.dart';
+import 'package:mawaqit/src/pages/quran/widget/reading/quran_surah_selector.dart';
 
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
@@ -189,9 +190,44 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 _isThereCurrentDialogShowing(context)),
             buildBackButton(
                 isPortrait, userPrefs, context, isPortrait ? _portraitModeBackButtonFocusNode : _backButtonFocusNode),
+            isPortrait ? Container() : buildShowSurah(quranReadingState),
           ],
         );
       },
+    );
+  }
+
+  Align buildShowSurah(QuranReadingState quranReadingState) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: EdgeInsets.only(top: 0.5.h),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              ref.read(quranReadingNotifierProvider.notifier).getAllSuwarPage();
+              showSurahSelector(context, quranReadingState.currentPage);
+            },
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                quranReadingState.currentSurahName,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 8.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
