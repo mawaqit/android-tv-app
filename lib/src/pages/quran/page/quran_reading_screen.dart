@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_widgets.dart';
@@ -41,6 +44,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _portraitModePageSelectorFocusNode;
 
   final ScrollController _gridScrollController = ScrollController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -267,6 +271,20 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     } else {
       ref.read(quranReadingNotifierProvider.notifier).nextPage(isPortrait: isPortrait);
     }
+  }
+
+  Widget _buildSvgPicture(SvgPicture svgPicture) {
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.all(32.0),
+      child: SvgPicture(
+        svgPicture.bytesLoader,
+        fit: BoxFit.contain,
+        width: double.infinity,
+        height: double.infinity,
+        alignment: Alignment.center,
+      ),
+    );
   }
 
   void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
