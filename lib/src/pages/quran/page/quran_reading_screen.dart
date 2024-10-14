@@ -149,7 +149,13 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           ),
         ),
         body: quranReadingState.when(
-          loading: () => Center(child: CircularProgressIndicator()),
+          loading: () {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
+            );
+          },
           error: (error, s) {
             final errorLocalized = S.of(context).error;
             return Center(child: Text('$errorLocalized: $error'));
@@ -174,7 +180,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                       builder: (context, constraints) {
                         final pageWidth = constraints.maxWidth / 2;
                         final pageHeight = constraints.maxHeight;
-                        final bottomPadding = pageHeight * 0.05; // 5% of screen height for bottom padding
+                        final bottomPadding = pageHeight * 0.05;
 
                         return Stack(
                           children: [
@@ -328,7 +334,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     splashFactorSize: 0.9,
                     icon: Icons.arrow_back_rounded,
                     onPressed: () {
-                      log('quran: QuranReadingScreen: back');
                       Navigator.pop(context);
                     },
                   ),
