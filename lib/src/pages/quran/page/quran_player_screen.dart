@@ -1,11 +1,12 @@
-import 'dart:developer';
 import 'dart:math' as math;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
@@ -217,6 +218,9 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Add reciter's image here
+            buildReciterImage(),
+            SizedBox(height: 2.h),
             Text(
               widget.surahName,
               style: TextStyle(
@@ -233,7 +237,7 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                 color: Colors.grey[400],
               ),
             ),
-            SizedBox(height: 4.h),
+            SizedBox(height: 2.h),
             Row(
               children: [
                 Spacer(),
@@ -650,6 +654,25 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  ClipOval buildReciterImage() {
+    return ClipOval(
+      child: Container(
+        width: 24.w,
+        height: 24.w,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+        ),
+        child: CachedNetworkImage(
+          imageUrl: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciterId}.jpg',
+          fit: BoxFit.fitWidth,
+          placeholder: (context, url) => Container(color: Colors.transparent),
+          errorWidget: (context, url, error) => Container(color: Colors.transparent),
         ),
       ),
     );
