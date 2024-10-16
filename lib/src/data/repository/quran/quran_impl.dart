@@ -10,7 +10,7 @@ import 'package:mawaqit/src/data/data_source/quran/quran_remote_data_source.dart
 class QuranImpl extends QuranRepository {
   final QuranRemoteDataSource _quranRemoteDataSource;
   final QuranLocalDataSource _quranLocalDataSource;
-  final Duration _cacheValidityDuration = Duration(hours: 24);
+  final Duration _cacheValidityDuration = Duration(days: 30);
 
   QuranImpl(
     this._quranRemoteDataSource,
