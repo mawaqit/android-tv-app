@@ -81,7 +81,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   bool isToggleScreenActivated = false;
   int minuteBefore = 0;
   int minuteAfter = 0;
-  late SharedPreferences prefs;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -124,7 +123,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
     minuteBefore = await getMinuteBefore();
     minuteAfter = await getMinuteAfter();
-    prefs = await SharedPreferences.getInstance();
 
     notifyListeners();
   }
@@ -172,9 +170,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _configSubscription?.cancel();
 
     /// if getting item returns an error
-    onItemError(e, stack) {
+    onItemError(e, stack) async {
       logger.e(e, stackTrace: stack);
-      bool hasCachedMosque = prefs.getBool(MosqueManagerConstant.khasCachedMosque) ?? false;
+      bool hasCachedMosque = await sharedPref.read(MosqueManagerConstant.khasCachedMosque) ?? false;
       if (!hasCachedMosque) {
         mosque = null;
         notifyListeners();
@@ -201,7 +199,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _mosqueSubscription = mosqueStream.listen(
       (e) async {
         mosque = e;
-        await prefs.setBool(MosqueManagerConstant.khasCachedMosque, true);
+        await sharedPref.save(MosqueManagerConstant.khasCachedMosque, true);
         _updateFlashEnabled();
         notifyListeners();
       },
