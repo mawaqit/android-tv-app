@@ -1,16 +1,19 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 
 import 'package:mawaqit/src/domain/error/quran_exceptions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class QuranLocalDataSource {
   final Box _surahBox;
+  final SharedPreferences _prefs;
 
-  QuranLocalDataSource(this._surahBox);
+  QuranLocalDataSource(this._surahBox, this._prefs);
 
   /// [saveSuwarByLanguage] save the list of surwars by language code
   Future<void> saveSuwarByLanguage(String languageCode, List<SurahModel> suwar) async {
@@ -69,9 +72,28 @@ class QuranLocalDataSource {
       throw CannotFindSuwarByLanguageException(e.toString());
     }
   }
+
+  Future<Option<DateTime>> getLastUpdateTimestamp(String languageCode) async {
+    try {
+      final timestamp = _prefs.getInt('${languageCode}_last_fetch');
+      return Option.fromNullable(timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null);
+    } catch (e) {
+      log('quran: getLastUpdateTimestamp: ${e.toString()}');
+      return None();
+    }
+  }
+
+  Future<void> saveLastUpdateTimestamp(String languageCode, DateTime timestamp) async {
+    try {
+      await _prefs.setInt('${languageCode}_last_fetch', timestamp.millisecondsSinceEpoch);
+    } catch (e) {
+      throw SaveLastUpdateTimestampException(e.toString());
+    }
+  }
 }
 
 final quranLocalDataSourceProvider = FutureProvider<QuranLocalDataSource>((ref) async {
   final surahBox = await Hive.openBox(QuranConstant.kSurahBox);
-  return QuranLocalDataSource(surahBox);
+  final prefs = await SharedPreferences.getInstance();
+  return QuranLocalDataSource(surahBox, prefs);
 });
