@@ -23,7 +23,7 @@ class UserPreferencesManager extends ChangeNotifier {
     _sharedPref = await SharedPreferences.getInstance();
 
     Api.useStagingApi(forceStaging);
-    forceOrientation();
+    forceOrientation(orientation: true);
 
     return this;
   }

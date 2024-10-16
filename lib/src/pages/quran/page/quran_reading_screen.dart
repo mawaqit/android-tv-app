@@ -26,6 +26,8 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 
+import '../../../data/data_source/device_info_data_source.dart';
+
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
 
@@ -43,7 +45,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _portraitModeBackButtonFocusNode;
   late FocusNode _portraitModeSwitchQuranFocusNode;
   late FocusNode _portraitModePageSelectorFocusNode;
-
+  bool isAndroidTV = false;
   final ScrollController _gridScrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -55,6 +57,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
+      isAndroidTV = await DeviceInfoDataSource().isAndroidTv();
     });
   }
 
@@ -72,8 +75,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   @override
   void dispose() {
-/*     _disposeFocusNodes();
- */
+    _disposeFocusNodes();
+
     super.dispose();
   }
 
@@ -131,9 +134,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
     return OrientationBuilder(
       builder: (context, orientation) {
-        final isCurrentlyLandscape = orientation == Orientation.landscape;
-        final wantLandscape = userPrefs.orientationLandscapeQuran;
-        final isPortrait = isCurrentlyLandscape == wantLandscape;
+        final currentOrientation = orientation == Orientation.landscape;
+        final isPortrait =
+            isAndroidTV ? !currentOrientation : currentOrientation == userPrefs.orientationLandscapeQuran;
         _switchScreenViewFocusNode.onKeyEvent =
             (node, event) => _handlePageScrollDownFocusGroupNode(node, event, isPortrait);
         _portraitModePageSelectorFocusNode.onKeyEvent =

@@ -95,6 +95,25 @@ class DeviceInfoDataSource {
     return false;
   }
 
+  /// [isAndroidTv] Checks if the device is AndroidTV.
+  Future<bool> isAndroidTv() async {
+    final features = MethodChannel('nativeMethodsChannel');
+
+    // List of features to check
+    final featuresToCheck = [
+      'android.software.leanback',
+    ];
+
+    for (final feature in featuresToCheck) {
+      final hasFeature = await _checkFeature(features, feature);
+      if (hasFeature) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   /// [_checkFeature] Checks if the device has a specific feature.
   Future<bool> _checkFeature(MethodChannel features, String feature) async {
     try {
