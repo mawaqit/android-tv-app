@@ -28,13 +28,16 @@ class QuranImpl extends QuranRepository {
     String languageCode = 'en',
   }) async {
     try {
+      if (await _quranLocalDataSource.isSuwarByLanguageFound(languageCode)) {
+        return _quranLocalDataSource.getSuwarByLanguage(languageCode);
+      }
+
       final suwar = await _quranRemoteDataSource.getSuwarByLanguage(languageCode: languageCode);
       log('quran: QuranImpl: getSuwarByLanguage: ${suwar[0]}');
       await _quranLocalDataSource.saveSuwarByLanguage(languageCode, suwar);
       return suwar;
-    } on Exception catch (_) {
-      final suwar = await _quranLocalDataSource.getSuwarByLanguage(languageCode);
-      return suwar;
+    } catch (_) {
+      return _quranLocalDataSource.getSuwarByLanguage(languageCode);
     }
   }
 }
