@@ -34,7 +34,7 @@ Widget buildVerticalPageView(QuranReadingState quranReadingState, WidgetRef ref)
                   fit: BoxFit.contain,
                   child: SizedBox(
                     width: pageWidth + 150,
-                    height: pageHeight + 150,
+                    height: pageHeight + 100,
                     child: buildSvgPicture(
                       quranReadingState.svgs[index % quranReadingState.svgs.length],
                     ),
@@ -134,7 +134,7 @@ Widget buildPageNumberIndicator(QuranReadingState quranReadingState, bool isPort
   return Positioned(
     left: 15.w,
     right: 15.w,
-    bottom: 1.h,
+    bottom: 0.08.h,
     child: Center(
       child: Material(
         color: Colors.transparent,
@@ -200,22 +200,36 @@ Widget buildMoshafSelector(
 
 Widget buildBackButton(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context, FocusNode focusNode) {
   return Positioned.directional(
-    start: 10,
-    textDirection: Directionality.of(context),
-    child: SwitchButton(
-      focusNode: focusNode,
-      opacity: 0.7,
-      iconSize: 14.sp,
-      splashFactorSize: 0.9,
-      icon: Icons.arrow_back_rounded,
-      onPressed: () {
-        if (isPortrait) {
-          userPrefs.orientationLandscape = true;
-        }
-        Navigator.pop(context);
-      },
-    ),
-  );
+      start: 10,
+      top: 10,
+      textDirection: Directionality.of(context),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          focusNode: focusNode,
+          onTap: () {
+            if (isPortrait) {
+              userPrefs.orientationLandscape = true;
+            }
+            Navigator.pop(context);
+          },
+          borderRadius: BorderRadius.circular(40),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(40),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.white,
+                size: 14.sp,
+              ),
+            ),
+          ),
+        ),
+      ));
 }
 
 Widget buildSvgPicture(SvgPicture svgPicture) {
