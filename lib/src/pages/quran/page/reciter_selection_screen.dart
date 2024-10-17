@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -135,16 +136,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         ),
       ),
       appBar: AppBar(
-        toolbarHeight: 6.vh,
         backgroundColor: Color(0xFF28262F),
         elevation: 0,
-        title: Text(
+        title: AutoSizeText(
           S.of(context).chooseReciter,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 14.sp,
             fontWeight: FontWeight.bold,
           ),
+          maxLines: 1,
+          minFontSize: 6.sp.roundToDouble(),
+          maxFontSize: 20.sp.roundToDouble(),
+          stepGranularity: 1,
         ),
         actions: [
           Consumer(
