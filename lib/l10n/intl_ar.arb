@@ -338,5 +338,19 @@
       }
     }
   },
-  "surahSelector": "اختر السورة"
+  "surahSelector": "اختر السورة",
+    "quranReadingPagePortrait": "الصفحة {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  }
 }

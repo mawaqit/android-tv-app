@@ -14,10 +14,12 @@ import 'package:mawaqit/src/models/address_model.dart';
 class MoshafSelector extends ConsumerWidget {
   final FocusNode focusNode;
   final bool isAutofocus;
+  final bool isPortrait;
 
   const MoshafSelector({
     super.key,
     required this.focusNode,
+    this.isPortrait = true,
     this.isAutofocus = false,
   });
 
@@ -55,7 +57,7 @@ class MoshafSelector extends ConsumerWidget {
                 },
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: isPortrait ? 8 : 4),
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(20),
