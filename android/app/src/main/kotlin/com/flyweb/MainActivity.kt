@@ -59,16 +59,7 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
-                    "hasSystemFeature" -> {
-                    val feature = call.argument<String>("feature")
-                    if (feature != null) {
-                        val pm = applicationContext.packageManager
-                        val hasFeature = pm.hasSystemFeature(feature)
-                        result.success(hasFeature)
-                    } else {
-                        result.error("InvalidArgument", "Feature argument is null", null)
-                    }
-                }
+
                     else -> result.notImplemented()
                 }
             }
