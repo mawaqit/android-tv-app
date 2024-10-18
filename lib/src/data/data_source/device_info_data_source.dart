@@ -76,8 +76,7 @@ class DeviceInfoDataSource {
   }
 
   Future<bool> isBoxOrAndroidTV() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
 
     // List of features to check
     final featuresToCheck = [
@@ -97,8 +96,7 @@ class DeviceInfoDataSource {
 
   /// [isAndroidTv] Checks if the device is AndroidTV.
   Future<bool> isAndroidTv() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
 
     return androidInfo.systemFeatures.contains(SystemFeaturesConstant.kLeanback);
   }
