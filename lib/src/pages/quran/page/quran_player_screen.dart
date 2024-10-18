@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fpdart/fpdart.dart';
@@ -93,16 +94,20 @@ class _QuranPlayerScreenState extends ConsumerState<QuranPlayerScreen> {
             return const SizedBox();
           },
           data: (quranPlayerState) {
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // const _BackgroundFilter(),
-                  Align(
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // const _BackgroundFilter(),
+                Flexible(
+                  flex: 3,
+                  child: Align(
                     alignment: Alignment.topCenter,
                     child: buildReciterImage(),
                   ),
-                  _QuranPlayer(
+                ),
+                Flexible(
+                  flex: 9,
+                  child: _QuranPlayer(
                     backButtonFocusNode: backButtonFocusNode,
                     isPlaying: quranPlayerState.playerState == AudioPlayerState.playing,
                     surahName: quranPlayerState.surahName,
@@ -113,8 +118,8 @@ class _QuranPlayerScreenState extends ConsumerState<QuranPlayerScreen> {
                     reciterId: widget.reciterId,
                     surah: widget.surah,
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),
@@ -125,8 +130,6 @@ class _QuranPlayerScreenState extends ConsumerState<QuranPlayerScreen> {
   ClipOval buildReciterImage() {
     return ClipOval(
       child: Container(
-        width: 24.w,
-        height: 24.w,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.transparent,
@@ -233,34 +236,38 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
     final directionality = Directionality.of(context);
     final theme = Theme.of(context);
     return Padding(
-      padding: EdgeInsets.all(3.w),
+      padding: EdgeInsets.all(1.h),
       child: FocusTraversalGroup(
         policy: OrderedTraversalPolicy(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Add reciter's image here
-            SizedBox(height: 2.h),
-            Text(
-              widget.surahName,
-              style: TextStyle(
-                fontSize: 5.w,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            // SizedBox(height: 1.h),
+            FittedBox(
+              child: Text(
+                widget.surahName,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
             SizedBox(height: 1.h),
-            Text(
-              widget.surahType,
-              style: TextStyle(
-                fontSize: 4.w,
-                color: Colors.grey[400],
+            FittedBox(
+              child: Text(
+                widget.surahType,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.grey[400],
+                ),
               ),
             ),
-            SizedBox(height: 2.h),
+            SizedBox(height: 1.h),
             buildDownloadButton(),
             buildSlider(),
-            SizedBox(height: 4.h),
+            SizedBox(height: 2.h),
             buildBottom(quranState, theme, directionality, context),
           ],
         ),
