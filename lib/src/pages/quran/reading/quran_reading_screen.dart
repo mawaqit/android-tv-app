@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
+import 'package:mawaqit/src/pages/quran/reading/widget/quran_floating_action_buttons.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_widgets.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_surah_selector.dart';
 
@@ -40,6 +41,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _switchQuranFocusNode;
   late FocusNode _switchQuranModeNode;
   late FocusNode _switchScreenViewFocusNode;
+  late FocusNode _switchToPlayQuranFocusNode;
   late FocusNode _portraitModeBackButtonFocusNode;
   late FocusNode _portraitModeSwitchQuranFocusNode;
   late FocusNode _portraitModePageSelectorFocusNode;
@@ -68,6 +70,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeBackButtonFocusNode = FocusNode(debugLabel: 'portrait_mode_back_button_node');
     _portraitModeSwitchQuranFocusNode = FocusNode(debugLabel: 'portrait_mode_switch_quran_node');
     _portraitModePageSelectorFocusNode = FocusNode(debugLabel: 'portrait_mode_page_selector_node');
+    _switchToPlayQuranFocusNode = FocusNode(debugLabel: 'switch_to_play_quran_node');
   }
 
   @override
@@ -85,6 +88,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeBackButtonFocusNode.dispose();
     _portraitModeSwitchQuranFocusNode.dispose();
     _portraitModePageSelectorFocusNode.dispose();
+    _switchToPlayQuranFocusNode.dispose();
   }
 
   void _toggleOrientation(UserPreferencesManager userPrefs) {
@@ -238,6 +242,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         _buildOrientationToggleButton(isPortrait, userPrefs),
         SizedBox(width: 200.sp),
         _buildQuranModeButton(isPortrait, userPrefs, context),
+        SizedBox(width: 200.sp),
+        _buildPlayToggleButton(isPortrait),
       ],
     );
   }
@@ -246,8 +252,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        _buildPlayToggleButton(isPortrait),
+        SizedBox(height: 1.h),
         _buildOrientationToggleButton(isPortrait, userPrefs),
-        SizedBox(height: 10),
+        SizedBox(height: 1.h),
         _buildQuranModeButton(isPortrait, userPrefs, context),
       ],
     );
@@ -294,6 +302,26 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
               builder: (context) => ReciterSelectionScreen.withoutSurahName(),
             ),
           );
+        },
+        heroTag: null,
+      ),
+    );
+  }
+
+  Widget _buildPlayToggleButton(bool isPortrait) {
+    return SizedBox(
+      width: isPortrait ? 35.sp : 30.sp,
+      height: isPortrait ? 35.sp : 30.sp,
+      child: FloatingActionButton(
+        focusNode: _switchToPlayQuranFocusNode,
+        backgroundColor: Colors.black.withOpacity(.3),
+        child: Icon(
+          !isPortrait ? Icons.play_arrow : Icons.stay_current_landscape,
+          color: Colors.white,
+          size: isPortrait ? 20.sp : 15.sp,
+        ),
+        onPressed: () {
+          ;
         },
         heroTag: null,
       ),
