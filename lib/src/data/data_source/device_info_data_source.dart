@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disk_space/disk_space.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
 import '../../../main.dart';
@@ -74,20 +75,18 @@ class DeviceInfoDataSource {
     return Platform.localeName;
   }
 
-  /// [isBoxOrAndroidTV] Checks if the device is a box or a AndroidTV.
   Future<bool> isBoxOrAndroidTV() async {
-    final features = MethodChannel('nativeMethodsChannel');
+    AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
 
     // List of features to check
     final featuresToCheck = [
-      'android.software.leanback',
-      'android.hardware.hdmi',
-      'android.hardware.ethernet',
+      SystemFeaturesConstant.kLeanback,
+      SystemFeaturesConstant.kHdmi,
+      SystemFeaturesConstant.kEthernet
     ];
 
     for (final feature in featuresToCheck) {
-      final hasFeature = await _checkFeature(features, feature);
-      if (hasFeature) {
+      if (androidInfo.systemFeatures.contains(feature)) {
         return true;
       }
     }
@@ -95,18 +94,11 @@ class DeviceInfoDataSource {
     return false;
   }
 
-  /// [_checkFeature] Checks if the device has a specific feature.
-  Future<bool> _checkFeature(MethodChannel features, String feature) async {
-    try {
-      final hasFeature = await features.invokeMethod<bool>(
-        'hasSystemFeature',
-        {'feature': feature},
-      );
-      logger.d('hasFeature: $hasFeature $feature');
-      return hasFeature != null && hasFeature;
-    } catch (e) {
-      return false;
-    }
+  /// [isAndroidTv] Checks if the device is AndroidTV.
+  Future<bool> isAndroidTv() async {
+    AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
+
+    return androidInfo.systemFeatures.contains(SystemFeaturesConstant.kLeanback);
   }
 }
 

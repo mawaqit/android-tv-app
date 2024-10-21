@@ -90,3 +90,9 @@ abstract class AzkarConstant {
 abstract class SettingsConstant {
   static const String kLanguageCode = 'language_code';
 }
+
+abstract class SystemFeaturesConstant {
+  static const String kLeanback = 'android.software.leanback';
+  static const String kHdmi = 'android.hardware.hdmi';
+  static const String kEthernet = 'android.hardware.ethernet';
+}
