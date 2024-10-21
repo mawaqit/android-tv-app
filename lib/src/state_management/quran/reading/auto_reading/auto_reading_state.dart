@@ -32,4 +32,18 @@ class AutoScrollState {
       maxFontSize: maxFontSize ?? this.maxFontSize,
     );
   }
+
+  @override
+  String toString() {
+    return 'AutoScrollState('
+        'isSinglePageView: $isSinglePageView, '
+        'autoScrollSpeed: $autoScrollSpeed, '
+        'isVisible: $isVisible, '
+        'fontSize: $fontSize, '
+        'maxFontSize: $maxFontSize, '
+        'isAutoScrolling: $isAutoScrolling, '
+        'showSpeedControl: $showSpeedControl'
+        ')';
+  }
+
 }

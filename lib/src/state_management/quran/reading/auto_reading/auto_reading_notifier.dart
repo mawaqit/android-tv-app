@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
 
-class AutoScrollNotifier extends Notifier<AutoScrollState> {
+class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   Timer? _autoScrollTimer;
   Timer? _hideTimer;
   late final ScrollController scrollController;
@@ -34,6 +34,9 @@ class AutoScrollNotifier extends Notifier<AutoScrollState> {
 
   void startAutoScroll() {
     _autoScrollTimer?.cancel();
+    state = state.copyWith(
+      isSinglePageView: true,
+    );
     _autoScrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
       if (scrollController.position.pixels < scrollController.position.maxScrollExtent) {
         scrollController.jumpTo(scrollController.position.pixels + (state.autoScrollSpeed * 2));
@@ -73,3 +76,7 @@ class AutoScrollNotifier extends Notifier<AutoScrollState> {
     state = state.copyWith(fontSize: newFontSize);
   }
 }
+
+final autoScrollNotifierProvider = AutoDisposeNotifierProvider<AutoScrollNotifier, AutoScrollState>(
+  AutoScrollNotifier.new,
+);
