@@ -75,6 +75,36 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     if (newFontSize > state.maxFontSize) newFontSize = 1.0;
     state = state.copyWith(fontSize: newFontSize);
   }
+
+  void increaseSpeed() {
+    double newSpeed = state.autoScrollSpeed + 0.1;
+    if (newSpeed > 5.0) newSpeed = 5.0;
+    state = state.copyWith(autoScrollSpeed: newSpeed);
+    if (state.isAutoScrolling) {
+      startAutoScroll();
+    }
+  }
+
+  void decreaseSpeed() {
+    double newSpeed = state.autoScrollSpeed - 0.1;
+    if (newSpeed < 0.1) newSpeed = 0.1;
+    state = state.copyWith(autoScrollSpeed: newSpeed);
+    if (state.isAutoScrolling) {
+      startAutoScroll();
+    }
+  }
+
+  void increaseFontSize() {
+    double newFontSize = state.fontSize + 0.2;
+    if (newFontSize > state.maxFontSize) newFontSize = state.maxFontSize;
+    state = state.copyWith(fontSize: newFontSize);
+  }
+
+  void decreaseFontSize() {
+    double newFontSize = state.fontSize - 0.2;
+    if (newFontSize < 1.0) newFontSize = 1.0;
+    state = state.copyWith(fontSize: newFontSize);
+  }
 }
 
 final autoScrollNotifierProvider = AutoDisposeNotifierProvider<AutoScrollNotifier, AutoScrollState>(

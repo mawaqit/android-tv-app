@@ -14,7 +14,7 @@ class AutoScrollState {
   });
 
   // Derived properties
-  bool get isAutoScrolling => !isSinglePageView;
+  bool get isAutoScrolling => isSinglePageView;
   bool get showSpeedControl => !isSinglePageView;
 
   AutoScrollState copyWith({
