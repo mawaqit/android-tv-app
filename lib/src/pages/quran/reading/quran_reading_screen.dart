@@ -149,11 +149,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           },
           child: Scaffold(
             backgroundColor: Colors.white,
-            floatingActionButtonLocation:
-                isPortrait ? FloatingActionButtonLocation.startFloat : _getFloatingActionButtonLocation(context),
-            floatingActionButton: isPortrait
-                ? buildFloatingPortrait(isPortrait, userPrefs, context)
-                : buildFloatingLandscape(isPortrait, userPrefs, context),
+            floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
+            floatingActionButton: QuranFloatingActionControls(
+              switchScreenViewFocusNode: _switchScreenViewFocusNode,
+              switchQuranModeNode: _switchQuranModeNode,
+              switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
+            ),
             body: _buildBody(quranReadingState, isPortrait, userPrefs),
           ),
         );
@@ -366,13 +367,20 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   FloatingActionButtonLocation _getFloatingActionButtonLocation(BuildContext context) {
     final TextDirection textDirection = Directionality.of(context);
-    switch (textDirection) {
-      case TextDirection.ltr:
-        return FloatingActionButtonLocation.endFloat;
-      case TextDirection.rtl:
-        return FloatingActionButtonLocation.startFloat;
-      default:
-        return FloatingActionButtonLocation.endFloat;
+    final orientation = MediaQuery.of(context).orientation;
+    final isPortrait = orientation == Orientation.portrait;
+
+    if (isPortrait) {
+      return FloatingActionButtonLocation.startFloat;
+    } else {
+      switch (textDirection) {
+        case TextDirection.ltr:
+          return FloatingActionButtonLocation.endFloat;
+        case TextDirection.rtl:
+          return FloatingActionButtonLocation.startFloat;
+        default:
+          return FloatingActionButtonLocation.endFloat;
+      }
     }
   }
 
@@ -419,3 +427,4 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   bool _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
 }
+
