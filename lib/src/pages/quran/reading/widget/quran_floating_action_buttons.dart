@@ -4,6 +4,7 @@ import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
+import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -43,7 +44,7 @@ class QuranFloatingActionControls extends ConsumerWidget {
         SizedBox(width: 200.sp),
         _buildQuranModeButton(userPrefs, isPortrait, ref, context),
         SizedBox(width: 200.sp),
-        _buildPlayToggleButton(isPortrait),
+        _buildPlayToggleButton(isPortrait, ref),
       ],
     );
   }
@@ -53,7 +54,7 @@ class QuranFloatingActionControls extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        _buildPlayToggleButton(isPortrait),
+        _buildPlayToggleButton(isPortrait, ref),
         SizedBox(height: 1.h),
         _buildOrientationToggleButton(userPrefs, isPortrait, context),
         SizedBox(height: 1.h),
@@ -62,8 +63,7 @@ class QuranFloatingActionControls extends ConsumerWidget {
     );
   }
 
-  Widget _buildOrientationToggleButton(
-      UserPreferencesManager userPrefs, bool isPortrait, BuildContext context) {
+  Widget _buildOrientationToggleButton(UserPreferencesManager userPrefs, bool isPortrait, BuildContext context) {
     return SizedBox(
       width: isPortrait ? 35.sp : 30.sp,
       height: isPortrait ? 35.sp : 30.sp,
@@ -82,15 +82,13 @@ class QuranFloatingActionControls extends ConsumerWidget {
   }
 
   void _toggleOrientation(UserPreferencesManager userPrefs, BuildContext context) {
-    final newOrientation = MediaQuery.of(context).orientation == Orientation.portrait
-        ? Orientation.landscape
-        : Orientation.portrait;
+    final newOrientation =
+        MediaQuery.of(context).orientation == Orientation.portrait ? Orientation.landscape : Orientation.portrait;
 
     userPrefs.orientationLandscape = newOrientation == Orientation.landscape;
   }
 
-  Widget _buildQuranModeButton(
-      UserPreferencesManager userPrefs, bool isPortrait, WidgetRef ref, BuildContext context) {
+  Widget _buildQuranModeButton(UserPreferencesManager userPrefs, bool isPortrait, WidgetRef ref, BuildContext context) {
     return SizedBox(
       width: isPortrait ? 35.sp : 30.sp,
       height: isPortrait ? 35.sp : 30.sp,
@@ -119,7 +117,9 @@ class QuranFloatingActionControls extends ConsumerWidget {
     );
   }
 
-  Widget _buildPlayToggleButton(bool isPortrait) {
+  Widget _buildPlayToggleButton(bool isPortrait, WidgetRef ref) {
+    final autoScrollState = ref.watch(autoScrollNotifierProvider);
+
     return SizedBox(
       width: isPortrait ? 35.sp : 30.sp,
       height: isPortrait ? 35.sp : 30.sp,
@@ -127,12 +127,12 @@ class QuranFloatingActionControls extends ConsumerWidget {
         focusNode: switchToPlayQuranFocusNode,
         backgroundColor: Colors.black.withOpacity(.3),
         child: Icon(
-          !isPortrait ? Icons.play_arrow : Icons.stay_current_landscape,
+          autoScrollState.isAutoScrolling ? Icons.play_arrow : Icons.pause,
           color: Colors.white,
           size: isPortrait ? 20.sp : 15.sp,
         ),
         onPressed: () {
-          // Implement play functionality
+          ref.read(autoScrollNotifierProvider.notifier).startAutoScroll();
         },
         heroTag: null,
       ),
