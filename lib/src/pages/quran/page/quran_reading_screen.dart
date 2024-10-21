@@ -201,7 +201,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: EdgeInsets.only(top: 0.5.h),
+        padding: EdgeInsets.only(top: 0.3.h),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -211,7 +211,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             },
             borderRadius: BorderRadius.circular(20),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(20),
