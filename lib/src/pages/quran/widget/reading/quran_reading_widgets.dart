@@ -135,7 +135,6 @@ Widget buildPageNumberIndicator(QuranReadingState quranReadingState, bool isPort
     left: 15.w,
     right: 15.w,
     bottom: isPortrait ? 1.h : 0.5.h,
-
     child: Center(
       child: Material(
         color: Colors.transparent,
