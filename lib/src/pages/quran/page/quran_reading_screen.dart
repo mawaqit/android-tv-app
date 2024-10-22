@@ -131,40 +131,36 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _leftSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
     _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
 
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        _switchScreenViewFocusNode.onKeyEvent =
-            (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
-        _portraitModePageSelectorFocusNode.onKeyEvent =
-            (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
-        _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
-        _portraitModeBackButtonFocusNode.onKeyEvent =
-            (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
-        _portraitModeSwitchQuranFocusNode.onKeyEvent =
-            (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
-        return WillPopScope(
-            onWillPop: () async {
-              userPrefs.orientationLandscape = true;
+    _switchScreenViewFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+    _portraitModePageSelectorFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+    _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+    _portraitModeBackButtonFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
+    _portraitModeSwitchQuranFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
+    return WillPopScope(
+        onWillPop: () async {
+          userPrefs.orientationLandscape = true;
 
-              return true;
-            },
-            child: RotatedBox(
-              quarterTurns: _isRotated ? -1 : 0,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.height,
-                height: MediaQuery.of(context).size.width,
-                child: Scaffold(
-                  backgroundColor: Colors.white,
-                  floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
-                  floatingActionButton: _isRotated
-                      ? buildFloatingPortrait(_isRotated, userPrefs, context)
-                      : buildFloatingLandscape(_isRotated, userPrefs, context),
-                  body: _buildBody(quranReadingState, _isRotated, userPrefs),
-                ),
-              ),
-            ));
-      },
-    );
+          return true;
+        },
+        child: RotatedBox(
+          quarterTurns: _isRotated ? -1 : 0,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.width,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
+              floatingActionButton: _isRotated
+                  ? buildFloatingPortrait(_isRotated, userPrefs, context)
+                  : buildFloatingLandscape(_isRotated, userPrefs, context),
+              body: _buildBody(quranReadingState, _isRotated, userPrefs),
+            ),
+          ),
+        ));
   }
 
   Widget _buildBody(

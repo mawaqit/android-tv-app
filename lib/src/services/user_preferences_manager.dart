@@ -10,7 +10,6 @@ const _secondaryScreenKey = 'UserPreferencesManager.secondary.screen.enabled';
 const _webViewModeKey = 'UserPreferencesManager.webView.mode.enabled';
 const _forceStagingKey = 'UserPreferencesManager.api.settings.staging';
 const _screenOrientation = 'UserPreferencesManager.screen.orientation';
-const _screenOrientationQuran = 'UserPreferencesManager.screen.orientation.quran';
 const _hijriAdjustments = 'UserPreferencesManager.hijriAdjustments';
 
 /// this manager responsible for managing user preferences
@@ -23,7 +22,7 @@ class UserPreferencesManager extends ChangeNotifier {
     _sharedPref = await SharedPreferences.getInstance();
 
     Api.useStagingApi(forceStaging);
-    forceOrientation(orientation: true);
+    forceOrientation();
 
     return this;
   }
@@ -75,7 +74,6 @@ class UserPreferencesManager extends ChangeNotifier {
   /// null will use the default orientation
   bool get orientationLandscape =>
       _sharedPref.getBool(_screenOrientation) ?? RelativeSizes.instance.orientation == Orientation.landscape;
-  bool get orientationLandscapeQuran => _sharedPref.getBool(_screenOrientationQuran) ?? false;
 
   /// set the screen orientation
   /// null will use the default orientation based on the device
@@ -85,22 +83,12 @@ class UserPreferencesManager extends ChangeNotifier {
     } else {
       _sharedPref.setBool(_screenOrientation, value);
     }
-    forceOrientation(orientation: orientationLandscape);
+    forceOrientation();
     notifyListeners();
   }
 
-  set orientationLandscapeQuran(bool? value) {
-    if (value == null) {
-      _sharedPref.remove(_screenOrientationQuran);
-    } else {
-      _sharedPref.setBool(_screenOrientationQuran, value);
-    }
-    forceOrientation(orientation: orientationLandscapeQuran);
-    notifyListeners();
-  }
-
-  void forceOrientation({bool orientation = false}) {
-    switch (orientation) {
+  void forceOrientation() {
+    switch (orientationLandscape) {
       case true:
         SystemChrome.setPreferredOrientations([
           DeviceOrientation.landscapeLeft,
