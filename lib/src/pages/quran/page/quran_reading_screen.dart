@@ -45,7 +45,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _portraitModeBackButtonFocusNode;
   late FocusNode _portraitModeSwitchQuranFocusNode;
   late FocusNode _portraitModePageSelectorFocusNode;
-  bool isAndroidTV = false;
   final ScrollController _gridScrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -57,7 +56,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
-      isAndroidTV = await DeviceInfoDataSource().isAndroidTv();
     });
   }
 
@@ -93,15 +91,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModePageSelectorFocusNode.dispose();
   }
 
-  void _toggleOrientation(UserPreferencesManager userPrefs) {
-    bool newOrientation = !userPrefs.orientationLandscapeQuran;
-
-    userPrefs.orientationLandscapeQuran = newOrientation;
-    isAndroidTV
-        ? setState(() {})
-        : setState(() {
-            _isRotated = !_isRotated;
-          });
+  void _toggleOrientation() {
+    setState(() {
+      _isRotated = !_isRotated;
+    });
   }
 
   @override
@@ -140,62 +133,36 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
     return OrientationBuilder(
       builder: (context, orientation) {
-        final currentOrientation = orientation == Orientation.landscape;
-        final isPortrait =
-            isAndroidTV ? !currentOrientation : currentOrientation == userPrefs.orientationLandscapeQuran;
-        bool switcherScreen = isAndroidTV ? isPortrait : _isRotated;
-
         _switchScreenViewFocusNode.onKeyEvent =
-            (node, event) => _handlePageScrollDownFocusGroupNode(node, event, isPortrait);
+            (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
         _portraitModePageSelectorFocusNode.onKeyEvent =
-            (node, event) => _handlePageScrollDownFocusGroupNode(node, event, isPortrait);
-        _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event, isPortrait);
+            (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+        _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
         _portraitModeBackButtonFocusNode.onKeyEvent =
-            (node, event) => _handlePageScrollUpFocusGroupNode(node, event, isPortrait);
+            (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
         _portraitModeSwitchQuranFocusNode.onKeyEvent =
-            (node, event) => _handlePageScrollUpFocusGroupNode(node, event, isPortrait);
+            (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
         return WillPopScope(
             onWillPop: () async {
               userPrefs.orientationLandscape = true;
 
               return true;
             },
-            child: _isRotated
-                ? FittedBox(
-                    fit: BoxFit.contain,
-                    child: RotatedBox(
-                      quarterTurns: -1,
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.height,
-                        height: MediaQuery.of(context).size.width,
-                        child: Scaffold(
-                          backgroundColor: Colors.white,
-                          floatingActionButtonLocation:
-                              _getFloatingActionButtonLocation(context),
-                          floatingActionButton: switcherScreen
-                              ? buildFloatingPortrait(
-                                  switcherScreen, userPrefs, context)
-                              : buildFloatingLandscape(
-                                  switcherScreen, userPrefs, context),
-                          body: _buildBody(
-                              quranReadingState, switcherScreen, userPrefs),
-                        ),
-                      ),
-                    ),
-                  )
-                : Scaffold(
-                    backgroundColor: Colors.white,
-                    floatingActionButtonLocation: switcherScreen
-                        ? FloatingActionButtonLocation.startFloat
-                        : _getFloatingActionButtonLocation(context),
-                    floatingActionButton: switcherScreen
-                        ? buildFloatingPortrait(
-                            switcherScreen, userPrefs, context)
-                        : buildFloatingLandscape(
-                            switcherScreen, userPrefs, context),
-                    body: _buildBody(
-                        quranReadingState, switcherScreen, userPrefs),
-                  ));
+            child: RotatedBox(
+              quarterTurns: _isRotated ? -1 : 0,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.width,
+                child: Scaffold(
+                  backgroundColor: Colors.white,
+                  floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
+                  floatingActionButton: _isRotated
+                      ? buildFloatingPortrait(_isRotated, userPrefs, context)
+                      : buildFloatingLandscape(_isRotated, userPrefs, context),
+                  body: _buildBody(quranReadingState, _isRotated, userPrefs),
+                ),
+              ),
+            ));
       },
     );
   }
@@ -203,7 +170,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   Widget _buildBody(
       AsyncValue<QuranReadingState> quranReadingState, bool isPortrait, UserPreferencesManager userPrefs) {
     final color = Theme.of(context).primaryColor;
-    bool switcherScreen = isAndroidTV ? isPortrait : _isRotated;
     return quranReadingState.when(
       loading: () => Center(
         child: CircularProgressIndicator(
@@ -217,39 +183,31 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       data: (quranReadingState) {
         return Stack(
           children: [
-            switcherScreen
+            isPortrait
                 ? buildVerticalPageView(quranReadingState, ref)
                 : buildHorizontalPageView(quranReadingState, ref, context),
-            if (!switcherScreen) ...[
+            if (!isPortrait) ...[
               buildRightSwitchButton(
                 context,
                 _rightSkipButtonFocusNode,
-                () => _scrollPageList(ScrollDirection.forward, switcherScreen),
+                () => _scrollPageList(ScrollDirection.forward, isPortrait),
               ),
               buildLeftSwitchButton(
                 context,
                 _leftSkipButtonFocusNode,
-                () => _scrollPageList(ScrollDirection.reverse, switcherScreen),
+                () => _scrollPageList(ScrollDirection.reverse, isPortrait),
               ),
             ],
             buildPageNumberIndicator(
-                quranReadingState, switcherScreen, context,
-                _portraitModePageSelectorFocusNode, _showPageSelector),
+                quranReadingState, isPortrait, context, _portraitModePageSelectorFocusNode, _showPageSelector),
             buildMoshafSelector(
-                switcherScreen,
+                isPortrait,
                 context,
-                switcherScreen
-                    ? _portraitModeSwitchQuranFocusNode
-                    : _switchQuranFocusNode,
+                isPortrait ? _portraitModeSwitchQuranFocusNode : _switchQuranFocusNode,
                 _isThereCurrentDialogShowing(context)),
             buildBackButton(
-                switcherScreen,
-                userPrefs,
-                context,
-                switcherScreen
-                    ? _portraitModeBackButtonFocusNode
-                    : _backButtonFocusNode),
-            switcherScreen ? SizedBox() : buildShowSurah(quranReadingState),
+                isPortrait, userPrefs, context, isPortrait ? _portraitModeBackButtonFocusNode : _backButtonFocusNode),
+            isPortrait ? SizedBox() : buildShowSurah(quranReadingState),
           ],
         );
       },
@@ -292,12 +250,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   Widget buildFloatingPortrait(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: 30),
+      padding: EdgeInsets.only(left: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         children: [
-          _buildOrientationToggleButton(isPortrait, userPrefs),
+          _buildOrientationToggleButton(isPortrait),
           _buildQuranModeButton(isPortrait, userPrefs, context),
         ],
       ),
@@ -308,14 +266,14 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        _buildOrientationToggleButton(isPortrait, userPrefs),
+        _buildOrientationToggleButton(isPortrait),
         SizedBox(height: 10),
         _buildQuranModeButton(isPortrait, userPrefs, context),
       ],
     );
   }
 
-  Widget _buildOrientationToggleButton(bool isPortrait, UserPreferencesManager userPrefs) {
+  Widget _buildOrientationToggleButton(bool isPortrait) {
     return SizedBox(
       width: isPortrait ? 35.sp : 30.sp,
       height: isPortrait ? 35.sp : 30.sp,
@@ -327,7 +285,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           color: Colors.white,
           size: isPortrait ? 20.sp : 15.sp,
         ),
-        onPressed: () => _toggleOrientation(userPrefs),
+        onPressed: () => _toggleOrientation(),
         heroTag: null,
       ),
     );
@@ -370,11 +328,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     }
   }
 
-  void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
+  void _showPageSelector(BuildContext context, int totalPages, int currentPage, bool switcherScreen) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return QuranReadingPageSelector(
+          isPortrait: switcherScreen,
           currentPage: currentPage,
           scrollController: _gridScrollController,
           totalPages: totalPages,

@@ -130,7 +130,7 @@ Widget buildLeftSwitchButton(BuildContext context, FocusNode focusNode, Function
 }
 
 Widget buildPageNumberIndicator(QuranReadingState quranReadingState, bool isPortrait, BuildContext context,
-    FocusNode focusNode, Function(BuildContext, int, int) showPageSelector) {
+    FocusNode focusNode, Function(BuildContext, int, int, bool) showPageSelector) {
   return Positioned(
     left: 15.w,
     right: 15.w,
@@ -141,11 +141,8 @@ Widget buildPageNumberIndicator(QuranReadingState quranReadingState, bool isPort
         child: InkWell(
           focusNode: focusNode,
           autofocus: false,
-          onTap: () => showPageSelector(
-            context,
-            quranReadingState.totalPages,
-            quranReadingState.currentPage,
-          ),
+          onTap: () =>
+              showPageSelector(context, quranReadingState.totalPages, quranReadingState.currentPage, isPortrait),
           borderRadius: BorderRadius.circular(20),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
