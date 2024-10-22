@@ -17,6 +17,8 @@ import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 class ReciteNotifier extends AsyncNotifier<ReciteState> {
   // Option<List<ReciterModel>> _cachedReciters = None();
   Timer? _debounce;
+  String _currentQuery = '';
+  bool _isAllReciters = true;
 
   @override
   build() async {
@@ -38,9 +40,11 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
   }
 
   void setSearchQuery(String query, bool isAllReciters) {
+    _currentQuery = query.toLowerCase();
+    _isAllReciters = isAllReciters;
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
-      _updateFilteredReciters(query.toLowerCase(), isAllReciters);
+      _updateFilteredReciters(_currentQuery, _isAllReciters);
     });
   }
 
@@ -48,13 +52,12 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
     final currentState = state.value;
     if (currentState == null) return;
     state = await AsyncValue.guard(() async {
-      if (isAllReciters) {
-        final filteredReciters = _filterReciters(currentState.reciters, query);
-        return currentState.copyWith(filteredReciters: filteredReciters);
-      } else {
-        final filteredFavoriteReciters = _filterReciters(currentState.favoriteReciters, query);
-        return currentState.copyWith(filteredFavoriteReciters: filteredFavoriteReciters);
-      }
+      final updatedFilteredReciters = _filterReciters(currentState.reciters, query);
+      final updatedFilteredFavorites = _filterReciters(currentState.favoriteReciters, query);
+      return currentState.copyWith(
+        filteredReciters: updatedFilteredReciters,
+        filteredFavoriteReciters: updatedFilteredFavorites,
+      );
     });
   }
 
@@ -90,10 +93,14 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
       await _saveFavoriteReciters(reciter.id);
       final updatedFavorites = [...state.value!.favoriteReciters, reciter];
       final updatedReciters = _sortReciters(state.value!.reciters, updatedFavorites);
+      final updatedFilteredFavorites = _filterReciters(updatedFavorites, _currentQuery);
+      final updatedFilteredReciters = _filterReciters(updatedReciters, _currentQuery);
       state = AsyncData(
         state.value!.copyWith(
           favoriteReciters: updatedFavorites,
+          filteredFavoriteReciters: updatedFilteredFavorites,
           reciters: updatedReciters,
+          filteredReciters: updatedFilteredReciters,
         ),
       );
     } catch (e, s) {
@@ -107,10 +114,14 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
       await reciteImpl.removeFavoriteReciter(reciter.id);
       final updatedFavorites = state.value!.favoriteReciters.where((r) => r.id != reciter.id).toList();
       final updatedReciters = _sortReciters(state.value!.reciters, updatedFavorites);
+      final updatedFilteredFavorites = _filterReciters(updatedFavorites, _currentQuery);
+      final updatedFilteredReciters = _filterReciters(updatedReciters, _currentQuery);
       state = AsyncData(
         state.value!.copyWith(
           favoriteReciters: updatedFavorites,
+          filteredFavoriteReciters: updatedFilteredFavorites,
           reciters: updatedReciters,
+          filteredReciters: updatedFilteredReciters,
         ),
       );
     } catch (e, s) {

@@ -134,7 +134,8 @@ Widget buildPageNumberIndicator(QuranReadingState quranReadingState, bool isPort
   return Positioned(
     left: 15.w,
     right: 15.w,
-    bottom: 0.08.h,
+    bottom: isPortrait ? 1.h : 0.5.h,
+
     child: Center(
       child: Material(
         color: Colors.transparent,
@@ -145,7 +146,7 @@ Widget buildPageNumberIndicator(QuranReadingState quranReadingState, bool isPort
               showPageSelector(context, quranReadingState.totalPages, quranReadingState.currentPage, isPortrait),
           borderRadius: BorderRadius.circular(20),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: isPortrait ? 8 : 4),
             decoration: BoxDecoration(
               color: Colors.black.withOpacity(0.4),
               borderRadius: BorderRadius.circular(20),
@@ -187,8 +188,9 @@ Widget buildMoshafSelector(
         )
       : Positioned(
           left: 10,
-          bottom: 1.h,
+          bottom: 0.5.h,
           child: MoshafSelector(
+            isPortrait: false,
             isAutofocus: !isThereCurrentDialogShowing,
             focusNode: focusNode,
           ),
