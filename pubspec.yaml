@@ -143,6 +143,7 @@ dependencies:
 
   # automatic scrolling
   scroll_to_index: ^3.0.1
+  extended_image: ^8.0.3
 
 dev_dependencies:
   flutter_test:

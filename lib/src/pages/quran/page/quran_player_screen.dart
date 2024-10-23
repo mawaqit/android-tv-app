@@ -1,6 +1,6 @@
 import 'dart:math' as math;
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -134,11 +134,25 @@ class _QuranPlayerScreenState extends ConsumerState<QuranPlayerScreen> {
           shape: BoxShape.circle,
           color: Colors.transparent,
         ),
-        child: CachedNetworkImage(
-          imageUrl: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciterId}.jpg',
+        child: ExtendedImage.network(
+          '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciterId}.jpg',
           fit: BoxFit.fitWidth,
-          placeholder: (context, url) => Container(color: Colors.transparent),
-          errorWidget: (context, url, error) => Container(color: Colors.transparent),
+          printError: false,
+          cache: true,
+          loadStateChanged: (ExtendedImageState state) {
+            switch (state.extendedImageLoadState) {
+              case LoadState.loading:
+                return Container(color: Colors.transparent);
+
+              case LoadState.completed:
+                return null;
+              case LoadState.failed:
+                return Container(color: Colors.transparent);
+
+              default:
+                return Container(color: Colors.transparent);
+            }
+          },
         ),
       ),
     );
