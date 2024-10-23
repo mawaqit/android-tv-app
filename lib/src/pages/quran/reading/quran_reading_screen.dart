@@ -15,6 +15,8 @@ import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
@@ -138,6 +140,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeSwitchQuranFocusNode.onKeyEvent = (node, event) => _handlePageScrollUpFocusGroupNode(node, event);
     _portraitModePageSelectorFocusNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event);
 
+    final autoReadingState = ref.watch(autoScrollNotifierProvider);
+
     return OrientationBuilder(
       builder: (context, orientation) {
         final isPortrait = orientation == Orientation.portrait;
@@ -155,7 +159,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
               switchQuranModeNode: _switchQuranModeNode,
               switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
             ),
-            body: _buildBody(quranReadingState, isPortrait, userPrefs),
+            body: _buildBody(quranReadingState, isPortrait, userPrefs, autoReadingState),
           ),
         );
       },
@@ -163,7 +167,11 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   }
 
   Widget _buildBody(
-      AsyncValue<QuranReadingState> quranReadingState, bool isPortrait, UserPreferencesManager userPrefs) {
+    AsyncValue<QuranReadingState> quranReadingState,
+    bool isPortrait,
+    UserPreferencesManager userPrefs,
+    AutoScrollState autoScrollState,
+  ) {
     final color = Theme.of(context).primaryColor;
     return quranReadingState.when(
       loading: () => Center(
@@ -178,9 +186,11 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       data: (quranReadingState) {
         return Stack(
           children: [
-            isPortrait
-                ? buildVerticalPageView(quranReadingState, ref)
-                : buildHorizontalPageView(quranReadingState, ref, context),
+            autoScrollState.isSinglePageView
+                ? buildAutoScrollView(quranReadingState, ref, autoScrollState)
+                : isPortrait
+                    ? buildVerticalPageView(quranReadingState, ref)
+                    : buildHorizontalPageView(quranReadingState, ref, context),
             if (!isPortrait) ...[
               buildRightSwitchButton(
                   context, _rightSkipButtonFocusNode, () => _scrollPageList(ScrollDirection.forward)),
@@ -233,6 +243,33 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildAutoScrollView(
+    QuranReadingState quranReadingState,
+    WidgetRef ref,
+    AutoScrollState autoScrollState,
+  ) {
+    return ListView.builder(
+      controller: autoScrollState.scrollController,
+      itemCount: quranReadingState.totalPages,
+      itemBuilder: (context, index) {
+        final currentPage = quranReadingState.currentPage;
+        final pageHeight = MediaQuery.of(context).size.height;
+
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final pageHeight =
+                constraints.maxHeight.isInfinite ? MediaQuery.of(context).size.height : constraints.maxHeight;
+            return Container(
+              width: constraints.maxWidth,
+              height: pageHeight,
+              child: quranReadingState.svgs[index],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -427,4 +464,3 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   bool _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
 }
-

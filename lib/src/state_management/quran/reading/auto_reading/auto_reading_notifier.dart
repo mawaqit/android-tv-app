@@ -17,31 +17,60 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       _hideTimer?.cancel();
       scrollController.dispose();
     });
-    return AutoScrollState();
+    return AutoScrollState(
+      scrollController: scrollController,
+    );
   }
 
-  void toggleAutoScroll() {
-    state = state.copyWith(
-      isSinglePageView: !state.isSinglePageView,
-    );
-
-    if (state.isAutoScrolling) {
-      startAutoScroll();
-    } else {
-      stopAutoScroll();
+  Future<void> jumpToCurrentPage(int currentPage, double pageHeight) async {
+    if (scrollController.hasClients) {
+      final offset = (currentPage - 1) * pageHeight;
+      scrollController.jumpTo(offset);
     }
   }
 
-  void startAutoScroll() {
+
+  void toggleAutoScroll(int currentPage, double pageHeight) {
+    if (state.isAutoScrolling) {
+      stopAutoScroll();
+    } else {
+      startAutoScroll(currentPage, pageHeight);
+    }
+  }
+
+  Future<void> startAutoScroll(int currentPage, double pageHeight) async {
     _autoScrollTimer?.cancel();
     state = state.copyWith(
       isSinglePageView: true,
     );
-    _autoScrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
-      if (scrollController.position.pixels < scrollController.position.maxScrollExtent) {
-        scrollController.jumpTo(scrollController.position.pixels + (state.autoScrollSpeed * 2));
-      } else {
-        stopAutoScroll();
+
+    // Ensure the ListView is built
+    await Future.delayed(Duration(milliseconds: 50));
+
+    // Jump to the current page
+    if (scrollController.hasClients) {
+      final offset = (currentPage - 1) * pageHeight;
+      scrollController.jumpTo(offset);
+    }
+
+    _startScrolling();
+  }
+
+
+
+  void _startScrolling() {
+    const duration = Duration(milliseconds: 50);
+    _autoScrollTimer = Timer.periodic(duration, (timer) {
+      if (scrollController.hasClients) {
+        final maxScroll = scrollController.position.maxScrollExtent;
+        final currentScroll = scrollController.offset;
+        final delta = state.autoScrollSpeed;
+
+        if (currentScroll >= maxScroll) {
+          stopAutoScroll();
+        } else {
+          scrollController.jumpTo(currentScroll + delta);
+        }
       }
     });
   }
@@ -49,13 +78,13 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   void stopAutoScroll() {
     _autoScrollTimer?.cancel();
     _autoScrollTimer = null;
+    state = state.copyWith(
+      isSinglePageView: false,
+    );
   }
 
   void changeSpeed(double newSpeed) {
     state = state.copyWith(autoScrollSpeed: newSpeed.clamp(0.1, 5.0));
-    if (state.isAutoScrolling) {
-      startAutoScroll();
-    }
   }
 
   void showControls() {
@@ -76,21 +105,21 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     state = state.copyWith(fontSize: newFontSize);
   }
 
-  void increaseSpeed() {
+  void increaseSpeed(int currentPage, double pageHeight) {
     double newSpeed = state.autoScrollSpeed + 0.1;
     if (newSpeed > 5.0) newSpeed = 5.0;
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {
-      startAutoScroll();
+      startAutoScroll(currentPage, pageHeight);
     }
   }
 
-  void decreaseSpeed() {
+  void decreaseSpeed(int currentPage, double pageHeight) {
     double newSpeed = state.autoScrollSpeed - 0.1;
     if (newSpeed < 0.1) newSpeed = 0.1;
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {
-      startAutoScroll();
+      startAutoScroll(currentPage, pageHeight);
     }
   }
 

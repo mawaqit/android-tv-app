@@ -1,11 +1,15 @@
+import 'package:flutter/material.dart';
+
 class AutoScrollState {
   final bool isSinglePageView;
   final double autoScrollSpeed;
   final bool isVisible;
   final double fontSize;
   final double maxFontSize;
+  final ScrollController scrollController;
 
   AutoScrollState({
+    required this.scrollController,
     this.isSinglePageView = false,
     this.autoScrollSpeed = 1.0,
     this.isVisible = true,
@@ -13,8 +17,8 @@ class AutoScrollState {
     this.maxFontSize = 3.0,
   });
 
-  // Derived properties
   bool get isAutoScrolling => isSinglePageView;
+
   bool get showSpeedControl => !isSinglePageView;
 
   AutoScrollState copyWith({
@@ -23,6 +27,7 @@ class AutoScrollState {
     bool? isVisible,
     double? fontSize,
     double? maxFontSize,
+    ScrollController? scrollController,
   }) {
     return AutoScrollState(
       isSinglePageView: isSinglePageView ?? this.isSinglePageView,
@@ -30,6 +35,7 @@ class AutoScrollState {
       isVisible: isVisible ?? this.isVisible,
       fontSize: fontSize ?? this.fontSize,
       maxFontSize: maxFontSize ?? this.maxFontSize,
+      scrollController: scrollController ?? this.scrollController,
     );
   }
 
@@ -45,5 +51,4 @@ class AutoScrollState {
         'showSpeedControl: $showSpeedControl'
         ')';
   }
-
 }
