@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/reading/widget/quran_floating_action_buttons.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_widgets.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_surah_selector.dart';
@@ -14,7 +12,6 @@ import 'package:mawaqit/src/pages/quran/widget/reading/quran_surah_selector.dart
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
-import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
@@ -24,8 +21,6 @@ import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.d
 import 'package:provider/provider.dart' as provider;
 
 import 'package:sizer/sizer.dart';
-
-import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 
@@ -255,8 +250,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       controller: autoScrollState.scrollController,
       itemCount: quranReadingState.totalPages,
       itemBuilder: (context, index) {
-        final currentPage = quranReadingState.currentPage;
-        final pageHeight = MediaQuery.of(context).size.height;
 
         return LayoutBuilder(
           builder: (context, constraints) {
@@ -273,99 +266,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     );
   }
 
-  Widget buildFloatingPortrait(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        _buildOrientationToggleButton(isPortrait, userPrefs),
-        SizedBox(width: 200.sp),
-        _buildQuranModeButton(isPortrait, userPrefs, context),
-        SizedBox(width: 200.sp),
-        _buildPlayToggleButton(isPortrait),
-      ],
-    );
-  }
-
-  Widget buildFloatingLandscape(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        _buildPlayToggleButton(isPortrait),
-        SizedBox(height: 1.h),
-        _buildOrientationToggleButton(isPortrait, userPrefs),
-        SizedBox(height: 1.h),
-        _buildQuranModeButton(isPortrait, userPrefs, context),
-      ],
-    );
-  }
-
-  Widget _buildOrientationToggleButton(bool isPortrait, UserPreferencesManager userPrefs) {
-    return SizedBox(
-      width: isPortrait ? 35.sp : 30.sp,
-      height: isPortrait ? 35.sp : 30.sp,
-      child: FloatingActionButton(
-        focusNode: _switchScreenViewFocusNode,
-        backgroundColor: Colors.black.withOpacity(.3),
-        child: Icon(
-          !isPortrait ? Icons.stay_current_portrait : Icons.stay_current_landscape,
-          color: Colors.white,
-          size: isPortrait ? 20.sp : 15.sp,
-        ),
-        onPressed: () => _toggleOrientation(userPrefs),
-        heroTag: null,
-      ),
-    );
-  }
-
-  Widget _buildQuranModeButton(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
-    return SizedBox(
-      width: isPortrait ? 35.sp : 30.sp,
-      height: isPortrait ? 35.sp : 30.sp,
-      child: FloatingActionButton(
-        focusNode: _switchQuranModeNode,
-        backgroundColor: Colors.black.withOpacity(.3),
-        child: Icon(
-          Icons.headset,
-          color: Colors.white,
-          size: isPortrait ? 20.sp : 15.sp,
-        ),
-        onPressed: () async {
-          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-          if (isPortrait) {
-            userPrefs.orientationLandscape = true;
-          }
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReciterSelectionScreen.withoutSurahName(),
-            ),
-          );
-        },
-        heroTag: null,
-      ),
-    );
-  }
-
-  Widget _buildPlayToggleButton(bool isPortrait) {
-    return SizedBox(
-      width: isPortrait ? 35.sp : 30.sp,
-      height: isPortrait ? 35.sp : 30.sp,
-      child: FloatingActionButton(
-        focusNode: _switchToPlayQuranFocusNode,
-        backgroundColor: Colors.black.withOpacity(.3),
-        child: Icon(
-          !isPortrait ? Icons.play_arrow : Icons.stay_current_landscape,
-          color: Colors.white,
-          size: isPortrait ? 20.sp : 15.sp,
-        ),
-        onPressed: () {
-          ;
-        },
-        heroTag: null,
-      ),
-    );
-  }
-
   void _scrollPageList(ScrollDirection direction) {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     if (direction == ScrollDirection.forward) {
@@ -374,21 +274,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       ref.read(quranReadingNotifierProvider.notifier).nextPage(isPortrait: isPortrait);
     }
   }
-
-  Widget _buildSvgPicture(SvgPicture svgPicture) {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(32.0),
-      child: SvgPicture(
-        svgPicture.bytesLoader,
-        fit: BoxFit.contain,
-        width: double.infinity,
-        height: double.infinity,
-        alignment: Alignment.center,
-      ),
-    );
-  }
-
   void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
     showDialog(
       context: context,
