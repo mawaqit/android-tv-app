@@ -47,8 +47,9 @@ class ReciteState extends Equatable {
     final reciterInfo = reciters.isNotEmpty ? reciters[0] : 'No reciters';
     return 'ReciteState(reciters: $reciterInfo, selectedReciter: ${selectedReciter.hashCode}, '
         'selectedMoshaf: ${selectedMoshaf.hashCode},'
-        'filteredReciters: ${filteredReciters.length}'
-        'filteredFavoriteReciters: ${filteredFavoriteReciters.length})';
+        'filteredReciters: ${filteredReciters.length},'
+        'filteredFavoriteReciters: ${filteredFavoriteReciters.length},'
+        'favoriteReciters: ${favoriteReciters.length})';
   }
 
   @override

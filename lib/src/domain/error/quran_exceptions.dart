@@ -103,3 +103,8 @@ class CannotFindSuwarByLanguageException extends QuranException {
   CannotFindSuwarByLanguageException(String message)
       : super('Error occurred while finding suwar by language: $message', 'FIND_SUWAR_BY_LANGUAGE_ERROR');
 }
+
+class SaveLastUpdateTimestampException extends QuranException {
+  SaveLastUpdateTimestampException(String message)
+      : super('Error occurred while saving last update timestamp: $message', 'SAVE_LAST_UPDATE_TIMESTAMP_ERROR');
+}

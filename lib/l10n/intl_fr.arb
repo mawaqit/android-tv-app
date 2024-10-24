@@ -316,6 +316,42 @@
         "example": "Abdul Basit"
       }
     }
+  },
+  "noFavoriteReciters": "Aucun réciteur préféré. Essayez d'en ajouter un à la liste",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+    "noReciterSearchResult": "Aucun résultat trouvé pour votre recherche.",
+    "searchForReciter": "Chercher un réciteur",
+  "downloadAllSuwarSuccessfully": "Tout le Coran est téléchargé",
+  "noSuwarDownload": "Aucune nouvelle sourate à télécharger",
+  "connectDownloadQuran":"Veuillez vous connecter à Internet pour télécharger",
+  "playInOnlineModeQuran": "Veuillez vous connecter à Internet pour jouer",
+  "downloaded": "Téléchargé",
+  "switchQuranType": "Aller à {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector":"Sélectionner une sourat",
+  "quranReadingPagePortrait": "Page {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
   }
 
 }

@@ -10,6 +10,7 @@ import 'package:mawaqit/src/data/data_source/quran/quran_remote_data_source.dart
 class QuranImpl extends QuranRepository {
   final QuranRemoteDataSource _quranRemoteDataSource;
   final QuranLocalDataSource _quranLocalDataSource;
+  final Duration _cacheValidityDuration = Duration(days: 30);
 
   QuranImpl(
     this._quranRemoteDataSource,
@@ -28,14 +29,42 @@ class QuranImpl extends QuranRepository {
     String languageCode = 'en',
   }) async {
     try {
+      // Check if cached data exists and is still valid
+      if (await _isCacheValid(languageCode)) {
+        final cachedSuwar = await _quranLocalDataSource.getSuwarByLanguage(languageCode);
+        return cachedSuwar;
+      }
+
+      // If cache is invalid or doesn't exist, fetch from remote
       final suwar = await _quranRemoteDataSource.getSuwarByLanguage(languageCode: languageCode);
-      log('quran: QuranImpl: getSuwarByLanguage: ${suwar[0]}');
-      await _quranLocalDataSource.saveSuwarByLanguage(languageCode, suwar);
+
+      // Save the new data to cache with current timestamp
+      await _saveSuwarWithTimestamp(languageCode, suwar);
+
       return suwar;
     } on Exception catch (_) {
-      final suwar = await _quranLocalDataSource.getSuwarByLanguage(languageCode);
-      return suwar;
+      // If remote fetch fails, try to return cached data even if it's outdated
+      final cachedSuwar = await _quranLocalDataSource.getSuwarByLanguage(languageCode);
+      if (cachedSuwar.isNotEmpty) {
+        return cachedSuwar;
+      }
+      // If no cached data, rethrow the exception
+      rethrow;
     }
+  }
+
+  Future<bool> _isCacheValid(String languageCode) async {
+    final lastUpdateTimestamp = await _quranLocalDataSource.getLastUpdateTimestamp(languageCode);
+    return lastUpdateTimestamp.fold(() => false, (time) {
+      final currentTime = DateTime.now();
+      final difference = currentTime.difference(time);
+      return difference < _cacheValidityDuration;
+    });
+  }
+
+  Future<void> _saveSuwarWithTimestamp(String languageCode, List<SurahModel> suwar) async {
+    await _quranLocalDataSource.saveSuwarByLanguage(languageCode, suwar);
+    await _quranLocalDataSource.saveLastUpdateTimestamp(languageCode, DateTime.now());
   }
 }
 

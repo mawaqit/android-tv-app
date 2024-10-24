@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/reading/widget/quran_floating_action_buttons.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_widgets.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_surah_selector.dart';
@@ -12,6 +13,8 @@ import 'package:mawaqit/src/pages/quran/widget/reading/quran_surah_selector.dart
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
@@ -23,6 +26,8 @@ import 'package:provider/provider.dart' as provider;
 import 'package:sizer/sizer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
+
+import '../../../data/data_source/device_info_data_source.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -42,7 +47,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _portraitModeBackButtonFocusNode;
   late FocusNode _portraitModeSwitchQuranFocusNode;
   late FocusNode _portraitModePageSelectorFocusNode;
-
   final ScrollController _gridScrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -70,9 +74,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _switchToPlayQuranFocusNode = FocusNode(debugLabel: 'switch_to_play_quran_node');
   }
 
+  bool _isRotated = false;
+
   @override
   void dispose() {
     _disposeFocusNodes();
+
     super.dispose();
   }
 
@@ -88,12 +95,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _switchToPlayQuranFocusNode.dispose();
   }
 
-  void _toggleOrientation(UserPreferencesManager userPrefs) {
-    final newOrientation =
-        MediaQuery.of(context).orientation == Orientation.portrait ? Orientation.landscape : Orientation.portrait;
-
-    userPrefs.orientationLandscape = newOrientation == Orientation.landscape;
-    setState(() {});
+  void _toggleOrientation() {
+    setState(() {
+      _isRotated = !_isRotated;
+    });
   }
 
   @override
@@ -129,36 +134,40 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
     _leftSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
     _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
-    _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event);
-    _switchScreenViewFocusNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event);
-    _portraitModeBackButtonFocusNode.onKeyEvent = (node, event) => _handlePageScrollUpFocusGroupNode(node, event);
-    _portraitModeSwitchQuranFocusNode.onKeyEvent = (node, event) => _handlePageScrollUpFocusGroupNode(node, event);
-    _portraitModePageSelectorFocusNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event);
+    _switchScreenViewFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+    _portraitModePageSelectorFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+    _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+    _portraitModeBackButtonFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
+    _portraitModeSwitchQuranFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
 
     final autoReadingState = ref.watch(autoScrollNotifierProvider);
 
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        final isPortrait = orientation == Orientation.portrait;
-
-        return WillPopScope(
-          onWillPop: () async {
-            userPrefs.orientationLandscape = true;
-            return true;
-          },
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
-            floatingActionButton: QuranFloatingActionControls(
-              switchScreenViewFocusNode: _switchScreenViewFocusNode,
-              switchQuranModeNode: _switchQuranModeNode,
-              switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
+    return WillPopScope(
+        onWillPop: () async {
+          userPrefs.orientationLandscape = true;
+          return true;
+        },
+        child: RotatedBox(
+          quarterTurns: _isRotated ? -1 : 0,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.width,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
+              floatingActionButton: QuranFloatingActionControls(
+                switchScreenViewFocusNode: _switchScreenViewFocusNode,
+                switchQuranModeNode: _switchQuranModeNode,
+                switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
+              ),
+              body: _buildBody(quranReadingState, _isRotated, userPrefs, autoReadingState),
             ),
-            body: _buildBody(quranReadingState, isPortrait, userPrefs, autoReadingState),
           ),
-        );
-      },
-    );
+        ));
   }
 
   Widget _buildBody(
@@ -188,8 +197,15 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                     : buildHorizontalPageView(quranReadingState, ref, context),
             if (!isPortrait) ...[
               buildRightSwitchButton(
-                  context, _rightSkipButtonFocusNode, () => _scrollPageList(ScrollDirection.forward)),
-              buildLeftSwitchButton(context, _leftSkipButtonFocusNode, () => _scrollPageList(ScrollDirection.reverse)),
+                context,
+                _rightSkipButtonFocusNode,
+                () => _scrollPageList(ScrollDirection.forward, isPortrait),
+              ),
+              buildLeftSwitchButton(
+                context,
+                _leftSkipButtonFocusNode,
+                () => _scrollPageList(ScrollDirection.reverse, isPortrait),
+              ),
             ],
             buildPageNumberIndicator(
                 quranReadingState, isPortrait, context, _portraitModePageSelectorFocusNode, _showPageSelector),
@@ -200,7 +216,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 _isThereCurrentDialogShowing(context)),
             buildBackButton(
                 isPortrait, userPrefs, context, isPortrait ? _portraitModeBackButtonFocusNode : _backButtonFocusNode),
-            isPortrait ? Container() : buildShowSurah(quranReadingState),
+            isPortrait ? SizedBox() : buildShowSurah(quranReadingState),
           ],
         );
       },
@@ -211,7 +227,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: EdgeInsets.only(top: 0.5.h),
+        padding: EdgeInsets.only(top: 0.3.h),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -221,7 +237,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             },
             borderRadius: BorderRadius.circular(20),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(20),
@@ -250,7 +266,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       controller: autoScrollState.scrollController,
       itemCount: quranReadingState.totalPages,
       itemBuilder: (context, index) {
-
         return LayoutBuilder(
           builder: (context, constraints) {
             final pageHeight =
@@ -266,19 +281,92 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     );
   }
 
-  void _scrollPageList(ScrollDirection direction) {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+  Widget buildFloatingPortrait(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          _buildOrientationToggleButton(isPortrait),
+          _buildQuranModeButton(isPortrait, userPrefs, context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFloatingLandscape(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        _buildOrientationToggleButton(isPortrait),
+        SizedBox(height: 10),
+        _buildQuranModeButton(isPortrait, userPrefs, context),
+      ],
+    );
+  }
+
+  Widget _buildOrientationToggleButton(bool isPortrait) {
+    return SizedBox(
+      width: isPortrait ? 35.sp : 30.sp,
+      height: isPortrait ? 35.sp : 30.sp,
+      child: FloatingActionButton(
+        focusNode: _switchScreenViewFocusNode,
+        backgroundColor: Colors.black.withOpacity(.3),
+        child: Icon(
+          !isPortrait ? Icons.stay_current_portrait : Icons.stay_current_landscape,
+          color: Colors.white,
+          size: isPortrait ? 20.sp : 15.sp,
+        ),
+        onPressed: () => _toggleOrientation(),
+        heroTag: null,
+      ),
+    );
+  }
+
+  Widget _buildQuranModeButton(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
+    return SizedBox(
+      width: isPortrait ? 35.sp : 30.sp,
+      height: isPortrait ? 35.sp : 30.sp,
+      child: FloatingActionButton(
+        focusNode: _switchQuranModeNode,
+        backgroundColor: Colors.black.withOpacity(.3),
+        child: Icon(
+          Icons.headset,
+          color: Colors.white,
+          size: isPortrait ? 20.sp : 15.sp,
+        ),
+        onPressed: () async {
+          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+          if (isPortrait) {
+            userPrefs.orientationLandscape = true;
+          }
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReciterSelectionScreen.withoutSurahName(),
+            ),
+          );
+        },
+        heroTag: null,
+      ),
+    );
+  }
+
+  void _scrollPageList(ScrollDirection direction, isPortrait) {
     if (direction == ScrollDirection.forward) {
       ref.read(quranReadingNotifierProvider.notifier).previousPage(isPortrait: isPortrait);
     } else {
       ref.read(quranReadingNotifierProvider.notifier).nextPage(isPortrait: isPortrait);
     }
   }
-  void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
+
+  void _showPageSelector(BuildContext context, int totalPages, int currentPage, bool switcherScreen) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return QuranReadingPageSelector(
+          isPortrait: switcherScreen,
           currentPage: currentPage,
           scrollController: _gridScrollController,
           totalPages: totalPages,
@@ -289,20 +377,13 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   FloatingActionButtonLocation _getFloatingActionButtonLocation(BuildContext context) {
     final TextDirection textDirection = Directionality.of(context);
-    final orientation = MediaQuery.of(context).orientation;
-    final isPortrait = orientation == Orientation.portrait;
-
-    if (isPortrait) {
-      return FloatingActionButtonLocation.startFloat;
-    } else {
-      switch (textDirection) {
-        case TextDirection.ltr:
-          return FloatingActionButtonLocation.endFloat;
-        case TextDirection.rtl:
-          return FloatingActionButtonLocation.startFloat;
-        default:
-          return FloatingActionButtonLocation.endFloat;
-      }
+    switch (textDirection) {
+      case TextDirection.ltr:
+        return FloatingActionButtonLocation.endFloat;
+      case TextDirection.rtl:
+        return FloatingActionButtonLocation.startFloat;
+      default:
+        return FloatingActionButtonLocation.endFloat;
     }
   }
 
@@ -325,21 +406,20 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     return KeyEventResult.ignored;
   }
 
-  KeyEventResult _handlePageScrollDownFocusGroupNode(FocusNode node, KeyEvent event) {
+  KeyEventResult _handlePageScrollDownFocusGroupNode(FocusNode node, KeyEvent event, bool isPortrait) {
     if (event is KeyDownEvent) {
-      final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
       if (event.logicalKey == LogicalKeyboardKey.arrowDown && isPortrait) {
-        _scrollPageList(ScrollDirection.reverse);
+        _scrollPageList(ScrollDirection.reverse, isPortrait);
         return KeyEventResult.handled;
       }
     }
     return KeyEventResult.ignored;
   }
 
-  KeyEventResult _handlePageScrollUpFocusGroupNode(FocusNode node, KeyEvent event) {
+  KeyEventResult _handlePageScrollUpFocusGroupNode(FocusNode node, KeyEvent event, bool isPortrait) {
     if (event is KeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        _scrollPageList(ScrollDirection.forward);
+        _scrollPageList(ScrollDirection.forward, isPortrait);
 
         return KeyEventResult.handled;
       }

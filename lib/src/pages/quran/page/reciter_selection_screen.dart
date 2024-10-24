@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/const/resource.dart';
-import 'package:mawaqit/src/pages/quran/reading/quran_reading_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/recite_type_grid_view.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
@@ -21,6 +21,7 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
 
 import '../../../domain/model/quran/reciter_model.dart';
+import '../reading/quran_reading_screen.dart';
 
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
@@ -137,13 +138,17 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         toolbarHeight: 40,
         backgroundColor: Color(0xFF28262F),
         elevation: 0,
-        title: Text(
+        title: AutoSizeText(
           S.of(context).chooseReciter,
           style: TextStyle(
             color: Colors.white,
             fontSize: 14.sp,
             fontWeight: FontWeight.bold,
           ),
+          maxLines: 1,
+          minFontSize: 6.sp.roundToDouble(),
+          maxFontSize: 20.sp.roundToDouble(),
+          stepGranularity: 1,
         ),
         actions: [
           Consumer(
