@@ -7,7 +7,6 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class QuranFloatingActionControls extends ConsumerWidget {
@@ -24,51 +23,52 @@ class QuranFloatingActionControls extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userPrefs = context.watch<UserPreferencesManager>();
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        final isPortrait = orientation == Orientation.portrait;
-        final autoScrollState = ref.watch(autoScrollNotifierProvider);
+    final autoScrollState = ref.watch(autoScrollNotifierProvider);
 
-        if (autoScrollState.isAutoScrolling) {
-          return quranReadingState.maybeWhen(
-            orElse: () {
-              return CircularProgressIndicator();
-            },
-            data: (quranState) {
-              return _AutoScrollingReadingMode(
-                isPortrait: isPortrait,
-                quranReadingState: quranState,
+    return Positioned(
+      right: 16,
+      bottom: 16,
+      child: quranReadingState.when(
+        data: (state) {
+          if (autoScrollState.isAutoScrolling) {
+            return _AutoScrollingReadingMode(
+              isPortrait: state.isRotated,
+              quranReadingState: state,
+              switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
+            );
+          }
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _PlayPauseButton(
+                isPortrait: state.isRotated,
                 switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
-              );
-            },
+              ),
+              SizedBox(height: 12),
+              _OrientationToggleButton(
+                switchScreenViewFocusNode: switchScreenViewFocusNode,
+              ),
+              SizedBox(height: 12),
+              _QuranModeButton(
+                isPortrait: state.isRotated,
+                switchQuranModeNode: switchQuranModeNode,
+              ),
+            ],
           );
-        } else {
-          return isPortrait
-              ? _FloatingPortrait(
-            userPrefs: userPrefs,
-            isPortrait: isPortrait,
-            switchScreenViewFocusNode: switchScreenViewFocusNode,
-            switchQuranModeNode: switchQuranModeNode,
-            switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
-          )
-              : _FloatingLandscape(
-            userPrefs: userPrefs,
-            isPortrait: isPortrait,
-            switchScreenViewFocusNode: switchScreenViewFocusNode,
-            switchQuranModeNode: switchQuranModeNode,
-            switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
-          );
-        }
-      },
+        },
+        loading: () => const CircularProgressIndicator(),
+        error: (_, __) => const Icon(Icons.error),
+      ),
     );
   }
 }
 
+
 class _FloatingPortrait extends StatelessWidget {
   final UserPreferencesManager userPrefs;
-  final bool isPortrait;
+  final ValueNotifier isPortrait;
   final FocusNode switchScreenViewFocusNode;
   final FocusNode switchQuranModeNode;
   final FocusNode switchToPlayQuranFocusNode;
@@ -87,19 +87,16 @@ class _FloatingPortrait extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         _OrientationToggleButton(
-          userPrefs: userPrefs,
-          isPortrait: isPortrait,
           switchScreenViewFocusNode: switchScreenViewFocusNode,
         ),
         SizedBox(width: 200.sp),
         _QuranModeButton(
-          userPrefs: userPrefs,
-          isPortrait: isPortrait,
+          isPortrait: isPortrait.value,
           switchQuranModeNode: switchQuranModeNode,
         ),
         SizedBox(width: 200.sp),
         _PlayPauseButton(
-          isPortrait: isPortrait,
+          isPortrait: isPortrait.value,
           switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
         ),
       ],
@@ -109,7 +106,7 @@ class _FloatingPortrait extends StatelessWidget {
 
 class _FloatingLandscape extends StatelessWidget {
   final UserPreferencesManager userPrefs;
-  final bool isPortrait;
+  final ValueNotifier<bool> isPortrait;
   final FocusNode switchScreenViewFocusNode;
   final FocusNode switchQuranModeNode;
   final FocusNode switchToPlayQuranFocusNode;
@@ -128,19 +125,16 @@ class _FloatingLandscape extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         _PlayPauseButton(
-          isPortrait: isPortrait,
+          isPortrait: isPortrait.value,
           switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
         ),
         SizedBox(height: 1.h),
         _OrientationToggleButton(
-          userPrefs: userPrefs,
-          isPortrait: isPortrait,
           switchScreenViewFocusNode: switchScreenViewFocusNode,
         ),
         SizedBox(height: 1.h),
         _QuranModeButton(
-          userPrefs: userPrefs,
-          isPortrait: isPortrait,
+          isPortrait: isPortrait.value,
           switchQuranModeNode: switchQuranModeNode,
         ),
       ],
@@ -148,51 +142,44 @@ class _FloatingLandscape extends StatelessWidget {
   }
 }
 
-class _OrientationToggleButton extends StatelessWidget {
-  final UserPreferencesManager userPrefs;
-  final bool isPortrait;
-  final FocusNode switchScreenViewFocusNode;
-
-  const _OrientationToggleButton({
-    required this.userPrefs,
-    required this.isPortrait,
-    required this.switchScreenViewFocusNode,
-  });
-
+class _OrientationToggleButtonState extends State<_OrientationToggleButton> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: isPortrait ? 35.sp : 30.sp,
-      height: isPortrait ? 35.sp : 30.sp,
-      child: FloatingActionButton(
-        focusNode: switchScreenViewFocusNode,
-        backgroundColor: Colors.black.withOpacity(.3),
-        child: Icon(
-          !isPortrait ? Icons.stay_current_portrait : Icons.stay_current_landscape,
-          color: Colors.white,
-          size: isPortrait ? 20.sp : 15.sp,
-        ),
-        onPressed: () => _toggleOrientation(context),
-        heroTag: null,
-      ),
+    return Consumer(
+      builder: (context, ref, child) {
+        final quranReadingState = ref.watch(quranReadingNotifierProvider);
+        return quranReadingState.when(
+          data: (state) => SizedBox(
+            width: state.isRotated ? 35.sp : 30.sp,
+            height: state.isRotated ? 35.sp : 30.sp,
+            child: FloatingActionButton(
+              focusNode: widget.switchScreenViewFocusNode,
+              backgroundColor: Colors.black.withOpacity(.3),
+              child: Icon(
+                !state.isRotated ? Icons.stay_current_portrait : Icons.stay_current_landscape,
+                color: Colors.white,
+                size: state.isRotated ? 20.sp : 15.sp,
+              ),
+              onPressed: () {
+                ref.read(quranReadingNotifierProvider.notifier).toggleRotation();
+              },
+              heroTag: null,
+            ),
+          ),
+          loading: () => const CircularProgressIndicator(),
+          error: (error, stack) => const Icon(Icons.error),
+        );
+      },
     );
-  }
-
-  void _toggleOrientation(BuildContext context) {
-    final newOrientation =
-    MediaQuery.of(context).orientation == Orientation.portrait ? Orientation.landscape : Orientation.portrait;
-
-    userPrefs.orientationLandscape = newOrientation == Orientation.landscape;
   }
 }
 
+
 class _QuranModeButton extends ConsumerWidget {
-  final UserPreferencesManager userPrefs;
   final bool isPortrait;
   final FocusNode switchQuranModeNode;
 
   const _QuranModeButton({
-    required this.userPrefs,
     required this.isPortrait,
     required this.switchQuranModeNode,
   });
@@ -212,9 +199,6 @@ class _QuranModeButton extends ConsumerWidget {
         ),
         onPressed: () async {
           ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-          if (isPortrait) {
-            userPrefs.orientationLandscape = true;
-          }
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -384,9 +368,9 @@ class _SpeedControls extends ConsumerWidget {
             onPressed: () {
               final pageHeight = MediaQuery.of(context).size.height;
               ref.read(autoScrollNotifierProvider.notifier).increaseSpeed(
-                quranReadingState.currentPage,
-                pageHeight,
-              );
+                    quranReadingState.currentPage,
+                    pageHeight,
+                  );
             },
             heroTag: 'increase_speed',
           ),
@@ -402,14 +386,49 @@ class _SpeedControls extends ConsumerWidget {
             onPressed: () {
               final pageHeight = MediaQuery.of(context).size.height;
               ref.read(autoScrollNotifierProvider.notifier).decreaseSpeed(
-                quranReadingState.currentPage,
-                pageHeight,
-              );
+                    quranReadingState.currentPage,
+                    pageHeight,
+                  );
             },
             heroTag: 'decrease_speed',
           ),
         ],
       ),
+    );
+  }
+}
+
+class _OrientationToggleButton extends ConsumerWidget {
+  final FocusNode switchScreenViewFocusNode;
+
+  const _OrientationToggleButton({
+    required this.switchScreenViewFocusNode,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final quranReadingState = ref.watch(quranReadingNotifierProvider);
+
+    return quranReadingState.when(
+      data: (state) => SizedBox(
+        width: state.isRotated ? 35.sp : 30.sp,
+        height: state.isRotated ? 35.sp : 30.sp,
+        child: FloatingActionButton(
+          focusNode: switchScreenViewFocusNode,
+          backgroundColor: Colors.black.withOpacity(.3),
+          child: Icon(
+            !state.isRotated ? Icons.stay_current_portrait : Icons.stay_current_landscape,
+            color: Colors.white,
+            size: state.isRotated ? 20.sp : 15.sp,
+          ),
+          onPressed: () {
+            ref.read(quranReadingNotifierProvider.notifier).toggleRotation();
+          },
+          heroTag: null,
+        ),
+      ),
+      loading: () => const CircularProgressIndicator(),
+      error: (_, __) => const Icon(Icons.error),
     );
   }
 }

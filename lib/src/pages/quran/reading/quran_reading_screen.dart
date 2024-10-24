@@ -68,12 +68,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _switchToPlayQuranFocusNode = FocusNode(debugLabel: 'switch_to_play_quran_node');
   }
 
-  bool _isRotated = false;
+  final ValueNotifier<bool> _isRotated = ValueNotifier(false);
 
   @override
   void dispose() {
     _disposeFocusNodes();
-
+    _isRotated.dispose();
     super.dispose();
   }
 
@@ -87,12 +87,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeSwitchQuranFocusNode.dispose();
     _portraitModePageSelectorFocusNode.dispose();
     _switchToPlayQuranFocusNode.dispose();
-  }
-
-  void _toggleOrientation() {
-    setState(() {
-      _isRotated = !_isRotated;
-    });
   }
 
   @override
@@ -129,14 +123,15 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _leftSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
     _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
     _switchScreenViewFocusNode.onKeyEvent =
-        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated.value);
     _portraitModePageSelectorFocusNode.onKeyEvent =
-        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
-    _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated.value);
+    _switchQuranModeNode.onKeyEvent =
+        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated.value);
     _portraitModeBackButtonFocusNode.onKeyEvent =
-        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
+        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated.value);
     _portraitModeSwitchQuranFocusNode.onKeyEvent =
-        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
+        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated.value);
 
     final autoReadingState = ref.watch(autoScrollNotifierProvider);
 
@@ -145,22 +140,31 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           userPrefs.orientationLandscape = true;
           return true;
         },
-        child: RotatedBox(
-          quarterTurns: _isRotated ? -1 : 0,
-          child: SizedBox(
-            width: MediaQuery.of(context).size.height,
-            height: MediaQuery.of(context).size.width,
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
-              floatingActionButton: QuranFloatingActionControls(
-                switchScreenViewFocusNode: _switchScreenViewFocusNode,
-                switchQuranModeNode: _switchQuranModeNode,
-                switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
+        child: ValueListenableBuilder<bool>(
+          valueListenable: _isRotated,
+          builder: (context, value, child) {
+            return quranReadingState.when(
+              data: (state) => RotatedBox(
+                quarterTurns: state.isRotated ? -1 : 0,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.width,
+                  child: Scaffold(
+                    backgroundColor: Colors.white,
+                    floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
+                    floatingActionButton: QuranFloatingActionControls(
+                      switchScreenViewFocusNode: _switchScreenViewFocusNode,
+                      switchQuranModeNode: _switchQuranModeNode,
+                      switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
+                    ),
+                    body: _buildBody(quranReadingState, state.isRotated, userPrefs, autoReadingState),
+                  ),
+                ),
               ),
-              body: _buildBody(quranReadingState, _isRotated, userPrefs, autoReadingState),
-            ),
-          ),
+              loading: () => const CircularProgressIndicator(),
+              error: (error, stack) => const Icon(Icons.error),
+            );
+          },
         ));
   }
 
