@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/reading/widget/quran_floating_action_buttons.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_widgets.dart';
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_surah_selector.dart';
@@ -13,8 +12,6 @@ import 'package:mawaqit/src/pages/quran/widget/reading/quran_surah_selector.dart
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
-import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
-import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
@@ -26,8 +23,6 @@ import 'package:provider/provider.dart' as provider;
 import 'package:sizer/sizer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
-
-import '../../../data/data_source/device_info_data_source.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -48,7 +43,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _portraitModeSwitchQuranFocusNode;
   late FocusNode _portraitModePageSelectorFocusNode;
   final ScrollController _gridScrollController = ScrollController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -278,78 +272,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           },
         );
       },
-    );
-  }
-
-  Widget buildFloatingPortrait(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          _buildOrientationToggleButton(isPortrait),
-          _buildQuranModeButton(isPortrait, userPrefs, context),
-        ],
-      ),
-    );
-  }
-
-  Widget buildFloatingLandscape(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        _buildOrientationToggleButton(isPortrait),
-        SizedBox(height: 10),
-        _buildQuranModeButton(isPortrait, userPrefs, context),
-      ],
-    );
-  }
-
-  Widget _buildOrientationToggleButton(bool isPortrait) {
-    return SizedBox(
-      width: isPortrait ? 35.sp : 30.sp,
-      height: isPortrait ? 35.sp : 30.sp,
-      child: FloatingActionButton(
-        focusNode: _switchScreenViewFocusNode,
-        backgroundColor: Colors.black.withOpacity(.3),
-        child: Icon(
-          !isPortrait ? Icons.stay_current_portrait : Icons.stay_current_landscape,
-          color: Colors.white,
-          size: isPortrait ? 20.sp : 15.sp,
-        ),
-        onPressed: () => _toggleOrientation(),
-        heroTag: null,
-      ),
-    );
-  }
-
-  Widget _buildQuranModeButton(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
-    return SizedBox(
-      width: isPortrait ? 35.sp : 30.sp,
-      height: isPortrait ? 35.sp : 30.sp,
-      child: FloatingActionButton(
-        focusNode: _switchQuranModeNode,
-        backgroundColor: Colors.black.withOpacity(.3),
-        child: Icon(
-          Icons.headset,
-          color: Colors.white,
-          size: isPortrait ? 20.sp : 15.sp,
-        ),
-        onPressed: () async {
-          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-          if (isPortrait) {
-            userPrefs.orientationLandscape = true;
-          }
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReciterSelectionScreen.withoutSurahName(),
-            ),
-          );
-        },
-        heroTag: null,
-      ),
     );
   }
 
