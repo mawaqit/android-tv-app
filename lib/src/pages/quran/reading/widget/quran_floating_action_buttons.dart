@@ -1,7 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
-import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_notifier.dart';
@@ -9,7 +10,7 @@ import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:sizer/sizer.dart';
 
-class QuranFloatingActionControls extends ConsumerWidget {
+class QuranFloatingActionControls extends ConsumerStatefulWidget {
   final FocusNode switchScreenViewFocusNode;
   final FocusNode switchQuranModeNode;
   final FocusNode switchToPlayQuranFocusNode;
@@ -22,158 +23,115 @@ class QuranFloatingActionControls extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _QuranFloatingActionControlsState();
+}
+
+class _QuranFloatingActionControlsState extends ConsumerState<QuranFloatingActionControls> {
+  late FocusScopeNode focusScopeNode;
+
+  @override
+  void initState() {
+    focusScopeNode = FocusScopeNode(debugLabel: 'quran_floating_action_controls');
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    focusScopeNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
     final autoScrollState = ref.watch(autoScrollNotifierProvider);
 
-    return Positioned(
-      right: 16,
-      bottom: 16,
-      child: quranReadingState.when(
-        data: (state) {
-          if (autoScrollState.isAutoScrolling) {
-            return _AutoScrollingReadingMode(
-              isPortrait: state.isRotated,
-              quranReadingState: state,
-              switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
-            );
-          }
+    return quranReadingState.when(
+      data: (state) {
+        if (autoScrollState.isAutoScrolling) {
+          return _AutoScrollingReadingMode(
+            isPortrait: state.isRotated,
+            quranReadingState: state,
+            switchToPlayQuranFocusNode: widget.switchToPlayQuranFocusNode,
+          );
+        }
 
-          return Column(
+        return FocusTraversalGroup(
+          policy: WidgetOrderTraversalPolicy(),
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _PlayPauseButton(
                 isPortrait: state.isRotated,
-                switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
+                switchToPlayQuranFocusNode: widget.switchToPlayQuranFocusNode,
               ),
               SizedBox(height: 12),
               _OrientationToggleButton(
-                switchScreenViewFocusNode: switchScreenViewFocusNode,
+                switchScreenViewFocusNode: widget.switchScreenViewFocusNode,
               ),
               SizedBox(height: 12),
               _QuranModeButton(
                 isPortrait: state.isRotated,
-                switchQuranModeNode: switchQuranModeNode,
+                switchQuranModeNode: widget.switchQuranModeNode,
               ),
             ],
-          );
-        },
-        loading: () => const CircularProgressIndicator(),
-        error: (_, __) => const Icon(Icons.error),
-      ),
-    );
-  }
-}
-
-
-class _FloatingPortrait extends StatelessWidget {
-  final UserPreferencesManager userPrefs;
-  final ValueNotifier isPortrait;
-  final FocusNode switchScreenViewFocusNode;
-  final FocusNode switchQuranModeNode;
-  final FocusNode switchToPlayQuranFocusNode;
-
-  const _FloatingPortrait({
-    required this.userPrefs,
-    required this.isPortrait,
-    required this.switchScreenViewFocusNode,
-    required this.switchQuranModeNode,
-    required this.switchToPlayQuranFocusNode,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        _OrientationToggleButton(
-          switchScreenViewFocusNode: switchScreenViewFocusNode,
-        ),
-        SizedBox(width: 200.sp),
-        _QuranModeButton(
-          isPortrait: isPortrait.value,
-          switchQuranModeNode: switchQuranModeNode,
-        ),
-        SizedBox(width: 200.sp),
-        _PlayPauseButton(
-          isPortrait: isPortrait.value,
-          switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
-        ),
-      ],
-    );
-  }
-}
-
-class _FloatingLandscape extends StatelessWidget {
-  final UserPreferencesManager userPrefs;
-  final ValueNotifier<bool> isPortrait;
-  final FocusNode switchScreenViewFocusNode;
-  final FocusNode switchQuranModeNode;
-  final FocusNode switchToPlayQuranFocusNode;
-
-  const _FloatingLandscape({
-    required this.userPrefs,
-    required this.isPortrait,
-    required this.switchScreenViewFocusNode,
-    required this.switchQuranModeNode,
-    required this.switchToPlayQuranFocusNode,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        _PlayPauseButton(
-          isPortrait: isPortrait.value,
-          switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
-        ),
-        SizedBox(height: 1.h),
-        _OrientationToggleButton(
-          switchScreenViewFocusNode: switchScreenViewFocusNode,
-        ),
-        SizedBox(height: 1.h),
-        _QuranModeButton(
-          isPortrait: isPortrait.value,
-          switchQuranModeNode: switchQuranModeNode,
-        ),
-      ],
-    );
-  }
-}
-
-class _OrientationToggleButtonState extends State<_OrientationToggleButton> {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final quranReadingState = ref.watch(quranReadingNotifierProvider);
-        return quranReadingState.when(
-          data: (state) => SizedBox(
-            width: state.isRotated ? 35.sp : 30.sp,
-            height: state.isRotated ? 35.sp : 30.sp,
-            child: FloatingActionButton(
-              focusNode: widget.switchScreenViewFocusNode,
-              backgroundColor: Colors.black.withOpacity(.3),
-              child: Icon(
-                !state.isRotated ? Icons.stay_current_portrait : Icons.stay_current_landscape,
-                color: Colors.white,
-                size: state.isRotated ? 20.sp : 15.sp,
-              ),
-              onPressed: () {
-                ref.read(quranReadingNotifierProvider.notifier).toggleRotation();
-              },
-              heroTag: null,
-            ),
           ),
-          loading: () => const CircularProgressIndicator(),
-          error: (error, stack) => const Icon(Icons.error),
         );
       },
+      loading: () => const CircularProgressIndicator(),
+      error: (_, __) => const Icon(Icons.error),
     );
   }
-}
 
+  KeyEventResult _handleFloatingActionButtons(FocusNode node, event, bool isRotated) {
+    if (event is KeyDownEvent) {
+      if (isRotated) {
+        // Landscape mode navigation
+        switch (event.logicalKey) {
+          case LogicalKeyboardKey.arrowUp:
+            // Navigate between floating action buttons vertically
+            FocusScope.of(context).previousFocus();
+            return KeyEventResult.handled;
+
+          case LogicalKeyboardKey.arrowDown:
+            // Navigate between floating action buttons vertically
+            FocusScope.of(context).nextFocus();
+            return KeyEventResult.handled;
+
+          case LogicalKeyboardKey.arrowLeft:
+            // Navigate to left side buttons (Quran switcher, etc.)
+            if (node == widget.switchToPlayQuranFocusNode) {
+              FocusScope.of(context).requestFocus(widget.switchQuranModeNode);
+            }
+            return KeyEventResult.handled;
+
+          case LogicalKeyboardKey.arrowRight:
+            // Navigate to right side floating action buttons
+            if (node == widget.switchQuranModeNode) {
+              FocusScope.of(context).requestFocus(widget.switchToPlayQuranFocusNode);
+            }
+            return KeyEventResult.handled;
+        }
+      } else {
+        if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+          node.focusInDirection(TraversalDirection.left);
+          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+          ref.read(quranReadingNotifierProvider.notifier).nextPage();
+          node.previousFocus();
+          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+          FocusScope.of(context).previousFocus();
+          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+          FocusScope.of(context).nextFocus();
+          return KeyEventResult.handled;
+        }
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+}
 
 class _QuranModeButton extends ConsumerWidget {
   final bool isPortrait;
@@ -430,5 +388,123 @@ class _OrientationToggleButton extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (_, __) => const Icon(Icons.error),
     );
+  }
+}
+
+
+class QuranFocusTraversalPolicy extends ReadingOrderTraversalPolicy {
+  @override
+  bool inDirection(FocusNode currentNode, TraversalDirection direction) {
+    final FocusScopeNode scope = currentNode.nearestScope!;
+    final List<FocusNode> nodes = scope.traversalDescendants.toList();
+
+    // Get specific nodes by their debug labels with null safety
+    final leftArrowNode = nodes.firstWhereOrNull(
+          (node) => node.debugLabel?.contains('left_skip_node') == true,
+    );
+    final rightArrowNode = nodes.firstWhereOrNull(
+          (node) => node.debugLabel?.contains('right_skip_node') == true,
+    );
+    final playButtonNode = nodes.firstWhereOrNull(
+          (node) => node.debugLabel?.contains('switch_to_play_quran_node') == true,
+    );
+    final orientationButtonNode = nodes.firstWhereOrNull(
+          (node) => node.debugLabel?.contains('switch_screen_view_node') == true,
+    );
+    final modeButtonNode = nodes.firstWhereOrNull(
+          (node) => node.debugLabel?.contains('switch_quran_mode_node') == true,
+    );
+    final hafsFocusNode = nodes.firstWhereOrNull(
+          (node) => node.debugLabel?.contains('go_to_hafs_node') == true,
+    );
+    final pageSelectorNode = nodes.firstWhereOrNull(
+          (node) => node.debugLabel?.contains('page_selector_node') == true,
+    );
+    final backButtonNode = nodes.firstWhereOrNull(
+          (node) => node.debugLabel?.contains('back_button_node') == true,
+    );
+
+    // Handle navigation between arrow buttons and related controls
+    if (currentNode == leftArrowNode || currentNode == rightArrowNode ||
+        currentNode == hafsFocusNode || currentNode == pageSelectorNode ||
+        currentNode == backButtonNode) {
+      switch (direction) {
+        case TraversalDirection.left:
+          if (currentNode == rightArrowNode && leftArrowNode != null) {
+            requestFocusCallback(leftArrowNode);
+            return true;
+          } else if (currentNode == hafsFocusNode && pageSelectorNode != null) {
+            requestFocusCallback(pageSelectorNode);
+            return true;
+          }
+          return false;
+
+        case TraversalDirection.right:
+          if (currentNode == leftArrowNode && rightArrowNode != null) {
+            requestFocusCallback(rightArrowNode);
+            return true;
+          } else if (currentNode == pageSelectorNode && hafsFocusNode != null) {
+            requestFocusCallback(hafsFocusNode);
+            return true;
+          }
+          return false;
+
+        case TraversalDirection.down:
+          if (currentNode == rightArrowNode && playButtonNode != null) {
+            requestFocusCallback(playButtonNode);
+            return true;
+          } else if (currentNode == leftArrowNode && hafsFocusNode != null) {
+            requestFocusCallback(hafsFocusNode);
+            return true;
+          }
+          return false;
+
+        case TraversalDirection.up:
+          if (currentNode == leftArrowNode && backButtonNode != null) {
+            requestFocusCallback(backButtonNode);
+            return true;
+          }
+          return false;
+      }
+    }
+
+    // Handle navigation in FAB column
+    if (currentNode == playButtonNode ||
+        currentNode == orientationButtonNode ||
+        currentNode == modeButtonNode) {
+      switch (direction) {
+        case TraversalDirection.up:
+          if (currentNode == orientationButtonNode && playButtonNode != null) {
+            requestFocusCallback(playButtonNode);
+            return true;
+          } else if (currentNode == modeButtonNode && orientationButtonNode != null) {
+            requestFocusCallback(orientationButtonNode);
+            return true;
+          }
+          return false;
+
+        case TraversalDirection.down:
+          if (currentNode == playButtonNode && orientationButtonNode != null) {
+            requestFocusCallback(orientationButtonNode);
+            return true;
+          } else if (currentNode == orientationButtonNode && modeButtonNode != null) {
+            requestFocusCallback(modeButtonNode);
+            return true;
+          }
+          return false;
+
+        case TraversalDirection.left:
+          if (currentNode == playButtonNode && rightArrowNode != null) {
+            requestFocusCallback(rightArrowNode);
+            return true;
+          }
+          return false;
+
+        case TraversalDirection.right:
+          return false;
+      }
+    }
+
+    return super.inDirection(currentNode, direction);
   }
 }

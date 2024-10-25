@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -100,31 +101,37 @@ Widget buildHorizontalPageView(QuranReadingState quranReadingState, WidgetRef re
 }
 
 Widget buildRightSwitchButton(BuildContext context, FocusNode focusNode, Function() onPressed) {
-  return Positioned(
-    right: 10,
-    top: 0,
-    bottom: 0,
-    child: SwitchButton(
-      focusNode: focusNode,
-      opacity: 0.7,
-      iconSize: 14.sp,
-      icon: Directionality.of(context) == TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-      onPressed: onPressed,
+  return FocusTraversalOrder(
+    order: NumericFocusOrder(2),
+    child: Positioned(
+      right: 10,
+      top: 0,
+      bottom: 0,
+      child: SwitchButton(
+        focusNode: focusNode,
+        opacity: 0.7,
+        iconSize: 14.sp,
+        icon: Directionality.of(context) == TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+        onPressed: onPressed,
+      ),
     ),
   );
 }
 
 Widget buildLeftSwitchButton(BuildContext context, FocusNode focusNode, Function() onPressed) {
-  return Positioned(
-    left: 10,
-    top: 0,
-    bottom: 0,
-    child: SwitchButton(
-      focusNode: focusNode,
-      opacity: 0.7,
-      iconSize: 14.sp,
-      icon: Directionality.of(context) != TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-      onPressed: onPressed,
+  return  FocusTraversalOrder(
+    order: NumericFocusOrder(1),
+    child: Positioned(
+      left: 10,
+      top: 0,
+      bottom: 0,
+      child: SwitchButton(
+        focusNode: focusNode,
+        opacity: 0.7,
+        iconSize: 14.sp,
+        icon: Directionality.of(context) != TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+        onPressed: onPressed,
+      ),
     ),
   );
 }
@@ -242,4 +249,68 @@ Widget buildSvgPicture(SvgPicture svgPicture) {
       alignment: Alignment.center,
     ),
   );
+}
+
+
+class ArrowButtonsFocusTraversalPolicy extends FocusTraversalPolicy {
+  const ArrowButtonsFocusTraversalPolicy({super.requestFocusCallback});
+
+  @override
+  FocusNode? findFirstFocusInDirection(FocusNode currentNode, TraversalDirection direction) {
+    final nodes = currentNode.nearestScope!.traversalDescendants;
+    return nodes.firstWhereOrNull((node) => node.debugLabel?.contains('left_skip_node') == true);
+  }
+
+  @override
+  Iterable<FocusNode> sortDescendants(Iterable<FocusNode> descendants, FocusNode currentNode) {
+    // Filter only the arrow button nodes
+    final arrowNodes = descendants.where((node) =>
+    node.debugLabel?.contains('left_skip_node') == true ||
+        node.debugLabel?.contains('right_skip_node') == true
+    ).toList();
+
+    // Sort them so left is first, right is second
+    mergeSort<FocusNode>(arrowNodes, compare: (a, b) {
+      final aIsLeft = a.debugLabel?.contains('left_skip_node') == true;
+      final bIsLeft = b.debugLabel?.contains('left_skip_node') == true;
+      return aIsLeft ? -1 : 1;
+    });
+
+    return arrowNodes;
+  }
+
+  @override
+  bool inDirection(FocusNode currentNode, TraversalDirection direction) {
+    final scope = currentNode.nearestScope!;
+    final descendants = scope.traversalDescendants;
+
+    final leftNode = descendants.firstWhereOrNull(
+            (node) => node.debugLabel?.contains('left_skip_node') == true
+    );
+    final rightNode = descendants.firstWhereOrNull(
+            (node) => node.debugLabel?.contains('right_skip_node') == true
+    );
+
+    if (leftNode == null || rightNode == null) return false;
+
+    switch (direction) {
+      case TraversalDirection.left:
+        if (currentNode == rightNode) {
+          requestFocusCallback(leftNode);
+          return true;
+        }
+        return false;
+
+      case TraversalDirection.right:
+        if (currentNode == leftNode) {
+          requestFocusCallback(rightNode);
+          return true;
+        }
+        return false;
+
+      case TraversalDirection.up:
+      case TraversalDirection.down:
+        return false;
+    }
+  }
 }
