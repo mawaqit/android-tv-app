@@ -352,5 +352,18 @@
       }
     }
   },
-  "surahSelector":"Select Surah"
+  "surahSelector":"Select Surah",
+  "scheduleSaved": "Your schedule has been saved.",
+  "completeAllFields": "Please complete all fields before saving.",
+  "endTimeAfter": "End time must be later than the start time.",
+  "scheduleListening": "Scheduled Listening",
+  "enableScheduling": "Enable Scheduling",
+  "scheduleDesc": "Activate this feature to automatically play Surah at scheduled times.",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "selectReciter": "Choose a Reciter",
+  "selectMoshaf": "Choose Moshaf",
+  "randomSurahSelection": "Random Surah Selection",
+  "selectSurah": "Choose Surah",
+  "save": "Save"
 }
