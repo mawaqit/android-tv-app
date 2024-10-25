@@ -7,8 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../const/constants.dart';
 
 /// Provider for the AudioControlNotifier
-final audioControlProvider =
-    AsyncNotifierProvider<AudioControlNotifier, AudioControlState>(
+final audioControlProvider = AsyncNotifierProvider<AudioControlNotifier, AudioControlState>(
   () => AudioControlNotifier(),
 );
 
@@ -18,8 +17,7 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
   final FlutterBackgroundService _service;
 
   /// Creates an AudioControlNotifier with an optional background service
-  AudioControlNotifier({FlutterBackgroundService? service})
-      : _service = service ?? FlutterBackgroundService();
+  AudioControlNotifier({FlutterBackgroundService? service}) : _service = service ?? FlutterBackgroundService();
 
   @override
   Future<AudioControlState> build() async {
@@ -36,9 +34,7 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
 
   /// Sets up the listener for audio state changes from the background service
   void _setupAudioStateListener() {
-    _service
-        .on(BackgroundScheduleAudioServiceConstant.kAudioStateChanged)
-        .listen(_handleAudioStateChange);
+    _service.on(BackgroundScheduleAudioServiceConstant.kAudioStateChanged).listen(_handleAudioStateChange);
   }
 
   /// Handles audio state changes received from the background service
@@ -66,8 +62,7 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
   }
 
   /// Handles schedule state changes
-  void _handleScheduleStateChange(
-      AsyncValue<dynamic>? previous, AsyncValue<dynamic> next) {
+  void _handleScheduleStateChange(AsyncValue<dynamic>? previous, AsyncValue<dynamic> next) {
     if (next.value != null) {
       try {
         state = AsyncData(state.value!.copyWith(
@@ -83,9 +78,7 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
   Future<AudioControlState> _getInitialState() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final isScheduleEnabled = prefs.getBool(
-              BackgroundScheduleAudioServiceConstant.kScheduleEnabled) ??
-          false;
+      final isScheduleEnabled = prefs.getBool(BackgroundScheduleAudioServiceConstant.kScheduleEnabled) ?? false;
 
       return AudioControlState(
         status: AudioStatus.paused,
@@ -139,9 +132,7 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
     if (state.value == null) return;
 
     final currentStatus = state.value!.status;
-    final newStatus = currentStatus == AudioStatus.playing
-        ? AudioStatus.paused
-        : AudioStatus.playing;
+    final newStatus = currentStatus == AudioStatus.playing ? AudioStatus.paused : AudioStatus.playing;
 
     try {
       // Update state optimistically

@@ -96,6 +96,7 @@ abstract class SystemFeaturesConstant {
   static const String kHdmi = 'android.hardware.hdmi';
   static const String kEthernet = 'android.hardware.ethernet';
 }
+
 class BackgroundScheduleAudioServiceConstant {
   static const String kManualPause = 'manual_pause_enabled';
   static const String kPendingSchedule = 'pending_schedule';
