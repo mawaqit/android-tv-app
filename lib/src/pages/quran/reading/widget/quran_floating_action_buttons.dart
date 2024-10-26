@@ -181,22 +181,28 @@ class _PlayPauseButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
     final autoScrollState = ref.watch(autoScrollNotifierProvider);
+
     return _ActionButton(
       isPortrait: isPortrait,
-      icon: autoScrollState.isAutoScrolling ? Icons.pause : Icons.play_arrow,
+      icon: !autoScrollState.isAutoScrolling ? Icons.play_arrow : autoScrollState.isPlaying ? Icons.pause : Icons.play_arrow,
       onPressed: () {
-        final quranReadingStateAsync = ref.read(quranReadingNotifierProvider);
-        final quranReadingState = quranReadingStateAsync.asData?.value;
-
-        if (quranReadingState != null) {
-          final currentPage = quranReadingState.currentPage;
+        if (!autoScrollState.isAutoScrolling) {
+          final quranReadingState = ref.watch(quranReadingNotifierProvider);
+          final currentPage = quranReadingState.maybeWhen(
+            data: (state) => state.currentPage,
+            orElse: () => 0,
+          );
           final pageHeight = MediaQuery.of(context).size.height;
-
-          ref.read(autoScrollNotifierProvider.notifier).toggleAutoScroll(currentPage, pageHeight);
+          autoScrollNotifier.toggleAutoScroll(currentPage, pageHeight);
+        }
+        if (autoScrollState.isPlaying) {
+          autoScrollNotifier.pauseAutoScroll();
+        } else {
+          autoScrollNotifier.resumeAutoScroll();
         }
       },
-      tooltip: autoScrollState.isAutoScrolling ? 'Pause' : 'Play',
       focusNode: switchToPlayQuranFocusNode,
     );
   }
@@ -219,6 +225,10 @@ class _AutoScrollingReadingMode extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        _ExitButton(
+          isPortrait: isPortrait,
+        ),
+        SizedBox(height: 1.h),
         _FontSizeControls(
           isPortrait: isPortrait,
           fontSize: autoScrollState.fontSize,
@@ -260,6 +270,27 @@ class _FontSizeControls extends ConsumerWidget {
   }
 }
 
+// Add new Exit button widget
+class _ExitButton extends ConsumerWidget {
+  final bool isPortrait;
+
+  const _ExitButton({
+    required this.isPortrait,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _ActionButton(
+      isPortrait: isPortrait,
+      icon: Icons.close,
+      onPressed: () {
+        ref.read(autoScrollNotifierProvider.notifier).stopAutoScroll();
+      },
+      tooltip: 'Exit Auto-Scroll',
+    );
+  }
+}
+
 class _SpeedControls extends ConsumerWidget {
   final QuranReadingState quranReadingState;
   final bool isPortrait;
@@ -279,9 +310,9 @@ class _SpeedControls extends ConsumerWidget {
       onPressed: () {
         final pageHeight = MediaQuery.of(context).size.height;
         ref.read(autoScrollNotifierProvider.notifier).cycleSpeed(
-          quranReadingState.currentPage,
-          pageHeight,
-        );
+              quranReadingState.currentPage,
+              pageHeight,
+            );
       },
       tooltip: 'Speed: ${(speed * 100).toInt()}%',
     );

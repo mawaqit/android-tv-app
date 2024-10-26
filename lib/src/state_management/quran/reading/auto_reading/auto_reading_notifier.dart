@@ -58,9 +58,23 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
 
 
+
   void _startScrolling() {
+    // Only start scrolling if we're in playing state
+    if (!state.isPlaying) return;
+
+    state = state.copyWith(
+      isPlaying: true,
+    );
+
     const duration = Duration(milliseconds: 50);
     _autoScrollTimer = Timer.periodic(duration, (timer) {
+      // Check if we should be scrolling
+      if (!state.isPlaying) {
+        timer.cancel();
+        return;
+      }
+
       if (scrollController.hasClients) {
         final maxScroll = scrollController.position.maxScrollExtent;
         final currentScroll = scrollController.offset;
@@ -153,6 +167,23 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {
       startAutoScroll(currentPage, pageHeight);
+    }
+  }
+
+  void pauseAutoScroll() {
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = null;
+    state = state.copyWith(
+      isPlaying: false,
+    );
+  }
+
+  void resumeAutoScroll() {
+    if (!state.isPlaying) {
+      state = state.copyWith(
+        isPlaying: true,
+      );
+      _startScrolling();
     }
   }
 }

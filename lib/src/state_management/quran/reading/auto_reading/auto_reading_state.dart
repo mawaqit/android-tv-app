@@ -7,6 +7,7 @@ class AutoScrollState {
   final double fontSize;
   final double maxFontSize;
   final ScrollController scrollController;
+  final bool isPlaying;
 
   AutoScrollState({
     required this.scrollController,
@@ -15,6 +16,7 @@ class AutoScrollState {
     this.isVisible = true,
     this.fontSize = 1.0,
     this.maxFontSize = 3.0,
+    this.isPlaying = false,
   });
 
   bool get isAutoScrolling => isSinglePageView;
@@ -28,6 +30,7 @@ class AutoScrollState {
     double? fontSize,
     double? maxFontSize,
     ScrollController? scrollController,
+    bool? isPlaying,
   }) {
     return AutoScrollState(
       isSinglePageView: isSinglePageView ?? this.isSinglePageView,
@@ -36,6 +39,7 @@ class AutoScrollState {
       fontSize: fontSize ?? this.fontSize,
       maxFontSize: maxFontSize ?? this.maxFontSize,
       scrollController: scrollController ?? this.scrollController,
+      isPlaying: isPlaying ?? this.isPlaying,
     );
   }
 
@@ -48,7 +52,8 @@ class AutoScrollState {
         'fontSize: $fontSize, '
         'maxFontSize: $maxFontSize, '
         'isAutoScrolling: $isAutoScrolling, '
-        'showSpeedControl: $showSpeedControl'
+        'showSpeedControl: $showSpeedControl,'
+        'isPlaying: $isPlaying'
         ')';
   }
 }
