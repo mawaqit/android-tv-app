@@ -202,42 +202,6 @@ class _PlayPauseButton extends ConsumerWidget {
   }
 }
 
-class _ActionButton extends StatelessWidget {
-  final bool isPortrait;
-  final IconData icon;
-  final VoidCallback onPressed;
-  final String? tooltip;
-  final FocusNode? focusNode;
-
-  const _ActionButton({
-    required this.isPortrait,
-    required this.icon,
-    required this.onPressed,
-    this.tooltip,
-    this.focusNode,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: isPortrait ? 35.sp : 30.sp,
-      height: isPortrait ? 35.sp : 30.sp,
-      child: FloatingActionButton(
-        focusNode: focusNode,
-        backgroundColor: Colors.black.withOpacity(.3),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: isPortrait ? 20.sp : 15.sp,
-        ),
-        onPressed: onPressed,
-        heroTag: null,
-        tooltip: tooltip,
-      ),
-    );
-  }
-}
-
 class _AutoScrollingReadingMode extends ConsumerWidget {
   final bool isPortrait;
   final QuranReadingState quranReadingState;
@@ -255,11 +219,15 @@ class _AutoScrollingReadingMode extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        _FontSizeControls(isPortrait: isPortrait),
+        _FontSizeControls(
+          isPortrait: isPortrait,
+          fontSize: autoScrollState.fontSize,
+        ),
         SizedBox(height: 1.h),
         _SpeedControls(
           quranReadingState: quranReadingState,
           isPortrait: isPortrait,
+          speed: autoScrollState.autoScrollSpeed,
         ),
         SizedBox(height: 1.h),
         _PlayPauseButton(
@@ -273,27 +241,21 @@ class _AutoScrollingReadingMode extends ConsumerWidget {
 
 class _FontSizeControls extends ConsumerWidget {
   final bool isPortrait;
+  final double fontSize;
 
-  const _FontSizeControls({required this.isPortrait});
+  const _FontSizeControls({
+    required this.isPortrait,
+    required this.fontSize,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        _ActionButton(
-          isPortrait: isPortrait,
-          icon: Icons.remove,
-          onPressed: () => ref.read(autoScrollNotifierProvider.notifier).decreaseFontSize(),
-          tooltip: 'Decrease Font Size',
-        ),
-        SizedBox(width: 1.h),
-        _ActionButton(
-          isPortrait: isPortrait,
-          icon: Icons.add,
-          onPressed: () => ref.read(autoScrollNotifierProvider.notifier).increaseFontSize(),
-          tooltip: 'Increase Font Size',
-        ),
-      ],
+    return _ActionButton(
+      isPortrait: isPortrait,
+      icon: Icons.text_fields,
+      onPressed: () => ref.read(autoScrollNotifierProvider.notifier).cycleFontSize(),
+      tooltip: 'Font Size: ${(fontSize * 100).toInt()}%',
+      autoFocus: true,
     );
   }
 }
@@ -301,56 +263,65 @@ class _FontSizeControls extends ConsumerWidget {
 class _SpeedControls extends ConsumerWidget {
   final QuranReadingState quranReadingState;
   final bool isPortrait;
+  final double speed;
 
   const _SpeedControls({
     required this.quranReadingState,
     required this.isPortrait,
+    required this.speed,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Positioned(
-      right: 16,
-      bottom: isPortrait ? 100 : 16,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            mini: true,
-            backgroundColor: Colors.black.withOpacity(.3),
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-              size: isPortrait ? 20.sp : 15.sp,
-            ),
-            onPressed: () {
-              final pageHeight = MediaQuery.of(context).size.height;
-              ref.read(autoScrollNotifierProvider.notifier).increaseSpeed(
-                    quranReadingState.currentPage,
-                    pageHeight,
-                  );
-            },
-            heroTag: 'increase_speed',
-          ),
-          SizedBox(height: 8),
-          FloatingActionButton(
-            mini: true,
-            backgroundColor: Colors.black.withOpacity(.3),
-            child: Icon(
-              Icons.remove,
-              color: Colors.white,
-              size: isPortrait ? 20.sp : 15.sp,
-            ),
-            onPressed: () {
-              final pageHeight = MediaQuery.of(context).size.height;
-              ref.read(autoScrollNotifierProvider.notifier).decreaseSpeed(
-                    quranReadingState.currentPage,
-                    pageHeight,
-                  );
-            },
-            heroTag: 'decrease_speed',
-          ),
-        ],
+    return _ActionButton(
+      isPortrait: isPortrait,
+      icon: Icons.speed,
+      onPressed: () {
+        final pageHeight = MediaQuery.of(context).size.height;
+        ref.read(autoScrollNotifierProvider.notifier).cycleSpeed(
+          quranReadingState.currentPage,
+          pageHeight,
+        );
+      },
+      tooltip: 'Speed: ${(speed * 100).toInt()}%',
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final bool isPortrait;
+  final IconData icon;
+  final VoidCallback onPressed;
+  final String? tooltip;
+  final FocusNode? focusNode;
+  bool autoFocus;
+
+  _ActionButton({
+    required this.isPortrait,
+    required this.icon,
+    required this.onPressed,
+    this.tooltip,
+    this.focusNode,
+    this.autoFocus = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: isPortrait ? 35.sp : 30.sp,
+      height: isPortrait ? 35.sp : 30.sp,
+      child: FloatingActionButton(
+        autofocus: autoFocus,
+        focusNode: focusNode,
+        backgroundColor: Colors.black.withOpacity(.3),
+        child: Icon(
+          icon,
+          color: Colors.white,
+          size: isPortrait ? 20.sp : 15.sp,
+        ),
+        onPressed: onPressed,
+        heroTag: null,
+        tooltip: tooltip,
       ),
     );
   }

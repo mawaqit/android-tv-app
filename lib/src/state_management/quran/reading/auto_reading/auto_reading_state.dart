@@ -11,7 +11,7 @@ class AutoScrollState {
   AutoScrollState({
     required this.scrollController,
     this.isSinglePageView = false,
-    this.autoScrollSpeed = 1.0,
+    this.autoScrollSpeed = 0.1,
     this.isVisible = true,
     this.fontSize = 1.0,
     this.maxFontSize = 3.0,
