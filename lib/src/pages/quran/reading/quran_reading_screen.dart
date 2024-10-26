@@ -21,9 +21,163 @@ import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 import 'package:provider/provider.dart' as provider;
 
-import 'package:sizer/sizer.dart';
-
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
+
+abstract class QuranViewStrategy {
+  Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context);
+
+  List<Widget> buildControls(
+    BuildContext context,
+    QuranReadingState state,
+    UserPreferencesManager userPrefs,
+    bool isPortrait,
+    FocusNodes focusNodes,
+    Function(ScrollDirection, bool) onScroll,
+    Function(BuildContext, int, int, bool) showPageSelector,
+  );
+}
+
+// Helper class to organize focus nodes
+class FocusNodes {
+  final FocusNode backButtonNode;
+  final FocusNode leftSkipNode;
+  final FocusNode rightSkipNode;
+  final FocusNode pageSelectorNode;
+  final FocusNode switchQuranNode;
+
+  FocusNodes({
+    required this.backButtonNode,
+    required this.leftSkipNode,
+    required this.rightSkipNode,
+    required this.pageSelectorNode,
+    required this.switchQuranNode,
+  });
+}
+
+class AutoScrollViewStrategy implements QuranViewStrategy {
+  final AutoScrollState autoScrollState;
+
+  AutoScrollViewStrategy(this.autoScrollState);
+
+  @override
+  Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
+    return ListView.builder(
+      controller: autoScrollState.scrollController,
+      itemCount: state.totalPages,
+      itemBuilder: (context, index) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final pageHeight =
+                constraints.maxHeight.isInfinite ? MediaQuery.of(context).size.height : constraints.maxHeight;
+            return SizedBox(
+              width: constraints.maxWidth,
+              height: pageHeight,
+              child: buildSvgPicture(state.svgs[index]),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  List<Widget> buildControls(
+    BuildContext context,
+    QuranReadingState state,
+    UserPreferencesManager userPrefs,
+    bool isPortrait,
+    FocusNodes focusNodes,
+    Function(ScrollDirection, bool) onScroll,
+    Function(BuildContext, int, int, bool) showPageSelector,
+  ) {
+    return [
+      buildBackButton(
+        isPortrait,
+        userPrefs,
+        context,
+        focusNodes.backButtonNode,
+      ),
+    ];
+  }
+}
+
+class NormalViewStrategy implements QuranViewStrategy {
+  final bool isPortrait;
+
+  NormalViewStrategy(this.isPortrait);
+
+  @override
+  Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
+    return isPortrait ? buildVerticalPageView(state, ref) : buildHorizontalPageView(state, ref, context);
+  }
+
+  @override
+  List<Widget> buildControls(
+    BuildContext context,
+    QuranReadingState state,
+    UserPreferencesManager userPrefs,
+    bool isPortrait,
+    FocusNodes focusNodes,
+    Function(ScrollDirection, bool) onScroll,
+    Function(BuildContext, int, int, bool) showPageSelector,
+  ) {
+    return [
+      buildBackButton(
+        isPortrait,
+        userPrefs,
+        context,
+        focusNodes.backButtonNode,
+      ),
+      _buildNavigationButtons(
+        context,
+        focusNodes,
+        onScroll,
+        isPortrait,
+      ),
+      buildPageNumberIndicator(
+        state,
+        isPortrait,
+        context,
+        focusNodes.pageSelectorNode,
+        showPageSelector,
+      ),
+      buildMoshafSelector(
+        isPortrait,
+        context,
+        focusNodes.switchQuranNode,
+        false,
+      ),
+    ];
+  }
+
+  Widget _buildNavigationButtons(
+    BuildContext context,
+    FocusNodes focusNodes,
+    Function(ScrollDirection, bool) onScroll,
+    bool isPortrait,
+  ) {
+    return FocusTraversalGroup(
+      policy: ArrowButtonsFocusTraversalPolicy(
+        backButtonNode: focusNodes.backButtonNode,
+        pageSelectorNode: focusNodes.pageSelectorNode,
+      ),
+      child: Stack(
+        children: [
+          buildLeftSwitchButton(
+            context,
+            focusNodes.leftSkipNode,
+            () => onScroll(ScrollDirection.reverse, isPortrait),
+          ),
+          buildRightSwitchButton(
+            context,
+            focusNodes.rightSkipNode,
+            () => onScroll(ScrollDirection.forward, isPortrait),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -149,91 +303,51 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             ),
           );
         },
-        loading: () => const CircularProgressIndicator(),
+        loading: () => SizedBox(),
         error: (error, stack) => const Icon(Icons.error),
       ),
     );
   }
 
   Widget _buildBody(
-      AsyncValue<QuranReadingState> quranReadingState,
-      bool isPortrait,
-      UserPreferencesManager userPrefs,
-      AutoScrollState autoScrollState,
-      ) {
-    final color = Theme.of(context).primaryColor;
+    AsyncValue<QuranReadingState> quranReadingState,
+    bool isPortrait,
+    UserPreferencesManager userPrefs,
+    AutoScrollState autoScrollState,
+  ) {
     return quranReadingState.when(
-      loading: () => Center(
-        child: CircularProgressIndicator(color: color),
-      ),
-      error: (error, s) {
-        final errorLocalized = S.of(context).error;
-        return Center(child: Text('$errorLocalized: $error'));
-      },
-      data: (quranReadingState) {
+      loading: () => _buildLoadingIndicator(),
+      error: (error, s) => _buildErrorIndicator(error),
+      data: (state) {
+        // Initialize the appropriate strategy
+        final viewStrategy =
+            autoScrollState.isSinglePageView ? AutoScrollViewStrategy(autoScrollState) : NormalViewStrategy(isPortrait);
+
+        // Create focus nodes bundle
+        final focusNodes = FocusNodes(
+          backButtonNode: _backButtonFocusNode,
+          leftSkipNode: _leftSkipButtonFocusNode,
+          rightSkipNode: _rightSkipButtonFocusNode,
+          pageSelectorNode: _portraitModePageSelectorFocusNode,
+          switchQuranNode: _switchQuranFocusNode,
+        );
+
         return Stack(
           children: [
-            // Main content (Quran pages)
-            autoScrollState.isSinglePageView
-                ? buildAutoScrollView(quranReadingState, ref, autoScrollState)
-                : isPortrait
-                ? buildVerticalPageView(quranReadingState, ref)
-                : buildHorizontalPageView(quranReadingState, ref, context),
+            // Main content
+            viewStrategy.buildView(state, ref, context),
 
+            // Controls overlay
             if (!isPortrait) ...[
-              // Back button
-              buildBackButton(isPortrait, userPrefs, context, _backButtonFocusNode),
-
-              // Navigation buttons
-              FocusTraversalGroup(
-                policy: ArrowButtonsFocusTraversalPolicy(
-                  backButtonNode: _backButtonFocusNode,
-                  pageSelectorNode: _portraitModePageSelectorFocusNode,
-                ),
-                child: Stack(
-                  children: [
-                    // Left button
-                    FocusTraversalOrder(
-                      order: NumericFocusOrder(2),
-                      child: buildLeftSwitchButton(
-                        context,
-                        _leftSkipButtonFocusNode,
-                            () => _scrollPageList(ScrollDirection.reverse, isPortrait),
-                      ),
-                    ),
-
-                    // Right button
-                    FocusTraversalOrder(
-                      order: NumericFocusOrder(3),
-                      child: buildRightSwitchButton(
-                        context,
-                        _rightSkipButtonFocusNode,
-                            () => _scrollPageList(ScrollDirection.forward, isPortrait),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Page selector
-              buildPageNumberIndicator(
-                quranReadingState,
-                isPortrait,
+              ...viewStrategy.buildControls(
                 context,
-                _portraitModePageSelectorFocusNode,
+                state,
+                userPrefs,
+                isPortrait,
+                focusNodes,
+                _scrollPageList,
                 _showPageSelector,
               ),
-
-              // Moshaf selector
-              buildMoshafSelector(
-                isPortrait,
-                context,
-                _switchQuranFocusNode,
-                _isThereCurrentDialogShowing(context),
-              ),
-
-              // Surah title
-              buildShowSurah(quranReadingState),
             ],
           ],
         );
@@ -241,37 +355,18 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     );
   }
 
-  Align buildShowSurah(QuranReadingState quranReadingState) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Padding(
-        padding: EdgeInsets.only(top: 0.3.h),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () {
-              ref.read(quranReadingNotifierProvider.notifier).getAllSuwarPage();
-              showSurahSelector(context, quranReadingState.currentPage);
-            },
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                quranReadingState.currentSurahName,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 8.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
+  Widget _buildLoadingIndicator() {
+    return Center(
+      child: CircularProgressIndicator(
+        color: Theme.of(context).primaryColor,
       ),
+    );
+  }
+
+  Widget _buildErrorIndicator(Object error) {
+    final errorLocalized = S.of(context).error;
+    return Center(
+      child: Text('$errorLocalized: $error'),
     );
   }
 
@@ -336,7 +431,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   bool _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
 }
 
-
 class ArrowButtonsFocusTraversalPolicy extends FocusTraversalPolicy {
   final FocusNode backButtonNode;
   final FocusNode pageSelectorNode;
@@ -374,10 +468,10 @@ class ArrowButtonsFocusTraversalPolicy extends FocusTraversalPolicy {
 
   @override
   Iterable<FocusNode> sortDescendants(Iterable<FocusNode> descendants, FocusNode currentNode) {
-    final arrowNodes = descendants.where((node) =>
-    node.debugLabel?.contains('left_skip_node') == true ||
-        node.debugLabel?.contains('right_skip_node') == true
-    ).toList();
+    final arrowNodes = descendants
+        .where((node) =>
+            node.debugLabel?.contains('left_skip_node') == true || node.debugLabel?.contains('right_skip_node') == true)
+        .toList();
 
     mergeSort<FocusNode>(arrowNodes, compare: (a, b) {
       final aIsLeft = a.debugLabel?.contains('left_skip_node') == true;
