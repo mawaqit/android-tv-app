@@ -72,7 +72,7 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
             return SizedBox(
               width: constraints.maxWidth,
               height: pageHeight,
-              child: buildSvgPicture(state.svgs[index]),
+              child: SvgPictureWidget(svgPicture: state.svgs[index]),
             );
           },
         );
@@ -91,11 +91,10 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
     Function(BuildContext, int, int, bool) showPageSelector,
   ) {
     return [
-      buildBackButton(
-        isPortrait,
-        userPrefs,
-        context,
-        focusNodes.backButtonNode,
+      BackButtonWidget(
+        isPortrait: isPortrait,
+        userPrefs: userPrefs,
+        focusNode: focusNodes.backButtonNode,
       ),
     ];
   }
@@ -108,7 +107,13 @@ class NormalViewStrategy implements QuranViewStrategy {
 
   @override
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
-    return isPortrait ? buildVerticalPageView(state, ref) : buildHorizontalPageView(state, ref, context);
+    return isPortrait
+        ? VerticalPageViewWidget(
+            quranReadingState: state,
+          )
+        : HorizontalPageViewWidget(
+            quranReadingState: state,
+          );
   }
 
   @override
@@ -122,11 +127,10 @@ class NormalViewStrategy implements QuranViewStrategy {
     Function(BuildContext, int, int, bool) showPageSelector,
   ) {
     return [
-      buildBackButton(
-        isPortrait,
-        userPrefs,
-        context,
-        focusNodes.backButtonNode,
+      BackButtonWidget(
+        isPortrait: isPortrait,
+        userPrefs: userPrefs,
+        focusNode: focusNodes.backButtonNode,
       ),
       _buildNavigationButtons(
         context,
@@ -134,18 +138,16 @@ class NormalViewStrategy implements QuranViewStrategy {
         onScroll,
         isPortrait,
       ),
-      buildPageNumberIndicator(
-        state,
-        isPortrait,
-        context,
-        focusNodes.pageSelectorNode,
-        showPageSelector,
+      PageNumberIndicatorWidget(
+        quranReadingState: state,
+        focusNode: focusNodes.pageSelectorNode,
+        isPortrait: isPortrait,
+        showPageSelector: showPageSelector,
       ),
-      buildMoshafSelector(
-        isPortrait,
-        context,
-        focusNodes.switchQuranNode,
-        false,
+      MoshafSelectorPositionedWidget(
+        isPortrait: isPortrait,
+        focusNode: focusNodes.switchQuranNode,
+        isThereCurrentDialogShowing: false,
       ),
     ];
   }
@@ -163,15 +165,13 @@ class NormalViewStrategy implements QuranViewStrategy {
       ),
       child: Stack(
         children: [
-          buildLeftSwitchButton(
-            context,
-            focusNodes.leftSkipNode,
-            () => onScroll(ScrollDirection.reverse, isPortrait),
+          LeftSwitchButtonWidget(
+            focusNode: focusNodes.leftSkipNode,
+            onPressed: () => onScroll(ScrollDirection.reverse, isPortrait),
           ),
-          buildRightSwitchButton(
-            context,
-            focusNodes.rightSkipNode,
-            () => onScroll(ScrollDirection.forward, isPortrait),
+          RightSwitchButtonWidget(
+            focusNode: focusNodes.rightSkipNode,
+            onPressed: () => onScroll(ScrollDirection.forward, isPortrait),
           ),
         ],
       ),
