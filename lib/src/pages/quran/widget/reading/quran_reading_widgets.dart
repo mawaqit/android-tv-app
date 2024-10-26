@@ -344,10 +344,14 @@ class BackButtonWidget extends ConsumerWidget {
 
 class SvgPictureWidget extends StatelessWidget {
   final SvgPicture svgPicture;
+  final double? width;
+  final double? height;
 
   const SvgPictureWidget({
     super.key,
     required this.svgPicture,
+    this.width = double.infinity,
+    this.height = double.infinity,
   });
 
   @override
@@ -358,8 +362,8 @@ class SvgPictureWidget extends StatelessWidget {
       child: SvgPicture(
         svgPicture.bytesLoader,
         fit: BoxFit.contain,
-        width: double.infinity,
-        height: double.infinity,
+        width: width,
+        height: height,
         alignment: Alignment.center,
       ),
     );

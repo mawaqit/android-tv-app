@@ -61,24 +61,24 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
 
   @override
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
+    final scalingFactor = autoScrollState.fontSize;
+
     return ListView.builder(
       controller: autoScrollState.scrollController,
       itemCount: state.totalPages,
       itemBuilder: (context, index) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final pageHeight =
-                constraints.maxHeight.isInfinite ? MediaQuery.of(context).size.height : constraints.maxHeight;
-            return SizedBox(
-              width: constraints.maxWidth,
-              height: pageHeight,
-              child: SvgPictureWidget(svgPicture: state.svgs[index]),
-            );
-          },
+        return SizedBox(
+          width: MediaQuery.of(context).size.width * scalingFactor,
+          height: MediaQuery.of(context).size.height * scalingFactor,
+          child: SvgPictureWidget(
+            svgPicture: state.svgs[index],
+          ),
         );
       },
     );
   }
+
+
 
   @override
   List<Widget> buildControls(
