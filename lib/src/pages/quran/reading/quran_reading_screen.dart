@@ -119,18 +119,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       }
     });
 
-    // _leftSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
-    // _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
-    // _switchScreenViewFocusNode.onKeyEvent =
-    //     (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
-    // _portraitModePageSelectorFocusNode.onKeyEvent =
-    //     (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
-    // _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
-    // _portraitModeBackButtonFocusNode.onKeyEvent =
-    //     (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
-    // _portraitModeSwitchQuranFocusNode.onKeyEvent =
-    //     (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
-
     final autoReadingState = ref.watch(autoScrollNotifierProvider);
 
     return WillPopScope(
@@ -179,9 +167,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     final color = Theme.of(context).primaryColor;
     return quranReadingState.when(
       loading: () => Center(
-        child: CircularProgressIndicator(
-          color: color,
-        ),
+        child: CircularProgressIndicator(color: color),
       ),
       error: (error, s) {
         final errorLocalized = S.of(context).error;
@@ -199,18 +185,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
             if (!isPortrait) ...[
               // Back button
-              Positioned(
-                top: 10,
-                left: 10,
-                child: FocusTraversalOrder(
-                  order: NumericFocusOrder(1),
-                  child: buildBackButton(
-                    isPortrait,
-                    userPrefs,
-                    context,
-                    _backButtonFocusNode,
-                  ),
-                ),
+              FocusTraversalOrder(
+                order: NumericFocusOrder(1),
+                child: buildBackButton(isPortrait, userPrefs, context, _backButtonFocusNode),
               ),
 
               // Navigation buttons
@@ -222,36 +199,22 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                 child: Stack(
                   children: [
                     // Left button
-                    Positioned(
-                      left: 10,
-                      top: 0,
-                      bottom: 0,
-                      child: Center(
-                        child: FocusTraversalOrder(
-                          order: NumericFocusOrder(2),
-                          child: buildLeftSwitchButton(
-                            context,
-                            _leftSkipButtonFocusNode,
-                                () => _scrollPageList(ScrollDirection.reverse, isPortrait),
-                          ),
-                        ),
+                    FocusTraversalOrder(
+                      order: NumericFocusOrder(2),
+                      child: buildLeftSwitchButton(
+                        context,
+                        _leftSkipButtonFocusNode,
+                            () => _scrollPageList(ScrollDirection.reverse, isPortrait),
                       ),
                     ),
 
                     // Right button
-                    Positioned(
-                      right: 10,
-                      top: 0,
-                      bottom: 0,
-                      child: Center(
-                        child: FocusTraversalOrder(
-                          order: NumericFocusOrder(3),
-                          child: buildRightSwitchButton(
-                            context,
-                            _rightSkipButtonFocusNode,
-                                () => _scrollPageList(ScrollDirection.forward, isPortrait),
-                          ),
-                        ),
+                    FocusTraversalOrder(
+                      order: NumericFocusOrder(3),
+                      child: buildRightSwitchButton(
+                        context,
+                        _rightSkipButtonFocusNode,
+                            () => _scrollPageList(ScrollDirection.forward, isPortrait),
                       ),
                     ),
                   ],
@@ -259,26 +222,20 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
               ),
 
               // Page selector
-              Positioned(
-                top: 60,
-                left: 0,
-                right: 0,
-                child: FocusTraversalOrder(
-                  order: NumericFocusOrder(4),
-                  child: buildPageNumberIndicator(
-                    quranReadingState,
-                    isPortrait,
-                    context,
-                    _portraitModePageSelectorFocusNode,
-                    _showPageSelector,
-                  ),
+              FocusTraversalOrder(
+                order: NumericFocusOrder(4),
+                child: buildPageNumberIndicator(
+                  quranReadingState,
+                  isPortrait,
+                  context,
+                  _portraitModePageSelectorFocusNode,
+                  _showPageSelector,
                 ),
               ),
 
               // Moshaf selector
-              Positioned(
-                top: 10,
-                right: 60,
+              FocusTraversalOrder(
+                order: NumericFocusOrder(5),
                 child: buildMoshafSelector(
                   isPortrait,
                   context,
