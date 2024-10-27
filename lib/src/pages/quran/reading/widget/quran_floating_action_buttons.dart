@@ -82,55 +82,6 @@ class _QuranFloatingActionControlsState extends ConsumerState<QuranFloatingActio
       error: (_, __) => const Icon(Icons.error),
     );
   }
-
-  KeyEventResult _handleFloatingActionButtons(FocusNode node, event, bool isRotated) {
-    if (event is KeyDownEvent) {
-      if (isRotated) {
-        // Landscape mode navigation
-        switch (event.logicalKey) {
-          case LogicalKeyboardKey.arrowUp:
-            // Navigate between floating action buttons vertically
-            FocusScope.of(context).previousFocus();
-            return KeyEventResult.handled;
-
-          case LogicalKeyboardKey.arrowDown:
-            // Navigate between floating action buttons vertically
-            FocusScope.of(context).nextFocus();
-            return KeyEventResult.handled;
-
-          case LogicalKeyboardKey.arrowLeft:
-            // Navigate to left side buttons (Quran switcher, etc.)
-            if (node == widget.switchToPlayQuranFocusNode) {
-              FocusScope.of(context).requestFocus(widget.switchQuranModeNode);
-            }
-            return KeyEventResult.handled;
-
-          case LogicalKeyboardKey.arrowRight:
-            // Navigate to right side floating action buttons
-            if (node == widget.switchQuranModeNode) {
-              FocusScope.of(context).requestFocus(widget.switchToPlayQuranFocusNode);
-            }
-            return KeyEventResult.handled;
-        }
-      } else {
-        if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-          node.focusInDirection(TraversalDirection.left);
-          return KeyEventResult.handled;
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-          ref.read(quranReadingNotifierProvider.notifier).nextPage();
-          node.previousFocus();
-          return KeyEventResult.handled;
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-          FocusScope.of(context).previousFocus();
-          return KeyEventResult.handled;
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-          FocusScope.of(context).nextFocus();
-          return KeyEventResult.handled;
-        }
-      }
-    }
-    return KeyEventResult.ignored;
-  }
 }
 
 class _QuranModeButton extends ConsumerWidget {
