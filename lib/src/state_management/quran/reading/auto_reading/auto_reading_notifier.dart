@@ -40,6 +40,13 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
   Future<void> startAutoScroll(int currentPage, double pageHeight) async {
     _autoScrollTimer?.cancel();
+
+    // Store the current scroll position before making changes
+    double? currentScrollPosition;
+    if (scrollController.hasClients) {
+      currentScrollPosition = scrollController.offset;
+    }
+
     state = state.copyWith(
       isSinglePageView: true,
     );
@@ -47,15 +54,19 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     // Ensure the ListView is built
     await Future.delayed(Duration(milliseconds: 50));
 
-    // Jump to the current page
+    // Restore the previous scroll position if it exists,
+    // otherwise jump to the current page
     if (scrollController.hasClients) {
-      final offset = (currentPage - 1) * pageHeight;
-      scrollController.jumpTo(offset);
+      if (currentScrollPosition != null) {
+        scrollController.jumpTo(currentScrollPosition);
+      } else {
+        final offset = (currentPage - 1) * pageHeight;
+        scrollController.jumpTo(offset);
+      }
     }
 
     _startScrolling();
   }
-
 
 
 
@@ -124,7 +135,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     if (newSpeed > 5.0) newSpeed = 5.0;
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {
-      startAutoScroll(currentPage, pageHeight);
+      _startScrolling(); // Only restart the scrolling timer
     }
   }
 
@@ -133,7 +144,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     if (newSpeed < 0.1) newSpeed = 0.1;
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {
-      startAutoScroll(currentPage, pageHeight);
+      _startScrolling(); // Only restart the scrolling timer
     }
   }
 
@@ -166,7 +177,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     }
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {
-      startAutoScroll(currentPage, pageHeight);
+      _startScrolling(); // Only restart the scrolling timer
     }
   }
 
