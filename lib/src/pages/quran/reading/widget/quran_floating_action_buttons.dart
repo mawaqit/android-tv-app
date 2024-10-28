@@ -137,7 +137,11 @@ class _PlayPauseButton extends ConsumerWidget {
 
     return _ActionButton(
       isPortrait: isPortrait,
-      icon: !autoScrollState.isAutoScrolling ? Icons.play_arrow : autoScrollState.isPlaying ? Icons.pause : Icons.play_arrow,
+      icon: !autoScrollState.isAutoScrolling
+          ? Icons.play_arrow
+          : autoScrollState.isPlaying
+              ? Icons.pause
+              : Icons.play_arrow,
       onPressed: () {
         if (!autoScrollState.isAutoScrolling) {
           final quranReadingState = ref.watch(quranReadingNotifierProvider);

@@ -29,7 +29,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     }
   }
 
-
   void toggleAutoScroll(int currentPage, double pageHeight) {
     if (state.isAutoScrolling) {
       stopAutoScroll();
@@ -67,8 +66,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
     _startScrolling();
   }
-
-
 
   void _startScrolling() {
     // Only start scrolling if we're in playing state
