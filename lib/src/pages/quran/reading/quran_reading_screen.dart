@@ -64,21 +64,30 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
     final scalingFactor = autoScrollState.fontSize;
 
     return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
       controller: autoScrollState.scrollController,
       itemCount: state.totalPages,
       itemBuilder: (context, index) {
-        return SizedBox(
-          width: MediaQuery.of(context).size.width * scalingFactor,
-          height: MediaQuery.of(context).size.height * scalingFactor,
-          child: SvgPictureWidget(
-            svgPicture: state.svgs[index],
+        return GestureDetector(
+          onTap: () {
+            final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
+            if (autoScrollState.isPlaying) {
+              autoScrollNotifier.pauseAutoScroll();
+            } else {
+              autoScrollNotifier.resumeAutoScroll();
+            }
+          },
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * scalingFactor,
+            height: MediaQuery.of(context).size.height * scalingFactor,
+            child: SvgPictureWidget(
+              svgPicture: state.svgs[index],
+            ),
           ),
         );
       },
     );
   }
-
-
 
   @override
   List<Widget> buildControls(
@@ -375,7 +384,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     WidgetRef ref,
     AutoScrollState autoScrollState,
   ) {
+    print('used auto scroll view');
     return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
       controller: autoScrollState.scrollController,
       itemCount: quranReadingState.totalPages,
       itemBuilder: (context, index) {

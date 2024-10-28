@@ -29,9 +29,7 @@ class VerticalPageViewWidget extends ConsumerWidget {
       controller: quranReadingState.pageController,
       onPageChanged: (index) {
         if (index != quranReadingState.currentPage) {
-          ref
-              .read(quranReadingNotifierProvider.notifier)
-              .updatePage(index, isPortairt: true);
+          ref.read(quranReadingNotifierProvider.notifier).updatePage(index, isPortairt: true);
         }
       },
       itemCount: quranReadingState.totalPages,
@@ -40,7 +38,6 @@ class VerticalPageViewWidget extends ConsumerWidget {
           builder: (context, constraints) {
             final pageWidth = constraints.maxWidth;
             final pageHeight = constraints.maxHeight;
-
             return Stack(
               children: [
                 Positioned.fill(
@@ -50,8 +47,7 @@ class VerticalPageViewWidget extends ConsumerWidget {
                       width: pageWidth + 150,
                       height: pageHeight + 100,
                       child: SvgPictureWidget(
-                        svgPicture: quranReadingState
-                            .svgs[index % quranReadingState.svgs.length],
+                        svgPicture: quranReadingState.svgs[index % quranReadingState.svgs.length],
                       ),
                     ),
                   ),
@@ -104,8 +100,7 @@ class HorizontalPageViewWidget extends ConsumerWidget {
                     bottom: bottomPadding,
                     width: pageWidth * 0.9,
                     child: SvgPictureWidget(
-                      svgPicture: quranReadingState
-                          .svgs[rightPageIndex % quranReadingState.svgs.length],
+                      svgPicture: quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
                     ),
                   ),
                 if (leftPageIndex < quranReadingState.svgs.length)
@@ -115,8 +110,7 @@ class HorizontalPageViewWidget extends ConsumerWidget {
                     bottom: bottomPadding,
                     width: pageWidth * 0.9,
                     child: SvgPictureWidget(
-                      svgPicture: quranReadingState
-                          .svgs[leftPageIndex % quranReadingState.svgs.length],
+                      svgPicture: quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
                     ),
                   ),
               ],
@@ -150,9 +144,7 @@ class RightSwitchButtonWidget extends ConsumerWidget {
           focusNode: focusNode,
           opacity: 0.7,
           iconSize: 14.sp,
-          icon: Directionality.of(context) == TextDirection.ltr
-              ? Icons.arrow_forward_ios
-              : Icons.arrow_back_ios,
+          icon: Directionality.of(context) == TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
           onPressed: onPressed,
         ),
       ),
@@ -182,9 +174,7 @@ class LeftSwitchButtonWidget extends ConsumerWidget {
           focusNode: focusNode,
           opacity: 0.7,
           iconSize: 14.sp,
-          icon: Directionality.of(context) != TextDirection.ltr
-              ? Icons.arrow_forward_ios
-              : Icons.arrow_back_ios,
+          icon: Directionality.of(context) != TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
           onPressed: onPressed,
         ),
       ),
@@ -226,8 +216,7 @@ class PageNumberIndicatorWidget extends ConsumerWidget {
             ),
             borderRadius: BorderRadius.circular(20),
             child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 16, vertical: isPortrait ? 8 : 4),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: isPortrait ? 8 : 4),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(20),
@@ -235,14 +224,14 @@ class PageNumberIndicatorWidget extends ConsumerWidget {
               child: Text(
                 isPortrait
                     ? S.of(context).quranReadingPagePortrait(
-                  quranReadingState.currentPage + 1,
-                  quranReadingState.totalPages,
-                )
+                          quranReadingState.currentPage + 1,
+                          quranReadingState.totalPages,
+                        )
                     : S.of(context).quranReadingPage(
-                  quranReadingState.currentPage + 1,
-                  quranReadingState.currentPage + 2,
-                  quranReadingState.totalPages,
-                ),
+                          quranReadingState.currentPage + 1,
+                          quranReadingState.currentPage + 2,
+                          quranReadingState.totalPages,
+                        ),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 10.sp,
@@ -273,23 +262,23 @@ class MoshafSelectorPositionedWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return isPortrait
         ? Positioned.directional(
-      end: 10,
-      textDirection: Directionality.of(context),
-      top: 1.h,
-      child: MoshafSelector(
-        isAutofocus: !isThereCurrentDialogShowing,
-        focusNode: focusNode,
-      ),
-    )
+            end: 10,
+            textDirection: Directionality.of(context),
+            top: 1.h,
+            child: MoshafSelector(
+              isAutofocus: !isThereCurrentDialogShowing,
+              focusNode: focusNode,
+            ),
+          )
         : Positioned(
-      left: 10,
-      bottom: 0.5.h,
-      child: MoshafSelector(
-        isPortrait: false,
-        isAutofocus: !isThereCurrentDialogShowing,
-        focusNode: focusNode,
-      ),
-    );
+            left: 10,
+            bottom: 0.5.h,
+            child: MoshafSelector(
+              isPortrait: false,
+              isAutofocus: !isThereCurrentDialogShowing,
+              focusNode: focusNode,
+            ),
+          );
   }
 }
 
