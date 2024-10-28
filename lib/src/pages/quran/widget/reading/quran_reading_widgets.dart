@@ -224,14 +224,14 @@ class PageNumberIndicatorWidget extends ConsumerWidget {
               child: Text(
                 isPortrait
                     ? S.of(context).quranReadingPagePortrait(
-                          quranReadingState.currentPage + 1,
-                          quranReadingState.totalPages,
-                        )
+                  quranReadingState.currentPage + 1,
+                  quranReadingState.totalPages,
+                )
                     : S.of(context).quranReadingPage(
-                          quranReadingState.currentPage + 1,
-                          quranReadingState.currentPage + 2,
-                          quranReadingState.totalPages,
-                        ),
+                  quranReadingState.currentPage + 1,
+                  quranReadingState.currentPage + 2,
+                  quranReadingState.totalPages,
+                ),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 10.sp,
@@ -262,23 +262,23 @@ class MoshafSelectorPositionedWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return isPortrait
         ? Positioned.directional(
-            end: 10,
-            textDirection: Directionality.of(context),
-            top: 1.h,
-            child: MoshafSelector(
-              isAutofocus: !isThereCurrentDialogShowing,
-              focusNode: focusNode,
-            ),
-          )
+      end: 10,
+      textDirection: Directionality.of(context),
+      top: 1.h,
+      child: MoshafSelector(
+        isAutofocus: !isThereCurrentDialogShowing,
+        focusNode: focusNode,
+      ),
+    )
         : Positioned(
-            left: 10,
-            bottom: 0.5.h,
-            child: MoshafSelector(
-              isPortrait: false,
-              isAutofocus: !isThereCurrentDialogShowing,
-              focusNode: focusNode,
-            ),
-          );
+      left: 10,
+      bottom: 0.5.h,
+      child: MoshafSelector(
+        isPortrait: false,
+        isAutofocus: !isThereCurrentDialogShowing,
+        focusNode: focusNode,
+      ),
+    );
   }
 }
 
