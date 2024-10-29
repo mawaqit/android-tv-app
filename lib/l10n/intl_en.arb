@@ -352,5 +352,16 @@
       }
     }
   },
-  "surahSelector":"Select Surah"
+  "surahSelector":"Select Surah",
+  "save":"Save",
+  "enterRtspUrl":"Enter RTSP URL",
+  "addRtspUrl":"Add your RTSP camera stream URL below",
+  "enableRtspCamera":"Enable RTSP Camera",
+  "rtspCameraSettings":"RTSP Camera Settings",
+  "invalidRtspUrl":"Invalid RTSP URL. Please check the URL and try again.",
+  "validRtspUrl":"RTSP URL validated and saved successfully.",
+  "rtspCameraSettingTitle":"Live camera connection",
+  "rtspCameraSettingDesc":"Connect to your local camera and display jumua prayer stream on the TV screen."
+
+
 }

@@ -15,6 +15,7 @@ import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/TimezoneScreen.dart';
 import 'package:mawaqit/src/pages/WifiSelectorScreen.dart';
+import 'package:mawaqit/src/pages/RTSPCameraSettingsScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -175,6 +176,12 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                             ),
                       );
                     },
+                  ),
+                  _SettingItem(
+                    title: S.of(context).rtspCameraSettingTitle,
+                    subtitle: S.of(context).rtspCameraSettingDesc,
+                    icon: Icon(Icons.video_camera_back, size: 35),
+                    onTap: () => AppRouter.push(RTSPCameraSettingsScreen()),
                   ),
                   SizedBox(height: 30),
                   Divider(),

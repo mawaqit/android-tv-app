@@ -96,3 +96,9 @@ abstract class SystemFeaturesConstant {
   static const String kHdmi = 'android.hardware.hdmi';
   static const String kEthernet = 'android.hardware.ethernet';
 }
+
+abstract class RtspCameraStreamConstant {
+  static const String kRtspUrlKey = 'rtsp_url';
+  static const String kRtspEnabledKey = 'rtsp_enabled';
+  static const int kMaxRetries = 3;
+}

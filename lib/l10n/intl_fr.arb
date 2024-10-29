@@ -352,6 +352,15 @@
         "example": "604"
       }
     }
-  }
+  },
+  "save": "Enregistrer",
+  "enterRtspUrl": "Entrez l'URL RTSP",
+  "addRtspUrl": "Ajoutez l'URL du flux de votre caméra RTSP ci-dessous",
+  "enableRtspCamera": "Activer la caméra RTSP",
+  "rtspCameraSettings": "Paramètres de la caméra RTSP",
+  "invalidRtspUrl": "URL RTSP invalide. Veuillez vérifier l'URL et réessayer.",
+  "validRtspUrl": "URL RTSP validée et enregistrée avec succès.",
+  "rtspCameraSettingTitle": "Connexion à la caméra en direct",
+  "rtspCameraSettingDesc": "Connectez-vous à votre caméra locale et affichez le flux de la prière du jumua sur l'écran TV."
 
 }
