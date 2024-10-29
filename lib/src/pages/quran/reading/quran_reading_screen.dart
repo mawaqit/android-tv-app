@@ -44,6 +44,7 @@ class FocusNodes {
   final FocusNode rightSkipNode;
   final FocusNode pageSelectorNode;
   final FocusNode switchQuranNode;
+  final FocusNode surahSelectorNode;
 
   FocusNodes({
     required this.backButtonNode,
@@ -51,6 +52,7 @@ class FocusNodes {
     required this.rightSkipNode,
     required this.pageSelectorNode,
     required this.switchQuranNode,
+    required this.surahSelectorNode,
   });
 }
 
@@ -147,6 +149,11 @@ class NormalViewStrategy implements QuranViewStrategy {
         onScroll,
         isPortrait,
       ),
+      SurahSelectorWidget(
+        isPortrait: isPortrait,
+        focusNode: focusNodes.surahSelectorNode,
+        isThereCurrentDialogShowing: false,
+      ),
       PageNumberIndicatorWidget(
         quranReadingState: state,
         focusNode: focusNodes.pageSelectorNode,
@@ -201,6 +208,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   late FocusNode _backButtonFocusNode;
   late FocusNode _switchQuranFocusNode;
   late FocusNode _switchQuranModeNode;
+  late FocusNode _surahSelectorNode;
   late FocusNode _switchScreenViewFocusNode;
   late FocusNode _switchToPlayQuranFocusNode;
   late FocusNode _portraitModeBackButtonFocusNode;
@@ -231,6 +239,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeSwitchQuranFocusNode = FocusNode(debugLabel: 'portrait_mode_switch_quran_node');
     _portraitModePageSelectorFocusNode = FocusNode(debugLabel: 'portrait_mode_page_selector_node');
     _switchToPlayQuranFocusNode = FocusNode(debugLabel: 'switch_to_play_quran_node');
+    _surahSelectorNode = FocusNode(debugLabel: 'surah_selector_node');
   }
 
   @override
@@ -249,6 +258,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     _portraitModeSwitchQuranFocusNode.dispose();
     _portraitModePageSelectorFocusNode.dispose();
     _switchToPlayQuranFocusNode.dispose();
+    _surahSelectorNode.dispose();
   }
 
   @override
@@ -339,6 +349,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           rightSkipNode: _rightSkipButtonFocusNode,
           pageSelectorNode: _portraitModePageSelectorFocusNode,
           switchQuranNode: _switchQuranFocusNode,
+          surahSelectorNode: _surahSelectorNode,
         );
 
         return Stack(
@@ -384,7 +395,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     WidgetRef ref,
     AutoScrollState autoScrollState,
   ) {
-    print('used auto scroll view');
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       controller: autoScrollState.scrollController,
