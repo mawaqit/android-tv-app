@@ -321,5 +321,4 @@
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
   }
-
 }
