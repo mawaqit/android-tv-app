@@ -12,11 +12,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mawaqit/const/resource.dart';
 //import 'package:location/location.dart' hide LocationAccuracy;
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/position/PositionResponse.dart';
 import 'package:mawaqit/src/elements/Loader.dart';
 import 'package:mawaqit/src/helpers/HexColor.dart';
 import 'package:mawaqit/src/pages/OfflineScreen.dart';
-import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -119,7 +119,6 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
   Widget build(BuildContext context) {
     super.build(context);
     print(widget.path);
-    final settings = Provider.of<SettingsManager>(context).settings;
     final userPreferences = context.watch<UserPreferencesManager>();
 
     return Focus(
@@ -151,7 +150,9 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                     useShouldOverrideUrlLoading: true,
                     useOnDownloadStart: true,
                     mediaPlaybackRequiresUserGesture: false,
-                    userAgent: Platform.isAndroid ? settings.userAgent!.valueAndroid! : settings.userAgent!.valueIOS!,
+                    userAgent: Platform.isAndroid
+                        ? MawaqitBackendSettingsConstans.kSettingsAndroidUserAgent
+                        : MawaqitBackendSettingsConstans.kSettingsIosUserAgent,
                   ),
                   android: AndroidInAppWebViewOptions(
                     useHybridComposition: true,
@@ -159,7 +160,6 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                   ios: IOSInAppWebViewOptions(
                     allowsInlineMediaPlayback: true,
                   )),
-              pullToRefreshController: settings.pullRefresh == "1" ? pullToRefreshController : null,
               onWebViewCreated: (InAppWebViewController controller) {
                 webViewController = controller;
                 controller.addJavaScriptHandler(
@@ -266,7 +266,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                 print(consoleMessage);
               },
             ),
-          (isLoading && settings.loader != "empty")
+          (isLoading)
               ? Positioned(
                   top: 0,
                   bottom: 0,
@@ -275,9 +275,9 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                   child: Container(
                     color: Theme.of(context).scaffoldBackgroundColor,
                     child: Loader(
-                        type: settings.loader,
+                        type: "Circle",
                         color: Theme.of(context).brightness == Brightness.light
-                            ? HexColor(settings.loaderColor)
+                            ? HexColor("#490094")
                             : Theme.of(context).primaryColor),
                   ),
                 )
