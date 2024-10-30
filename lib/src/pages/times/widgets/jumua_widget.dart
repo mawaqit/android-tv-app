@@ -49,6 +49,7 @@ class JumuaWidget extends StatelessWidget {
       title: S.of(context).jumua,
       time: !mosqueManager.isJumuaOrJumua2EmptyOrNull() ? DateFormat.Hm().format(mosqueManager.activeJumuaaDate()) : "",
       iqama: mosqueManager.times!.jumua2,
+      iqama2: mosqueManager.times!.jumua3,
       isIqamaMoreImportant: false,
       active: mosqueManager.nextIqamaIndex() == 1 && AppDateTime.isFriday && mosqueManager.times?.jumua != null,
     );
