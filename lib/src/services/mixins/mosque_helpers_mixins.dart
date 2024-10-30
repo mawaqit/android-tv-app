@@ -178,6 +178,20 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return salahIndex;
   }
 
+  /// return the upcoming salah index
+  /// return -1 in case of issue(invalid times format)
+  int nextSalahAfterIqamaIndex() {
+    final now = mosqueDate();
+    final nextSalah = actualIqamaTimes().firstWhere(
+      (element) => element.isAfter(now),
+      orElse: () => actualIqamaTimes().first,
+    );
+    var salahIndex = actualIqamaTimes().indexOf(nextSalah);
+    if (salahIndex > 4) salahIndex = 0;
+    if (salahIndex < 0) salahIndex = 4;
+    return salahIndex;
+  }
+
   /// the duration until the next salah
   Duration nextSalahAfter() {
     final now = mosqueDate();
