@@ -11,12 +11,22 @@ import 'package:provider/provider.dart';
 class JumuaWidget extends StatelessWidget {
   const JumuaWidget({super.key});
 
+  List<String> getOrderedJumuaTimes(MosqueManager mosqueManager) {
+    final times = mosqueManager.times;
+    List<String> jumuaTimes = [];
+
+    if (times?.jumua != null) jumuaTimes.add(times!.jumua!);
+    if (times?.jumua2 != null) jumuaTimes.add(times!.jumua2!);
+    if (times?.jumua3 != null) jumuaTimes.add(times!.jumua3!);
+
+    return jumuaTimes;
+  }
+
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
-    /// show eid instead of jumuaa if its eid time and eid is enabled
     if (mosqueManager.showEid(userPrefs.hijriAdjustments)) {
       return FadeInOutWidget(
         first: eidWidget(mosqueManager, context),
@@ -43,15 +53,27 @@ class JumuaWidget extends StatelessWidget {
   }
 
   Widget jumuaTile(MosqueManager mosqueManager, BuildContext context) {
+    final jumuaTimes = getOrderedJumuaTimes(mosqueManager);
+
+    if (jumuaTimes.isEmpty) {
+      return SalahItemWidget(
+        withDivider: true,
+        removeBackground: true,
+        title: S.of(context).jumua,
+        time: "",
+        isIqamaMoreImportant: false,
+      );
+    }
+
     return SalahItemWidget(
       withDivider: true,
       removeBackground: true,
       title: S.of(context).jumua,
-      time: !mosqueManager.isJumuaOrJumua2EmptyOrNull() ? DateFormat.Hm().format(mosqueManager.activeJumuaaDate()) : "",
-      iqama: mosqueManager.times!.jumua2,
-      iqama2: mosqueManager.times!.jumua3,
+      time: jumuaTimes[0],
+      iqama: jumuaTimes.length > 1 ? jumuaTimes[1] : null,
+      iqama2: jumuaTimes.length > 2 ? jumuaTimes[2] : null,
       isIqamaMoreImportant: false,
-      active: mosqueManager.nextIqamaIndex() == 1 && AppDateTime.isFriday && mosqueManager.times?.jumua != null,
+      active: mosqueManager.nextIqamaIndex() == 1 && AppDateTime.isFriday,
     );
   }
 }
