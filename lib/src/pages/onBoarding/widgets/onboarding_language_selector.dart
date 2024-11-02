@@ -102,6 +102,7 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
                   Divider(height: 1).animate().fade(delay: .7.seconds),
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
+                print('locale: ${locale.languageCode}');
                 return LanguageTile(
                   onSelect: widget.onSelect,
                   locale: locale,
