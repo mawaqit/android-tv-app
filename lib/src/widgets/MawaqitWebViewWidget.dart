@@ -151,8 +151,8 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
                     useOnDownloadStart: true,
                     mediaPlaybackRequiresUserGesture: false,
                     userAgent: Platform.isAndroid
-                        ? MawaqitBackendSettingsConstans.kSettingsAndroidUserAgent
-                        : MawaqitBackendSettingsConstans.kSettingsIosUserAgent,
+                        ? MawaqitBackendSettingsConstant.kSettingsAndroidUserAgent
+                        : MawaqitBackendSettingsConstant.kSettingsIosUserAgent,
                   ),
                   android: AndroidInAppWebViewOptions(
                     useHybridComposition: true,

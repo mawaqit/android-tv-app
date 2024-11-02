@@ -195,8 +195,8 @@ class MawaqitDrawer extends ConsumerWidget {
                   icon: Icons.share,
                   text: S.of(context).share,
                   onTap: () {
-                    _shareApp(context, MawaqitBackendSettingsConstans.kSettingsTitle,
-                        MawaqitBackendSettingsConstans.kSettingsShare);
+                    _shareApp(context, MawaqitBackendSettingsConstant.kSettingsTitle,
+                        MawaqitBackendSettingsConstant.kSettingsShare);
                   }),
               DrawerListTitle(
                 icon: Icons.star,

@@ -97,7 +97,7 @@ abstract class SystemFeaturesConstant {
   static const String kEthernet = 'android.hardware.ethernet';
 }
 
-abstract class MawaqitBackendSettingsConstans {
+abstract class MawaqitBackendSettingsConstant {
   static const String kSettingsTitle = "Mawaqit";
   static const String kSettingsShare =
       "Download Mawaqit\r\nAndroid:\r\nhttps:\/\/play.google.com\/store\/apps\/details?id=com.mawaqit.admin\r\niOS:\r\nhttps:\/\/apps.apple.com\/fr\/app\/mawaqit-prayer-times-mosque\/id1460522683\r\n";
