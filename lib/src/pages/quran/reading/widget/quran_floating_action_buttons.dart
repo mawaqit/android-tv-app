@@ -27,7 +27,6 @@ class QuranFloatingActionControls extends ConsumerStatefulWidget {
 }
 
 class _QuranFloatingActionControlsState extends ConsumerState<QuranFloatingActionControls> {
-
   @override
   Widget build(BuildContext context) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
@@ -84,14 +83,8 @@ class _QuranModeButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Calculate relative size
     double buttonSize = isPortrait
-        ? MediaQuery
-        .of(context)
-        .size
-        .width * 0.06 // Adjust as needed
-        : MediaQuery
-        .of(context)
-        .size
-        .width * 0.06; // Adjust as needed
+        ? MediaQuery.of(context).size.width * 0.06 // Adjust as needed
+        : MediaQuery.of(context).size.width * 0.06; // Adjust as needed
     double iconSize = buttonSize * 0.5; // Icon size relative to button size
 
     return SizedBox(
@@ -139,8 +132,8 @@ class _PlayPauseButton extends ConsumerWidget {
       icon: !autoScrollState.isAutoScrolling
           ? Icons.play_arrow
           : autoScrollState.isPlaying
-          ? Icons.pause
-          : Icons.play_arrow,
+              ? Icons.pause
+              : Icons.play_arrow,
       onPressed: () {
         if (!autoScrollState.isAutoScrolling) {
           final quranReadingState = ref.watch(quranReadingNotifierProvider);
@@ -148,10 +141,7 @@ class _PlayPauseButton extends ConsumerWidget {
             data: (state) => state.currentPage,
             orElse: () => 0,
           );
-          final pageHeight = MediaQuery
-              .of(context)
-              .size
-              .height;
+          final pageHeight = MediaQuery.of(context).size.height;
           autoScrollNotifier.toggleAutoScroll(currentPage, pageHeight);
         }
         if (autoScrollState.isPlaying) {
@@ -265,14 +255,11 @@ class _SpeedControls extends ConsumerWidget {
       isPortrait: isPortrait,
       icon: Icons.speed,
       onPressed: () {
-        final pageHeight = MediaQuery
-            .of(context)
-            .size
-            .height;
+        final pageHeight = MediaQuery.of(context).size.height;
         ref.read(autoScrollNotifierProvider.notifier).cycleSpeed(
-          quranReadingState.currentPage,
-          pageHeight,
-        );
+              quranReadingState.currentPage,
+              pageHeight,
+            );
       },
       tooltip: 'Speed: ${(speed * 100).toInt()}%',
     );
@@ -300,19 +287,12 @@ class _ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // Calculate relative size
     double buttonSize = isPortrait
-        ? MediaQuery
-        .of(context)
-        .size
-        .width * 0.06 // Adjust as needed
-        : MediaQuery
-        .of(context)
-        .size
-        .width * 0.06; // Adjust as needed
+        ? MediaQuery.of(context).size.width * 0.06 // Adjust as needed
+        : MediaQuery.of(context).size.width * 0.06; // Adjust as needed
     double iconSize = buttonSize * 0.5; // Icon size relative to button size
 
-
     return SizedBox(
-      width:buttonSize,
+      width: buttonSize,
       height: buttonSize,
       child: FloatingActionButton(
         autofocus: autoFocus,
@@ -342,38 +322,31 @@ class _OrientationToggleButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
 
-
     return quranReadingState.when(
       data: (state) {
         // Calculate relative size
         double buttonSize = state.isRotated
-            ? MediaQuery
-            .of(context)
-            .size
-            .width * 0.06 // Adjust as needed
-            : MediaQuery
-            .of(context)
-            .size
-            .width * 0.06; // Adjust as needed
+            ? MediaQuery.of(context).size.width * 0.06 // Adjust as needed
+            : MediaQuery.of(context).size.width * 0.06; // Adjust as needed
         double iconSize = buttonSize * 0.5; // Icon size relative to button size
 
         return SizedBox(
-            width: buttonSize,
-            height: buttonSize,
-            child: FloatingActionButton(
-              focusNode: switchScreenViewFocusNode,
-              backgroundColor: Colors.black.withOpacity(.3),
-              child: Icon(
-                !state.isRotated ? Icons.stay_current_portrait : Icons.stay_current_landscape,
-                color: Colors.white,
-                size: iconSize,
-              ),
-              onPressed: () {
-                ref.read(quranReadingNotifierProvider.notifier).toggleRotation();
-              },
-              heroTag: null,
+          width: buttonSize,
+          height: buttonSize,
+          child: FloatingActionButton(
+            focusNode: switchScreenViewFocusNode,
+            backgroundColor: Colors.black.withOpacity(.3),
+            child: Icon(
+              !state.isRotated ? Icons.stay_current_portrait : Icons.stay_current_landscape,
+              color: Colors.white,
+              size: iconSize,
             ),
-          );
+            onPressed: () {
+              ref.read(quranReadingNotifierProvider.notifier).toggleRotation();
+            },
+            heroTag: null,
+          ),
+        );
       },
       loading: () => const CircularProgressIndicator(),
       error: (_, __) => const Icon(Icons.error),
