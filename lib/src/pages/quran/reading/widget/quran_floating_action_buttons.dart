@@ -27,19 +27,6 @@ class QuranFloatingActionControls extends ConsumerStatefulWidget {
 }
 
 class _QuranFloatingActionControlsState extends ConsumerState<QuranFloatingActionControls> {
-  late FocusScopeNode focusScopeNode;
-
-  @override
-  void initState() {
-    focusScopeNode = FocusScopeNode(debugLabel: 'quran_floating_action_controls');
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    focusScopeNode.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

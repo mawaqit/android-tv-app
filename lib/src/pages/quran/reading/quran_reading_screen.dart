@@ -137,6 +137,38 @@ class NormalViewStrategy implements QuranViewStrategy {
     Function(ScrollDirection, bool) onScroll,
     Function(BuildContext, int, int, bool) showPageSelector,
   ) {
+    if (isPortrait) {
+      return [
+        BackButtonWidget(
+          isPortrait: isPortrait,
+          userPrefs: userPrefs,
+          focusNode: focusNodes.backButtonNode,
+        ),
+        _buildNavigationButtons(
+          context,
+          focusNodes,
+          onScroll,
+          isPortrait,
+        ),
+        SurahSelectorWidget(
+          isPortrait: isPortrait,
+          focusNode: focusNodes.surahSelectorNode,
+          isThereCurrentDialogShowing: false,
+        ),
+        PageNumberIndicatorWidget(
+          quranReadingState: state,
+          focusNode: focusNodes.pageSelectorNode,
+          isPortrait: isPortrait,
+          showPageSelector: showPageSelector,
+        ),
+        MoshafSelectorPositionedWidget(
+          isPortrait: isPortrait,
+          focusNode: focusNodes.switchQuranNode,
+          isThereCurrentDialogShowing: false,
+        ),
+      ];
+    }
+
     return [
       BackButtonWidget(
         isPortrait: isPortrait,
@@ -329,18 +361,18 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   }
 
   Widget _buildBody(
-      AsyncValue<QuranReadingState> quranReadingState,
-      bool isPortrait,
-      UserPreferencesManager userPrefs,
-      AutoScrollState autoScrollState,
-      ) {
+    AsyncValue<QuranReadingState> quranReadingState,
+    bool isPortrait,
+    UserPreferencesManager userPrefs,
+    AutoScrollState autoScrollState,
+  ) {
     return quranReadingState.when(
       loading: () => _buildLoadingIndicator(),
       error: (error, s) => _buildErrorIndicator(error),
       data: (state) {
         // Initialize the appropriate strategy
         final viewStrategy =
-        autoScrollState.isSinglePageView ? AutoScrollViewStrategy(autoScrollState) : NormalViewStrategy(isPortrait);
+            autoScrollState.isSinglePageView ? AutoScrollViewStrategy(autoScrollState) : NormalViewStrategy(isPortrait);
 
         // Create focus nodes bundle
         final focusNodes = FocusNodes(
@@ -351,7 +383,33 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           switchQuranNode: _switchQuranFocusNode,
           surahSelectorNode: _surahSelectorNode,
         );
+        if (isPortrait) {
+          return FocusTraversalGroup(
+            policy: PortraitModeFocusTraversalPolicy(
+              backButtonNode: _backButtonFocusNode,
+              switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
+              switchQuranNode: _switchQuranFocusNode,
+              pageSelectorNode: _portraitModePageSelectorFocusNode,
+            ),
+            child: Stack(
+              children: [
+                // Main content
+                viewStrategy.buildView(state, ref, context),
 
+                // Controls overlay - show in both portrait and landscape
+                ...viewStrategy.buildControls(
+                  context,
+                  state,
+                  userPrefs,
+                  isPortrait,
+                  focusNodes,
+                  _scrollPageList,
+                  _showPageSelector,
+                ),
+              ],
+            ),
+          );
+        }
         return Stack(
           children: [
             // Main content
@@ -533,5 +591,144 @@ class ArrowButtonsFocusTraversalPolicy extends FocusTraversalPolicy {
         }
         return false;
     }
+  }
+}
+
+class PortraitModeFocusTraversalPolicy extends FocusTraversalPolicy {
+  final FocusNode backButtonNode;
+  final FocusNode switchQuranNode;
+  final FocusNode pageSelectorNode;
+  final FocusNode switchToPlayQuranFocusNode;
+
+  const PortraitModeFocusTraversalPolicy({
+    super.requestFocusCallback,
+    required this.backButtonNode,
+    required this.switchQuranNode,
+    required this.pageSelectorNode,
+    required this.switchToPlayQuranFocusNode,
+  });
+
+  @override
+  FocusNode? findFirstFocus(FocusNode currentNode, {bool ignoreCurrentFocus = false}) {
+    return backButtonNode;
+  }
+
+  @override
+  FocusNode findLastFocus(FocusNode currentNode, {bool ignoreCurrentFocus = false}) {
+    return pageSelectorNode;
+  }
+
+  @override
+  bool inDirection(FocusNode currentNode, TraversalDirection direction) {
+    print('Current Node: ${currentNode.debugLabel}, Direction: $direction, || FocusNode: ${currentNode}');
+
+    if (currentNode == backButtonNode) {
+      switch (direction) {
+        case TraversalDirection.right:
+          if (_canFocusNode(switchQuranNode)) {
+            _requestFocus(switchQuranNode);
+            return true;
+          }
+          break;
+        case TraversalDirection.down:
+          if (_canFocusNode(pageSelectorNode)) {
+            _requestFocus(pageSelectorNode);
+            return true;
+          }
+          break;
+        default:
+          return false;
+      }
+    } else if (currentNode == switchQuranNode) {
+      switch (direction) {
+        case TraversalDirection.left:
+          if (_canFocusNode(backButtonNode)) {
+            _requestFocus(backButtonNode);
+            return true;
+          }
+          break;
+        case TraversalDirection.right:
+          if (_canFocusNode(pageSelectorNode)) {
+            _requestFocus(pageSelectorNode);
+            return true;
+          }
+          break;
+        case TraversalDirection.down:
+          if (_canFocusNode(pageSelectorNode)) {
+            _requestFocus(pageSelectorNode);
+            return true;
+          }
+          break;
+        default:
+          break;
+      }
+    } else if (currentNode == pageSelectorNode) {
+      switch (direction) {
+        case TraversalDirection.up:
+          if (_canFocusNode(switchQuranNode)) {
+            _requestFocus(switchQuranNode);
+            return true;
+          }
+          break;
+        case TraversalDirection.down:
+          if (_canFocusNode(backButtonNode)) {
+            _requestFocus(backButtonNode);
+            return true;
+          }
+          break;
+        case TraversalDirection.left:
+          if (_canFocusNode(switchQuranNode)) {
+            _requestFocus(switchQuranNode);
+            return true;
+          }
+          break;
+        case TraversalDirection.right:
+          print('Current Node: Right test');
+          if (_canFocusNode(switchToPlayQuranFocusNode)) {
+            _requestFocus(switchToPlayQuranFocusNode);
+            return true;
+          }
+          break;
+        default:
+          break;
+      }
+    } else if (currentNode == switchToPlayQuranFocusNode) {
+      switch (direction) {
+        case TraversalDirection.up:
+          if (_canFocusNode(switchQuranNode)) {
+            _requestFocus(switchQuranNode);
+            return true;
+          }
+          break;
+        case TraversalDirection.left:
+          if (_canFocusNode(switchQuranNode)) {
+            _requestFocus(switchQuranNode);
+            return true;
+          }
+          break;
+
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  bool _canFocusNode(FocusNode node) {
+    return node.canRequestFocus;
+  }
+
+  void _requestFocus(FocusNode node) {
+    requestFocusCallback.call(node);
+  }
+
+  @override
+  FocusNode? findFirstFocusInDirection(FocusNode currentNode, TraversalDirection direction) {
+    return null;
+  }
+
+  @override
+  Iterable<FocusNode> sortDescendants(Iterable<FocusNode> descendants, FocusNode currentNode) {
+    return [backButtonNode, switchQuranNode, pageSelectorNode].where((node) => descendants.contains(node));
   }
 }
