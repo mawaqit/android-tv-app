@@ -329,18 +329,18 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   }
 
   Widget _buildBody(
-    AsyncValue<QuranReadingState> quranReadingState,
-    bool isPortrait,
-    UserPreferencesManager userPrefs,
-    AutoScrollState autoScrollState,
-  ) {
+      AsyncValue<QuranReadingState> quranReadingState,
+      bool isPortrait,
+      UserPreferencesManager userPrefs,
+      AutoScrollState autoScrollState,
+      ) {
     return quranReadingState.when(
       loading: () => _buildLoadingIndicator(),
       error: (error, s) => _buildErrorIndicator(error),
       data: (state) {
         // Initialize the appropriate strategy
         final viewStrategy =
-            autoScrollState.isSinglePageView ? AutoScrollViewStrategy(autoScrollState) : NormalViewStrategy(isPortrait);
+        autoScrollState.isSinglePageView ? AutoScrollViewStrategy(autoScrollState) : NormalViewStrategy(isPortrait);
 
         // Create focus nodes bundle
         final focusNodes = FocusNodes(
@@ -357,18 +357,16 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             // Main content
             viewStrategy.buildView(state, ref, context),
 
-            // Controls overlay
-            if (!isPortrait) ...[
-              ...viewStrategy.buildControls(
-                context,
-                state,
-                userPrefs,
-                isPortrait,
-                focusNodes,
-                _scrollPageList,
-                _showPageSelector,
-              ),
-            ],
+            // Controls overlay - show in both portrait and landscape
+            ...viewStrategy.buildControls(
+              context,
+              state,
+              userPrefs,
+              isPortrait,
+              focusNodes,
+              _scrollPageList,
+              _showPageSelector,
+            ),
           ],
         );
       },
