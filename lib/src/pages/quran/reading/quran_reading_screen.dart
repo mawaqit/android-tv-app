@@ -144,12 +144,6 @@ class NormalViewStrategy implements QuranViewStrategy {
           userPrefs: userPrefs,
           focusNode: focusNodes.backButtonNode,
         ),
-        _buildNavigationButtons(
-          context,
-          focusNodes,
-          onScroll,
-          isPortrait,
-        ),
         SurahSelectorWidget(
           isPortrait: isPortrait,
           focusNode: focusNodes.surahSelectorNode,
