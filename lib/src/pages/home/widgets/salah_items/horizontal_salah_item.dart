@@ -44,14 +44,18 @@ class HorizontalSalahItem extends StatelessWidget {
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
+    final iqamaEnabled = mosqueConfig?.iqamaEnabled == true;
 
     final is24period = mosqueConfig?.timeDisplayFormat != "12";
+
+    // Determine if the item should be highlighted
+    final shouldHighlight = active && (!iqamaEnabled || (iqama?.isNotEmpty ?? false));
 
     return Container(
       margin: margin ?? EdgeInsets.symmetric(horizontal: 5.vw),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(3.vw),
-        color: active
+        color: shouldHighlight
             ? mosqueProvider.getColorTheme().withOpacity(.5)
             : removeBackground
                 ? null

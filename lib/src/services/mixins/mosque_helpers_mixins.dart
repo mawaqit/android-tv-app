@@ -164,18 +164,38 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return iqamaTimes.indexOf(nextIqama);
   }
 
-  /// return the upcoming salah index
-  /// return -1 in case of issue(invalid times format)
+  /// Return the upcoming salah index based on Iqama times.
+  /// If Iqama time is not available, fallback to actual prayer time.
   int nextSalahIndex() {
     final now = mosqueDate();
-    final nextSalah = actualTimes().firstWhere(
-      (element) => element.isAfter(now),
-      orElse: () => actualTimes().first,
-    );
-    var salahIndex = actualTimes().indexOf(nextSalah);
-    if (salahIndex > 4) salahIndex = 0;
-    if (salahIndex < 0) salahIndex = 4;
-    return salahIndex;
+    final iqamaEnabled = mosqueConfig?.iqamaEnabled == true;
+    final iqamaTimes = actualIqamaTimes();
+    final prayerTimes = actualTimes();
+
+    // Handle case where it's after last prayer of the day
+    if (now.isAfter(iqamaTimes.last)) {
+      return 0; // Next prayer will be first prayer of next day
+    }
+
+    // Find current or next prayer index
+    for (var i = 0; i < prayerTimes.length; i++) {
+      final prayerTime = prayerTimes[i];
+      final iqamaTime = iqamaTimes[i];
+
+      if (iqamaEnabled && iqamaTime != null) {
+        // If Iqama is enabled and time is set, use it to determine active prayer
+        if (now.isBefore(iqamaTime)) {
+          return i;
+        }
+      } else {
+        // Otherwise fall back to prayer time
+        if (now.isBefore(prayerTime)) {
+          return i;
+        }
+      }
+    }
+
+    return 0; // Default to first prayer if no conditions met
   }
 
   /// the duration until the next salah
