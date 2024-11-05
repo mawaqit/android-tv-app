@@ -235,7 +235,7 @@ class __ExitButtonState extends ConsumerState<_ExitButton> {
   late FocusNode exitFocusNode;
   @override
   void initState() {
-    exitFocusNode = FocusNode();
+    exitFocusNode = FocusNode(debugLabel: 'exit_focus_node');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       exitFocusNode.requestFocus();
     });
