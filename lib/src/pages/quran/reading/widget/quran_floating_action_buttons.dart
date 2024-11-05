@@ -231,7 +231,6 @@ class _ExitButton extends ConsumerStatefulWidget {
 }
 
 class __ExitButtonState extends ConsumerState<_ExitButton> {
-
   late FocusNode exitFocusNode;
   @override
   void initState() {
@@ -241,6 +240,7 @@ class __ExitButtonState extends ConsumerState<_ExitButton> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return _ActionButton(
