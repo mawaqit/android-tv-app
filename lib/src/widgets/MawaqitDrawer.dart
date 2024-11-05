@@ -32,7 +32,7 @@ import 'package:mawaqit/src/pages/SettingScreen.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
 import '../pages/quran/page/quran_mode_selection_screen.dart';
-import '../pages/quran/page/quran_reading_screen.dart';
+import 'package:mawaqit/src/pages/quran/reading/quran_reading_screen.dart';
 import '../state_management/quran/quran/quran_state.dart';
 
 class MawaqitDrawer extends ConsumerWidget {
