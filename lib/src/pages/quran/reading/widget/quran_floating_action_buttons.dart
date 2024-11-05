@@ -218,17 +218,35 @@ class _FontSizeControls extends ConsumerWidget {
 }
 
 // Add new Exit button widget
-class _ExitButton extends ConsumerWidget {
+class _ExitButton extends ConsumerStatefulWidget {
   final bool isPortrait;
 
   const _ExitButton({
+    super.key,
     required this.isPortrait,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => __ExitButtonState();
+}
+
+class __ExitButtonState extends ConsumerState<_ExitButton> {
+
+  late FocusNode exitFocusNode;
+  @override
+  void initState() {
+    exitFocusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      exitFocusNode.requestFocus();
+    });
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
     return _ActionButton(
-      isPortrait: isPortrait,
+      autoFocus: true,
+      focusNode: exitFocusNode,
+      isPortrait: widget.isPortrait,
       icon: Icons.close,
       onPressed: () {
         ref.read(autoScrollNotifierProvider.notifier).stopAutoScroll();

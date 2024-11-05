@@ -101,13 +101,7 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
     Function(ScrollDirection, bool) onScroll,
     Function(BuildContext, int, int, bool) showPageSelector,
   ) {
-    return [
-      BackButtonWidget(
-        isPortrait: isPortrait,
-        userPrefs: userPrefs,
-        focusNode: focusNodes.backButtonNode,
-      ),
-    ];
+    return [];
   }
 }
 
