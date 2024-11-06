@@ -11,6 +11,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../main.dart';
 import '../../../helpers/connectivity_provider.dart';
@@ -48,27 +49,36 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
 
     final jumuaaDisableInMosque = !userPrefs.isSecondaryScreen && mosqueManager.typeIsMosque;
 
-    return switch (connectivity) {
-      AsyncData(:final value) => streamState.when(
-          data: (state) => switchStreamWidget(value, mosqueManager, jumuaaDisableInMosque, state),
-          loading: () => CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-          ),
-          error: (_, __) => switchStreamWidget(value, mosqueManager, jumuaaDisableInMosque, null),
-        ),
-      _ => CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-        ),
-    };
+    return connectivity.when(
+      data: (value) => _switchStreamWidget(
+        value,
+        mosqueManager,
+        jumuaaDisableInMosque,
+        streamState.asData?.value,
+      ),
+      loading: () => const CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+      ),
+      error: (_, __) => _switchStreamWidget(
+        ConnectivityStatus.disconnected,
+        mosqueManager,
+        jumuaaDisableInMosque,
+        null,
+      ),
+    );
   }
 
-  Widget switchStreamWidget(ConnectivityStatus connectivityStatus, MosqueManager mosqueManager,
-      bool jumuaaDisableInMosque, RtspCameraStreamState? streamState) {
+  Widget _switchStreamWidget(
+    ConnectivityStatus connectivityStatus,
+    MosqueManager mosqueManager,
+    bool jumuaaDisableInMosque,
+    RtspCameraStreamState? streamState,
+  ) {
     // Check for RTSP stream first
     if (streamState != null &&
         streamState.isRTSPEnabled &&
-        streamState.isRTSPInitialized &&
-        !streamState.invalidRTSPUrl &&
+        !streamState.invalidStreamUrl &&
+        streamState.streamType == StreamType.rtsp &&
         connectivityStatus != ConnectivityStatus.disconnected) {
       return Scaffold(
         backgroundColor: Colors.black,
@@ -93,12 +103,28 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       }
       return Scaffold(backgroundColor: Colors.black);
     } else {
-      return MawaqitYoutubePlayer(
-        channelId: mosqueManager.mosque!.streamUrl!,
-        onDone: widget.onDone,
-        muted: mosqueManager.typeIsMosque,
-        onNotFound: () => setState(() => invalidStreamUrl = true),
-      );
+      final videoId = ref.read(rtspCameraStreamProvider.notifier).extractVideoId(streamState?.streamUrl ?? '');
+      return (streamState?.invalidStreamUrl ?? true) || streamState?.streamUrl == null
+          ? MawaqitYoutubePlayer(
+              channelId: mosqueManager.mosque!.streamUrl!,
+              onDone: widget.onDone,
+              muted: mosqueManager.typeIsMosque,
+              onNotFound: () => setState(() => invalidStreamUrl = true),
+            )
+          : YoutubePlayer(
+              controller: YoutubePlayerController(
+                initialVideoId: videoId!,
+                flags: const YoutubePlayerFlags(
+                  autoPlay: true,
+                  mute: false,
+                  enableCaption: false,
+                  hideControls: true,
+                  isLive: true,
+                  useHybridComposition: true,
+                  forceHD: true,
+                ),
+              ),
+            );
     }
   }
 }

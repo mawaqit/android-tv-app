@@ -1,47 +1,71 @@
 import 'package:equatable/equatable.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+class StreamConstants {
+  static const maxRetries = 3;
+  static const retryDelay = Duration(seconds: 2);
+  static const prefKeyEnabled = 'rtsp_enabled';
+  static const prefKeyUrl = 'rtsp_url';
+}
+
+// stream_state.dart
+enum StreamType { rtsp, youtubeLive, unknown }
 
 class RtspCameraStreamState extends Equatable {
   final bool isRTSPEnabled;
-  final String? rtspUrl;
-  final bool isRTSPInitialized;
-  final bool invalidRTSPUrl;
+  final String? streamUrl;
+  final bool isStreamInitialized;
   final bool invalidStreamUrl;
+  final StreamType streamType;
   final int retryCount;
+  final YoutubePlayerController? youtubeController;
 
   const RtspCameraStreamState({
     required this.isRTSPEnabled,
-    required this.rtspUrl,
-    required this.isRTSPInitialized,
-    required this.invalidRTSPUrl,
+    this.streamUrl,
+    required this.isStreamInitialized,
     required this.invalidStreamUrl,
+    required this.streamType,
     required this.retryCount,
+    this.youtubeController,
   });
 
   RtspCameraStreamState copyWith({
     bool? isRTSPEnabled,
-    String? rtspUrl,
-    bool? isRTSPInitialized,
-    bool? invalidRTSPUrl,
+    String? streamUrl,
+    bool? isStreamInitialized,
     bool? invalidStreamUrl,
+    StreamType? streamType,
     int? retryCount,
+    YoutubePlayerController? youtubeController,
   }) {
     return RtspCameraStreamState(
       isRTSPEnabled: isRTSPEnabled ?? this.isRTSPEnabled,
-      rtspUrl: rtspUrl ?? this.rtspUrl,
-      isRTSPInitialized: isRTSPInitialized ?? this.isRTSPInitialized,
-      invalidRTSPUrl: invalidRTSPUrl ?? this.invalidRTSPUrl,
+      streamUrl: streamUrl ?? this.streamUrl,
+      isStreamInitialized: isStreamInitialized ?? this.isStreamInitialized,
       invalidStreamUrl: invalidStreamUrl ?? this.invalidStreamUrl,
+      streamType: streamType ?? this.streamType,
       retryCount: retryCount ?? this.retryCount,
+      youtubeController: youtubeController ?? this.youtubeController,
     );
   }
 
   @override
   List<Object?> get props => [
         isRTSPEnabled,
-        rtspUrl,
-        isRTSPInitialized,
-        invalidRTSPUrl,
+        streamUrl,
+        isStreamInitialized,
         invalidStreamUrl,
+        streamType,
         retryCount,
+        youtubeController,
       ];
+
+  factory RtspCameraStreamState.initial() => const RtspCameraStreamState(
+        isRTSPEnabled: false,
+        isStreamInitialized: false,
+        invalidStreamUrl: false,
+        streamType: StreamType.unknown,
+        retryCount: 0,
+      );
 }

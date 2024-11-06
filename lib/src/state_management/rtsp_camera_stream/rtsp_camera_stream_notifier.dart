@@ -1,11 +1,14 @@
 import 'dart:developer';
-
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_state.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class RtspCameraStreamNotifier extends AsyncNotifier<RtspCameraStreamState> {
   late final Player _player;
@@ -19,45 +22,53 @@ class RtspCameraStreamNotifier extends AsyncNotifier<RtspCameraStreamState> {
     _player = Player();
     _videoController = VideoController(_player);
     _prefs = await SharedPreferences.getInstance();
-    return await _loadInitialState();
+    return _loadInitialState();
   }
 
   Future<RtspCameraStreamState> _loadInitialState() async {
-    try {
-      final isRTSPEnabled = _prefs.getBool(RtspCameraStreamConstant.kRtspEnabledKey) ?? false;
-      final rtspUrl = _prefs.getString(RtspCameraStreamConstant.kRtspUrlKey);
+    final isEnabled = _prefs.getBool(StreamConstants.prefKeyEnabled) ?? false;
+    final url = _prefs.getString(StreamConstants.prefKeyUrl);
 
-      if (isRTSPEnabled && rtspUrl != null && rtspUrl.isNotEmpty) {
-        return await _initializeRtspPlayer(
-          RtspCameraStreamState(
-            isRTSPEnabled: isRTSPEnabled,
-            rtspUrl: rtspUrl,
-            isRTSPInitialized: false,
-            invalidRTSPUrl: false,
-            invalidStreamUrl: false,
-            retryCount: 0,
-          ),
-        );
+    if (!isEnabled || url == null || url.isEmpty) {
+      return RtspCameraStreamState.initial();
+    }
+
+    final initialState = RtspCameraStreamState(
+      isRTSPEnabled: isEnabled,
+      streamUrl: url,
+      isStreamInitialized: false,
+      invalidStreamUrl: false,
+      streamType: _getStreamType(url),
+      retryCount: 0,
+    );
+
+    return _initializeStream(initialState);
+  }
+
+  StreamType _getStreamType(String url) {
+    final lowercaseUrl = url.toLowerCase();
+    if (lowercaseUrl.startsWith('rtsp://')) return StreamType.rtsp;
+    if (lowercaseUrl.contains('youtube.com')) return StreamType.youtubeLive;
+    return StreamType.unknown;
+  }
+
+  String? extractVideoId(String url) {
+    try {
+      final uri = Uri.parse(url);
+
+      if (uri.host == 'youtu.be') {
+        return uri.pathSegments.first;
       }
 
-      return RtspCameraStreamState(
-        isRTSPEnabled: isRTSPEnabled,
-        rtspUrl: rtspUrl,
-        isRTSPInitialized: false,
-        invalidRTSPUrl: true,
-        invalidStreamUrl: true,
-        retryCount: 0,
-      );
+      if (uri.host.contains('youtube.com')) {
+        return uri.queryParameters['v'] ??
+            uri.queryParameters['video_id'] ??
+            uri.pathSegments.lastWhere((s) => s.isNotEmpty, orElse: () => '');
+      }
     } catch (e) {
-      return RtspCameraStreamState(
-        isRTSPEnabled: false,
-        rtspUrl: null,
-        isRTSPInitialized: false,
-        invalidRTSPUrl: true,
-        invalidStreamUrl: true,
-        retryCount: 0,
-      );
+      debugPrint('Video ID extraction error: $e');
     }
+    return null;
   }
 
   Future<void> updateStream({
@@ -65,57 +76,105 @@ class RtspCameraStreamNotifier extends AsyncNotifier<RtspCameraStreamState> {
     String? url,
   }) async {
     state = const AsyncLoading();
-    await _player.stop();
 
-    await _prefs.setBool(RtspCameraStreamConstant.kRtspEnabledKey, isEnabled);
-    if (url != null) {
-      await _prefs.setString(RtspCameraStreamConstant.kRtspUrlKey, url);
-    }
+    try {
+      await _player.stop();
+      await _prefs.setBool(StreamConstants.prefKeyEnabled, isEnabled);
 
-    if (isEnabled && url != null && url.isNotEmpty) {
-      state = AsyncData(await _initializeRtspPlayer(
-        RtspCameraStreamState(
+      if (url != null) {
+        await _prefs.setString(StreamConstants.prefKeyUrl, url);
+      }
+
+      if (isEnabled && url != null && url.isNotEmpty) {
+        final newState = await _initializeStream(
+          RtspCameraStreamState(
+            isRTSPEnabled: isEnabled,
+            streamUrl: url,
+            isStreamInitialized: false,
+            invalidStreamUrl: false,
+            streamType: _getStreamType(url),
+            retryCount: 0,
+          ),
+        );
+        state = AsyncData(newState);
+      } else {
+        state = AsyncData(RtspCameraStreamState.initial().copyWith(
           isRTSPEnabled: isEnabled,
-          rtspUrl: url,
-          isRTSPInitialized: false,
-          invalidRTSPUrl: false,
-          invalidStreamUrl: false,
-          retryCount: 0,
-        ),
-      ));
-    } else {
-      state = AsyncData(RtspCameraStreamState(
-        isRTSPEnabled: isEnabled,
-        rtspUrl: url,
-        isRTSPInitialized: false,
-        invalidRTSPUrl: true,
-        invalidStreamUrl: true,
-        retryCount: 0,
-      ));
+          streamUrl: url,
+          streamType: url != null ? _getStreamType(url) : StreamType.unknown,
+        ));
+      }
+    } catch (e) {
+      state = AsyncError(e, StackTrace.current);
     }
   }
 
-  Future<RtspCameraStreamState> _initializeRtspPlayer(
-    RtspCameraStreamState currentState,
-  ) async {
+  Future<RtspCameraStreamState> _initializeStream(RtspCameraStreamState currentState) async {
+    YoutubeExplode? yt;
+
     try {
-      await _player.open(Media(currentState.rtspUrl!));
-      return currentState.copyWith(
-        isRTSPInitialized: true,
-        invalidRTSPUrl: false,
-        invalidStreamUrl: false,
-      );
+      switch (currentState.streamType) {
+        case StreamType.rtsp:
+          await _player.open(Media(currentState.streamUrl!));
+          return currentState.copyWith(
+            isStreamInitialized: true,
+            invalidStreamUrl: false,
+          );
+
+        case StreamType.youtubeLive:
+          final videoId = extractVideoId(currentState.streamUrl!);
+          if (videoId == null) {
+            return currentState.copyWith(
+              invalidStreamUrl: true,
+              isStreamInitialized: false,
+            );
+          }
+
+          yt = YoutubeExplode();
+          final video = await yt.videos.get(videoId);
+
+          if (!video.isLive) {
+            return currentState.copyWith(
+              invalidStreamUrl: true,
+              isStreamInitialized: false,
+            );
+          }
+
+          return currentState.copyWith(
+            isStreamInitialized: true,
+            invalidStreamUrl: false,
+          );
+
+        case StreamType.unknown:
+          return currentState.copyWith(
+            invalidStreamUrl: true,
+            isStreamInitialized: false,
+          );
+      }
     } catch (e) {
-      return await _handleInitializationError(currentState);
+      debugPrint('Stream initialization error: $e');
+      return _isNetworkError(e)
+          ? currentState.copyWith(
+              invalidStreamUrl: false,
+              isStreamInitialized: false,
+            )
+          : await _handleInitializationError(currentState);
+    } finally {
+      yt?.close();
     }
+  }
+
+  bool _isNetworkError(dynamic error) {
+    final errorStr = error.toString().toLowerCase();
+    return errorStr.contains('network') || errorStr.contains('connection');
   }
 
   Future<RtspCameraStreamState> _handleInitializationError(
     RtspCameraStreamState currentState,
   ) async {
-    if (currentState.retryCount < RtspCameraStreamConstant.kMaxRetries) {
-      await Future.delayed(const Duration(seconds: 2));
-      return _initializeRtspPlayer(
+    if (currentState.retryCount < StreamConstants.maxRetries) {
+      await Future.delayed(StreamConstants.retryDelay);
+      return _initializeStream(
         currentState.copyWith(
           retryCount: currentState.retryCount + 1,
         ),
@@ -123,10 +182,14 @@ class RtspCameraStreamNotifier extends AsyncNotifier<RtspCameraStreamState> {
     }
 
     return currentState.copyWith(
-      invalidRTSPUrl: true,
       invalidStreamUrl: true,
-      isRTSPInitialized: false,
+      isStreamInitialized: false,
     );
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
   }
 }
 
