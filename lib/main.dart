@@ -1,3 +1,4 @@
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +43,8 @@ Future<void> main() async {
       await Firebase.initializeApp();
       final directory = await getApplicationDocumentsDirectory();
       Hive.init(directory.path);
+      await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+
       tz.initializeTimeZones();
       Hive.registerAdapter(SurahModelAdapter());
       Hive.registerAdapter(ReciterModelAdapter());
