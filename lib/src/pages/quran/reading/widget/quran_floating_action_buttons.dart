@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
+import 'package:mawaqit/src/routes/routes_constant.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_notifier.dart';
@@ -98,14 +99,9 @@ class _QuranModeButton extends ConsumerWidget {
           color: Colors.white,
           size: iconSize,
         ),
-        onPressed: () async {
+        onPressed: () {
           ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReciterSelectionScreen.withoutSurahName(),
-            ),
-          );
+          Navigator.pushReplacementNamed(context, Routes.quranReciter);
         },
         heroTag: null,
       ),
