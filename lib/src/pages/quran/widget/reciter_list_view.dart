@@ -1,4 +1,4 @@
-import 'package:extended_image/extended_image.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -140,26 +140,11 @@ class ReciterCard extends ConsumerWidget {
           fit: StackFit.expand,
           children: [
             // CachedNetworkImage with different sizes for online and offline images
-            ExtendedImage.network(
-              '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
-              fit: BoxFit.cover,
-              printError: false,
-              cache: true,
-              loadStateChanged: (ExtendedImageState state) {
-                switch (state.extendedImageLoadState) {
-                  case LoadState.loading:
-                    return _buildOfflineImage();
-
-                  case LoadState.completed:
-                    return null;
-                  case LoadState.failed:
-                    return _buildOfflineImage();
-
-                  default:
-                    return _buildOfflineImage();
-                }
-              },
-            ),
+            FastCachedImage(
+                url: '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
+                fit: BoxFit.fitWidth,
+                loadingBuilder: (context, progress) => Container(color: Colors.transparent),
+                errorBuilder: (context, error, stackTrace) => _buildOfflineImage()),
             // Gradient overlay
             Container(
               decoration: BoxDecoration(

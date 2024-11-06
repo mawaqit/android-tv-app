@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:collection/collection.dart';
-import 'package:extended_image/extended_image.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -130,33 +130,31 @@ class _QuranPlayerScreenState extends ConsumerState<QuranPlayerScreen> {
   ClipOval buildReciterImage() {
     return ClipOval(
       child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.transparent,
-        ),
-        child: ExtendedImage.network(
-          '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciterId}.jpg',
-          fit: BoxFit.fitWidth,
-          printError: false,
-          cache: true,
-          loadStateChanged: (ExtendedImageState state) {
-            switch (state.extendedImageLoadState) {
-              case LoadState.loading:
-                return Container(color: Colors.transparent);
-
-              case LoadState.completed:
-                return null;
-              case LoadState.failed:
-                return Container(color: Colors.transparent);
-
-              default:
-                return Container(color: Colors.transparent);
-            }
-          },
-        ),
-      ),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.transparent,
+          ),
+          child: FastCachedImage(
+              url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciterId}.jpg',
+              fit: BoxFit.fitWidth,
+              loadingBuilder: (context, progress) => Container(color: Colors.transparent),
+              errorBuilder: (context, error, stackTrace) => _buildOfflineImage())),
     );
   }
+}
+
+Widget _buildOfflineImage() {
+  return Center(
+    child: Container(
+      width: 24.w,
+      height: 24.w,
+      padding: EdgeInsets.only(bottom: 2.h),
+      child: Image.asset(
+        R.ASSETS_SVG_RECITER_ICON_PNG,
+        fit: BoxFit.contain,
+      ),
+    ),
+  );
 }
 
 class _QuranPlayer extends ConsumerStatefulWidget {
