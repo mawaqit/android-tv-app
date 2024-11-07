@@ -352,5 +352,16 @@
         "example": "604"
       }
     }
-  }
+  },
+  "save": "حفظ",
+  "enterRtspUrl": "أدخل رابط RTSP أو YouTube Live",
+  "addRtspUrl": "أضف رابط بث كاميرا RTSP الخاص بك أدناه",
+  "enableRtspCamera": "تفعيل بث الكاميرا",
+  "rtspCameraSettings": "إعدادات الكاميرا",
+  "invalidRtspUrl": "رابط RTSP غير صالح. يرجى التحقق من الرابط والمحاولة مرة أخرى.",
+  "validRtspUrl": "تم التحقق من رابط RTSP وحفظه بنجاح.",
+  "rtspCameraSettingTitle": "اتصال الكاميرا المباشر",
+  "rtspCameraSettingDesc": "اتصل بالكاميرا المحلية واعرض بث صلاة الجمعة على شاشة التلفاز.",
+  "rtspCameraSettingScreenDesc": "إذا أدخلت رابطًا هنا، ستتحول شاشتك تلقائيًا إلى وضع بث الفيديو عند وصول وقت الجمعة.",
+  "validatingStream": "جارٍ التحقق من البث..."
 }
