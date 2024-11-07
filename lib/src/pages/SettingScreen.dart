@@ -191,7 +191,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                               AppRouter.pop();
                             },
                             title: checkInternet,
-                            content: checkInternetLegacyMode,
+                            content: S.of(context).checkInternetLiveCamera,
                           );
                         },
                         data: (isConnectedToInternet) {
@@ -202,7 +202,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                                 AppRouter.pop();
                               },
                               title: checkInternet,
-                              content: checkInternetLegacyMode,
+                              content: S.of(context).checkInternetLiveCamera,
                             );
                           } else {
                             AppRouter.push(RTSPCameraSettingsScreen());
