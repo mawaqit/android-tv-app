@@ -363,6 +363,13 @@
   "rtspCameraSettingTitle": "Connexion de la caméra en direct",
   "rtspCameraSettingDesc": "Connectez-vous à votre caméra locale et affichez le flux de la prière de la jumua sur l'écran de la TV.",
   "rtspCameraSettingScreenDesc": "Si vous entrez une URL ici, votre écran passera automatiquement en mode streaming vidéo lorsque l'heure de la Jumua arrive.",
-  "validatingStream": "Validation du flux..."
+  "validatingStream": "Validation du flux...",
+  "checkInternetLiveCamera": "Vous devez vous connecter à Internet pour configurer la caméra en direct"
+
+
+
+
+
+
 
 }

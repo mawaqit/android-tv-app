@@ -363,6 +363,8 @@
   "rtspCameraSettingTitle":"Live camera connection",
   "rtspCameraSettingDesc":"Connect to your local camera and display jumua prayer stream on the TV screen.",
   "rtspCameraSettingScreenDesc":"If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
-  "validatingStream":"Validating Stream..."
+  "validatingStream":"Validating Stream...",
+  "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
+
 
 }
