@@ -361,7 +361,8 @@
   "invalidRtspUrl":"Invalid RTSP URL. Please check the URL and try again.",
   "validRtspUrl":"RTSP URL validated and saved successfully.",
   "rtspCameraSettingTitle":"Live camera connection",
-  "rtspCameraSettingDesc":"Connect to your local camera and display jumua prayer stream on the TV screen."
-
+  "rtspCameraSettingDesc":"Connect to your local camera and display jumua prayer stream on the TV screen.",
+  "rtspCameraSettingScreenDesc":"If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+  "validatingStream":"'Validating Stream..."
 
 }
