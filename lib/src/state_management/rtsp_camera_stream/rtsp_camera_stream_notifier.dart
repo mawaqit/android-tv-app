@@ -26,8 +26,8 @@ class RtspCameraStreamNotifier extends AsyncNotifier<RtspCameraStreamState> {
   }
 
   Future<RtspCameraStreamState> _loadInitialState() async {
-    final isEnabled = _prefs.getBool(StreamConstants.prefKeyEnabled) ?? false;
-    final url = _prefs.getString(StreamConstants.prefKeyUrl);
+    final isEnabled = _prefs.getBool(RtspCameraStreamConstant.prefKeyEnabled) ?? false;
+    final url = _prefs.getString(RtspCameraStreamConstant.prefKeyUrl);
 
     if (!isEnabled || url == null || url.isEmpty) {
       return RtspCameraStreamState.initial();
@@ -79,10 +79,10 @@ class RtspCameraStreamNotifier extends AsyncNotifier<RtspCameraStreamState> {
 
     try {
       await _player.stop();
-      await _prefs.setBool(StreamConstants.prefKeyEnabled, isEnabled);
+      await _prefs.setBool(RtspCameraStreamConstant.prefKeyEnabled, isEnabled);
 
       if (url != null) {
-        await _prefs.setString(StreamConstants.prefKeyUrl, url);
+        await _prefs.setString(RtspCameraStreamConstant.prefKeyUrl, url);
       }
 
       if (isEnabled && url != null && url.isNotEmpty) {
@@ -172,8 +172,8 @@ class RtspCameraStreamNotifier extends AsyncNotifier<RtspCameraStreamState> {
   Future<RtspCameraStreamState> _handleInitializationError(
     RtspCameraStreamState currentState,
   ) async {
-    if (currentState.retryCount < StreamConstants.maxRetries) {
-      await Future.delayed(StreamConstants.retryDelay);
+    if (currentState.retryCount < RtspCameraStreamConstant.maxRetries) {
+      await Future.delayed(RtspCameraStreamConstant.retryDelay);
       return _initializeStream(
         currentState.copyWith(
           retryCount: currentState.retryCount + 1,

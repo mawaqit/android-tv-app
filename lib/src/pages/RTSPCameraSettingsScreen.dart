@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_notifier.dart';
 import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_state.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
@@ -43,8 +44,8 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
 
   Future<void> _initializeSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    final isEnabled = prefs.getBool(StreamConstants.prefKeyEnabled) ?? false;
-    final savedUrl = prefs.getString(StreamConstants.prefKeyUrl);
+    final isEnabled = prefs.getBool(RtspCameraStreamConstant.prefKeyEnabled) ?? false;
+    final savedUrl = prefs.getString(RtspCameraStreamConstant.prefKeyUrl);
 
     if (savedUrl != null && savedUrl.isNotEmpty) {
       _urlController.text = savedUrl;

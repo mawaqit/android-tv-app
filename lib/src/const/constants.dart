@@ -98,7 +98,8 @@ abstract class SystemFeaturesConstant {
 }
 
 abstract class RtspCameraStreamConstant {
-  static const String kRtspUrlKey = 'rtsp_url';
-  static const String kRtspEnabledKey = 'rtsp_enabled';
-  static const int kMaxRetries = 3;
+  static const maxRetries = 3;
+  static const retryDelay = Duration(seconds: 2);
+  static const prefKeyEnabled = 'rtsp_enabled';
+  static const prefKeyUrl = 'rtsp_url';
 }
