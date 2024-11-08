@@ -1,14 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class StreamConstants {
-  static const maxRetries = 3;
-  static const retryDelay = Duration(seconds: 2);
-  static const prefKeyEnabled = 'rtsp_enabled';
-  static const prefKeyUrl = 'rtsp_url';
-}
-
-// stream_state.dart
 enum StreamType { rtsp, youtubeLive, unknown }
 
 class RtspCameraStreamState extends Equatable {

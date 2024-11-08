@@ -1,6 +1,11 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_notifier.dart';
 import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_state.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
@@ -21,17 +26,26 @@ class RTSPCameraSettingsScreen extends ConsumerStatefulWidget {
 
 class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScreen> {
   final TextEditingController _urlController = TextEditingController();
+  late StreamSubscription<bool> keyboardSubscription;
+  final FocusNode _saveButtonFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _initializeSettings();
+    var keyboardVisibilityController = KeyboardVisibilityController();
+
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        FocusScope.of(context).requestFocus(_saveButtonFocusNode);
+      }
+    });
   }
 
   Future<void> _initializeSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    final isEnabled = prefs.getBool(StreamConstants.prefKeyEnabled) ?? false;
-    final savedUrl = prefs.getString(StreamConstants.prefKeyUrl);
+    final isEnabled = prefs.getBool(RtspCameraStreamConstant.prefKeyEnabled) ?? false;
+    final savedUrl = prefs.getString(RtspCameraStreamConstant.prefKeyUrl);
 
     if (savedUrl != null && savedUrl.isNotEmpty) {
       _urlController.text = savedUrl;
@@ -80,7 +94,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         ),
       );
     } catch (e) {
-      debugPrint('Stream validation error: $e');
+      log('Stream validation error: $e');
     }
   }
 
@@ -103,7 +117,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                 const CircularProgressIndicator(),
                 const SizedBox(height: 16),
                 Text(
-                  'Validating Stream...',
+                  S.of(context).validatingStream,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ],
@@ -126,7 +140,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         const Divider(indent: 50, endIndent: 50),
         const SizedBox(height: 10),
         Text(
-          "If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+          S.of(context).rtspCameraSettingScreenDesc,
           style: Theme.of(context).textTheme.bodySmall?.apply(fontSizeFactor: 1.5),
           textAlign: TextAlign.center,
         ),
@@ -153,18 +167,18 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           const SizedBox(height: 20),
           TextField(
             controller: _urlController,
+            onSubmitted: (_) => _validateAndSaveSettings(state),
             decoration: InputDecoration(
               labelText: S.of(context).enterRtspUrl,
               hintText: 'rtsp://... or https://youtube.com/live/...',
-              helperText: 'Supports RTSP and YouTube Live URLs',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            autofocus: false,
           ),
           const SizedBox(height: 20),
           ElevatedButton.icon(
+            focusNode: _saveButtonFocusNode,
             onPressed: ref.watch(rtspCameraStreamProvider).isLoading ? null : () => _validateAndSaveSettings(state),
             icon: ref.watch(rtspCameraStreamProvider).isLoading
                 ? const SizedBox(
@@ -177,13 +191,38 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                   )
                 : const Icon(Icons.save),
             label: Text(S.of(context).save),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all(
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                if (states.contains(MaterialState.focused)) {
+                  return Theme.of(context).primaryColor;
+                }
+
+                return Colors.white;
+              }),
+              iconColor: MaterialStateProperty.resolveWith<Color>((states) {
+                if (states.contains(MaterialState.focused)) {
+                  return Colors.white;
+                }
+
+                return Colors.black;
+              }),
+              foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                if (states.contains(MaterialState.focused)) {
+                  return Colors.white;
+                }
+
+                return Colors.black;
+              }),
             ),
-          ),
+          )
         ],
       ],
     );

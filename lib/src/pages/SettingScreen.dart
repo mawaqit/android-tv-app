@@ -181,7 +181,35 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     title: S.of(context).rtspCameraSettingTitle,
                     subtitle: S.of(context).rtspCameraSettingDesc,
                     icon: Icon(Icons.video_camera_back, size: 35),
-                    onTap: () => AppRouter.push(RTSPCameraSettingsScreen()),
+                    onTap: () async {
+                      await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                      ref.watch(connectivityProvider).maybeWhen(
+                        orElse: () {
+                          showCheckInternetDialog(
+                            context: context,
+                            onRetry: () {
+                              AppRouter.pop();
+                            },
+                            title: checkInternet,
+                            content: S.of(context).checkInternetLiveCamera,
+                          );
+                        },
+                        data: (isConnectedToInternet) {
+                          if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                            showCheckInternetDialog(
+                              context: context,
+                              onRetry: () {
+                                AppRouter.pop();
+                              },
+                              title: checkInternet,
+                              content: S.of(context).checkInternetLiveCamera,
+                            );
+                          } else {
+                            AppRouter.push(RTSPCameraSettingsScreen());
+                          }
+                        },
+                      );
+                    },
                   ),
                   SizedBox(height: 30),
                   Divider(),
