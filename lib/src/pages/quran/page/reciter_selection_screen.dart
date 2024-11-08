@@ -23,6 +23,7 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
 
 import '../../../domain/model/quran/reciter_model.dart';
+import '../reading/quran_reading_screen.dart';
 
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
@@ -136,12 +137,14 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         ),
       ),
       appBar: AppBar(
+        toolbarHeight: 40,
         backgroundColor: Color(0xFF28262F),
         elevation: 0,
         title: AutoSizeText(
           S.of(context).chooseReciter,
           style: TextStyle(
             color: Colors.white,
+            fontSize: 14.sp,
             fontWeight: FontWeight.bold,
           ),
           maxLines: 1,

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/const/resource.dart';
-import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
+import 'package:mawaqit/src/pages/quran/reading/quran_reading_screen.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:sizer/sizer.dart';
 
