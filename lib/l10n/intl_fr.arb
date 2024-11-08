@@ -352,6 +352,19 @@
         "example": "604"
       }
     }
-  }
+  },
+  "scheduleSaved": "Votre planification a été enregistré.",
+  "completeAllFields": "Veuillez remplir tous les champs avant de sauvegarder.",
+  "endTimeAfter": "L'heure de fin doit être postérieure à l'heure de début.",
+  "scheduleListening": "Écoute planifiée",
+  "enableScheduling": "Activer la planification",
+  "scheduleDesc": "Activez cette fonctionnalité pour lire automatiquement une Sourate aux heures planifiées.",
+  "startTime": "Heure de Début",
+  "endTime": "Heure de Fin",
+  "selectReciter": "Choisissez un Récitateur",
+  "selectMoshaf": "Choisissez un Moushaf",
+  "randomSurahSelection": "Sélection Aléatoire de Sourate",
+  "selectSurah": "Choisissez une Sourate",
+  "save": "Sauvegarder"
 
 }
