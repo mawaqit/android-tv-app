@@ -14,6 +14,13 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    // Special handling for QuranModeSelection
+    if (settings.name == Routes.quranModeSelection) {
+      return MaterialPageRoute(
+        builder: (context) => const QuranModeSelection(),
+      );
+    }
+
     // Check if the route is a Quran screen
     if (Routes.quranScreens.contains(settings.name)) {
       return MaterialPageRoute(
