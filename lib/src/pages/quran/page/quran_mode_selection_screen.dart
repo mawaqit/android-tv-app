@@ -42,7 +42,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
     super.dispose();
   }
 
-  void _handleKeyEvent(RawKeyEvent event) {
+  Future<void> _handleKeyEvent(RawKeyEvent event) async {
     if (event is RawKeyDownEvent) {
       final isLtr = Directionality.of(context) == TextDirection.ltr;
 
@@ -66,11 +66,15 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
         }
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
         if (_selectedIndex == 0) {
-          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-          Navigator.pushReplacementNamed(context, Routes.quranReading);
+          await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+          if(mounted){
+            Navigator.pushReplacementNamed(context, Routes.quranReading);
+          }
         } else {
-          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-          Navigator.pushReplacementNamed(context, Routes.quranReciter);
+          await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+          if(mounted) {
+            Navigator.pushReplacementNamed(context, Routes.quranReciter);
+          }
         }
       }
     }
