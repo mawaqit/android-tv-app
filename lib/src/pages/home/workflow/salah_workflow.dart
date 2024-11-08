@@ -33,7 +33,8 @@ class SalahWorkflowScreen extends ConsumerStatefulWidget {
   ConsumerState<SalahWorkflowScreen> createState() => _SalahWorkflowScreenState();
 }
 
-class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> { // Changed to ConsumerState
+class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> {
+  // Changed to ConsumerState
   @override
   void initState() {
     super.initState();

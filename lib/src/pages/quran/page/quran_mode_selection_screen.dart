@@ -67,12 +67,12 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
         if (_selectedIndex == 0) {
           await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-          if(mounted){
+          if (mounted) {
             Navigator.pushReplacementNamed(context, Routes.quranReading);
           }
         } else {
           await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-          if(mounted) {
+          if (mounted) {
             Navigator.pushReplacementNamed(context, Routes.quranReciter);
           }
         }

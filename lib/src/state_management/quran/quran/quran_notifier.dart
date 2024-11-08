@@ -85,7 +85,7 @@ class QuranNotifier extends AsyncNotifier<QuranState> {
   }
 
   void exitQuranMode() {
-    try{
+    try {
       state = AsyncData(state.value!.copyWith(mode: QuranMode.none));
     } catch (err, stack) {
       state = AsyncError(err, stack);
