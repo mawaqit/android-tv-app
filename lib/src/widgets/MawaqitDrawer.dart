@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart' hide Page;
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show ConsumerWidget, WidgetRef;
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ConsumerWidget, WidgetRef;
 import 'package:flutter_svg/svg.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -62,15 +63,18 @@ class MawaqitDrawer extends ConsumerWidget {
                             Spacer(),
                             ElevatedButton.icon(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
                                   if (states.contains(MaterialState.focused)) {
                                     return theme.primaryColorDark;
                                   }
                                   return Colors.white;
                                 }),
                                 elevation: MaterialStateProperty.all(0),
-                                overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                overlayColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                foregroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
                                   if (states.contains(MaterialState.focused)) {
                                     return Colors.white;
                                   }
@@ -81,7 +85,9 @@ class MawaqitDrawer extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                 ),
-                                padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 0)),
                               ),
                               onPressed: () => SystemNavigator.pop(),
                               icon: Container(
@@ -158,7 +164,9 @@ class MawaqitDrawer extends ConsumerWidget {
                 icon: Icons.book,
                 text: S.of(context).quran,
                 onTap: () async {
-                  await ref.read(quranNotifierProvider.notifier).getSelectedMode();
+                  await ref
+                      .read(quranNotifierProvider.notifier)
+                      .getSelectedMode();
                   final state = ref.read(quranNotifierProvider);
                   Navigator.pop(context);
 
@@ -196,7 +204,9 @@ class MawaqitDrawer extends ConsumerWidget {
                   icon: Icons.share,
                   text: S.of(context).share,
                   onTap: () {
-                    _shareApp(context, MawaqitBackendSettingsConstant.kSettingsTitle,
+                    _shareApp(
+                        context,
+                        MawaqitBackendSettingsConstant.kSettingsTitle,
                         MawaqitBackendSettingsConstant.kSettingsShare);
                   }),
               DrawerListTitle(
@@ -214,6 +224,8 @@ class MawaqitDrawer extends ConsumerWidget {
 
   _shareApp(BuildContext context, String? text, String share) {
     final RenderBox box = context.findRenderObject() as RenderBox;
-    Share.share(share, subject: text, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    Share.share(share,
+        subject: text,
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }

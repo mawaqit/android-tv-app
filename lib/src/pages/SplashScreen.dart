@@ -68,10 +68,12 @@ class _SpashState extends ConsumerState<Splash> {
 
     Hive.initFlutter();
 
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
 
     HttpOverrides.global = MyHttpOverrides();
-    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
@@ -121,8 +123,8 @@ class _SpashState extends ConsumerState<Splash> {
       } else {
         AppRouter.pushReplacement(OfflineHomeScreen());
       }
-      generateStream(Duration(minutes: 10))
-          .listen((event) => WakelockPlus.enable().catchError(CrashlyticsWrapper.sendException));
+      generateStream(Duration(minutes: 10)).listen((event) =>
+          WakelockPlus.enable().catchError(CrashlyticsWrapper.sendException));
     } on DioError catch (e) {
       if (e.response == null) {
         print('no internet connection');
@@ -192,7 +194,8 @@ class _SpashState extends ConsumerState<Splash> {
                 child: SplashScreen.callback(
                   isLoading: false,
                   onSuccess: (e) => animationFuture.complete(),
-                  onError: (error, stacktrace) => animationFuture.completeError(error, stacktrace),
+                  onError: (error, stacktrace) =>
+                      animationFuture.completeError(error, stacktrace),
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
                   startAnimation: 'idle',
