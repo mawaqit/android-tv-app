@@ -96,3 +96,13 @@ abstract class SystemFeaturesConstant {
   static const String kHdmi = 'android.hardware.hdmi';
   static const String kEthernet = 'android.hardware.ethernet';
 }
+
+abstract class MawaqitBackendSettingsConstant {
+  static const String kSettingsTitle = "Mawaqit";
+  static const String kSettingsShare =
+      "Download Mawaqit\r\nAndroid:\r\nhttps:\/\/play.google.com\/store\/apps\/details?id=com.mawaqit.admin\r\niOS:\r\nhttps:\/\/apps.apple.com\/fr\/app\/mawaqit-prayer-times-mosque\/id1460522683\r\n";
+  static const String kSettingsAndroidUserAgent =
+      "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/95.0.4638.69 Safari\/537.36";
+  static const String kSettingsIosUserAgent =
+      "Mozilla\/5.0 (iPhone; CPU iPhone OS 14_5 like Mac OS X) AppleWebKit\/605.1.15 (KHTML, like Gecko) CriOS\/90.0.4430.78 Mobile\/15E148 Safari\/604.1";
+}

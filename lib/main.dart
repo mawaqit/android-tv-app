@@ -25,7 +25,6 @@ import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:path_provider/path_provider.dart';
@@ -67,7 +66,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => AppLanguage()),
         ChangeNotifierProvider(create: (context) => MosqueManager()),
-        ChangeNotifierProvider(create: (context) => SettingsManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => FeatureManager(context)),
         ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
