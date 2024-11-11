@@ -30,10 +30,17 @@ class RouteGenerator {
               final quranState = ref.watch(quranNotifierProvider);
               if (quranState.value?.mode == QuranMode.none) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
+                  // Get the navigator state
+                  final navigator = Navigator.of(context);
+                  // Pop until we reach the root or can't pop anymore
+                  while (navigator.canPop()) {
+                    // Pop both dialog and screen if in listening mode
+                    if (Routes.quranScreens.contains(settings.name)) {
+                      navigator.pop();
+                    }
                   }
                 });
+                return const SizedBox(); // Return empty widget while popping
               }
               return _buildQuranScreen(settings, context);
             },
