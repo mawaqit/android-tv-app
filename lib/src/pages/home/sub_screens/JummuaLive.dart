@@ -6,6 +6,7 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +35,11 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
   @override
   void initState() {
     invalidStreamUrl = context.read<MosqueManager>().mosque?.streamUrl == null;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(quranNotifierProvider.notifier).exitQuranMode();
+    });
+
     log('JummuaLive: invalidStreamUrl: $invalidStreamUrl');
     super.initState();
   }

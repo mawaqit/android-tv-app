@@ -13,7 +13,6 @@ import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widg
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../sub_screens/AdhanSubScreen.dart';
@@ -38,9 +37,6 @@ class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(quranNotifierProvider.notifier).exitQuranMode();
-    });
   }
 
   calculateCurrentSalah(MosqueManager mosqueManger) {

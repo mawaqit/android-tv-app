@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
@@ -12,13 +13,14 @@ import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/mosque_header.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 
-class AdhanSubScreen extends StatefulWidget {
+class AdhanSubScreen extends ConsumerStatefulWidget {
   const AdhanSubScreen({Key? key, this.onDone, this.forceAdhan = false}) : super(key: key);
 
   final VoidCallback? onDone;
@@ -27,10 +29,10 @@ class AdhanSubScreen extends StatefulWidget {
   final bool forceAdhan;
 
   @override
-  State<AdhanSubScreen> createState() => _AdhanSubScreenState();
+  ConsumerState<AdhanSubScreen> createState() => _AdhanSubScreenState();
 }
 
-class _AdhanSubScreenState extends State<AdhanSubScreen> {
+class _AdhanSubScreenState extends ConsumerState<AdhanSubScreen> {
   AudioManager? audioManager;
 
   /// if mosque using Beb sound we will wait for minutes delay
@@ -45,6 +47,10 @@ class _AdhanSubScreenState extends State<AdhanSubScreen> {
     audioManager = context.read<AudioManager>();
     final isFajrPray = mosqueManager.salahIndex == 0;
     final duration = mosqueManager.getAdhanDuration(isFajrPray);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(quranNotifierProvider.notifier).exitQuranMode();
+    });
 
     Future.delayed(Duration(minutes: 5), () {
       closeAdhanScreen();
