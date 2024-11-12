@@ -45,16 +45,29 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     final mosqueManager = context.read<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
     final connectivity = ref.watch(connectivityProvider);
-    final streamState = ref.watch(rtspCameraStreamProvider);
+    final streamStateAsync = ref.watch(rtspCameraSettingsProvider);
 
     final jumuaaDisableInMosque = !userPrefs.isSecondaryScreen && mosqueManager.typeIsMosque;
 
     return connectivity.when(
-      data: (value) => _switchStreamWidget(
-        value,
-        mosqueManager,
-        jumuaaDisableInMosque,
-        streamState.asData?.value,
+      data: (value) => streamStateAsync.when(
+        data: (streamState) => _switchStreamWidget(
+          value,
+          mosqueManager,
+          jumuaaDisableInMosque,
+          streamState,
+        ),
+        loading: () => const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          ),
+        ),
+        error: (error, stack) => _switchStreamWidget(
+          value,
+          mosqueManager,
+          jumuaaDisableInMosque,
+          RTSPCameraSettingsState(isLoading: false),
+        ),
       ),
       loading: () => const CircularProgressIndicator(
         valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -63,7 +76,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
         ConnectivityStatus.disconnected,
         mosqueManager,
         jumuaaDisableInMosque,
-        null,
+        RTSPCameraSettingsState(isLoading: false),
       ),
     );
   }
@@ -72,13 +85,13 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     ConnectivityStatus connectivityStatus,
     MosqueManager mosqueManager,
     bool jumuaaDisableInMosque,
-    RtspCameraStreamState? streamState,
+    RTSPCameraSettingsState streamState,
   ) {
     // Check for RTSP stream first
-    if (streamState != null &&
-        streamState.isRTSPEnabled &&
+    if (streamState.isRTSPEnabled &&
         !streamState.invalidStreamUrl &&
         streamState.streamType == StreamType.rtsp &&
+        streamState.videoController != null &&
         connectivityStatus != ConnectivityStatus.disconnected) {
       return Scaffold(
         backgroundColor: Colors.black,
@@ -86,7 +99,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
           child: AspectRatio(
             aspectRatio: 16 / 9,
             child: Video(
-              controller: ref.read(rtspCameraStreamProvider.notifier).videoController,
+              controller: streamState.videoController!,
             ),
           ),
         ),
@@ -101,30 +114,20 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) {
         return JumuaHadithSubScreen(onDone: widget.onDone);
       }
-      return Scaffold(backgroundColor: Colors.black);
+      return const Scaffold(backgroundColor: Colors.black);
     } else {
-      final videoId = ref.read(rtspCameraStreamProvider.notifier).extractVideoId(streamState?.streamUrl ?? '');
-      return (streamState?.invalidStreamUrl ?? true) || streamState?.streamUrl == null
+      return streamState.invalidStreamUrl || streamState.streamUrl == null
           ? MawaqitYoutubePlayer(
               channelId: mosqueManager.mosque!.streamUrl!,
               onDone: widget.onDone,
               muted: mosqueManager.typeIsMosque,
               onNotFound: () => setState(() => invalidStreamUrl = true),
             )
-          : YoutubePlayer(
-              controller: YoutubePlayerController(
-                initialVideoId: videoId!,
-                flags: const YoutubePlayerFlags(
-                  autoPlay: true,
-                  mute: false,
-                  enableCaption: false,
-                  hideControls: true,
-                  isLive: true,
-                  useHybridComposition: true,
-                  forceHD: true,
-                ),
-              ),
-            );
+          : streamState.youtubeController != null
+              ? YoutubePlayer(
+                  controller: streamState.youtubeController!,
+                )
+              : const Scaffold(backgroundColor: Colors.black);
     }
   }
 }

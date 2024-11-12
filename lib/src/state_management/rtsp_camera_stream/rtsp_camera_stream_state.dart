@@ -1,63 +1,55 @@
-import 'package:equatable/equatable.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_notifier.dart';
+import 'package:media_kit_video/media_kit_video.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-enum StreamType { rtsp, youtubeLive, unknown }
-
-class RtspCameraStreamState extends Equatable {
+class RTSPCameraSettingsState {
+  final bool isInitialized;
   final bool isRTSPEnabled;
   final String? streamUrl;
-  final bool isStreamInitialized;
-  final bool invalidStreamUrl;
-  final StreamType streamType;
-  final int retryCount;
+  final StreamType? streamType;
+  final VideoController? videoController;
   final YoutubePlayerController? youtubeController;
+  final bool invalidStreamUrl;
+  final bool isLoading;
+  final bool showValidationSnackbar;
 
-  const RtspCameraStreamState({
-    required this.isRTSPEnabled,
+  const RTSPCameraSettingsState({
+    this.isInitialized = false,
+    this.isRTSPEnabled = false,
     this.streamUrl,
-    required this.isStreamInitialized,
-    required this.invalidStreamUrl,
-    required this.streamType,
-    required this.retryCount,
+    this.streamType,
+    this.videoController,
     this.youtubeController,
+    this.invalidStreamUrl = false,
+    this.isLoading = false,
+    this.showValidationSnackbar = false,
   });
 
-  RtspCameraStreamState copyWith({
+  RTSPCameraSettingsState copyWith({
+    bool? isInitialized,
     bool? isRTSPEnabled,
     String? streamUrl,
-    bool? isStreamInitialized,
-    bool? invalidStreamUrl,
     StreamType? streamType,
-    int? retryCount,
+    VideoController? videoController,
     YoutubePlayerController? youtubeController,
+    bool? invalidStreamUrl,
+    bool? isLoading,
+    bool? showValidationSnackbar,
   }) {
-    return RtspCameraStreamState(
+    return RTSPCameraSettingsState(
+      isInitialized: isInitialized ?? this.isInitialized,
       isRTSPEnabled: isRTSPEnabled ?? this.isRTSPEnabled,
       streamUrl: streamUrl ?? this.streamUrl,
-      isStreamInitialized: isStreamInitialized ?? this.isStreamInitialized,
-      invalidStreamUrl: invalidStreamUrl ?? this.invalidStreamUrl,
       streamType: streamType ?? this.streamType,
-      retryCount: retryCount ?? this.retryCount,
+      videoController: videoController ?? this.videoController,
       youtubeController: youtubeController ?? this.youtubeController,
+      invalidStreamUrl: invalidStreamUrl ?? this.invalidStreamUrl,
+      isLoading: isLoading ?? this.isLoading,
+      showValidationSnackbar: showValidationSnackbar ?? this.showValidationSnackbar,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        isRTSPEnabled,
-        streamUrl,
-        isStreamInitialized,
-        invalidStreamUrl,
-        streamType,
-        retryCount,
-        youtubeController,
-      ];
-
-  factory RtspCameraStreamState.initial() => const RtspCameraStreamState(
-        isRTSPEnabled: false,
-        isStreamInitialized: false,
-        invalidStreamUrl: false,
-        streamType: StreamType.unknown,
-        retryCount: 0,
-      );
 }

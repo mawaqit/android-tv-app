@@ -364,6 +364,9 @@
   "rtspCameraSettingDesc": "اتصل بالكاميرا المحلية واعرض بث صلاة الجمعة على شاشة التلفاز.",
   "rtspCameraSettingScreenDesc": "إذا أدخلت رابطًا هنا، ستتحول شاشتك تلقائيًا إلى وضع بث الفيديو عند وصول وقت الجمعة.",
   "validatingStream": "جارٍ التحقق من البث...",
-  "checkInternetLiveCamera": "يجب عليك الاتصال بالإنترنت لإعداد الكاميرا "
+  "checkInternetLiveCamera": "يجب عليك الاتصال بالإنترنت لإعداد الكاميرا ",
+  "somethingWentWrong": "حدث خطأ ما! يرجى المحاولة مرة أخرى",
+  "somethingWrong": "حدث خطأ ما",
+  "tryAgainLater": "يرجى المحاولة لاحقًا"
 
 }

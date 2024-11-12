@@ -10,189 +10,138 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class RtspCameraStreamNotifier extends AsyncNotifier<RtspCameraStreamState> {
-  late final Player _player;
-  late final VideoController _videoController;
-  late final SharedPreferences _prefs;
+enum StreamType { rtsp, youtubeLive }
 
-  VideoController get videoController => _videoController;
-
+class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSettingsState> {
   @override
-  Future<RtspCameraStreamState> build() async {
-    _player = Player();
-    _videoController = VideoController(_player);
-    _prefs = await SharedPreferences.getInstance();
-    return _loadInitialState();
+  Future<RTSPCameraSettingsState> build() async {
+    return await initializeSettings();
   }
 
-  Future<RtspCameraStreamState> _loadInitialState() async {
-    final isEnabled = _prefs.getBool(RtspCameraStreamConstant.prefKeyEnabled) ?? false;
-    final url = _prefs.getString(RtspCameraStreamConstant.prefKeyUrl);
+  Future<RTSPCameraSettingsState> initializeSettings() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final isEnabled = prefs.getBool('rtsp_camera_enabled') ?? false;
+      final savedUrl = prefs.getString('rtsp_camera_url');
 
-    if (!isEnabled || url == null || url.isEmpty) {
-      return RtspCameraStreamState.initial();
+      if (isEnabled && savedUrl != null) {
+        return await updateStream(isEnabled: isEnabled, url: savedUrl);
+      }
+
+      return RTSPCameraSettingsState(
+        isInitialized: true,
+        isRTSPEnabled: isEnabled,
+        streamUrl: savedUrl,
+        isLoading: false,
+      );
+    } catch (e) {
+      return RTSPCameraSettingsState(
+        isInitialized: true,
+        isLoading: false,
+        showValidationSnackbar: true,
+      );
     }
-
-    final initialState = RtspCameraStreamState(
-      isRTSPEnabled: isEnabled,
-      streamUrl: url,
-      isStreamInitialized: false,
-      invalidStreamUrl: false,
-      streamType: _getStreamType(url),
-      retryCount: 0,
-    );
-
-    return _initializeStream(initialState);
-  }
-
-  StreamType _getStreamType(String url) {
-    final lowercaseUrl = url.toLowerCase();
-    if (lowercaseUrl.startsWith('rtsp://')) return StreamType.rtsp;
-    if (lowercaseUrl.contains('youtube.com')) return StreamType.youtubeLive;
-    return StreamType.unknown;
   }
 
   String? extractVideoId(String url) {
-    try {
-      final uri = Uri.parse(url);
-
-      if (uri.host == 'youtu.be') {
-        return uri.pathSegments.first;
-      }
-
-      if (uri.host.contains('youtube.com')) {
-        return uri.queryParameters['v'] ??
-            uri.queryParameters['video_id'] ??
-            uri.pathSegments.lastWhere((s) => s.isNotEmpty, orElse: () => '');
-      }
-    } catch (e) {
-      debugPrint('Video ID extraction error: $e');
+    if (url.contains('youtube.com/live/')) {
+      return url.split('youtube.com/live/')[1].split('?').first;
     }
-    return null;
+    return YoutubePlayer.convertUrlToId(url);
   }
 
-  Future<void> updateStream({
-    required bool isEnabled,
-    String? url,
-  }) async {
-    state = const AsyncLoading();
-
+  Future<RTSPCameraSettingsState> updateStream({required bool isEnabled, String? url}) async {
+    if (url != null) {
+      state = const AsyncValue.loading();
+    }
     try {
-      await _player.stop();
-      await _prefs.setBool(RtspCameraStreamConstant.prefKeyEnabled, isEnabled);
-
-      if (url != null) {
-        await _prefs.setString(RtspCameraStreamConstant.prefKeyUrl, url);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('rtsp_camera_enabled', isEnabled);
+      state = AsyncValue.data(RTSPCameraSettingsState(
+        isRTSPEnabled: isEnabled,
+        streamUrl: url ?? state.value?.streamUrl,
+        isLoading: url != null,
+        isInitialized: true,
+      ));
+      if (url == null) {
+        return state.value!;
       }
 
-      if (isEnabled && url != null && url.isNotEmpty) {
-        final newState = await _initializeStream(
-          RtspCameraStreamState(
+      await prefs.setString('rtsp_camera_url', url);
+
+      if (RtspCameraStreamConstant.youtubeUrlRegex.hasMatch(url)) {
+        final videoId = extractVideoId(url);
+        if (videoId == null) {
+          return RTSPCameraSettingsState(
             isRTSPEnabled: isEnabled,
-            streamUrl: url,
-            isStreamInitialized: false,
-            invalidStreamUrl: false,
-            streamType: _getStreamType(url),
-            retryCount: 0,
+            invalidStreamUrl: true,
+            isLoading: false,
+            showValidationSnackbar: true,
+          );
+        }
+
+        final controller = YoutubePlayerController(
+          initialVideoId: videoId,
+          flags: const YoutubePlayerFlags(
+            autoPlay: true,
+            mute: false,
+            enableCaption: false,
+            hideControls: true,
+            isLive: true,
+            useHybridComposition: true,
+            forceHD: true,
           ),
         );
-        state = AsyncData(newState);
-      } else {
-        state = AsyncData(RtspCameraStreamState.initial().copyWith(
+
+        return RTSPCameraSettingsState(
           isRTSPEnabled: isEnabled,
           streamUrl: url,
-          streamType: url != null ? _getStreamType(url) : StreamType.unknown,
-        ));
+          streamType: StreamType.youtubeLive,
+          youtubeController: controller,
+          invalidStreamUrl: false,
+          isLoading: false,
+          showValidationSnackbar: true,
+        );
+      } else if (url.startsWith('rtsp://')) {
+        final player = Player();
+        final controller = VideoController(player);
+        await player.open(Media(url));
+
+        return RTSPCameraSettingsState(
+          isRTSPEnabled: isEnabled,
+          streamUrl: url,
+          streamType: StreamType.rtsp,
+          videoController: controller,
+          invalidStreamUrl: false,
+          isLoading: false,
+          showValidationSnackbar: true,
+        );
       }
+
+      return RTSPCameraSettingsState(
+        isRTSPEnabled: isEnabled,
+        invalidStreamUrl: true,
+        isLoading: false,
+        showValidationSnackbar: true,
+      );
     } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-
-  Future<RtspCameraStreamState> _initializeStream(RtspCameraStreamState currentState) async {
-    YoutubeExplode? yt;
-
-    try {
-      switch (currentState.streamType) {
-        case StreamType.rtsp:
-          await _player.open(Media(currentState.streamUrl!));
-          return currentState.copyWith(
-            isStreamInitialized: true,
-            invalidStreamUrl: false,
-          );
-
-        case StreamType.youtubeLive:
-          final videoId = extractVideoId(currentState.streamUrl!);
-          if (videoId == null) {
-            return currentState.copyWith(
-              invalidStreamUrl: true,
-              isStreamInitialized: false,
-            );
-          }
-
-          yt = YoutubeExplode();
-          final video = await yt.videos.get(videoId);
-
-          if (!video.isLive) {
-            return currentState.copyWith(
-              invalidStreamUrl: true,
-              isStreamInitialized: false,
-            );
-          }
-
-          return currentState.copyWith(
-            isStreamInitialized: true,
-            invalidStreamUrl: false,
-          );
-
-        case StreamType.unknown:
-          return currentState.copyWith(
-            invalidStreamUrl: true,
-            isStreamInitialized: false,
-          );
-      }
-    } catch (e) {
-      debugPrint('Stream initialization error: $e');
-      return _isNetworkError(e)
-          ? currentState.copyWith(
-              invalidStreamUrl: false,
-              isStreamInitialized: false,
-            )
-          : await _handleInitializationError(currentState);
-    } finally {
-      yt?.close();
-    }
-  }
-
-  bool _isNetworkError(dynamic error) {
-    final errorStr = error.toString().toLowerCase();
-    return errorStr.contains('network') || errorStr.contains('connection');
-  }
-
-  Future<RtspCameraStreamState> _handleInitializationError(
-    RtspCameraStreamState currentState,
-  ) async {
-    if (currentState.retryCount < RtspCameraStreamConstant.maxRetries) {
-      await Future.delayed(RtspCameraStreamConstant.retryDelay);
-      return _initializeStream(
-        currentState.copyWith(
-          retryCount: currentState.retryCount + 1,
-        ),
+      return RTSPCameraSettingsState(
+        invalidStreamUrl: true,
+        isLoading: false,
+        showValidationSnackbar: true,
       );
     }
-
-    return currentState.copyWith(
-      invalidStreamUrl: true,
-      isStreamInitialized: false,
-    );
   }
 
-  @override
-  void dispose() {
-    _player.dispose();
+  Future<void> clearSnackbarFlag() async {
+    final currentState = state.value;
+    if (currentState != null) {
+      state = AsyncValue.data(currentState.copyWith(showValidationSnackbar: false));
+    }
   }
 }
 
-final rtspCameraStreamProvider = AsyncNotifierProvider<RtspCameraStreamNotifier, RtspCameraStreamState>(
-  () => RtspCameraStreamNotifier(),
-);
+final rtspCameraSettingsProvider =
+    AutoDisposeAsyncNotifierProvider<RTSPCameraSettingsNotifier, RTSPCameraSettingsState>(() {
+  return RTSPCameraSettingsNotifier();
+});
