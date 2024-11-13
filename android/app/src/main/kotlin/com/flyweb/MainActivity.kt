@@ -59,6 +59,25 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
+                    "installApk" -> {
+                         val filePath = call.argument<String>("filePath")
+                if (filePath != null) {
+                    try {
+                        val process = Runtime.getRuntime().exec(arrayOf("su", "-c", "adb install -r $filePath"))
+                        val exitCode = process.waitFor()
+                        
+                        if (exitCode == 0) {
+                            result.success("APK installed successfully")
+                        } else {
+                            result.error("INSTALL_FAILED", "Failed to install APK", null)
+                        }
+                    } catch (e: IOException) {
+                        result.error("INSTALL_FAILED", "Error executing ADB command: ${e.message}", null)
+                    }
+                } else {
+                    result.error("INVALID_PATH", "File path is null", null)
+                }
+                    }
                     else -> result.notImplemented()
                 }
             }

@@ -3,7 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show ConsumerWidget, WidgetRef, ProviderContainer;
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ConsumerWidget, WidgetRef, ProviderContainer;
 import 'package:flutter_svg/svg.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -20,6 +21,7 @@ import 'package:mawaqit/src/pages/AboutScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
+import 'package:mawaqit/src/services/apk_installer.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -71,15 +73,18 @@ class MawaqitDrawer extends ConsumerWidget {
                             Spacer(),
                             ElevatedButton.icon(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
                                   if (states.contains(MaterialState.focused)) {
                                     return theme.primaryColorDark;
                                   }
                                   return Colors.white;
                                 }),
                                 elevation: MaterialStateProperty.all(0),
-                                overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                overlayColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                foregroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
                                   if (states.contains(MaterialState.focused)) {
                                     return Colors.white;
                                   }
@@ -90,7 +95,9 @@ class MawaqitDrawer extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                 ),
-                                padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 0)),
                               ),
                               onPressed: () => SystemNavigator.pop(),
                               icon: Container(
@@ -160,7 +167,8 @@ class MawaqitDrawer extends ConsumerWidget {
                   text: S.of(context).home,
                   onTap: () async {
                     if (settings.tabNavigationEnable == "1") {
-                      AppRouter.popAndPush(WebScreen(settings.url), name: 'HomeScreen');
+                      AppRouter.popAndPush(WebScreen(settings.url),
+                          name: 'HomeScreen');
                     } else {
                       Navigator.pop(context);
 
@@ -172,7 +180,9 @@ class MawaqitDrawer extends ConsumerWidget {
                 icon: Icons.book,
                 text: S.of(context).quran,
                 onTap: () async {
-                  await ref.read(quranNotifierProvider.notifier).getSelectedMode();
+                  await ref
+                      .read(quranNotifierProvider.notifier)
+                      .getSelectedMode();
                   final state = ref.read(quranNotifierProvider);
                   switch (state.value!.mode) {
                     case QuranMode.reading:
@@ -205,7 +215,47 @@ class MawaqitDrawer extends ConsumerWidget {
               DrawerListTitle(
                 icon: Icons.info,
                 text: S.of(context).about,
-                onTap: () => AppRouter.popAndPush(AboutScreen()),
+                onTap: () async {
+                  try {
+                    // Show loading dialog
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    );
+
+                    final installer = ApkInstaller();
+                    await installer.downloadAndInstallApk(
+                        'https://github.com/mawaqit/android-tv-app/releases/download/1.16.1/MAWAQIT-For-TV-v1.16.1-394.apk');
+
+                    // Hide loading dialog
+                    Navigator.pop(context);
+
+                    // Show success message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                            Text('Update downloaded and installation started'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  } catch (e) {
+                    // Hide loading dialog
+                    Navigator.pop(context);
+
+                    // Show error message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to update: ${e.toString()}'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                },
               ),
               DrawerListTitle(
                   icon: Icons.share,
@@ -258,13 +308,16 @@ class MawaqitDrawer extends ConsumerWidget {
               forceThemeColor: true,
               iconUrl: page.iconUrl,
               text: translations[page.title!.toCamelCase] ?? page.title,
-              onTap: () => AppRouter.popAndPush(PageScreen(page), name: page.title)))
+              onTap: () =>
+                  AppRouter.popAndPush(PageScreen(page), name: page.title)))
           .toList(),
     );
   }
 
   _shareApp(BuildContext context, String? text, String share) {
     final RenderBox box = context.findRenderObject() as RenderBox;
-    Share.share(share, subject: text, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    Share.share(share,
+        subject: text,
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }
