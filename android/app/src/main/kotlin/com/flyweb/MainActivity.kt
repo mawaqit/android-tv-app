@@ -60,11 +60,11 @@ class MainActivity : FlutterActivity() {
                         result.success(isSuccess)
                     }
                     "installApk" -> {
+                         val filePath = call.argument<String>("filePath")
                 if (filePath != null) {
                
     try {
-                         val filePath = call.argument<String>("filePath")
-                executeCommand(listOf("install --user 0 -r $filePath"), result)
+                                        executeCommand(listOf("install --user 0 -r $filePath"), result)
             } catch (e: Exception) {
                 handleCommandException(e, result)
             }
