@@ -14,6 +14,7 @@ import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/recite/quran_audio_player_notifier.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +50,7 @@ class _AdhanSubScreenState extends ConsumerState<AdhanSubScreen> {
     final duration = mosqueManager.getAdhanDuration(isFajrPray);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(quranPlayerNotifierProvider.notifier).pause();
       ref.read(quranNotifierProvider.notifier).exitQuranMode();
     });
 
