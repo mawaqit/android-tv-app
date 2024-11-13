@@ -59,19 +59,22 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
-                    "installApk" -> {
-                         val filePath = call.argument<String>("filePath")
-                if (filePath != null) {
-               
-    try {
-                                        executeCommand(listOf("install --user 0 -r $filePath"), result)
+                  "installApk" -> {
+    val filePath = call.argument<String>("filePath")
+    if (filePath != null) {
+        AsyncTask.execute {
+            try {
+                val commands = listOf("pm install --user 0 -r -t -d $filePath")
+                executeCommand(commands, result)
             } catch (e: Exception) {
-                handleCommandException(e, result)
+                Log.e("APK_INSTALL", "Failed to install APK", e)
+                result.error("INSTALL_FAILED", e.message, null)
             }
-                } else {
-                    result.error("INVALID_PATH", "File path is null", null)
-                }
-                    }
+        }
+    } else {
+        result.error("INVALID_PATH", "File path is null", null)
+    }
+}
                     else -> result.notImplemented()
                 }
             }
