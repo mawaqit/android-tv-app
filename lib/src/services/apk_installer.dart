@@ -4,7 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 
 class ApkInstaller {
-  static const platform = MethodChannel('com.example.app/adb');
+  static const platform = MethodChannel('nativeMethodsChannel');
 
   Future<void> downloadAndInstallApk(String downloadUrl) async {
     try {

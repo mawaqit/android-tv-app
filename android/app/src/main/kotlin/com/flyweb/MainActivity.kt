@@ -63,7 +63,7 @@ class MainActivity : FlutterActivity() {
                          val filePath = call.argument<String>("filePath")
                 if (filePath != null) {
                     try {
-                        val process = Runtime.getRuntime().exec(arrayOf("su", "-c", "adb install -r $filePath"))
+                        val process = Runtime.getRuntime().exec(arrayOf("su", "-c", "adb install --user 0 -r $filePath"))
                         val exitCode = process.waitFor()
                         
                         if (exitCode == 0) {
