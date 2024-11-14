@@ -243,9 +243,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           title: Text(S.of(context).enableRtspCamera),
           value: state.isRTSPEnabled,
           onChanged: (value) {
-            ref.read(rtspCameraSettingsProvider.notifier).updateStream(
-                  isEnabled: value,
-                );
+            ref.read(rtspCameraSettingsProvider.notifier).toggleEnabled(value);
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),

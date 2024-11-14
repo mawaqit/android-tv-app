@@ -43,6 +43,23 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
     }
   }
 
+  Future<void> toggleEnabled(bool isEnabled) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('rtsp_camera_enabled', isEnabled);
+
+      final currentState = state.value;
+      if (currentState != null) {
+        state = AsyncValue.data(currentState.copyWith(
+          isRTSPEnabled: isEnabled,
+          isLoading: false,
+        ));
+      }
+    } catch (e) {
+      log('Error toggling RTSP camera: $e');
+    }
+  }
+
   String? extractVideoId(String url) {
     if (url.contains('youtube.com/live/')) {
       return url.split('youtube.com/live/')[1].split('?').first;
@@ -54,30 +71,34 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
     if (url != null) {
       state = const AsyncValue.loading();
     }
+
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('rtsp_camera_enabled', isEnabled);
-      state = AsyncValue.data(RTSPCameraSettingsState(
-        isRTSPEnabled: isEnabled,
-        streamUrl: url ?? state.value?.streamUrl,
-        isLoading: url != null,
-        isInitialized: true,
-      ));
+
+      // If there's no URL, just update the enabled state
       if (url == null) {
-        return state.value!;
+        return RTSPCameraSettingsState(
+          isRTSPEnabled: isEnabled,
+          streamUrl: state.value?.streamUrl,
+          isLoading: false,
+          isInitialized: true,
+        );
       }
 
       await prefs.setString('rtsp_camera_url', url);
 
+      // YouTube URL handling
       if (RtspCameraStreamConstant.youtubeUrlRegex.hasMatch(url)) {
         final videoId = extractVideoId(url);
         if (videoId == null) {
-          return RTSPCameraSettingsState(
+          state = AsyncValue.data(RTSPCameraSettingsState(
             isRTSPEnabled: isEnabled,
             invalidStreamUrl: true,
             isLoading: false,
             showValidationSnackbar: true,
-          );
+          ));
+          return state.value!;
         }
 
         final controller = YoutubePlayerController(
@@ -93,7 +114,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
           ),
         );
 
-        return RTSPCameraSettingsState(
+        final newState = RTSPCameraSettingsState(
           isRTSPEnabled: isEnabled,
           streamUrl: url,
           streamType: StreamType.youtubeLive,
@@ -102,12 +123,17 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
           isLoading: false,
           showValidationSnackbar: true,
         );
-      } else if (url.startsWith('rtsp://')) {
+
+        state = AsyncValue.data(newState);
+        return newState;
+      }
+      // RTSP URL handling
+      else if (url.startsWith('rtsp://')) {
         final player = Player();
         final controller = VideoController(player);
         await player.open(Media(url));
 
-        return RTSPCameraSettingsState(
+        final newState = RTSPCameraSettingsState(
           isRTSPEnabled: isEnabled,
           streamUrl: url,
           streamType: StreamType.rtsp,
@@ -116,20 +142,29 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
           isLoading: false,
           showValidationSnackbar: true,
         );
+
+        state = AsyncValue.data(newState);
+        return newState;
       }
 
-      return RTSPCameraSettingsState(
+      // Invalid URL format
+      final newState = RTSPCameraSettingsState(
         isRTSPEnabled: isEnabled,
         invalidStreamUrl: true,
         isLoading: false,
         showValidationSnackbar: true,
       );
+
+      state = AsyncValue.data(newState);
+      return newState;
     } catch (e) {
-      return RTSPCameraSettingsState(
+      final errorState = RTSPCameraSettingsState(
         invalidStreamUrl: true,
         isLoading: false,
         showValidationSnackbar: true,
       );
+      state = AsyncValue.data(errorState);
+      return errorState;
     }
   }
 
