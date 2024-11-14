@@ -264,7 +264,7 @@
   "extractingQuran": "कुरान निकालना",
   "updatedQuran": "कुरान अद्यतन किया गया",
   "quranLatestVersion": "कुरान अद्यतन है",
-  "quranUpdatedVersion": "कुरान का अद्यतन संस्करण है: {संस्करण}",
+  "quranUpdatedVersion": "कुरान का अद्यतन संस्करण है: {version}",
   "quranIsUpdated": "कुरान अद्यतन है",
   "quranDownloaded": "कुरान डाउनलोड किया गया",
   "quranIsAlreadyDownloaded": "कुरान पहले ही डाउनलोड हो चुका है",
@@ -272,7 +272,7 @@
   "reciteType": "पाठ प्रकार",
   "readingMode": "मैं पढ़ना चाहता हूं",
   "listeningMode": "मैं सुनना चाहता हूँ",
-  "quranReadingPage": "पेज {leftPage} - {rightPage} / {totalPages",
+  "quranReadingPage": "पेज {leftPage} - {rightPage} / {totalPages}",
   "@quranReadingPage": {
     "description": "Placeholder text for displaying Quran reading page numbers",
     "placeholders": {
@@ -290,7 +290,7 @@
       }
     }
   },
-  "quranReadingPagePortrait": "आपकी खोज के कोई नतीजे नहीं मिलें",
+  "quranReadingPagePortrait": "पेज {currentPage} / {totalPages}",
   "@quranReadingPagePortrait": {
     "description": "Placeholder text for displaying Quran reading page portrait numbers",
     "placeholders": {
@@ -311,7 +311,7 @@
   "warsh": "वारश",
   "favorites": "पसंदीदा",
   "allReciters": "सभी पाठक",
-  "reciterAddedToFavorites": "वाचक {नाम} को पसंदीदा में जोड़ा गया",
+  "reciterAddedToFavorites": "वाचक {name} को पसंदीदा में जोड़ा गया",
   "@reciterAddedToFavorites": {
     "description": "Message shown when a reciter is added to favorites",
     "placeholders": {
@@ -321,7 +321,7 @@
       }
     }
   },
-  "reciterRemovedFromFavorites": "वाचक {नाम} को पसंदीदा से हटा दिया गया",
+  "reciterRemovedFromFavorites": "वाचक {name} को पसंदीदा से हटा दिया गया",
   "@reciterRemovedFromFavorites": {
     "description": "Message shown when a reciter is removed from favorites",
     "placeholders": {
