@@ -306,7 +306,7 @@
   },
   "chooseQuranPage": "اختر الصفحة",
   "checkingForUpdates": "التحقق من وجود تحديث...",
-  "chooseQuranType": "اختر القرآن الكريم",
+  "chooseQuranType": "إختر الرواية",
   "hafs": "حفص",
   "warsh": "ورش",
   "favorites": "المفضلة",
@@ -336,11 +336,11 @@
     "description": "Message shown when there are no favorite reciters"
   },
   "noReciterSearchResult": "لا توجد نتائج للبحث الخاص بك",
-  "searchForReciter": "البحث عن مُعالج",
+  "searchForReciter": "البحث عن القارئ",
   "downloadAllSuwarSuccessfully": "تم تنزيل القرآن بأكمله",
-  "noSuwarDownload": "لا توجد حروب جديدة للتحميل",
+  "noSuwarDownload": "لا يوجد سور جديدة للتحميل",
   "connectDownloadQuran": "الرجاء الاتصال بالإنترنت للتنزيل",
-  "playInOnlineModeQuran": "الرجاء الاتصال بالإنترنت للعب",
+  "playInOnlineModeQuran": "الرجاء الاتصال بالإنترنت للتشغيل",
   "downloaded": "تم التحميل",
   "switchQuranType": "انتقل إلى {name}",
   "@switchQuranType": {
@@ -352,5 +352,5 @@
       }
     }
   },
-  "surahSelector": "Select Surah"
+  "surahSelector": "اختر السورة"
 }
