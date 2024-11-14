@@ -264,7 +264,7 @@
   "extractingQuran": "कुरान निकालना",
   "updatedQuran": "कुरान अद्यतन किया गया",
   "quranLatestVersion": "कुरान अद्यतन है",
-  "quranUpdatedVersion": "कुरान का अद्यतन संस्करण है: {version}",
+  "quranUpdatedVersion": "कुरान का अद्यतन संस्करण है: {संस्करण}",
   "quranIsUpdated": "कुरान अद्यतन है",
   "quranDownloaded": "कुरान डाउनलोड किया गया",
   "quranIsAlreadyDownloaded": "कुरान पहले ही डाउनलोड हो चुका है",
@@ -272,7 +272,7 @@
   "reciteType": "पाठ प्रकार",
   "readingMode": "मैं पढ़ना चाहता हूं",
   "listeningMode": "मैं सुनना चाहता हूँ",
-  "quranReadingPage": "पेज {leftPage} - {rightPage} / {totalPages}",
+  "quranReadingPage": "पेज {leftPage} - {rightPage} / {totalPages",
   "@quranReadingPage": {
     "description": "Placeholder text for displaying Quran reading page numbers",
     "placeholders": {
@@ -290,6 +290,20 @@
       }
     }
   },
+  "quranReadingPagePortrait": "आपकी खोज के कोई नतीजे नहीं मिलें",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "पेज चुनें",
   "checkingForUpdates": "अपडेट के लिए जांच कर रहा है...",
   "chooseQuranType": "कुरान चुनें",
@@ -297,7 +311,7 @@
   "warsh": "वारश",
   "favorites": "पसंदीदा",
   "allReciters": "सभी पाठक",
-  "reciterAddedToFavorites": "वाचक {name} को पसंदीदा में जोड़ा गया",
+  "reciterAddedToFavorites": "वाचक {नाम} को पसंदीदा में जोड़ा गया",
   "@reciterAddedToFavorites": {
     "description": "Message shown when a reciter is added to favorites",
     "placeholders": {
@@ -307,7 +321,7 @@
       }
     }
   },
-  "reciterRemovedFromFavorites": "वाचक {name} को पसंदीदा से हटा दिया गया",
+  "reciterRemovedFromFavorites": "वाचक {नाम} को पसंदीदा से हटा दिया गया",
   "@reciterRemovedFromFavorites": {
     "description": "Message shown when a reciter is removed from favorites",
     "placeholders": {
@@ -320,6 +334,23 @@
   "noFavoriteReciters": "कोई पसंदीदा पाठक नहीं. सूची में एक जोड़ने का प्रयास करें",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
-
+  },
+  "noReciterSearchResult": "आपकी खोज के कोई नतीजे नहीं मिलें",
+  "searchForReciter": "एक वाचक की खोज करें",
+  "downloadAllSuwarSuccessfully": "पूरा कुरान डाउनलोड हो गया है",
+  "noSuwarDownload": "डाउनलोड करने के लिए कोई नया सुरा नहीं",
+  "connectDownloadQuran": "कृपया डाउनलोड करने के लिए इंटरनेट से कनेक्ट करें",
+  "playInOnlineModeQuran": "कृपया खेलने के लिए इंटरनेट से कनेक्ट करें",
+  "downloaded": "डाउनलोड",
+  "switchQuranType": "{नाम} पर जाएँ",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "सूरह का चयन करें"
 }
