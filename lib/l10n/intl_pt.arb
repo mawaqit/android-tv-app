@@ -290,6 +290,20 @@
       }
     }
   },
+  "quranReadingPagePortrait": "Página {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "Escolha a página",
   "checkingForUpdates": "A verificar atualizações...",
   "chooseQuranType": "Escolher Alcorão",
@@ -320,5 +334,23 @@
   "noFavoriteReciters": "Sem recitadores favoritos. Tente adicionar um à lista.",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
+  },
+  "noReciterSearchResult": "Nenhum resultado encontrado para a sua pesquisa",
+  "searchForReciter": "Pesquisar por um recitador",
+  "downloadAllSuwarSuccessfully": "O Alcorão completo foi descarregado",
+  "noSuwarDownload": "Não há novos surah para descarregar",
+  "connectDownloadQuran": "Por favor, conecte-se à Internet para descarregar",
+  "playInOnlineModeQuran": "Por favor, conecte-se à internet para reproduzir",
+  "downloaded": "Descarregado",
+  "switchQuranType": "Ir para {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Selecionar Surah"
 }
