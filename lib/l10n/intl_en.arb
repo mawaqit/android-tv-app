@@ -352,5 +352,12 @@
       }
     }
   },
-  "surahSelector":"Select Surah"
+  "surahSelector":"Select Surah",
+  "checkForUpdates": "Check for Updates",
+  "checkForNewVersion": "Check if a new version is available",
+  "wouldYouLikeToUpdate": "Would you like to update the app?",
+  "updateCompleted": "Update completed successfully!",
+  "noUpdates": "No Updates",
+  "usingLatestVersion": "You are using the latest version.",
+  "failedToCheckUpdates": "Failed to check for updates:"
 }

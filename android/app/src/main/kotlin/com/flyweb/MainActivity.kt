@@ -59,7 +59,37 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
+                            "installApk" -> {
+                        val filePath = call.argument<String>("filePath")
+                        if (filePath != null) {
+                            AsyncTask.execute {
+                                try {
+                                    // Check if file exists
+                                    val file = java.io.File(filePath)
+                                    if (!file.exists()) {
+                                        Log.e("APK_INSTALL", "APK file not found at path: $filePath")
+                                        result.error("FILE_NOT_FOUND", "APK file not found", null)
+                                        return@execute
+                                    }
 
+                                    // Check if device is rooted
+                                    if (!checkRoot()) {
+                                        Log.e("APK_INSTALL", "Device is not rooted")
+                                        result.error("NOT_ROOTED", "Device is not rooted", null)
+                                        return@execute
+                                    }
+
+                                    val commands = listOf("pm install -r -d $filePath")
+                                    executeCommand(commands, result)
+                                } catch (e: Exception) {
+                                    Log.e("APK_INSTALL", "Failed to install APK", e)
+                                    result.error("INSTALL_FAILED", e.message, null)
+                                }
+                            }
+                        } else {
+                            result.error("INVALID_PATH", "File path is null", null)
+                        }
+                    }
                     else -> result.notImplemented()
                 }
             }
