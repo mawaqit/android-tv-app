@@ -65,87 +65,77 @@ class MainActivity : FlutterActivity() {
         Log.e("APK_INSTALL", "File path is null")
         result.error("INVALID_PATH", "File path is null", null)
     } else {
-        val filePath = call.argument<String>("filePath")
-if (filePath == null) {
-    Log.e("APK_INSTALL", "File path is null")
-    result.error("INVALID_PATH", "File path is null", null)
-} else {
-    AsyncTask.execute {
-        try {
-            Log.d("APK_INSTALL", "Starting installation process...")
-            Log.d("APK_INSTALL", "File path: $filePath")
-
-            val file = java.io.File(filePath)
-            if (!file.exists()) {
-                Log.e("APK_INSTALL", "APK file not found at path: $filePath")
-                result.error("FILE_NOT_FOUND", "APK file not found", null)
-                return@execute
-            }
-
-            if (!checkRoot()) {
-                Log.e("APK_INSTALL", "Device is not rooted")
-                result.error("NOT_ROOTED", "Device is not rooted", null)
-                return@execute
-            }
-
-            val packageName = "com.mawaqit.androidtv"
-
-            // Modified script to wait for package installation to complete
-  val scriptContent = """
-    #!/system/bin/sh
-    
-    # Wait for installation to complete (max 60 seconds)
-    for i in $(seq 1 60); do
-        if pm path com.mawaqit.androidtv >/dev/null 2>&1; then
-            # Package exists, but wait for dexopt to complete
-            if [ -d "/data/app/com.mawaqit.androidtv-"* ]; then
-                if ! pgrep -f "dex2oat.*com.mawaqit.androidtv" >/dev/null; then
-                    # No dexopt running, safe to proceed
-                    break
-                fi
-            fi
-        fi
-        sleep 1
-    done
-
-    # Additional wait for system to settle
-    sleep 2
-    
-    # Launch app with retries
-    for i in $(seq 1 3); do
-        am start -n com.mawaqit.androidtv/com.mawaqit.androidtv.MainActivity
-        if [ $? -eq 0 ]; then
-            break
-        fi
-        sleep 2
-    done
-""".trimIndent()
-
-            val scriptFile = File(context.cacheDir, "launch_script.sh")
-            scriptFile.writeText(scriptContent)
-            scriptFile.setExecutable(true)
-
-            // Launch the script first, then install
-            executeCommands(listOf(
-                "nohup sh ${scriptFile.absolutePath} >/dev/null 2>&1 &",
-                "pm install -r -d $filePath"
-            ))
-
-            result.success(true)
-
-        } catch (e: Exception) {
-            Log.e("APK_INSTALL", "Failed to install APK", e)
+        AsyncTask.execute {
             try {
-                result.error("INSTALL_FAILED", e.message, null)
-            } catch (e: IllegalStateException) {
-                Log.e("APK_INSTALL", "Result already submitted", e)
+                Log.d("APK_INSTALL", "Starting installation process...")
+                Log.d("APK_INSTALL", "File path: $filePath")
+
+                val file = java.io.File(filePath)
+                if (!file.exists()) {
+                    Log.e("APK_INSTALL", "APK file not found at path: $filePath")
+                    result.error("FILE_NOT_FOUND", "APK file not found", null)
+                    return@execute
+                }
+
+                if (!checkRoot()) {
+                    Log.e("APK_INSTALL", "Device is not rooted")
+                    result.error("NOT_ROOTED", "Device is not rooted", null)
+                    return@execute
+                }
+
+                val packageName = "com.mawaqit.androidtv"
+                
+                // Create a launch script that will survive the process termination
+                val scriptContent = """
+                    #!/system/bin/sh
+                    
+                    # Wait for the old process to be fully terminated
+                    sleep 3
+                    
+                    # Force stop any existing instances
+                    am force-stop $packageName
+                    
+                    # Wait for system to settle
+                    sleep 2
+                    
+                    # Launch app with retries
+                    for i in $(seq 1 5); do
+                        # Try to launch the app
+                        am start -n $packageName/com.mawaqit.androidtv.MainActivity --activity-clear-top
+                        if [ $? -eq 0 ]; then
+                            exit 0
+                        fi
+                        sleep 2
+                    done
+                """.trimIndent()
+
+                val scriptFile = File(context.cacheDir, "relaunch_script.sh")
+                scriptFile.writeText(scriptContent)
+                scriptFile.setExecutable(true)
+
+                // Launch the script in the background before installation
+                executeCommands(listOf(
+                    "nohup sh ${scriptFile.absolutePath} >/dev/null 2>&1 &"
+                ))
+
+                // Perform the installation
+                executeCommands(listOf(
+                    "pm install -r -d $filePath"
+                ))
+
+                result.success(true)
+
+            } catch (e: Exception) {
+                Log.e("APK_INSTALL", "Failed to install APK", e)
+                try {
+                    result.error("INSTALL_FAILED", e.message, null)
+                } catch (e: IllegalStateException) {
+                    Log.e("APK_INSTALL", "Result already submitted", e)
+                }
             }
         }
     }
-}
-    }
-}
-                    else -> result.notImplemented()
+}                 else -> result.notImplemented()
                 }
             }
     }
