@@ -60,73 +60,91 @@ class MainActivity : FlutterActivity() {
                         result.success(isSuccess)
                     }
 "installApk" -> {
-    val filePath = call.argument<String>("filePath")
-    if (filePath != null) {
-        AsyncTask.execute {
-            try {
-                Log.d("APK_INSTALL", "Starting installation process...")
-                Log.d("APK_INSTALL", "File path: $filePath")
-
-                // Check if file exists
-                val file = java.io.File(filePath)
-                if (!file.exists()) {
-                    Log.e("APK_INSTALL", "APK file not found at path: $filePath")
-                    result.error("FILE_NOT_FOUND", "APK file not found", null)
-                    return@execute
-                }
-                Log.d("APK_INSTALL", "APK file exists")
-
-                // Check if device is rooted
-                if (!checkRoot()) {
-                    Log.e("APK_INSTALL", "Device is not rooted")
-                    result.error("NOT_ROOTED", "Device is not rooted", null)
-                    return@execute
-                }
-                Log.d("APK_INSTALL", "Device is rooted, proceeding with installation")
-
-                val packageName = "com.mawaqit.androidtv"
-                
-                // Create a separate script file for launching
-                val launchScript = """
-                    #!/system/bin/sh
-                    sleep 10
-                    am start -n $packageName/$packageName.MainActivity
-                    am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n $packageName/$packageName.MainActivity
-                """.trimIndent()
-
-                val scriptFile = File(context.filesDir, "launch_script.sh")
-                scriptFile.writeText(launchScript)
-                scriptFile.setExecutable(true)
-
-                // Make the script executable through root
-                executeCommand(listOf("chmod 777 ${scriptFile.absolutePath}"), result)
-
-                // Run the launch script in background
-                executeCommand(listOf("nohup sh ${scriptFile.absolutePath} >/dev/null 2>&1 &"), result)
-
-                // Now install the APK
-                Log.d("APK_INSTALL", "Executing install command...")
-                executeCommand(listOf("pm install -r -d $filePath"), result)
-                
-                Log.d("APK_INSTALL", "Installation process completed")
-                result.success(true)
-                
-            } catch (e: Exception) {
-                Log.e("APK_INSTALL", "Failed to install APK", e)
-                Log.e("APK_INSTALL", "Error stack trace: ${e.stackTrace.joinToString("\n")}")
-                result.error("INSTALL_FAILED", e.message, null)
-            }
-        }
-    } else {
+  val filePath = call.argument<String>("filePath")
+    if (filePath == null) {
         Log.e("APK_INSTALL", "File path is null")
         result.error("INVALID_PATH", "File path is null", null)
+        return
+    }
+
+    AsyncTask.execute {
+        try {
+            Log.d("APK_INSTALL", "Starting installation process...")
+            Log.d("APK_INSTALL", "File path: $filePath")
+
+            // Check if file exists
+            val file = java.io.File(filePath)
+            if (!file.exists()) {
+                Log.e("APK_INSTALL", "APK file not found at path: $filePath")
+                result.error("FILE_NOT_FOUND", "APK file not found", null)
+                return@execute
+            }
+
+            // Check if device is rooted
+            if (!checkRoot()) {
+                Log.e("APK_INSTALL", "Device is not rooted")
+                result.error("NOT_ROOTED", "Device is not rooted", null)
+                return@execute
+            }
+
+            val packageName = "com.mawaqit.androidtv"
+
+            // Install the APK first
+            val installSuccess = executeCommands(listOf("pm install -r -d $filePath"))
+            if (!installSuccess) {
+                result.error("INSTALL_FAILED", "Failed to install APK", null)
+                return@execute
+            }
+
+            // Create a delayed launch using root
+            val launchCommand = """
+                sleep 5
+                am force-stop $packageName
+                am start -n $packageName/$packageName.MainActivity
+            """.trimIndent()
+
+            // Execute the launch command in background
+            executeCommands(listOf("nohup sh -c '$launchCommand' >/dev/null 2>&1 &"))
+            
+            // Send success result before the process gets killed
+            result.success(true)
+
+        } catch (e: Exception) {
+            Log.e("APK_INSTALL", "Failed to install APK", e)
+            try {
+                result.error("INSTALL_FAILED", e.message, null)
+            } catch (e: IllegalStateException) {
+                // Ignore if result was already submitted
+                Log.e("APK_INSTALL", "Result already submitted", e)
+            }
+        }
     }
 }
                     else -> result.notImplemented()
                 }
             }
     }
-
+private fun executeCommands(commands: List<String>): Boolean {
+    return try {
+        val process = Runtime.getRuntime().exec("su")
+        val outputStream = DataOutputStream(process.outputStream)
+        
+        for (command in commands) {
+            Log.d("SU_COMMAND", "Executing command: $command")
+            outputStream.writeBytes("$command\n")
+        }
+        
+        outputStream.writeBytes("exit\n")
+        outputStream.flush()
+        outputStream.close()
+        
+        val exitCode = process.waitFor()
+        exitCode == 0
+    } catch (e: Exception) {
+        Log.e("SU_COMMAND", "Error executing command", e)
+        false
+    }
+}
     private fun checkRoot(): Boolean {
         return try {
             val p = Runtime.getRuntime().exec("su")
