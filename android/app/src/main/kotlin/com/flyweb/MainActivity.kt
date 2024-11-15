@@ -91,17 +91,35 @@ if (filePath == null) {
             val packageName = "com.mawaqit.androidtv"
 
             // Modified script to wait for package installation to complete
-            val scriptContent = """
-                #!/system/bin/sh
-                # Wait for package to be fully installed and ready
-                while ! pm path $packageName >/dev/null 2>&1; do
-                    sleep 1
-                done
-                # Additional wait for system to settle
-                sleep 3
-                # Launch the app
-                am start -n $packageName/$packageName.MainActivity
-            """.trimIndent()
+  val scriptContent = """
+    #!/system/bin/sh
+    
+    # Wait for installation to complete (max 60 seconds)
+    for i in $(seq 1 60); do
+        if pm path com.mawaqit.androidtv >/dev/null 2>&1; then
+            # Package exists, but wait for dexopt to complete
+            if [ -d "/data/app/com.mawaqit.androidtv-"* ]; then
+                if ! pgrep -f "dex2oat.*com.mawaqit.androidtv" >/dev/null; then
+                    # No dexopt running, safe to proceed
+                    break
+                fi
+            fi
+        fi
+        sleep 1
+    done
+
+    # Additional wait for system to settle
+    sleep 2
+    
+    # Launch app with retries
+    for i in $(seq 1 3); do
+        am start -n com.mawaqit.androidtv/com.mawaqit.androidtv.MainActivity
+        if [ $? -eq 0 ]; then
+            break
+        fi
+        sleep 2
+    done
+""".trimIndent()
 
             val scriptFile = File(context.cacheDir, "launch_script.sh")
             scriptFile.writeText(scriptContent)
