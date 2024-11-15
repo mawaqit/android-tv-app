@@ -59,7 +59,7 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
- "installApk" -> {
+"installApk" -> {
     val filePath = call.argument<String>("filePath")
     if (filePath != null) {
         AsyncTask.execute {
@@ -85,17 +85,21 @@ class MainActivity : FlutterActivity() {
                 Log.d("APK_INSTALL", "Device is rooted, proceeding with installation")
 
                 val packageName = "com.mawaqit.androidtv"
+                
                 // First install the APK
                 Log.d("APK_INSTALL", "Executing install command...")
                 executeCommand(listOf("pm install -r -d $filePath"), result)
                 
-                // Wait for 2 seconds
-                Log.d("APK_INSTALL", "Waiting 2 seconds before launching...")
-                Thread.sleep(2000)
+                // Wait longer for installation to complete
+                Log.d("APK_INSTALL", "Waiting 5 seconds for installation to complete...")
+                Thread.sleep(5000)
                 
-                // Then launch the app
+                // Launch using a different intent command
                 Log.d("APK_INSTALL", "Attempting to launch app...")
-                executeCommand(listOf("am start -n $packageName/$packageName.MainActivity"), result)
+                executeCommand(listOf(
+                    "am start -n $packageName/$packageName.MainActivity",
+                    "am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n $packageName/$packageName.MainActivity"
+                ), result)
                 
                 Log.d("APK_INSTALL", "Installation and launch process completed")
             } catch (e: Exception) {
