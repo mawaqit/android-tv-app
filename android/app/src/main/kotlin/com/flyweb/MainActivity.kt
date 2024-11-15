@@ -87,18 +87,15 @@ class MainActivity : FlutterActivity() {
 
                 val packageName = "com.mawaqit.androidtv"
 
-                // Create a script that waits for package replaced broadcast
+                // Create a script that uses am broadcast to detect package changes
                 val scriptContent = """
                     #!/system/bin/sh
-                    while true; do
-                        if dumpsys package $packageName | grep -q "Package \\[$packageName\\] (.*):"; then
-                            sleep 3
-                            am force-stop $packageName
-                            am start -n $packageName/$packageName.MainActivity
-                            exit 0
-                        fi
-                        sleep 1
-                    done
+                    # Wait for package manager to finish
+                    sleep 15
+                    # Force stop and start
+                    am force-stop $packageName
+                    sleep 2
+                    am start -n $packageName/$packageName.MainActivity
                 """.trimIndent()
 
                 // Write launch script to a temporary file
@@ -106,7 +103,7 @@ class MainActivity : FlutterActivity() {
                 scriptFile.writeText(scriptContent)
                 scriptFile.setExecutable(true)
 
-                // Start the monitoring script in background
+                // Execute the installation and launch script
                 executeCommands(listOf(
                     "nohup sh ${scriptFile.absolutePath} >/dev/null 2>&1 &",
                     "pm install -r -d $filePath"
