@@ -60,62 +60,63 @@ class MainActivity : FlutterActivity() {
                         result.success(isSuccess)
                     }
 "installApk" -> {
-  val filePath = call.argument<String>("filePath")
+    val filePath = call.argument<String>("filePath")
     if (filePath == null) {
         Log.e("APK_INSTALL", "File path is null")
         result.error("INVALID_PATH", "File path is null", null)
-        return
-    }
-
-    AsyncTask.execute {
-        try {
-            Log.d("APK_INSTALL", "Starting installation process...")
-            Log.d("APK_INSTALL", "File path: $filePath")
-
-            // Check if file exists
-            val file = java.io.File(filePath)
-            if (!file.exists()) {
-                Log.e("APK_INSTALL", "APK file not found at path: $filePath")
-                result.error("FILE_NOT_FOUND", "APK file not found", null)
-                return@execute
-            }
-
-            // Check if device is rooted
-            if (!checkRoot()) {
-                Log.e("APK_INSTALL", "Device is not rooted")
-                result.error("NOT_ROOTED", "Device is not rooted", null)
-                return@execute
-            }
-
-            val packageName = "com.mawaqit.androidtv"
-
-            // Install the APK first
-            val installSuccess = executeCommands(listOf("pm install -r -d $filePath"))
-            if (!installSuccess) {
-                result.error("INSTALL_FAILED", "Failed to install APK", null)
-                return@execute
-            }
-
-            // Create a delayed launch using root
-            val launchCommand = """
-                sleep 5
-                am force-stop $packageName
-                am start -n $packageName/$packageName.MainActivity
-            """.trimIndent()
-
-            // Execute the launch command in background
-            executeCommands(listOf("nohup sh -c '$launchCommand' >/dev/null 2>&1 &"))
-            
-            // Send success result before the process gets killed
-            result.success(true)
-
-        } catch (e: Exception) {
-            Log.e("APK_INSTALL", "Failed to install APK", e)
+    } else {
+        AsyncTask.execute {
             try {
-                result.error("INSTALL_FAILED", e.message, null)
-            } catch (e: IllegalStateException) {
-                // Ignore if result was already submitted
-                Log.e("APK_INSTALL", "Result already submitted", e)
+                Log.d("APK_INSTALL", "Starting installation process...")
+                Log.d("APK_INSTALL", "File path: $filePath")
+
+                // Check if file exists
+                val file = java.io.File(filePath)
+                if (!file.exists()) {
+                    Log.e("APK_INSTALL", "APK file not found at path: $filePath")
+                    result.error("FILE_NOT_FOUND", "APK file not found", null)
+                    return@execute
+                }
+
+                // Check if device is rooted
+                if (!checkRoot()) {
+                    Log.e("APK_INSTALL", "Device is not rooted")
+                    result.error("NOT_ROOTED", "Device is not rooted", null)
+                    return@execute
+                }
+
+                val packageName = "com.mawaqit.androidtv"
+
+                // Create a script file for post-install launch
+                val scriptContent = """
+                    #!/system/bin/sh
+                    sleep 5
+                    am force-stop $packageName
+                    am start -n $packageName/$packageName.MainActivity
+                """.trimIndent()
+
+                // Write launch script to a temporary file
+                val scriptFile = File(context.cacheDir, "launch_script.sh")
+                scriptFile.writeText(scriptContent)
+                scriptFile.setExecutable(true)
+
+                // Schedule the launch script to run after installation
+                executeCommands(listOf(
+                    "nohup sh -c '${scriptFile.absolutePath}' >/dev/null 2>&1 &",
+                    "pm install -r -d $filePath"
+                ))
+
+                // Send success result
+                result.success(true)
+
+            } catch (e: Exception) {
+                Log.e("APK_INSTALL", "Failed to install APK", e)
+                try {
+                    result.error("INSTALL_FAILED", e.message, null)
+                } catch (e: IllegalStateException) {
+                    // Ignore if result was already submitted
+                    Log.e("APK_INSTALL", "Result already submitted", e)
+                }
             }
         }
     }
