@@ -87,12 +87,18 @@ class MainActivity : FlutterActivity() {
 
                 val packageName = "com.mawaqit.androidtv"
 
-                // Create a script file for post-install launch
+                // Create a script that waits for package replaced broadcast
                 val scriptContent = """
                     #!/system/bin/sh
-                    sleep 5
-                    am force-stop $packageName
-                    am start -n $packageName/$packageName.MainActivity
+                    while true; do
+                        if dumpsys package $packageName | grep -q "Package \\[$packageName\\] (.*):"; then
+                            sleep 3
+                            am force-stop $packageName
+                            am start -n $packageName/$packageName.MainActivity
+                            exit 0
+                        fi
+                        sleep 1
+                    done
                 """.trimIndent()
 
                 // Write launch script to a temporary file
@@ -100,9 +106,9 @@ class MainActivity : FlutterActivity() {
                 scriptFile.writeText(scriptContent)
                 scriptFile.setExecutable(true)
 
-                // Schedule the launch script to run after installation
+                // Start the monitoring script in background
                 executeCommands(listOf(
-                    "nohup sh -c '${scriptFile.absolutePath}' >/dev/null 2>&1 &",
+                    "nohup sh ${scriptFile.absolutePath} >/dev/null 2>&1 &",
                     "pm install -r -d $filePath"
                 ))
 
