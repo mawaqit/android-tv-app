@@ -59,11 +59,14 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
-           "installApk" -> {
+ "installApk" -> {
     val filePath = call.argument<String>("filePath")
     if (filePath != null) {
         AsyncTask.execute {
             try {
+                Log.d("APK_INSTALL", "Starting installation process...")
+                Log.d("APK_INSTALL", "File path: $filePath")
+
                 // Check if file exists
                 val file = java.io.File(filePath)
                 if (!file.exists()) {
@@ -71,6 +74,7 @@ class MainActivity : FlutterActivity() {
                     result.error("FILE_NOT_FOUND", "APK file not found", null)
                     return@execute
                 }
+                Log.d("APK_INSTALL", "APK file exists")
 
                 // Check if device is rooted
                 if (!checkRoot()) {
@@ -78,19 +82,30 @@ class MainActivity : FlutterActivity() {
                     result.error("NOT_ROOTED", "Device is not rooted", null)
                     return@execute
                 }
+                Log.d("APK_INSTALL", "Device is rooted, proceeding with installation")
 
                 val packageName = "com.mawaqit.androidtv"
-                val commands = listOf(
-                    "pm install -r -d $filePath",
-                    "am start -n $packageName/$packageName.MainActivity"
-                )
-                executeCommand(commands, result)
+                // First install the APK
+                Log.d("APK_INSTALL", "Executing install command...")
+                executeCommand(listOf("pm install -r -d $filePath"), result)
+                
+                // Wait for 2 seconds
+                Log.d("APK_INSTALL", "Waiting 2 seconds before launching...")
+                Thread.sleep(2000)
+                
+                // Then launch the app
+                Log.d("APK_INSTALL", "Attempting to launch app...")
+                executeCommand(listOf("am start -n $packageName/$packageName.MainActivity"), result)
+                
+                Log.d("APK_INSTALL", "Installation and launch process completed")
             } catch (e: Exception) {
                 Log.e("APK_INSTALL", "Failed to install APK", e)
+                Log.e("APK_INSTALL", "Error stack trace: ${e.stackTrace.joinToString("\n")}")
                 result.error("INSTALL_FAILED", e.message, null)
             }
         }
     } else {
+        Log.e("APK_INSTALL", "File path is null")
         result.error("INVALID_PATH", "File path is null", null)
     }
 }
