@@ -65,63 +65,66 @@ class MainActivity : FlutterActivity() {
         Log.e("APK_INSTALL", "File path is null")
         result.error("INVALID_PATH", "File path is null", null)
     } else {
-        AsyncTask.execute {
+        val filePath = call.argument<String>("filePath")
+if (filePath == null) {
+    Log.e("APK_INSTALL", "File path is null")
+    result.error("INVALID_PATH", "File path is null", null)
+} else {
+    AsyncTask.execute {
+        try {
+            Log.d("APK_INSTALL", "Starting installation process...")
+            Log.d("APK_INSTALL", "File path: $filePath")
+
+            val file = java.io.File(filePath)
+            if (!file.exists()) {
+                Log.e("APK_INSTALL", "APK file not found at path: $filePath")
+                result.error("FILE_NOT_FOUND", "APK file not found", null)
+                return@execute
+            }
+
+            if (!checkRoot()) {
+                Log.e("APK_INSTALL", "Device is not rooted")
+                result.error("NOT_ROOTED", "Device is not rooted", null)
+                return@execute
+            }
+
+            val packageName = "com.mawaqit.androidtv"
+
+            // Modified script to wait for package installation to complete
+            val scriptContent = """
+                #!/system/bin/sh
+                # Wait for package to be fully installed and ready
+                while ! pm path $packageName >/dev/null 2>&1; do
+                    sleep 1
+                done
+                # Additional wait for system to settle
+                sleep 3
+                # Launch the app
+                am start -n $packageName/$packageName.MainActivity
+            """.trimIndent()
+
+            val scriptFile = File(context.cacheDir, "launch_script.sh")
+            scriptFile.writeText(scriptContent)
+            scriptFile.setExecutable(true)
+
+            // Launch the script first, then install
+            executeCommands(listOf(
+                "nohup sh ${scriptFile.absolutePath} >/dev/null 2>&1 &",
+                "pm install -r -d $filePath"
+            ))
+
+            result.success(true)
+
+        } catch (e: Exception) {
+            Log.e("APK_INSTALL", "Failed to install APK", e)
             try {
-                Log.d("APK_INSTALL", "Starting installation process...")
-                Log.d("APK_INSTALL", "File path: $filePath")
-
-                // Check if file exists
-                val file = java.io.File(filePath)
-                if (!file.exists()) {
-                    Log.e("APK_INSTALL", "APK file not found at path: $filePath")
-                    result.error("FILE_NOT_FOUND", "APK file not found", null)
-                    return@execute
-                }
-
-                // Check if device is rooted
-                if (!checkRoot()) {
-                    Log.e("APK_INSTALL", "Device is not rooted")
-                    result.error("NOT_ROOTED", "Device is not rooted", null)
-                    return@execute
-                }
-
-                val packageName = "com.mawaqit.androidtv"
-
-                // Create a script that uses am broadcast to detect package changes
-                val scriptContent = """
-                    #!/system/bin/sh
-                    # Wait for package manager to finish
-                    sleep 15
-                    # Force stop and start
-                    am force-stop $packageName
-                    sleep 2
-                    am start -n $packageName/$packageName.MainActivity
-                """.trimIndent()
-
-                // Write launch script to a temporary file
-                val scriptFile = File(context.cacheDir, "launch_script.sh")
-                scriptFile.writeText(scriptContent)
-                scriptFile.setExecutable(true)
-
-                // Execute the installation and launch script
-                executeCommands(listOf(
-                    "nohup sh ${scriptFile.absolutePath} >/dev/null 2>&1 &",
-                    "pm install -r -d $filePath"
-                ))
-
-                // Send success result
-                result.success(true)
-
-            } catch (e: Exception) {
-                Log.e("APK_INSTALL", "Failed to install APK", e)
-                try {
-                    result.error("INSTALL_FAILED", e.message, null)
-                } catch (e: IllegalStateException) {
-                    // Ignore if result was already submitted
-                    Log.e("APK_INSTALL", "Result already submitted", e)
-                }
+                result.error("INSTALL_FAILED", e.message, null)
+            } catch (e: IllegalStateException) {
+                Log.e("APK_INSTALL", "Result already submitted", e)
             }
         }
+    }
+}
     }
 }
                     else -> result.notImplemented()
