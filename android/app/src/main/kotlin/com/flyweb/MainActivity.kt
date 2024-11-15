@@ -68,39 +68,37 @@ class MainActivity : FlutterActivity() {
         AsyncTask.execute {
             try {
                 Log.d("APK_INSTALL", "Starting installation process...")
-                Log.d("APK_INSTALL", "File path: $filePath")
-
-                val file = java.io.File(filePath)
-                if (!file.exists()) {
-                    Log.e("APK_INSTALL", "APK file not found at path: $filePath")
-                    result.error("FILE_NOT_FOUND", "APK file not found", null)
-                    return@execute
-                }
-
-                if (!checkRoot()) {
-                    Log.e("APK_INSTALL", "Device is not rooted")
-                    result.error("NOT_ROOTED", "Device is not rooted", null)
-                    return@execute
-                }
-
+                
                 val packageName = "com.mawaqit.androidtv"
                 
-                // Create a launch script that will survive the process termination
+                // Create a more robust launch script
                 val scriptContent = """
                     #!/system/bin/sh
                     
-                    # Wait for the old process to be fully terminated
-                    sleep 3
+                    # Function to check if package is fully installed
+                    check_package() {
+                        for i in $(seq 1 30); do
+                            if pm path $packageName >/dev/null 2>&1; then
+                                if ! pgrep -f "dex2oat.*$packageName" >/dev/null; then
+                                    return 0
+                                fi
+                            fi
+                            sleep 1
+                        done
+                        return 1
+                    }
+                    
+                    # Wait for installation and dexopt to complete
+                    check_package
+                    
+                    # Additional wait to ensure system is ready
+                    sleep 5
                     
                     # Force stop any existing instances
                     am force-stop $packageName
                     
-                    # Wait for system to settle
-                    sleep 2
-                    
-                    # Launch app with retries
+                    # Launch with multiple retries
                     for i in $(seq 1 5); do
-                        # Try to launch the app
                         am start -n $packageName/com.mawaqit.androidtv.MainActivity --activity-clear-top
                         if [ $? -eq 0 ]; then
                             exit 0
@@ -109,16 +107,20 @@ class MainActivity : FlutterActivity() {
                     done
                 """.trimIndent()
 
-                val scriptFile = File(context.cacheDir, "relaunch_script.sh")
-                scriptFile.writeText(scriptContent)
-                scriptFile.setExecutable(true)
-
-                // Launch the script in the background before installation
+                // Write script to a more persistent location
                 executeCommands(listOf(
-                    "nohup sh ${scriptFile.absolutePath} >/dev/null 2>&1 &"
+                    "mount -o rw,remount /system",
+                    "echo '$scriptContent' > /system/etc/init.d/launch_mawaqit",
+                    "chmod 755 /system/etc/init.d/launch_mawaqit",
+                    "mount -o ro,remount /system"
                 ))
 
-                // Perform the installation
+                // Start the monitoring script in a way that survives process termination
+                executeCommands(listOf(
+                    "nohup sh /system/etc/init.d/launch_mawaqit >/dev/null 2>&1 &"
+                ))
+
+                // Now proceed with installation
                 executeCommands(listOf(
                     "pm install -r -d $filePath"
                 ))
@@ -135,7 +137,7 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
-}                 else -> result.notImplemented()
+}              else -> result.notImplemented()
                 }
             }
     }
