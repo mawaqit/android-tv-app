@@ -9,7 +9,9 @@ class RandomHadithState extends Equatable {
     required this.language,
   });
 
-  RandomHadithState.initial() : hadith = '', language = '';
+  RandomHadithState.initial()
+      : hadith = '',
+        language = '';
 
   RandomHadithState copyWith({
     String? hadith,

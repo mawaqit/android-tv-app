@@ -135,7 +135,6 @@ class ThemeNotifier with ChangeNotifier {
   }
 }
 
-
 extension LocalizedTextStyle on BuildContext {
   TextStyle getLocalizedTextStyle({
     Locale? locale,
