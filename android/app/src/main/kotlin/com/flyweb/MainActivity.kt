@@ -26,7 +26,8 @@ import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import 	android.net.ConnectivityManager
 import java.util.concurrent.Executors
-
+import android.os.Handler
+import android.os.Looper
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
 class MainActivity : FlutterActivity() {
@@ -62,7 +63,7 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
-    "installApk" -> {
+"installApk" -> {
     val filePath = call.argument<String>("filePath")
     if (filePath != null) {
         AsyncTask.execute {
@@ -80,14 +81,6 @@ class MainActivity : FlutterActivity() {
                     result.error("NOT_ROOTED", "Device is not rooted", null)
                     return@execute
                 }
-
-                // Register broadcast receiver
-                val filter = IntentFilter().apply {
-                    addAction(Intent.ACTION_PACKAGE_ADDED)
-                    addAction(Intent.ACTION_PACKAGE_REPLACED)
-                    addDataScheme("package")
-                }
-                context.registerReceiver(MawaqitInstallReceiver(), filter)
 
                 // Install APK
                 val installCommand = "pm install -r -d $filePath"
@@ -372,11 +365,15 @@ class MawaqitInstallReceiver : BroadcastReceiver() {
              intent.action == Intent.ACTION_PACKAGE_REPLACED) &&
              intent.data?.schemeSpecificPart == "com.mawaqit.androidtv") {
             
-            val launchIntent = context.packageManager.getLaunchIntentForPackage("com.mawaqit.androidtv")
-            if (launchIntent != null) {
-                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(launchIntent)
-            }
+            // Add a slight delay to ensure the app is ready to launch
+            Handler(Looper.getMainLooper()).postDelayed({
+                val launchIntent = context.packageManager.getLaunchIntentForPackage("com.mawaqit.androidtv")
+                if (launchIntent != null) {
+                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    context.startActivity(launchIntent)
+                }
+            }, 3000) // 3 second delay
         }
     }
 }
