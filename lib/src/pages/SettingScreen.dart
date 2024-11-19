@@ -72,8 +72,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     final userPreferences = context.watch<UserPreferencesManager>();
     final themeManager = context.watch<ThemeNotifier>();
     final String checkInternet = S.of(context).noInternet;
-    final String checkInternetLegacyMode =
-        S.of(context).checkInternetLegacyMode;
+    final String checkInternetLegacyMode = S.of(context).checkInternetLegacyMode;
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
@@ -90,14 +89,12 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(updateState.value?.message ??
-                        S.of(context).wouldYouLikeToUpdate),
+                    Text(updateState.value?.message ?? S.of(context).wouldYouLikeToUpdate),
                     if (updateState.value?.progress != null) ...[
                       const SizedBox(height: 16),
                       LinearProgressIndicator(
                         value: updateState.value?.progress,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.background,
+                        backgroundColor: Theme.of(context).colorScheme.background,
                         valueColor: AlwaysStoppedAnimation<Color>(
                           Theme.of(context).colorScheme.primary,
                         ),
@@ -112,17 +109,24 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 ),
                 actions: [
                   TextButton(
-                    onPressed: () => {
-                      ref.read(manualUpdateNotifierProvider.notifier).cancelUpdate(),
-                      Navigator.pop(context)
-                    },
+                    onPressed: () =>
+                        {ref.read(manualUpdateNotifierProvider.notifier).cancelUpdate(), Navigator.pop(context)},
                     child: Text(S.of(context).cancel),
                   ),
                   TextButton(
                     onPressed: () {
-                      ref
-                          .read(manualUpdateNotifierProvider.notifier)
-                          .downloadAndInstallUpdate();
+                      final isDeviceRooted = ref.read(onBoardingProvider).maybeWhen(
+                            orElse: () => false,
+                            data: (value) => value.isRootedDevice,
+                          );
+
+                      if (isDeviceRooted) {
+                        // For rooted devices, use direct APK installation
+                        ref.read(manualUpdateNotifierProvider.notifier).downloadAndInstallUpdate();
+                      } else {
+                        ref.read(appUpdateProvider.notifier).openStore();
+                        Navigator.pop(context);
+                      }
                     },
                     child: Text(S.of(context).update),
                   ),
@@ -193,15 +197,12 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                           isIconActivated: true,
                           title: S.of(context).randomHadithLanguage,
                           description: S.of(context).descLang,
-                          languages:
-                              appLanguage.hadithLocalizedLanguage.keys.toList(),
+                          languages: appLanguage.hadithLocalizedLanguage.keys.toList(),
                           isSelected: (langCode) {
                             return appLanguage.hadithLanguage == langCode;
                           },
                           onSelect: (langCode) async {
-                            await ref
-                                .read(connectivityProvider.notifier)
-                                .checkInternetConnection();
+                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
                             ref.watch(connectivityProvider).maybeWhen(
                               orElse: () {
                                 showCheckInternetDialog(
@@ -214,8 +215,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                                 );
                               },
                               data: (isConnectedToInternet) {
-                                if (isConnectedToInternet ==
-                                    ConnectivityStatus.disconnected) {
+                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
                                   showCheckInternetDialog(
                                     context: context,
                                     onRetry: () {
@@ -225,13 +225,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                                     content: hadithLanguage,
                                   );
                                 } else {
-                                  context
-                                      .read<AppLanguage>()
-                                      .setHadithLanguage(langCode);
-                                  ref
-                                      .read(
-                                          randomHadithNotifierProvider.notifier)
-                                      .setHadithLanguage(langCode);
+                                  context.read<AppLanguage>().setHadithLanguage(langCode);
+                                  ref.read(randomHadithNotifierProvider.notifier).setHadithLanguage(langCode);
                                   AppRouter.pop();
                                 }
                               },
@@ -249,9 +244,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         icon: Icon(Icons.update, size: 35),
                         onChanged: (value) {
                           logger.d('setting: disable the update $value');
-                          ref
-                              .read(appUpdateProvider.notifier)
-                              .toggleAutoUpdateChecking();
+                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
                         },
                         value: ref.watch(appUpdateProvider).maybeWhen(
                               orElse: () => false,
@@ -269,9 +262,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     textAlign: TextAlign.center,
                   ),
                   _SettingSwitchItem(
-                    title: theme.brightness == Brightness.light
-                        ? S.of(context).darkMode
-                        : S.of(context).lightMode,
+                    title: theme.brightness == Brightness.light ? S.of(context).darkMode : S.of(context).lightMode,
                     icon: Icon(Icons.brightness_4, size: 35),
                     onChanged: (value) => themeManager.toggleMode(),
                     value: themeManager.isLightTheme ?? false,
@@ -310,30 +301,23 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       subtitle: S.of(context).announcementOnlyModeEXPLINATION,
                       icon: Icon(Icons.notifications, size: 35),
                       value: userPreferences.announcementsOnly,
-                      onChanged: (value) =>
-                          userPreferences.announcementsOnly = value,
+                      onChanged: (value) => userPreferences.announcementsOnly = value,
                     ),
-                  if (!userPreferences.webViewMode &&
-                      !userPreferences.announcementsOnly)
+                  if (!userPreferences.webViewMode && !userPreferences.announcementsOnly)
                     _SettingSwitchItem(
                       title: S.of(context).secondaryScreen,
                       subtitle: S.of(context).secondaryScreenExplanation,
                       value: userPreferences.isSecondaryScreen,
                       icon: Icon(Icons.monitor, size: 35),
-                      onChanged: (value) =>
-                          userPreferences.isSecondaryScreen = value,
+                      onChanged: (value) => userPreferences.isSecondaryScreen = value,
                     ),
                   _SettingSwitchItem(
                     title: S.of(context).webView,
-                    subtitle: S
-                        .of(context)
-                        .ifYouAreFacingAnIssueWithTheAppActivateThis,
+                    subtitle: S.of(context).ifYouAreFacingAnIssueWithTheAppActivateThis,
                     icon: Icon(Icons.online_prediction, size: 35),
                     value: userPreferences.webViewMode,
                     onChanged: (value) async {
-                      await ref
-                          .read(connectivityProvider.notifier)
-                          .checkInternetConnection();
+                      await ref.read(connectivityProvider.notifier).checkInternetConnection();
                       ref.watch(connectivityProvider).maybeWhen(
                         orElse: () {
                           showCheckInternetDialog(
@@ -346,8 +330,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                           );
                         },
                         data: (isConnectedToInternet) {
-                          if (isConnectedToInternet ==
-                              ConnectivityStatus.disconnected) {
+                          if (isConnectedToInternet == ConnectivityStatus.disconnected) {
                             showCheckInternetDialog(
                               context: context,
                               onRetry: () {
@@ -371,9 +354,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     onTap: () async {
                       var softwareFuture = await PackageInfo.fromPlatform();
 
-                      ref
-                          .read(manualUpdateNotifierProvider.notifier)
-                          .checkForUpdates(softwareFuture.version);
+                      ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(softwareFuture.version);
                     },
                   ),
                 ],
@@ -460,10 +441,7 @@ class _SettingItem extends StatelessWidget {
         trailing: Icon(Icons.arrow_forward_ios),
         title: Text(title),
         subtitle: subtitle != null
-            ? Text(subtitle!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 10))
+            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 10))
             : null,
         onTap: onTap,
       ),
@@ -497,9 +475,7 @@ class _SettingSwitchItem extends StatelessWidget {
         autofocus: true,
         secondary: icon ?? SizedBox(),
         title: Text(title),
-        subtitle: subtitle != null
-            ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip)
-            : null,
+        subtitle: subtitle != null ? Text(subtitle!, maxLines: 2, overflow: TextOverflow.clip) : null,
         value: value,
         onChanged: onChanged,
       ),
