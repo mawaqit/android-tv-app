@@ -77,14 +77,14 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
-    ref.listen(updateNotifierProvider, (previous, next) {
+    ref.listen(manualUpdateNotifierProvider, (previous, next) {
       if (next.value?.status == UpdateStatus.available) {
         showDialog(
           context: context,
           barrierDismissible: false,
           builder: (context) => Consumer(
             builder: (context, ref, child) {
-              final updateState = ref.watch(updateNotifierProvider);
+              final updateState = ref.watch(manualUpdateNotifierProvider);
               return AlertDialog(
                 title: Text(S.of(context).updateAvailable),
                 content: Column(
@@ -113,7 +113,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 actions: [
                   TextButton(
                     onPressed: () => {
-                      ref.read(updateNotifierProvider.notifier).cancelUpdate(),
+                      ref.read(manualUpdateNotifierProvider.notifier).cancelUpdate(),
                       Navigator.pop(context)
                     },
                     child: Text(S.of(context).cancel),
@@ -121,7 +121,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   TextButton(
                     onPressed: () {
                       ref
-                          .read(updateNotifierProvider.notifier)
+                          .read(manualUpdateNotifierProvider.notifier)
                           .downloadAndInstallUpdate();
                     },
                     child: Text(S.of(context).update),
@@ -372,7 +372,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       var softwareFuture = await PackageInfo.fromPlatform();
 
                       ref
-                          .read(updateNotifierProvider.notifier)
+                          .read(manualUpdateNotifierProvider.notifier)
                           .checkForUpdates(softwareFuture.version);
                     },
                   ),
