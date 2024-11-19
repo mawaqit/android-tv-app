@@ -61,83 +61,9 @@ class MainActivity : FlutterActivity() {
                     }
 "installApk" -> {
     val filePath = call.argument<String>("filePath")
-    if (filePath == null) {
-        Log.e("APK_INSTALL", "File path is null")
-        result.error("INVALID_PATH", "File path is null", null)
-    } else {
-        AsyncTask.execute {
-            try {
-                Log.d("APK_INSTALL", "Starting installation process...")
-                
-                val packageName = "com.mawaqit.androidtv"
-                
-                // Create a more robust launch script
-                val scriptContent = """
-                    #!/system/bin/sh
-                    
-                    # Function to check if package is fully installed
-                    check_package() {
-                        for i in $(seq 1 30); do
-                            if pm path $packageName >/dev/null 2>&1; then
-                                if ! pgrep -f "dex2oat.*$packageName" >/dev/null; then
-                                    return 0
-                                fi
-                            fi
-                            sleep 1
-                        done
-                        return 1
-                    }
-                    
-                    # Wait for installation and dexopt to complete
-                    check_package
-                    
-                    # Additional wait to ensure system is ready
-                    sleep 5
-                    
-                    # Force stop any existing instances
-                    am force-stop $packageName
-                    
-                    # Launch with multiple retries
-                    for i in $(seq 1 5); do
-                        am start -n $packageName/com.mawaqit.androidtv.MainActivity --activity-clear-top
-                        if [ $? -eq 0 ]; then
-                            exit 0
-                        fi
-                        sleep 2
-                    done
-                """.trimIndent()
-
-                // Write script to a more persistent location
-                executeCommands(listOf(
-                    "mount -o rw,remount /system",
-                    "echo '$scriptContent' > /system/etc/init.d/launch_mawaqit",
-                    "chmod 755 /system/etc/init.d/launch_mawaqit",
-                    "mount -o ro,remount /system"
-                ))
-
-                // Start the monitoring script in a way that survives process termination
-                executeCommands(listOf(
-                    "nohup sh /system/etc/init.d/launch_mawaqit >/dev/null 2>&1 &"
-                ))
-
-                // Now proceed with installation
-                executeCommands(listOf(
-                    "pm install -r -d $filePath"
-                ))
-
-                result.success(true)
-
-            } catch (e: Exception) {
-                Log.e("APK_INSTALL", "Failed to install APK", e)
-                try {
-                    result.error("INSTALL_FAILED", e.message, null)
-                } catch (e: IllegalStateException) {
-                    Log.e("APK_INSTALL", "Result already submitted", e)
-                }
-            }
-        }
-    }
-}              else -> result.notImplemented()
+    val handler = ApkInstallHandler(context)
+    handler.installAndLaunchApk(filePath, result)
+}             else -> result.notImplemented()
                 }
             }
     }
@@ -418,3 +344,120 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
     }
 }
 
+class ApkInstallHandler(private val context: Context) {
+    private val packageName = "com.mawaqit.androidtv"
+    private val launchScriptPath = "/data/local/tmp/launch_mawaqit.sh"
+
+    fun installAndLaunchApk(filePath: String, result: Result) {
+        if (filePath.isNullOrEmpty()) {
+            Log.e("APK_INSTALL", "File path is null")
+            result.error("INVALID_PATH", "File path is null", null)
+            return
+        }
+
+        // Create installation monitor script before starting installation
+        createLaunchScript()
+        
+        // Start a background service to handle post-install launch
+        startMonitorService()
+        
+        // Proceed with installation in background
+        AsyncTask.execute {
+            try {
+                // Start monitoring service first
+                val serviceIntent = Intent(context, InstallMonitorService::class.java)
+                context.startService(serviceIntent)
+                
+                // Perform installation
+                val installResult = installApk(filePath)
+                
+                result.success(installResult)
+            } catch (e: Exception) {
+                Log.e("APK_INSTALL", "Failed to install APK", e)
+                result.error("INSTALL_FAILED", e.message, null)
+            }
+        }
+    }
+
+    private fun createLaunchScript() {
+        val scriptContent = """
+            #!/system/bin/sh
+            
+            PACKAGE="$packageName"
+            MAX_ATTEMPTS=30
+            
+            # Function to check if package is installed and not being optimized
+            check_package() {
+                for i in $(seq 1 $MAX_ATTEMPTS); do
+                    if pm path $PACKAGE >/dev/null 2>&1; then
+                        if ! pgrep -f "dex2oat.*$PACKAGE" >/dev/null; then
+                            return 0
+                        fi
+                    fi
+                    sleep 1
+                done
+                return 1
+            }
+            
+            # Wait for installation to complete
+            check_package
+            
+            # Additional wait for system stability
+            sleep 3
+            
+            # Force stop any existing instances
+            am force-stop $PACKAGE
+            
+            # Launch with retries
+            for i in $(seq 1 5); do
+                am start -n $PACKAGE/com.mawaqit.androidtv.MainActivity --activity-clear-top
+                if [ $? -eq 0 ]; then
+                    exit 0
+                fi
+                sleep 2
+            done
+        """.trimIndent()
+
+        try {
+            context.openFileOutput("launch_script.sh", Context.MODE_PRIVATE).use { 
+                it.write(scriptContent.toByteArray())
+            }
+            Runtime.getRuntime().exec("chmod 755 ${context.getFileStreamPath("launch_script.sh")}")
+        } catch (e: Exception) {
+            Log.e("APK_INSTALL", "Failed to create launch script", e)
+        }
+    }
+
+    private fun installApk(filePath: String): Boolean {
+        return try {
+            val command = "pm install -r -d $filePath"
+            val process = Runtime.getRuntime().exec(command)
+            process.waitFor() == 0
+        } catch (e: Exception) {
+            Log.e("APK_INSTALL", "Installation failed", e)
+            false
+        }
+    }
+}
+
+// Service to monitor installation and launch app
+class InstallMonitorService : Service() {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Run on a separate thread to avoid ANR
+        Thread {
+            try {
+                // Execute the launch script
+                val scriptPath = context.getFileStreamPath("launch_script.sh").absolutePath
+                Runtime.getRuntime().exec("sh $scriptPath")
+            } catch (e: Exception) {
+                Log.e("MONITOR_SERVICE", "Failed to execute launch script", e)
+            } finally {
+                stopSelf()
+            }
+        }.start()
+
+        return START_NOT_STICKY
+    }
+
+    override fun onBind(intent: Intent?): IBinder? = null
+}
