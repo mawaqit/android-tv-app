@@ -27,6 +27,8 @@ import android.net.wifi.WifiManager
 import 	android.net.ConnectivityManager
 import java.util.concurrent.Executors
 
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 class MainActivity : FlutterActivity() {
     private lateinit var mAdminComponentName: ComponentName
     private lateinit var mDevicePolicyManager: DevicePolicyManager
@@ -60,32 +62,52 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
-  "installApk" -> installApk(call, result)
+    "installApk" -> {
+    val filePath = call.argument<String>("filePath")
+    if (filePath != null) {
+        AsyncTask.execute {
+            try {
+                // Check if file exists
+                val file = java.io.File(filePath)
+                if (!file.exists()) {
+                    Log.e("APK_INSTALL", "APK file not found at path: $filePath")
+                    result.error("FILE_NOT_FOUND", "APK file not found", null)
+                    return@execute
+                }
+                // Check if device is rooted
+                if (!checkRoot()) {
+                    Log.e("APK_INSTALL", "Device is not rooted")
+                    result.error("NOT_ROOTED", "Device is not rooted", null)
+                    return@execute
+                }
+
+                // Register broadcast receiver
+                val filter = IntentFilter().apply {
+                    addAction(Intent.ACTION_PACKAGE_ADDED)
+                    addAction(Intent.ACTION_PACKAGE_REPLACED)
+                    addDataScheme("package")
+                }
+                context.registerReceiver(MawaqitInstallReceiver(), filter)
+
+                // Install APK
+                val installCommand = "pm install -r -d $filePath"
+                executeCommand(listOf(installCommand), result)
+                
+                result.success("Installation initiated")
+            } catch (e: Exception) {
+                Log.e("APK_INSTALL", "Failed to install APK", e)
+                result.error("INSTALL_FAILED", e.message, null)
+            }
+        }
+    } else {
+        result.error("INVALID_PATH", "File path is null", null)
+    }
+}
         else -> result.notImplemented()
                 }
             }
     }
-private fun executeCommands(commands: List<String>): Boolean {
-    return try {
-        val process = Runtime.getRuntime().exec("su")
-        val outputStream = DataOutputStream(process.outputStream)
-        
-        for (command in commands) {
-            Log.d("SU_COMMAND", "Executing command: $command")
-            outputStream.writeBytes("$command\n")
-        }
-        
-        outputStream.writeBytes("exit\n")
-        outputStream.flush()
-        outputStream.close()
-        
-        val exitCode = process.waitFor()
-        exitCode == 0
-    } catch (e: Exception) {
-        Log.e("SU_COMMAND", "Error executing command", e)
-        false
-    }
-}
+
     private fun checkRoot(): Boolean {
         return try {
             val p = Runtime.getRuntime().exec("su")
@@ -148,61 +170,7 @@ private fun executeCommands(commands: List<String>): Boolean {
         }
     }
 
-private fun installApk(call: MethodCall, result: MethodChannel.Result) {
-    val filePath = call.argument<String>("filePath")
-    val packageName = "com.mawaqit.androidtv"
-    
-    if (filePath == null || packageName == null) {
-        result.error("INVALID_INPUT", "File path or package name is null", null)
-        return
-    }
 
-    Executors.newSingleThreadExecutor().execute {
-        try {
-            // Detailed installation command with more verbose output
-            val installCommand = "pm install -r -d \"$filePath\""
-            val process = Runtime.getRuntime().exec(installCommand)
-            
-            // Read the error stream to get more details about installation failure
-            val errorStream = process.errorStream.bufferedReader().use { it.readText() }
-            val inputStream = process.inputStream.bufferedReader().use { it.readText() }
-            
-            val exitCode = process.waitFor()
-            
-            Log.d("APK_INSTALL", "Install Command: $installCommand")
-            Log.d("APK_INSTALL", "Exit Code: $exitCode")
-            Log.d("APK_INSTALL", "Error Stream: $errorStream")
-            Log.d("APK_INSTALL", "Input Stream: $inputStream")
-
-            runOnUiThread {
-                if (exitCode == 0) {
-                    val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
-                    if (launchIntent != null) {
-                        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(launchIntent)
-                        result.success(true)
-                    } else {
-                        result.error("LAUNCH_FAILED", "Could not find launch intent", null)
-                    }
-                } else {
-                    result.error(
-                        "INSTALL_FAILED", 
-                        "APK installation failed. Exit Code: $exitCode", 
-                        "Error: $errorStream"
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            runOnUiThread {
-                result.error(
-                    "INSTALL_ERROR", 
-                    "Installation process failed: ${e.message}", 
-                    e.stackTraceToString()
-                )
-            }
-        }
-    }
-}
     private fun connectToWifi(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {
@@ -327,6 +295,7 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
             }
         }
     }
+
     private fun sendDownArrowEvent(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {
@@ -397,3 +366,17 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
     }
 }
 
+class MawaqitInstallReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        if ((intent.action == Intent.ACTION_PACKAGE_ADDED || 
+             intent.action == Intent.ACTION_PACKAGE_REPLACED) &&
+             intent.data?.schemeSpecificPart == "com.mawaqit.androidtv") {
+            
+            val launchIntent = context.packageManager.getLaunchIntentForPackage("com.mawaqit.androidtv")
+            if (launchIntent != null) {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(launchIntent)
+            }
+        }
+    }
+}
