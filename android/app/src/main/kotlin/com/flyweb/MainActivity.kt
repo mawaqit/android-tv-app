@@ -84,7 +84,7 @@ class MainActivity : FlutterActivity() {
 
     
 
-                executeCommand(listOf("pm install -r -d $filePath","am start -W -n com.mawaqit.androidtv/.MainActivity"), result)
+                executeCommand(listOf("pm install -r -d $filePath"), result)
                 
                 result.success("Installation initiated")
             } catch (e: Exception) {
