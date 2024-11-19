@@ -96,3 +96,23 @@ abstract class SystemFeaturesConstant {
   static const String kHdmi = 'android.hardware.hdmi';
   static const String kEthernet = 'android.hardware.ethernet';
 }
+
+abstract class AppUpdateConstant {
+  // SharedPreferences keys
+  static const String kLastUpdateCheck = 'last_update_check';
+  static const String kCurrentVersion = 'current_version';
+
+  // GitHub API
+  static const String kGitHubApiBaseUrl = 'https://api.github.com/';
+  static const String kGitHubRepoEndpoint = 'repos/mawaqit/android-tv-app/releases';
+  static const String kGitHubApiAcceptHeader = 'application/vnd.github.v3+json';
+
+  // File paths
+  static const String kUpdateFileName = 'update.apk';
+
+  // Update check intervals
+  static const Duration kUpdateCheckInterval = Duration(hours: 24);
+
+  // HTTP Headers
+  static const String kAcceptHeader = 'Accept';
+}
