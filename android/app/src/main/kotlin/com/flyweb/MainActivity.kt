@@ -26,15 +26,10 @@ import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import 	android.net.ConnectivityManager
 import java.util.concurrent.Executors
-import android.os.Handler
 import android.os.Looper
+import android.os.Handler
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
-import android.app.Service
-import android.os.IBinder
-import android.os.Build
-
-
 class MainActivity : FlutterActivity() {
     private lateinit var mAdminComponentName: ComponentName
     private lateinit var mDevicePolicyManager: DevicePolicyManager
@@ -73,21 +68,35 @@ class MainActivity : FlutterActivity() {
     if (filePath != null) {
         AsyncTask.execute {
             try {
+                // Check if file exists
                 val file = java.io.File(filePath)
                 if (!file.exists()) {
                     Log.e("APK_INSTALL", "APK file not found at path: $filePath")
                     result.error("FILE_NOT_FOUND", "APK file not found", null)
                     return@execute
                 }
+                // Check if device is rooted
                 if (!checkRoot()) {
                     Log.e("APK_INSTALL", "Device is not rooted")
                     result.error("NOT_ROOTED", "Device is not rooted", null)
                     return@execute
                 }
 
-                // Install APK
-                val installCommand = "pm install -r -d $filePath"
-                executeCommand(listOf(installCommand), result)
+                // Create restart script
+                val packageName = context.packageName
+                val scriptContent = """
+                    #!/system/bin/sh
+                    pm install -r -d $filePath
+                    sleep 2
+                    am start -n $packageName/$packageName.MainActivity
+                """.trimIndent()
+                
+                val scriptFile = File(context.filesDir, "restart.sh")
+                scriptFile.writeText(scriptContent)
+                scriptFile.setExecutable(true)
+
+                // Execute script
+                executeCommand(listOf("su -c 'sh ${scriptFile.absolutePath}'"), result)
                 
                 result.success("Installation initiated")
             } catch (e: Exception) {
@@ -368,29 +377,15 @@ class MawaqitInstallReceiver : BroadcastReceiver() {
              intent.action == Intent.ACTION_PACKAGE_REPLACED) &&
              intent.data?.schemeSpecificPart == "com.mawaqit.androidtv") {
             
-            val serviceIntent = Intent(context, InstallationService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(serviceIntent)
-            } else {
-                context.startService(serviceIntent)
-            }
+            // Add a slight delay to ensure the app is ready to launch
+            Handler(Looper.getMainLooper()).postDelayed({
+                val launchIntent = context.packageManager.getLaunchIntentForPackage("com.mawaqit.androidtv")
+                if (launchIntent != null) {
+                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    context.startActivity(launchIntent)
+                }
+            }, 3000) // 3 second delay
         }
-    }
-}
-class InstallationService : Service() {
-    override fun onBind(intent: Intent?): IBinder? = null
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Handler(Looper.getMainLooper()).postDelayed({
-            val launchIntent = packageManager.getLaunchIntentForPackage("com.mawaqit.androidtv")
-            if (launchIntent != null) {
-                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(launchIntent)
-            }
-            stopSelf()
-        }, 5000) // 5 second delay
-
-        return START_NOT_STICKY
     }
 }
