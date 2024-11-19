@@ -63,7 +63,7 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
-"installApk" -> {
+    "installApk" -> {
     val filePath = call.argument<String>("filePath")
     if (filePath != null) {
         AsyncTask.execute {
@@ -82,21 +82,9 @@ class MainActivity : FlutterActivity() {
                     return@execute
                 }
 
-                // Create restart script
-                val packageName = context.packageName
-                val scriptContent = """
-                    #!/system/bin/sh
-                    pm install -r -d $filePath
-                    sleep 2
-                    am start -n $packageName/$packageName.MainActivity
-                """.trimIndent()
-                
-                val scriptFile = File(context.filesDir, "restart.sh")
-                scriptFile.writeText(scriptContent)
-                scriptFile.setExecutable(true)
+    
 
-                // Execute script
-                executeCommand(listOf("su -c 'sh ${scriptFile.absolutePath}'"), result)
+                executeCommand(listOf("pm install -r -d $filePath","am start -W -n com.mawaqit.androidtv/.MainActivity"), result)
                 
                 result.success("Installation initiated")
             } catch (e: Exception) {
