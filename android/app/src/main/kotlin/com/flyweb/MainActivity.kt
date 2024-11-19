@@ -30,6 +30,11 @@ import android.os.Handler
 import android.os.Looper
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
+import android.app.Service
+import android.os.IBinder
+import android.os.Build
+
+
 class MainActivity : FlutterActivity() {
     private lateinit var mAdminComponentName: ComponentName
     private lateinit var mDevicePolicyManager: DevicePolicyManager
@@ -68,14 +73,12 @@ class MainActivity : FlutterActivity() {
     if (filePath != null) {
         AsyncTask.execute {
             try {
-                // Check if file exists
                 val file = java.io.File(filePath)
                 if (!file.exists()) {
                     Log.e("APK_INSTALL", "APK file not found at path: $filePath")
                     result.error("FILE_NOT_FOUND", "APK file not found", null)
                     return@execute
                 }
-                // Check if device is rooted
                 if (!checkRoot()) {
                     Log.e("APK_INSTALL", "Device is not rooted")
                     result.error("NOT_ROOTED", "Device is not rooted", null)
@@ -365,15 +368,29 @@ class MawaqitInstallReceiver : BroadcastReceiver() {
              intent.action == Intent.ACTION_PACKAGE_REPLACED) &&
              intent.data?.schemeSpecificPart == "com.mawaqit.androidtv") {
             
-            // Add a slight delay to ensure the app is ready to launch
-            Handler(Looper.getMainLooper()).postDelayed({
-                val launchIntent = context.packageManager.getLaunchIntentForPackage("com.mawaqit.androidtv")
-                if (launchIntent != null) {
-                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    context.startActivity(launchIntent)
-                }
-            }, 3000) // 3 second delay
+            val serviceIntent = Intent(context, InstallationService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent)
+            } else {
+                context.startService(serviceIntent)
+            }
         }
+    }
+}
+class InstallationService : Service() {
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Handler(Looper.getMainLooper()).postDelayed({
+            val launchIntent = packageManager.getLaunchIntentForPackage("com.mawaqit.androidtv")
+            if (launchIntent != null) {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(launchIntent)
+            }
+            stopSelf()
+        }, 5000) // 5 second delay
+
+        return START_NOT_STICKY
     }
 }
