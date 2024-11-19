@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 
-final updateNotifierProvider =
-    AsyncNotifierProvider<UpdateNotifier, UpdateState>(() {
-  return UpdateNotifier();
+final manualUpdateNotifierProvider =
+    AsyncNotifierProvider<ManualUpdateNotifier, UpdateState>(() {
+  return ManualUpdateNotifier();
 });
 
-class UpdateNotifier extends AsyncNotifier<UpdateState> {
+class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
   static const platform = MethodChannel('nativeMethodsChannel');
   late final Dio _dio;
   CancelToken? _cancelToken;
