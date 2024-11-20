@@ -359,21 +359,3 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
     }
 }
 
-class MawaqitInstallReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        if ((intent.action == Intent.ACTION_PACKAGE_ADDED || 
-             intent.action == Intent.ACTION_PACKAGE_REPLACED) &&
-             intent.data?.schemeSpecificPart == "com.mawaqit.androidtv") {
-            
-            // Add a slight delay to ensure the app is ready to launch
-            Handler(Looper.getMainLooper()).postDelayed({
-                val launchIntent = context.packageManager.getLaunchIntentForPackage("com.mawaqit.androidtv")
-                if (launchIntent != null) {
-                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    context.startActivity(launchIntent)
-                }
-            }, 3000) // 3 second delay
-        }
-    }
-}
