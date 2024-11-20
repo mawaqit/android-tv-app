@@ -96,3 +96,8 @@ abstract class SystemFeaturesConstant {
   static const String kHdmi = 'android.hardware.hdmi';
   static const String kEthernet = 'android.hardware.ethernet';
 }
+
+abstract class ManualUpdateConstant {
+  static const String githubApiBaseUrl = 'https://api.github.com/repos/mawaqit/android-tv-app/releases';
+  static const String githubAcceptHeader = 'application/vnd.github.v3+json';
+}
