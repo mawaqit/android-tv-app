@@ -21,7 +21,6 @@ class CacheKey {
   static const String kIsUpdateDismissed = 'is_update_dismissed';
   static const String kUpdateDismissedVersion = 'update_dismissed_version';
   static const String kHttpRequests = 'http_requests_cache';
-  static const String kSelectedMoshaf = 'selected_moshaf';
 }
 
 class HttpHeaderConstant {
@@ -63,21 +62,47 @@ abstract class AnnouncementConstant {
 
 abstract class MosqueManagerConstant {
   static const String kMosqueUUID = "mosqueUUID";
+  static const String khasCachedMosque = "hasCachedMosque";
 }
 
 abstract class QuranConstant {
   static const String kQuranZipBaseUrl = "https://cdn.mawaqit.net/quran/";
-  static const String kQuranLocalVersion = 'quran_local_version';
+  static const String kHafsQuranLocalVersion = 'hafs_quran_local_version';
+  static const String kWarshQuranLocalVersion = 'warsh_quran_local_version';
+  static const String kSelectedMoshafType = 'selected_moshaf_type';
   static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
   static const String kSurahBox = 'surah_box';
-  static const String kReciterBox = 'reciter_box';
+  static const String kReciterBox = 'reciter_box_v2';
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
+  static const String kFavoriteReciterBox = 'favorite_reciter_box';
   static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/config.json';
+  static const String kIsFirstTime = 'is_first_time_quran';
+  static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
 }
 
 abstract class AzkarConstant {
   static const String kAzkarAfterPrayer = 'أذكار بعد الصلاة';
   static const String kAzkarSabahAfterPrayer = 'أذكار الصباح';
   static const String kAzkarAsrAfterPrayer = 'أذكار المساء';
+}
+
+abstract class SettingsConstant {
+  static const String kLanguageCode = 'language_code';
+}
+
+abstract class SystemFeaturesConstant {
+  static const String kLeanback = 'android.software.leanback';
+  static const String kHdmi = 'android.hardware.hdmi';
+  static const String kEthernet = 'android.hardware.ethernet';
+}
+
+abstract class MawaqitBackendSettingsConstant {
+  static const String kSettingsTitle = "Mawaqit";
+  static const String kSettingsShare =
+      "Download Mawaqit\r\nAndroid:\r\nhttps:\/\/play.google.com\/store\/apps\/details?id=com.mawaqit.admin\r\niOS:\r\nhttps:\/\/apps.apple.com\/fr\/app\/mawaqit-prayer-times-mosque\/id1460522683\r\n";
+  static const String kSettingsAndroidUserAgent =
+      "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/95.0.4638.69 Safari\/537.36";
+  static const String kSettingsIosUserAgent =
+      "Mozilla\/5.0 (iPhone; CPU iPhone OS 14_5 like Mac OS X) AppleWebKit\/605.1.15 (KHTML, like Gecko) CriOS\/90.0.4430.78 Mobile\/15E148 Safari\/604.1";
 }

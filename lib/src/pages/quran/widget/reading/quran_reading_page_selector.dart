@@ -7,12 +7,14 @@ import 'package:sizer/sizer.dart';
 class QuranReadingPageSelector extends ConsumerStatefulWidget {
   final int totalPages;
   final int currentPage;
+  final bool isPortrait;
   final ScrollController scrollController;
 
   const QuranReadingPageSelector({
     required this.totalPages,
     required this.currentPage,
     required this.scrollController,
+    required this.isPortrait,
   });
 
   @override
@@ -47,52 +49,57 @@ class _QuranReadingPageSelectorState extends ConsumerState<QuranReadingPageSelec
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: SizedBox(
-        width: double.maxFinite,
-        child: Text(
-          S.of(context).chooseQuranPage,
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
+    return RotatedBox(
+      quarterTurns: widget.isPortrait ? -1 : 0,
+      child: AlertDialog(
+        title: SizedBox(
+          width: double.maxFinite,
+          child: Text(
+            S.of(context).chooseQuranPage,
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
         ),
-      ),
-      content: Container(
-        width: double.maxFinite,
-        height: 60.h,
-        child: GridView.builder(
-          controller: widget.scrollController,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 6,
-            childAspectRatio: 3 / 2,
-          ),
-          itemCount: widget.totalPages,
-          itemBuilder: (BuildContext context, int index) {
-            final isSelected = index == widget.currentPage;
-            return InkWell(
-              onTap: () {
-                ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
-                Navigator.of(context).pop(); // Close the dialog after selection
-              },
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: isSelected ? Theme.of(context).focusColor : null,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text(
-                  '${index + 1}',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: isSelected ? FontWeight.bold : null,
-                    color: isSelected ? Colors.white : null,
+        content: Container(
+          width: double.maxFinite,
+          height: 60.h,
+          child: GridView.builder(
+            controller: widget.scrollController,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: widget.isPortrait ? 4 : 6,
+              childAspectRatio: 3 / 2,
+            ),
+            itemCount: widget.totalPages,
+            itemBuilder: (BuildContext context, int index) {
+              final isSelected = index == widget.currentPage;
+              return InkWell(
+                onTap: () {
+                  widget.isPortrait
+                      ? ref.read(quranReadingNotifierProvider.notifier).updatePage(index, isPortairt: true)
+                      : ref.read(quranReadingNotifierProvider.notifier).updatePage(index);
+                  Navigator.of(context).pop(); // Close the dialog after selection
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isSelected ? Theme.of(context).focusColor : null,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text(
+                    '${index + 1}',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: isSelected ? FontWeight.bold : null,
+                      color: isSelected ? Colors.white : null,
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

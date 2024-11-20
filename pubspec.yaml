@@ -16,7 +16,8 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-version: 1.14.0+1
+
+version: 1.16.1+1
 
 
 environment:
@@ -139,8 +140,18 @@ dependencies:
   audio_service: ^0.18.10
   notification_overlay:
     git:
-      url: https://github.com/ghassenbenzahra123/custom-android-tv-notification
-      ref: master
+      url: https://github.com/mawaqit/android-tv-notification
+      ref: main
+
+  percent_indicator: ^4.2.3
+
+  # functional programming
+  fpdart: ^1.1.0
+
+  # automatic scrolling
+  scroll_to_index: ^3.0.1
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

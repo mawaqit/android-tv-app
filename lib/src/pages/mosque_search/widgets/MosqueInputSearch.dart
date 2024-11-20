@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as Provider;
 
+import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/AppRouter.dart';
 import '../../../helpers/SharedPref.dart';
+import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 
-class MosqueInputSearch extends StatefulWidget {
+class MosqueInputSearch extends ConsumerStatefulWidget {
   const MosqueInputSearch({Key? key, this.onDone}) : super(key: key);
 
   final void Function()? onDone;
 
   @override
-  State<MosqueInputSearch> createState() => _MosqueInputSearchState();
+  ConsumerState<MosqueInputSearch> createState() => _MosqueInputSearchState();
 }
 
-class _MosqueInputSearchState extends State<MosqueInputSearch> {
+class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
   final inputController = TextEditingController();
   final scrollController = ScrollController();
   SharedPref sharedPref = SharedPref();
@@ -62,7 +65,7 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
       loading = true;
       if (page == 1) results = [];
     });
-    final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
+    final mosqueManager = Provider.Provider.of<MosqueManager>(context, listen: false);
     await mosqueManager
         .searchMosques(mosque, page: page)
         .then((value) => setState(() {
@@ -83,7 +86,10 @@ class _MosqueInputSearchState extends State<MosqueInputSearch> {
 
   /// handle on mosque tile clicked
   Future<void> _selectMosque(Mosque mosque) {
-    return context.read<MosqueManager>().setMosqueUUid(mosque.uuid.toString()).then((value) {
+    return context.read<MosqueManager>().setMosqueUUid(mosque.uuid.toString()).then((value) async {
+      final mosqueManager = context.read<MosqueManager>();
+      final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
+      ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
       !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
     }).catchError((e, stack) {
       if (e is InvalidMosqueId) {

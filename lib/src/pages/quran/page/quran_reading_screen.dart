@@ -7,19 +7,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
-import 'package:mawaqit/src/pages/quran/widget/switch_button.dart';
+import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_widgets.dart';
+import 'package:mawaqit/src/pages/quran/widget/reading/quran_surah_selector.dart';
+
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/download_quran_popup.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:provider/provider.dart' as provider;
 
 import 'package:sizer/sizer.dart';
 
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
+
+import '../../../data/data_source/device_info_data_source.dart';
 
 class QuranReadingScreen extends ConsumerStatefulWidget {
   const QuranReadingScreen({super.key});
@@ -29,41 +36,306 @@ class QuranReadingScreen extends ConsumerStatefulWidget {
 }
 
 class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
-  int quranIndex = 0;
-  late FocusNode _backButtonFocusNode;
   late FocusNode _rightSkipButtonFocusNode;
   late FocusNode _leftSkipButtonFocusNode;
-  late FocusNode _listeningModeFocusNode;
-  late FocusNode _choosePageFocusNode;
+  late FocusNode _backButtonFocusNode;
+  late FocusNode _switchQuranFocusNode;
+  late FocusNode _switchQuranModeNode;
+  late FocusNode _switchScreenViewFocusNode;
+  late FocusNode _portraitModeBackButtonFocusNode;
+  late FocusNode _portraitModeSwitchQuranFocusNode;
+  late FocusNode _portraitModePageSelectorFocusNode;
   final ScrollController _gridScrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _backButtonFocusNode = FocusNode(debugLabel: 'node_backButton');
-    _listeningModeFocusNode = FocusNode(debugLabel: 'node_listeningMode');
-    _rightSkipButtonFocusNode = FocusNode(debugLabel: 'node_rightSkip');
-    _leftSkipButtonFocusNode = FocusNode(debugLabel: 'node_leftSkip');
-    _choosePageFocusNode = FocusNode(debugLabel: 'node_choosePage');
+    _initializeFocusNodes();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // ref.read(downloadQuranPopUpProvider.notifier).showDownloadQuranAlertDialog(context);
-      ref.read(downloadQuranPopUpProvider.notifier).showDownloadQuranAlertDialog(context);
+      ref.read(downloadQuranNotifierProvider);
       ref.read(quranReadingNotifierProvider);
-      // await showDownloadQuranAlertDialog(context, ref, _scaffoldKey);
+    });
+  }
+
+  void _initializeFocusNodes() {
+    _rightSkipButtonFocusNode = FocusNode(debugLabel: 'right_skip_node');
+    _leftSkipButtonFocusNode = FocusNode(debugLabel: 'left_skip_node');
+    _backButtonFocusNode = FocusNode(debugLabel: 'back_button_node');
+    _switchQuranFocusNode = FocusNode(debugLabel: 'switch_quran_node');
+    _switchQuranModeNode = FocusNode(debugLabel: 'switch_quran_mode_node');
+    _switchScreenViewFocusNode = FocusNode(debugLabel: 'switch_screen_view_node');
+    _portraitModeBackButtonFocusNode = FocusNode(debugLabel: 'portrait_mode_back_button_node');
+    _portraitModeSwitchQuranFocusNode = FocusNode(debugLabel: 'portrait_mode_switch_quran_node');
+    _portraitModePageSelectorFocusNode = FocusNode(debugLabel: 'portrait_mode_page_selector_node');
+  }
+
+  bool _isRotated = false;
+
+  @override
+  void dispose() {
+    _disposeFocusNodes();
+
+    super.dispose();
+  }
+
+  void _disposeFocusNodes() {
+    _leftSkipButtonFocusNode.dispose();
+    _rightSkipButtonFocusNode.dispose();
+    _backButtonFocusNode.dispose();
+    _switchQuranFocusNode.dispose();
+    _switchScreenViewFocusNode.dispose();
+    _portraitModeBackButtonFocusNode.dispose();
+    _portraitModeSwitchQuranFocusNode.dispose();
+    _portraitModePageSelectorFocusNode.dispose();
+  }
+
+  void _toggleOrientation() {
+    setState(() {
+      _isRotated = !_isRotated;
     });
   }
 
   @override
-  void dispose() {
-    // _listeningModeFocusNode.dispose();
-    // _rightSkipButtonFocusNode.dispose();
-    // _gridScrollController.dispose();
-    // _leftSkipButtonFocusNode.dispose();
-    // _backButtonFocusNode.dispose();
-    // _choosePageFocusNode.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    final quranReadingState = ref.watch(quranReadingNotifierProvider);
+    final userPrefs = context.watch<UserPreferencesManager>();
+    ref.listen(downloadQuranNotifierProvider, (previous, next) async {
+      if (!next.hasValue || next.value is Success) {
+        ref.invalidate(quranReadingNotifierProvider);
+      }
+
+      // don't show dialog for them
+      if (next.hasValue &&
+          (next.value is NoUpdate ||
+              next.value is CheckingDownloadedQuran ||
+              next.value is CheckingUpdate ||
+              next.value is CancelDownload)) {
+        return;
+      }
+
+      if (previous!.hasValue && previous.value != next.value) {
+        // Perform an action based on the new status
+      }
+
+      if (!_isThereCurrentDialogShowing(context)) {
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => DownloadQuranDialog(),
+        );
+      }
+    });
+
+    _leftSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
+    _rightSkipButtonFocusNode.onKeyEvent = (node, event) => _handleSwitcherFocusGroupNode(node, event);
+
+    _switchScreenViewFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+    _portraitModePageSelectorFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+    _switchQuranModeNode.onKeyEvent = (node, event) => _handlePageScrollDownFocusGroupNode(node, event, _isRotated);
+    _portraitModeBackButtonFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
+    _portraitModeSwitchQuranFocusNode.onKeyEvent =
+        (node, event) => _handlePageScrollUpFocusGroupNode(node, event, _isRotated);
+    return WillPopScope(
+        onWillPop: () async {
+          userPrefs.orientationLandscape = true;
+
+          return true;
+        },
+        child: RotatedBox(
+          quarterTurns: _isRotated ? -1 : 0,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.width,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
+              floatingActionButton: _isRotated
+                  ? buildFloatingPortrait(_isRotated, userPrefs, context)
+                  : buildFloatingLandscape(_isRotated, userPrefs, context),
+              body: _buildBody(quranReadingState, _isRotated, userPrefs),
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildBody(
+      AsyncValue<QuranReadingState> quranReadingState, bool isPortrait, UserPreferencesManager userPrefs) {
+    final color = Theme.of(context).primaryColor;
+    return quranReadingState.when(
+      loading: () => Center(
+        child: CircularProgressIndicator(
+          color: color,
+        ),
+      ),
+      error: (error, s) {
+        final errorLocalized = S.of(context).error;
+        return Center(child: Text('$errorLocalized: $error'));
+      },
+      data: (quranReadingState) {
+        return Stack(
+          children: [
+            isPortrait
+                ? buildVerticalPageView(quranReadingState, ref)
+                : buildHorizontalPageView(quranReadingState, ref, context),
+            if (!isPortrait) ...[
+              buildRightSwitchButton(
+                context,
+                _rightSkipButtonFocusNode,
+                () => _scrollPageList(ScrollDirection.forward, isPortrait),
+              ),
+              buildLeftSwitchButton(
+                context,
+                _leftSkipButtonFocusNode,
+                () => _scrollPageList(ScrollDirection.reverse, isPortrait),
+              ),
+            ],
+            buildPageNumberIndicator(
+                quranReadingState, isPortrait, context, _portraitModePageSelectorFocusNode, _showPageSelector),
+            buildMoshafSelector(
+                isPortrait,
+                context,
+                isPortrait ? _portraitModeSwitchQuranFocusNode : _switchQuranFocusNode,
+                _isThereCurrentDialogShowing(context)),
+            buildBackButton(
+                isPortrait, userPrefs, context, isPortrait ? _portraitModeBackButtonFocusNode : _backButtonFocusNode),
+            isPortrait ? SizedBox() : buildShowSurah(quranReadingState),
+          ],
+        );
+      },
+    );
+  }
+
+  Align buildShowSurah(QuranReadingState quranReadingState) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: EdgeInsets.only(top: 0.3.h),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              ref.read(quranReadingNotifierProvider.notifier).getAllSuwarPage();
+              showSurahSelector(context, quranReadingState.currentPage);
+            },
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                quranReadingState.currentSurahName,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 8.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildFloatingPortrait(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          _buildOrientationToggleButton(isPortrait),
+          _buildQuranModeButton(isPortrait, userPrefs, context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFloatingLandscape(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        _buildOrientationToggleButton(isPortrait),
+        SizedBox(height: 10),
+        _buildQuranModeButton(isPortrait, userPrefs, context),
+      ],
+    );
+  }
+
+  Widget _buildOrientationToggleButton(bool isPortrait) {
+    return SizedBox(
+      width: isPortrait ? 35.sp : 30.sp,
+      height: isPortrait ? 35.sp : 30.sp,
+      child: FloatingActionButton(
+        focusNode: _switchScreenViewFocusNode,
+        backgroundColor: Colors.black.withOpacity(.3),
+        child: Icon(
+          !isPortrait ? Icons.stay_current_portrait : Icons.stay_current_landscape,
+          color: Colors.white,
+          size: isPortrait ? 20.sp : 15.sp,
+        ),
+        onPressed: () => _toggleOrientation(),
+        heroTag: null,
+      ),
+    );
+  }
+
+  Widget _buildQuranModeButton(bool isPortrait, UserPreferencesManager userPrefs, BuildContext context) {
+    return SizedBox(
+      width: isPortrait ? 35.sp : 30.sp,
+      height: isPortrait ? 35.sp : 30.sp,
+      child: FloatingActionButton(
+        focusNode: _switchQuranModeNode,
+        backgroundColor: Colors.black.withOpacity(.3),
+        child: Icon(
+          Icons.headset,
+          color: Colors.white,
+          size: isPortrait ? 20.sp : 15.sp,
+        ),
+        onPressed: () async {
+          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+          if (isPortrait) {
+            userPrefs.orientationLandscape = true;
+          }
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReciterSelectionScreen.withoutSurahName(),
+            ),
+          );
+        },
+        heroTag: null,
+      ),
+    );
+  }
+
+  void _scrollPageList(ScrollDirection direction, isPortrait) {
+    if (direction == ScrollDirection.forward) {
+      ref.read(quranReadingNotifierProvider.notifier).previousPage(isPortrait: isPortrait);
+    } else {
+      ref.read(quranReadingNotifierProvider.notifier).nextPage(isPortrait: isPortrait);
+    }
+  }
+
+  void _showPageSelector(BuildContext context, int totalPages, int currentPage, bool switcherScreen) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return QuranReadingPageSelector(
+          isPortrait: switcherScreen,
+          currentPage: currentPage,
+          scrollController: _gridScrollController,
+          totalPages: totalPages,
+        );
+      },
+    );
   }
 
   FloatingActionButtonLocation _getFloatingActionButtonLocation(BuildContext context) {
@@ -78,254 +350,45 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final quranReadingState = ref.watch(quranReadingNotifierProvider);
-
-    ref.listen(downloadQuranNotifierProvider, (previous, next) {
-      if (!next.hasValue || next.value is Success) {
-        log('quran: QuranReadingScreen: Downloaded quran');
-        ref.invalidate(quranReadingNotifierProvider);
-      }
-    });
-
-    return WillPopScope(
-      onWillPop: () async {
-        ref.read(downloadQuranPopUpProvider.notifier).dispose();
-        return true;
-      },
-      child: KeyboardListener(
-        onKeyEvent: _handleKeyEvent,
-        focusNode: FocusNode(debugLabel: 'node_quranReadingScreen'),
-        autofocus: true,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
-          floatingActionButton: SizedBox(
-            width: 30.sp, // Set the desired width
-            height: 30.sp, //
-            child: FloatingActionButton(
-              focusNode: _listeningModeFocusNode,
-              backgroundColor: Colors.black.withOpacity(.3),
-              child: Icon(
-                Icons.headset,
-                color: Colors.white,
-                size: 15.sp,
-              ),
-              onPressed: () async {
-                ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ReciterSelectionScreen.withoutSurahName(),
-                  ),
-                );
-              },
-            ),
-          ),
-          body: quranReadingState.when(
-            loading: () => Center(child: CircularProgressIndicator()),
-            error: (error, s) {
-              final errorLocalized = S.of(context).error;
-              return Center(child: Text('$errorLocalized: $error'));
-            },
-            data: (quranReadingState) {
-              return Stack(
-                children: [
-                  PageView.builder(
-                    reverse: Directionality.of(context) == TextDirection.ltr ? true : false,
-                    controller: quranReadingState.pageController,
-                    onPageChanged: (index) {
-                      final actualPage = index * 2;
-                      if (actualPage != quranReadingState.currentPage) {
-                        ref.read(quranReadingNotifierProvider.notifier).updatePage(actualPage);
-                      }
-                    },
-                    itemCount: (quranReadingState.totalPages / 2).ceil(),
-                    itemBuilder: (context, index) {
-                      final leftPageIndex = index * 2;
-                      final rightPageIndex = leftPageIndex + 1;
-                      return LayoutBuilder(
-                        builder: (context, constraints) {
-                          final pageWidth = constraints.maxWidth / 2;
-                          final pageHeight = constraints.maxHeight;
-                          final bottomPadding = pageHeight * 0.05; // 5% of screen height for bottom padding
-
-                          return Stack(
-                            children: [
-                              // Right Page (now on the left)
-                              if (rightPageIndex < quranReadingState.svgs.length)
-                                Positioned(
-                                  left: 12.w,
-                                  top: 0,
-                                  bottom: bottomPadding,
-                                  width: pageWidth * 0.9,
-                                  child: _buildSvgPicture(
-                                    quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
-                                  ),
-                                ),
-                              // Left Page (now on the right)
-                              if (leftPageIndex < quranReadingState.svgs.length)
-                                Positioned(
-                                  right: 12.w,
-                                  top: 0,
-                                  bottom: bottomPadding,
-                                  width: pageWidth * 0.9,
-                                  child: _buildSvgPicture(
-                                    quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
-                                  ),
-                                ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  Positioned(
-                    right: 10,
-                    top: 0,
-                    bottom: 0,
-                    child: SwitchButton(
-                      focusNode: _rightSkipButtonFocusNode,
-                      opacity: 0.7,
-                      iconSize: 14.sp,
-                      icon: Directionality.of(context) == TextDirection.ltr
-                          ? Icons.arrow_forward_ios
-                          : Icons.arrow_back_ios,
-                      onPressed: () => _scrollPageList(ScrollDirection.forward),
-                    ),
-                  ),
-                  Positioned(
-                    left: 10,
-                    top: 0,
-                    bottom: 0,
-                    child: SwitchButton(
-                      focusNode: _leftSkipButtonFocusNode,
-                      opacity: 0.7,
-                      iconSize: 14.sp,
-                      icon: Directionality.of(context) != TextDirection.ltr
-                          ? Icons.arrow_forward_ios
-                          : Icons.arrow_back_ios,
-                      onPressed: () => _scrollPageList(ScrollDirection.reverse),
-                    ),
-                  ),
-                  // Page Number
-                  Positioned(
-                    left: 15.w,
-                    right: 15.w,
-                    bottom: 1.h,
-                    child: Center(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          autofocus: true,
-                          focusNode: _choosePageFocusNode,
-                          onTap: () => _showPageSelector(
-                            context,
-                            quranReadingState.totalPages,
-                            quranReadingState.currentPage,
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.4),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              S.of(context).quranReadingPage(
-                                    quranReadingState.currentPage + 1,
-                                    quranReadingState.currentPage + 2,
-                                    quranReadingState.totalPages,
-                                  ),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 8.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // back button
-                  Positioned(
-                    left: Directionality.of(context) == TextDirection.ltr ? 10 : null,
-                    right: Directionality.of(context) == TextDirection.rtl ? 10 : null,
-                    child: SwitchButton(
-                      focusNode: _backButtonFocusNode,
-                      opacity: 0.7,
-                      iconSize: 17.sp,
-                      splashFactorSize: 0.9,
-                      icon: Icons.arrow_back_rounded,
-                      onPressed: () {
-                        log('quran: QuranReadingScreen: back');
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _scrollPageList(ScrollDirection direction) {
-    if (direction == ScrollDirection.forward) {
-      ref.read(quranReadingNotifierProvider.notifier).previousPage();
-    } else {
-      ref.read(quranReadingNotifierProvider.notifier).nextPage();
-    }
-  }
-
-  Widget _buildSvgPicture(SvgPicture svgPicture) {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(32.0),
-      child: SvgPicture(
-        svgPicture.bytesLoader,
-        fit: BoxFit.contain,
-        width: double.infinity,
-        height: double.infinity,
-        alignment: Alignment.center,
-      ),
-    );
-  }
-
-  void _showPageSelector(BuildContext context, int totalPages, int currentPage) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return QuranReadingPageSelector(
-          currentPage: currentPage,
-          scrollController: _gridScrollController,
-          totalPages: totalPages,
-        );
-      },
-    );
-  }
-
-  void _handleKeyEvent(KeyEvent event) {
+  KeyEventResult _handleSwitcherFocusGroupNode(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
         _rightSkipButtonFocusNode.requestFocus();
+        return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         _leftSkipButtonFocusNode.requestFocus();
+        return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
         _backButtonFocusNode.requestFocus();
+        return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        if (FocusScope.of(context).focusedChild == _listeningModeFocusNode) {
-          _choosePageFocusNode.requestFocus();
-        } else {
-          _listeningModeFocusNode.requestFocus();
-        }
-      } else if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
-        if (FocusScope.of(context).focusedChild == _choosePageFocusNode) {}
+        _switchQuranFocusNode.requestFocus();
+        return KeyEventResult.handled;
       }
     }
+    return KeyEventResult.ignored;
   }
+
+  KeyEventResult _handlePageScrollDownFocusGroupNode(FocusNode node, KeyEvent event, bool isPortrait) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown && isPortrait) {
+        _scrollPageList(ScrollDirection.reverse, isPortrait);
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
+  KeyEventResult _handlePageScrollUpFocusGroupNode(FocusNode node, KeyEvent event, bool isPortrait) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        _scrollPageList(ScrollDirection.forward, isPortrait);
+
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
+  bool _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
 }

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:isolate';
 import 'package:meta/meta.dart';
 
 import 'package:dio/dio.dart';
@@ -9,6 +10,15 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/module/dio_module.dart';
 
 import 'package:mawaqit/src/domain/error/recite_exception.dart';
+
+import '../../../domain/model/quran/audio_file_model.dart';
+
+class _DownloadParams {
+  final String url;
+  final SendPort sendPort;
+
+  _DownloadParams(this.url, this.sendPort);
+}
 
 class ReciteRemoteDataSource {
   final Dio _dio;
@@ -84,6 +94,56 @@ class ReciteRemoteDataSource {
 
   static List<int> _convertSurahListToIntegers(String surahList) {
     return surahList.split(',').map(int.parse).toList();
+  }
+
+  static void _downloadAudioFileIsolate(_DownloadParams params) async {
+    final dio = Dio();
+    try {
+      final response = await dio.get<List<int>>(
+        params.url,
+        options: Options(responseType: ResponseType.bytes),
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            final progress = (received / total) * 100;
+            params.sendPort.send({'progress': progress});
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        params.sendPort.send({'data': response.data!});
+      } else {
+        params.sendPort.send({'error': 'Failed to fetch audio file'});
+      }
+    } catch (e) {
+      params.sendPort.send({'error': e.toString()});
+    }
+
+    Isolate.exit();
+  }
+
+  Future<List<int>> downloadAudioFile(
+    AudioFileModel audioFile,
+    Function(double) onProgress,
+  ) async {
+    final receivePort = ReceivePort();
+    await Isolate.spawn(_downloadAudioFileIsolate, _DownloadParams(audioFile.url, receivePort.sendPort));
+
+    List<int> downloadedList = [];
+    await for (final message in receivePort) {
+      if (message is Map) {
+        if (message.containsKey('progress')) {
+          onProgress(message['progress']);
+        } else if (message.containsKey('data')) {
+          downloadedList = message['data'];
+          break;
+        } else if (message.containsKey('error')) {
+          throw (message['error']);
+        }
+      }
+    }
+
+    return downloadedList;
   }
 }
 

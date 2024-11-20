@@ -37,9 +37,8 @@ class QuranBackground extends ConsumerWidget {
                       height: 40.sp, // Set the desired height
                       child: FloatingActionButton(
                         focusNode: floatingActionButtonFocusNode,
-                        backgroundColor: floatingActionButtonFocusNode?.hasFocus == true
-                            ? Colors.cyan
-                            : Colors.black.withOpacity(.5),
+                        focusColor: Theme.of(context).primaryColor,
+                        backgroundColor: Colors.black.withOpacity(.5),
                         child: Icon(
                           Icons.menu_book,
                           color: Colors.white,
@@ -91,7 +90,6 @@ class QuranBackground extends ConsumerWidget {
                         ),
                         onPressed: () async {
                           ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-                          log('quran: QuranBackground: Switch to reading');
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

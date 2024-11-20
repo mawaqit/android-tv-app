@@ -134,6 +134,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
     minuteBefore = await getMinuteBefore();
     minuteAfter = await getMinuteAfter();
+
     notifyListeners();
   }
 
@@ -180,18 +181,13 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _configSubscription?.cancel();
 
     /// if getting item returns an error
-    onItemError(e, stack) {
-      if (e is MosqueFailure) {
+    onItemError(e, stack) async {
+      logger.e(e, stackTrace: stack);
+      bool hasCachedMosque = await sharedPref.read(MosqueManagerConstant.khasCachedMosque) ?? false;
+      if (!hasCachedMosque) {
         mosque = null;
         notifyListeners();
-        return;
       }
-
-      logger.e(e, stackTrace: stack);
-
-      mosque = null;
-      notifyListeners();
-
       throw e;
     }
 
@@ -212,8 +208,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     final configStream = Api.getMosqueConfigStream(uuid).asBroadcastStream();
 
     _mosqueSubscription = mosqueStream.listen(
-      (e) {
+      (e) async {
         mosque = e;
+        await sharedPref.save(MosqueManagerConstant.khasCachedMosque, true);
         _updateFlashEnabled();
         notifyListeners();
       },

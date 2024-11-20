@@ -21,12 +21,10 @@ import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/helpers/StreamGenerator.dart';
-import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:notification_overlay/notification_overlay.dart';
@@ -77,18 +75,6 @@ class _SpashState extends ConsumerState<Splash> {
     HttpOverrides.global = MyHttpOverrides();
     FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
 
-    await ref.read(connectivityProvider.notifier).checkInternetConnection();
-    ref.watch(connectivityProvider).maybeWhen(
-          orElse: () {},
-          data: (isConnectedToInternet) {
-            if (isConnectedToInternet == ConnectivityStatus.connected) {
-              final hadithLangCode =
-                  context.read<AppLanguage>().hadithLanguage == '' ? 'ar' : context.read<AppLanguage>().hadithLanguage;
-              context.read<AppLanguage>().setHadithLanguage(hadithLangCode);
-              ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
-            } else {}
-          },
-        );
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
       if (systemOverlaysAreVisible) return;
@@ -106,7 +92,7 @@ class _SpashState extends ConsumerState<Splash> {
     prefs.setBool("isEventsSet", false);
   }
 
-  Future<Settings> _initSettings() async {
+  Future<void> _initSettings() async {
     FeatureManagerProvider.initialize(context);
     await context.read<AppLanguage>().fetchLocale();
     await context.read<MosqueManager>().init().logPerformance("Mosque manager");
@@ -114,6 +100,7 @@ class _SpashState extends ConsumerState<Splash> {
     final settingsManage = context.read<SettingsManager>();
     await settingsManage.init().logPerformance('Setting manager');
     return settingsManage.settings;
+
   }
 
   Future<bool> loadBoarding() async {
@@ -127,6 +114,7 @@ class _SpashState extends ConsumerState<Splash> {
     try {
       await initApplicationUI();
       var settings = await _initSettings();
+
       var goBoarding = await loadBoarding();
       var mosqueManager = context.read<MosqueManager>();
       bool hasNoMosque = mosqueManager.mosqueUUID == null;
@@ -134,7 +122,7 @@ class _SpashState extends ConsumerState<Splash> {
       /// waite for the animation if it is not loaded yet
       await animationFuture.future;
 
-      if (hasNoMosque || goBoarding && settings.boarding == "1") {
+      if (hasNoMosque || goBoarding) {
         AppRouter.pushReplacement(OnBoardingScreen());
       } else {
         AppRouter.pushReplacement(OfflineHomeScreen());

@@ -59,6 +59,7 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
+
                     else -> result.notImplemented()
                 }
             }

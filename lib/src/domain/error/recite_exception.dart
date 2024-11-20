@@ -81,3 +81,47 @@ class FetchRecitersException extends ReciterException {
   FetchRecitersException(String message)
       : super('Error occurred while fetching reciters: $message', 'FETCH_RECITERS_ERROR');
 }
+
+class AddFavoriteReciterException implements Exception {
+  final String message;
+  AddFavoriteReciterException(this.message);
+}
+
+class RemoveFavoriteReciterException implements Exception {
+  final String message;
+  RemoveFavoriteReciterException(this.message);
+}
+
+class FetchFavoriteRecitersException implements Exception {
+  final String message;
+  FetchFavoriteRecitersException(this.message);
+}
+
+class FetchAudioFileFailedException extends ReciterException {
+  FetchAudioFileFailedException(String message)
+      : super('Error occurred while fetching audio file: $message', 'FETCH_AUDIO_FILE_ERROR');
+}
+
+class CheckSurahExistenceException extends ReciterException {
+  CheckSurahExistenceException(String message)
+      : super('Error occurred while saving audio file: $message', 'CHECK_SURAH_EXISTENCE_ERROR');
+}
+
+class SaveAudioFileException extends ReciterException {
+  SaveAudioFileException(String message)
+      : super('Error occurred while saving audio file: $message', 'SAVE_AUDIO_FILE_ERROR');
+}
+
+class FetchAudioFileException extends ReciterException {
+  FetchAudioFileException(String message)
+      : super('Error occurred while fetching audio file: $message', 'FETCH_AUDIO_FILE_ERROR');
+}
+
+class AudioFileNotFoundInCacheException extends ReciterException {
+  AudioFileNotFoundInCacheException() : super('Audio file not found in cache', 'AUDIO_FILE_NOT_FOUND_IN_CACHE_ERROR');
+}
+
+class FetchLocalAudioFileException extends ReciterException {
+  FetchLocalAudioFileException(String message)
+      : super('Audio file not found in local $message', 'AUDIO_FILE_NOT_FOUND_LOCAL_ERROR');
+}

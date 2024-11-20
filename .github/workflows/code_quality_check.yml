@@ -2,8 +2,9 @@ name: Check source code quality
 
 on:
   pull_request:
-    branches: ["main"]
-
+    branches: 
+      - main
+      - 'release-*'
 jobs:
   lint:
     name: Check lints

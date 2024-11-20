@@ -8,6 +8,7 @@ class SwitchButton extends StatelessWidget {
   final double iconSize;
   final FocusNode? focusNode;
   final double splashFactorSize;
+  final bool isAutofocus;
 
   const SwitchButton({
     super.key,
@@ -15,20 +16,32 @@ class SwitchButton extends StatelessWidget {
     required this.opacity,
     required this.onPressed,
     required this.iconSize,
+    this.isAutofocus = false,
     this.focusNode,
     this.splashFactorSize = 1.25,
   });
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return InkWell(
       focusNode: focusNode,
-      onPressed: onPressed,
-      splashRadius: iconSize * splashFactorSize,
-      icon: Icon(
-        icon,
-        color: Colors.black.withOpacity(opacity),
-        size: iconSize,
+      autofocus: isAutofocus,
+      focusColor: Theme.of(context).focusColor,
+      onTap: onPressed,
+      customBorder: CircleBorder(),
+      child: Container(
+        padding: EdgeInsets.all(8.sp),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+        ),
+        child: Center(
+          child: Icon(
+            icon,
+            color: Colors.black,
+            size: iconSize,
+          ),
+        ),
       ),
     );
   }

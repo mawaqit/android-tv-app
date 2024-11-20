@@ -1,20 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-enum MoshafType {
-  warsh,
-  hafs;
-
-  static MoshafType fromString(String value) {
-    return MoshafType.values.firstWhere(
-      (type) {
-        return type.name.toString().toLowerCase() == value.toString().toLowerCase();
-      },
-      orElse: () => throw ArgumentError('Invalid MoshafType: $value'),
-    );
-  }
-}
+import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 
 class QuranReadingState extends Equatable {
   final int currentJuz;
@@ -22,7 +9,8 @@ class QuranReadingState extends Equatable {
   final int currentPage;
   final List<SvgPicture> svgs;
   final PageController pageController;
-  final MoshafType moshafType;
+  final List<SurahModel> suwar;
+  final String currentSurahName;
 
   QuranReadingState({
     required this.currentJuz,
@@ -30,7 +18,8 @@ class QuranReadingState extends Equatable {
     required this.currentPage,
     required this.svgs,
     required this.pageController,
-    this.moshafType = MoshafType.hafs,
+    required this.suwar,
+    required this.currentSurahName,
   });
 
   QuranReadingState copyWith({
@@ -39,16 +28,18 @@ class QuranReadingState extends Equatable {
     List<SvgPicture>? svgs,
     int? currentPage,
     bool? isInitial,
-    MoshafType? moshafType,
     PageController? pageController,
+    List<SurahModel>? suwar,
+    String? currentSurahName,
   }) {
     return QuranReadingState(
-      moshafType: moshafType ?? this.moshafType,
       currentJuz: currentJuz ?? this.currentJuz,
       currentSurah: currentSurah ?? this.currentSurah,
       currentPage: currentPage ?? this.currentPage,
       svgs: svgs ?? this.svgs,
       pageController: pageController ?? this.pageController,
+      suwar: suwar ?? this.suwar,
+      currentSurahName: currentSurahName ?? this.currentSurahName,
     );
   }
 
@@ -58,8 +49,9 @@ class QuranReadingState extends Equatable {
         currentSurah,
         currentPage,
         svgs,
-        moshafType,
         pageController,
+        suwar,
+        currentSurahName,
       ];
 
   int get totalPages => svgs.length;

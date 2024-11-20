@@ -19,7 +19,6 @@ mixin RandomHadithMixin on ChangeNotifier {
   @override
   void initState() {
     appLanguage.addListener(_languageChanged);
-    appLanguage.getHadithLanguage();
   }
 
   void _languageChanged() {
