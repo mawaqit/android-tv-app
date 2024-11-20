@@ -1,17 +1,21 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/state_management/manual_app_update/manual_update_state.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 
-final manualUpdateNotifierProvider =
-    AsyncNotifierProvider<ManualUpdateNotifier, UpdateState>(() {
+import 'package:upgrader/upgrader.dart';
+
+final manualUpdateNotifierProvider = AsyncNotifierProvider<ManualUpdateNotifier, UpdateState>(() {
   return ManualUpdateNotifier();
 });
 
 class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
-  static const platform = MethodChannel('nativeMethodsChannel');
+  static const platform = MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
   late final Dio _dio;
   CancelToken? _cancelToken;
 
@@ -25,17 +29,7 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
     _cancelToken?.cancel('Update cancelled by user');
     _cancelToken = null;
 
-    // Clean up downloaded file if it exists
-    if (state.value?.filePath != null) {
-      try {
-        final file = File(state.value!.filePath!);
-        if (file.existsSync()) {
-          file.deleteSync();
-        }
-      } catch (e) {
-        print('Error cleaning up file: $e');
-      }
-    }
+    _cleanupDownloadedFile();
 
     state = const AsyncValue.data(UpdateState(
       status: UpdateStatus.cancelled,
@@ -43,12 +37,30 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
     ));
   }
 
-  Future<void> checkForUpdates(String currentVersion) async {
-    state = const AsyncValue.data(UpdateState(
-        status: UpdateStatus.checking, message: 'Checking updates...'));
+  void _cleanupDownloadedFile() {
+    final filePath = state.value?.filePath;
+    if (filePath != null) {
+      try {
+        final file = File(filePath);
+        if (file.existsSync()) file.deleteSync();
+      } catch (e) {
+        debugPrint('Error cleaning up file: $e');
+      }
+    }
+  }
 
+  Future<void> checkForUpdates(
+    String currentVersion,
+    String languageCode, {
+    bool? isDeviceRooted,
+  }) async {
     try {
-      final hasUpdate = await _isUpdateAvailable(currentVersion);
+      state = const AsyncValue.data(UpdateState(status: UpdateStatus.checking, message: 'Checking updates...'));
+
+      final hasUpdate = isDeviceRooted ?? false
+          ? await _isUpdateAvailableForRootedDevice(currentVersion)
+          : await _isUpdateAvailableStandard(languageCode);
+
       if (hasUpdate) {
         final downloadUrl = await _getLatestReleaseUrl();
         state = AsyncValue.data(state.value!.copyWith(
@@ -63,12 +75,47 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
         ));
       }
     } catch (e, st) {
-      state = AsyncValue.error('Failed to check updates: ${e.toString()}', st);
+      state = AsyncValue.error('Failed to check updates', st);
     }
   }
 
+  Future<bool> _isUpdateAvailableStandard(String languageCode) async {
+    final upgrader = Upgrader(
+      messages: UpgraderMessages(code: languageCode),
+    );
+    await upgrader.initialize();
+    return upgrader.isUpdateAvailable();
+  }
+
+  Future<bool> _isUpdateAvailableForRootedDevice(String currentVersion) async {
+    final releases = await _fetchReleases();
+    final latestRelease = releases.firstWhere(
+      (release) => release['prerelease'] == false,
+      orElse: () => throw Exception('No stable release found'),
+    );
+
+    final latestVersion = latestRelease['tag_name'].toString();
+    return _compareVersions(latestVersion, currentVersion) > 0;
+  }
+
+  Future<List<dynamic>> _fetchReleases() async {
+    final response = await _dio.get(
+      ManualUpdateConstant.githubApiBaseUrl,
+      options: Options(
+        headers: {'Accept': ManualUpdateConstant.githubAcceptHeader},
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch releases: ${response.statusCode}');
+    }
+
+    return response.data as List;
+  }
+
   Future<void> downloadAndInstallUpdate() async {
-    if (state.value?.downloadUrl == null) return;
+    final downloadUrl = state.value?.downloadUrl;
+    if (downloadUrl == null) return;
 
     try {
       _cancelToken = CancelToken();
@@ -78,7 +125,7 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
         message: 'Downloading update...',
       ));
 
-      final filePath = await _downloadApk(state.value!.downloadUrl!);
+      final filePath = await _downloadApk(downloadUrl);
 
       // Check if cancelled after download
       if (_cancelToken?.isCancelled ?? false) return;
@@ -89,47 +136,38 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
         filePath: filePath,
       ));
 
-      try {
-        await _installApk(filePath);
-        state = AsyncValue.data(state.value!.copyWith(
-          status: UpdateStatus.completed,
-          message: 'Update completed successfully',
-        ));
-      } catch (installError) {
-        state = AsyncValue.data(state.value!.copyWith(
-          status: UpdateStatus.error,
-          message: 'Installation failed: ${installError.toString()}',
-        ));
-        // Clean up the downloaded file in case of installation failure
-        try {
-          final file = File(filePath);
-          if (await file.exists()) {
-            await file.delete();
-          }
-        } catch (cleanupError) {
-          print('Failed to clean up APK file: $cleanupError');
-        }
-      }
+      await _installApk(filePath);
+
+      state = AsyncValue.data(state.value!.copyWith(
+        status: UpdateStatus.completed,
+        message: 'Update completed successfully',
+      ));
     } catch (e, st) {
       if (e is DioException && e.type == DioExceptionType.cancel) {
-        // Handle cancellation - state already updated in cancelUpdate()
-        return;
+        return; // Already handled by cancelUpdate
       }
-      state = AsyncValue.data(state.value!.copyWith(
-        status: UpdateStatus.error,
-        message: 'Update failed: ${e.toString()}',
-      ));
+
+      _handleUpdateError(e, st);
     } finally {
       _cancelToken = null;
     }
   }
 
+  void _handleUpdateError(Object e, StackTrace st) {
+    _cleanupDownloadedFile();
+
+    state = AsyncValue.data(state.value!.copyWith(
+      status: UpdateStatus.error,
+      message: 'Update failed: ${e.toString()}',
+    ));
+  }
+
   Future<String> _getLatestReleaseUrl() async {
     try {
       final response = await _dio.get(
-        'https://api.github.com/repos/mawaqit/android-tv-app/releases',
+        ManualUpdateConstant.githubApiBaseUrl,
         options: Options(
-          headers: {'Accept': 'application/vnd.github.v3+json'},
+          headers: {'Accept': ManualUpdateConstant.githubAcceptHeader},
           validateStatus: (status) => status! < 500,
         ),
       );
@@ -199,31 +237,6 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
       }
     } catch (e) {
       throw Exception('Error installing APK: $e');
-    }
-  }
-
-  Future<bool> _isUpdateAvailable(String currentVersion) async {
-    try {
-      final response = await _dio.get(
-        'https://api.github.com/repos/mawaqit/android-tv-app/releases',
-        options: Options(
-          headers: {'Accept': 'application/vnd.github.v3+json'},
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        final releases = response.data as List;
-        final latestRelease = releases.firstWhere(
-          (release) => release['prerelease'] == false,
-          orElse: () => throw Exception('No stable release found'),
-        );
-
-        final latestVersion = latestRelease['tag_name'].toString();
-        return _compareVersions(latestVersion, currentVersion) > 0;
-      }
-      return false;
-    } catch (e) {
-      throw Exception('Error checking for updates: $e');
     }
   }
 

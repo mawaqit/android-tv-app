@@ -359,5 +359,11 @@
   "updateCompleted": "Update completed successfully!",
   "noUpdates": "No Updates",
   "usingLatestVersion": "You are using the latest version.",
-  "failedToCheckUpdates": "Failed to check for updates:"
+  "updateCancelled": "Update cancelled",
+  "checkingUpdates": "Checking updates...",
+  "downloadingUpdate": "Downloading update...",
+  "installingUpdate": "Installing update...",
+  "updateCompletedSuccessfully": "Update completed successfully",
+  "updateFailed": "Update failed"
+  
 }

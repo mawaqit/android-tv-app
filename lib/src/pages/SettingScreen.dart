@@ -23,8 +23,10 @@ import 'package:mawaqit/src/state_management/manual_app_update/manual_update_not
 import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
+import 'package:mawaqit/src/widgets/manual_update_dialog.dart';
 import 'package:provider/provider.dart' hide Consumer;
 import 'package:sizer/sizer.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../../i18n/AppLanguage.dart';
 import '../../main.dart';
@@ -77,78 +79,15 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
     ref.listen(manualUpdateNotifierProvider, (previous, next) {
-      if (next.value?.status == UpdateStatus.available) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => Consumer(
-            builder: (context, ref, child) {
-              final updateState = ref.watch(manualUpdateNotifierProvider);
-              return AlertDialog(
-                title: Text(S.of(context).updateAvailable),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(updateState.value?.message ?? S.of(context).wouldYouLikeToUpdate),
-                    if (updateState.value?.progress != null) ...[
-                      const SizedBox(height: 16),
-                      LinearProgressIndicator(
-                        value: updateState.value?.progress,
-                        backgroundColor: Theme.of(context).colorScheme.background,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${(updateState.value!.progress! * 100).toStringAsFixed(1)}%',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () =>
-                        {ref.read(manualUpdateNotifierProvider.notifier).cancelUpdate(), Navigator.pop(context)},
-                    child: Text(S.of(context).cancel),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      final isDeviceRooted = ref.read(onBoardingProvider).maybeWhen(
-                            orElse: () => false,
-                            data: (value) => value.isRootedDevice,
-                          );
-
-                      if (isDeviceRooted) {
-                        // For rooted devices, use direct APK installation
-                        ref.read(manualUpdateNotifierProvider.notifier).downloadAndInstallUpdate();
-                      } else {
-                        ref.read(appUpdateProvider.notifier).openStore();
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Text(S.of(context).update),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      } else if (next.value?.status == UpdateStatus.notAvailable) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(S.of(context).noUpdates),
-            content: Text(S.of(context).usingLatestVersion),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(S.of(context).ok),
-              ),
-            ],
-          ),
-        );
+      switch (next.value?.status) {
+        case UpdateStatus.available:
+          UpdateDialog.show(context, ref);
+          break;
+        case UpdateStatus.notAvailable:
+          UpdateDialog.showNoUpdateAvailableDialog(context);
+          break;
+        default:
+          break;
       }
     });
     return ScreenWithAnimationWidget(
@@ -236,24 +175,6 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       );
                     },
                   ),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      return _SettingSwitchItem(
-                        title: S.of(context).automaticUpdate,
-                        subtitle: S.of(context).automaticUpdateDescription,
-                        icon: Icon(Icons.update, size: 35),
-                        onChanged: (value) {
-                          logger.d('setting: disable the update $value');
-                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
-                        },
-                        value: ref.watch(appUpdateProvider).maybeWhen(
-                              orElse: () => false,
-                              data: (data) => data.isAutoUpdateChecking,
-                            ),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
                   Text(
@@ -347,6 +268,24 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     },
                   ),
                   _screenLock(context, ref),
+                  Divider(),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return _SettingSwitchItem(
+                        title: S.of(context).automaticUpdate,
+                        subtitle: S.of(context).automaticUpdateDescription,
+                        icon: Icon(Icons.update, size: 35),
+                        onChanged: (value) {
+                          logger.d('setting: disable the update $value');
+                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
+                        },
+                        value: ref.watch(appUpdateProvider).maybeWhen(
+                              orElse: () => false,
+                              data: (data) => data.isAutoUpdateChecking,
+                            ),
+                      );
+                    },
+                  ),
                   _SettingItem(
                     title: S.of(context).checkForUpdates,
                     subtitle: S.of(context).checkForNewVersion,
@@ -354,7 +293,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     onTap: () async {
                       var softwareFuture = await PackageInfo.fromPlatform();
 
-                      ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(softwareFuture.version);
+                      ref
+                          .read(manualUpdateNotifierProvider.notifier)
+                          .checkForUpdates(softwareFuture.version, context.read<AppLanguage>().appLocal.languageCode);
                     },
                   ),
                 ],
