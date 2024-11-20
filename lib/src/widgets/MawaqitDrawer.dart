@@ -20,6 +20,7 @@ import 'package:mawaqit/src/pages/AboutScreen.dart';
 import 'package:mawaqit/src/pages/PageScreen.dart';
 import 'package:mawaqit/src/pages/WebScreen.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
+import 'package:mawaqit/src/routes/routes_constant.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -32,7 +33,7 @@ import 'package:mawaqit/src/pages/SettingScreen.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
 import '../pages/quran/page/quran_mode_selection_screen.dart';
-import '../pages/quran/page/quran_reading_screen.dart';
+import 'package:mawaqit/src/pages/quran/reading/quran_reading_screen.dart';
 import '../state_management/quran/quran/quran_state.dart';
 
 class MawaqitDrawer extends ConsumerWidget {
@@ -174,20 +175,19 @@ class MawaqitDrawer extends ConsumerWidget {
                 onTap: () async {
                   await ref.read(quranNotifierProvider.notifier).getSelectedMode();
                   final state = ref.read(quranNotifierProvider);
+                  Navigator.pop(context);
+
                   switch (state.value!.mode) {
                     case QuranMode.reading:
                       log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: reading');
-                      Navigator.pop(context);
-                      AppRouter.push(QuranReadingScreen());
+                      Navigator.pushNamed(context, Routes.quranReading);
                       break;
                     case QuranMode.listening:
                       log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: listening');
-                      Navigator.pop(context);
-                      AppRouter.push(ReciterSelectionScreen.withoutSurahName());
+                      Navigator.pushNamed(context, Routes.quranReciter);
                       break;
                     case QuranMode.none:
-                      Navigator.pop(context);
-                      AppRouter.push(QuranModeSelection());
+                      Navigator.pushNamed(context, Routes.quranModeSelection);
                       break;
                   }
                 },

@@ -19,18 +19,23 @@ import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:mawaqit/src/state_management/manual_app_update/manual_update_notifier.dart';
 import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
+import 'package:mawaqit/src/widgets/manual_update_dialog.dart';
 import 'package:provider/provider.dart' hide Consumer;
 import 'package:sizer/sizer.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../../i18n/AppLanguage.dart';
 import '../../main.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
 import '../state_management/app_update/app_update_notifier.dart';
+import '../state_management/manual_app_update/manual_update_state.dart';
 import '../state_management/quran/download_quran/download_quran_notifier.dart';
 import '../state_management/random_hadith/random_hadith_notifier.dart';
 import '../widgets/screen_lock_widget.dart';
@@ -73,7 +78,18 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
-
+    ref.listen(manualUpdateNotifierProvider, (previous, next) {
+      switch (next.value?.status) {
+        case UpdateStatus.available:
+          UpdateDialog.show(context, ref);
+          break;
+        case UpdateStatus.notAvailable:
+          UpdateDialog.showNoUpdateAvailableDialog(context);
+          break;
+        default:
+          break;
+      }
+    });
     return ScreenWithAnimationWidget(
       animation: 'settings',
       child: Padding(
@@ -159,24 +175,6 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       );
                     },
                   ),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      return _SettingSwitchItem(
-                        title: S.of(context).automaticUpdate,
-                        subtitle: S.of(context).automaticUpdateDescription,
-                        icon: Icon(Icons.update, size: 35),
-                        onChanged: (value) {
-                          logger.d('setting: disable the update $value');
-                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
-                        },
-                        value: ref.watch(appUpdateProvider).maybeWhen(
-                              orElse: () => false,
-                              data: (data) => data.isAutoUpdateChecking,
-                            ),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
                   Text(
@@ -270,6 +268,36 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     },
                   ),
                   _screenLock(context, ref),
+                  Divider(),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return _SettingSwitchItem(
+                        title: S.of(context).automaticUpdate,
+                        subtitle: S.of(context).automaticUpdateDescription,
+                        icon: Icon(Icons.update, size: 35),
+                        onChanged: (value) {
+                          logger.d('setting: disable the update $value');
+                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
+                        },
+                        value: ref.watch(appUpdateProvider).maybeWhen(
+                              orElse: () => false,
+                              data: (data) => data.isAutoUpdateChecking,
+                            ),
+                      );
+                    },
+                  ),
+                  _SettingItem(
+                    title: S.of(context).checkForUpdates,
+                    subtitle: S.of(context).checkForNewVersion,
+                    icon: const Icon(Icons.system_update, size: 35),
+                    onTap: () async {
+                      var softwareFuture = await PackageInfo.fromPlatform();
+
+                      ref
+                          .read(manualUpdateNotifierProvider.notifier)
+                          .checkForUpdates(softwareFuture.version, context.read<AppLanguage>().appLocal.languageCode);
+                    },
+                  ),
                 ],
               ),
             ),

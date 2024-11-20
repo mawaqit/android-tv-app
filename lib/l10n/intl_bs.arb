@@ -290,6 +290,20 @@
       }
     }
   },
+  "quranReadingPagePortrait": "Strana {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "Odaberite stranicu",
   "checkingForUpdates": "Provjera za ažuriranje...",
   "chooseQuranType": "Izaberi Kur'an",
@@ -320,5 +334,23 @@
   "noFavoriteReciters": "Nema omiljenih učača. Pokušajte dodati jednog na listu",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
+  },
+  "noReciterSearchResult": "Bez rezultata za vašu pretragu.",
+  "searchForReciter": "Potraži učača",
+  "downloadAllSuwarSuccessfully": "Kompletan Kur'an je preuzet",
+  "noSuwarDownload": "Nema novih sura za preuzimanje",
+  "connectDownloadQuran": "Da bi ste preuzeli molimo vas da se povežete na internetu",
+  "playInOnlineModeQuran": "Da bi ste slušali učenje Kur'ana molimo vas da se povežete na internetu",
+  "downloaded": "Preuzeto",
+  "switchQuranType": "Idi na {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Odaberi suru"
 }
