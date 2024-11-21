@@ -45,8 +45,7 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       final directory = await getApplicationDocumentsDirectory();
-      final bool isPermissionGranted =
-          await NotificationOverlay.checkOverlayPermission();
+      final bool isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
       if (!isPermissionGranted) {
         await NotificationOverlay.requestOverlayPermission();
       }

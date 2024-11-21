@@ -6,7 +6,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -97,10 +96,6 @@ class _SpashState extends ConsumerState<Splash> {
     await context.read<AppLanguage>().fetchLocale();
     await context.read<MosqueManager>().init().logPerformance("Mosque manager");
     MosqueManager.setInstance(context.read<MosqueManager>());
-    final settingsManage = context.read<SettingsManager>();
-    await settingsManage.init().logPerformance('Setting manager');
-    return settingsManage.settings;
-
   }
 
   Future<bool> loadBoarding() async {
