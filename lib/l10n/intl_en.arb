@@ -335,11 +335,11 @@
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
   },
-    "noReciterSearchResult": "No results found for your search",
-    "searchForReciter": "Search for a reciter",
+  "noReciterSearchResult": "No results found for your search",
+  "searchForReciter": "Search for a reciter",
   "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
   "noSuwarDownload": "No new suwars to download",
-  "connectDownloadQuran":"Please connect to Internet to download",
+  "connectDownloadQuran": "Please connect to Internet to download",
   "playInOnlineModeQuran": "Please connect to internet to play",
   "downloaded": "Downloaded",
   "switchQuranType": "Go to {name}",
@@ -352,7 +352,7 @@
       }
     }
   },
-  "surahSelector":"Select Surah",
+  "surahSelector": "Select Surah",
   "checkForUpdates": "Check for Updates",
   "checkForNewVersion": "Check if a new version is available",
   "wouldYouLikeToUpdate": "Would you like to update the app?",
@@ -365,5 +365,4 @@
   "installingUpdate": "Installing update...",
   "updateCompletedSuccessfully": "Update completed successfully",
   "updateFailed": "Update failed"
-  
 }
