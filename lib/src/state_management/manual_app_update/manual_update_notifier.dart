@@ -51,31 +51,30 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
 
   Future<void> checkForUpdates(
     String currentVersion,
-    String languageCode, {
-    bool? isDeviceRooted,
-  }) async {
+    String languageCode,
+    bool isDeviceRooted,
+  ) async {
+    state = const AsyncLoading();
     try {
-      state = const AsyncValue.data(UpdateState(status: UpdateStatus.checking, message: 'Checking updates...'));
-
-      final hasUpdate = isDeviceRooted ?? false
+      final hasUpdate = isDeviceRooted
           ? await _isUpdateAvailableForRootedDevice(currentVersion)
           : await _isUpdateAvailableStandard(languageCode);
 
       if (hasUpdate) {
         final downloadUrl = await _getLatestReleaseUrl();
-        state = AsyncValue.data(state.value!.copyWith(
+        state = AsyncData(state.value!.copyWith(
           status: UpdateStatus.available,
           message: 'Update available',
           downloadUrl: downloadUrl,
         ));
       } else {
-        state = const AsyncValue.data(UpdateState(
+        state = const AsyncData(UpdateState(
           status: UpdateStatus.notAvailable,
           message: 'You are using the latest version',
         ));
       }
     } catch (e, st) {
-      state = AsyncValue.error('Failed to check updates', st);
+      state = AsyncError(e, st);
     }
   }
 
@@ -93,7 +92,6 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
       (release) => release['prerelease'] == false,
       orElse: () => throw Exception('No stable release found'),
     );
-
     final latestVersion = latestRelease['tag_name'].toString();
     return _compareVersions(latestVersion, currentVersion) > 0;
   }
@@ -243,7 +241,6 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
   int _compareVersions(String v1, String v2) {
     final version1 = v1.replaceAll('v', '').split('.');
     final version2 = v2.replaceAll('v', '').split('.');
-
     for (var i = 0; i < version1.length && i < version2.length; i++) {
       final num1 = int.parse(version1[i]);
       final num2 = int.parse(version2[i]);
