@@ -367,12 +367,17 @@
   "checkInternetLiveCamera": "Vous devez vous connecter à Internet pour configurer la caméra en direct",
   "somethingWentWrong": "Quelque chose s'est mal passé ! Veuillez réessayer",
   "somethingWrong": "Quelque chose s'est mal passé",
-  "tryAgainLater": "Veuillez réessayer plus tard"
-
-
-
-
-
-
-
+  "tryAgainLater": "Veuillez réessayer plus tard",
+  "checkForUpdates": "Vérifier les mises à jour",
+  "checkForNewVersion": "Vérifiez si une nouvelle version est disponible",
+  "wouldYouLikeToUpdate": "Souhaitez-vous mettre à jour l'application ?",
+  "updateCompleted": "Mise à jour terminée avec succès !",
+  "noUpdates": "Aucune mise à jour",
+  "usingLatestVersion": "Vous utilisez la dernière version.",
+  "updateCancelled": "Mise à jour annulée",
+  "checkingUpdates": "Vérification des mises à jour...",
+  "downloadingUpdate": "Téléchargement de la mise à jour...",
+  "installingUpdate": "Installation de la mise à jour...",
+  "updateCompletedSuccessfully": "Mise à jour terminée avec succès",
+  "updateFailed": "Échec de la mise à jour"
 }

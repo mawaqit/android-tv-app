@@ -97,6 +97,11 @@ abstract class SystemFeaturesConstant {
   static const String kEthernet = 'android.hardware.ethernet';
 }
 
+abstract class ManualUpdateConstant {
+  static const String githubApiBaseUrl = 'https://api.github.com/repos/mawaqit/android-tv-app/releases';
+  static const String githubAcceptHeader = 'application/vnd.github.v3+json';
+}
+
 abstract class RtspCameraStreamConstant {
   static const maxRetries = 3;
   static const retryDelay = Duration(seconds: 2);
