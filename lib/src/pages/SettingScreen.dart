@@ -41,6 +41,7 @@ import '../state_management/random_hadith/random_hadith_notifier.dart';
 import '../widgets/screen_lock_widget.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
+import 'rtsp_camera_settings_screen.dart';
 
 class SettingScreen extends ConsumerStatefulWidget {
   const SettingScreen({super.key});
