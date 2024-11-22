@@ -21,8 +21,9 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
   Future<RTSPCameraSettingsState> initializeSettings() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final isEnabled = prefs.getBool('rtsp_camera_enabled') ?? false;
-      final savedUrl = prefs.getString('rtsp_camera_url');
+      final isEnabled = prefs.getBool(RtspCameraStreamConstant.prefKeyEnabled) ?? false;
+      final savedUrl = prefs.getString(RtspCameraStreamConstant.prefKeyUrl);
+
 
       if (isEnabled && savedUrl != null) {
         return await updateStream(isEnabled: isEnabled, url: savedUrl);
@@ -46,7 +47,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
   Future<void> toggleEnabled(bool isEnabled) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('rtsp_camera_enabled', isEnabled);
+      await prefs.setBool(RtspCameraStreamConstant.prefKeyEnabled, isEnabled);
 
       final currentState = state.value;
       if (currentState != null) {
@@ -74,7 +75,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('rtsp_camera_enabled', isEnabled);
+      await prefs.setBool(RtspCameraStreamConstant.prefKeyEnabled, isEnabled);
 
       // If there's no URL, just update the enabled state
       if (url == null) {
@@ -86,7 +87,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
         );
       }
 
-      await prefs.setString('rtsp_camera_url', url);
+      await prefs.setString(RtspCameraStreamConstant.prefKeyUrl, url);
 
       // YouTube URL handling
       if (RtspCameraStreamConstant.youtubeUrlRegex.hasMatch(url)) {
