@@ -352,5 +352,17 @@
         "example": "604"
       }
     }
-  }
+  },
+  "checkForUpdates": "التحقق من التحديثات",
+  "checkForNewVersion": "تحقق مما إذا كانت هناك نسخة جديدة متوفرة",
+  "wouldYouLikeToUpdate": "هل ترغب في تحديث التطبيق؟",
+  "updateCompleted": "تم التحديث بنجاح!",
+  "noUpdates": "لا توجد تحديثات",
+  "usingLatestVersion": "أنت تستخدم أحدث إصدار.",
+  "updateCancelled": "تم إلغاء التحديث",
+  "checkingUpdates": "جارٍ التحقق من التحديثات...",
+  "downloadingUpdate": "جارٍ تنزيل التحديث...",
+  "installingUpdate": "جارٍ تثبيت التحديث...",
+  "updateCompletedSuccessfully": "تم التحديث بنجاح",
+  "updateFailed": "فشل التحديث"
 }

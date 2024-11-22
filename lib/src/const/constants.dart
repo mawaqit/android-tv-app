@@ -106,3 +106,8 @@ abstract class MawaqitBackendSettingsConstant {
   static const String kSettingsIosUserAgent =
       "Mozilla\/5.0 (iPhone; CPU iPhone OS 14_5 like Mac OS X) AppleWebKit\/605.1.15 (KHTML, like Gecko) CriOS\/90.0.4430.78 Mobile\/15E148 Safari\/604.1";
 }
+
+abstract class ManualUpdateConstant {
+  static const String githubApiBaseUrl = 'https://api.github.com/repos/mawaqit/android-tv-app/releases';
+  static const String githubAcceptHeader = 'application/vnd.github.v3+json';
+}

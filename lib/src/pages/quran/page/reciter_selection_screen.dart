@@ -23,6 +23,8 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
 
 import '../../../domain/model/quran/reciter_model.dart';
+import '../reading/quran_reading_screen.dart';
+import 'package:mawaqit/src/routes/routes_constant.dart';
 
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
@@ -108,6 +110,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     ref.read(reciteNotifierProvider.notifier).setSearchQuery(_searchController.text, isAllReciters);
   }
 
+  void _navigateToReading() {
+    ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+    Navigator.pushReplacementNamed(context, Routes.quranReading);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,24 +131,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             color: Colors.white,
             size: 15.sp,
           ),
-          onPressed: () async {
-            ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => QuranReadingScreen(),
-              ),
-            );
-          },
+          onPressed: _navigateToReading,
         ),
       ),
       appBar: AppBar(
+        toolbarHeight: 40,
         backgroundColor: Color(0xFF28262F),
         elevation: 0,
         title: AutoSizeText(
           S.of(context).chooseReciter,
           style: TextStyle(
             color: Colors.white,
+            fontSize: 14.sp,
             fontWeight: FontWeight.bold,
           ),
           maxLines: 1,

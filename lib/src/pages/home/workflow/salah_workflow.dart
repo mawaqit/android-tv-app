@@ -12,13 +12,14 @@ import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 
 import '../sub_screens/AdhanSubScreen.dart';
 import '../widgets/workflows/WorkFlowWidget.dart';
 
 /// handling the logic form 5min before adhan -> the last of after salah azkar
-class SalahWorkflowScreen extends StatefulWidget {
+class SalahWorkflowScreen extends ConsumerStatefulWidget {
   const SalahWorkflowScreen({
     Key? key,
     required this.onDone,
@@ -28,10 +29,16 @@ class SalahWorkflowScreen extends StatefulWidget {
   final void Function() onDone;
 
   @override
-  State<SalahWorkflowScreen> createState() => _SalahWorkflowScreenState();
+  ConsumerState<SalahWorkflowScreen> createState() => _SalahWorkflowScreenState();
 }
 
-class _SalahWorkflowScreenState extends State<SalahWorkflowScreen> {
+class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> {
+  // Changed to ConsumerState
+  @override
+  void initState() {
+    super.initState();
+  }
+
   calculateCurrentSalah(MosqueManager mosqueManger) {
     if (mosqueManger.nextSalahAfter() < Duration(minutes: 5)) return mosqueManger.nextSalahIndex();
 

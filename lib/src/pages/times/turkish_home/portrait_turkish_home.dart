@@ -91,8 +91,9 @@ class _PortraitTurkishHomeState extends riverpod.ConsumerState<PortraitTurkishHo
     final isIqamaMoreImportant = mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
     final iqamaEnabled = mosqueManager.mosqueConfig?.iqamaEnabled == true;
 
-    final nextActiveSalah = mosqueManager.nextSalahIndex();
-
+    final nextActiveSalah = mosqueManager.mosqueConfig!.iqamaMoreImportant == true
+        ? mosqueManager.nextSalahAfterIqamaIndex()
+        : mosqueManager.nextSalahIndex();
     return Column(
       children: [
         MosqueHeader(mosque: mosqueManager.mosque!),

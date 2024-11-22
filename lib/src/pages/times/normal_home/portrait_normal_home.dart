@@ -92,8 +92,9 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
     final isIqamaMoreImportant = mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
     final iqamaEnabled = mosqueManager.mosqueConfig?.iqamaEnabled == true;
 
-    final nextActiveSalah = mosqueManager.nextSalahIndex();
-
+    final nextActiveSalah = mosqueManager.mosqueConfig!.iqamaMoreImportant == true
+        ? mosqueManager.nextSalahAfterIqamaIndex()
+        : mosqueManager.nextSalahIndex();
     return Column(
       children: [
         SizedBox(height: 15.vh, child: MosqueHeader(mosque: mosqueManager.mosque!)),

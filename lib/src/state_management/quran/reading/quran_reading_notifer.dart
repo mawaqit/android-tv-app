@@ -165,6 +165,14 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     return "";
   }
 
+  Future<void> toggleRotation() async {
+    state = await AsyncValue.guard(() async {
+      return state.value!.copyWith(
+        isRotated: !state.value!.isRotated,
+      );
+    });
+  }
+
   Future<List<SvgPicture>> _loadSvgs({required MoshafType moshafType}) async {
     final repository = await ref.read(quranReadingRepositoryProvider.future);
     return repository.loadAllSvgs(moshafType);
