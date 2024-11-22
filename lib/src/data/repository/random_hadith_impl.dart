@@ -85,11 +85,9 @@ class RandomHadithImpl implements RandomHadithRepository {
       for (final lang in languageList) {
         log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: language in for $lang');
         // Use an isolate to fetch the Hadith in XML format and cache it locally.
-        final hadithXmlList = await remoteDataSource.findSpecificHadith(
-            language: lang,
-            searchText: 'وعنْ كعْبِ بن عُرْوةَ رضي اللَّه عَنْهُ عَنْ رسول اللَّه صَلّى اللهُ عَلَيْهِ وسَلَّم قال :');
+        final hadithXmlList = await remoteDataSource.getRandomHadithXML(language: lang);
         if (hadithXmlList != null) {
-          final hadithList = [hadithXmlList.text ?? ''];
+          final hadithList = hadithXmlList.map((e) => e.text).whereType<String>().toList();
           log('random_hadith: RandomHadithImpl: fetchAndCacheHadith: hadithList ${hadithList.length} ${hadithList.first}');
           await localDataSource.cacheRandomHadith(lang, hadithList);
         }
@@ -115,7 +113,7 @@ class RandomHadithImpl implements RandomHadithRepository {
   Future<String> _handleOnlineMode(String language) async {
     log('random_hadith: RandomHadithImpl: Handling online mode');
 
-    // final hadith = await remoteDataSource.getRandomHadith(language: language);
+    final hadith = await remoteDataSource.getRandomHadith(language: language);
 
     final lastRunTime = sharedPreferences.getInt(RandomHadithConstant.kLastHadithXMLFetchDate);
     final lastRunLanguage = sharedPreferences.getString(RandomHadithConstant.kLastHadithXMLFetchLanguage);
@@ -135,7 +133,7 @@ class RandomHadithImpl implements RandomHadithRepository {
     // If the fetch is not needed, return the cached Hadith.
     if (!isFetchNeeded) {
       log('random_hadith: RandomHadithImpl: Returning cached Hadith');
-      return 'وعنْ كعْبِ بن عُرْوةَ رضي اللَّه عَنْهُ عَنْ رسول اللَّه صَلّى اللهُ عَلَيْهِ وسَلَّم قال : « مُعقِّبَاتٌ لا يَخِيبُ قَائِلُهُنَّ ­ أَو فَاعِلُهُنَّ ­ دُبُرَ كُلِّ صلاةٍُ مكتُوبةٍ : ثَلاثاً وثَلاثينَ تَسْبِيحَةً ، وَثَلاثاً وَثَلاثِينَ تَحْمِيدَةً ، وَأَرْبَعاً وثَلاثِينَ تَكبِيرةً » رواه مسلم';
+      return hadith;
     }
 
     // Update the date of the last successful fetch operation.
@@ -148,7 +146,7 @@ class RandomHadithImpl implements RandomHadithRepository {
     fetchAndCacheHadith(language);
 
     log('random_hadith: RandomHadithImpl: Returning fetched Hadith');
-    return 'وعنْ كعْبِ بن عُرْوةَ رضي اللَّه عَنْهُ عَنْ رسول اللَّه صَلّى اللهُ عَلَيْهِ وسَلَّم قال : « مُعقِّبَاتٌ لا يَخِيبُ قَائِلُهُنَّ ­ أَو فَاعِلُهُنَّ ­ دُبُرَ كُلِّ صلاةٍُ مكتُوبةٍ : ثَلاثاً وثَلاثينَ تَسْبِيحَةً ، وَثَلاثاً وَثَلاثِينَ تَحْمِيدَةً ، وَأَرْبَعاً وثَلاثِينَ تَكبِيرةً » رواه مسلم';
+    return hadith;
   }
 
   /// Handles the offline mode for fetching a random Hadith.

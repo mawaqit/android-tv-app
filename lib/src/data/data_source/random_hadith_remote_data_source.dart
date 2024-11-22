@@ -25,7 +25,7 @@ class RandomHadithRemoteDataSource {
 
   /// [getRandomHadith] Fetches a random hadith in plain text format from the remote server based
   /// on the provided language.
-  Future<String> x({
+  Future<String> getRandomHadith({
     String language = 'ar',
   }) async {
     try {
@@ -64,34 +64,6 @@ class RandomHadithRemoteDataSource {
       return hadithXML;
     } catch (e) {
       logger.e('Error fetching random hadith XML $e', error: e);
-      rethrow;
-    }
-  }
-
-  /// Find specific hadith by text content
-  Future<XmlElement?> findSpecificHadith({
-    String language = 'ar',
-    required String searchText,
-  }) async {
-    log('random_hadith: RandomHadithRemoteDataSource: Searching for specific hadith');
-    try {
-      final response = await staticDio.get('/xml/ahadith/$language.xml');
-      final XmlElement? hadithXML = await Isolate.run(
-        () async {
-          final document = XmlDocument.from(response.data)!;
-          final hadithList = document.getElements('hadith');
-
-          // Find the hadith containing the specific text
-          return hadithList?.firstWhere(
-            (element) => element.text!.contains(searchText),
-            orElse: () => hadithList.first,
-          );
-        },
-        debugName: 'random_hadith: findSpecificHadith',
-      );
-      return hadithXML;
-    } catch (e) {
-      logger.e('Error finding specific hadith: $e', error: e);
       rethrow;
     }
   }
