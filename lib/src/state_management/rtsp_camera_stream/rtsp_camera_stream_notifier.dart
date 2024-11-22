@@ -169,7 +169,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
     }
   }
 
-  Future<void> clearSnackbarFlag() async {
+  Future<void> clearSnackBarFlag() async {
     final currentState = state.value;
     if (currentState != null) {
       state = AsyncValue.data(currentState.copyWith(showValidationSnackbar: false));

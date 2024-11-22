@@ -81,7 +81,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                 ),
               ),
             );
-            ref.read(rtspCameraSettingsProvider.notifier).clearSnackbarFlag();
+            ref.read(rtspCameraSettingsProvider.notifier).clearSnackBarFlag();
           });
         }
 
