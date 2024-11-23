@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/domain/error/rtsp_expceptions.dart';
 import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_notifier.dart';
 import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_state.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
@@ -50,43 +51,51 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     final asyncState = ref.watch(rtspCameraSettingsProvider);
+    ref.listen(rtspCameraSettingsProvider, (previous, next) {
+      if (previous != next && !next.isLoading && next.hasValue && !next.hasError && next.value!.isRTSPEnabled) {
+        final state = next.value!;
+
+        // Only show snackbar when URL validation status changes
+        ScaffoldMessenger.of(context).clearSnackBars();
+
+        String message;
+        Color backgroundColor;
+
+        if (state.streamUrl != null && !state.isInvalidUrl) {
+          message = S.of(context).validRtspUrl;
+          backgroundColor = Colors.green;
+        } else if (state.isInvalidUrl) {
+          message = S.of(context).invalidRtspUrl;
+          backgroundColor = Colors.red;
+        } else {
+          return;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              message,
+              style: const TextStyle(fontSize: 16),
+            ),
+            backgroundColor: backgroundColor,
+            duration: const Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+    });
 
     return asyncState.when(
       data: (state) {
-        // Show snackbar if needed
-        if (state.showValidationSnackbar) {
-          String message;
-          if (state.invalidStreamUrl) {
-            message = S.of(context).invalidRtspUrl;
-          } else if (state.streamUrl != null) {
-            message = S.of(context).validRtspUrl;
-          } else {
-            message = S.of(context).somethingWentWrong;
-          }
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  message,
-                  style: const TextStyle(fontSize: 16),
-                ),
-                backgroundColor: state.invalidStreamUrl ? Colors.red : Colors.green,
-                duration: const Duration(seconds: 3),
-                behavior: SnackBarBehavior.floating,
-                margin: const EdgeInsets.all(16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            );
-            ref.read(rtspCameraSettingsProvider.notifier).clearSnackBarFlag();
-          });
-        }
-
         return Scaffold(
-          appBar: state.isRTSPEnabled && !state.invalidStreamUrl
+          appBar: state.isRTSPEnabled
               ? AppBar(
                   backgroundColor: Colors.transparent,
                   elevation: 0,
@@ -101,7 +110,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           body: SafeArea(
             child: Stack(
               children: [
-                if (!state.isRTSPEnabled || state.invalidStreamUrl)
+                if (!state.isRTSPEnabled)
                   ScreenWithAnimationWidget(
                     animation: "settings",
                     child: SingleChildScrollView(
@@ -144,37 +153,11 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         body: _buildLoadingOverlay(),
       ),
       error: (error, stackTrace) {
-        log('RTSP Camera Settings Error: $error\nStack trace: $stackTrace');
-
-        return Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: Colors.red,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  S.of(context).somethingWrong,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  S.of(context).tryAgainLater,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+        if (error is RTSPCameraException) {
+          return _buildErrorScreen(error);
+        } else {
+          return _buildErrorScreen(RTSPStreamUpdateException(error.toString()));
+        }
       },
     );
   }
@@ -204,6 +187,43 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorScreen(RTSPCameraException error) {
+    String errorMessage = '';
+
+    errorMessage = S.of(context).somethingWentWrong;
+
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              size: 48,
+              color: Colors.red,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              errorMessage,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(rtspCameraSettingsProvider);
+              },
+              child: Text(S.of(context).tryAgain),
+            ),
+          ],
         ),
       ),
     );

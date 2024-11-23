@@ -99,7 +99,6 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
   ) {
     // Check for RTSP stream first
     if (streamState.isRTSPEnabled &&
-        !streamState.invalidStreamUrl &&
         streamState.streamType == StreamType.rtsp &&
         streamState.videoController != null &&
         connectivityStatus != ConnectivityStatus.disconnected) {
@@ -126,7 +125,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       }
       return const Scaffold(backgroundColor: Colors.black);
     } else {
-      return streamState.invalidStreamUrl || streamState.streamUrl == null
+      return streamState.streamUrl == null
           ? MawaqitYoutubePlayer(
               channelId: mosqueManager.mosque!.streamUrl!,
               onDone: widget.onDone,

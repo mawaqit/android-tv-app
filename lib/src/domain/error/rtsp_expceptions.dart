@@ -14,13 +14,16 @@ class RTSPInitializationException extends RTSPCameraException {
 }
 
 class RTSPToggleException extends RTSPCameraException {
-  RTSPToggleException(String message)
-      : super('Error toggling RTSP camera: $message', 'RTSP_TOGGLE_ERROR');
+  RTSPToggleException(String message) : super('Error toggling RTSP camera: $message', 'RTSP_TOGGLE_ERROR');
 }
 
 class InvalidRTSPURLException extends RTSPCameraException {
-  InvalidRTSPURLException(String message)
-      : super('Invalid RTSP URL: $message', 'INVALID_RTSP_URL_ERROR');
+  InvalidRTSPURLException(String message) : super('Invalid RTSP URL: $message', 'INVALID_RTSP_URL_ERROR');
+}
+
+class URLNotProvidedRTSPURLException extends RTSPCameraException {
+  URLNotProvidedRTSPURLException(String message)
+      : super('URL not provided: $message', 'URL_NOT_PROVIDED_RTSP_URL_ERROR');
 }
 
 class YouTubeVideoIdExtractionException extends RTSPCameraException {
@@ -29,11 +32,9 @@ class YouTubeVideoIdExtractionException extends RTSPCameraException {
 }
 
 class RTSPStreamUpdateException extends RTSPCameraException {
-  RTSPStreamUpdateException(String message)
-      : super('Error updating RTSP stream: $message', 'RTSP_STREAM_UPDATE_ERROR');
+  RTSPStreamUpdateException(String message) : super('Error updating RTSP stream: $message', 'RTSP_STREAM_UPDATE_ERROR');
 }
 
 class RTSPUnknownException extends RTSPCameraException {
-  RTSPUnknownException(String message)
-      : super('Unknown RTSP error: $message', 'RTSP_UNKNOWN_ERROR');
+  RTSPUnknownException(String message) : super('Unknown RTSP error: $message', 'RTSP_UNKNOWN_ERROR');
 }
