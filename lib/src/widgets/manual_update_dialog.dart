@@ -11,7 +11,8 @@ class UpdateDialogMessages {
   static Map<UpdateStatus, String> getLocalizedMessage(BuildContext context) {
     return {
       UpdateStatus.checking: S.of(context).checkingForUpdates,
-      UpdateStatus.available: S.of(context).updateAvailable,
+/*       UpdateStatus.available: S.of(context).updateAvailable,
+ */
       UpdateStatus.notAvailable: S.of(context).usingLatestVersion,
       UpdateStatus.downloading: S.of(context).downloadingUpdate,
       UpdateStatus.installing: S.of(context).installingUpdate,
@@ -40,13 +41,32 @@ class UpdateDialog {
     );
   }
 
-  static Widget _buildDialogContent(BuildContext context, AsyncValue<UpdateState> updateState) {
+  static Widget _buildDialogContent(
+      BuildContext context, AsyncValue<UpdateState> updateState) {
     final localizedMessages = UpdateDialogMessages.getLocalizedMessage(context);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(localizedMessages[updateState.value?.status] ?? S.of(context).wouldYouLikeToUpdate),
+        if (updateState.value?.currentVersion != null &&
+            updateState.value?.availableVersion != null) ...[
+          Text(
+              'Your app is running version ${updateState.value?.currentVersion}. A new update (version ${updateState.value?.availableVersion}) is available with the latest features and improvements.'
+              /* style: Theme.of(context).textTheme.bodyMedium, */
+              ),
+          const SizedBox(height: 8),
+        ],
+        if (updateState.value?.status == UpdateStatus.error)
+          Text(
+            updateState.value?.message ?? S.of(context).updateFailed,
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+            textAlign: TextAlign.center,
+          )
+        else
+          Text(
+            localizedMessages[updateState.value?.status] ??
+                S.of(context).wouldYouLikeToUpdate,
+          ),
         if (updateState.value?.progress != null) ...[
           const SizedBox(height: 16),
           LinearProgressIndicator(
@@ -89,7 +109,9 @@ class UpdateDialog {
         );
 
     if (isDeviceRooted) {
-      ref.read(manualUpdateNotifierProvider.notifier).downloadAndInstallUpdate();
+      ref
+          .read(manualUpdateNotifierProvider.notifier)
+          .downloadAndInstallUpdate();
     } else {
       ref.read(appUpdateProvider.notifier).openStore();
       Navigator.pop(context);

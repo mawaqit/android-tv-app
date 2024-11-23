@@ -10,12 +10,14 @@ import 'dart:io';
 
 import 'package:upgrader/upgrader.dart';
 
-final manualUpdateNotifierProvider = AsyncNotifierProvider<ManualUpdateNotifier, UpdateState>(() {
+final manualUpdateNotifierProvider =
+    AsyncNotifierProvider<ManualUpdateNotifier, UpdateState>(() {
   return ManualUpdateNotifier();
 });
 
 class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
-  static const platform = MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
+  static const platform =
+      MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
   late final Dio _dio;
   CancelToken? _cancelToken;
 
@@ -62,15 +64,20 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
 
       if (hasUpdate) {
         final downloadUrl = await _getLatestReleaseUrl();
+        final latestVersion = await _getLatestVersion();
+
         state = AsyncData(state.value!.copyWith(
           status: UpdateStatus.available,
           message: 'Update available',
           downloadUrl: downloadUrl,
+          currentVersion: currentVersion,
+          availableVersion: latestVersion,
         ));
       } else {
-        state = const AsyncData(UpdateState(
+        state = AsyncData(UpdateState(
           status: UpdateStatus.notAvailable,
           message: 'You are using the latest version',
+          currentVersion: currentVersion,
         ));
       }
     } catch (e, st) {
@@ -109,6 +116,15 @@ class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
     }
 
     return response.data as List;
+  }
+
+  Future<String> _getLatestVersion() async {
+    final releases = await _fetchReleases();
+    final latestRelease = releases.firstWhere(
+      (release) => release['prerelease'] == false,
+      orElse: () => throw Exception('No stable release found'),
+    );
+    return latestRelease['tag_name'].toString();
   }
 
   Future<void> downloadAndInstallUpdate() async {
