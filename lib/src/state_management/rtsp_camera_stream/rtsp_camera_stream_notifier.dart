@@ -13,8 +13,22 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 enum StreamType { rtsp, youtubeLive }
 
 class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSettingsState> {
+  YoutubePlayerController? _youtubeController;
+  Player? _player;
+  VideoController? _videoController;
+
+  Future<void> dispose() async {
+    _youtubeController?.dispose();
+    await _player?.dispose();
+    await _videoController?.player.dispose();
+  }
+
   @override
   Future<RTSPCameraSettingsState> build() async {
+    ref.onDispose(() async {
+      await dispose();
+    });
+
     return await initializeSettings();
   }
 
@@ -23,7 +37,6 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       final prefs = await SharedPreferences.getInstance();
       final isEnabled = prefs.getBool(RtspCameraStreamConstant.prefKeyEnabled) ?? false;
       final savedUrl = prefs.getString(RtspCameraStreamConstant.prefKeyUrl);
-
 
       if (isEnabled && savedUrl != null) {
         return await updateStream(isEnabled: isEnabled, url: savedUrl);
@@ -89,7 +102,10 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
 
       await prefs.setString(RtspCameraStreamConstant.prefKeyUrl, url);
 
-      // YouTube URL handling
+      // Dispose existing controllers
+      _youtubeController?.dispose();
+      _player?.dispose();
+
       if (RtspCameraStreamConstant.youtubeUrlRegex.hasMatch(url)) {
         final videoId = extractVideoId(url);
         if (videoId == null) {
@@ -102,7 +118,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
           return state.value!;
         }
 
-        final controller = YoutubePlayerController(
+        _youtubeController = YoutubePlayerController(
           initialVideoId: videoId,
           flags: const YoutubePlayerFlags(
             autoPlay: true,
@@ -119,7 +135,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
           isRTSPEnabled: isEnabled,
           streamUrl: url,
           streamType: StreamType.youtubeLive,
-          youtubeController: controller,
+          youtubeController: _youtubeController,
           invalidStreamUrl: false,
           isLoading: false,
           showValidationSnackbar: true,
@@ -127,18 +143,16 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
 
         state = AsyncValue.data(newState);
         return newState;
-      }
-      // RTSP URL handling
-      else if (url.startsWith('rtsp://')) {
-        final player = Player();
-        final controller = VideoController(player);
-        await player.open(Media(url));
+      } else if (url.startsWith('rtsp://')) {
+        _player = Player();
+        _videoController = VideoController(_player!);
+        await _player!.open(Media(url));
 
         final newState = RTSPCameraSettingsState(
           isRTSPEnabled: isEnabled,
           streamUrl: url,
           streamType: StreamType.rtsp,
-          videoController: controller,
+          videoController: _videoController,
           invalidStreamUrl: false,
           isLoading: false,
           showValidationSnackbar: true,
