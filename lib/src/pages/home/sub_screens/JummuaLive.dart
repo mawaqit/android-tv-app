@@ -76,7 +76,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
           value,
           mosqueManager,
           jumuaaDisableInMosque,
-          RTSPCameraSettingsState(isLoading: false),
+          RTSPCameraSettingsState(),
         ),
       ),
       loading: () => const CircularProgressIndicator(
@@ -86,7 +86,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
         ConnectivityStatus.disconnected,
         mosqueManager,
         jumuaaDisableInMosque,
-        RTSPCameraSettingsState(isLoading: false),
+        RTSPCameraSettingsState(),
       ),
     );
   }

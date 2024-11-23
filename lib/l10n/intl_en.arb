@@ -378,8 +378,7 @@
   "validatingStream":"Validating Stream...",
   "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
   "somethingWentWrong": "Something went wrong! please try again",
-  "somethingWrong":"Something went wrong",
-  "tryAgainLater":"Please try again later"
-
-
+  "somethingWrong": "Something went wrong",
+  "tryAgainLater": "Please try again later",
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/..."
 }

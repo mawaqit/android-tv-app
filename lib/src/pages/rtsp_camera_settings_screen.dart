@@ -135,16 +135,13 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                       ),
                     ],
                   ),
-                if (state.isLoading) _buildLoadingOverlay(),
               ],
             ),
           ),
         );
       },
-      loading: () => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+      loading: () => Scaffold(
+        body: _buildLoadingOverlay(),
       ),
       error: (error, stackTrace) {
         log('RTSP Camera Settings Error: $error\nStack trace: $stackTrace');
@@ -267,7 +264,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                 ),
             decoration: InputDecoration(
               labelText: S.of(context).enterRtspUrl,
-              hintText: 'rtsp://... or https://youtube.com/live/...',
+              hintText: S.of(context).hintTextRtspUrl,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -276,22 +273,11 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           const SizedBox(height: 20),
           ElevatedButton.icon(
             focusNode: _saveButtonFocusNode,
-            onPressed: state.isLoading
-                ? null
-                : () => ref.read(rtspCameraSettingsProvider.notifier).updateStream(
-                      isEnabled: true,
-                      url: _urlController.text,
-                    ),
-            icon: state.isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Icon(Icons.save),
+            onPressed: () => ref.read(rtspCameraSettingsProvider.notifier).updateStream(
+                  isEnabled: true,
+                  url: _urlController.text,
+                ),
+            icon: const Icon(Icons.save),
             label: Text(S.of(context).save),
             style: ButtonStyle(
               padding: MaterialStateProperty.all(
