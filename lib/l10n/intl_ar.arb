@@ -243,8 +243,8 @@
   "screenLockMode": "وضع تشغيل/إيقاف الشاشة",
   "screenLockDesc": "تشغيل/إيقاف الشاشة قبل وبعد كل صلاة لتوفير الطاقة",
   "screenLockDesc2": "هذه ميزة تشغيل/إيقاف الشاشة قبل وبعد كل صلاة أذان",
-  "before": "دقائق قبل كل وقت للصلاة",
-  "after": "دقائق بعد كل وقت للصلاة",
+  "before": "الدقائق قبل كل صلاة",
+  "after": "الدقائق بعد كل صلاة",
   "updateAvailable": "التحديث متاح",
   "seeMore": "مشاهدة المزيد",
   "whatIsNew": "ما الجديد",
@@ -337,10 +337,10 @@
   },
   "noReciterSearchResult": "لم يتم العثور على نتائج لبحثك",
   "searchForReciter": "ابحث عن قارئ",
-  "downloadAllSuwarSuccessfully": "تم تحميل القرآن بالكامل",
+  "downloadAllSuwarSuccessfully": "تم تحميل القرآن كاملاً",
   "noSuwarDownload": "لا يوجد سور لتحميلها",
-  "connectDownloadQuran": "الرجاء الاتصال بالإنترنت لتنزيل القرآن",
-  "playInOnlineModeQuran": "الرجاء الاتصال بالإنترنت لتشغيل القرآن",
+  "connectDownloadQuran": "الرجاء الاتصال بالإنترنت للتنزيل",
+  "playInOnlineModeQuran": "الرجاء الاتصال بالإنترنت للتشغيل",
   "downloaded": "تم التحميل",
   "switchQuranType": "انتقل إلى {name}",
   "@switchQuranType": {
@@ -362,7 +362,7 @@
   "updateCancelled": "تم إلغاء التحديث",
   "checkingUpdates": "جارٍ التحقق من التحديثات...",
   "downloadingUpdate": "جارٍ تنزيل التحديث...",
-  "installingUpdate": "جارٍ تثبيت التحديث...",
+  "installingUpdate": "جارٍ تنزيل التحديث...",
   "updateCompletedSuccessfully": "تم التحديث بنجاح",
   "updateFailed": "فشل التحديث"
 }
