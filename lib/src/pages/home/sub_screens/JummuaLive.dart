@@ -61,12 +61,14 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
 
     return connectivity.when(
       data: (value) => streamStateAsync.when(
-        data: (streamState) => _switchStreamWidget(
-          value,
-          mosqueManager,
-          jumuaaDisableInMosque,
-          streamState,
-        ),
+        data: (streamState) {
+          return _switchStreamWidget(
+            value,
+            mosqueManager,
+            jumuaaDisableInMosque,
+            streamState,
+          );
+        },
         loading: () => const Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -90,17 +92,28 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       ),
     );
   }
-
   Widget _switchStreamWidget(
-    ConnectivityStatus connectivityStatus,
-    MosqueManager mosqueManager,
-    bool jumuaaDisableInMosque,
-    RTSPCameraSettingsState streamState,
-  ) {
-    // Check for RTSP stream first
+      ConnectivityStatus connectivityStatus,
+      MosqueManager mosqueManager,
+      bool jumuaaDisableInMosque,
+      RTSPCameraSettingsState streamState,
+      ) {
+    // First check if we should show Hadith screen or black screen
+    if (invalidStreamUrl ||
+        mosqueManager.mosque?.streamUrl == null ||
+        jumuaaDisableInMosque ||
+        connectivityStatus == ConnectivityStatus.disconnected) {
+      if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) {
+        return JumuaHadithSubScreen(onDone: widget.onDone);
+      }
+      return const Scaffold(backgroundColor: Colors.black);
+    }
+
+    // Check if RTSP is enabled and working
     if (streamState.isRTSPEnabled &&
         streamState.streamType == StreamType.rtsp &&
         streamState.videoController != null &&
+        streamState.streamUrl != null &&
         connectivityStatus != ConnectivityStatus.disconnected) {
       return Scaffold(
         backgroundColor: Colors.black,
@@ -115,28 +128,12 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       );
     }
 
-    // Fall back to YouTube or Hadith screen
-    if (invalidStreamUrl ||
-        mosqueManager.mosque?.streamUrl == null ||
-        jumuaaDisableInMosque ||
-        connectivityStatus == ConnectivityStatus.disconnected) {
-      if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) {
-        return JumuaHadithSubScreen(onDone: widget.onDone);
-      }
-      return const Scaffold(backgroundColor: Colors.black);
-    } else {
-      return streamState.streamUrl == null
-          ? MawaqitYoutubePlayer(
-              channelId: mosqueManager.mosque!.streamUrl!,
-              onDone: widget.onDone,
-              muted: mosqueManager.typeIsMosque,
-              onNotFound: () => setState(() => invalidStreamUrl = true),
-            )
-          : streamState.youtubeController != null
-              ? YoutubePlayer(
-                  controller: streamState.youtubeController!,
-                )
-              : const Scaffold(backgroundColor: Colors.black);
-    }
+    // Fallback to YouTube if RTSP is not available or not working
+    return MawaqitYoutubePlayer(
+      channelId: mosqueManager.mosque!.streamUrl!,
+      onDone: widget.onDone,
+      muted: mosqueManager.typeIsMosque,
+      onNotFound: () => setState(() => invalidStreamUrl = true),
+    );
   }
 }
