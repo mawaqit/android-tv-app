@@ -364,5 +364,20 @@
   "downloadingUpdate": "جارٍ تنزيل التحديث...",
   "installingUpdate": "جارٍ تثبيت التحديث...",
   "updateCompletedSuccessfully": "تم التحديث بنجاح",
-  "updateFailed": "فشل التحديث"
+  "updateFailed": "فشل التحديث",
+  "checkInternetUpdate": "يجب عليك الاتصال بالإنترنت للتحقق من وجود تحديثات جديدة",
+  "appUpdateAvailable": "تطبيقك يعمل بالإصدار {currentVersion}. تحديث جديد (الإصدار {updatedVersion}) متوفر مع أحدث الميزات والتحسينات.",
+  "@appUpdateAvailable": {
+    "description": "نص بديل لعرض رسالة التحديث المتاح",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  }
 }

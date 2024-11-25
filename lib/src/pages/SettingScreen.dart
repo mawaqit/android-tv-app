@@ -299,13 +299,41 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     onTap: ref.watch(manualUpdateNotifierProvider).isLoading
                         ? null
                         : () async {
-                            var softwareFuture = await PackageInfo.fromPlatform();
-                            final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
-                                  orElse: () => false,
-                                  data: (value) => value.isRootedDevice,
+                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                            ref.watch(connectivityProvider).maybeWhen(
+                              orElse: () {
+                                showCheckInternetDialog(
+                                  context: context,
+                                  onRetry: () {
+                                    AppRouter.pop();
+                                  },
+                                  title: checkInternet,
+                                  content: S.of(context).checkInternetUpdate,
                                 );
-                            ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(softwareFuture.version,
-                                context.read<AppLanguage>().appLocal.languageCode, isDeviceRooted);
+                              },
+                              data: (isConnectedToInternet) async {
+                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                  showCheckInternetDialog(
+                                    context: context,
+                                    onRetry: () {
+                                      AppRouter.pop();
+                                    },
+                                    title: checkInternet,
+                                    content: S.of(context).checkInternetUpdate,
+                                  );
+                                } else {
+                                  var softwareFuture = await PackageInfo.fromPlatform();
+                                  final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
+                                        orElse: () => false,
+                                        data: (value) => value.isRootedDevice,
+                                      );
+                                  ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(
+                                      softwareFuture.version,
+                                      context.read<AppLanguage>().appLocal.languageCode,
+                                      isDeviceRooted);
+                                }
+                              },
+                            );
                           },
                   ),
                 ],

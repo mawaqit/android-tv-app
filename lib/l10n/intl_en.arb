@@ -364,6 +364,22 @@
   "downloadingUpdate": "Downloading update...",
   "installingUpdate": "Installing update...",
   "updateCompletedSuccessfully": "Update completed successfully",
-  "updateFailed": "Update failed"
+  "updateFailed": "Update failed",
+  "checkInternetUpdate": "You must connect to internet to check for new updates",
+  "appUpdateAvailable": "Your app is running version {currentVersion}. A new update (version {updatedVersion} ) is available with the latest features and improvements.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  }
+
   
 }

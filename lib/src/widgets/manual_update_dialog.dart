@@ -41,19 +41,15 @@ class UpdateDialog {
     );
   }
 
-  static Widget _buildDialogContent(
-      BuildContext context, AsyncValue<UpdateState> updateState) {
+  static Widget _buildDialogContent(BuildContext context, AsyncValue<UpdateState> updateState) {
     final localizedMessages = UpdateDialogMessages.getLocalizedMessage(context);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (updateState.value?.currentVersion != null &&
-            updateState.value?.availableVersion != null) ...[
-          Text(
-              'Your app is running version ${updateState.value?.currentVersion}. A new update (version ${updateState.value?.availableVersion}) is available with the latest features and improvements.'
-              /* style: Theme.of(context).textTheme.bodyMedium, */
-              ),
+        if (updateState.value?.currentVersion != null && updateState.value?.availableVersion != null) ...[
+          Text(S.of(context).appUpdateAvailable(
+              updateState.value?.currentVersion as String, updateState.value?.availableVersion as String)),
           const SizedBox(height: 8),
         ],
         if (updateState.value?.status == UpdateStatus.error)
@@ -64,8 +60,7 @@ class UpdateDialog {
           )
         else
           Text(
-            localizedMessages[updateState.value?.status] ??
-                S.of(context).wouldYouLikeToUpdate,
+            localizedMessages[updateState.value?.status] ?? S.of(context).wouldYouLikeToUpdate,
           ),
         if (updateState.value?.progress != null) ...[
           const SizedBox(height: 16),
@@ -87,6 +82,10 @@ class UpdateDialog {
   }
 
   static List<Widget> _buildDialogActions(BuildContext context, WidgetRef ref) {
+    final updateState = ref.watch(manualUpdateNotifierProvider);
+    final isUpdating =
+        updateState.value?.status == UpdateStatus.downloading || updateState.value?.status == UpdateStatus.installing;
+
     return [
       TextButton(
         onPressed: () {
@@ -96,7 +95,7 @@ class UpdateDialog {
         child: Text(S.of(context).cancel),
       ),
       TextButton(
-        onPressed: () => _handleUpdateAction(context, ref),
+        onPressed: isUpdating ? null : () => _handleUpdateAction(context, ref),
         child: Text(S.of(context).update),
       ),
     ];
@@ -109,9 +108,7 @@ class UpdateDialog {
         );
 
     if (isDeviceRooted) {
-      ref
-          .read(manualUpdateNotifierProvider.notifier)
-          .downloadAndInstallUpdate();
+      ref.read(manualUpdateNotifierProvider.notifier).downloadAndInstallUpdate();
     } else {
       ref.read(appUpdateProvider.notifier).openStore();
       Navigator.pop(context);

@@ -364,5 +364,20 @@
   "downloadingUpdate": "Téléchargement de la mise à jour...",
   "installingUpdate": "Installation de la mise à jour...",
   "updateCompletedSuccessfully": "Mise à jour terminée avec succès",
-  "updateFailed": "Échec de la mise à jour"
+  "updateFailed": "Échec de la mise à jour",
+  "checkInternetUpdate": "Vous devez être connecté à Internet pour vérifier les nouvelles mises à jour",
+  "appUpdateAvailable": "Votre application utilise la version {currentVersion}. Une nouvelle mise à jour (version {updatedVersion}) est disponible avec les dernières fonctionnalités et améliorations.",
+  "@appUpdateAvailable": {
+    "description": "Texte de remplacement pour afficher le message de mise à jour disponible",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  }
 }

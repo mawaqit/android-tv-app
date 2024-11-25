@@ -10,14 +10,12 @@ import 'dart:io';
 
 import 'package:upgrader/upgrader.dart';
 
-final manualUpdateNotifierProvider =
-    AsyncNotifierProvider<ManualUpdateNotifier, UpdateState>(() {
+final manualUpdateNotifierProvider = AsyncNotifierProvider<ManualUpdateNotifier, UpdateState>(() {
   return ManualUpdateNotifier();
 });
 
 class ManualUpdateNotifier extends AsyncNotifier<UpdateState> {
-  static const platform =
-      MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
+  static const platform = MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
   late final Dio _dio;
   CancelToken? _cancelToken;
 
