@@ -94,11 +94,11 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
   }
 
   Widget _switchStreamWidget(
-      ConnectivityStatus connectivityStatus,
-      MosqueManager mosqueManager,
-      bool jumuaaDisableInMosque,
-      RTSPCameraSettingsState streamState,
-      ) {
+    ConnectivityStatus connectivityStatus,
+    MosqueManager mosqueManager,
+    bool jumuaaDisableInMosque,
+    RTSPCameraSettingsState streamState,
+  ) {
     // First check if we should show Hadith screen or black screen
     if (invalidStreamUrl ||
         mosqueManager.mosque?.streamUrl == null ||
@@ -132,9 +132,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     }
 
     // If RTSP is not working or disabled, show YouTube player
-    if (!streamState.isRTSPEnabled ||
-        streamState.streamType != StreamType.rtsp ||
-        streamState.streamUrl == null) {
+    if (!streamState.isRTSPEnabled || streamState.streamType != StreamType.rtsp || streamState.streamUrl == null) {
       return MawaqitYoutubePlayer(
         channelId: mosqueManager.mosque!.streamUrl!,
         onDone: widget.onDone,
