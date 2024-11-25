@@ -92,6 +92,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       ),
     );
   }
+
   Widget _switchStreamWidget(
       ConnectivityStatus connectivityStatus,
       MosqueManager mosqueManager,
@@ -109,12 +110,14 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       return const Scaffold(backgroundColor: Colors.black);
     }
 
-    // Check if RTSP is enabled and working
-    if (streamState.isRTSPEnabled &&
+    // Check if RTSP is enabled and properly configured
+    final isRTSPWorking = streamState.isRTSPEnabled &&
         streamState.streamType == StreamType.rtsp &&
         streamState.videoController != null &&
         streamState.streamUrl != null &&
-        connectivityStatus != ConnectivityStatus.disconnected) {
+        connectivityStatus != ConnectivityStatus.disconnected;
+
+    if (isRTSPWorking) {
       return Scaffold(
         backgroundColor: Colors.black,
         body: Center(
@@ -128,12 +131,19 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       );
     }
 
-    // Fallback to YouTube if RTSP is not available or not working
-    return MawaqitYoutubePlayer(
-      channelId: mosqueManager.mosque!.streamUrl!,
-      onDone: widget.onDone,
-      muted: mosqueManager.typeIsMosque,
-      onNotFound: () => setState(() => invalidStreamUrl = true),
-    );
+    // If RTSP is not working or disabled, show YouTube player
+    if (!streamState.isRTSPEnabled ||
+        streamState.streamType != StreamType.rtsp ||
+        streamState.streamUrl == null) {
+      return MawaqitYoutubePlayer(
+        channelId: mosqueManager.mosque!.streamUrl!,
+        onDone: widget.onDone,
+        muted: mosqueManager.typeIsMosque,
+        onNotFound: () => setState(() => invalidStreamUrl = true),
+      );
+    }
+
+    // Fallback case
+    return const Scaffold(backgroundColor: Colors.black);
   }
 }
