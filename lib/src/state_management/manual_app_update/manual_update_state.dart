@@ -19,6 +19,8 @@ class UpdateState extends Equatable {
   final String? error;
   final String? downloadUrl;
   final String? filePath;
+  final String? currentVersion;
+  final String? availableVersion;
 
   const UpdateState({
     this.status = UpdateStatus.initial,
@@ -27,6 +29,8 @@ class UpdateState extends Equatable {
     this.error,
     this.downloadUrl,
     this.filePath,
+    this.currentVersion,
+    this.availableVersion,
   });
 
   UpdateState copyWith({
@@ -36,6 +40,8 @@ class UpdateState extends Equatable {
     String? error,
     String? downloadUrl,
     String? filePath,
+    String? currentVersion,
+    String? availableVersion,
   }) {
     return UpdateState(
       status: status ?? this.status,
@@ -44,6 +50,8 @@ class UpdateState extends Equatable {
       error: error ?? this.error,
       downloadUrl: downloadUrl ?? this.downloadUrl,
       filePath: filePath ?? this.filePath,
+      currentVersion: currentVersion ?? this.currentVersion,
+      availableVersion: availableVersion ?? this.availableVersion,
     );
   }
 
