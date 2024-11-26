@@ -19,9 +19,25 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
   VideoController? _videoController;
 
   Future<void> dispose() async {
-    _youtubeController?.dispose();
-    await _player?.dispose();
-    await _videoController?.player.dispose();
+    try {
+      if (_youtubeController != null) {
+        _youtubeController!.dispose();
+        _youtubeController = null;
+      }
+
+      if (_player != null) {
+        await _player!.pause();
+        await _player!.dispose();
+        _player = null;
+      }
+
+      if (_videoController != null) {
+        await _videoController!.player.dispose();
+        _videoController = null;
+      }
+    } catch (e) {
+      log('Error disposing controllers: $e');
+    }
   }
 
   @override
@@ -121,25 +137,59 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       await prefs.setBool(RtspCameraStreamConstant.prefKeyEnabled, isEnabled);
       await prefs.setString(RtspCameraStreamConstant.prefKeyUrl, url);
 
+      // Dispose of existing controllers before creating new ones
+      await dispose();
+
       // Handle YouTube URLs (including live streams)
       if (RtspCameraStreamConstant.youtubeUrlRegex.hasMatch(url)) {
         final newState = await _handleYoutubeStream(isEnabled, url);
-        state = AsyncValue.data(newState);
+        if (state.hasValue) {
+          // Ensure we're not keeping any references to old controllers
+          state = AsyncValue.data(
+            state.value!.copyWith(
+              videoController: null,
+              youtubeController: newState.youtubeController,
+              streamType: StreamType.youtubeLive,
+              streamUrl: url,
+              isInvalidUrl: false,
+            ),
+          );
+        } else {
+          state = AsyncValue.data(newState);
+        }
         return;
       }
       // Handle RTSP URLs
       else if (url.startsWith('rtsp://')) {
         final newState = await _handleRTSPStream(isEnabled, url);
-        state = AsyncValue.data(newState);
+        if (state.hasValue) {
+          // Ensure we're not keeping any references to old controllers
+          state = AsyncValue.data(
+            state.value!.copyWith(
+              youtubeController: null,
+              videoController: newState.videoController,
+              streamType: StreamType.rtsp,
+              streamUrl: url,
+              isInvalidUrl: false,
+            ),
+          );
+        } else {
+          state = AsyncValue.data(newState);
+        }
         return;
       }
 
       throw InvalidRTSPURLException('Invalid URL format: $url');
     } catch (e, s) {
+      // Clean up on error
+      await dispose();
+
       if (e is InvalidRTSPURLException || e is URLNotProvidedRTSPURLException) {
         state = AsyncValue.data(
           state.value!.copyWith(
             isInvalidUrl: true,
+            videoController: null,
+            youtubeController: null,
           ),
         );
       } else {
@@ -158,6 +208,9 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
 
   Future<RTSPCameraSettingsState> _handleYoutubeStream(bool isEnabled, String url) async {
     try {
+      // Ensure previous controllers are disposed
+      await dispose();
+
       final videoId = extractVideoId(url);
       if (videoId == null) {
         throw InvalidRTSPURLException('URL is empty: $url');
@@ -183,12 +236,16 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
         youtubeController: _youtubeController,
       );
     } catch (e) {
+      await dispose();
       throw YouTubeVideoIdExtractionException(e.toString());
     }
   }
 
   Future<RTSPCameraSettingsState> _handleRTSPStream(bool isEnabled, String url) async {
     try {
+      // Ensure previous controllers are disposed
+      await dispose();
+
       _player = Player();
       _videoController = VideoController(_player!);
       await _player!.open(Media(url));
@@ -201,6 +258,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
         videoController: _videoController,
       );
     } catch (e) {
+      await dispose();
       throw RTSPStreamUpdateException(e.toString());
     }
   }

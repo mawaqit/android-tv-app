@@ -94,11 +94,11 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
   }
 
   Widget _switchStreamWidget(
-      ConnectivityStatus connectivityStatus,
-      MosqueManager mosqueManager,
-      bool jumuaaDisableInMosque,
-      RTSPCameraSettingsState streamState,
-      ) {
+    ConnectivityStatus connectivityStatus,
+    MosqueManager mosqueManager,
+    bool jumuaaDisableInMosque,
+    RTSPCameraSettingsState streamState,
+  ) {
     // First check if we should show Hadith screen or black screen
     if (jumuaaDisableInMosque || connectivityStatus == ConnectivityStatus.disconnected) {
       if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) {
