@@ -90,7 +90,6 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
         if (!isEnabled) {
           await pauseStreams();
         }
-
         state = AsyncValue.data(
           currentState.copyWith(
             isRTSPEnabled: isEnabled,
@@ -122,11 +121,14 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       await prefs.setBool(RtspCameraStreamConstant.prefKeyEnabled, isEnabled);
       await prefs.setString(RtspCameraStreamConstant.prefKeyUrl, url);
 
+      // Handle YouTube URLs (including live streams)
       if (RtspCameraStreamConstant.youtubeUrlRegex.hasMatch(url)) {
         final newState = await _handleYoutubeStream(isEnabled, url);
         state = AsyncValue.data(newState);
         return;
-      } else if (url.startsWith('rtsp://')) {
+      }
+      // Handle RTSP URLs
+      else if (url.startsWith('rtsp://')) {
         final newState = await _handleRTSPStream(isEnabled, url);
         state = AsyncValue.data(newState);
         return;
@@ -141,7 +143,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
           ),
         );
       } else {
-        log('Error updating RTSP stream: $e', error: e, stackTrace: s);
+        log('Error updating stream: $e', error: e, stackTrace: s);
         state = AsyncValue.error(e, s);
       }
     }

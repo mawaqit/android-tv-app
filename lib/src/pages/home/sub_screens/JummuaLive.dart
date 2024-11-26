@@ -94,16 +94,13 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
   }
 
   Widget _switchStreamWidget(
-    ConnectivityStatus connectivityStatus,
-    MosqueManager mosqueManager,
-    bool jumuaaDisableInMosque,
-    RTSPCameraSettingsState streamState,
-  ) {
+      ConnectivityStatus connectivityStatus,
+      MosqueManager mosqueManager,
+      bool jumuaaDisableInMosque,
+      RTSPCameraSettingsState streamState,
+      ) {
     // First check if we should show Hadith screen or black screen
-    if (invalidStreamUrl ||
-        mosqueManager.mosque?.streamUrl == null ||
-        jumuaaDisableInMosque ||
-        connectivityStatus == ConnectivityStatus.disconnected) {
+    if (jumuaaDisableInMosque || connectivityStatus == ConnectivityStatus.disconnected) {
       if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) {
         return JumuaHadithSubScreen(onDone: widget.onDone);
       }
@@ -117,6 +114,14 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
         streamState.streamUrl != null &&
         connectivityStatus != ConnectivityStatus.disconnected;
 
+    // Check if YouTube stream is configured
+    final isYouTubeWorking = streamState.isRTSPEnabled &&
+        streamState.streamType == StreamType.youtubeLive &&
+        streamState.youtubeController != null &&
+        streamState.streamUrl != null &&
+        connectivityStatus != ConnectivityStatus.disconnected;
+
+    // Priority 1: RTSP Stream if working
     if (isRTSPWorking) {
       return Scaffold(
         backgroundColor: Colors.black,
@@ -131,8 +136,23 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       );
     }
 
-    // If RTSP is not working or disabled, show YouTube player
-    if (!streamState.isRTSPEnabled || streamState.streamType != StreamType.rtsp || streamState.streamUrl == null) {
+    // Priority 2: YouTube Stream from RTSP settings if working
+    if (isYouTubeWorking) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: YoutubePlayer(
+              controller: streamState.youtubeController!,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Priority 3: Mosque Manager's YouTube stream as fallback
+    if (mosqueManager.mosque?.streamUrl != null) {
       return MawaqitYoutubePlayer(
         channelId: mosqueManager.mosque!.streamUrl!,
         onDone: widget.onDone,
