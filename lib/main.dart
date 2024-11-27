@@ -120,7 +120,7 @@ class MyApp extends riverpod.ConsumerWidget {
                       KurdishWidgetLocalizations.delegate,
                       KurdishCupertinoLocalizations.delegate
                     ],
-                    supportedLocales: [Locale('cnr'), ...S.supportedLocales],
+                    supportedLocales: S.supportedLocales,
                     debugShowCheckedModeBanner: false,
                     onGenerateRoute: RouteGenerator.generateRoute,
                     home: Splash(),
