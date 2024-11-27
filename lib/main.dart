@@ -34,6 +34,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
+import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
 
@@ -107,6 +108,10 @@ class MyApp extends riverpod.ConsumerWidget {
                       AnalyticsWrapper.observer(),
                     ],
                     localizationsDelegates: [
+                      MontenegrinMaterialLocalizations.delegate,
+                      MontenegrinWidgetsLocalizations.delegate,
+                      MontenegrinCupertinoLocalizations.delegate,
+
                       S.delegate,
                       GlobalCupertinoLocalizations.delegate,
                       GlobalMaterialLocalizations.delegate,
@@ -115,7 +120,7 @@ class MyApp extends riverpod.ConsumerWidget {
                       KurdishWidgetLocalizations.delegate,
                       KurdishCupertinoLocalizations.delegate
                     ],
-                    supportedLocales: S.supportedLocales,
+                    supportedLocales: [Locale('cnr'), ...S.supportedLocales],
                     debugShowCheckedModeBanner: false,
                     onGenerateRoute: RouteGenerator.generateRoute,
                     home: Splash(),
