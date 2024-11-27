@@ -172,7 +172,7 @@
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
-  "secondaryScreenExplanation": "غرفة الصلاة الثانوية )غرفة النساء أو طابق آخر على سبيل المثال(، ستظهر هذه الشاشة البث المباشر للجمعة إذا تم تفعيله على حساب MAWAQIT",
+  "secondaryScreenExplanation": "غرفة الصلاة الثانوية (غرفة النساء أو طابق آخر على سبيل المثال)، ستظهر هذه الشاشة البث المباشر للجمعة إذا تم تفعيله على حساب MAWAQIT",
   "mainScreenExplanation": "غرفة المسجد الرئيسية، هذه الشاشة لن تظهر البث المباشر للجمعة",
   "normalModeExplanation": "ستظهر الشاشة العادية مع أوقات الصلاة والإعلانات.",
   "announcementOnlyModeExplanation": "ستظهر الإعلانات طوال الوقت",
@@ -364,5 +364,21 @@
   "downloadingUpdate": "جارٍ تنزيل التحديث...",
   "installingUpdate": "جارٍ تثبيت التحديث...",
   "updateCompletedSuccessfully": "تم التحديث بنجاح",
-  "updateFailed": "فشل التحديث"
+  "updateFailed": "فشل التحديث",
+  "save": "حفظ",
+  "enterRtspUrl": "أدخل رابط RTSP أو YouTube Live",
+  "addRtspUrl": "أضف رابط بث كاميرا RTSP الخاص بك أدناه",
+  "enableRtspCamera": "تفعيل بث الكاميرا",
+  "rtspCameraSettings": "إعدادات الكاميرا",
+  "invalidRtspUrl": "رابط RTSP غير صالح. يرجى التحقق من الرابط والمحاولة مرة أخرى.",
+  "validRtspUrl": "تم التحقق من رابط RTSP وحفظه بنجاح.",
+  "rtspCameraSettingTitle": "اتصال الكاميرا المباشر",
+  "rtspCameraSettingDesc": "اتصل بالكاميرا المحلية واعرض بث صلاة الجمعة على شاشة التلفاز.",
+  "rtspCameraSettingScreenDesc": "إذا أدخلت رابطًا هنا، ستتحول شاشتك تلقائيًا إلى وضع بث الفيديو عند وصول وقت الجمعة.",
+  "validatingStream": "جارٍ التحقق من البث...",
+  "checkInternetLiveCamera": "يجب عليك الاتصال بالإنترنت لإعداد الكاميرا ",
+  "somethingWentWrong": "حدث خطأ ما! يرجى المحاولة مرة أخرى",
+  "somethingWrong": "حدث خطأ ما",
+  "tryAgainLater": "يرجى المحاولة لاحقًا"
+
 }

@@ -96,7 +96,9 @@ dependencies:
   hijri: ^3.0.0
 
   #  webview_flutter: ^3.0.0
-
+  media_kit: ^1.1.11 # Primary package.
+  media_kit_video: ^1.2.5 # For video rendering.
+  media_kit_libs_video: ^1.0.5 # Native video dependencies.
   rive_splash_screen: ^0.1.1
   lottie: ^2.3.2
   flutter_svg: ^2.0.5
