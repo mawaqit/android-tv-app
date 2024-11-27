@@ -111,7 +111,6 @@ class MyApp extends riverpod.ConsumerWidget {
                       MontenegrinMaterialLocalizations.delegate,
                       MontenegrinWidgetsLocalizations.delegate,
                       MontenegrinCupertinoLocalizations.delegate,
-
                       S.delegate,
                       GlobalCupertinoLocalizations.delegate,
                       GlobalMaterialLocalizations.delegate,
