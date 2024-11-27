@@ -11,7 +11,8 @@ class UpdateDialogMessages {
   static Map<UpdateStatus, String> getLocalizedMessage(BuildContext context) {
     return {
       UpdateStatus.checking: S.of(context).checkingForUpdates,
-      UpdateStatus.available: S.of(context).updateAvailable,
+/*       UpdateStatus.available: S.of(context).updateAvailable,
+ */
       UpdateStatus.notAvailable: S.of(context).usingLatestVersion,
       UpdateStatus.downloading: S.of(context).downloadingUpdate,
       UpdateStatus.installing: S.of(context).installingUpdate,
@@ -46,7 +47,21 @@ class UpdateDialog {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(localizedMessages[updateState.value?.status] ?? S.of(context).wouldYouLikeToUpdate),
+        if (updateState.value?.currentVersion != null && updateState.value?.availableVersion != null) ...[
+          Text(S.of(context).appUpdateAvailable(
+              updateState.value?.currentVersion as String, updateState.value?.availableVersion as String)),
+          const SizedBox(height: 8),
+        ],
+        if (updateState.value?.status == UpdateStatus.error)
+          Text(
+            updateState.value?.message ?? S.of(context).updateFailed,
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+            textAlign: TextAlign.center,
+          )
+        else
+          Text(
+            localizedMessages[updateState.value?.status] ?? S.of(context).wouldYouLikeToUpdate,
+          ),
         if (updateState.value?.progress != null) ...[
           const SizedBox(height: 16),
           LinearProgressIndicator(
@@ -67,6 +82,10 @@ class UpdateDialog {
   }
 
   static List<Widget> _buildDialogActions(BuildContext context, WidgetRef ref) {
+    final updateState = ref.watch(manualUpdateNotifierProvider);
+    final isUpdating =
+        updateState.value?.status == UpdateStatus.downloading || updateState.value?.status == UpdateStatus.installing;
+
     return [
       TextButton(
         onPressed: () {
@@ -76,7 +95,7 @@ class UpdateDialog {
         child: Text(S.of(context).cancel),
       ),
       TextButton(
-        onPressed: () => _handleUpdateAction(context, ref),
+        onPressed: isUpdating ? null : () => _handleUpdateAction(context, ref),
         child: Text(S.of(context).update),
       ),
     ];
