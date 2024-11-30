@@ -50,7 +50,7 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
       // UpdateAvailable() => _buildUpdateAvailableDialog(context, state),
       Downloading() => _buildDownloadingDialog(context, state),
       Extracting() => _buildExtractingDialog(context, state),
-      Success() => _buildSuccessDialog(context, state),
+      Success() => _successDialog(context),
       CancelDownload() => Container(),
       // NoUpdate() => _buildNoUpdateDialog(context, state),
       _ => Container(),
@@ -123,19 +123,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
           Text('${state.progress.toStringAsFixed(2)}%'),
         ],
       ),
-    );
-  }
-
-  Widget _buildSuccessDialog(BuildContext context, Success state) {
-    return AlertDialog(
-      title: Text(S.of(context).quranDownloaded),
-      actions: [
-        TextButton(
-          autofocus: true,
-          onPressed: () => Navigator.pop(context),
-          child: Text(S.of(context).ok),
-        ),
-      ],
     );
   }
 
@@ -231,5 +218,15 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
         ),
       ],
     );
+  }
+
+  Widget _successDialog(BuildContext context) {
+    Future.microtask(() {
+      // Close the current dialog
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+    });
+    return Container();
   }
 }
