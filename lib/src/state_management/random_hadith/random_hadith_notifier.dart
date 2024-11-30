@@ -12,7 +12,7 @@ import 'package:mawaqit/src/data/repository/random_hadith_impl.dart';
 class RandomHadithNotifier extends AsyncNotifier<RandomHadithState> {
   @override
   FutureOr<RandomHadithState> build() {
-    return RandomHadithState(hadith: '');
+    return RandomHadithState(hadith: '', language: '');
   }
 
   Future<void> getRandomHadith({
@@ -22,7 +22,7 @@ class RandomHadithNotifier extends AsyncNotifier<RandomHadithState> {
     state = await AsyncValue.guard(() async {
       final randomHadithUseCase = await ref.read(randomHadithUseCaseProvider.future);
       final hadith = await randomHadithUseCase.getRandomHadith(language: language);
-      return RandomHadithState(hadith: hadith);
+      return RandomHadithState(hadith: hadith, language: language);
     });
   }
 

@@ -1,12 +1,19 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
+import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
+import 'package:provider/provider.dart';
 
 /// this screen made to show of the hadith screen
-class HadithWidget extends StatelessWidget {
+class HadithWidget extends ConsumerWidget {
   HadithWidget({
     Key? key,
     this.title,
@@ -44,7 +51,23 @@ class HadithWidget extends StatelessWidget {
   final double maxHeight;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hadithLang = ref.watch<Locale>(
+      randomHadithNotifierProvider.select((state) {
+        try {
+          final lang = state.maybeWhen(
+            orElse: () => 'ar',
+            data: (state) {
+              return state.language;
+            },
+          );
+          return Locale(lang);
+        } catch (e) {
+          return Locale('ar');
+        }
+      }),
+    );
+
     return Padding(
       padding: padding ?? EdgeInsets.all(1.vwr),
       child: Column(
@@ -58,6 +81,8 @@ class HadithWidget extends StatelessWidget {
           if (arabicText != null && arabicText != '')
             contentText(
               arabicText!,
+              context,
+              hadithLang,
               textDirection: TextDirection.rtl,
               delay: .1.seconds,
             ),
@@ -70,6 +95,8 @@ class HadithWidget extends StatelessWidget {
           if (translatedText != null && translatedText != arabicText && translatedText != '')
             contentText(
               translatedText!,
+              context,
+              hadithLang,
               textDirection: textDirection,
               delay: .3.seconds,
             ),
@@ -97,7 +124,9 @@ class HadithWidget extends StatelessWidget {
   }
 
   Widget contentText(
-    String text, {
+    String text,
+    BuildContext context,
+    Locale hadithLanguage, {
     TextDirection? textDirection,
     Duration? delay,
   }) {
@@ -110,11 +139,12 @@ class HadithWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: AutoSizeText(
             text,
-            style: TextStyle(
-              fontSize: 600,
-              color: Colors.white,
-              shadows: kIqamaCountDownTextShadow,
-            ),
+            style: context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
+                  color: Colors.white,
+                  shadows: kIqamaCountDownTextShadow,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 600,
+                ),
             textAlign: TextAlign.center,
             textDirection: textDirection,
           ).animate().fadeIn(delay: delay).addRepaintBoundary(),
