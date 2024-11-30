@@ -24,17 +24,17 @@
   "sec": "Sec",
   "online": "Connecté",
   "missingMosqueId": "Numéro d'identification MAWAQIT #ID ou MOSQUE #ID manquant",
-  "mosqueIdIsNotValid": "Désolé, le {mosqueId} n'est pas un id de mosquée valide",
+  "mosqueIdIsNotValid": "{mosqueId} n'est pas un id de mosquée valide",
   "selectMosqueId": "Veuillez saisir l'ID de votre MAWAQIT",
   "mawaqitWelcome": "Bienvenue sur MAWAQIT",
-  "mawaqitDesc": "Assalamu Alaikom, et Baraka'Allah fikom pour avoir choisi MAWAQIT, le premier et #1 réseau de mosquées intelligentes au monde, utilisé par des millions de musulmans dans le monde entier à travers une centaine de pays depuis 2016.\n\nNous vous fournissons l'affichage de mosquée intelligent le plus avancé, disponible sur plusieurs appareils (Mobile, Tablettes, Smartwatch, écrans de télévision), sans collecter ou partager vos données personnelles.\n\nNous sommes une organisation à but non lucratif, et ce projet est un \"Waqf fi'sabili Allah\" (dotation dédiée).\nVeuillez soutenir ce projet béni ici : https://donate.mawaqit.net\n\nVos dons permettent à ce projet d'être accessible à tous, partout, totalement GRATUITEMENT, SANS PUBLICITÉ, et SANS ABONNEMENT MENSUEL.\n\nCe projet ne serait pas possible sans l'aide d'Allah qui a rassemblé une communauté passionnée de bénévoles talentueux et passionnés, qui travaillent jour et nuit pour vous fournir le meilleur service possible, et un système à la pointe de la technologie disponible 7/24.\n\nVeuillez envisager de faire un don pour que ce projet béni puisse continuer. Baraka'Allah fikom pour votre confiance et votre soutien continus.",
+  "mawaqitDesc": "Assalamu Alaikom, et Baraka'Allah fikom pour avoir choisi MAWAQIT, le premier et #1 réseau de mosquées intelligentes au monde, utilisé par des millions de musulmans dans le monde entier à travers 85+ pays depuis 2016.\n\nNous vous fournissons l'affichage de mosquée intelligente le plus avancé, disponible sur plusieurs appareils (Mobile, Smartwatch, écrans de télévision), sans collecter ou partager vos données personnelles.\n\nVeuillez soutenir ce projet béni ici : https://donate.mawaqit.net\n\nNous sommes une organisation à but non lucratif, et ce projet est un \"Waqf fi'sabili Allah\" (dotation dédiée).\n\nVos dons permettent à ce projet d'être accessible à tous, partout, totalement GRATUITEMENT, SANS PUBLICITÉ, et SANS ABONNEMENT MENSUEL.\n\nCe projet ne serait pas possible sans l'aide d'Allah qui a rassemblé une communauté passionnée de bénévoles talentueux et passionnés, qui travaillent jour et nuit pour vous fournir le meilleur service possible, et un système à la pointe de la technologie disponible 24 heures sur 24, 7 jours sur 7.\n\nVeuillez envisager de faire un don pour que ce projet béni puisse continuer. Baraka'Allah fikom pour votre confiance et votre soutien continus.",
   "privacyPolicy": "Politique de confidentialité",
   "termsOfService": "Conditions générales d’utilisation",
   "installationGuide": "Guide d'installation",
   "drawerTitle": "MAWAQIT",
   "drawerDesc": "Connecting muslims to Mosques",
   "backendError": "Désolé, nous n'avons pas pu nous connecter au serveur.\nVeuillez vérifier votre connexion Internet ou réessayer plus tard.",
-  "selectWithMosqueId": "Votre ID se trouve dans votre espace utilisateur mawaqit.net",
+  "selectWithMosqueId": "Essayez: 256, c'est l'ID de 'Grande Mosquée de Paris'",
   "searchForMosque": "Quelle mosquée recherchez-vous ? (ID, nom, ville, code postal...)",
   "searchMosque": "Chercher une mosquée",
   "mosqueNameError": "Entrer le nom de la mosquée",
@@ -88,36 +88,36 @@
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
-  "azkarList7": "اللهم أنت ربي، لا إله إلا أنت، خلقتني وأنا عبدُك, وأنا على عهدِك ووعدِك ما استطعتُ، أعوذ بك من شر ما صنعتُ، أبوءُ لَكَ بنعمتكَ عَلَيَّ، وأبوء بذنبي، فاغفر لي، فإنه لا يغفرُ الذنوب إلا أنت",
+  "azkarList7": "اللهم أنت ربي، لا إله إلا أنت، خلقتني وأنا عبدُك, وأنا على عهدِك ووعدِك ما استطعتُ، أعوذ بك من شر ما صنعتُ، أبوءُ لَكَ بنعمتكَ عَلَيَّ، وأبوء بذنبي، فاغفر لي، فإنه لا يغفرُ الذنوب إلا أنت",
   "@azkarList7": {
     "description": "اللهم أنت ربي، لا إله إلا أنت، خلقتني وأنا عبدُك, وأنا على عهدِك ووعدِك ما استطعتُ، أعوذ بك من شر ما صنعتُ، أبوءُ لَكَ بنعمتكَ عَلَيَّ، وأبوء بذنبي، فاغفر لي، فإنه لا يغفرُ الذنوب إلا أنت"
   },
-  "azkarList8": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر",
+  "azkarList8": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر",
   "@azkarList8": {
     "description": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر"
   },
-  "azkarList9": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]",
+  "azkarList9": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]",
   "@azkarList9": {
     "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
-  "azkarList10": "|اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ |ثلاثَ مرَّاتٍ",
+  "azkarList10": "|اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ |ثلاثَ مرَّاتٍ",
   "@azkarList10": {
     "description": "|اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ |ثلاثَ مرَّاتٍ"
   },
-  "azkarList11": "|حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ |سَبْعَ مَرّاتٍ",
+  "azkarList11": "|حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ |سَبْعَ مَرّاتٍ",
   "@azkarList11": {
     "description": "|حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ |سَبْعَ مَرّاتٍ"
   },
-  "azkarList12": "|رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً |ثلاثَ مرَّاتٍ",
+  "azkarList12": "|رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً |ثلاثَ مرَّاتٍ",
   "@azkarList12": {
     "description": "|رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً |ثلاثَ مرَّاتٍ"
   },
-  "azkarList13": "|لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ |عشرَ مرَّاتٍ",
+  "azkarList13": "|لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ |عشرَ مرَّاتٍ",
   "@azkarList13": {
     "description": "|لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ |عشرَ مرَّات"
   },
   "jumuaaScreenTitle": "L'heure du Joumoua",
-  "jumuaaHadith": "Le Prophète Alayhi essalam a dit : \"Quiconque fait les ablutions parfaitement puis va à la joumoua puis écoute et se tait, il lui est pardonné ce qui se trouve entre ce moment et le vendredi suivant et trois autres jours, et celui qui touche des pierres a certainement fait une futilité\".",
+  "jumuaaHadith": "Le Prophète ﷺ a dit : \"Quiconque fait les ablutions parfaitement puis va à la jumua puis écoute et se tait, il lui est pardonné ce qui se trouve entre ce moment et le vendredi suivant et trois autres jours, et celui qui touche des pierres a certainement fait une futilité\".",
   "shuruk": "Chourouk",
   "reset": "Reset",
   "mosqueNotFoundMessage": "Désolé, votre mosquée n'a pas été trouvée, elle est peut-être manquante ou temporairement désactivée.",
@@ -127,16 +127,16 @@
   "muharram": "Mouharram",
   "safar": "Safar",
   "rabiAlawwal": "Rabi' al-Awwal",
-  "rabiAlthani": "Rabi' al-thani",
-  "jumadaAlula": "Joumada al-oula",
+  "rabiAlthani": "Rabi' al-akhir",
+  "jumadaAlula": "Jumada al-Ula",
   "jumadaAlakhirah": "Joumada al-akhirah",
   "rajab": "Rajab",
   "shaban": "Chaabane",
   "ramadan": "Ramadan",
-  "shawwal": "Chaoual",
-  "dhuAlqidah": "Dhou al-Qi'dah",
-  "dhuAlhijjah": "Dhou al-Hijja",
-  "duaaBetweenSalahAndAdhan": "Selon Anas Ibn Mâlik, le Prophète (ﷺ) a dit : \"Les invocations entre l'Adhân et l’Iqâma ne sont pas rejetées\"",
+  "shawwal": "Shawwal",
+  "dhuAlqidah": "Dhu al-Qi'dah",
+  "dhuAlhijjah": "Dhu al-Hijja",
+  "duaaBetweenSalahAndAdhan": "    Selon Anas Ibn Mâlik, le Prophète (ﷺ) a dit : \"Les invocations entre l'Adhân et l’Iqâmah ne sont pas rejetées\"",
   "salatKhayrMinaNawm": "Assalatou khayroun mina nawm",
   "salatElEid": "Salat Al Aïd",
   "webView": "Forcer l'ancienne version (Online)",
@@ -290,20 +290,6 @@
       }
     }
   },
-  "quranReadingPagePortrait": "Page {currentPage} / {totalPages}",
-  "@quranReadingPagePortrait": {
-    "description": "Placeholder text for displaying Quran reading page portrait numbers",
-    "placeholders": {
-      "currentPage": {
-        "type": "int",
-        "example": "1"
-      },
-      "totalPages": {
-        "type": "int",
-        "example": "604"
-      }
-    }
-  },
   "chooseQuranPage": "Choisir une page",
   "checkingForUpdates": "Vérification des mises à jour...",
   "chooseQuranType": "Choisir quran",
@@ -311,6 +297,7 @@
   "warsh": "Warch",
   "favorites": "Favoris",
   "allReciters": "Tous les Réciteurs",
+  "noFavoriteReciters": "Pas de réciteur favori. Essayez d'en ajouter un à la liste",
   "reciterAddedToFavorites": "Le réciteur {name} a été ajouté aux favoris",
   "@reciterAddedToFavorites": {
     "description": "Message shown when a reciter is added to favorites",
@@ -335,11 +322,11 @@
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
   },
-  "noReciterSearchResult": "Aucun résultat trouvé pour votre recherche.",
-  "searchForReciter": "Chercher un réciteur",
+    "noReciterSearchResult": "Aucun résultat trouvé pour votre recherche.",
+    "searchForReciter": "Chercher un réciteur",
   "downloadAllSuwarSuccessfully": "Tout le Coran est téléchargé",
   "noSuwarDownload": "Aucune nouvelle sourate à télécharger",
-  "connectDownloadQuran": "Veuillez vous connecter à Internet pour télécharger",
+  "connectDownloadQuran":"Veuillez vous connecter à Internet pour télécharger",
   "playInOnlineModeQuran": "Veuillez vous connecter à Internet pour jouer",
   "downloaded": "Téléchargé",
   "switchQuranType": "Aller à {name}",
@@ -352,7 +339,36 @@
       }
     }
   },
-  "surahSelector": "Sélectionner une sourat",
+  "surahSelector":"Sélectionner une sourat",
+  "quranReadingPagePortrait": "Page {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "save": "Enregistrer",
+  "enterRtspUrl": "Entrez l'URL RTSP ou YouTube Live",
+  "addRtspUrl": "Ajoutez l'URL de votre flux de caméra ci-dessous",
+  "enableRtspCamera": "Activer le flux de la caméra",
+  "rtspCameraSettings": "Paramètres de la caméra",
+  "invalidRtspUrl": "URL invalide. Veuillez vérifier l'URL et réessayer.",
+  "validRtspUrl": "URL validée et enregistrée avec succès.",
+  "rtspCameraSettingTitle": "Connexion de la caméra en direct",
+  "rtspCameraSettingDesc": "Connectez-vous à votre caméra locale et affichez le flux de la prière de la jumua sur l'écran de la TV.",
+  "rtspCameraSettingScreenDesc": "Si vous entrez une URL ici, votre écran passera automatiquement en mode streaming vidéo lorsque l'heure de la Jumua arrive.",
+  "validatingStream": "Validation du flux...",
+  "checkInternetLiveCamera": "Vous devez vous connecter à Internet pour configurer la caméra en direct",
+  "somethingWentWrong": "Quelque chose s'est mal passé ! Veuillez réessayer",
+  "somethingWrong": "Quelque chose s'est mal passé",
+  "tryAgainLater": "Veuillez réessayer plus tard",
   "checkForUpdates": "Vérifier les mises à jour",
   "checkForNewVersion": "Vérifiez si une nouvelle version est disponible",
   "wouldYouLikeToUpdate": "Souhaitez-vous mettre à jour l'application ?",
@@ -364,6 +380,7 @@
   "downloadingUpdate": "Téléchargement de la mise à jour...",
   "installingUpdate": "Installation de la mise à jour...",
   "updateCompletedSuccessfully": "Mise à jour terminée avec succès",
+  "updateFailed": "Échec de la mise à jour",
   "updateFailed": "Échec de la mise à jour",
   "checkInternetUpdate": "Vous devez être connecté à Internet pour vérifier les nouvelles mises à jour",
   "appUpdateAvailable": "Votre application utilise la version {currentVersion}. Une nouvelle mise à jour (version {updatedVersion}) est disponible avec les dernières fonctionnalités et améliorations.",
