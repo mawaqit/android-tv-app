@@ -335,11 +335,11 @@
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
   },
-    "noReciterSearchResult": "No results found for your search",
-    "searchForReciter": "Search for a reciter",
+  "noReciterSearchResult": "No results found for your search",
+  "searchForReciter": "Search for a reciter",
   "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
   "noSuwarDownload": "No new suwars to download",
-  "connectDownloadQuran":"Please connect to Internet to download",
+  "connectDownloadQuran": "Please connect to Internet to download",
   "playInOnlineModeQuran": "Please connect to internet to play",
   "downloaded": "Downloaded",
   "switchQuranType": "Go to {name}",
@@ -352,7 +352,7 @@
       }
     }
   },
-  "surahSelector":"Select Surah",
+  "surahSelector": "Select Surah",
   "checkForUpdates": "Check for Updates",
   "checkForNewVersion": "Check if a new version is available",
   "wouldYouLikeToUpdate": "Would you like to update the app?",
@@ -380,5 +380,20 @@
   "somethingWentWrong": "Something went wrong! please try again",
   "somethingWrong": "Something went wrong",
   "tryAgainLater": "Please try again later",
-  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/..."
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/...",
+  "checkInternetUpdate": "You must connect to internet to check for new updates",
+  "appUpdateAvailable": "Your app is running version {currentVersion}. A new update (version {updatedVersion}) is available with the latest features and improvements.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  }
 }

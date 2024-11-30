@@ -342,14 +342,52 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   _SettingItem(
                     title: S.of(context).checkForUpdates,
                     subtitle: S.of(context).checkForNewVersion,
-                    icon: const Icon(Icons.system_update, size: 35),
-                    onTap: () async {
-                      var softwareFuture = await PackageInfo.fromPlatform();
-
-                      ref
-                          .read(manualUpdateNotifierProvider.notifier)
-                          .checkForUpdates(softwareFuture.version, context.read<AppLanguage>().appLocal.languageCode);
-                    },
+                    icon: ref.watch(manualUpdateNotifierProvider).isLoading
+                        ? const SizedBox(
+                            width: 35,
+                            height: 35,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Icon(Icons.system_update, size: 35),
+                    onTap: ref.watch(manualUpdateNotifierProvider).isLoading
+                        ? null
+                        : () async {
+                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                            ref.watch(connectivityProvider).maybeWhen(
+                              orElse: () {
+                                showCheckInternetDialog(
+                                  context: context,
+                                  onRetry: () {
+                                    AppRouter.pop();
+                                  },
+                                  title: checkInternet,
+                                  content: S.of(context).checkInternetUpdate,
+                                );
+                              },
+                              data: (isConnectedToInternet) async {
+                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                  showCheckInternetDialog(
+                                    context: context,
+                                    onRetry: () {
+                                      AppRouter.pop();
+                                    },
+                                    title: checkInternet,
+                                    content: S.of(context).checkInternetUpdate,
+                                  );
+                                } else {
+                                  var softwareFuture = await PackageInfo.fromPlatform();
+                                  final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
+                                        orElse: () => false,
+                                        data: (value) => value.isRootedDevice,
+                                      );
+                                  ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(
+                                      softwareFuture.version,
+                                      context.read<AppLanguage>().appLocal.languageCode,
+                                      isDeviceRooted);
+                                }
+                              },
+                            );
+                          },
                   ),
                 ],
               ),
