@@ -8,7 +8,8 @@ import 'package:mawaqit/src/domain/model/quran/moshaf_type_model.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.dart';
-import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
+
 
 class DownloadQuranDialog extends ConsumerStatefulWidget {
   const DownloadQuranDialog({super.key});
@@ -50,7 +51,7 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
       // UpdateAvailable() => _buildUpdateAvailableDialog(context, state),
       Downloading() => _buildDownloadingDialog(context, state),
       Extracting() => _buildExtractingDialog(context, state),
-      Success() => _buildSuccessDialog(context, state),
+      Success() => _successDialog(context),
       CancelDownload() => Container(),
       // NoUpdate() => _buildNoUpdateDialog(context, state),
       _ => Container(),
@@ -123,19 +124,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
           Text('${state.progress.toStringAsFixed(2)}%'),
         ],
       ),
-    );
-  }
-
-  Widget _buildSuccessDialog(BuildContext context, Success state) {
-    return AlertDialog(
-      title: Text(S.of(context).quranDownloaded),
-      actions: [
-        TextButton(
-          autofocus: true,
-          onPressed: () => Navigator.pop(context),
-          child: Text(S.of(context).ok),
-        ),
-      ],
     );
   }
 
@@ -231,5 +219,9 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
         ),
       ],
     );
+  }
+
+  Widget _successDialog(BuildContext context) {
+    return Container();
   }
 }

@@ -135,9 +135,12 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
     try {
       final downloadState = await _downloadQuran(moshafType);
       if (downloadState is Success) {
+        // Execute these operations sequentially
         await ref.read(moshafTypeNotifierProvider.notifier).setNotFirstTime();
-      }
-      if (downloadState is! CancelDownload) {
+        await ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(moshafType);
+
+        state = AsyncData(downloadState);
+      } else if (downloadState is! CancelDownload) {
         state = AsyncData(downloadState);
       }
     } catch (e, s) {

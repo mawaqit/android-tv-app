@@ -295,6 +295,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     final userPrefs = context.watch<UserPreferencesManager>();
     ref.listen(downloadQuranNotifierProvider, (previous, next) async {
       if (!next.hasValue || next.value is Success) {
+        Navigator.pop(context);
         ref.invalidate(quranReadingNotifierProvider);
       }
 

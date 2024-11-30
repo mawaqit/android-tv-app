@@ -109,28 +109,39 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
   Future<QuranReadingState> _initState(Future<QuranReadingRepository> repository) async {
     final quranReadingRepository = await repository;
     final mosqueModel = await ref.read(moshafTypeNotifierProvider.future);
-    return mosqueModel.selectedMoshaf.fold(
-      () {
-        throw Exception('No MoshafType');
-      },
-      (moshaf) async {
-        state = AsyncLoading();
-        final svgs = await _loadSvgs(moshafType: moshaf);
-        final lastReadPage = await quranReadingRepository.getLastReadPage();
-        final pageController = PageController(initialPage: (lastReadPage / 2).floor());
-        final suwar = await getAllSuwar();
-        final initialSurahName = _getCurrentSurahName(lastReadPage, suwar);
-        return QuranReadingState(
-          currentJuz: 1,
-          currentSurah: 1,
-          suwar: suwar,
-          currentPage: lastReadPage,
-          svgs: svgs,
-          pageController: pageController,
-          currentSurahName: initialSurahName,
-        );
-      },
-    );
+
+    // Add error handling and retry logic
+    try {
+      return mosqueModel.selectedMoshaf.fold(
+        () {
+          throw Exception('No MoshafType selected');
+        },
+        (moshaf) async {
+          state = AsyncLoading();
+          final svgs = await _loadSvgs(moshafType: moshaf);
+          if (svgs.isEmpty) {
+            throw Exception('No SVGs found for moshaf type: ${moshaf.name}');
+          }
+          final lastReadPage = await quranReadingRepository.getLastReadPage();
+          final pageController = PageController(initialPage: (lastReadPage / 2).floor());
+          final suwar = await getAllSuwar();
+          final initialSurahName = _getCurrentSurahName(lastReadPage, suwar);
+
+          return QuranReadingState(
+            currentJuz: 1,
+            currentSurah: 1,
+            suwar: suwar,
+            currentPage: lastReadPage,
+            svgs: svgs,
+            pageController: pageController,
+            currentSurahName: initialSurahName,
+          );
+        },
+      );
+    } catch (e) {
+      log('Failed to initialize Quran reading state: $e');
+      rethrow;
+    }
   }
 
   Future<void> _saveLastReadPage(int index) async {
