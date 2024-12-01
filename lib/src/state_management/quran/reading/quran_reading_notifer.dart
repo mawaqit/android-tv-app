@@ -38,7 +38,6 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     }
   }
 
-
   void nextPage({bool isPortrait = false}) async {
     log('quran: QuranReadingNotifier: nextPage:');
     state = await AsyncValue.guard(() async {
