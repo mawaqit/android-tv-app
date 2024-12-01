@@ -136,11 +136,6 @@ class NormalViewStrategy implements QuranViewStrategy {
   ) {
     if (isPortrait) {
       return [
-        BackButtonWidget(
-          isPortrait: isPortrait,
-          userPrefs: userPrefs,
-          focusNode: focusNodes.backButtonNode,
-        ),
         SurahSelectorWidget(
           isPortrait: isPortrait,
           focusNode: focusNodes.surahSelectorNode,
@@ -157,15 +152,15 @@ class NormalViewStrategy implements QuranViewStrategy {
           focusNode: focusNodes.switchQuranNode,
           isThereCurrentDialogShowing: false,
         ),
+        BackButtonWidget(
+          isPortrait: isPortrait,
+          userPrefs: userPrefs,
+          focusNode: focusNodes.backButtonNode,
+        ),
       ];
     }
 
     return [
-      BackButtonWidget(
-        isPortrait: isPortrait,
-        userPrefs: userPrefs,
-        focusNode: focusNodes.backButtonNode,
-      ),
       _buildNavigationButtons(
         context,
         focusNodes,
@@ -187,6 +182,11 @@ class NormalViewStrategy implements QuranViewStrategy {
         isPortrait: isPortrait,
         focusNode: focusNodes.switchQuranNode,
         isThereCurrentDialogShowing: false,
+      ),
+      BackButtonWidget(
+        isPortrait: isPortrait,
+        userPrefs: userPrefs,
+        focusNode: focusNodes.backButtonNode,
       ),
     ];
   }
