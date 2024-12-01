@@ -125,7 +125,6 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
             onPressed: () async {
               final notifier = ref.read(downloadQuranNotifierProvider.notifier);
               final moshafType = ref.watch(moshafTypeNotifierProvider);
-
               ref.read(moshafTypeNotifierProvider).maybeWhen(
                     orElse: () {},
                     data: (state) async {
@@ -211,7 +210,18 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              final moshafType = ref.watch(moshafTypeNotifierProvider);
+              moshafType.when(
+                data: (data) {
+                  if (data.isFirstTime) {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                error: (_, __) {},
+                loading: () {},
+              );
             },
             child: Text(S.of(context).cancel),
           ),
