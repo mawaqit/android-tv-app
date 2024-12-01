@@ -320,38 +320,51 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
     });
 
     final autoReadingState = ref.watch(autoScrollNotifierProvider);
-
-    return WillPopScope(
-      onWillPop: () async {
-        userPrefs.orientationLandscape = true;
-        return true;
-      },
-      child: quranReadingState.when(
-        data: (state) {
-          setState(() {
-            _isRotated = state.isRotated;
-          });
-          return RotatedBox(
-            quarterTurns: state.isRotated ? -1 : 0,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.height,
-              height: MediaQuery.of(context).size.width,
-              child: Scaffold(
-                backgroundColor: Colors.white,
-                floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
-                floatingActionButton: QuranFloatingActionControls(
-                  switchScreenViewFocusNode: _switchScreenViewFocusNode,
-                  switchQuranModeNode: _switchQuranModeNode,
-                  switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
-                ),
-                body: _buildBody(quranReadingState, state.isRotated, userPrefs, autoReadingState),
-              ),
+    final downloadState = ref.watch(downloadQuranNotifierProvider);
+    return downloadState.when(
+      data: (data) {
+        if (data is NeededDownloadedQuran || data is Downloading || data is Extracting) {
+          return Scaffold(
+            body: Container(
+              color: Colors.white,
             ),
           );
-        },
-        loading: () => SizedBox(),
-        error: (error, stack) => const Icon(Icons.error),
-      ),
+        }
+        return WillPopScope(
+          onWillPop: () async {
+            userPrefs.orientationLandscape = true;
+            return true;
+          },
+          child: quranReadingState.when(
+            data: (state) {
+              setState(() {
+                _isRotated = state.isRotated;
+              });
+              return RotatedBox(
+                quarterTurns: state.isRotated ? -1 : 0,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.width,
+                  child: Scaffold(
+                    backgroundColor: Colors.white,
+                    floatingActionButtonLocation: _getFloatingActionButtonLocation(context),
+                    floatingActionButton: QuranFloatingActionControls(
+                      switchScreenViewFocusNode: _switchScreenViewFocusNode,
+                      switchQuranModeNode: _switchQuranModeNode,
+                      switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
+                    ),
+                    body: _buildBody(quranReadingState, state.isRotated, userPrefs, autoReadingState),
+                  ),
+                ),
+              );
+            },
+            loading: () => Scaffold(body: SizedBox()),
+            error: (error, stack) => Scaffold(body: const Icon(Icons.error)),
+          ),
+        );
+      },
+      loading: () => Scaffold(body: _buildLoadingIndicator()),
+      error: (error, stack) => Scaffold(body: _buildErrorIndicator(error)),
     );
   }
 

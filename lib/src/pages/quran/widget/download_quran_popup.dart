@@ -124,6 +124,8 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
             autofocus: true,
             onPressed: () async {
               final notifier = ref.read(downloadQuranNotifierProvider.notifier);
+              final moshafType = ref.watch(moshafTypeNotifierProvider);
+
               ref.read(moshafTypeNotifierProvider).maybeWhen(
                     orElse: () {},
                     data: (state) async {
@@ -131,10 +133,20 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
                         return null;
                       }, (selectedMoshaf) async {
                         await notifier.cancelDownload(selectedMoshaf); // Await cancellation
-                        Navigator.pop(context); // Close dialog after cancel completes
                       });
                     },
                   );
+              moshafType.when(
+                data: (data) {
+                  if (data.isFirstTime) {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                error: (_, __) {},
+                loading: () {},
+              );
             },
             child: Text(S.of(context).cancel),
           ),
