@@ -57,6 +57,105 @@ class FocusNodes {
     required this.switchQuranNode,
     required this.surahSelectorNode,
   });
+
+  void setupFocusTraversal() {
+    // Setup focus traversal for back button
+    backButtonNode.onKey = (node, event) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        leftSkipNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowRight) {
+        surahSelectorNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    };
+
+    // Setup focus traversal for left skip node
+    leftSkipNode.onKey = (node, event) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        backButtonNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowRight) {
+        rightSkipNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        pageSelectorNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    };
+
+    // Setup focus traversal for right skip node
+    rightSkipNode.onKey = (node, event) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        leftSkipNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        switchQuranNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    };
+
+    // Setup focus traversal for page selector node
+    pageSelectorNode.onKey = (node, event) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        leftSkipNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        switchQuranNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    };
+
+    // Setup focus traversal for switch quran node
+    switchQuranNode.onKey = (node, event) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        rightSkipNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        surahSelectorNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    };
+
+    // Setup focus traversal for surah selector node
+    surahSelectorNode.onKey = (node, event) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        switchQuranNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        backButtonNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    };
+  }
+
+  // Optional: Method to reset focus to a default node
+  void resetToDefaultFocus() {
+    backButtonNode.requestFocus();
+  }
+
+  // Optional: Method to dispose all focus nodes
+  void dispose() {
+    backButtonNode.dispose();
+    leftSkipNode.dispose();
+    rightSkipNode.dispose();
+    pageSelectorNode.dispose();
+    switchQuranNode.dispose();
+    surahSelectorNode.dispose();
+  }
 }
 
 class AutoScrollViewStrategy implements QuranViewStrategy {
@@ -238,6 +337,17 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   void initState() {
     super.initState();
     _initializeFocusNodes();
+    // Create FocusNodes instance and setup traversal
+    final focusNodes = FocusNodes(
+      backButtonNode: _backButtonFocusNode,
+      leftSkipNode: _leftSkipButtonFocusNode,
+      rightSkipNode: _rightSkipButtonFocusNode,
+      pageSelectorNode: _portraitModePageSelectorFocusNode,
+      switchQuranNode: _switchQuranFocusNode,
+      surahSelectorNode: _surahSelectorNode,
+    );
+
+    focusNodes.setupFocusTraversal();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
@@ -501,4 +611,3 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   bool _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
 }
-
