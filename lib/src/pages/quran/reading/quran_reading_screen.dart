@@ -197,23 +197,17 @@ class NormalViewStrategy implements QuranViewStrategy {
     Function(ScrollDirection, bool) onScroll,
     bool isPortrait,
   ) {
-    return FocusTraversalGroup(
-      policy: ArrowButtonsFocusTraversalPolicy(
-        backButtonNode: focusNodes.backButtonNode,
-        pageSelectorNode: focusNodes.pageSelectorNode,
-      ),
-      child: Stack(
-        children: [
-          LeftSwitchButtonWidget(
-            focusNode: focusNodes.leftSkipNode,
-            onPressed: () => onScroll(ScrollDirection.reverse, isPortrait),
-          ),
-          RightSwitchButtonWidget(
-            focusNode: focusNodes.rightSkipNode,
-            onPressed: () => onScroll(ScrollDirection.forward, isPortrait),
-          ),
-        ],
-      ),
+    return Stack(
+      children: [
+        LeftSwitchButtonWidget(
+          focusNode: focusNodes.leftSkipNode,
+          onPressed: () => onScroll(ScrollDirection.reverse, isPortrait),
+        ),
+        RightSwitchButtonWidget(
+          focusNode: focusNodes.rightSkipNode,
+          onPressed: () => onScroll(ScrollDirection.forward, isPortrait),
+        ),
+      ],
     );
   }
 }
@@ -392,30 +386,22 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           surahSelectorNode: _surahSelectorNode,
         );
         if (isPortrait) {
-          return FocusTraversalGroup(
-            policy: PortraitModeFocusTraversalPolicy(
-              backButtonNode: _backButtonFocusNode,
-              switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
-              switchQuranNode: _switchQuranFocusNode,
-              pageSelectorNode: _portraitModePageSelectorFocusNode,
-            ),
-            child: Stack(
-              children: [
-                // Main content
-                viewStrategy.buildView(state, ref, context),
+          return Stack(
+            children: [
+              // Main content
+              viewStrategy.buildView(state, ref, context),
 
-                // Controls overlay - show in both portrait and landscape
-                ...viewStrategy.buildControls(
-                  context,
-                  state,
-                  userPrefs,
-                  isPortrait,
-                  focusNodes,
-                  _scrollPageList,
-                  _showPageSelector,
-                ),
-              ],
-            ),
+              // Controls overlay - show in both portrait and landscape
+              ...viewStrategy.buildControls(
+                context,
+                state,
+                userPrefs,
+                isPortrait,
+                focusNodes,
+                _scrollPageList,
+                _showPageSelector,
+              ),
+            ],
           );
         }
         return Stack(
@@ -516,227 +502,3 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   bool _isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
 }
 
-class ArrowButtonsFocusTraversalPolicy extends FocusTraversalPolicy {
-  final FocusNode backButtonNode;
-  final FocusNode pageSelectorNode;
-
-  const ArrowButtonsFocusTraversalPolicy({
-    super.requestFocusCallback,
-    required this.backButtonNode,
-    required this.pageSelectorNode,
-  });
-
-  @override
-  FocusNode? findFirstFocus(FocusNode currentNode, {bool ignoreCurrentFocus = false}) {
-    final nodes = currentNode.nearestScope!.traversalDescendants;
-    return nodes.firstWhereOrNull((node) => node.debugLabel?.contains('left_skip_node') == true);
-  }
-
-  @override
-  FocusNode findLastFocus(FocusNode currentNode, {bool ignoreCurrentFocus = false}) {
-    final nodes = currentNode.nearestScope!.traversalDescendants;
-    return nodes.firstWhereOrNull((node) => node.debugLabel?.contains('right_skip_node') == true) ?? currentNode;
-  }
-
-  @override
-  FocusNode? findFirstFocusInDirection(FocusNode currentNode, TraversalDirection direction) {
-    switch (direction) {
-      case TraversalDirection.up:
-        return backButtonNode;
-      case TraversalDirection.down:
-        return pageSelectorNode;
-      case TraversalDirection.left:
-      case TraversalDirection.right:
-        return null;
-    }
-  }
-
-  @override
-  Iterable<FocusNode> sortDescendants(Iterable<FocusNode> descendants, FocusNode currentNode) {
-    final arrowNodes = descendants
-        .where((node) =>
-            node.debugLabel?.contains('left_skip_node') == true || node.debugLabel?.contains('right_skip_node') == true)
-        .toList();
-
-    mergeSort<FocusNode>(arrowNodes, compare: (a, b) {
-      final aIsLeft = a.debugLabel?.contains('left_skip_node') == true;
-      final bIsLeft = b.debugLabel?.contains('left_skip_node') == true;
-      return aIsLeft ? -1 : 1;
-    });
-
-    return arrowNodes;
-  }
-
-  @override
-  bool inDirection(FocusNode currentNode, TraversalDirection direction) {
-    final nodes = currentNode.nearestScope!.traversalDescendants;
-    final leftNode = nodes.firstWhereOrNull((node) => node.debugLabel?.contains('left_skip_node') == true);
-    final rightNode = nodes.firstWhereOrNull((node) => node.debugLabel?.contains('right_skip_node') == true);
-
-    switch (direction) {
-      case TraversalDirection.left:
-        if (currentNode == rightNode && leftNode != null) {
-          requestFocusCallback(leftNode);
-          return true;
-        }
-        return false;
-      case TraversalDirection.right:
-        if (currentNode == leftNode && rightNode != null) {
-          requestFocusCallback(rightNode);
-          return true;
-        }
-        return false;
-      case TraversalDirection.up:
-        if ((currentNode == leftNode || currentNode == rightNode) && backButtonNode.canRequestFocus) {
-          requestFocusCallback(backButtonNode);
-          return true;
-        }
-        return false;
-      case TraversalDirection.down:
-        if ((currentNode == leftNode || currentNode == rightNode) && pageSelectorNode.canRequestFocus) {
-          requestFocusCallback(pageSelectorNode);
-          return true;
-        }
-        return false;
-    }
-  }
-}
-
-class PortraitModeFocusTraversalPolicy extends FocusTraversalPolicy {
-  final FocusNode backButtonNode;
-  final FocusNode switchQuranNode;
-  final FocusNode pageSelectorNode;
-  final FocusNode switchToPlayQuranFocusNode;
-
-  const PortraitModeFocusTraversalPolicy({
-    super.requestFocusCallback,
-    required this.backButtonNode,
-    required this.switchQuranNode,
-    required this.pageSelectorNode,
-    required this.switchToPlayQuranFocusNode,
-  });
-
-  @override
-  FocusNode? findFirstFocus(FocusNode currentNode, {bool ignoreCurrentFocus = false}) {
-    return backButtonNode;
-  }
-
-  @override
-  FocusNode findLastFocus(FocusNode currentNode, {bool ignoreCurrentFocus = false}) {
-    return pageSelectorNode;
-  }
-
-  @override
-  bool inDirection(FocusNode currentNode, TraversalDirection direction) {
-    print('Current Node: ${currentNode.debugLabel}, Direction: $direction, || FocusNode: ${currentNode}');
-
-    if (currentNode == backButtonNode) {
-      switch (direction) {
-        case TraversalDirection.right:
-          if (_canFocusNode(switchQuranNode)) {
-            _requestFocus(switchQuranNode);
-            return true;
-          }
-          break;
-        case TraversalDirection.down:
-          if (_canFocusNode(pageSelectorNode)) {
-            _requestFocus(pageSelectorNode);
-            return true;
-          }
-          break;
-        default:
-          return false;
-      }
-    } else if (currentNode == switchQuranNode) {
-      switch (direction) {
-        case TraversalDirection.left:
-          if (_canFocusNode(backButtonNode)) {
-            _requestFocus(backButtonNode);
-            return true;
-          }
-          break;
-        case TraversalDirection.right:
-          if (_canFocusNode(pageSelectorNode)) {
-            _requestFocus(pageSelectorNode);
-            return true;
-          }
-          break;
-        case TraversalDirection.down:
-          if (_canFocusNode(pageSelectorNode)) {
-            _requestFocus(pageSelectorNode);
-            return true;
-          }
-          break;
-        default:
-          break;
-      }
-    } else if (currentNode == pageSelectorNode) {
-      switch (direction) {
-        case TraversalDirection.up:
-          if (_canFocusNode(switchQuranNode)) {
-            _requestFocus(switchQuranNode);
-            return true;
-          }
-          break;
-        case TraversalDirection.down:
-          if (_canFocusNode(backButtonNode)) {
-            _requestFocus(backButtonNode);
-            return true;
-          }
-          break;
-        case TraversalDirection.left:
-          if (_canFocusNode(switchQuranNode)) {
-            _requestFocus(switchQuranNode);
-            return true;
-          }
-          break;
-        case TraversalDirection.right:
-          print('Current Node: Right test');
-          if (_canFocusNode(switchToPlayQuranFocusNode)) {
-            _requestFocus(switchToPlayQuranFocusNode);
-            return true;
-          }
-          break;
-        default:
-          break;
-      }
-    } else if (currentNode == switchToPlayQuranFocusNode) {
-      switch (direction) {
-        case TraversalDirection.up:
-          if (_canFocusNode(switchQuranNode)) {
-            _requestFocus(switchQuranNode);
-            return true;
-          }
-          break;
-        case TraversalDirection.left:
-          if (_canFocusNode(switchQuranNode)) {
-            _requestFocus(switchQuranNode);
-            return true;
-          }
-          break;
-
-        default:
-          break;
-      }
-    }
-    return false;
-  }
-
-  bool _canFocusNode(FocusNode node) {
-    return node.canRequestFocus;
-  }
-
-  void _requestFocus(FocusNode node) {
-    requestFocusCallback.call(node);
-  }
-
-  @override
-  FocusNode? findFirstFocusInDirection(FocusNode currentNode, TraversalDirection direction) {
-    return null;
-  }
-
-  @override
-  Iterable<FocusNode> sortDescendants(Iterable<FocusNode> descendants, FocusNode currentNode) {
-    return [backButtonNode, switchQuranNode, pageSelectorNode].where((node) => descendants.contains(node));
-  }
-}
