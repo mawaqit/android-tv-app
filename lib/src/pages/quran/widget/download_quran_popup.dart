@@ -87,7 +87,8 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
     };
   }
 
-  Widget _buildUpdateAvailableDialog(BuildContext context, UpdateAvailable state) {
+  Widget _buildUpdateAvailableDialog(
+      BuildContext context, UpdateAvailable state) {
     final moshafName = switch (state.moshafType) {
       MoshafType.warsh => S.of(context).warsh,
       MoshafType.hafs => S.of(context).hafs,
@@ -95,7 +96,8 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
 
     return AlertDialog(
       title: Text(S.of(context).updateAvailable),
-      content: Text(S.of(context).quranUpdateDialogContent(moshafName, state.version)),
+      content: Text(
+          S.of(context).quranUpdateDialogContent(moshafName, state.version)),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
@@ -138,7 +140,8 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
                       state.selectedMoshaf.fold(() {
                         return null;
                       }, (selectedMoshaf) async {
-                        await notifier.cancelDownload(selectedMoshaf); // Await cancellation
+                        await notifier.cancelDownload(
+                            selectedMoshaf); // Await cancellation
                       });
                     },
                   );
@@ -233,7 +236,9 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
             autofocus: true,
             onPressed: () async {
               Navigator.pop(context);
-              await ref.read(downloadQuranNotifierProvider.notifier).downloadQuran(selectedMoshafType);
+              await ref
+                  .read(downloadQuranNotifierProvider.notifier)
+                  .downloadQuran(selectedMoshafType);
             },
             child: Text(S.of(context).download),
           ),
@@ -258,7 +263,9 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
         setState(() {
           selectedMoshafType = selected!;
         });
-        ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(selectedMoshafType);
+        ref
+            .read(moshafTypeNotifierProvider.notifier)
+            .selectMoshafType(selectedMoshafType);
       },
     );
   }
