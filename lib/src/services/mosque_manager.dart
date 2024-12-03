@@ -81,6 +81,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   bool isToggleScreenActivated = false;
   int minuteBefore = 0;
   int minuteAfter = 0;
+  bool isIshaFajrOnly = false;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -100,6 +101,11 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   static Future<int> getMinuteAfter() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_minuteAfterKey) ?? 10;
+  }
+
+  static Future<bool> getisIshaFajr() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
   }
 
   static Future<bool> checkRoot() async {
@@ -123,7 +129,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
     minuteBefore = await getMinuteBefore();
     minuteAfter = await getMinuteAfter();
-
+    isIshaFajrOnly = await getisIshaFajr();
     notifyListeners();
   }
 
@@ -220,6 +226,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
                 ToggleScreenFeature.checkEventsScheduled().then((_) {
                   if (!isEventsSet) {
                     ToggleScreenFeature.scheduleToggleScreen(
+                      isIshaFajrOnly,
                       e.dayTimesStrings(today, salahOnly: false),
                       minuteBefore,
                       minuteAfter,
