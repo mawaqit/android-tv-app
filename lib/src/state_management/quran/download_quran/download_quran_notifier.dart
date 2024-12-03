@@ -131,13 +131,23 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
   }
 
   Future<void> downloadQuran(MoshafType moshafType) async {
-    state = const AsyncLoading();
+    final link = ref.keepAlive(); // Keep alive during download
+
     try {
+      state = const AsyncLoading();
+
+      // First ensure moshaf type is selected
+      await ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(moshafType);
+
       final downloadState = await _downloadQuran(moshafType);
       if (downloadState is Success) {
         await ref.read(moshafTypeNotifierProvider.notifier).setNotFirstTime();
-      }
-      if (downloadState is! CancelDownload) {
+
+        state = AsyncData(downloadState);
+
+        // Force rebuild reading provider in next frame
+        ref.invalidate(quranReadingNotifierProvider);
+      } else if (downloadState is! CancelDownload) {
         state = AsyncData(downloadState);
       }
     } catch (e, s) {
@@ -145,6 +155,8 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
         return;
       }
       state = AsyncError(e, s);
+    } finally {
+      link.close();
     }
   }
 
