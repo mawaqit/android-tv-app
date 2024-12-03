@@ -111,3 +111,14 @@ abstract class ManualUpdateConstant {
   static const String githubApiBaseUrl = 'https://api.github.com/repos/mawaqit/android-tv-app/releases';
   static const String githubAcceptHeader = 'application/vnd.github.v3+json';
 }
+
+abstract class RtspCameraStreamConstant {
+  static const maxRetries = 3;
+  static const retryDelay = Duration(seconds: 2);
+  static const prefKeyEnabled = 'rtsp_enabled';
+  static const prefKeyUrl = 'rtsp_url';
+  static const String youtubeUrlPattern =
+      r'http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?';
+
+  static final RegExp youtubeUrlRegex = RegExp(youtubeUrlPattern);
+}

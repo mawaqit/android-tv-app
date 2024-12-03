@@ -41,6 +41,7 @@ import '../state_management/random_hadith/random_hadith_notifier.dart';
 import '../widgets/screen_lock_widget.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
+import 'rtsp_camera_settings_screen.dart';
 
 class SettingScreen extends ConsumerStatefulWidget {
   const SettingScreen({super.key});
@@ -175,6 +176,58 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       );
                     },
                   ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return _SettingSwitchItem(
+                        title: S.of(context).automaticUpdate,
+                        subtitle: S.of(context).automaticUpdateDescription,
+                        icon: Icon(Icons.update, size: 35),
+                        onChanged: (value) {
+                          logger.d('setting: disable the update $value');
+                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
+                        },
+                        value: ref.watch(appUpdateProvider).maybeWhen(
+                              orElse: () => false,
+                              data: (data) => data.isAutoUpdateChecking,
+                            ),
+                      );
+                    },
+                  ),
+                  _SettingItem(
+                    title: S.of(context).rtspCameraSettingTitle,
+                    subtitle: S.of(context).rtspCameraSettingDesc,
+                    icon: Icon(Icons.video_camera_back, size: 35),
+                    onTap: () async {
+                      await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                      ref.watch(connectivityProvider).maybeWhen(
+                        orElse: () {
+                          showCheckInternetDialog(
+                            context: context,
+                            onRetry: () {
+                              AppRouter.pop();
+                            },
+                            title: checkInternet,
+                            content: S.of(context).checkInternetLiveCamera,
+                          );
+                        },
+                        data: (isConnectedToInternet) {
+                          if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                            showCheckInternetDialog(
+                              context: context,
+                              onRetry: () {
+                                AppRouter.pop();
+                              },
+                              title: checkInternet,
+                              content: S.of(context).checkInternetLiveCamera,
+                            );
+                          } else {
+                            AppRouter.push(RTSPCameraSettingsScreen());
+                          }
+                        },
+                      );
+                    },
+                  ),
+                  SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
                   Text(
@@ -289,14 +342,52 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   _SettingItem(
                     title: S.of(context).checkForUpdates,
                     subtitle: S.of(context).checkForNewVersion,
-                    icon: const Icon(Icons.system_update, size: 35),
-                    onTap: () async {
-                      var softwareFuture = await PackageInfo.fromPlatform();
-
-                      ref
-                          .read(manualUpdateNotifierProvider.notifier)
-                          .checkForUpdates(softwareFuture.version, context.read<AppLanguage>().appLocal.languageCode);
-                    },
+                    icon: ref.watch(manualUpdateNotifierProvider).isLoading
+                        ? const SizedBox(
+                            width: 35,
+                            height: 35,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Icon(Icons.system_update, size: 35),
+                    onTap: ref.watch(manualUpdateNotifierProvider).isLoading
+                        ? null
+                        : () async {
+                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                            ref.watch(connectivityProvider).maybeWhen(
+                              orElse: () {
+                                showCheckInternetDialog(
+                                  context: context,
+                                  onRetry: () {
+                                    AppRouter.pop();
+                                  },
+                                  title: checkInternet,
+                                  content: S.of(context).checkInternetUpdate,
+                                );
+                              },
+                              data: (isConnectedToInternet) async {
+                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                  showCheckInternetDialog(
+                                    context: context,
+                                    onRetry: () {
+                                      AppRouter.pop();
+                                    },
+                                    title: checkInternet,
+                                    content: S.of(context).checkInternetUpdate,
+                                  );
+                                } else {
+                                  var softwareFuture = await PackageInfo.fromPlatform();
+                                  final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
+                                        orElse: () => false,
+                                        data: (value) => value.isRootedDevice,
+                                      );
+                                  ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(
+                                      softwareFuture.version,
+                                      context.read<AppLanguage>().appLocal.languageCode,
+                                      isDeviceRooted);
+                                }
+                              },
+                            );
+                          },
                   ),
                 ],
               ),
