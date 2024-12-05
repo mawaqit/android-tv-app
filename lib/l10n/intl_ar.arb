@@ -372,7 +372,7 @@
   "rtspCameraSettings": "إعدادات الكاميرا",
   "invalidRtspUrl": "رابط RTSP غير صالح. يرجى التحقق من الرابط والمحاولة مرة أخرى.",
   "validRtspUrl": "تم التحقق من رابط RTSP وحفظه بنجاح.",
-  "rtspCameraSettingTitle": "اتصال الكاميرا المباشر",
+  "rtspCameraSettingTitle": "إعداد البث المباشر لصلاة الجمعة",
   "rtspCameraSettingDesc": "اتصل بالكاميرا المحلية واعرض بث صلاة الجمعة على شاشة التلفاز.",
   "rtspCameraSettingScreenDesc": "إذا أدخلت رابطًا هنا، ستتحول شاشتك تلقائيًا إلى وضع بث الفيديو عند وصول وقت الجمعة.",
   "validatingStream": "جارٍ التحقق من البث...",

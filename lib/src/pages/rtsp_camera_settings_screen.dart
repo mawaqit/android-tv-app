@@ -34,10 +34,9 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final state = ref.read(rtspCameraSettingsProvider);
-      state.whenData((value) {
-        if (value.streamUrl != null) {
+    ref.listenManual(rtspCameraSettingsProvider, (previous, next) {
+      next.whenData((value) {
+        if (value.streamUrl != null && mounted) {
           _urlController.text = value.streamUrl!;
         }
       });
