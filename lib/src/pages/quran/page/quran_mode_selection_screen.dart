@@ -80,12 +80,12 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
     }
   }
 
-  void _handleNavigation(int index) {
+  Future<void> _handleNavigation(int index) async {
     if (index == 0) {
-      ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+      await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
       Navigator.pushReplacementNamed(context, Routes.quranReading);
     } else {
-      ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+      await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
       Navigator.pushReplacementNamed(context, Routes.quranReciter);
     }
   }
