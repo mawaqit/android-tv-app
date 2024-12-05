@@ -61,6 +61,7 @@ class FocusNodes {
 
 class AutoScrollViewStrategy implements QuranViewStrategy {
   final AutoScrollState autoScrollState;
+  final int preloadDistance = 3; // Adjust preload distance for performance
 
   AutoScrollViewStrategy(this.autoScrollState);
 
@@ -68,29 +69,46 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
     final scalingFactor = autoScrollState.fontSize;
 
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      controller: autoScrollState.scrollController,
-      itemCount: state.totalPages,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
-            if (autoScrollState.isPlaying) {
-              autoScrollNotifier.pauseAutoScroll();
-            } else {
-              autoScrollNotifier.resumeAutoScroll();
-            }
+    return Stack(
+      children: [
+        ListView.builder(
+          key: PageStorageKey('auto_scroll_list'),  // Add key to preserve scroll position
+          physics: NeverScrollableScrollPhysics(),
+          controller: autoScrollState.scrollController,
+          itemCount: state.totalPages,
+          cacheExtent: MediaQuery.of(context).size.height * preloadDistance, // Reduce cache extent
+          itemExtent: MediaQuery.of(context).size.height * scalingFactor, // Use itemExtent for fixed height
+          addRepaintBoundaries: true, // Optimize repaint boundaries
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
+                if (autoScrollState.isPlaying) {
+                  autoScrollNotifier.pauseAutoScroll();
+                } else {
+                  autoScrollNotifier.resumeAutoScroll();
+                }
+              },
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * scalingFactor,
+                height: MediaQuery.of(context).size.height * scalingFactor,
+                child: SvgPictureWidget(
+                  svgPicture: state.svgs[index],
+                ),
+              ),
+            );
           },
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * scalingFactor,
-            height: MediaQuery.of(context).size.height * scalingFactor,
-            child: SvgPictureWidget(
-              svgPicture: state.svgs[index],
+        ),
+        if (autoScrollState.isLoading)
+          Container(
+            color: Colors.white.withOpacity(0.7),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
             ),
           ),
-        );
-      },
+      ],
     );
   }
 

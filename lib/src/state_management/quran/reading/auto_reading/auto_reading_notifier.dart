@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
 
 class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   Timer? _autoScrollTimer;
@@ -40,44 +41,33 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   Future<void> startAutoScroll(int currentPage, double pageHeight) async {
     _autoScrollTimer?.cancel();
 
-    // Store the current scroll position before making changes
-    double? currentScrollPosition;
-    if (scrollController.hasClients) {
-      currentScrollPosition = scrollController.offset;
-    }
-
     state = state.copyWith(
       isSinglePageView: true,
+      isLoading: true,
+      currentPage: currentPage, // Set initial page
     );
 
     // Ensure the ListView is built
-    await Future.delayed(Duration(milliseconds: 50));
+    await Future.delayed(Duration(milliseconds: 500));
 
-    // Restore the previous scroll position if it exists,
-    // otherwise jump to the current page
     if (scrollController.hasClients) {
-      if (currentScrollPosition != null) {
-        scrollController.jumpTo(currentScrollPosition);
-      } else {
-        final offset = (currentPage - 1) * pageHeight;
-        scrollController.jumpTo(offset);
-      }
+      final offset = (currentPage - 1) * pageHeight;
+      scrollController.jumpTo(offset);
     }
+
+    state = state.copyWith(
+      isLoading: false,
+      isPlaying: true,
+    );
 
     _startScrolling();
   }
 
   void _startScrolling() {
-    // Only start scrolling if we're in playing state
     if (!state.isPlaying) return;
-
-    state = state.copyWith(
-      isPlaying: true,
-    );
 
     const duration = Duration(milliseconds: 50);
     _autoScrollTimer = Timer.periodic(duration, (timer) {
-      // Check if we should be scrolling
       if (!state.isPlaying) {
         timer.cancel();
         return;
@@ -92,17 +82,52 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
           stopAutoScroll();
         } else {
           scrollController.jumpTo(currentScroll + delta);
+
+          // Update current page during scrolling
+          final pageHeight = scrollController.position.viewportDimension;
+          final newPage = (currentScroll / pageHeight).ceil() + 1;
+          if (newPage != state.currentPage) {
+            state = state.copyWith(currentPage: newPage);
+          }
         }
       }
     });
   }
 
-  void stopAutoScroll() {
+  void stopAutoScroll() async {
     _autoScrollTimer?.cancel();
     _autoScrollTimer = null;
-    state = state.copyWith(
-      isSinglePageView: false,
-    );
+
+    // Calculate current page before switching views
+    if (scrollController.hasClients) {
+      final pageHeight = scrollController.position.viewportDimension;
+      final currentPage = (scrollController.offset / pageHeight).ceil() + 1;
+      
+      // First update state to disable auto-scroll
+      state = state.copyWith(
+        isSinglePageView: false,
+        isPlaying: false,
+      );
+
+      // Then update the page after a small delay to allow view transition
+      await Future.delayed(Duration(milliseconds: 100));
+      
+      // Update QuranReadingState with current page
+      try {
+        await ref.read(quranReadingNotifierProvider.notifier).updatePage(
+          currentPage,
+          isPortairt: false,
+        );
+      } catch (e) {
+        // Handle error silently or show a user-friendly message
+        print('Error updating page: $e');
+      }
+    } else {
+      state = state.copyWith(
+        isSinglePageView: false,
+        isPlaying: false,
+      );
+    }
   }
 
   void changeSpeed(double newSpeed) {

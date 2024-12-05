@@ -77,9 +77,13 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       final currentState = state.value!;
       if (page >= 0 && page < currentState.totalPages) {
         await _saveLastReadPage(page);
-        !isPortairt
-            ? currentState.pageController.jumpToPage((page / 2).floor())
-            : currentState.pageController.jumpToPage(page); // Jump to the selected page
+
+        if (currentState.pageController.hasClients) {
+          !isPortairt
+              ? currentState.pageController.jumpToPage((page / 2).floor())
+              : currentState.pageController.jumpToPage(page);
+        }
+
         final newSurahName = _getCurrentSurahName(page, currentState.suwar);
 
         return currentState.copyWith(
