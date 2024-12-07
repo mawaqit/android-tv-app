@@ -101,7 +101,9 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     // Calculate current page before switching views
     if (scrollController.hasClients) {
       final pageHeight = scrollController.position.viewportDimension;
-      final currentPage = (scrollController.offset / pageHeight).ceil() + 1;
+      // Use floor instead of ceil and don't add 1 to stay on current page
+      // if scroll hasn't moved significantly
+      final currentPage = (scrollController.offset / pageHeight).floor() + 1;
       
       // First update state to disable auto-scroll
       state = state.copyWith(
