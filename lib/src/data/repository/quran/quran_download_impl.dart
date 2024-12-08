@@ -48,6 +48,9 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
     String? filePath,
   }) async {
     try {
+      // Clean up existing files before downloading
+      await _cleanupExistingFiles();
+
       await remoteDataSource.downloadQuranWithProgress(
         version: version,
         moshafType: moshafType,
@@ -72,6 +75,23 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
         await _cleanupAfterCancellation(version);
       }
       rethrow;
+    }
+  }
+
+  Future<void> _cleanupExistingFiles() async {
+    try {
+      // Delete the quran directory if it exists
+      if (await Directory(quranPathHelper.quranDirectoryPath).exists()) {
+        await Directory(quranPathHelper.quranDirectoryPath).delete(recursive: true);
+      }
+      
+      // Delete the zip directory if it exists
+      if (await Directory(quranPathHelper.quranZipDirectoryPath).exists()) {
+        await Directory(quranPathHelper.quranZipDirectoryPath).delete(recursive: true);
+      }
+    } catch (e) {
+      // Log error but don't throw, as this is cleanup
+      print('Error during cleanup: $e');
     }
   }
 
