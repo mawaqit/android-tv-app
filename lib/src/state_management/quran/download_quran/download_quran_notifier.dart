@@ -81,7 +81,10 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
         orElse: () async {
           final remoteVersion = await downloadQuranRepoImpl.getRemoteQuranVersion(moshafType: moshafType);
           return localVersionOption.fold(
-            () => UpdateAvailable(remoteVersion),
+            () => UpdateAvailable(
+              version: remoteVersion,
+              moshafType: moshafType,
+            ),
             (localVersion) => _compareVersions(moshafType, localVersion, remoteVersion),
           );
         },
@@ -90,7 +93,10 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
             final remoteVersion = await downloadQuranRepoImpl.getRemoteQuranVersion(moshafType: moshafType);
 
             return localVersionOption.fold(
-              () => UpdateAvailable(remoteVersion),
+              () => UpdateAvailable(
+                version: remoteVersion,
+                moshafType: moshafType,
+              ),
               (localVersion) => _compareVersions(moshafType, localVersion, remoteVersion),
             );
           } else {
@@ -115,7 +121,10 @@ class DownloadQuranNotifier extends AutoDisposeAsyncNotifier<DownloadQuranState>
 
   Future<DownloadQuranState> _compareVersions(MoshafType moshafType, String localVersion, String remoteVersion) async {
     if (VersionHelper.isNewer(remoteVersion, localVersion)) {
-      return UpdateAvailable(remoteVersion);
+      return UpdateAvailable(
+        version: remoteVersion,
+        moshafType: moshafType,
+      );
     } else {
       final savePath = await getApplicationSupportDirectory();
       final quranPathHelper = QuranPathHelper(

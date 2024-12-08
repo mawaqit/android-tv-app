@@ -46,8 +46,17 @@ class NoUpdate extends DownloadQuranState with EquatableMixin {
 
 class UpdateAvailable extends DownloadQuranState {
   final String version;
+  final MoshafType moshafType;
 
-  const UpdateAvailable(this.version);
+  const UpdateAvailable({
+    required this.version,
+    required this.moshafType,
+  });
+
+  @override
+  String toString() {
+    return 'UpdateAvailable: $version , $moshafType';
+  }
 }
 
 class CancelDownload extends DownloadQuranState {
