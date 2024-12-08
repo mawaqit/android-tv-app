@@ -84,7 +84,7 @@ class QuranDownloadRepositoryImpl implements QuranDownloadRepository {
       if (await Directory(quranPathHelper.quranDirectoryPath).exists()) {
         await Directory(quranPathHelper.quranDirectoryPath).delete(recursive: true);
       }
-      
+
       // Delete the zip directory if it exists
       if (await Directory(quranPathHelper.quranZipDirectoryPath).exists()) {
         await Directory(quranPathHelper.quranZipDirectoryPath).delete(recursive: true);
