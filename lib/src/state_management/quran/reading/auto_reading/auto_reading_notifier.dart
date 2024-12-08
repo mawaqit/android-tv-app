@@ -51,8 +51,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     await Future.delayed(Duration(milliseconds: 500));
 
     if (scrollController.hasClients) {
-      final offset = (currentPage - 1) * pageHeight;
-      scrollController.jumpTo(offset);
+      _initializeScrollController(currentPage, pageHeight);
     }
 
     state = state.copyWith(
@@ -61,6 +60,12 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     );
 
     _startScrolling();
+  }
+
+  void _initializeScrollController(int currentPage, double pageHeight) {
+    final pageOffset = (currentPage - 1) * pageHeight;
+    // Set initial offset to correct position, account for rotation if necessary
+    scrollController.jumpTo(pageOffset);
   }
 
   void _startScrolling() {
@@ -85,13 +90,25 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
           // Update current page during scrolling
           final pageHeight = scrollController.position.viewportDimension;
-          final newPage = (currentScroll / pageHeight).ceil() + 1;
+          final newPage = _calculateCurrentPage(scrollController, pageHeight);
           if (newPage != state.currentPage) {
             state = state.copyWith(currentPage: newPage);
           }
         }
       }
     });
+  }
+
+  // Function to calculate current page during scrolling
+  int _calculateCurrentPage(ScrollController scrollController, double pageHeight) {
+    final viewportOffset = scrollController.offset % pageHeight;
+    if (viewportOffset < (pageHeight / 2)) {
+      // Scrolled to the left, check if it's possible to navigate to the previous page
+      return (scrollController.offset / pageHeight).floor() + 1;
+    } else {
+      // Scrolled to the right, check if it's possible to navigate to the next page
+      return (scrollController.offset / pageHeight).ceil() + 1;
+    }
   }
 
   void stopAutoScroll() async {
@@ -103,8 +120,8 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       final pageHeight = scrollController.position.viewportDimension;
       // Use floor instead of ceil and don't add 1 to stay on current page
       // if scroll hasn't moved significantly
-      final currentPage = (scrollController.offset / pageHeight).floor() + 1;
-      
+      final currentPage = _calculateCurrentPage(scrollController, pageHeight);
+
       // First update state to disable auto-scroll
       state = state.copyWith(
         isSinglePageView: false,
@@ -113,7 +130,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
       // Then update the page after a small delay to allow view transition
       await Future.delayed(Duration(milliseconds: 100));
-      
+
       // Update QuranReadingState with current page
       try {
         await ref.read(quranReadingNotifierProvider.notifier).updatePage(
