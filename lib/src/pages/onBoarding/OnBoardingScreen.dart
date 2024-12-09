@@ -30,7 +30,6 @@ class OnBoardingItem {
   final Widget? widget;
   final bool enableNextButton;
   final bool enablePreviousButton;
-  final bool skipPage;
   final bool Function()? skip;
   late FocusNode skipButtonFocusNode;
 
@@ -39,7 +38,6 @@ class OnBoardingItem {
     this.widget,
     this.enableNextButton = false,
     this.enablePreviousButton = false,
-    this.skipPage = false,
 
     /// if item is skipped, it will be marked as done
     this.skip,
@@ -162,12 +160,12 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
         animation: 'settings',
         widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2), focusNode: skipButtonFocusNode),
         enablePreviousButton: true,
-        skipPage: true),
+        enableNextButton: true),
     OnBoardingItem(
         animation: 'settings',
         widget: OnBoardingWifiSelector(onSelect: () => nextPage(3), focusNode: skipButtonFocusNode),
         enablePreviousButton: true,
-        skipPage: true),
+        enableNextButton: true),
     OnBoardingItem(
       animation: 'search',
       widget: MosqueSearch(onDone: () => nextPage(6)),
@@ -303,13 +301,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                     focusNode: skipButtonFocusNode,
                     icon: Icons.arrow_forward_rounded,
                     label: S.of(context).next,
-                    onPressed: () => nextPage(currentScreen + 1),
-                  ),
-                if (activePage.skipPage)
-                  MawaqitIconButton(
-                    focusNode: skipButtonFocusNode,
-                    icon: Icons.arrow_forward_rounded,
-                    label: S.of(context).skip,
                     onPressed: () => nextPage(currentScreen + 1),
                   ),
               ],
