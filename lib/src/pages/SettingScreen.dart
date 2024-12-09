@@ -247,7 +247,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     icon: Icon(Icons.portrait, size: 35),
                     onTap: () => AppRouter.push(ScreenWithAnimationWidget(
                       animation: 'welcome',
-                      child: OnBoardingOrientationWidget(),
+                      child: OnBoardingOrientationWidget(
+                        onNext: AppRouter.pop,
+                      ),
                     )),
                   ),
                   featureManager.isFeatureEnabled("timezone_shift") &&

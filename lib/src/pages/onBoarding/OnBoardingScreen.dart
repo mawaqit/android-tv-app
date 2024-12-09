@@ -66,7 +66,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     ),
     OnBoardingItem(
         animation: 'welcome',
-        widget: OnBoardingOrientationWidget(), // remove onSelect parameter
+        widget: OnBoardingOrientationWidget.onboarding(), // remove onSelect parameter
         enableNextButton: true, // enable next button
         enablePreviousButton: true),
     OnBoardingItem(
@@ -149,7 +149,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     ),
     OnBoardingItem(
         animation: 'welcome',
-        widget: OnBoardingOrientationWidget(), // remove onSelect parameter
+        widget: OnBoardingOrientationWidget.onboarding(), // remove onSelect parameter
         enableNextButton: true, // enable next button
         enablePreviousButton: true),
     OnBoardingItem(

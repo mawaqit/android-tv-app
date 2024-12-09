@@ -4,7 +4,47 @@ import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 class OnBoardingOrientationWidget extends StatelessWidget {
-  const OnBoardingOrientationWidget({Key? key}) : super(key: key);
+  final VoidCallback? onNext;
+  final bool isOnboarding;
+
+  // Private constructor
+  const OnBoardingOrientationWidget._({
+    Key? key,
+    required this.isOnboarding,
+    this.onNext,
+  }) : super(key: key);
+
+  // Factory constructor for normal mode
+  factory OnBoardingOrientationWidget({
+    Key? key,
+    required VoidCallback onNext,
+  }) {
+    return OnBoardingOrientationWidget._(
+      key: key,
+      isOnboarding: false,
+      onNext: onNext,
+    );
+  }
+
+  // Factory constructor for onboarding mode
+  factory OnBoardingOrientationWidget.onboarding({
+    Key? key,
+  }) {
+    return OnBoardingOrientationWidget._(
+      key: key,
+      isOnboarding: true,
+    );
+  }
+
+  // Helper method to wrap callbacks with onNext if available
+  VoidCallback _wrapWithOnNext(VoidCallback callback) {
+    return () {
+      callback();
+      if (!isOnboarding) {
+        onNext?.call();
+      }
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +64,17 @@ class OnBoardingOrientationWidget extends StatelessWidget {
               style: theme.textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
-            Text(tr.selectYourMawaqitTvAppOrientation, style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
+            Text(
+              tr.selectYourMawaqitTvAppOrientation,
+              style: theme.textTheme.titleMedium,
+              textAlign: TextAlign.center,
+            ),
             SizedBox(height: 50),
             ToggleButtonWidget(
               isSelected: userPrefs.orientationLandscape,
-              onPressed: () => userPrefs.orientationLandscape = true,
+              onPressed: _wrapWithOnNext(
+                () => userPrefs.orientationLandscape = true,
+              ),
               label: tr.landscape,
             ),
             Padding(
@@ -38,7 +84,9 @@ class OnBoardingOrientationWidget extends StatelessWidget {
             SizedBox(height: 20),
             ToggleButtonWidget(
               isSelected: !userPrefs.orientationLandscape,
-              onPressed: () => userPrefs.orientationLandscape = false,
+              onPressed: _wrapWithOnNext(
+                () => userPrefs.orientationLandscape = false,
+              ),
               label: tr.portrait,
             ),
             Text(tr.portraitBTNDescription, textAlign: TextAlign.center),
