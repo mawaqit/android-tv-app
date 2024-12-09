@@ -33,6 +33,7 @@ class OnBoardingItem {
   final bool skipPage;
   final bool Function()? skip;
   late FocusNode skipButtonFocusNode;
+
   OnBoardingItem({
     required this.animation,
     this.widget,
@@ -61,7 +62,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'language',
       widget: OnBoardingLanguageSelector(),
-      enableNextButton: true,  // Enable next button for language selection
+      enableNextButton: true, // Enable next button for language selection
     ),
     OnBoardingItem(
         animation: 'welcome',
@@ -144,18 +145,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'language',
       widget: OnBoardingLanguageSelector(),
-      enableNextButton: true,  // Enable next button for language selection
+      enableNextButton: true, // Enable next button for language selection
     ),
-    OnBoardingItem(
-        animation: 'settings',
-        widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2), focusNode: skipButtonFocusNode),
-        enablePreviousButton: true,
-        skipPage: true),
-    OnBoardingItem(
-        animation: 'settings',
-        widget: OnBoardingWifiSelector(onSelect: () => nextPage(3), focusNode: skipButtonFocusNode),
-        enablePreviousButton: true,
-        skipPage: true),
     OnBoardingItem(
         animation: 'welcome',
         widget: OnBoardingOrientationWidget(), // remove onSelect parameter
@@ -167,6 +158,16 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       enableNextButton: true,
       enablePreviousButton: true,
     ),
+    OnBoardingItem(
+        animation: 'settings',
+        widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2), focusNode: skipButtonFocusNode),
+        enablePreviousButton: true,
+        skipPage: true),
+    OnBoardingItem(
+        animation: 'settings',
+        widget: OnBoardingWifiSelector(onSelect: () => nextPage(3), focusNode: skipButtonFocusNode),
+        enablePreviousButton: true,
+        skipPage: true),
     OnBoardingItem(
       animation: 'search',
       widget: MosqueSearch(onDone: () => nextPage(6)),
@@ -189,6 +190,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
   ];
+
   static Future<bool> checkRoot() async {
     try {
       final result = await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
