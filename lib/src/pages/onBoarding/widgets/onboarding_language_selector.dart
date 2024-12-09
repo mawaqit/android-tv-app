@@ -9,7 +9,47 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 class OnBoardingLanguageSelector extends StatefulWidget {
-  const OnBoardingLanguageSelector({super.key});
+  final bool isOnboarding;
+  final VoidCallback? onSelect;
+
+  // Private constructor
+  const OnBoardingLanguageSelector._({
+    Key? key,
+    required this.isOnboarding,
+    this.onSelect,
+  }) : super(key: key);
+
+  // Factory constructor
+  factory OnBoardingLanguageSelector({
+    Key? key,
+    bool isOnboarding = true,
+    VoidCallback? onNext,
+  }) {
+    return OnBoardingLanguageSelector._(
+      key: key,
+      isOnboarding: isOnboarding,
+      onSelect: onNext,
+    );
+  }
+
+  // Named factory constructor for normal mode
+  factory OnBoardingLanguageSelector.normal({Key? key, required VoidCallback onNext}) {
+    return OnBoardingLanguageSelector._(
+      key: key,
+      isOnboarding: false,
+      onSelect: onNext,
+    );
+  }
+
+  // Named factory constructor for onboarding mode
+  factory OnBoardingLanguageSelector.onboarding({
+    Key? key,
+  }) {
+    return OnBoardingLanguageSelector._(
+      key: key,
+      isOnboarding: true,
+    );
+  }
 
   @override
   State<OnBoardingLanguageSelector> createState() => _OnBoardingLanguageSelectorState();
@@ -101,6 +141,7 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
                 return LanguageTile(
+                  onSelect: widget.onSelect ?? () {},
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),
                 );
@@ -121,10 +162,13 @@ class LanguageTile extends StatefulWidget {
     Key? key,
     required this.isSelected,
     required this.locale,
+    required this.onSelect,
   }) : super(key: key);
 
   final bool isSelected;
   final Locale locale;
+
+  final void Function() onSelect;
 
   @override
   State<LanguageTile> createState() => _LanguageTileState();
@@ -157,6 +201,7 @@ class _LanguageTileState extends State<LanguageTile> {
             borderRadius: BorderRadius.circular(10),
             onTap: () {
               appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueUUID);
+              widget.onSelect();
             },
             child: ListTile(
               dense: true,
