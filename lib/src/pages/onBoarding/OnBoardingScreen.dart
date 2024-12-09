@@ -179,7 +179,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'search',
       widget: OnBoardingScreenType.onboarding(),
-      enableNextButton: false,
+      enableNextButton: true,
       enablePreviousButton: true,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
