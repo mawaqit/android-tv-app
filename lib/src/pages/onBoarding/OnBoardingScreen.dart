@@ -81,7 +81,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     /// main screen or secondary screen (if user has already selected a mosque)
     OnBoardingItem(
         animation: 'search',
-        widget: OnBoardingScreenType(onDone: () => nextPage(5)),
+        widget: OnBoardingScreenType.onboarding(),
+        enableNextButton: true,
         skip: () => !context.read<MosqueManager>().typeIsMosque,
         enablePreviousButton: true),
 
@@ -175,8 +176,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     /// main screen or secondary screen (if user has already selected a mosque)
     OnBoardingItem(
       animation: 'search',
-      widget: OnBoardingScreenType(onDone: () => nextPage(7)),
+      widget: OnBoardingScreenType.onboarding(),
       enableNextButton: false,
+      enablePreviousButton: true,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
 
