@@ -88,10 +88,12 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
 
     /// Allow user to select between regular mode or announcement mode
     OnBoardingItem(
-        animation: 'search',
-        widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
-        skip: () => !context.read<MosqueManager>().typeIsMosque,
-        enablePreviousButton: true),
+      animation: 'search',
+      widget: OnBoardingAnnouncementScreens(isOnboarding: true),
+      skip: () => !context.read<MosqueManager>().typeIsMosque,
+      enablePreviousButton: true,
+      enableNextButton: true,
+    ),
   ];
 
   onDone() {
@@ -185,7 +187,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     /// Allow user to select between regular mode or announcement mode
     OnBoardingItem(
       animation: 'search',
-      widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(8)),
+      widget: OnBoardingAnnouncementScreens(isOnboarding: true),
+      enableNextButton: true,
       enablePreviousButton: true,
       skip: () => !context.read<MosqueManager>().typeIsMosque,
     ),
