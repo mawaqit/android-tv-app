@@ -9,9 +9,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
 
 class OnBoardingLanguageSelector extends StatefulWidget {
-  const OnBoardingLanguageSelector({Key? key, required this.onSelect}) : super(key: key);
-
-  final void Function() onSelect;
+  const OnBoardingLanguageSelector({super.key});
 
   @override
   State<OnBoardingLanguageSelector> createState() => _OnBoardingLanguageSelectorState();
@@ -103,7 +101,6 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
                 return LanguageTile(
-                  onSelect: widget.onSelect,
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),
                 );
@@ -124,13 +121,10 @@ class LanguageTile extends StatefulWidget {
     Key? key,
     required this.isSelected,
     required this.locale,
-    required this.onSelect,
   }) : super(key: key);
 
   final bool isSelected;
   final Locale locale;
-
-  final void Function() onSelect;
 
   @override
   State<LanguageTile> createState() => _LanguageTileState();
@@ -163,7 +157,6 @@ class _LanguageTileState extends State<LanguageTile> {
             borderRadius: BorderRadius.circular(10),
             onTap: () {
               appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueUUID);
-              widget.onSelect();
             },
             child: ListTile(
               dense: true,

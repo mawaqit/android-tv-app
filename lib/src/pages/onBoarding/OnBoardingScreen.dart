@@ -60,7 +60,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   late List<OnBoardingItem> onBoardingItems = [
     OnBoardingItem(
       animation: 'language',
-      widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
+      widget: OnBoardingLanguageSelector(),
+      enableNextButton: true,  // Enable next button for language selection
     ),
     OnBoardingItem(
         animation: 'welcome',
@@ -141,7 +142,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   late final kioskModeonBoardingItems = [
     OnBoardingItem(
       animation: 'language',
-      widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
+      widget: OnBoardingLanguageSelector(),
+      enableNextButton: true,  // Enable next button for language selection
     ),
     OnBoardingItem(
         animation: 'settings',

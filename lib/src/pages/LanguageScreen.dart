@@ -42,7 +42,7 @@ class LanguageScreen extends StatelessWidget {
               description: description!,
               isIconActivated: isIconActivated!,
             )
-          : OnBoardingLanguageSelector(onSelect: AppRouter.pop),
+          : OnBoardingLanguageSelector(),
     );
   }
 // AppBar _renderAppBar(context) {
