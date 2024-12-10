@@ -262,7 +262,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   }
 
   WillPopScope buildWillPopScope(OnBoardingItem activePage, BuildContext context) {
-    final isLastItem = currentScreen == (_rootStatus ? kioskModeonBoardingItems.length - 1 : onBoardingItems.length - 1);
+    final isLastItem =
+        currentScreen == (_rootStatus ? kioskModeonBoardingItems.length - 1 : onBoardingItems.length - 1);
 
     return WillPopScope(
       onWillPop: () async {
@@ -273,50 +274,68 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       },
       child: SafeArea(
         child: Scaffold(
-          body: ScreenWithAnimationWidget(
-            animation: activePage.animation,
-            child: activePage.widget ?? SizedBox(),
-          ),
-          bottomNavigationBar: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            // height: 80,
-            child: Row(
-              children: [
-                VersionWidget(
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
-                  ),
-                ),
-                Spacer(flex: 2),
-                DotsIndicator(
-                  dotsCount: _rootStatus ? kioskModeonBoardingItems.length : onBoardingItems.length,
-                  position: currentScreen,
-                  decorator: DotsDecorator(
-                    size: const Size.square(9.0),
-                    activeSize: const Size(21.0, 9.0),
-                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-                    spacing: EdgeInsets.all(3),
-                  ),
-                ),
-                Spacer(),
-                if (activePage.enablePreviousButton)
-                  MawaqitBackIconButton(
-                    icon: Icons.arrow_back_rounded,
-                    label: S.of(context).previous,
-                    onPressed: () => previousPage(currentScreen - 1),
-                  ),
-                if (activePage.enableNextButton)
-                  MawaqitIconButton(
-                    focusNode: ref.watch(nextNodeProvider),
-                    icon: isLastItem ? Icons.check : Icons.arrow_forward_rounded,
-                    // Temporarily hardcode "Finish" to verify localization
-                    label: isLastItem ?  S.of(context).finish : S.of(context).next,
-                    onPressed: () => nextPage(currentScreen + 1),
-                  ),
-              ],
+            body: ScreenWithAnimationWidget(
+              animation: activePage.animation,
+              child: activePage.widget ?? SizedBox(),
             ),
-          ),
-        ),
+            bottomNavigationBar: Container(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+              child: Row(
+                children: [
+                  // Left side - Version Widget
+                  Expanded(
+                    flex: 2,
+                    child: VersionWidget(
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
+                      ),
+                    ),
+                  ),
+                  // Left spacer with specific flex
+                  Expanded(flex: 1, child: SizedBox()),
+                  // Center - Dots Indicator
+                  DotsIndicator(
+                    dotsCount: _rootStatus ? kioskModeonBoardingItems.length : onBoardingItems.length,
+                    position: currentScreen,
+                    decorator: DotsDecorator(
+                      size: const Size.square(9.0),
+                      activeSize: const Size(21.0, 9.0),
+                      activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                      spacing: EdgeInsets.all(3),
+                    ),
+                  ),
+                  // Right spacer with same flex as left
+                  Expanded(flex: 1, child: SizedBox()),
+                  // Right side - Navigation Buttons
+                  // Right side - Navigation Buttons
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: Directionality.of(context) == TextDirection.ltr
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+                      children: [
+                        if (activePage.enablePreviousButton)
+                          MawaqitBackIconButton(
+                            icon: Icons.arrow_back_rounded,
+                            label: S.of(context).previous,
+                            onPressed: () => previousPage(currentScreen - 1),
+                          ),
+                        if (activePage.enablePreviousButton) SizedBox(width: 10),
+                        if (activePage.enableNextButton)
+                          MawaqitIconButton(
+                            focusNode: ref.watch(nextNodeProvider),
+                            icon: isLastItem ? Icons.check : Icons.arrow_forward_rounded,
+                            label: isLastItem ? S.of(context).finish : S.of(context).next,
+                            onPressed: () => nextPage(currentScreen + 1),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )),
       ),
     );
   }
