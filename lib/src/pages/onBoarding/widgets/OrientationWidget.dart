@@ -86,13 +86,11 @@ class OnBoardingOrientationWidget extends StatelessWidget {
             SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(
-                tr.landscapeBTNDescription,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
-                ),
-                textAlign: TextAlign.center
-              ),
+              child: Text(tr.landscapeBTNDescription,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+                  ),
+                  textAlign: TextAlign.center),
             ),
             SizedBox(height: 20),
             ToggleButtonWidget(
@@ -121,14 +119,14 @@ class ToggleButtonWidget extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onPressed;
   final String label;
-  final TextStyle? textStyle;  // Add this line
+  final TextStyle? textStyle; // Add this line
 
   const ToggleButtonWidget({
     super.key,
     required this.isSelected,
     required this.onPressed,
     required this.label,
-    this.textStyle,  // Add this line
+    this.textStyle, // Add this line
   });
 
   @override
@@ -145,11 +143,11 @@ class ToggleButtonWidget extends StatelessWidget {
               backgroundColor: theme.primaryColor,
               foregroundColor: Colors.white,
             ),
-            child: Text(label, style: textStyle),  // Add style here
+            child: Text(label, style: textStyle), // Add style here
           )
         : OutlinedButton(
             onPressed: onPressed,
-            child: Text(label, style: textStyle),  // Add style here
+            child: Text(label, style: textStyle), // Add style here
           );
   }
 }
