@@ -37,25 +37,38 @@ class OnBoardingAnnouncementScreens extends StatelessWidget {
           children: [
             Text(
               tr.announcementOnlyMode,
+              style: theme.textTheme.headlineMedium,
               textAlign: TextAlign.center,
-              style: theme.textTheme.titleLarge?.copyWith(fontSize: 25),
             ),
             SizedBox(height: 10),
             Text(
               tr.announcementOnlyModeEXPLINATION,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
+              ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 40),
+            SizedBox(height: 30),
             ToggleButtonWidget(
               isSelected: !userPrefs.announcementsOnly,
               onPressed: _wrapWithOnNext(
                 () => userPrefs.announcementsOnly = false,
               ),
               label: tr.normalMode,
+              textStyle: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(tr.normalModeExplanation, textAlign: TextAlign.center),
+              child: Text(
+                tr.normalModeExplanation,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: 20),
             ToggleButtonWidget(
@@ -65,7 +78,17 @@ class OnBoardingAnnouncementScreens extends StatelessWidget {
               ),
               label: tr.announcementOnlyMode,
             ),
-            Text(tr.announcementOnlyModeExplanation, textAlign: TextAlign.center),
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
+                tr.announcementOnlyModeExplanation,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),
@@ -77,12 +100,14 @@ class ToggleButtonWidget extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onPressed;
   final String label;
+  final TextStyle? textStyle;
 
   const ToggleButtonWidget({
     super.key,
     required this.isSelected,
     required this.onPressed,
     required this.label,
+    this.textStyle,
   });
 
   @override
@@ -99,11 +124,11 @@ class ToggleButtonWidget extends StatelessWidget {
               backgroundColor: theme.primaryColor,
               foregroundColor: Colors.white,
             ),
-            child: Text(label),
+            child: Text(label, style: textStyle),
           )
         : OutlinedButton(
             onPressed: onPressed,
-            child: Text(label),
+            child: Text(label, style: textStyle),
           );
   }
 }
