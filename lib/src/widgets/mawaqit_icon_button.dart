@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class MawaqitIconButton extends StatefulWidget {
   const MawaqitIconButton({
@@ -48,9 +49,12 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
                   children: [
                     Text(
                       widget.label,
-                      style: theme.textTheme.bodySmall!.copyWith(color: focused ? Colors.white : color),
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        color: focused ? Colors.white : color,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 12),
                     Align(
                       alignment: Alignment(.5, 0),
                       child: Icon(widget.icon, color: focused ? Colors.white : color, size: 16),

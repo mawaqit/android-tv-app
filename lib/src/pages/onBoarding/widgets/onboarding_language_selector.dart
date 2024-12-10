@@ -9,7 +9,8 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:provider/provider.dart' as provider; // Prefix the provider import
+import 'package:provider/provider.dart' as provider;
+import 'package:sizer/sizer.dart'; // Prefix the provider import
 
 class OnBoardingLanguageSelector extends StatefulWidget {
   final bool isOnboarding;
@@ -113,20 +114,18 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
         SizedBox(height: 10),
         Text(
           S.of(context).appLang,
-          style: TextStyle(
-            fontSize: 25.0,
-            fontWeight: FontWeight.w700,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                fontWeight: FontWeight.w700,
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+              ),
         ).animate().slideY().fade(),
-        SizedBox(height: 8),
+        SizedBox(height: 2.h),
         Text(
           S.of(context).descLang,
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-          ),
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+              ),
         ).animate().slideX(begin: .5).fade(),
         SizedBox(height: 20),
         Expanded(
