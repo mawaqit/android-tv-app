@@ -64,22 +64,35 @@ class OnBoardingOrientationWidget extends StatelessWidget {
               style: theme.textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
+            SizedBox(height: 10),
             Text(
               tr.selectYourMawaqitTvAppOrientation,
-              style: theme.textTheme.titleMedium,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
+              ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 30),
             ToggleButtonWidget(
               isSelected: userPrefs.orientationLandscape,
               onPressed: _wrapWithOnNext(
                 () => userPrefs.orientationLandscape = true,
               ),
               label: tr.landscape,
+              textStyle: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(tr.landscapeBTNDescription, textAlign: TextAlign.center),
+              child: Text(
+                tr.landscapeBTNDescription,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+                ),
+                textAlign: TextAlign.center
+              ),
             ),
             SizedBox(height: 20),
             ToggleButtonWidget(
@@ -89,7 +102,14 @@ class OnBoardingOrientationWidget extends StatelessWidget {
               ),
               label: tr.portrait,
             ),
-            Text(tr.portraitBTNDescription, textAlign: TextAlign.center),
+            SizedBox(height: 10),
+            Text(
+              tr.portraitBTNDescription,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
@@ -101,12 +121,14 @@ class ToggleButtonWidget extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onPressed;
   final String label;
+  final TextStyle? textStyle;  // Add this line
 
   const ToggleButtonWidget({
     super.key,
     required this.isSelected,
     required this.onPressed,
     required this.label,
+    this.textStyle,  // Add this line
   });
 
   @override
@@ -123,11 +145,11 @@ class ToggleButtonWidget extends StatelessWidget {
               backgroundColor: theme.primaryColor,
               foregroundColor: Colors.white,
             ),
-            child: Text(label),
+            child: Text(label, style: textStyle),  // Add style here
           )
         : OutlinedButton(
             onPressed: onPressed,
-            child: Text(label),
+            child: Text(label, style: textStyle),  // Add style here
           );
   }
 }
