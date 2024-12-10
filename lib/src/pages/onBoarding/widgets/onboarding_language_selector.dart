@@ -212,7 +212,7 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
             onKey: (node, event) {
               if (event is RawKeyDownEvent) {
                 if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
-                  ref.read(nextNodeProvider).requestFocus();
+                  // ref.read(nextNodeProvider).requestFocus();
                   handleSelection();
                   return KeyEventResult.handled;
                 }

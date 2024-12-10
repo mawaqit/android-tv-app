@@ -334,7 +334,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                         if (activePage.enablePreviousButton) SizedBox(width: 10),
                         if (activePage.enableNextButton)
                           MawaqitIconButton(
-                            focusNode: ref.watch(nextNodeProvider),
+                            focusNode: FocusNode(),
                             icon: isLastItem ? Icons.check : Icons.arrow_forward_rounded,
                             label: isLastItem ? S.of(context).finish : S.of(context).next,
                             onPressed: () => nextPage(currentScreen + 1),
@@ -350,8 +350,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   }
 }
 
-final nextNodeProvider = riverpod.Provider.autoDispose<FocusNode>((ref) {
-  final focusNode = FocusNode();
-  ref.onDispose(() => focusNode.dispose());
-  return focusNode;
-});
+// final nextNodeProvider = riverpod.Provider.autoDispose<FocusNode>((ref) {
+//   final focusNode = FocusNode();
+//   ref.onDispose(() => focusNode.dispose());
+//   return focusNode;
+// });
