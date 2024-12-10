@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -54,70 +55,65 @@ class OnBoardingScreenType extends StatelessWidget {
     final userPrefs = context.watch<UserPreferencesManager>();
     final tr = S.of(context);
 
-    return Material(
-      child: FractionallySizedBox(
-        widthFactor: .75,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              tr.mainScreenOrSecondaryScreen,
-              style: theme.textTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 10),
-            Text(
-              tr.mainScreenOrSecondaryScreenEXPLINATION,
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 30),
-            ToggleButtonWidget(
-              isSelected: !userPrefs.isSecondaryScreen,
-              onPressed: _wrapWithOnDone(
-                () => userPrefs.isSecondaryScreen = false,
-              ),
-              label: tr.mainScreen,
-              textStyle: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(
-                tr.mainScreenExplanation,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(height: 20),
-            ToggleButtonWidget(
-              isSelected: userPrefs.isSecondaryScreen,
-              onPressed: _wrapWithOnDone(
-                () => userPrefs.isSecondaryScreen = true,
-              ),
-              label: tr.secondaryScreen,
-              textStyle: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              tr.secondaryScreenExplanation,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AutoSizeText(
+          tr.mainScreenOrSecondaryScreen,
+          style: theme.textTheme.headlineSmall,
+          textAlign: TextAlign.center,
         ),
-      ),
+        SizedBox(height: 10),
+        AutoSizeText(
+          tr.mainScreenOrSecondaryScreenEXPLINATION,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
+          ),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 30),
+        ToggleButtonWidget(
+          isSelected: !userPrefs.isSecondaryScreen,
+          onPressed: _wrapWithOnDone(
+            () => userPrefs.isSecondaryScreen = false,
+          ),
+          label: tr.mainScreen,
+          textStyle: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Text(
+            tr.mainScreenExplanation,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        SizedBox(height: 20),
+        ToggleButtonWidget(
+          isSelected: userPrefs.isSecondaryScreen,
+          onPressed: _wrapWithOnDone(
+            () => userPrefs.isSecondaryScreen = true,
+          ),
+          label: tr.secondaryScreen,
+          textStyle: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10),
+        AutoSizeText(
+          tr.secondaryScreenExplanation,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }
