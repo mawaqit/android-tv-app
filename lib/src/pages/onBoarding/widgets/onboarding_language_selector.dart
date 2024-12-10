@@ -1,17 +1,59 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
+import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as provider;
+import 'package:sizer/sizer.dart'; // Prefix the provider import
 
 class OnBoardingLanguageSelector extends StatefulWidget {
-  const OnBoardingLanguageSelector({Key? key, required this.onSelect}) : super(key: key);
+  final bool isOnboarding;
+  final VoidCallback? onSelect; // Renamed for consistency
 
-  final void Function() onSelect;
+  // Private constructor
+  const OnBoardingLanguageSelector._({
+    Key? key,
+    required this.isOnboarding,
+    this.onSelect,
+  }) : super(key: key);
+
+  // Factory constructor
+  factory OnBoardingLanguageSelector({
+    Key? key,
+    bool isOnboarding = true,
+    VoidCallback? onNext,
+  }) {
+    return OnBoardingLanguageSelector._(
+      key: key,
+      isOnboarding: isOnboarding,
+      onSelect: onNext, // Assigning to onSelect
+    );
+  }
+
+  // Named factory constructor for normal mode
+  factory OnBoardingLanguageSelector.normal({Key? key, required VoidCallback onNext}) {
+    return OnBoardingLanguageSelector._(
+      key: key,
+      isOnboarding: false,
+      onSelect: onNext,
+    );
+  }
+
+  // Named factory constructor for onboarding mode
+  factory OnBoardingLanguageSelector.onboarding({
+    Key? key,
+  }) {
+    return OnBoardingLanguageSelector._(
+      key: key,
+      isOnboarding: true,
+    );
+  }
 
   @override
   State<OnBoardingLanguageSelector> createState() => _OnBoardingLanguageSelectorState();
@@ -35,10 +77,10 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
   @override
   Widget build(BuildContext context) {
     final locales = S.supportedLocales;
-    final appLanguage = Provider.of<AppLanguage>(context);
+    final appLanguage = provider.Provider.of<AppLanguage>(context); // Use prefixed Provider
     final themeData = Theme.of(context);
 
-    /// if the [langCode] is current used language
+    /// Check if the [langCode] is the currently used language
     bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
 
     final sortedLocales = [
@@ -50,14 +92,14 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
             .compareTo(appLanguage.languageName(b.languageCode).toLowerCase())),
     ];
 
-    // After defining your sortedLocales and other UI components
+    // Scroll to the selected language after frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-        final appLanguage = Provider.of<AppLanguage>(context, listen: false);
+        final appLanguage = provider.Provider.of<AppLanguage>(context, listen: false); // Use prefixed Provider
         int selectedIndex =
             sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
         if (selectedIndex != -1) {
-          double position = selectedIndex * 51; // Estimate the height per item. Adjust this based on your item height.
+          double position = selectedIndex * 51; // Adjust based on item height
           _scrollController.animateTo(
             position,
             duration: Duration(milliseconds: 300),
@@ -72,20 +114,18 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
         SizedBox(height: 10),
         Text(
           S.of(context).appLang,
-          style: TextStyle(
-            fontSize: 25.0,
-            fontWeight: FontWeight.w700,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                fontWeight: FontWeight.w700,
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+              ),
         ).animate().slideY().fade(),
-        SizedBox(height: 8),
+        SizedBox(height: 2.h),
         Text(
           S.of(context).descLang,
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-          ),
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+              ),
         ).animate().slideX(begin: .5).fade(),
         SizedBox(height: 20),
         Expanded(
@@ -103,13 +143,10 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
                 return LanguageTile(
-                  onSelect: widget.onSelect,
+                  onSelect: widget.onSelect ?? () {}, // Pass the onSelect callback
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),
                 );
-                // .animate(delay: 110.milliseconds * index)
-                // .moveX(begin: 200)
-                // .fade();
               },
             ),
           ),
@@ -119,7 +156,7 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
   }
 }
 
-class LanguageTile extends StatefulWidget {
+class LanguageTile extends ConsumerStatefulWidget {
   const LanguageTile({
     Key? key,
     required this.isSelected,
@@ -129,21 +166,32 @@ class LanguageTile extends StatefulWidget {
 
   final bool isSelected;
   final Locale locale;
-
-  final void Function() onSelect;
+  final VoidCallback onSelect;
 
   @override
-  State<LanguageTile> createState() => _LanguageTileState();
+  ConsumerState<LanguageTile> createState() => _LanguageTileState();
 }
 
-class _LanguageTileState extends State<LanguageTile> {
+class _LanguageTileState extends ConsumerState<LanguageTile> {
   late bool isFocused = widget.isSelected;
+  final focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    final appLanguage = Provider.of<AppLanguage>(context);
-    final mosqueManager = Provider.of<MosqueManager>(context);
+    final appLanguage = provider.Provider.of<AppLanguage>(context); // Use prefixed Provider
+    final mosqueManager = provider.Provider.of<MosqueManager>(context); // Use prefixed Provider
+
+    void handleSelection() {
+      appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueUUID);
+      widget.onSelect(); // Invoke the callback to navigate
+    }
 
     return Material(
       child: Padding(
@@ -157,23 +205,43 @@ class _LanguageTileState extends State<LanguageTile> {
                     : null,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: InkWell(
+          child: Focus(
+            focusNode: focusNode,
             autofocus: widget.isSelected,
-            onFocusChange: (i) => setState(() => isFocused = i),
-            borderRadius: BorderRadius.circular(10),
-            onTap: () {
-              appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueUUID);
-              widget.onSelect();
+            onFocusChange: (hasFocus) => setState(() => isFocused = hasFocus),
+            onKey: (node, event) {
+              if (event is RawKeyDownEvent) {
+                if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+                  // ref.read(nextNodeProvider).requestFocus();
+                  handleSelection();
+                  return KeyEventResult.handled;
+                }
+
+                if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                  node.nextFocus();
+                  return KeyEventResult.handled;
+                }
+
+                if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                  node.previousFocus();
+                  return KeyEventResult.handled;
+                }
+              }
+              return KeyEventResult.ignored;
             },
-            child: ListTile(
-              dense: true,
-              textColor: isFocused || widget.isSelected ? Colors.white : null,
-              leading: flagIcon(widget.locale.languageCode),
-              title: Text(
-                appLanguage.languageName(widget.locale.languageCode),
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            child: InkWell(
+              onTap: handleSelection,
+              borderRadius: BorderRadius.circular(10),
+              child: ListTile(
+                dense: true,
+                textColor: isFocused || widget.isSelected ? Colors.white : null,
+                leading: flagIcon(widget.locale.languageCode),
+                title: Text(
+                  appLanguage.languageName(widget.locale.languageCode),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+                trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
               ),
-              trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
             ),
           ),
         ),

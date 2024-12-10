@@ -248,7 +248,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     onTap: () => AppRouter.push(ScreenWithAnimationWidget(
                       animation: 'welcome',
                       child: OnBoardingOrientationWidget(
-                        onSelect: () => Navigator.pop(context),
+                        onNext: AppRouter.pop,
                       ),
                     )),
                   ),
