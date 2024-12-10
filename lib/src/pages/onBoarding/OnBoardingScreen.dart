@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -305,7 +307,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                   ),
                 if (activePage.enableNextButton)
                   MawaqitIconButton(
-                    focusNode: skipButtonFocusNode,
+                    focusNode: ref.watch(nextNodeProvider),
                     icon: isLastItem ? Icons.check : Icons.arrow_forward_rounded,
                     // Temporarily hardcode "Finish" to verify localization
                     label: isLastItem ? 'Finish' : S.of(context).next,
@@ -319,3 +321,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     );
   }
 }
+
+final nextNodeProvider = riverpod.Provider.autoDispose<FocusNode>((ref) {
+  final focusNode = FocusNode();
+  ref.onDispose(() => focusNode.dispose());
+  return focusNode;
+});
