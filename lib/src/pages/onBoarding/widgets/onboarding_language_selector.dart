@@ -2,18 +2,18 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
+import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:provider/provider.dart';
-import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';  // Ensure imports are correct
-import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';  // Ensure imports are correct
+import 'package:provider/provider.dart' as provider; // Prefix the provider import
 
 class OnBoardingLanguageSelector extends StatefulWidget {
   final bool isOnboarding;
-  final VoidCallback? onSelect;  // Renamed for consistency
+  final VoidCallback? onSelect; // Renamed for consistency
 
   // Private constructor
   const OnBoardingLanguageSelector._({
@@ -31,7 +31,7 @@ class OnBoardingLanguageSelector extends StatefulWidget {
     return OnBoardingLanguageSelector._(
       key: key,
       isOnboarding: isOnboarding,
-      onSelect: onNext,  // Assigning to onSelect
+      onSelect: onNext, // Assigning to onSelect
     );
   }
 
@@ -76,7 +76,7 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
   @override
   Widget build(BuildContext context) {
     final locales = S.supportedLocales;
-    final appLanguage = Provider.of<AppLanguage>(context);
+    final appLanguage = provider.Provider.of<AppLanguage>(context); // Use prefixed Provider
     final themeData = Theme.of(context);
 
     /// Check if the [langCode] is the currently used language
@@ -94,7 +94,7 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
     // Scroll to the selected language after frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-        final appLanguage = Provider.of<AppLanguage>(context, listen: false);
+        final appLanguage = provider.Provider.of<AppLanguage>(context, listen: false); // Use prefixed Provider
         int selectedIndex =
             sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
         if (selectedIndex != -1) {
@@ -144,7 +144,7 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
                 return LanguageTile(
-                  onSelect: widget.onSelect ?? () {},  // Pass the onSelect callback
+                  onSelect: widget.onSelect ?? () {}, // Pass the onSelect callback
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),
                 );
@@ -157,7 +157,7 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
   }
 }
 
-class LanguageTile extends StatefulWidget {
+class LanguageTile extends ConsumerStatefulWidget {
   const LanguageTile({
     Key? key,
     required this.isSelected,
@@ -170,10 +170,10 @@ class LanguageTile extends StatefulWidget {
   final VoidCallback onSelect;
 
   @override
-  State<LanguageTile> createState() => _LanguageTileState();
+  ConsumerState<LanguageTile> createState() => _LanguageTileState();
 }
 
-class _LanguageTileState extends State<LanguageTile> {
+class _LanguageTileState extends ConsumerState<LanguageTile> {
   late bool isFocused = widget.isSelected;
   final focusNode = FocusNode();
 
@@ -186,12 +186,12 @@ class _LanguageTileState extends State<LanguageTile> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    final appLanguage = Provider.of<AppLanguage>(context);
-    final mosqueManager = Provider.of<MosqueManager>(context);
-    
+    final appLanguage = provider.Provider.of<AppLanguage>(context); // Use prefixed Provider
+    final mosqueManager = provider.Provider.of<MosqueManager>(context); // Use prefixed Provider
+
     void handleSelection() {
       appLanguage.changeLanguage(widget.locale, mosqueManager.mosqueUUID);
-      widget.onSelect();  // Invoke the callback to navigate
+      widget.onSelect(); // Invoke the callback to navigate
     }
 
     return Material(
@@ -212,17 +212,17 @@ class _LanguageTileState extends State<LanguageTile> {
             onFocusChange: (hasFocus) => setState(() => isFocused = hasFocus),
             onKey: (node, event) {
               if (event is RawKeyDownEvent) {
-                if (event.logicalKey == LogicalKeyboardKey.select || 
-                    event.logicalKey == LogicalKeyboardKey.enter) {
+                if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+                  ref.read(nextNodeProvider).requestFocus();
                   handleSelection();
                   return KeyEventResult.handled;
                 }
-                
+
                 if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
                   node.nextFocus();
                   return KeyEventResult.handled;
                 }
-                
+
                 if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
                   node.previousFocus();
                   return KeyEventResult.handled;
