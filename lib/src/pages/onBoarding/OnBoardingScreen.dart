@@ -310,7 +310,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                     focusNode: ref.watch(nextNodeProvider),
                     icon: isLastItem ? Icons.check : Icons.arrow_forward_rounded,
                     // Temporarily hardcode "Finish" to verify localization
-                    label: isLastItem ? 'Finish' : S.of(context).next,
+                    label: isLastItem ?  S.of(context).finish : S.of(context).next,
                     onPressed: () => nextPage(currentScreen + 1),
                   ),
               ],
