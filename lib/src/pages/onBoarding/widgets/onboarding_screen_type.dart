@@ -66,22 +66,35 @@ class OnBoardingScreenType extends StatelessWidget {
               style: theme.textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
+            SizedBox(height: 10),
             Text(
               tr.mainScreenOrSecondaryScreenEXPLINATION,
-              style: theme.textTheme.titleMedium,
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
+              ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 30),
             ToggleButtonWidget(
               isSelected: !userPrefs.isSecondaryScreen,
               onPressed: _wrapWithOnDone(
                 () => userPrefs.isSecondaryScreen = false,
               ),
               label: tr.mainScreen,
+              textStyle: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(tr.mainScreenExplanation, textAlign: TextAlign.center),
+              child: Text(
+                tr.mainScreenExplanation,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: 20),
             ToggleButtonWidget(
@@ -90,8 +103,18 @@ class OnBoardingScreenType extends StatelessWidget {
                 () => userPrefs.isSecondaryScreen = true,
               ),
               label: tr.secondaryScreen,
+              textStyle: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            Text(tr.secondaryScreenExplanation, textAlign: TextAlign.center),
+            SizedBox(height: 10),
+            Text(
+              tr.secondaryScreenExplanation,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),

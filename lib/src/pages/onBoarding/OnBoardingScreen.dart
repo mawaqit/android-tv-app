@@ -307,7 +307,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                   // Right spacer with same flex as left
                   Expanded(flex: 1, child: SizedBox()),
                   // Right side - Navigation Buttons
-                  // Right side - Navigation Buttons
                   Expanded(
                     flex: 2,
                     child: Row(
@@ -316,12 +315,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                           ? MainAxisAlignment.end
                           : MainAxisAlignment.start,
                       children: [
-                        // activePage.enablePreviousButton ? MawaqitBackIconButton(
-                        //   icon: Icons.arrow_back_rounded,
-                        //   label: S.of(context).previous,
-                        //   onPressed: () => previousPage(currentScreen - 1),
-                        // ) : SizedBox(width: 200,),
-                        // if (activePage.enablePreviousButton)
                           Visibility(
                             visible: activePage.enablePreviousButton,
                             replacement: Opacity(
