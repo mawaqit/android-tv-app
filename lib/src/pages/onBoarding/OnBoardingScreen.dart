@@ -316,11 +316,27 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                           ? MainAxisAlignment.end
                           : MainAxisAlignment.start,
                       children: [
-                        if (activePage.enablePreviousButton)
-                          MawaqitBackIconButton(
-                            icon: Icons.arrow_back_rounded,
-                            label: S.of(context).previous,
-                            onPressed: () => previousPage(currentScreen - 1),
+                        // activePage.enablePreviousButton ? MawaqitBackIconButton(
+                        //   icon: Icons.arrow_back_rounded,
+                        //   label: S.of(context).previous,
+                        //   onPressed: () => previousPage(currentScreen - 1),
+                        // ) : SizedBox(width: 200,),
+                        // if (activePage.enablePreviousButton)
+                          Visibility(
+                            visible: activePage.enablePreviousButton,
+                            replacement: Opacity(
+                              opacity: 0,
+                              child: MawaqitBackIconButton(
+                                icon: Icons.arrow_back_rounded,
+                                label: S.of(context).previous,
+                                onPressed: () => previousPage(currentScreen - 1),
+                              ),
+                            ),
+                            child: MawaqitBackIconButton(
+                              icon: Icons.arrow_back_rounded,
+                              label: S.of(context).previous,
+                              onPressed: () => previousPage(currentScreen - 1),
+                            ),
                           ),
                         if (activePage.enablePreviousButton) SizedBox(width: 10),
                         if (activePage.enableNextButton)
