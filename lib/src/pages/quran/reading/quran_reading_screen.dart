@@ -72,7 +72,7 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
     return Stack(
       children: [
         ListView.builder(
-          key: PageStorageKey('auto_scroll_list'),  // Add key to preserve scroll position
+          key: PageStorageKey('auto_scroll_list'), // Add key to preserve scroll position
           physics: NeverScrollableScrollPhysics(),
           controller: autoScrollState.scrollController,
           itemCount: state.totalPages,

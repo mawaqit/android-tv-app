@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 
 class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   Timer? _autoScrollTimer;
@@ -111,7 +112,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     }
   }
 
-  void stopAutoScroll() async {
+  void stopAutoScroll({QuranReadingState? quranReadingState, bool isPortairt = false}) async {
     _autoScrollTimer?.cancel();
     _autoScrollTimer = null;
 
@@ -121,7 +122,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       // Use floor instead of ceil and don't add 1 to stay on current page
       // if scroll hasn't moved significantly
       final currentPage = _calculateCurrentPage(scrollController, pageHeight);
-
       // First update state to disable auto-scroll
       state = state.copyWith(
         isSinglePageView: false,
@@ -134,9 +134,9 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       // Update QuranReadingState with current page
       try {
         await ref.read(quranReadingNotifierProvider.notifier).updatePage(
-          currentPage,
-          isPortairt: false,
-        );
+              !isPortairt ? currentPage : quranReadingState!.currentPage,
+              isPortairt: isPortairt,
+            );
       } catch (e) {
         // Handle error silently or show a user-friendly message
         print('Error updating page: $e');

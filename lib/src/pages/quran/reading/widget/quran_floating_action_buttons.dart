@@ -54,6 +54,7 @@ class _QuranFloatingActionControlsState extends ConsumerState<QuranFloatingActio
               ),
               SizedBox(height: 12),
               _OrientationToggleButton(
+                currentPage: state.currentPage,
                 switchScreenViewFocusNode: widget.switchScreenViewFocusNode,
               ),
               SizedBox(height: 12),
@@ -169,6 +170,7 @@ class _AutoScrollingReadingMode extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         _ExitButton(
+          quranReadingState: quranReadingState,
           isPortrait: isPortrait,
         ),
         SizedBox(height: 1.h),
@@ -216,10 +218,12 @@ class _FontSizeControls extends ConsumerWidget {
 // Add new Exit button widget
 class _ExitButton extends ConsumerStatefulWidget {
   final bool isPortrait;
+  final QuranReadingState quranReadingState;
 
   const _ExitButton({
     super.key,
     required this.isPortrait,
+    required this.quranReadingState,
   });
 
   @override
@@ -245,7 +249,9 @@ class __ExitButtonState extends ConsumerState<_ExitButton> {
       isPortrait: widget.isPortrait,
       icon: Icons.close,
       onPressed: () {
-        ref.read(autoScrollNotifierProvider.notifier).stopAutoScroll();
+        ref.read(autoScrollNotifierProvider.notifier).stopAutoScroll(
+            isPortairt: widget.isPortrait,
+            quranReadingState: widget.quranReadingState);
       },
       tooltip: 'Exit Auto-Scroll',
     );
@@ -327,9 +333,10 @@ class _ActionButton extends StatelessWidget {
 
 class _OrientationToggleButton extends ConsumerWidget {
   final FocusNode switchScreenViewFocusNode;
-
+  final int currentPage;
   const _OrientationToggleButton({
     required this.switchScreenViewFocusNode,
+    required this.currentPage,
   });
 
   @override
@@ -356,6 +363,10 @@ class _OrientationToggleButton extends ConsumerWidget {
               size: iconSize,
             ),
             onPressed: () {
+              ref
+                  .read(quranReadingNotifierProvider.notifier)
+                  .updatePage(currentPage);
+
               ref.read(quranReadingNotifierProvider.notifier).toggleRotation();
             },
             heroTag: null,
