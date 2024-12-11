@@ -365,17 +365,17 @@
   "installingUpdate": "Installing update...",
   "updateCompletedSuccessfully": "Update completed successfully",
   "updateFailed": "Update failed",
-  "save":"Save",
-  "enterRtspUrl":"Enter RTSP or Youtube Live URL",
-  "addRtspUrl":"Add your camera stream URL below",
-  "enableRtspCamera":"Enable Camera Streaming",
-  "rtspCameraSettings":"Camera Settings",
-  "invalidRtspUrl":"Invalid URL. Please check the URL and try again.",
-  "validRtspUrl":"URL validated and saved successfully.",
-  "rtspCameraSettingTitle":"Live camera connection",
-  "rtspCameraSettingDesc":"Connect to your local camera and display jumua prayer stream on the TV screen.",
-  "rtspCameraSettingScreenDesc":"If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
-  "validatingStream":"Validating Stream...",
+  "save": "Save",
+  "enterRtspUrl": "Enter RTSP or Youtube Live URL",
+  "addRtspUrl": "Add your camera stream URL below",
+  "enableRtspCamera": "Enable Camera Streaming",
+  "rtspCameraSettings": "Camera Settings",
+  "invalidRtspUrl": "Invalid URL. Please check the URL and try again.",
+  "validRtspUrl": "URL validated and saved successfully.",
+  "rtspCameraSettingTitle": "Live camera connection",
+  "rtspCameraSettingDesc": "Connect to your local camera and display jumua prayer stream on the TV screen.",
+  "rtspCameraSettingScreenDesc": "If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+  "validatingStream": "Validating Stream...",
   "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
   "somethingWentWrong": "Something went wrong! please try again",
   "somethingWrong": "Something went wrong",
@@ -396,7 +396,21 @@
       }
     }
   },
-  "ishaAndFajrOnly":"Fajr and Isha prayers only",
-  "minutesBeforeFajrPrayer":"minutes before fajr prayer time",
-  "minutesAfterIshaPrayer":"minutes afer isha prayer time"
+  "quranUpdateDialogContent": "A new update for the {moshafName} Quran (version {version}) is available.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr and Isha prayers only",
+  "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time"
 }
