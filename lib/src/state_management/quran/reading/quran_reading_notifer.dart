@@ -77,9 +77,13 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       final currentState = state.value!;
       if (page >= 0 && page < currentState.totalPages) {
         await _saveLastReadPage(page);
-        !isPortairt
-            ? currentState.pageController.jumpToPage((page / 2).floor())
-            : currentState.pageController.jumpToPage(page); // Jump to the selected page
+
+        if (currentState.pageController.hasClients) {
+          !isPortairt
+              ? currentState.pageController.jumpToPage((page / 2).floor())
+              : currentState.pageController.jumpToPage(page);
+        }
+
         final newSurahName = _getCurrentSurahName(page, currentState.suwar);
 
         return currentState.copyWith(
@@ -133,6 +137,12 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       }
 
       state = AsyncLoading();
+
+
+      // Clear any existing SVGs in memory
+      await _clearSvgCache();
+
+
       final svgs = await _loadSvgs(moshafType: moshafType);
 
       if (svgs.isEmpty) {
@@ -155,6 +165,19 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     } catch (e) {
       rethrow;
     }
+
+  }
+
+  Future<void> _clearSvgCache() async {
+    // Clear any existing state
+    state = AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      return state.value!.copyWith(
+        svgs: [],
+        pageController: PageController(),
+      );
+    });
+
   }
 
   Future<void> _saveLastReadPage(int index) async {
