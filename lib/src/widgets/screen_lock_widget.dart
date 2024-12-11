@@ -42,7 +42,7 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
   final TimeShiftManager timeManager = TimeShiftManager();
   late DateTime selectedTime;
   bool value = false;
-
+  bool isIshaFajrOnly = false;
   @override
   void initState() {
     super.initState();
@@ -50,8 +50,10 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(screenLockNotifierProvider.notifier);
       value = await ToggleScreenFeature.getToggleFeatureState();
+      isIshaFajrOnly = await ToggleScreenFeature.getToggleFeatureishaFajrState();
       setState(() {
         value = value;
+        isIshaFajrOnly = isIshaFajrOnly;
       });
     });
   }
@@ -114,13 +116,29 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
       ),
       child: Column(
         children: [
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            clipBehavior: Clip.antiAlias,
+            child: SwitchListTile(
+              autofocus: false,
+              secondary: const Icon(Icons.nightlight, size: 35),
+              title: Text(S.of(context).ishaAndFajrOnly),
+              value: isIshaFajrOnly,
+              onChanged: (newValue) {
+                setState(() {
+                  isIshaFajrOnly = newValue;
+                });
+              },
+            ),
+          ),
           _buildTimeSelector(
             context,
             S.of(context).powerOnScreen,
             selectedMinuteBefore,
             ref.read(screenLockNotifierProvider.notifier).selectNextMinuteBefore,
             ref.read(screenLockNotifierProvider.notifier).selectPreviousMinuteBefore,
-            S.of(context).before,
+            isIshaFajrOnly ? S.of(context).minutesBeforeFajrPrayer : S.of(context).before,
           ),
           const SizedBox(height: 16),
           _buildTimeSelector(
@@ -129,7 +147,7 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
             selectedMinuteAfter,
             ref.read(screenLockNotifierProvider.notifier).selectNextMinuteAfter,
             ref.read(screenLockNotifierProvider.notifier).selectPreviousMinuteAfter,
-            S.of(context).after,
+            isIshaFajrOnly ? S.of(context).minutesAfterIshaPrayer : S.of(context).after,
           ),
         ],
       ),
@@ -173,7 +191,7 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
   Widget _buildSaveButton(BuildContext context, List<String> times) {
     return OutlinedButton(
       onPressed: () async {
-        await ref.read(screenLockNotifierProvider.notifier).saveSettings(times);
+        await ref.read(screenLockNotifierProvider.notifier).saveSettings(times, isIshaFajrOnly);
         Navigator.pop(context);
       },
       child: Text(S.current.ok),

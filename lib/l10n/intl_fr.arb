@@ -396,5 +396,9 @@
         "example": "604"
       }
     }
-  }
+  },
+  "ishaAndFajrOnly": "Seulement les prières Fajr et d'Isha",
+  "minutesBeforeFajrPrayer": "minutes avant l'heure de la prière de Fajr",
+  "minutesAfterIshaPrayer": "minutes après l'heure de la prière d'Isha"
+
 }
