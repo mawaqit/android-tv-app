@@ -137,6 +137,10 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       }
 
       state = AsyncLoading();
+
+      // Clear any existing SVGs in memory
+      await _clearSvgCache();
+
       final svgs = await _loadSvgs(moshafType: moshafType);
 
       if (svgs.isEmpty) {
@@ -159,6 +163,17 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<void> _clearSvgCache() async {
+    // Clear any existing state
+    state = AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      return state.value!.copyWith(
+        svgs: [],
+        pageController: PageController(),
+      );
+    });
   }
 
   Future<void> _saveLastReadPage(int index) async {
