@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
+import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ToggleScreenFeature {
@@ -18,11 +19,14 @@ class ToggleScreenFeature {
   static final Map<String, List<Timer>> _scheduledTimers = {};
 
   static Future<void> scheduleToggleScreen(
-      List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
-    for (String timeString in timeStrings) {
-      final parts = timeString.split(':');
-      final hour = int.parse(parts[0]);
-      final minute = int.parse(parts[1]);
+      bool isfajrIshaonly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
+    final timeShiftManager = TimeShiftManager();
+
+    if (isfajrIshaonly) {
+      String fajrTime = timeStrings[0];
+      List<String> parts = fajrTime.split(':');
+      int hour = int.parse(parts[0]);
+      int minute = int.parse(parts[1]);
 
       final now = AppDateTime.now();
       DateTime scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
@@ -32,19 +36,60 @@ class ToggleScreenFeature {
       }
 
       final beforeDelay = scheduledDateTime.difference(now) - Duration(minutes: beforeDelayMinutes);
-      if (beforeDelay.isNegative) {
-        continue;
+
+      if (!beforeDelay.isNegative) {
+        final beforeTimer = Timer(beforeDelay, () {
+          timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
+        });
+        _scheduledTimers[fajrTime] = [beforeTimer];
       }
-      final beforeTimer = Timer(beforeDelay, () {
-        _toggleBoxScreenOn();
-      });
+
+      String ishaTime = timeStrings[5];
+      parts = ishaTime.split(':');
+      hour = int.parse(parts[0]);
+      minute = int.parse(parts[1]);
+
+      scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
+
+      if (scheduledDateTime.isBefore(now)) {
+        scheduledDateTime = scheduledDateTime.add(Duration(days: 1));
+      }
 
       final afterDelay = scheduledDateTime.difference(now) + Duration(minutes: afterDelayMinutes);
-      final afterTimer = Timer(afterDelay, () {
-        _toggleBoxScreenOff();
-      });
 
-      _scheduledTimers[timeString] = [beforeTimer, afterTimer];
+      final afterTimer = Timer(afterDelay, () {
+        timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
+      });
+      _scheduledTimers[ishaTime] = [afterTimer];
+    } else {
+      // Original logic for all prayer times
+      for (String timeString in timeStrings) {
+        final parts = timeString.split(':');
+        final hour = int.parse(parts[0]);
+        final minute = int.parse(parts[1]);
+
+        final now = AppDateTime.now();
+        DateTime scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
+
+        if (scheduledDateTime.isBefore(now)) {
+          scheduledDateTime = scheduledDateTime.add(Duration(days: 1));
+        }
+
+        final beforeDelay = scheduledDateTime.difference(now) - Duration(minutes: beforeDelayMinutes);
+        if (beforeDelay.isNegative) {
+          continue;
+        }
+        final beforeTimer = Timer(beforeDelay, () {
+          _toggleBoxScreenOn();
+        });
+
+        final afterDelay = scheduledDateTime.difference(now) + Duration(minutes: afterDelayMinutes);
+        final afterTimer = Timer(afterDelay, () {
+          _toggleBoxScreenOff();
+        });
+
+        _scheduledTimers[timeString] = [beforeTimer, afterTimer];
+      }
     }
     await _saveScheduledTimersToPrefs();
   }
@@ -76,7 +121,6 @@ class ToggleScreenFeature {
         }).toList(),
       );
     });
-
     await prefs.setString(_scheduledTimersKey, json.encode(timersMap));
   }
 
@@ -88,6 +132,11 @@ class ToggleScreenFeature {
   static Future<bool> getToggleFeatureState() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(TurnOnOffTvConstant.kActivateToggleFeature) ?? false;
+  }
+
+  static Future<bool> getToggleFeatureishaFajrState() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
   }
 
   static Future<void> cancelAllScheduledTimers() async {
@@ -115,6 +164,24 @@ class ToggleScreenFeature {
     try {
       await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
           .invokeMethod(TurnOnOffTvConstant.kToggleBoxScreenOff);
+    } on PlatformException catch (e) {
+      logger.e(e);
+    }
+  }
+
+  static Future<void> _toggleTabletScreenOn() async {
+    try {
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
+          .invokeMethod(TurnOnOffTvConstant.kToggleTabletScreenOn);
+    } on PlatformException catch (e) {
+      logger.e(e);
+    }
+  }
+
+  static Future<void> _toggleTabletScreenOff() async {
+    try {
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
+          .invokeMethod(TurnOnOffTvConstant.kToggleTabletScreenOff);
     } on PlatformException catch (e) {
       logger.e(e);
     }
