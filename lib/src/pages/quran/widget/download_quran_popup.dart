@@ -59,6 +59,8 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
       Extracting() => _buildExtractingDialog(context, state),
       Success() => _handleSuccess(context),
       CancelDownload() => const SizedBox(),
+
+      UpdateAvailable() => _buildUpdateAvailableDialog(context, state),
       _ => const SizedBox(),
     };
   }
@@ -87,8 +89,14 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
   }
 
   Widget _buildUpdateAvailableDialog(BuildContext context, UpdateAvailable state) {
+    final moshafName = switch (state.moshafType) {
+      MoshafType.warsh => S.of(context).warsh,
+      MoshafType.hafs => S.of(context).hafs,
+    };
+
     return AlertDialog(
       title: Text(S.of(context).updateAvailable),
+      content: Text(S.of(context).quranUpdateDialogContent(moshafName, state.version)),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
@@ -97,8 +105,8 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
         TextButton(
           autofocus: true,
           onPressed: () {
-            // final notifier = ref.read(downloadQuranNotifierProvider.notifier);
-            // notifier.downloadQuran(notifier.selectedMoshafType);
+            final notifier = ref.read(downloadQuranNotifierProvider.notifier);
+            notifier.downloadQuran(state.moshafType);
           },
           child: Text(S.of(context).download),
         ),
@@ -178,8 +186,9 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(S.of(context).ok),
+
         ),
-      ],
+      ),
     );
   }
 
