@@ -163,7 +163,6 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     } catch (e) {
       rethrow;
     }
-
   }
 
   Future<void> _clearSvgCache() async {
