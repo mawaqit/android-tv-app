@@ -25,7 +25,11 @@ import android.util.Log
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import 	android.net.ConnectivityManager
-
+import java.util.concurrent.Executors
+import android.os.Looper
+import android.os.Handler
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 class MainActivity : FlutterActivity() {
     private lateinit var mAdminComponentName: ComponentName
     private lateinit var mDevicePolicyManager: DevicePolicyManager
@@ -50,6 +54,8 @@ class MainActivity : FlutterActivity() {
                     "checkRoot" -> result.success(checkRoot())
                     "toggleBoxScreenOff" -> toggleBoxScreenOff(call, result)
                     "toggleBoxScreenOn" -> toggleBoxScreenOn(call, result)
+                    "toggleTabletScreenOff" -> toggleTabletScreenOff(call, result)
+                    "toggleTabletScreenOn" -> toggleTabletScreenOn(call, result)
                     "connectToNetworkWPA" -> connectToNetworkWPA(call, result)
                     "addLocationPermission" -> addLocationPermission(call, result)
                     "grantFineLocationPermission" -> grantFineLocationPermission(call, result)
@@ -59,8 +65,36 @@ class MainActivity : FlutterActivity() {
                         val isSuccess = clearDataRestart()
                         result.success(isSuccess)
                     }
-
-                    else -> result.notImplemented()
+                            "installApk" -> {
+                        val filePath = call.argument<String>("filePath")
+                        if (filePath != null) {
+                            AsyncTask.execute {
+                                try {
+                                    // Check if file exists
+                                    val file = java.io.File(filePath)
+                                    if (!file.exists()) {
+                                        Log.e("APK_INSTALL", "APK file not found at path: $filePath")
+                                        result.error("FILE_NOT_FOUND", "APK file not found", null)
+                                        return@execute
+                                    }
+                                    // Check if device is rooted
+                                    if (!checkRoot()) {
+                                        Log.e("APK_INSTALL", "Device is not rooted")
+                                        result.error("NOT_ROOTED", "Device is not rooted", null)
+                                        return@execute
+                                    }
+                                    val commands = listOf("pm install -r -d $filePath")
+                                    executeCommand(commands, result)
+                                } catch (e: Exception) {
+                                    Log.e("APK_INSTALL", "Failed to install APK", e)
+                                    result.error("INSTALL_FAILED", e.message, null)
+                                }
+                            }
+                        } else {
+                            result.error("INVALID_PATH", "File path is null", null)
+                        }
+                    }
+        else -> result.notImplemented()
                 }
             }
     }
@@ -126,6 +160,7 @@ class MainActivity : FlutterActivity() {
             false
         }
     }
+
 
     private fun connectToWifi(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
@@ -222,6 +257,30 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
             }
         }
     }
+    private fun toggleTabletScreenOff(call: MethodCall, result: MethodChannel.Result) {
+        AsyncTask.execute {
+            try {
+                val commands = listOf(
+"input keyevent 26"
+                )
+                executeCommand(commands, result) // Lock the device
+            } catch (e: Exception) {
+                handleCommandException(e, result)
+            }
+        }
+    }
+    private fun toggleTabletScreenOn(call: MethodCall, result: MethodChannel.Result) {
+        AsyncTask.execute {
+            try {
+                val commands = listOf(
+"input keyevent 82"
+                )
+                executeCommand(commands, result) // Lock the device
+            } catch (e: Exception) {
+                handleCommandException(e, result)
+            }
+        }
+    }
     private fun grantFineLocationPermission(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {
@@ -251,6 +310,7 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
             }
         }
     }
+
     private fun sendDownArrowEvent(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {

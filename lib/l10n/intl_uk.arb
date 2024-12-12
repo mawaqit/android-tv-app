@@ -168,7 +168,7 @@
   "announcementOnlyMode": "Режим оголошень",
   "normalMode": "Звичайний режим ",
   "announcementOnlyModeEXPLINATION": "Виберіть, чи будуть на екрані постійно показуватися оголошення, це може бути корисно, якщо ви встановите екран, наприклад, біля входу.",
-  "duaaElEftarText": "",
+  "duaaElEftarText": "اللهُمَّ إِنِّي لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ، وَإِلَيْكَ انْبَتُّ، وَعَلَيْكَ تَوَكَّلْتُ، ذَهَبَ الظَّمَأُ وَابْتلّت الْعُرُوِقُ، وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ.",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
@@ -290,6 +290,20 @@
       }
     }
   },
+  "quranReadingPagePortrait": "Сторінка {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "Оберіть сторінку",
   "checkingForUpdates": "Перевірка оновлень...",
   "chooseQuranType": "Оберіть Куран",
@@ -320,5 +334,23 @@
   "noFavoriteReciters": "Немає улюблених читців. Спробуйте додати одного до списку",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
+  },
+  "noReciterSearchResult": "Нічого не знайдено по вашому запиту",
+  "searchForReciter": "Пошук читця",
+  "downloadAllSuwarSuccessfully": "Увесь Куран завантажений",
+  "noSuwarDownload": "Немає нових сур для завантаження",
+  "connectDownloadQuran": "Будь ласка, підключіться до Інтернету для завантаження",
+  "playInOnlineModeQuran": "Для відтворення, під'єднайтеся до Інтернету",
+  "downloaded": "Завантажено",
+  "switchQuranType": "Перейти до {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Select Surah"
 }

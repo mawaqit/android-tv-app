@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
+import 'package:mawaqit/src/pages/quran/reading/quran_reading_screen.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/quran_background.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
+import 'package:mawaqit/src/routes/routes_constant.dart';
 
 class QuranModeSelection extends ConsumerStatefulWidget {
   const QuranModeSelection({super.key});
@@ -41,7 +42,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
     super.dispose();
   }
 
-  void _handleKeyEvent(RawKeyEvent event) {
+  Future<void> _handleKeyEvent(RawKeyEvent event) async {
     if (event is RawKeyDownEvent) {
       final isLtr = Directionality.of(context) == TextDirection.ltr;
 
@@ -65,23 +66,27 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
         }
       } else if (event.logicalKey == LogicalKeyboardKey.select) {
         if (_selectedIndex == 0) {
-          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QuranReadingScreen(),
-            ),
-          );
+          await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, Routes.quranReading);
+          }
         } else {
-          ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReciterSelectionScreen.withoutSurahName(),
-            ),
-          );
+          await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, Routes.quranReciter);
+          }
         }
       }
+    }
+  }
+
+  Future<void> _handleNavigation(int index) async {
+    if (index == 0) {
+      await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+      Navigator.pushReplacementNamed(context, Routes.quranReading);
+    } else {
+      await ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
+      Navigator.pushReplacementNamed(context, Routes.quranReciter);
     }
   }
 
@@ -122,13 +127,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                       setState(() {
                         _selectedIndex = 0;
                       });
-                      ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => QuranReadingScreen(),
-                        ),
-                      );
+                      _handleNavigation(0);
                     },
                     isSelected: _selectedIndex == 0,
                     focusNode: _readingFocusNode,
@@ -141,13 +140,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
                       setState(() {
                         _selectedIndex = 1;
                       });
-                      ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.listening);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ReciterSelectionScreen.withoutSurahName(),
-                        ),
-                      );
+                      _handleNavigation(1);
                     },
                     isSelected: _selectedIndex == 1,
                     focusNode: _listeningFocusNode,
@@ -172,7 +165,7 @@ class _QuranModeSelectionState extends ConsumerState<QuranModeSelection> {
     return Focus(
       focusNode: focusNode,
       child: GestureDetector(
-        onTap: onPressed,
+        onTap: () => _handleNavigation(isSelected ? 0 : 1),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
           width: 50.w,

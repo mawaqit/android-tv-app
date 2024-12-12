@@ -335,11 +335,11 @@
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
   },
-    "noReciterSearchResult": "No results found for your search",
-    "searchForReciter": "Search for a reciter",
+  "noReciterSearchResult": "No results found for your search",
+  "searchForReciter": "Search for a reciter",
   "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
   "noSuwarDownload": "No new suwars to download",
-  "connectDownloadQuran":"Please connect to Internet to download",
+  "connectDownloadQuran": "Please connect to Internet to download",
   "playInOnlineModeQuran": "Please connect to internet to play",
   "downloaded": "Downloaded",
   "switchQuranType": "Go to {name}",
@@ -352,5 +352,65 @@
       }
     }
   },
-  "surahSelector":"Select Surah"
+  "surahSelector": "Select Surah",
+  "checkForUpdates": "Check for Updates",
+  "checkForNewVersion": "Check if a new version is available",
+  "wouldYouLikeToUpdate": "Would you like to update the app?",
+  "updateCompleted": "Update completed successfully!",
+  "noUpdates": "No Updates",
+  "usingLatestVersion": "You are using the latest version.",
+  "updateCancelled": "Update cancelled",
+  "checkingUpdates": "Checking updates...",
+  "downloadingUpdate": "Downloading update...",
+  "installingUpdate": "Installing update...",
+  "updateCompletedSuccessfully": "Update completed successfully",
+  "updateFailed": "Update failed",
+  "save": "Save",
+  "enterRtspUrl": "Enter RTSP or Youtube Live URL",
+  "addRtspUrl": "Add your camera stream URL below",
+  "enableRtspCamera": "Enable Camera Streaming",
+  "rtspCameraSettings": "Camera Settings",
+  "invalidRtspUrl": "Invalid URL. Please check the URL and try again.",
+  "validRtspUrl": "URL validated and saved successfully.",
+  "rtspCameraSettingTitle": "Live camera connection",
+  "rtspCameraSettingDesc": "Connect to your local camera and display jumua prayer stream on the TV screen.",
+  "rtspCameraSettingScreenDesc": "If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+  "validatingStream": "Validating Stream...",
+  "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
+  "somethingWentWrong": "Something went wrong! please try again",
+  "somethingWrong": "Something went wrong",
+  "tryAgainLater": "Please try again later",
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/...",
+  "checkInternetUpdate": "You must connect to internet to check for new updates",
+  "appUpdateAvailable": "Your app is running version {currentVersion}. A new update (version {updatedVersion}) is available with the latest features and improvements.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "A new update for the {moshafName} Quran (version {version}) is available.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr and Isha prayers only",
+  "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time"
 }
