@@ -8,10 +8,10 @@ import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
-import '../../../i18n/l10n.dart';
-import '../../models/mosque.dart';
-import '../../models/mosqueConfig.dart';
-import '../../models/times.dart';
+import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/models/mosque.dart';
+import 'package:mawaqit/src/models/mosqueConfig.dart';
+import 'package:mawaqit/src/models/times.dart';
 
 mixin MosqueHelpersMixin on ChangeNotifier {
   abstract Mosque? mosque;
