@@ -42,6 +42,14 @@ class RandomHadithNotifier extends AsyncNotifier<RandomHadithState> {
       return Future.value(state.value);
     });
   }
+
+  Future<void> ensureHadithLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final language = prefs.getString(RandomHadithConstant.kHadithLanguage) ?? AppLanguage().hadithLanguage;
+    // Ensure hadiths are cached during initialization
+    final randomHadithRepository = await ref.read(randomHadithRepositoryProvider.future);
+    await randomHadithRepository.ensureHadithsAreCached(language);
+  }
 }
 
 final randomHadithNotifierProvider =
