@@ -8,10 +8,10 @@ import 'package:mawaqit/src/models/announcement.dart';
 import 'package:mawaqit/src/models/calendar/MawaqitHijriCalendar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 
-import '../../../i18n/l10n.dart';
-import '../../models/mosque.dart';
-import '../../models/mosqueConfig.dart';
-import '../../models/times.dart';
+import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/models/mosque.dart';
+import 'package:mawaqit/src/models/mosqueConfig.dart';
+import 'package:mawaqit/src/models/times.dart';
 
 mixin MosqueHelpersMixin on ChangeNotifier {
   abstract Mosque? mosque;
@@ -168,14 +168,67 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// return -1 in case of issue(invalid times format)
   int nextSalahIndex() {
     final now = mosqueDate();
-    final nextSalah = actualTimes().firstWhere(
-      (element) => element.isAfter(now),
-      orElse: () => actualTimes().first,
-    );
-    var salahIndex = actualTimes().indexOf(nextSalah);
-    if (salahIndex > 4) salahIndex = 0;
-    if (salahIndex < 0) salahIndex = 4;
-    return salahIndex;
+    final times = actualTimes();
+    final fajrTime = times[0];
+
+    // Convert time to minutes since start of day
+    int toMinutes(DateTime time) {
+      // If time is after midnight but before Fajr, add 24 hours
+      if (time.hour < fajrTime.hour || (time.hour == fajrTime.hour && time.minute < fajrTime.minute)) {
+        return (time.hour + 24) * 60 + time.minute;
+      }
+      return time.hour * 60 + time.minute;
+    }
+
+    // Get minutes for current time
+    int nowMinutes = toMinutes(now);
+
+    // Convert prayer times to minutes and handle after-midnight cases
+    List<int> timeMinutes = times.mapIndexed((index, time) {
+      // For Isha prayer (index 4), if it's very early (e.g. 1:00), treat it as next day
+      if (index == 4 && time.hour < fajrTime.hour) {
+        return (time.hour + 24) * 60 + time.minute;
+      }
+      return time.hour * 60 + time.minute;
+    }).toList();
+
+    // Find next prayer
+    int nextIndex = timeMinutes.indexWhere((minutes) => minutes > nowMinutes);
+
+    // If no next prayer found today, return Fajr (0)
+    return nextIndex == -1 ? 0 : nextIndex;
+  }
+
+  /// return the upcoming salah index
+  /// return -1 in case of issue(invalid times format)
+  int nextSalahAfterIqamaIndex() {
+    final now = mosqueDate();
+    final times = actualIqamaTimes();
+
+    // Convert time to minutes since midnight for easier comparison
+    int toMinutes(DateTime time, DateTime fajrTime) {
+      // If current time is before fajr and after midnight,
+      // or if prayer time is before fajr, add 24 hours
+      bool isAfterMidnight = time.hour < fajrTime.hour || (time.hour == fajrTime.hour && time.minute < fajrTime.minute);
+
+      int hours = isAfterMidnight ? time.hour + 24 : time.hour;
+      return hours * 60 + time.minute;
+    }
+
+    // Get minutes since midnight for current time
+    int nowMinutes = toMinutes(now, times[0]);
+
+    // Convert prayer times to minutes
+    List<int> timeMinutes = times.map((t) {
+      bool isBeforeFajr = t.hour < times[0].hour || (t.hour == times[0].hour && t.minute <= times[0].minute);
+      return isBeforeFajr ? toMinutes(t, times[0]) : t.hour * 60 + t.minute;
+    }).toList();
+
+    // Find the next prayer time
+    final nextIndex = timeMinutes.indexWhere((t) => t > nowMinutes);
+
+    // If no next prayer found today, return first prayer (Fajr)
+    return nextIndex == -1 ? 0 : nextIndex;
   }
 
   /// the duration until the next salah

@@ -294,7 +294,8 @@
   "checkingForUpdates": "Vérification des mises à jour...",
   "chooseQuranType": "Choisir quran",
   "hafs": "Hafs",
-  "warsh": "Warsh",
+  "warsh": "Warch",
+  "favorites": "Favoris",
   "allReciters": "Tous les Réciteurs",
   "noFavoriteReciters": "Pas de réciteur favori. Essayez d'en ajouter un à la liste",
   "reciterAddedToFavorites": "Le réciteur {name} a été ajouté aux favoris",
@@ -352,6 +353,52 @@
         "example": "604"
       }
     }
-  }
+  },
+  "save": "Enregistrer",
+  "enterRtspUrl": "Entrez l'URL RTSP ou YouTube Live",
+  "addRtspUrl": "Ajoutez l'URL de votre flux de caméra ci-dessous",
+  "enableRtspCamera": "Activer le flux de la caméra",
+  "rtspCameraSettings": "Paramètres de la caméra",
+  "invalidRtspUrl": "URL invalide. Veuillez vérifier l'URL et réessayer.",
+  "validRtspUrl": "URL validée et enregistrée avec succès.",
+  "rtspCameraSettingTitle": "Connexion de la caméra en direct",
+  "rtspCameraSettingDesc": "Connectez-vous à votre caméra locale et affichez le flux de la prière de la jumua sur l'écran de la TV.",
+  "rtspCameraSettingScreenDesc": "Si vous entrez une URL ici, votre écran passera automatiquement en mode streaming vidéo lorsque l'heure de la Jumua arrive.",
+  "validatingStream": "Validation du flux...",
+  "checkInternetLiveCamera": "Vous devez vous connecter à Internet pour configurer la caméra en direct",
+  "somethingWentWrong": "Quelque chose s'est mal passé ! Veuillez réessayer",
+  "somethingWrong": "Quelque chose s'est mal passé",
+  "tryAgainLater": "Veuillez réessayer plus tard",
+  "checkForUpdates": "Vérifier les mises à jour",
+  "checkForNewVersion": "Vérifiez si une nouvelle version est disponible",
+  "wouldYouLikeToUpdate": "Souhaitez-vous mettre à jour l'application ?",
+  "updateCompleted": "Mise à jour terminée avec succès !",
+  "noUpdates": "Aucune mise à jour",
+  "usingLatestVersion": "Vous utilisez la dernière version.",
+  "updateCancelled": "Mise à jour annulée",
+  "checkingUpdates": "Vérification des mises à jour...",
+  "downloadingUpdate": "Téléchargement de la mise à jour...",
+  "installingUpdate": "Installation de la mise à jour...",
+  "updateCompletedSuccessfully": "Mise à jour terminée avec succès",
+  "updateFailed": "Échec de la mise à jour",
+  "updateFailed": "Échec de la mise à jour",
+  "checkInternetUpdate": "Vous devez être connecté à Internet pour vérifier les nouvelles mises à jour",
+  "appUpdateAvailable": "Votre application utilise la version {currentVersion}. Une nouvelle mise à jour (version {updatedVersion}) est disponible avec les dernières fonctionnalités et améliorations.",
+  "@appUpdateAvailable": {
+    "description": "Texte de remplacement pour afficher le message de mise à jour disponible",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Seulement les prières Fajr et d'Isha",
+  "minutesBeforeFajrPrayer": "minutes avant l'heure de la prière de Fajr",
+  "minutesAfterIshaPrayer": "minutes après l'heure de la prière d'Isha"
 
 }

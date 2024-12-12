@@ -23,6 +23,7 @@ import '../../../models/address_model.dart';
 import '../../../services/theme_manager.dart';
 import '../../../state_management/quran/recite/download_audio_quran/download_audio_quran_notifier.dart';
 import '../../../state_management/quran/recite/download_audio_quran/download_audio_quran_state.dart';
+import 'package:mawaqit/src/routes/routes_constant.dart';
 
 class SurahSelectionScreen extends ConsumerStatefulWidget {
   final MoshafModel selectedMoshaf;
@@ -91,18 +92,17 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
           suwar: suwar,
           reciterId: widget.reciterId,
         );
-    Navigator.push(
+
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => QuranPlayerScreen(
-          reciterId: widget.reciterId,
-          selectedMoshaf: widget.selectedMoshaf,
-          surah: surah,
-        ),
-      ),
-    ).then((_) {
-      _isNavigating = false;
-    });
+      Routes.quranPlayer,
+      arguments: {
+        'reciterId': widget.reciterId,
+        'selectedMoshaf': widget.selectedMoshaf,
+        'surah': surah,
+      },
+    );
+    _isNavigating = false;
   }
 
   String _getKey() {
