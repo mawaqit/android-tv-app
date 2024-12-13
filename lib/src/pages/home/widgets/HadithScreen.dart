@@ -131,12 +131,12 @@ class HadithWidget extends ConsumerWidget {
     Duration? delay,
   }) {
     return Flexible(
-      fit: FlexFit.loose,
+      fit: FlexFit.tight,
       child: Container(
         constraints: BoxConstraints(maxHeight: maxHeight.vh),
         child: Padding(
           key: ValueKey(text),
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 16),
           child: AutoSizeText(
             text,
             style: context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
