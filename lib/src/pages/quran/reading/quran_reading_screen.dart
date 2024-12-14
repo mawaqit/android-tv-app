@@ -25,6 +25,7 @@ import 'package:provider/provider.dart' as provider;
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
+import 'package:sizer/sizer.dart';
 
 abstract class QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context);
@@ -101,10 +102,13 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
         ),
         if (autoScrollState.isLoading) // Show loading screen only when isLoading is true
           Container(
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.black.withOpacity(0.9),
             child: Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
+              child: Text(
+                  S.of(context).initializingAutoReading,
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                  color: Colors.white
+                ),
               ),
             ),
           ),

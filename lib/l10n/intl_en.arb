@@ -412,5 +412,6 @@
   },
   "ishaAndFajrOnly": "Fajr and Isha prayers only",
   "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
-  "minutesAfterIshaPrayer": "minutes afer isha prayer time"
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time",
+  "initializingAutoReading": "Initializing in progress..."
 }

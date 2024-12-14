@@ -397,6 +397,6 @@
   },
   "ishaAndFajrOnly": "فقط صلاتي الفجر و العشاء",
   "minutesBeforeFajrPrayer": "دقائق قبل وقت صلاة الفجر",
-  "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء"
-
+  "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء",
+  "initializingAutoReading": "جاري التهيئة..."
 }
