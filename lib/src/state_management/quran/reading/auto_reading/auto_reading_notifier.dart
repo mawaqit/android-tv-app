@@ -45,6 +45,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     state = state.copyWith(
       isSinglePageView: true,
       isLoading: true,
+      fontSize: 1.0,
       currentPage: currentPage, // Set initial page
     );
 
