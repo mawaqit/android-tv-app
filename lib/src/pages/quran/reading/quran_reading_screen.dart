@@ -99,7 +99,6 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
             );
           },
         ),
-
         if (autoScrollState.isLoading) // Show loading screen only when isLoading is true
           Container(
             color: Colors.white.withOpacity(0.7),

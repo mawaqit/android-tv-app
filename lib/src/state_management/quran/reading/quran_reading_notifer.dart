@@ -214,10 +214,8 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
 
       return state.value!.copyWith(
         isRotated: !state.value!.isRotated,
-        pageController: PageController(
-            initialPage: !state.value!.isRotated ? currentPage : currentPage ~/ 2,
-            keepPage: true
-        ),
+        pageController:
+            PageController(initialPage: !state.value!.isRotated ? currentPage : currentPage ~/ 2, keepPage: true),
         currentPage: currentPage,
       );
     });
