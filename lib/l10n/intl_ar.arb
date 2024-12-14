@@ -394,5 +394,9 @@
         "example": "604"
       }
     }
-  }
+  },
+  "ishaAndFajrOnly": "فقط صلاتي الفجر و العشاء",
+  "minutesBeforeFajrPrayer": "دقائق قبل وقت صلاة الفجر",
+  "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء"
+
 }
