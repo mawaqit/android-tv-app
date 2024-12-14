@@ -105,10 +105,8 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
             color: Colors.black.withOpacity(0.9),
             child: Center(
               child: Text(
-                  S.of(context).initializingAutoReading,
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  color: Colors.white
-                ),
+                S.of(context).initializingAutoReading,
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
               ),
             ),
           ),
