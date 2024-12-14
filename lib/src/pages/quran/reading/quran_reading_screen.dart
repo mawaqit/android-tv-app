@@ -72,34 +72,35 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
     return Stack(
       children: [
         ListView.builder(
-          key: PageStorageKey('auto_scroll_list'), // Add key to preserve scroll position
           physics: NeverScrollableScrollPhysics(),
           controller: autoScrollState.scrollController,
           itemCount: state.totalPages,
           cacheExtent: MediaQuery.of(context).size.height * preloadDistance, // Reduce cache extent
-          itemExtent: MediaQuery.of(context).size.height * scalingFactor, // Use itemExtent for fixed height
           addRepaintBoundaries: true, // Optimize repaint boundaries
           itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
-                if (autoScrollState.isPlaying) {
-                  autoScrollNotifier.pauseAutoScroll();
-                } else {
-                  autoScrollNotifier.resumeAutoScroll();
-                }
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * scalingFactor,
-                height: MediaQuery.of(context).size.height * scalingFactor,
-                child: SvgPictureWidget(
-                  svgPicture: state.svgs[index],
+            return RepaintBoundary(
+              child: GestureDetector(
+                onTap: () {
+                  final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
+                  if (autoScrollState.isPlaying) {
+                    autoScrollNotifier.pauseAutoScroll();
+                  } else {
+                    autoScrollNotifier.resumeAutoScroll();
+                  }
+                },
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * scalingFactor,
+                  height: MediaQuery.of(context).size.height * scalingFactor,
+                  child: SvgPictureWidget(
+                    svgPicture: state.svgs[index],
+                  ),
                 ),
               ),
             );
           },
         ),
-        if (autoScrollState.isLoading)
+
+        if (autoScrollState.isLoading) // Show loading screen only when isLoading is true
           Container(
             color: Colors.white.withOpacity(0.7),
             child: Center(
