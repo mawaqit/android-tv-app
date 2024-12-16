@@ -77,24 +77,21 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
           controller: autoScrollState.scrollController,
           itemCount: state.totalPages,
           cacheExtent: MediaQuery.of(context).size.height * preloadDistance, // Reduce cache extent
-          addRepaintBoundaries: true, // Optimize repaint boundaries
           itemBuilder: (context, index) {
-            return RepaintBoundary(
-              child: GestureDetector(
-                onTap: () {
-                  final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
-                  if (autoScrollState.isPlaying) {
-                    autoScrollNotifier.pauseAutoScroll();
-                  } else {
-                    autoScrollNotifier.resumeAutoScroll();
-                  }
-                },
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * scalingFactor,
-                  height: MediaQuery.of(context).size.height * scalingFactor,
-                  child: SvgPictureWidget(
-                    svgPicture: state.svgs[index],
-                  ),
+            return GestureDetector(
+              onTap: () {
+                final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
+                if (autoScrollState.isPlaying) {
+                  autoScrollNotifier.pauseAutoScroll();
+                } else {
+                  autoScrollNotifier.resumeAutoScroll();
+                }
+              },
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * scalingFactor,
+                height: MediaQuery.of(context).size.height * scalingFactor,
+                child: SvgPictureWidget(
+                  svgPicture: state.svgs[index],
                 ),
               ),
             );
