@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class AutoScrollState {
+class AutoScrollState extends Equatable {
   final bool isSinglePageView;
   final double autoScrollSpeed;
   final bool isVisible;
@@ -64,4 +65,17 @@ class AutoScrollState {
         'isPlaying: $isPlaying'
         ')';
   }
+
+  @override
+  List<Object?> get props => [
+    isSinglePageView,
+    autoScrollSpeed,
+    isVisible,
+    fontSize,
+    maxFontSize,
+    scrollController,
+    isPlaying,
+    isLoading,
+    currentPage,
+  ];
 }
