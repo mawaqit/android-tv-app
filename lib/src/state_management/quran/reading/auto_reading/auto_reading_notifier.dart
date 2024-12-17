@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
@@ -39,6 +40,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     }
   }
 
+
   Future<void> startAutoScroll(int currentPage, double pageHeight) async {
     _autoScrollTimer?.cancel();
 
@@ -49,11 +51,20 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       currentPage: currentPage, // Set initial page
     );
 
-    // Ensure the ListView is built
-    await Future.delayed(Duration(milliseconds: 500));
+    // Wait for the next frame to ensure the ListView is built
+    await SchedulerBinding.instance.endOfFrame;
 
     if (scrollController.hasClients) {
       _initializeScrollController(currentPage, pageHeight);
+    } else {
+      // If the ScrollController still doesn't have clients, wait for the next frame
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (scrollController.hasClients) {
+          _initializeScrollController(currentPage, pageHeight);
+        } else {
+          print('ScrollController is not attached to any clients!');
+        }
+      });
     }
 
     state = state.copyWith(
