@@ -41,39 +41,47 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
 
-  Future<void> startAutoScroll(int currentPage, double pageHeight) async {
+Future<void> startAutoScroll(int currentPage, double pageHeight) async {
     _autoScrollTimer?.cancel();
 
     state = state.copyWith(
       isSinglePageView: true,
       isLoading: true,
       fontSize: 1.0,
-      currentPage: currentPage, // Set initial page
+      currentPage: currentPage,
     );
 
-    // Wait for the next frame to ensure the ListView is built
-    await SchedulerBinding.instance.endOfFrame;
-
-    if (scrollController.hasClients) {
-      _initializeScrollController(currentPage, pageHeight);
-    } else {
-      // If the ScrollController still doesn't have clients, wait for the next frame
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        if (scrollController.hasClients) {
-          _initializeScrollController(currentPage, pageHeight);
-        } else {
-          print('ScrollController is not attached to any clients!');
+    try {
+      await Future.microtask(() async {
+        for (int i = 0; i < 50; i++) {
+          if (scrollController.hasClients) {
+            _initializeScrollController(currentPage, pageHeight);
+            break;
         }
+          await Future.delayed(Duration(milliseconds: 100));
+        }
+
+        state = state.copyWith(
+          isLoading: false,
+          isPlaying: true,
+        );
+
+        _startScrolling();
+      }).timeout(Duration(seconds: 5), onTimeout: () {
+        print('Auto-scroll initialization timed out');
+        state = state.copyWith(
+          isLoading: false,
+          isPlaying: false,
+        );
       });
+    } catch (e) {
+      print('Error in startAutoScroll: $e');
+      state = state.copyWith(
+        isLoading: false,
+        isPlaying: false,
+      );
     }
-
-    state = state.copyWith(
-      isLoading: false,
-      isPlaying: true,
-    );
-
-    _startScrolling();
-  }
+}
 
   void _initializeScrollController(int currentPage, double pageHeight) {
     final pageOffset = (currentPage - 1) * pageHeight;
