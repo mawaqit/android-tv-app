@@ -187,5 +187,6 @@ class Config {
     "yo": {"name": "Yoruba", "nativeName": "Yorùbá"},
     "za": {"name": "Zhuang, Chuang", "nativeName": "Saɯ cueŋƅ, Saw cuengh"},
     "zu": {"name": "Zulu", "nativeName": "Zulu"},
+    "cnr": {"name": "Montenegrin", "nativeName": "Crnogorski"}
   };
 }

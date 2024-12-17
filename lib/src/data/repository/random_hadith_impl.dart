@@ -176,6 +176,29 @@ class RandomHadithImpl implements RandomHadithRepository {
       return hadith ?? '';
     }
   }
+
+  Future<bool> _checkCachedHadiths(String language) async {
+    log('random_hadith: RandomHadithImpl: Checking cached hadiths for language: $language');
+
+    if (RandomHadithHelper.isTwoLanguage(language)) {
+      final languageList = RandomHadithHelper.getLanguage(language);
+      // Check if both languages have cached hadiths
+      return languageList.every((lang) => localDataSource.hasHadithsForLanguage(lang));
+    } else {
+      return localDataSource.hasHadithsForLanguage(language);
+    }
+  }
+
+  @override
+  Future<void> ensureHadithsAreCached(String language) async {
+    final hasCachedHadiths = await _checkCachedHadiths(language);
+    final isConnected = await connectivityService.connectionStatus == ConnectivityStatus.connected;
+
+    if (!hasCachedHadiths && isConnected) {
+      log('random_hadith: RandomHadithImpl: No cached hadiths found, fetching from remote $language');
+      await fetchAndCacheHadith(language);
+    }
+  }
 }
 
 /// [randomHadithRepositoryProvider] Riverpod provider for RandomHadithImpl.

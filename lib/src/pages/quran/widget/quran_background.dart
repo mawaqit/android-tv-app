@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/const/resource.dart';
-import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
+import 'package:mawaqit/src/pages/quran/reading/quran_reading_screen.dart';
+import 'package:mawaqit/src/routes/routes_constant.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:sizer/sizer.dart';
 
@@ -47,11 +48,9 @@ class QuranBackground extends ConsumerWidget {
                         onPressed: () async {
                           ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
                           log('quran: QuranBackground: Switch to reading');
-                          Navigator.pushReplacement(
+                          Navigator.pushReplacementNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => QuranReadingScreen(),
-                            ),
+                            Routes.quranReading,
                           );
                         },
                       ),
@@ -90,11 +89,9 @@ class QuranBackground extends ConsumerWidget {
                         ),
                         onPressed: () async {
                           ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-                          Navigator.pushReplacement(
+                          Navigator.pushReplacementNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => QuranReadingScreen(),
-                            ),
+                            Routes.quranReading,
                           );
                         },
                       ),

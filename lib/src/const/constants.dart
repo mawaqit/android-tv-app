@@ -51,7 +51,9 @@ class TurnOnOffTvConstant {
   static const String kCheckRoot = "checkRoot";
   static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
   static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
-
+  static const String kToggleTabletScreenOn = "toggleTabletScreenOn";
+  static const String kToggleTabletScreenOff = "toggleTabletScreenOff";
+  static const String kisFajrIshaOnly = "isIshaFajrOnly";
   static const String kMinuteBeforeKey = 'selectedMinuteBefore';
   static const String kMinuteAfterKey = 'selectedMinuteAfter';
 }
@@ -76,7 +78,7 @@ abstract class QuranConstant {
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
   static const String kFavoriteReciterBox = 'favorite_reciter_box';
-  static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/config.json';
+  static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/tv_config.json';
   static const String kIsFirstTime = 'is_first_time_quran';
   static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
 }
@@ -113,4 +115,29 @@ class BackgroundScheduleAudioServiceConstant {
   static const String kGetPlaybackState = 'kGetPlaybackState';
   static const String kStopAudio = 'kStopAudio';
   static const String kResumeAudio = 'kResumeAudio';
+}
+abstract class MawaqitBackendSettingsConstant {
+  static const String kSettingsTitle = "Mawaqit";
+  static const String kSettingsShare =
+      "Download Mawaqit\r\nAndroid:\r\nhttps:\/\/play.google.com\/store\/apps\/details?id=com.mawaqit.admin\r\niOS:\r\nhttps:\/\/apps.apple.com\/fr\/app\/mawaqit-prayer-times-mosque\/id1460522683\r\n";
+  static const String kSettingsAndroidUserAgent =
+      "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/95.0.4638.69 Safari\/537.36";
+  static const String kSettingsIosUserAgent =
+      "Mozilla\/5.0 (iPhone; CPU iPhone OS 14_5 like Mac OS X) AppleWebKit\/605.1.15 (KHTML, like Gecko) CriOS\/90.0.4430.78 Mobile\/15E148 Safari\/604.1";
+}
+
+abstract class ManualUpdateConstant {
+  static const String githubApiBaseUrl = 'https://api.github.com/repos/mawaqit/android-tv-app/releases';
+  static const String githubAcceptHeader = 'application/vnd.github.v3+json';
+}
+
+abstract class RtspCameraStreamConstant {
+  static const maxRetries = 3;
+  static const retryDelay = Duration(seconds: 2);
+  static const prefKeyEnabled = 'rtsp_enabled';
+  static const prefKeyUrl = 'rtsp_url';
+  static const String youtubeUrlPattern =
+      r'http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?';
+
+  static final RegExp youtubeUrlRegex = RegExp(youtubeUrlPattern);
 }

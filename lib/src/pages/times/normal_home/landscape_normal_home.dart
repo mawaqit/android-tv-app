@@ -88,7 +88,9 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
     final isIqamaMoreImportant = mosqueManager.mosqueConfig!.iqamaMoreImportant == true;
     final iqamaEnabled = mosqueManager.mosqueConfig?.iqamaEnabled == true;
 
-    final nextActiveSalah = mosqueManager.nextSalahIndex();
+    final nextActiveSalah = mosqueManager.mosqueConfig!.iqamaMoreImportant == true
+        ? mosqueManager.nextSalahAfterIqamaIndex()
+        : mosqueManager.nextSalahIndex();
 
     return Column(
       children: [

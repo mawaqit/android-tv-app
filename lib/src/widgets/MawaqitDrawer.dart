@@ -1,9 +1,8 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart' hide Page;
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show ConsumerWidget, WidgetRef, ProviderContainer;
+import 'package:flutter_riverpod/flutter_riverpod.dart' show ConsumerWidget, WidgetRef;
 import 'package:flutter_svg/svg.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -12,16 +11,10 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/elements/DrawerListTitle.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/helpers/StringUtils.dart';
-import 'package:mawaqit/src/models/menu.dart';
-import 'package:mawaqit/src/models/page.dart';
-import 'package:mawaqit/src/models/settings.dart';
 import 'package:mawaqit/src/pages/AboutScreen.dart';
-import 'package:mawaqit/src/pages/PageScreen.dart';
-import 'package:mawaqit/src/pages/WebScreen.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
+import 'package:mawaqit/src/routes/routes_constant.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +25,7 @@ import 'package:mawaqit/src/pages/SettingScreen.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 
 import '../pages/quran/page/quran_mode_selection_screen.dart';
-import '../pages/quran/page/quran_reading_screen.dart';
+import 'package:mawaqit/src/pages/quran/reading/quran_reading_screen.dart';
 import '../state_management/quran/quran/quran_state.dart';
 
 class MawaqitDrawer extends ConsumerWidget {
@@ -42,8 +35,6 @@ class MawaqitDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = Provider.of<SettingsManager>(context).settings;
-    final mosqueManager = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
 
     final theme = Theme.of(context);
@@ -159,35 +150,29 @@ class MawaqitDrawer extends ConsumerWidget {
                   icon: Icons.home,
                   text: S.of(context).home,
                   onTap: () async {
-                    if (settings.tabNavigationEnable == "1") {
-                      AppRouter.popAndPush(WebScreen(settings.url), name: 'HomeScreen');
-                    } else {
-                      Navigator.pop(context);
+                    Navigator.pop(context);
 
-                      goHome();
-                    }
+                    goHome();
                   }),
-              _renderMenuDrawer(settings, context),
               DrawerListTitle(
                 icon: Icons.book,
                 text: S.of(context).quran,
                 onTap: () async {
                   await ref.read(quranNotifierProvider.notifier).getSelectedMode();
                   final state = ref.read(quranNotifierProvider);
+                  Navigator.pop(context);
+
                   switch (state.value!.mode) {
                     case QuranMode.reading:
                       log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: reading');
-                      Navigator.pop(context);
-                      AppRouter.push(QuranReadingScreen());
+                      Navigator.pushNamed(context, Routes.quranReading);
                       break;
                     case QuranMode.listening:
                       log('quran: MawaqitDrawer: build: quranNotifierProvider: mode: listening');
-                      Navigator.pop(context);
-                      AppRouter.push(ReciterSelectionScreen.withoutSurahName());
+                      Navigator.pushNamed(context, Routes.quranReciter);
                       break;
                     case QuranMode.none:
-                      Navigator.pop(context);
-                      AppRouter.push(QuranModeSelection());
+                      Navigator.pushNamed(context, Routes.quranModeSelection);
                       break;
                   }
                 },
@@ -211,7 +196,8 @@ class MawaqitDrawer extends ConsumerWidget {
                   icon: Icons.share,
                   text: S.of(context).share,
                   onTap: () {
-                    _shareApp(context, settings.title, settings.share!);
+                    _shareApp(context, MawaqitBackendSettingsConstant.kSettingsTitle,
+                        MawaqitBackendSettingsConstant.kSettingsShare);
                   }),
               DrawerListTitle(
                 icon: Icons.star,
@@ -223,43 +209,6 @@ class MawaqitDrawer extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _renderMenuDrawer(Settings settings, BuildContext context) {
-    List<Menu> menus = settings.menus ?? [];
-
-    return new Column(
-      children: menus
-          .map((Menu menu) => DrawerListTitle(
-              iconUrl: menu.iconUrl,
-              forceThemeColor: true,
-              autoTranslate: true,
-              text: menu.title,
-              onTap: () async {
-                AppRouter.push(WebScreen(menu.url), name: menu.title);
-                Navigator.pop(context);
-              }))
-          .toList(),
-    );
-  }
-
-  Widget _renderPageDrawer(List<Page> pages, context) {
-    final translations = {
-      "privacyPolicy": S.of(context).privacyPolicy,
-      "networkStatus": S.of(context).networkStatus,
-      "termsOfService": S.of(context).termsOfService,
-      "installationGuide": S.of(context).installationGuide,
-    };
-
-    return Column(
-      children: pages
-          .map((Page page) => DrawerListTitle(
-              forceThemeColor: true,
-              iconUrl: page.iconUrl,
-              text: translations[page.title!.toCamelCase] ?? page.title,
-              onTap: () => AppRouter.popAndPush(PageScreen(page), name: page.title)))
-          .toList(),
     );
   }
 
