@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
 
 import './storage_manager.dart';
@@ -131,5 +132,35 @@ class ThemeNotifier with ChangeNotifier {
     isLightTheme = !(isLightTheme ?? true);
     StorageManager.saveData('themeMode', isLightTheme! ? 'light' : 'dark');
     notifyListeners();
+  }
+}
+
+extension LocalizedTextStyle on BuildContext {
+  TextStyle getLocalizedTextStyle({
+    Locale? locale,
+    double fontSize = 16.0,
+    FontWeight fontWeight = FontWeight.normal,
+    Color color = Colors.black,
+  }) {
+    // Define a map for font configurations based on locale
+    final fontMap = {
+      'ar': GoogleFonts.notoKufiArabic,
+      // Add more language codes and corresponding GoogleFonts functions as needed
+    };
+
+    // Use the provided locale or fall back to the context's locale
+    final effectiveLocale = locale ?? Localizations.localeOf(this);
+    final languageCode = effectiveLocale.languageCode;
+
+    // Get the appropriate font function for the locale
+    final fontFunction = fontMap[languageCode] ?? GoogleFonts.roboto;
+    // Return a TextStyle with dynamic customization
+    return fontFunction(
+      textStyle: TextStyle(
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        color: color,
+      ),
+    );
   }
 }
