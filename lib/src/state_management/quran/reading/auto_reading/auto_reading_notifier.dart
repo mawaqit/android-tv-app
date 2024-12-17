@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,84 +43,137 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
 
 Future<void> startAutoScroll(int currentPage, double pageHeight) async {
+    // Cancel any existing timers
     _autoScrollTimer?.cancel();
+    _hideTimer?.cancel();
 
+    // Reset state with clear initialization
     state = state.copyWith(
       isSinglePageView: true,
       isLoading: true,
       fontSize: 1.0,
       currentPage: currentPage,
+      isPlaying: false, // Start as not playing
     );
 
     try {
-      await Future.microtask(() async {
-        for (int i = 0; i < 50; i++) {
-          if (scrollController.hasClients) {
+      // Use Future.wait to ensure all async operations complete
+      await Future.wait([
+        Future.microtask(() async {
+          // Robust wait for scroll controller
+          for (int i = 0; i < 50; i++) {
+            // 5 seconds total wait time
+            if (scrollController.hasClients &&
+                scrollController.position.hasContentDimensions) {
             _initializeScrollController(currentPage, pageHeight);
             break;
-        }
+            }
           await Future.delayed(Duration(milliseconds: 100));
         }
+        }),
+      
+        // Additional delay to ensure view is fully rendered
+        Future.delayed(Duration(milliseconds: 500))
+      ]);
 
-        state = state.copyWith(
-          isLoading: false,
-          isPlaying: true,
-        );
+      // Update state to start auto-scrolling
+      state = state.copyWith(
+        isLoading: false,
+        isPlaying: true,
+      );
 
-        _startScrolling();
-      }).timeout(Duration(seconds: 5), onTimeout: () {
-        print('Auto-scroll initialization timed out');
-        state = state.copyWith(
-          isLoading: false,
-          isPlaying: false,
-        );
-      });
-    } catch (e) {
-      print('Error in startAutoScroll: $e');
+      // Start scrolling with a slight delay
+      await Future.delayed(Duration(milliseconds: 100));
+      _startScrolling();
+
+    } catch (e, stackTrace) {
+      print('Auto-scroll initialization error: $e');
+      print('Stacktrace: $stackTrace');
+
+      // Fallback state reset
       state = state.copyWith(
         isLoading: false,
         isPlaying: false,
       );
     }
 }
-
   void _initializeScrollController(int currentPage, double pageHeight) {
     final pageOffset = (currentPage - 1) * pageHeight;
     // Set initial offset to correct position, account for rotation if necessary
     scrollController.jumpTo(pageOffset);
   }
 
-  void _startScrolling() {
-    print('Starting auto-scrolling...');
-    if (!state.isPlaying) return;
+void _startScrolling() {
+    // Cancel any existing timer to prevent multiple timers
+    _autoScrollTimer?.cancel();
 
-    const duration = Duration(milliseconds: 50);
-    _autoScrollTimer = Timer.periodic(duration, (timer) {
-      if (!state.isPlaying) {
+    // Validate initial state
+    if (!state.isPlaying) {
+      print('Auto-scroll not started: state is not playing');
+      return;
+    }
+
+    // Additional safety checks
+    if (scrollController == null) {
+      print('ScrollController is null');
+      return;
+    }
+
+    // Track initialization attempts
+    int scrollAttempts = 0;
+    const int maxScrollAttempts = 10;
+
+    _autoScrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
+      scrollAttempts++;
+
+      // Prevent infinite attempts
+      if (scrollAttempts > maxScrollAttempts) {
+        print('Max scroll attempts reached. Stopping auto-scroll.');
         timer.cancel();
+        state = state.copyWith(isPlaying: false);
         return;
       }
-      print('Scrolling... before');
 
-      if (scrollController.hasClients) {
-        print('Scrolling...');
+      // Comprehensive client check
+      if (scrollController.hasClients &&
+          scrollController.position.hasContentDimensions) {
+        try {
         final maxScroll = scrollController.position.maxScrollExtent;
         final currentScroll = scrollController.offset;
         final delta = state.autoScrollSpeed;
 
+          // Detailed logging for debugging
+          print(
+              'Max Scroll: $maxScroll, Current Scroll: $currentScroll, Delta: $delta');
+
         if (currentScroll >= maxScroll) {
+            print('Reached max scroll. Stopping auto-scroll.');
           stopAutoScroll();
-        } else {
-          print('Scrolling... after');
-          scrollController.jumpTo(currentScroll + delta);
-          print('Scrolling... after 2');
-          // Update current page during scrolling
+            timer.cancel();
+            return;
+          }
+
+          // Safe scroll operation
+          scrollController.jumpTo(min(currentScroll + delta, maxScroll));
+
+          // Page calculation
           final pageHeight = scrollController.position.viewportDimension;
           final newPage = _calculateCurrentPage(scrollController, pageHeight);
+        
           if (newPage != state.currentPage) {
             state = state.copyWith(currentPage: newPage);
           }
+        } catch (e, stackTrace) {
+          print('Error during auto-scroll: $e');
+          print('Stacktrace: $stackTrace');
+          timer.cancel();
+          state = state.copyWith(isPlaying: false);
         }
+      } else {
+        print('ScrollController does not have clients or content dimensions');
+        print('HasClients: ${scrollController.hasClients}');
+        print(
+            'HasContentDimensions: ${scrollController.position.hasContentDimensions}');
       }
     });
   }
