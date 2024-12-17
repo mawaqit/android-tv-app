@@ -59,9 +59,7 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
       Extracting() => _buildExtractingDialog(context, state),
       Success() => _handleSuccess(context),
       CancelDownload() => const SizedBox(),
-
       UpdateAvailable() => _buildUpdateAvailableDialog(context, state),
-
       _ => const SizedBox(),
     };
   }

@@ -163,7 +163,6 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     } catch (e) {
       rethrow;
     }
-
   }
 
   Future<void> _clearSvgCache() async {
@@ -175,7 +174,6 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
         pageController: PageController(),
       );
     });
-
   }
 
   Future<void> _saveLastReadPage(int index) async {
