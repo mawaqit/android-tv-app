@@ -82,6 +82,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
   void _startScrolling() {
+    print('Starting auto-scrolling...');
     if (!state.isPlaying) return;
 
     const duration = Duration(milliseconds: 50);
@@ -90,8 +91,10 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
         timer.cancel();
         return;
       }
+      print('Scrolling... before');
 
       if (scrollController.hasClients) {
+        print('Scrolling...');
         final maxScroll = scrollController.position.maxScrollExtent;
         final currentScroll = scrollController.offset;
         final delta = state.autoScrollSpeed;
@@ -99,8 +102,9 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
         if (currentScroll >= maxScroll) {
           stopAutoScroll();
         } else {
+          print('Scrolling... after');
           scrollController.jumpTo(currentScroll + delta);
-
+          print('Scrolling... after 2');
           // Update current page during scrolling
           final pageHeight = scrollController.position.viewportDimension;
           final newPage = _calculateCurrentPage(scrollController, pageHeight);
