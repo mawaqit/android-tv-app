@@ -35,5 +35,6 @@ class AudioControlState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, isLoading, error, shouldShowControls, isConfigured];
+  List<Object?> get props =>
+      [status, isLoading, error, shouldShowControls, isConfigured];
 }
