@@ -412,5 +412,17 @@
   },
   "ishaAndFajrOnly": "Fajr and Isha prayers only",
   "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
-  "minutesAfterIshaPrayer": "minutes afer isha prayer time"
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time",
+  "scheduleSaved": "Your schedule has been saved.",
+  "completeAllFields": "Please complete all fields before saving.",
+  "endTimeAfter": "The end time must be after the start time.",
+  "scheduleListening": "Scheduled Listening",
+  "enableScheduling": "Enable Scheduling",
+  "scheduleDesc": "Enable this feature to automatically play a Surah at scheduled times.",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "selectReciter": "Select a Reciter",
+  "selectMoshaf": "Select a Mushaf",
+  "randomSurahSelection": "Random Surah Selection",
+  "selectSurah": "Select a Surah"
 }
