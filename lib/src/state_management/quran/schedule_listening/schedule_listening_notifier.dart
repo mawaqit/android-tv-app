@@ -177,6 +177,11 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
   /// Saves the current schedule configuration.
   Future<bool> saveSchedule() async {
     final currentState = state.value!;
+    if (!currentState.isScheduleEnabled) {
+      await _disableSchedule();
+      state = AsyncData(state.value!.copyWith(isScheduleEnabled: false));
+      return true;
+    }
 
     if (!_isValidScheduleState(currentState)) {
       return false;
