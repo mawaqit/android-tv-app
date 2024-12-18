@@ -217,9 +217,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             error: (error, stack) => Text('Error: $error'),
           )
         ],
-
-          onPressed: _navigateToReading,
-        ),
       ),
       appBar: AppBar(
         toolbarHeight: 40,

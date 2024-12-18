@@ -116,6 +116,7 @@ class BackgroundScheduleAudioServiceConstant {
   static const String kStopAudio = 'kStopAudio';
   static const String kResumeAudio = 'kResumeAudio';
 }
+
 abstract class MawaqitBackendSettingsConstant {
   static const String kSettingsTitle = "Mawaqit";
   static const String kSettingsShare =
