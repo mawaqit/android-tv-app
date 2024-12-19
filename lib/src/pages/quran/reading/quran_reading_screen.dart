@@ -78,6 +78,7 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
           itemCount: state.totalPages,
           cacheExtent: MediaQuery.of(context).size.height * preloadDistance, // Reduce cache extent
           itemBuilder: (context, index) {
+            print('Index: $index');
             return GestureDetector(
               onTap: () {
                 final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
