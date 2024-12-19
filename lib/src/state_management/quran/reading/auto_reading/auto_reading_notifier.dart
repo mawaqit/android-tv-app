@@ -10,7 +10,7 @@ import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.d
 class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   Timer? _autoScrollTimer;
   Timer? _hideTimer;
-  late final ScrollController scrollController;
+  late ScrollController scrollController;
 
   @override
   AutoScrollState build() {
@@ -24,6 +24,12 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       scrollController: scrollController,
     );
   }
+
+  void setScrollController(ScrollController controller) {
+    print('Setting scroll controller...');
+    scrollController = controller;
+  }
+
 
   Future<void> jumpToCurrentPage(int currentPage, double pageHeight) async {
     if (scrollController.hasClients) {

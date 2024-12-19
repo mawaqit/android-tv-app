@@ -64,6 +64,7 @@ class FocusNodes {
     required this.switchScreenViewFocusNode,
     required this.switchQuranModeNode,
   });
+
   void setupFocusTraversal({required bool isPortrait}) {
     if (isPortrait) {
       setupPortraitFocusTraversal();
@@ -255,29 +256,54 @@ class FocusNodes {
   }
 }
 
-class AutoScrollViewStrategy implements QuranViewStrategy {
+// New ConsumerStatefulWidget to manage ScrollController
+class AutoScrollReadingView extends ConsumerStatefulWidget {
   final AutoScrollState autoScrollState;
-  final int preloadDistance = 3; // Adjust preload distance for performance
 
-  AutoScrollViewStrategy(this.autoScrollState);
+  AutoScrollReadingView({required this.autoScrollState});
 
   @override
-  Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
-    final scalingFactor = autoScrollState.fontSize;
+  _AutoScrollReadingViewState createState() => _AutoScrollReadingViewState();
+}
 
+class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
+  late ScrollController scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+    // Pass the ScrollController to the notifier
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(autoScrollNotifierProvider.notifier).setScrollController(scrollController);
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scalingFactor = widget.autoScrollState.fontSize;
+    final readingState = ref.watch(quranReadingNotifierProvider);
+    final total = readingState.whenOrNull(data: (data) => data.totalPages) ?? 0;
+    final pages = readingState.whenOrNull(data: (data) => data.svgs) ?? [];
+    final preloadDistance = 3;
     return Stack(
       children: [
         ListView.builder(
           physics: NeverScrollableScrollPhysics(),
-          controller: autoScrollState.scrollController,
-          itemCount: state.totalPages,
-          cacheExtent: MediaQuery.of(context).size.height * preloadDistance, // Reduce cache extent
+          controller: scrollController,
+          itemCount: total,
+          cacheExtent: MediaQuery.of(context).size.height * preloadDistance,
           itemBuilder: (context, index) {
-            print('Index: $index');
             return GestureDetector(
               onTap: () {
                 final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
-                if (autoScrollState.isPlaying) {
+                if (widget.autoScrollState.isPlaying) {
                   autoScrollNotifier.pauseAutoScroll();
                 } else {
                   autoScrollNotifier.resumeAutoScroll();
@@ -287,13 +313,13 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
                 width: MediaQuery.of(context).size.width * scalingFactor,
                 height: MediaQuery.of(context).size.height * scalingFactor,
                 child: SvgPictureWidget(
-                  svgPicture: state.svgs[index],
+                  svgPicture: pages[index],
                 ),
               ),
             );
           },
         ),
-        if (autoScrollState.isLoading) // Show loading screen only when isLoading is true
+        if (widget.autoScrollState.isLoading)
           Container(
             color: Colors.black.withOpacity(0.9),
             child: Center(
@@ -305,6 +331,18 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
           ),
       ],
     );
+  }
+}
+
+// Update AutoScrollViewStrategy to use AutoScrollReadingView
+class AutoScrollViewStrategy implements QuranViewStrategy {
+  final AutoScrollState autoScrollState;
+
+  AutoScrollViewStrategy(this.autoScrollState);
+
+  @override
+  Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
+    return AutoScrollReadingView(autoScrollState: autoScrollState);
   }
 
   @override
