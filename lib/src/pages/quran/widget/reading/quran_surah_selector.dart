@@ -59,7 +59,7 @@ class SurahSelectorWidget extends ConsumerWidget {
                       state.currentSurahName,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 7.sp,
+                        fontSize: 8.sp,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,

@@ -601,7 +601,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
           children: [
             // Add padding container around main content
             Padding(
-              padding: EdgeInsets.only(top: isPortrait ? 0 : 2.h), // Add top padding only in landscape mode
+              padding: EdgeInsets.only(top: isPortrait ? 0 : 1.h), // Add top padding only in landscape mode
               child: viewStrategy.buildView(state, ref, context),
             ),
 
