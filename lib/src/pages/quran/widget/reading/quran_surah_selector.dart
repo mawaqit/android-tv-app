@@ -47,18 +47,29 @@ class SurahSelectorWidget extends ConsumerWidget {
               borderRadius: BorderRadius.circular(20),
               child: Builder(
                 builder: (context) {
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(20),
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 22.w, // Limit width to 30% of screen
                     ),
-                    child: Text(
-                      state.currentSurahName,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8.sp,
-                        fontWeight: FontWeight.bold,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 2.w,
+                        vertical: 1.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6), // Increased opacity for better readability
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        state.currentSurahName,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 7.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                   );
