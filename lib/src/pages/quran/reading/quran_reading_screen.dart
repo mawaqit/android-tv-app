@@ -25,6 +25,7 @@ import 'package:provider/provider.dart' as provider;
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
+import 'package:sizer/sizer.dart';
 
 abstract class QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context);
@@ -596,31 +597,15 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             switchQuranModeNode: _switchQuranModeNode);
         focusNodes.setupFocusTraversal(isPortrait: isPortrait);
 
-        if (isPortrait) {
-          return Stack(
-            children: [
-              // Main content
-              viewStrategy.buildView(state, ref, context),
-
-              // Controls overlay - show in both portrait and landscape
-              ...viewStrategy.buildControls(
-                context,
-                state,
-                userPrefs,
-                isPortrait,
-                focusNodes,
-                _scrollPageList,
-                _showPageSelector,
-              ),
-            ],
-          );
-        }
         return Stack(
           children: [
-            // Main content
-            viewStrategy.buildView(state, ref, context),
+            // Add padding container around main content
+            Padding(
+              padding: EdgeInsets.only(top: isPortrait ? 0 : 2.h), // Add top padding only in landscape mode
+              child: viewStrategy.buildView(state, ref, context),
+            ),
 
-            // Controls overlay - show in both portrait and landscape
+            // Controls overlay
             ...viewStrategy.buildControls(
               context,
               state,

@@ -25,9 +25,8 @@ class SurahSelectorWidget extends ConsumerWidget {
     }
 
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
-
     return Positioned(
-      top: 8,
+      top: 0.65.h,
       left: 0,
       right: 0,
       child: Center(
@@ -47,30 +46,24 @@ class SurahSelectorWidget extends ConsumerWidget {
               borderRadius: BorderRadius.circular(20),
               child: Builder(
                 builder: (context) {
-                  return ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 22.w, // Limit width to 30% of screen
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 2.w,
+                      vertical: 0.75.h,
                     ),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 2.w,
-                        vertical: 1.h,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6), // Increased opacity for better readability
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      state.currentSurahName,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 7.sp,
+                        fontWeight: FontWeight.bold,
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6), // Increased opacity for better readability
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        state.currentSurahName,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 7.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
                     ),
                   );
                 },
