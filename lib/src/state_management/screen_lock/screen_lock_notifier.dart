@@ -21,6 +21,7 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
     return ScreenLockState(
       selectedTime:
           DateTime.now().add(Duration(hours: timeShiftManager.shift, minutes: timeShiftManager.shiftInMinutes)),
+      isfajrIshaonly: prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false,
       isActive: isActive,
       selectedMinuteBefore: prefs.getInt(TurnOnOffTvConstant.kMinuteBeforeKey) ?? 10,
       selectedMinuteAfter: prefs.getInt(TurnOnOffTvConstant.kMinuteAfterKey) ?? 30,
@@ -63,9 +64,10 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
     state = AsyncValue.data(state.value!.copyWith(selectedMinuteAfter: newMinute < 10 ? 59 : newMinute));
   }
 
-  Future<void> saveSettings(List<String> times) async {
+  Future<void> saveSettings(List<String> times, bool isIshaFajrOnly) async {
     await ToggleScreenFeature.cancelAllScheduledTimers();
     ToggleScreenFeature.scheduleToggleScreen(
+      isIshaFajrOnly,
       times,
       state.value!.selectedMinuteBefore,
       state.value!.selectedMinuteAfter,
@@ -75,6 +77,7 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt(TurnOnOffTvConstant.kMinuteBeforeKey, state.value!.selectedMinuteBefore);
     prefs.setInt(TurnOnOffTvConstant.kMinuteAfterKey, state.value!.selectedMinuteAfter);
+    prefs.setBool(TurnOnOffTvConstant.kisFajrIshaOnly, isIshaFajrOnly);
   }
 }
 

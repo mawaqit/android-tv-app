@@ -17,7 +17,14 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 
+
+
+
+
 version: 1.18.0+1
+
+
+
 
 
 environment:
@@ -68,7 +75,7 @@ dependencies:
   store_redirect: ^2.0.1
   connectivity_plus: ^4.0.0
   uni_links: ^0.5.1
-  
+
   # TOOLS
   google_fonts: ^4.0.4
   device_info_plus: ^9.0.2
@@ -147,6 +154,8 @@ dependencies:
   scroll_to_index: ^3.0.1
   fast_cached_network_image: ^1.2.0
 
+  montenegrin_localization: ^0.1.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -156,10 +165,11 @@ dev_dependencies:
   dependency_validator:
   build_runner: ^2.4.9
   http_mock_adapter: ^0.6.1
-
+  flutter_background_service: ^2.1.3
   flutter_lints: 3.0.1
   hive_generator: ^2.0.1
   mocktail: ^1.0.3
+  audio_service: ^0.18.10
   dart_mappable_builder: ^4.2.3
   json_serializable: ^6.8.0
 # For information on the generic Dart part of this file, see the

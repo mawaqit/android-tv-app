@@ -10,12 +10,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
+import 'package:mawaqit/src/pages/quran/page/schedule_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/recite_type_grid_view.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_state.dart';
+import 'package:mawaqit/src/state_management/quran/schedule_listening/audio_control_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/schedule_listening/audio_control_state.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -46,6 +49,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   late FocusNode favoriteFocusNode;
   late FocusNode changeReadingModeFocusNode;
+  late FocusNode scheduleListeningFocusNode;
 
   late FocusScopeNode reciteTypeFocusScopeNode;
   late FocusScopeNode reciteFocusScopeNode;
@@ -79,7 +83,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         }
       }
     });
+
     changeReadingModeFocusNode = FocusNode(debugLabel: 'change_reading_mode_focus_node');
+    scheduleListeningFocusNode = FocusNode(debugLabel: 'scheduleListeningFocusNode');
     favoriteFocusNode = FocusNode(debugLabel: 'favorite_focus_node');
 
     reciteTypeFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_type_focus_scope_node');
@@ -99,6 +105,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
     reciteTypeFocusScopeNode.dispose();
     reciteFocusScopeNode.dispose();
+    scheduleListeningFocusNode.dispose();
 
     _tabController.dispose();
     _searchController.dispose();
@@ -117,22 +124,99 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   @override
   Widget build(BuildContext context) {
+    final audioState = ref.watch(audioControlProvider);
+
     return Scaffold(
       key: _scaffoldKey,
-      floatingActionButton: SizedBox(
-        width: 40.sp, // Set the desired width
-        height: 40.sp, // Set the desired height
-        child: FloatingActionButton(
-          focusNode: changeReadingModeFocusNode,
-          focusColor: Theme.of(context).primaryColor,
-          backgroundColor: Colors.black.withOpacity(.5),
-          child: Icon(
-            Icons.menu_book,
-            color: Colors.white,
-            size: 15.sp,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            width: 30.sp, // Set the desired width
+            height: 30.sp, // Set the desired height
+            child: Consumer(
+              builder: (context, ref, child) {
+                return ref.watch(reciteNotifierProvider).when(
+                      data: (reciter) {
+                        return FloatingActionButton(
+                          backgroundColor: Colors.black.withOpacity(.5),
+                          child: Icon(
+                            Icons.schedule,
+                            color: Colors.white,
+                            size: 15.sp,
+                          ),
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ScheduleScreen(reciterList: reciter.reciters);
+                              },
+                            );
+                          },
+                        );
+                      },
+                      loading: () => CircularProgressIndicator(),
+                      error: (error, stackTrace) => Icon(Icons.error, color: Colors.red),
+                    );
+              },
+            ),
           ),
-          onPressed: _navigateToReading,
-        ),
+          SizedBox(
+            width: 5.sp,
+          ),
+          SizedBox(
+            width: 30.sp, // Set the desired width
+            height: 30.sp, // Set the desired height
+            child: FloatingActionButton(
+              focusNode: changeReadingModeFocusNode,
+              focusColor: Theme.of(context).primaryColor,
+              backgroundColor: Colors.black.withOpacity(.5),
+              child: Icon(
+                Icons.menu_book,
+                color: Colors.white,
+                size: 15.sp,
+              ),
+              onPressed: () async {
+                ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QuranReadingScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(
+            width: 5.sp,
+          ),
+          audioState.when(
+            data: (state) {
+              if (!state.shouldShowControls) {
+                return const SizedBox.shrink(); // Hide controls when scheduling is disabled
+              }
+
+              return SizedBox(
+                width: 30.sp, // Set the desired width
+                height: 30.sp, // Set the desired height
+                child: FloatingActionButton(
+                  focusNode: scheduleListeningFocusNode,
+                  focusColor: Theme.of(context).primaryColor,
+                  backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
+                  child: Icon(
+                    color: Colors.white,
+                    state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
+                  ),
+                  onPressed: () {
+                    ref.read(audioControlProvider.notifier).togglePlayback();
+                  },
+                ),
+              );
+            },
+            loading: () => const CircularProgressIndicator(),
+            error: (error, stack) => Text('Error: $error'),
+          )
+        ],
       ),
       appBar: AppBar(
         toolbarHeight: 40,

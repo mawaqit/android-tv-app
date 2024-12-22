@@ -51,7 +51,9 @@ class TurnOnOffTvConstant {
   static const String kCheckRoot = "checkRoot";
   static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
   static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
-
+  static const String kToggleTabletScreenOn = "toggleTabletScreenOn";
+  static const String kToggleTabletScreenOff = "toggleTabletScreenOff";
+  static const String kisFajrIshaOnly = "isIshaFajrOnly";
   static const String kMinuteBeforeKey = 'selectedMinuteBefore';
   static const String kMinuteAfterKey = 'selectedMinuteAfter';
 }
@@ -76,7 +78,7 @@ abstract class QuranConstant {
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
   static const String kFavoriteReciterBox = 'favorite_reciter_box';
-  static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/config.json';
+  static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/tv_config.json';
   static const String kIsFirstTime = 'is_first_time_quran';
   static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
 }
@@ -95,6 +97,24 @@ abstract class SystemFeaturesConstant {
   static const String kLeanback = 'android.software.leanback';
   static const String kHdmi = 'android.hardware.hdmi';
   static const String kEthernet = 'android.hardware.ethernet';
+}
+
+class BackgroundScheduleAudioServiceConstant {
+  static const String kManualPause = 'manual_pause_enabled';
+  static const String kPendingSchedule = 'pending_schedule';
+  static const String kScheduleEnabled = 'schedule_enabled';
+  static const String kStartTime = 'start_time';
+  static const String kEndTime = 'end_time';
+  static const String kRandomEnabled = 'isRandomEnabled';
+  static const String kRandomUrls = 'random_urls';
+  static const String kSelectedSurah = 'selected_surah';
+  static const String kSelectedSurahUrl = 'selected_surah_url';
+  static const String kSelectedReciter = 'selected_reciter';
+  static const String kSelectedMoshaf = 'selected_moshaf';
+  static const String kAudioStateChanged = 'kAudioStateChanged';
+  static const String kGetPlaybackState = 'kGetPlaybackState';
+  static const String kStopAudio = 'kStopAudio';
+  static const String kResumeAudio = 'kResumeAudio';
 }
 
 abstract class MawaqitBackendSettingsConstant {
