@@ -447,10 +447,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(downloadQuranNotifierProvider);
-<<<<<<< HEAD
-=======
       final quranReadingState = ref.watch(quranReadingNotifierProvider);
->>>>>>> 58199ed69000fdab5ad5f5305a89af16bb9a2f11
     });
   }
 
