@@ -125,48 +125,42 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   @override
   Widget build(BuildContext context) {
     final audioState = ref.watch(audioControlProvider);
+    final buttonSize = MediaQuery.of(context).size.width * 0.07;
+    final iconSize = buttonSize * 0.5;
+    final spacerWidth = buttonSize * 0.22;
 
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          ref.watch(reciteNotifierProvider).maybeWhen(
+                data: (reciter) => SizedBox(
+                  width: buttonSize,
+                  height: buttonSize,
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.black.withOpacity(.5),
+                    child: Icon(
+                      Icons.schedule,
+                      color: Colors.white,
+                      size: iconSize,
+                    ),
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ScheduleScreen(reciterList: reciter.reciters);
+                        },
+                      );
+                    },
+                  ),
+                ),
+                orElse: () => const SizedBox.shrink(),
+              ),
+          SizedBox(width: spacerWidth),
           SizedBox(
-            width: 30.sp, // Set the desired width
-            height: 30.sp, // Set the desired height
-            child: Consumer(
-              builder: (context, ref, child) {
-                return ref.watch(reciteNotifierProvider).when(
-                      data: (reciter) {
-                        return FloatingActionButton(
-                          backgroundColor: Colors.black.withOpacity(.5),
-                          child: Icon(
-                            Icons.schedule,
-                            color: Colors.white,
-                            size: 15.sp,
-                          ),
-                          onPressed: () async {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return ScheduleScreen(reciterList: reciter.reciters);
-                              },
-                            );
-                          },
-                        );
-                      },
-                      loading: () => CircularProgressIndicator(),
-                      error: (error, stackTrace) => Icon(Icons.error, color: Colors.red),
-                    );
-              },
-            ),
-          ),
-          SizedBox(
-            width: 5.sp,
-          ),
-          SizedBox(
-            width: 30.sp, // Set the desired width
-            height: 30.sp, // Set the desired height
+            width: buttonSize,
+            height: buttonSize,
             child: FloatingActionButton(
               focusNode: changeReadingModeFocusNode,
               focusColor: Theme.of(context).primaryColor,
@@ -174,7 +168,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               child: Icon(
                 Icons.menu_book,
                 color: Colors.white,
-                size: 15.sp,
+                size: iconSize,
               ),
               onPressed: () async {
                 ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
@@ -188,7 +182,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             ),
           ),
           SizedBox(
-            width: 5.sp,
+            width: spacerWidth,
           ),
           audioState.when(
             data: (state) {
@@ -197,8 +191,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               }
 
               return SizedBox(
-                width: 30.sp, // Set the desired width
-                height: 30.sp, // Set the desired height
+                width: buttonSize, // Set the desired width
+                height: buttonSize, // Set the desired height
                 child: FloatingActionButton(
                   focusNode: scheduleListeningFocusNode,
                   focusColor: Theme.of(context).primaryColor,
@@ -206,6 +200,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                   child: Icon(
                     color: Colors.white,
                     state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
+                    size: iconSize,
                   ),
                   onPressed: () {
                     ref.read(audioControlProvider.notifier).togglePlayback();
