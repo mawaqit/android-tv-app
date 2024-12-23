@@ -178,7 +178,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
           style: textTheme.bodyLarge,
         ),
         SizedBox(height: 2.h),
-
         if (state.isScheduleEnabled) ...[
           ..._buildScheduleOptions(state, quranState),
           SizedBox(height: 2.h),

@@ -8,14 +8,14 @@ class AudioControlState extends Equatable {
   final bool isLoading;
   final String? error;
   final bool shouldShowControls;
-  final bool isConfigured;  // Add this field
+  final bool isConfigured; // Add this field
 
   const AudioControlState({
     this.status = AudioStatus.paused,
     this.isLoading = false,
     this.error,
     this.shouldShowControls = false,
-    this.isConfigured = false,  // Initialize it
+    this.isConfigured = false, // Initialize it
   });
 
   AudioControlState copyWith({
@@ -23,7 +23,7 @@ class AudioControlState extends Equatable {
     bool? isLoading,
     String? error,
     bool? shouldShowControls,
-    bool? isConfigured,  // Add to copyWith
+    bool? isConfigured, // Add to copyWith
   }) {
     return AudioControlState(
       status: status ?? this.status,

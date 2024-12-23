@@ -135,25 +135,26 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           ref.watch(reciteNotifierProvider).whenOrNull(
-                data: (reciter) => SizedBox(
-                  width: buttonSize,
-                  height: buttonSize,
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.black.withOpacity(.5),
-                    child: Icon(
-                      Icons.schedule,
-                      color: Colors.white,
-                      size: iconSize,
+                    data: (reciter) => SizedBox(
+                      width: buttonSize,
+                      height: buttonSize,
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.black.withOpacity(.5),
+                        child: Icon(
+                          Icons.schedule,
+                          color: Colors.white,
+                          size: iconSize,
+                        ),
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
+                          );
+                        },
+                      ),
                     ),
-                    onPressed: () async {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
-                      );
-                    },
-                  ),
-                ),
-              ) ?? const SizedBox.shrink(),
+                  ) ??
+              const SizedBox.shrink(),
           SizedBox(width: spacerWidth),
           SizedBox(
             width: buttonSize,

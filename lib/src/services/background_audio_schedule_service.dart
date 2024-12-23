@@ -12,9 +12,11 @@ import 'package:audio_session/audio_session.dart';
 /// BackgroundAudioService class to handle all audio-related operations
 class BackgroundAudioScheduleService {
   static AudioPlayer? _audioPlayer;
+  static Duration? _savedPosition;
 
   static bool isPlaying() => _audioPlayer?.playing ?? false;
   static AudioPlayer? get player => _audioPlayer;
+  static final FlutterBackgroundService _service = FlutterBackgroundService();
 
   /// Initialize the background service
   static Future<void> initialize() async {
@@ -34,22 +36,40 @@ class BackgroundAudioScheduleService {
   }
 
   /// Configure and start audio playback
+  /// Configure and start audio playback
   static Future<void> playAudio(dynamic surahSource, {bool createPlaylist = false}) async {
     try {
-      _audioPlayer ??= AudioPlayer();
+      if (_audioPlayer == null) {
+        _audioPlayer = AudioPlayer();
+        await _configureAudioSession();
+        await _setupAudioSource(surahSource, createPlaylist);
+      }
 
-      await _configureAudioSession();
-      await _setupAudioSource(surahSource, createPlaylist);
+      // If we have a saved position and the player is already set up
+      if (_savedPosition != null && _audioPlayer?.audioSource != null) {
+        await _audioPlayer?.seek(_savedPosition!);
+        _savedPosition = null;
+      }
+
       await _startPlayback(createPlaylist);
+      _service.invoke('kAudioStateChanged', {'isPlaying': true});
     } catch (e) {
       print('Error playing audio: $e');
+      _service.invoke('kAudioStateChanged', {'isPlaying': false});
     }
   }
 
   /// Stop audio playback
   static Future<void> stopPlayback() async {
-    print('Pausing surah playback');
-    await _audioPlayer?.pause();
+    try {
+      print('Pausing surah playback');
+      // Save the current position before pausing
+      _savedPosition = await _audioPlayer?.position;
+      await _audioPlayer?.pause();
+      _service.invoke('kAudioStateChanged', {'isPlaying': false});
+    } catch (e) {
+      print('Error stopping playback: $e');
+    }
   }
 
   /// Configure audio session settings
@@ -79,11 +99,16 @@ class BackgroundAudioScheduleService {
   }
 
   /// Setup audio source based on playlist or single audio
+  /// Setup audio source based on playlist or single audio
   static Future<void> _setupAudioSource(dynamic surahSource, bool createPlaylist) async {
-    if (createPlaylist) {
-      await _setupPlaylist(surahSource);
-    } else {
-      await _setupSingleAudio(surahSource);
+    // Only set up new audio source if it's different or player has no source
+    if (_audioPlayer?.audioSource == null) {
+      if (createPlaylist) {
+        await _setupPlaylist(surahSource);
+      } else {
+        await _setupSingleAudio(surahSource);
+      }
+      _savedPosition = null;
     }
   }
 
@@ -117,7 +142,14 @@ class BackgroundAudioScheduleService {
       if (event.processingState == ProcessingState.completed && !createPlaylist) {
         _audioPlayer?.seek(Duration.zero);
         _audioPlayer?.play();
+        _savedPosition = null;
+        _service.invoke('kAudioStateChanged', {'isPlaying': true});
       }
+    });
+
+    _audioPlayer?.playerStateStream.listen((playerState) {
+      final isPlaying = playerState.playing;
+      _service.invoke('kAudioStateChanged', {'isPlaying': isPlaying});
     });
   }
 }
@@ -140,11 +172,12 @@ class ScheduleManager {
 
   /// Check if schedule should be skipped
   static Future<bool> _shouldSkipSchedule(SharedPreferences prefs) async {
-    final isPendingSchedule = prefs.getBool(BackgroundScheduleAudioServiceConstant.kPendingSchedule) ?? false;
-    final isManuallyPaused = prefs.getBool(BackgroundScheduleAudioServiceConstant.kManualPause) ?? false;
+    final isPendingSchedule = prefs
+            .getBool(BackgroundScheduleAudioServiceConstant.kPendingSchedule) ??
+        false;
     final isScheduleEnabled = prefs.getBool(BackgroundScheduleAudioServiceConstant.kScheduleEnabled) ?? false;
 
-    if (!isScheduleEnabled || isManuallyPaused || isPendingSchedule) {
+    if (!isScheduleEnabled || isPendingSchedule) {
       if (BackgroundAudioScheduleService.isPlaying()) {
         await BackgroundAudioScheduleService.stopPlayback();
         FlutterBackgroundService().invoke('kAudioStateChanged', {'isPlaying': false});
@@ -174,25 +207,42 @@ class ScheduleManager {
   /// Handle schedule execution
   static Future<void> _handleScheduleExecution(
       TimeOfDay currentTime, ScheduleData scheduleData, SharedPreferences prefs) async {
+    final service = FlutterBackgroundService();
+
     if (_isTimeInRange(currentTime, scheduleData.startTime, scheduleData.endTime)) {
       if (!BackgroundAudioScheduleService.isPlaying()) {
         await _startScheduledPlayback(scheduleData);
-        FlutterBackgroundService().invoke('kAudioStateChanged', {'isPlaying': true});
+        // Notify UI of playback state change
+        service.invoke('kAudioStateChanged', {'isPlaying': true});
       }
     } else if (BackgroundAudioScheduleService.isPlaying()) {
       await BackgroundAudioScheduleService.stopPlayback();
-      FlutterBackgroundService().invoke('kAudioStateChanged', {'isPlaying': false});
+      // Notify UI of playback state change
+      service.invoke('kAudioStateChanged', {'isPlaying': false});
     }
   }
 
   /// Start scheduled playback
   static Future<void> _startScheduledPlayback(ScheduleData scheduleData) async {
-    if (scheduleData.isRandomEnabled && scheduleData.randomUrls != null) {
-      await BackgroundAudioScheduleService.playAudio(scheduleData.randomUrls, createPlaylist: true);
-    } else if (scheduleData.selectedSurahUrl != null) {
-      final surahIdStr = scheduleData.selectedSurah.toString().padLeft(3, '0');
-      final surahUrl = "${scheduleData.selectedSurahUrl}$surahIdStr.mp3";
-      await BackgroundAudioScheduleService.playAudio(surahUrl);
+    final service = FlutterBackgroundService();
+
+    try {
+      if (scheduleData.isRandomEnabled && scheduleData.randomUrls != null) {
+        await BackgroundAudioScheduleService.playAudio(scheduleData.randomUrls,
+            createPlaylist: true);
+      } else if (scheduleData.selectedSurahUrl != null) {
+        final surahIdStr =
+            scheduleData.selectedSurah.toString().padLeft(3, '0');
+        final surahUrl = "${scheduleData.selectedSurahUrl}$surahIdStr.mp3";
+        await BackgroundAudioScheduleService.playAudio(surahUrl);
+      }
+
+      // Notify UI of successful playback start
+      service.invoke('kAudioStateChanged', {'isPlaying': true});
+    } catch (e) {
+      print('Error starting scheduled playback: $e');
+      // Notify UI of failure
+      service.invoke('kAudioStateChanged', {'isPlaying': false});
     }
   }
 
