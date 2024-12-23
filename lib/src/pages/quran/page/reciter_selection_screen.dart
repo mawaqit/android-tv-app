@@ -127,7 +127,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     final audioState = ref.watch(audioControlProvider);
     final buttonSize = MediaQuery.of(context).size.width * 0.07;
     final iconSize = buttonSize * 0.5;
-    final spacerWidth = buttonSize * 0.22;
+    final spacerWidth = buttonSize * 0.25;
 
     return Scaffold(
       key: _scaffoldKey,
