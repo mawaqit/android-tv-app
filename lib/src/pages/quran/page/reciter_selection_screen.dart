@@ -134,7 +134,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          ref.watch(reciteNotifierProvider).maybeWhen(
+          ref.watch(reciteNotifierProvider).whenOrNull(
                 data: (reciter) => SizedBox(
                   width: buttonSize,
                   height: buttonSize,
@@ -148,15 +148,12 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                     onPressed: () async {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) {
-                          return ScheduleScreen(reciterList: reciter.reciters);
-                        },
+                        builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
                       );
                     },
                   ),
                 ),
-                orElse: () => const SizedBox.shrink(),
-              ),
+              ) ?? const SizedBox.shrink(),
           SizedBox(width: spacerWidth),
           SizedBox(
             width: buttonSize,
