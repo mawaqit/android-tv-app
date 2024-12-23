@@ -65,8 +65,14 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
   void _handleScheduleStateChange(AsyncValue<dynamic>? previous, AsyncValue<dynamic> next) {
     if (next.value != null) {
       try {
+        final scheduleState = next.value!;
+        final isConfigured = scheduleState.selectedReciter != null &&
+                           scheduleState.selectedMoshaf != null &&
+                           (scheduleState.selectedSurahId != null || scheduleState.isRandomEnabled);
+
         state = AsyncData(state.value!.copyWith(
-          shouldShowControls: next.value!.isScheduleEnabled,
+          shouldShowControls: scheduleState.isScheduleEnabled,
+          isConfigured: isConfigured,
         ));
       } catch (e) {
         _handleError('Failed to update controls visibility: $e');

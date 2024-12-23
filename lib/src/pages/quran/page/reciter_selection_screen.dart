@@ -183,8 +183,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           ),
           audioState.when(
             data: (state) {
-              if (!state.shouldShowControls) {
-                return const SizedBox.shrink(); // Hide controls when scheduling is disabled
+              if (!state.shouldShowControls || !state.isConfigured) {
+                return const SizedBox.shrink();
               }
 
               return SizedBox(
