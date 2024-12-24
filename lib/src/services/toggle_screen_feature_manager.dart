@@ -80,12 +80,12 @@ class ToggleScreenFeature {
           continue;
         }
         final beforeTimer = Timer(beforeDelay, () {
-          _toggleBoxScreenOn();
+          timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
         });
 
         final afterDelay = scheduledDateTime.difference(now) + Duration(minutes: afterDelayMinutes);
         final afterTimer = Timer(afterDelay, () {
-          _toggleBoxScreenOff();
+          timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
         });
 
         _scheduledTimers[timeString] = [beforeTimer, afterTimer];
