@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/widget/schedule_screen_widgets/custom_scheduling_drop_down.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/schedule_listening_notifier.dart';
+import 'package:sizer/sizer.dart';
 import '../../../domain/model/quran/moshaf_model.dart';
 import '../../../domain/model/quran/reciter_model.dart';
 import '../widget/schedule_screen_widgets/androidtv_timepicker.dart';
@@ -56,7 +57,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       ),
     );
 
-    Overlay.of(context)?.insert(overlayEntry);
+    Overlay.of(context).insert(overlayEntry);
 
     Future.delayed(const Duration(seconds: 3)).then((_) {
       if (overlayEntry.mounted) {
@@ -147,48 +148,43 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     AsyncValue<dynamic> quranState,
     BuildContext context,
   ) {
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildHeader(context),
-        const SizedBox(height: 16),
-        _buildScheduleSwitch(state),
-        const SizedBox(height: 8),
-        _buildScheduleDescription(),
-        const SizedBox(height: 16),
+        SizedBox(height: 1.h),
+        Text(
+          S.of(context).scheduleListening,
+          style: textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 2.h),
+        SwitchListTile(
+          title: Text(
+            S.of(context).enableScheduling,
+            style: textTheme.titleMedium,
+          ),
+          value: state.isScheduleEnabled,
+          onChanged: (bool value) {
+            ref.read(scheduleProvider.notifier).setScheduleEnabled(value);
+          },
+        ),
+        SizedBox(height: 2.h),
+        Text(
+          S.of(context).scheduleDesc,
+          style: textTheme.bodyLarge,
+        ),
+        SizedBox(height: 2.h),
         if (state.isScheduleEnabled) ...[
           ..._buildScheduleOptions(state, quranState),
-          const SizedBox(height: 24),
+          SizedBox(height: 2.h),
         ],
         _buildActionButtons(context),
-        const SizedBox(height: 10),
+        SizedBox(height: 2.h),
       ],
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Text(
-      S.of(context).scheduleListening,
-      style: Theme.of(context).textTheme.titleLarge,
-      textAlign: TextAlign.center,
-    );
-  }
-
-  Widget _buildScheduleSwitch(dynamic state) {
-    return SwitchListTile(
-      title: Text(S.of(context).enableScheduling),
-      value: state.isScheduleEnabled,
-      onChanged: (bool value) {
-        ref.read(scheduleProvider.notifier).setScheduleEnabled(value);
-      },
-    );
-  }
-
-  Widget _buildScheduleDescription() {
-    return Text(
-      S.of(context).scheduleDesc,
-      style: TextStyle(fontSize: 12, color: Colors.grey),
     );
   }
 
@@ -244,9 +240,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   }
 
   Widget _buildRandomSurahCheckbox(dynamic state, BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return CheckboxListTile(
       activeColor: Theme.of(context).primaryColor,
-      title: Text(S.of(context).randomSurahSelection),
+      title: Text(
+        S.of(context).randomSurahSelection,
+        style: textTheme.titleMedium,
+      ),
       value: state.isRandomEnabled,
       onChanged: (bool? value) {
         ref.read(scheduleProvider.notifier).setRandomEnabled(value ?? false);
@@ -274,12 +274,16 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   }
 
   Widget _buildActionButtons(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(S.of(context).cancel),
+          child: Text(
+            S.of(context).cancel,
+            style: textTheme.bodyLarge,
+          ),
         ),
         const SizedBox(width: 8),
         ElevatedButton(
