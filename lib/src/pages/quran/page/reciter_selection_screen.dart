@@ -19,6 +19,7 @@ import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_state.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/audio_control_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/audio_control_state.dart';
+import 'package:mawaqit/src/state_management/quran/schedule_listening/schedule_listening_notifier.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -28,6 +29,75 @@ import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
 import '../../../domain/model/quran/reciter_model.dart';
 import '../reading/quran_reading_screen.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class AudioControlWidget extends ConsumerWidget {
+  final double buttonSize;
+  final double iconSize;
+  final FocusNode scheduleListeningFocusNode;
+
+  const AudioControlWidget({
+    Key? key,
+    required this.buttonSize,
+    required this.iconSize,
+    required this.scheduleListeningFocusNode,
+  }) : super(key: key);
+
+  bool _isWithinScheduledTime(TimeOfDay startTime, TimeOfDay endTime) {
+    final now = TimeOfDay.now();
+    final currentMinutes = now.hour * 60 + now.minute;
+    final startMinutes = startTime.hour * 60 + startTime.minute;
+    final endMinutes = endTime.hour * 60 + endTime.minute;
+
+    if (startMinutes <= endMinutes) {
+      return currentMinutes >= startMinutes && currentMinutes < endMinutes;
+    }
+    return currentMinutes >= startMinutes || currentMinutes < endMinutes;
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(audioControlProvider).when(
+          data: (state) {
+            final scheduleState = ref.watch(scheduleProvider);
+
+            return scheduleState.when(
+              data: (schedule) {
+                final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
+
+                final shouldShow = schedule.isScheduleEnabled && isWithinTime;
+
+                if (!shouldShow) {
+                  return const SizedBox.shrink();
+                }
+                return SizedBox(
+                  width: buttonSize, // Set the desired width
+                  height: buttonSize, // Set the desired height
+                  child: FloatingActionButton(
+                    focusNode: scheduleListeningFocusNode,
+                    focusColor: Theme.of(context).primaryColor,
+                    backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
+                    child: Icon(
+                      color: Colors.white,
+                      state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
+                      size: iconSize,
+                    ),
+                    onPressed: () {
+                      ref.read(audioControlProvider.notifier).togglePlayback();
+                    },
+                  ),
+                );
+              },
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            );
+          },
+          loading: () => const CircularProgressIndicator(),
+          error: (error, _) => Text('Error: $error'),
+        );
+  }
+}
 
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
@@ -182,32 +252,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           SizedBox(
             width: spacerWidth,
           ),
-          audioState.when(
-            data: (state) {
-              if (!state.shouldShowControls || !state.isConfigured) {
-                return const SizedBox.shrink();
-              }
-
-              return SizedBox(
-                width: buttonSize, // Set the desired width
-                height: buttonSize, // Set the desired height
-                child: FloatingActionButton(
-                  focusNode: scheduleListeningFocusNode,
-                  focusColor: Theme.of(context).primaryColor,
-                  backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
-                  child: Icon(
-                    color: Colors.white,
-                    state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
-                    size: iconSize,
-                  ),
-                  onPressed: () {
-                    ref.read(audioControlProvider.notifier).togglePlayback();
-                  },
-                ),
-              );
-            },
-            loading: () => const CircularProgressIndicator(),
-            error: (error, stack) => Text('Error: $error'),
+          AudioControlWidget(
+            buttonSize: buttonSize,
+            iconSize: iconSize,
+            scheduleListeningFocusNode: scheduleListeningFocusNode,
           )
         ],
       ),
