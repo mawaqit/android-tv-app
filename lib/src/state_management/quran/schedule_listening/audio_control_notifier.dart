@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/audio_control_state.dart';
@@ -17,7 +15,6 @@ final audioControlProvider = AsyncNotifierProvider<AudioControlNotifier, AudioCo
 class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
   /// Background service instance
   final FlutterBackgroundService _service;
-  Timer? _stateCheckTimer;
 
   /// Creates an AudioControlNotifier with an optional background service
   AudioControlNotifier({FlutterBackgroundService? service}) : _service = service ?? FlutterBackgroundService();
@@ -25,18 +22,10 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
   @override
   Future<AudioControlState> build() async {
     await _initializeListeners();
-    _startPeriodicStateCheck();
     return _getInitialState();
   }
 
-  void _startPeriodicStateCheck() {
-    // Check state every 5 seconds
-    _stateCheckTimer?.cancel();
-    _stateCheckTimer = Timer.periodic(const Duration(seconds: 5), (_) {
-      _checkPlaybackState();
-    });
-  }
-
+  /// Initializes all event listeners for the audio control
   Future<void> _initializeListeners() async {
     _setupAudioStateListener();
     _setupScheduleStateListener();
@@ -45,19 +34,7 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
 
   /// Sets up the listener for audio state changes from the background service
   void _setupAudioStateListener() {
-    _service.on('kAudioStateChanged').listen((event) {
-      if (event != null && event is Map<String, dynamic>) {
-        final isPlaying = event['isPlaying'] as bool?;
-        if (isPlaying != null) {
-          _updatePlaybackState(isPlaying);
-        }
-      }
-    });
-
-    // Listen for schedule updates
-    _service.on('update_schedule').listen((_) {
-      _checkPlaybackState();
-    });
+    _service.on(BackgroundScheduleAudioServiceConstant.kAudioStateChanged).listen(_handleAudioStateChange);
   }
 
   /// Handles audio state changes received from the background service
@@ -73,7 +50,6 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
     try {
       state = AsyncData(state.value!.copyWith(
         status: isPlaying ? AudioStatus.playing : AudioStatus.paused,
-        isLoading: false,
       ));
     } catch (e) {
       _handleError('Failed to update playback state: $e');
@@ -89,14 +65,8 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
   void _handleScheduleStateChange(AsyncValue<dynamic>? previous, AsyncValue<dynamic> next) {
     if (next.value != null) {
       try {
-        final scheduleState = next.value!;
-        final isConfigured = scheduleState.selectedReciter != null &&
-            scheduleState.selectedMoshaf != null &&
-            (scheduleState.selectedSurahId != null || scheduleState.isRandomEnabled);
-
         state = AsyncData(state.value!.copyWith(
-          shouldShowControls: scheduleState.isScheduleEnabled,
-          isConfigured: isConfigured,
+          shouldShowControls: next.value!.isScheduleEnabled,
         ));
       } catch (e) {
         _handleError('Failed to update controls visibility: $e');
@@ -127,18 +97,7 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
   Future<void> _checkPlaybackState() async {
     try {
       await _updateLoadingState(true);
-
-      // Request current playback state from service
-      _service.invoke('kGetPlaybackState');
-
-      // Also check schedule state
-      final prefs = await SharedPreferences.getInstance();
-      final isScheduleEnabled = prefs.getBool(BackgroundScheduleAudioServiceConstant.kScheduleEnabled) ?? false;
-      final isPendingSchedule = prefs.getBool(BackgroundScheduleAudioServiceConstant.kPendingSchedule) ?? false;
-
-      if (!isScheduleEnabled || isPendingSchedule) {
-        _updatePlaybackState(false);
-      }
+      _service.invoke(BackgroundScheduleAudioServiceConstant.kGetPlaybackState);
     } catch (e) {
       _handleError('Failed to check playback state: $e');
     } finally {
@@ -172,29 +131,21 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
   Future<void> togglePlayback() async {
     if (state.value == null) return;
 
+    final currentStatus = state.value!.status;
+    final newStatus = currentStatus == AudioStatus.playing ? AudioStatus.paused : AudioStatus.playing;
+
     try {
-      final currentStatus = state.value!.status;
-      final newStatus = currentStatus == AudioStatus.playing ? AudioStatus.paused : AudioStatus.playing;
-
       // Update state optimistically
-      state = AsyncData(state.value!.copyWith(
-        status: newStatus,
-        isLoading: true,
-      ));
+      await _updatePlaybackStateWithLoading(newStatus);
 
-      // Invoke service method
-      if (newStatus == AudioStatus.paused) {
-        _service.invoke('kStopAudio');
-      } else {
-        _service.invoke('kResumeAudio');
-      }
-
-      // Add a small delay before checking the actual state
-      await Future.delayed(const Duration(milliseconds: 500));
-      await _checkPlaybackState();
+      // Invoke appropriate service method
+      _service.invoke(newStatus == AudioStatus.paused
+          ? BackgroundScheduleAudioServiceConstant.kStopAudio
+          : BackgroundScheduleAudioServiceConstant.kResumeAudio);
     } catch (e) {
+      // Revert to previous state on error
+      await _updatePlaybackStateWithLoading(currentStatus);
       _handleError('Failed to toggle playback: $e');
-      await _checkPlaybackState();
     }
   }
 

@@ -142,8 +142,3 @@ abstract class RtspCameraStreamConstant {
 
   static final RegExp youtubeUrlRegex = RegExp(youtubeUrlPattern);
 }
-
-abstract class ScheduleListeningConstant {
-  static const startTime = '08:00';
-  static const endTime = '20:00';
-}

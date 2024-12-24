@@ -28,38 +28,15 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
   /// Loads the saved schedule state from SharedPreferences.
   Future<ScheduleState> _loadSavedSchedule() async {
     final isScheduleEnabled = _prefs.getBool(BackgroundScheduleAudioServiceConstant.kScheduleEnabled) ?? false;
-    final startTime = _parseTimeOfDay(
-      _prefs.getString(BackgroundScheduleAudioServiceConstant.kStartTime) ?? ScheduleListeningConstant.startTime,
-    );
-    final endTime = _parseTimeOfDay(
-      _prefs.getString(BackgroundScheduleAudioServiceConstant.kEndTime) ?? ScheduleListeningConstant.endTime,
-    );
+    final startTime = _parseTimeOfDay(_prefs.getString(BackgroundScheduleAudioServiceConstant.kStartTime) ?? '08:00');
+    final endTime = _parseTimeOfDay(_prefs.getString(BackgroundScheduleAudioServiceConstant.kEndTime) ?? '20:00');
     final isRandomEnabled = _prefs.getBool(BackgroundScheduleAudioServiceConstant.kRandomEnabled) ?? false;
-    final selectedSurahId = _prefs.getInt(BackgroundScheduleAudioServiceConstant.kSelectedSurah);
 
+    final savedReciterName = _prefs.getString(BackgroundScheduleAudioServiceConstant.kSelectedReciter);
     final reciterList = state.value?.reciterList ?? [];
 
-    // Get saved preferences
-    final savedReciterName = _prefs.getString(BackgroundScheduleAudioServiceConstant.kSelectedReciter);
-    final savedMoshafId = _prefs.getString(BackgroundScheduleAudioServiceConstant.kSelectedMoshaf);
-
-    // Find selected reciter
-    ReciterModel? selectedReciter;
-    if (savedReciterName != null && reciterList.isNotEmpty) {
-      selectedReciter = reciterList.firstWhere(
-        (reciter) => reciter.name == savedReciterName,
-        orElse: () => reciterList.first,
-      );
-    }
-
-    // Find selected moshaf
-    MoshafModel? selectedMoshaf;
-    if (selectedReciter != null && savedMoshafId != null) {
-      selectedMoshaf = selectedReciter.moshaf.firstWhere(
-        (moshaf) => moshaf.id.toString() == savedMoshafId,
-        orElse: () => selectedReciter!.moshaf.first,
-      );
-    }
+    final selectedReciter = _findSelectedReciter(savedReciterName, reciterList);
+    final selectedMoshaf = _findSelectedMoshaf(selectedReciter);
 
     return ScheduleState(
       isScheduleEnabled: isScheduleEnabled,
@@ -67,7 +44,7 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
       endTime: endTime,
       selectedReciter: selectedReciter,
       selectedMoshaf: selectedMoshaf,
-      selectedSurahId: selectedSurahId,
+      selectedSurahId: _prefs.getInt(BackgroundScheduleAudioServiceConstant.kSelectedSurah),
       isRandomEnabled: isRandomEnabled,
       reciterList: reciterList,
     );
@@ -244,35 +221,16 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
     final startTimeString = _formatTimeOfDay(currentState.startTime);
     final endTimeString = _formatTimeOfDay(currentState.endTime);
 
-    final batch = [
-      _prefs.setBool(BackgroundScheduleAudioServiceConstant.kScheduleEnabled, currentState.isScheduleEnabled),
+    await Future.wait([
+      _prefs.setBool(BackgroundScheduleAudioServiceConstant.kScheduleEnabled, true),
       _prefs.setString(BackgroundScheduleAudioServiceConstant.kStartTime, startTimeString),
       _prefs.setString(BackgroundScheduleAudioServiceConstant.kEndTime, endTimeString),
+      _prefs.setString(BackgroundScheduleAudioServiceConstant.kSelectedReciter, currentState.selectedReciter!.name),
+      _prefs.setString(
+          BackgroundScheduleAudioServiceConstant.kSelectedMoshaf, currentState.selectedMoshaf!.id.toString()),
       _prefs.setBool(BackgroundScheduleAudioServiceConstant.kRandomEnabled, currentState.isRandomEnabled),
-    ];
+    ]);
 
-    if (currentState.selectedReciter != null) {
-      batch.add(_prefs.setString(
-        BackgroundScheduleAudioServiceConstant.kSelectedReciter,
-        currentState.selectedReciter!.name,
-      ));
-    }
-
-    if (currentState.selectedMoshaf != null) {
-      batch.add(_prefs.setString(
-        BackgroundScheduleAudioServiceConstant.kSelectedMoshaf,
-        currentState.selectedMoshaf!.id.toString(),
-      ));
-    }
-
-    if (currentState.selectedSurahId != null) {
-      batch.add(_prefs.setInt(
-        BackgroundScheduleAudioServiceConstant.kSelectedSurah,
-        currentState.selectedSurahId!,
-      ));
-    }
-
-    await Future.wait(batch);
     await _savePlaybackPreferences(currentState);
   }
 
@@ -331,15 +289,7 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
   }
 
   Future<void> updateReciterList(List<ReciterModel> reciterList) async {
-    // Save current state before updating list
-    final currentState = state.value;
-
-    // Update reciter list
-    state = AsyncData(currentState!.copyWith(reciterList: reciterList));
-
-    // Reload saved preferences to restore selections with new list
-    final updatedState = await _loadSavedSchedule();
-    state = AsyncData(updatedState);
+    state = AsyncData(state.value!.copyWith(reciterList: reciterList));
   }
 }
 
