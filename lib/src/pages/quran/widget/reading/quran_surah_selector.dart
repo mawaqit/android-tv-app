@@ -25,9 +25,8 @@ class SurahSelectorWidget extends ConsumerWidget {
     }
 
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
-
     return Positioned(
-      top: 8,
+      top: 0.65.h,
       left: 0,
       right: 0,
       child: Center(
@@ -48,9 +47,12 @@ class SurahSelectorWidget extends ConsumerWidget {
               child: Builder(
                 builder: (context) {
                   return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 2.w,
+                      vertical: 0.75.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.4),
+                      color: Colors.black.withOpacity(0.6), // Increased opacity for better readability
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -60,6 +62,8 @@ class SurahSelectorWidget extends ConsumerWidget {
                         fontSize: 8.sp,
                         fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
                     ),
                   );
                 },
