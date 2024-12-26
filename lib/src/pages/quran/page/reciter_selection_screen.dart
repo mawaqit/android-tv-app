@@ -8,8 +8,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/const/resource.dart';
-import 'package:mawaqit/src/helpers/RelativeSizes.dart';
-import 'package:mawaqit/src/pages/quran/page/quran_reading_screen.dart';
+import 'package:mawaqit/src/data/repository/schedule_repository_impl.dart';
+import 'package:mawaqit/src/domain/model/schedule_model.dart';
 import 'package:mawaqit/src/pages/quran/page/schedule_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/recite_type_grid_view.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
@@ -29,8 +29,6 @@ import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
 import '../../../domain/model/quran/reciter_model.dart';
 import '../reading/quran_reading_screen.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AudioControlWidget extends ConsumerWidget {
   final double buttonSize;
@@ -58,44 +56,76 @@ class AudioControlWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(audioControlProvider).when(
-          data: (state) {
-            final scheduleState = ref.watch(scheduleProvider);
+    final audioState = ref.watch(audioNotifierProvider);
+    final scheduleState = ref.watch(scheduleNotifierProvider);
 
-            return scheduleState.when(
-              data: (schedule) {
-                final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
+    return scheduleState.when(
+      data: (schedule) {
+        final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
+        final shouldShow = schedule.isScheduleEnabled && isWithinTime;
 
-                final shouldShow = schedule.isScheduleEnabled && isWithinTime;
+        if (!shouldShow) {
+          return const SizedBox.shrink();
+        }
 
-                if (!shouldShow) {
-                  return const SizedBox.shrink();
-                }
-                return SizedBox(
-                  width: buttonSize, // Set the desired width
-                  height: buttonSize, // Set the desired height
-                  child: FloatingActionButton(
-                    focusNode: scheduleListeningFocusNode,
-                    focusColor: Theme.of(context).primaryColor,
-                    backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
-                    child: Icon(
-                      color: Colors.white,
-                      state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
-                      size: iconSize,
-                    ),
-                    onPressed: () {
-                      ref.read(audioControlProvider.notifier).togglePlayback();
-                    },
-                  ),
-                );
-              },
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
-            );
-          },
-          loading: () => const CircularProgressIndicator(),
-          error: (error, _) => Text('Error: $error'),
+        return audioState.when(
+          data: (state) => _buildButton(context, ref, schedule),
+          loading: () =>  SizedBox.shrink(),
+          error: (error, _) => const SizedBox.shrink(),
         );
+      },
+      loading: () =>  SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildButton(BuildContext context, WidgetRef ref, ScheduleModel schedule) {
+    final audioState = ref.watch(audioNotifierProvider);
+    return audioState.maybeWhen(
+      orElse: () {
+        return SizedBox.shrink();
+      },
+      data: (state) {
+        return SizedBox(
+          width: buttonSize,
+          height: buttonSize,
+          child: FloatingActionButton(
+            focusNode: scheduleListeningFocusNode,
+            focusColor: Theme.of(context).primaryColor,
+            backgroundColor: state.status ==  AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
+            child: Icon(
+              color: Colors.white,
+              state.status ==  AudioStatus.playing ? Icons.pause : Icons.play_arrow,
+              size: iconSize,
+            ),
+            onPressed: () async {
+              final isPlaying = state.status ==  AudioStatus.playing ;
+              if (isPlaying) {
+                ref.read(audioNotifierProvider.notifier).pausePlayback();
+              } else {
+                await _playAudio(ref, schedule);
+              }
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _playAudio(WidgetRef ref, ScheduleModel schedule) async {
+    final audioNotifier = ref.read(audioNotifierProvider.notifier);
+    final scheduleRepo = await ref.read(scheduleRepositoryProvider.future);
+
+    if (schedule.isRandomEnabled) {
+      final randomUrls = await scheduleRepo.generateRandomUrls(schedule);
+      await audioNotifier.playAudio(randomUrls.first, createPlaylist: true);
+    } else if (schedule.selectedMoshaf != null && schedule.selectedSurahId != null) {
+      final surahId = schedule.selectedSurahId.toString().padLeft(3, '0');
+      final surahUrl = '${schedule.selectedMoshaf!.server}$surahId.mp3';
+      await audioNotifier.playAudio(surahUrl);
+    } else {
+      print('No valid audio source available');
+    }
   }
 }
 
@@ -194,7 +224,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   @override
   Widget build(BuildContext context) {
-    final audioState = ref.watch(audioControlProvider);
     final buttonSize = MediaQuery.of(context).size.width * 0.07;
     final iconSize = buttonSize * 0.5;
     final spacerWidth = buttonSize * 0.25;
@@ -218,7 +247,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                         onPressed: () async {
                           showDialog(
                             context: context,
-                            builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
+                            builder: (BuildContext context) => ScheduleScreen(),
                           );
                         },
                       ),

@@ -1,128 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-import 'package:mawaqit/src/pages/quran/widget/schedule_screen_widgets/custom_scheduling_drop_down.dart';
+import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
+import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
+import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
+import 'package:mawaqit/src/domain/model/schedule_model.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/schedule_listening_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:sizer/sizer.dart';
-import '../../../domain/model/quran/moshaf_model.dart';
-import '../../../domain/model/quran/reciter_model.dart';
+import '../widget/schedule_screen_widgets/custom_scheduling_drop_down.dart';
 import '../widget/schedule_screen_widgets/androidtv_timepicker.dart';
 import '../widget/schedule_screen_widgets/focusable_timepicker.dart';
 import '../widget/schedule_screen_widgets/custom_overlay_notification.dart';
-import '../../../state_management/quran/quran/quran_notifier.dart';
 
-class ScheduleScreen extends ConsumerStatefulWidget {
-  final List<ReciterModel> reciterList;
-
-  const ScheduleScreen({
+class ScheduleScreen extends ConsumerWidget {
+  ScheduleScreen({
     super.key,
-    required this.reciterList,
   });
 
   @override
-  ConsumerState<ScheduleScreen> createState() => _ScheduleScreenState();
-}
-
-class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _initializeData();
-  }
-
-  void _initializeData() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(quranNotifierProvider.notifier).getSuwarByLanguage();
-      ref.read(scheduleProvider.notifier).updateReciterList(widget.reciterList);
-    });
-  }
-
-  Future<void> _handleSaveSchedule() async {
-    final success = await ref.read(scheduleProvider.notifier).saveSchedule();
-    if (success) {
-      _showNotification(S.of(context).scheduleSaved);
-      if (mounted) Navigator.of(context).pop();
-    } else {
-      _showNotification(S.of(context).completeAllFields);
-    }
-  }
-
-  void _showNotification(String message) {
-    late OverlayEntry overlayEntry;
-
-    overlayEntry = OverlayEntry(
-      builder: (context) => CustomOverlayNotification(
-        message: message,
-        onDismiss: () => overlayEntry.remove(),
-      ),
-    );
-
-    Overlay.of(context).insert(overlayEntry);
-
-    Future.delayed(const Duration(seconds: 3)).then((_) {
-      if (overlayEntry.mounted) {
-        overlayEntry.remove();
-      }
-    });
-  }
-
-  Future<void> _handleTimeSelection(BuildContext context, bool isStartTime) async {
-    final scheduleNotifier = ref.read(scheduleProvider.notifier);
-    final currentState = ref.read(scheduleProvider).value!;
-
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) => TVFriendlyTimePicker(
-        initialTime: isStartTime ? currentState.startTime : currentState.endTime,
-        onTimeSelected: (TimeOfDay selectedTime) async {
-          if (isStartTime) {
-            await _handleStartTimeSelection(selectedTime, currentState, scheduleNotifier);
-          } else {
-            await _handleEndTimeSelection(selectedTime, scheduleNotifier);
-          }
-        },
-      ),
-    );
-  }
-
-  Future<void> _handleStartTimeSelection(
-    TimeOfDay selectedTime,
-    dynamic currentState,
-    dynamic scheduleNotifier,
-  ) async {
-    await scheduleNotifier.setStartTime(selectedTime);
-    final endTime = currentState.endTime;
-
-    if (_shouldAdjustEndTime(selectedTime, endTime)) {
-      await scheduleNotifier.setEndTime(
-        TimeOfDay(
-          hour: (selectedTime.hour + 1) % 24,
-          minute: selectedTime.minute,
-        ),
-      );
-    }
-  }
-
-  bool _shouldAdjustEndTime(TimeOfDay selectedTime, TimeOfDay endTime) {
-    return endTime.hour < selectedTime.hour ||
-        (endTime.hour == selectedTime.hour && endTime.minute <= selectedTime.minute);
-  }
-
-  Future<void> _handleEndTimeSelection(
-    TimeOfDay selectedTime,
-    dynamic scheduleNotifier,
-  ) async {
-    final success = await scheduleNotifier.setEndTime(selectedTime);
-    if (!success) {
-      _showNotification(S.of(context).endTimeAfter);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final AsyncValue<dynamic> scheduleState = ref.watch(scheduleProvider);
-    final AsyncValue<dynamic> quranState = ref.watch(quranNotifierProvider);
-
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scheduleState = ref.watch(scheduleNotifierProvider);
+    final quranState = ref.watch(quranNotifierProvider);
     return Dialog(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -133,7 +32,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: scheduleState.when(
-              data: (state) => _buildScheduleContent(state, quranState, context),
+              data: (state) => _buildScheduleContent(state, context, ref),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Text('Error: $error'),
             ),
@@ -144,9 +43,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   }
 
   Widget _buildScheduleContent(
-    dynamic state,
-    AsyncValue<dynamic> quranState,
+    ScheduleModel state,
     BuildContext context,
+    WidgetRef ref,
   ) {
     final textTheme = Theme.of(context).textTheme;
     return Column(
@@ -169,7 +68,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
           ),
           value: state.isScheduleEnabled,
           onChanged: (bool value) {
-            ref.read(scheduleProvider.notifier).setScheduleEnabled(value);
+            ref.read(scheduleNotifierProvider.notifier).setScheduleEnabled(value);
           },
         ),
         SizedBox(height: 2.h),
@@ -179,67 +78,98 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
         ),
         SizedBox(height: 2.h),
         if (state.isScheduleEnabled) ...[
-          ..._buildScheduleOptions(state, quranState),
+          ..._buildScheduleOptions(state, context, ref),
           SizedBox(height: 2.h),
         ],
-        _buildActionButtons(context),
+        _buildActionButtons(context, ref),
         SizedBox(height: 2.h),
       ],
     );
   }
 
-  List<Widget> _buildScheduleOptions(dynamic state, AsyncValue<dynamic> quranState) {
+  List<Widget> _buildScheduleOptions(
+    ScheduleModel state,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     return [
-      _buildTimePicker(S.of(context).startTime, state.startTime, true),
+      _buildTimePicker(S.of(context).startTime, state.startTime, true, context, ref),
       const SizedBox(height: 16),
-      _buildTimePicker(S.of(context).endTime, state.endTime, false),
+      _buildTimePicker(S.of(context).endTime, state.endTime, false, context, ref),
       const SizedBox(height: 24),
-      _buildReciterDropdown(state),
+      _buildReciterDropdown(state, context, ref),
       const SizedBox(height: 16),
       if (state.selectedReciter != null) ...[
-        _buildMoshafDropdown(state),
+        _buildMoshafDropdown(state, context, ref),
         const SizedBox(height: 16),
       ],
-      _buildRandomSurahCheckbox(state, context),
+      _buildRandomSurahCheckbox(state, context, ref),
       const SizedBox(height: 16),
-      if (state.selectedMoshaf != null && !state.isRandomEnabled) _buildSurahDropdown(state, quranState),
+      if (state.selectedMoshaf != null && !state.isRandomEnabled) _buildSurahDropdown(state, context, ref),
     ];
   }
 
-  Widget _buildTimePicker(String label, TimeOfDay time, bool isStartTime) {
+  Widget _buildTimePicker(
+    String label,
+    TimeOfDay time,
+    bool isStartTime,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     return FocusableTimePicker(
       label: label,
       time: time,
       isStartTime: isStartTime,
-      onTap: _handleTimeSelection,
+      onTap: (BuildContext context, bool isStartTime) async {
+        final scheduleNotifier = ref.read(scheduleNotifierProvider.notifier);
+        final currentState = ref.read(scheduleNotifierProvider).value!;
+
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) => TVFriendlyTimePicker(
+            initialTime: isStartTime ? currentState.startTime : currentState.endTime,
+            onTimeSelected: (TimeOfDay selectedTime) async {
+              if (isStartTime) {
+                scheduleNotifier.setStartTime(selectedTime);
+              } else {
+                scheduleNotifier.setEndTime(selectedTime);
+              }
+            },
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildReciterDropdown(dynamic state) {
+  Widget _buildReciterDropdown(ScheduleModel state, BuildContext context, WidgetRef ref) {
     return CustomDropdown<ReciterModel>(
       value: state.selectedReciter,
-      items: widget.reciterList,
+      items: state.reciterList,
       onChanged: (ReciterModel? newValue) {
-        ref.read(scheduleProvider.notifier).setSelectedReciter(newValue);
+        if (newValue != null) {
+          ref.read(scheduleNotifierProvider.notifier).setSelectedReciter(newValue);
+        }
       },
       hint: S.of(context).selectReciter,
       getLabel: (reciter) => reciter.name,
     );
   }
 
-  Widget _buildMoshafDropdown(dynamic state) {
+  Widget _buildMoshafDropdown(ScheduleModel state, BuildContext context, WidgetRef ref) {
     return CustomDropdown<MoshafModel>(
       value: state.selectedMoshaf,
       items: state.selectedReciter!.moshaf,
       onChanged: (MoshafModel? newValue) {
-        ref.read(scheduleProvider.notifier).setSelectedMoshaf(newValue);
+        if (newValue != null) {
+          ref.read(scheduleNotifierProvider.notifier).setSelectedMoshaf(newValue);
+        }
       },
       hint: S.of(context).selectMoshaf,
       getLabel: (moshaf) => moshaf.name,
     );
   }
 
-  Widget _buildRandomSurahCheckbox(dynamic state, BuildContext context) {
+  Widget _buildRandomSurahCheckbox(ScheduleModel state, BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     return CheckboxListTile(
       activeColor: Theme.of(context).primaryColor,
@@ -249,31 +179,35 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       ),
       value: state.isRandomEnabled,
       onChanged: (bool? value) {
-        ref.read(scheduleProvider.notifier).setRandomEnabled(value ?? false);
+        ref.read(scheduleNotifierProvider.notifier).setRandomEnabled(value ?? false);
       },
     );
   }
 
-  Widget _buildSurahDropdown(dynamic state, AsyncValue<dynamic> quranState) {
-    return quranState.when(
-      data: (data) => CustomDropdown<int>(
-        value: state.selectedSurahId,
-        items: state.selectedMoshaf!.surahList,
-        onChanged: (int? newValue) {
-          ref.read(scheduleProvider.notifier).setSelectedSurahId(newValue);
-        },
-        hint: S.of(context).selectSurah,
-        getLabel: (surahId) {
-          final surah = data.suwar.firstWhere((s) => s.id == surahId);
-          return '${surah.id}. ${surah.name}';
-        },
-      ),
-      loading: () => const CircularProgressIndicator(),
-      error: (error, stack) => Text('Error: $error'),
-    );
+  Widget _buildSurahDropdown(
+    ScheduleModel state,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    final availableSurahs = state.selectedMoshaf!.surahList;
+    final allSurahs = state.selectedSurahList;
+    print('availableSurahs: $availableSurahs, allSurahs: $allSurahs');
+    return allSurahs.isNotEmpty && state.selectedSurahId != null
+        ? CustomDropdown<SurahModel>(
+            value: allSurahs.firstWhere((surah) => surah.id == state.selectedSurahId),
+            items: allSurahs.where((surah) => availableSurahs.contains(surah.id)).toList(),
+            onChanged: (SurahModel? newValue) {
+              if (newValue != null) {
+                ref.read(scheduleNotifierProvider.notifier).setSelectedSurah(newValue.id);
+              }
+            },
+            hint: S.of(context).selectSurah,
+            getLabel: (surah) => surah.name,
+          )
+        : const SizedBox();
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -297,10 +231,36 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
               },
             ),
           ),
-          onPressed: _handleSaveSchedule,
+          onPressed: () => _handleSaveSchedule(context, ref),
           child: Text(S.of(context).save),
         ),
       ],
     );
+  }
+
+  Future<void> _handleSaveSchedule(BuildContext context, WidgetRef ref) async {
+    final scheduleNotifier = ref.read(scheduleNotifierProvider.notifier);
+    scheduleNotifier.saveSchedule();
+    _showNotification(context, S.of(context).scheduleSaved);
+    Navigator.of(context).pop();
+  }
+
+  void _showNotification(BuildContext context, String message) {
+    late OverlayEntry overlayEntry;
+
+    overlayEntry = OverlayEntry(
+      builder: (context) => CustomOverlayNotification(
+        message: message,
+        onDismiss: () => overlayEntry.remove(),
+      ),
+    );
+
+    Overlay.of(context).insert(overlayEntry);
+
+    Future.delayed(const Duration(seconds: 3)).then((_) {
+      if (overlayEntry.mounted) {
+        overlayEntry.remove();
+      }
+    });
   }
 }
