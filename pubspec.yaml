@@ -155,6 +155,7 @@ dependencies:
   fast_cached_network_image: ^1.2.0
 
   montenegrin_localization: ^0.1.0+1
+  workmanager: ^0.5.2
 
 dev_dependencies:
   flutter_test:
