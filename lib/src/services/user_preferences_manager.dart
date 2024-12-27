@@ -21,7 +21,7 @@ class UserPreferencesManager extends ChangeNotifier {
   Future<UserPreferencesManager> init() async {
     _sharedPref = await SharedPreferences.getInstance();
 
-    Api.useStagingApi(true);
+    Api.useStagingApi(forceStaging);
     forceOrientation();
 
     return this;
@@ -62,7 +62,7 @@ class UserPreferencesManager extends ChangeNotifier {
   /// this method is used to force staging api
   /// if value is null, it will be [false]
   set forceStaging(bool value) {
-    Api.useStagingApi(true);
+    Api.useStagingApi(value);
 
     _sharedPref.setBool(_forceStagingKey, value);
     notifyListeners();
