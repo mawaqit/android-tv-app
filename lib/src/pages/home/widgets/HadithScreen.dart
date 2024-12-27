@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
+import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -11,8 +12,8 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 
-/// this screen made to show of the hadith screen
 class HadithWidget extends ConsumerWidget {
   HadithWidget({
     Key? key,
@@ -27,27 +28,12 @@ class HadithWidget extends ConsumerWidget {
   }) : super(key: key);
 
   final EdgeInsetsGeometry? padding;
-
-  /// The main title of the screen
   final String? title;
-
-  /// arabic text of the hadith screen
   final String? arabicText;
-
-  /// translated title of the hadith
   final String? translatedTitle;
-
-  /// translated text of the hadith
   final String? translatedText;
-
-  /// force the text direction of the translated text
-  /// used for random hadith because hadith language is not the same as the app language
   final TextDirection? textDirection;
-
-  /// alignment of the item along the main axis
   final MainAxisAlignment mainAxisAlignment;
-
-  // Max height constraint
   final double maxHeight;
 
   @override
@@ -57,9 +43,7 @@ class HadithWidget extends ConsumerWidget {
         try {
           final lang = state.maybeWhen(
             orElse: () => 'ar',
-            data: (state) {
-              return state.language;
-            },
+            data: (state) => state.language,
           );
           return Locale(lang);
         } catch (e) {
@@ -67,6 +51,7 @@ class HadithWidget extends ConsumerWidget {
         }
       }),
     );
+    final jumuaArHadith = AppLocalizationsAr().jumuaaHadith;
 
     return Padding(
       padding: padding ?? EdgeInsets.all(1.vwr),
@@ -79,12 +64,13 @@ class HadithWidget extends ConsumerWidget {
               textDirection: TextDirection.rtl,
             ),
           if (arabicText != null && arabicText != '')
-            contentText(
-              arabicText!,
-              context,
-              hadithLang,
+            _buildContentText(
+              text: arabicText!,
+              context: context,
+              hadithLanguage: hadithLang,
               textDirection: TextDirection.rtl,
               delay: .1.seconds,
+              isJumua: arabicText == jumuaArHadith,
             ),
           if (translatedTitle != null && translatedTitle != title && translatedTitle != '')
             titleText(
@@ -93,12 +79,13 @@ class HadithWidget extends ConsumerWidget {
               delay: .2.seconds,
             ),
           if (translatedText != null && translatedText != arabicText && translatedText != '')
-            contentText(
-              translatedText!,
-              context,
-              hadithLang,
+            _buildContentText(
+              text: translatedText!,
+              context: context,
+              hadithLanguage: hadithLang,
               textDirection: textDirection,
               delay: .3.seconds,
+              isJumua: translatedText == S.of(context).jumuaaHadith,
             ),
         ],
       ),
@@ -123,31 +110,38 @@ class HadithWidget extends ConsumerWidget {
     ).animate(delay: delay).slide().fade().addRepaintBoundary();
   }
 
-  Widget contentText(
-    String text,
-    BuildContext context,
-    Locale hadithLanguage, {
+  Widget _buildContentText({
+    required String text,
+    required BuildContext context,
+    required Locale hadithLanguage,
     TextDirection? textDirection,
     Duration? delay,
+    required bool isJumua,
   }) {
     return Flexible(
-      fit: FlexFit.tight,
+      fit: isJumua ? FlexFit.loose : FlexFit.tight,
       child: Container(
         constraints: BoxConstraints(maxHeight: maxHeight.vh),
         child: Padding(
           key: ValueKey(text),
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: 8.0,
-            vertical: 16,
+            vertical: isJumua ? 0.0 : 16.0,
           ),
           child: AutoSizeText(
             text,
-            style: context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
-                  color: Colors.white,
-                  shadows: kIqamaCountDownTextShadow,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 600,
-                ),
+            style: isJumua
+                ? TextStyle(
+                    fontSize: 600,
+                    color: Colors.white,
+                    shadows: kIqamaCountDownTextShadow,
+                  )
+                : context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
+                      color: Colors.white,
+                      shadows: kIqamaCountDownTextShadow,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 600,
+                    ),
             textAlign: TextAlign.center,
             textDirection: textDirection,
           ).animate().fadeIn(delay: delay).addRepaintBoundary(),
