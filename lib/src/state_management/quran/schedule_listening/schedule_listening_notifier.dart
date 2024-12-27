@@ -210,6 +210,7 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
       return false;
     }
 
+    // Force stop current playback before applying new settings
     await _disableSchedule();
     await _prefs.remove(BackgroundScheduleAudioServiceConstant.kPendingSchedule);
     await _savePreferences(currentState);
@@ -222,11 +223,14 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
     );
 
     await _prefs.reload();
-    _service.invoke('update_schedule');
+
+    // Force a complete restart of the schedule
+    _service.invoke('restart_schedule');
 
     if (isInRange) {
-      ref.read(audioControlProvider.notifier).togglePlayback();
+      // Remove manual pause flag to allow immediate playback with new settings
       await _prefs.setBool(BackgroundScheduleAudioServiceConstant.kManualPause, false);
+      ref.read(audioControlProvider.notifier).togglePlayback();
     }
 
     return true;
