@@ -2,21 +2,15 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:mawaqit/i18n/AppLanguage.dart';
-import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
-import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 
-class HadithWidget extends ConsumerWidget {
-  HadithWidget({
-    Key? key,
+class DisplayTextWidget extends ConsumerWidget {
+  const DisplayTextWidget({
+    super.key,
     this.title,
     this.arabicText,
     this.translatedTitle,
@@ -25,7 +19,54 @@ class HadithWidget extends ConsumerWidget {
     this.maxHeight = 50,
     this.mainAxisAlignment = MainAxisAlignment.center,
     this.padding,
-  }) : super(key: key);
+    this.isHadith = false,  // Add this flag to determine the mode
+  });
+
+  // Factory constructor for normal display
+  factory DisplayTextWidget.normal({
+    Key? key,
+    required String title,
+    required String arabicText,
+    required String translatedTitle,
+    required String translatedText,
+    TextDirection? textDirection,
+    double maxHeight = 50,
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
+    EdgeInsetsGeometry? padding,
+  }) {
+    return DisplayTextWidget(
+      key: key,
+      title: title,
+      arabicText: arabicText,
+      translatedTitle: translatedTitle,
+      translatedText: translatedText,
+      textDirection: textDirection,
+      maxHeight: maxHeight,
+      mainAxisAlignment: mainAxisAlignment,
+      padding: padding,
+      isHadith: false,
+    );
+  }
+
+  // Factory constructor for hadith display
+  factory DisplayTextWidget.hadith({
+    Key? key,
+    String? translatedText,
+    TextDirection? textDirection,
+    double maxHeight = 50,
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
+    EdgeInsetsGeometry? padding,
+  }) {
+    return DisplayTextWidget(
+      key: key,
+      translatedText: translatedText,
+      textDirection: textDirection,
+      maxHeight: maxHeight,
+      mainAxisAlignment: mainAxisAlignment,
+      padding: padding,
+      isHadith: true,
+    );
+  }
 
   final EdgeInsetsGeometry? padding;
   final String? title;
@@ -35,6 +76,7 @@ class HadithWidget extends ConsumerWidget {
   final TextDirection? textDirection;
   final MainAxisAlignment mainAxisAlignment;
   final double maxHeight;
+  final bool isHadith;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,7 +93,6 @@ class HadithWidget extends ConsumerWidget {
         }
       }),
     );
-    final jumuaArHadith = AppLocalizationsAr().jumuaaHadith;
 
     return Padding(
       padding: padding ?? EdgeInsets.all(1.vwr),
@@ -64,13 +105,12 @@ class HadithWidget extends ConsumerWidget {
               textDirection: TextDirection.rtl,
             ),
           if (arabicText != null && arabicText != '')
-            _buildContentText(
-              text: arabicText!,
-              context: context,
-              hadithLanguage: hadithLang,
+            contentText(
+              arabicText!,
+              context,
+              hadithLang,
               textDirection: TextDirection.rtl,
               delay: .1.seconds,
-              isJumua: arabicText == jumuaArHadith,
             ),
           if (translatedTitle != null && translatedTitle != title && translatedTitle != '')
             titleText(
@@ -79,13 +119,12 @@ class HadithWidget extends ConsumerWidget {
               delay: .2.seconds,
             ),
           if (translatedText != null && translatedText != arabicText && translatedText != '')
-            _buildContentText(
-              text: translatedText!,
-              context: context,
-              hadithLanguage: hadithLang,
+            contentText(
+              translatedText!,
+              context,
+              hadithLang,
               textDirection: textDirection,
               delay: .3.seconds,
-              isJumua: translatedText == S.of(context).jumuaaHadith,
             ),
         ],
       ),
@@ -93,10 +132,10 @@ class HadithWidget extends ConsumerWidget {
   }
 
   Widget titleText(
-    String text, {
-    TextDirection? textDirection,
-    Duration? delay,
-  }) {
+      String text, {
+        TextDirection? textDirection,
+        Duration? delay,
+      }) {
     return Text(
       text,
       style: TextStyle(
@@ -110,38 +149,37 @@ class HadithWidget extends ConsumerWidget {
     ).animate(delay: delay).slide().fade().addRepaintBoundary();
   }
 
-  Widget _buildContentText({
-    required String text,
-    required BuildContext context,
-    required Locale hadithLanguage,
-    TextDirection? textDirection,
-    Duration? delay,
-    required bool isJumua,
-  }) {
+  Widget contentText(
+      String text,
+      BuildContext context,
+      Locale hadithLanguage, {
+        TextDirection? textDirection,
+        Duration? delay,
+      }) {
     return Flexible(
-      fit: isJumua ? FlexFit.loose : FlexFit.tight,
+      fit: isHadith ? FlexFit.tight : FlexFit.loose,
       child: Container(
         constraints: BoxConstraints(maxHeight: maxHeight.vh),
         child: Padding(
           key: ValueKey(text),
           padding: EdgeInsets.symmetric(
             horizontal: 8.0,
-            vertical: isJumua ? 0.0 : 16.0,
+            vertical: isHadith ? 16.0 : 0.0,
           ),
           child: AutoSizeText(
             text,
-            style: isJumua
-                ? TextStyle(
-                    fontSize: 600,
-                    color: Colors.white,
-                    shadows: kIqamaCountDownTextShadow,
-                  )
-                : context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
-                      color: Colors.white,
-                      shadows: kIqamaCountDownTextShadow,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 600,
-                    ),
+            style: isHadith
+                ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
+              color: Colors.white,
+              shadows: kIqamaCountDownTextShadow,
+              fontWeight: FontWeight.bold,
+              fontSize: 600,
+            )
+                : TextStyle(
+              fontSize: 600,
+              color: Colors.white,
+              shadows: kIqamaCountDownTextShadow,
+            ),
             textAlign: TextAlign.center,
             textDirection: textDirection,
           ).animate().fadeIn(delay: delay).addRepaintBoundary(),
