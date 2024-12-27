@@ -19,7 +19,7 @@ class DisplayTextWidget extends ConsumerWidget {
     this.maxHeight = 50,
     this.mainAxisAlignment = MainAxisAlignment.center,
     this.padding,
-    this.isHadith = false,  // Add this flag to determine the mode
+    this.isHadith = false, // Add this flag to determine the mode
   });
 
   // Factory constructor for normal display
@@ -132,10 +132,10 @@ class DisplayTextWidget extends ConsumerWidget {
   }
 
   Widget titleText(
-      String text, {
-        TextDirection? textDirection,
-        Duration? delay,
-      }) {
+    String text, {
+    TextDirection? textDirection,
+    Duration? delay,
+  }) {
     return Text(
       text,
       style: TextStyle(
@@ -150,12 +150,12 @@ class DisplayTextWidget extends ConsumerWidget {
   }
 
   Widget contentText(
-      String text,
-      BuildContext context,
-      Locale hadithLanguage, {
-        TextDirection? textDirection,
-        Duration? delay,
-      }) {
+    String text,
+    BuildContext context,
+    Locale hadithLanguage, {
+    TextDirection? textDirection,
+    Duration? delay,
+  }) {
     return Flexible(
       fit: isHadith ? FlexFit.tight : FlexFit.loose,
       child: Container(
@@ -170,16 +170,16 @@ class DisplayTextWidget extends ConsumerWidget {
             text,
             style: isHadith
                 ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
-              color: Colors.white,
-              shadows: kIqamaCountDownTextShadow,
-              fontWeight: FontWeight.bold,
-              fontSize: 600,
-            )
+                      color: Colors.white,
+                      shadows: kIqamaCountDownTextShadow,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 600,
+                    )
                 : TextStyle(
-              fontSize: 600,
-              color: Colors.white,
-              shadows: kIqamaCountDownTextShadow,
-            ),
+                    fontSize: 600,
+                    color: Colors.white,
+                    shadows: kIqamaCountDownTextShadow,
+                  ),
             textAlign: TextAlign.center,
             textDirection: textDirection,
           ).animate().fadeIn(delay: delay).addRepaintBoundary(),
