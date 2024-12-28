@@ -100,24 +100,24 @@
   "@azkarList9": {
     "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
-  "azkarList10": "Ó Allah! Conceda-me boa saúde no meu corpo, nos meus ouvidos e nos meus olhos. Ninguém exceto Vós é digno de adoração. Ó Allah! Peço refúgio da descrença e pobreza. Ó Allah! Peço Vossa proteção dos tormentos da sepultura; ninguém mais é digno de adoração exceto Vós. (três vezes)",
+  "azkarList10": "Ó Allah! Concedei-me boa saúde no meu corpo, nos meus ouvidos e nos meus olhos. Não há divindade digna de adoração senão Vós. Ó Allah! Suplico-Vos refúgio contra a descrença e a pobreza. Ó Allah! Peço a Vossa proteção contra os tormentos da sepultura. Não há outra divindade digna de adoração senão Vós. (três vezes)",
   "@azkarList10": {
     "description": "|اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ |ثلاثَ مرَّاتٍ"
   },
-  "azkarList11": "Allah é suficiente para mim, ninguém mais é digno da adoração exceto Ele, n’Ele coloquei a minha confiança e Ele é o Senhor do Trono Sublime. (sete vezes)",
+  "azkarList11": "Allah é suficiente para mim. Não há divindade digna de adoração senão Ele. N’Ele confio, e Ele é o Senhor do Trono Sublime. (sete vezes)",
   "@azkarList11": {
     "description": "|حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ |سَبْعَ مَرّاتٍ"
   },
-  "azkarList12": "Estou de todo contente em crer Allah como meu Senhor, Islam como a minha religião e Muhammad (Que a paz e a misericórdia de Allah esteja sobre ele) como meu Profeta. (três vezes)",
+  "azkarList12": "Estou plenamente satisfeito por crer em Allah como meu Senhor, no Islão como a minha religião e em Muhammad (que a paz e a misericórdia de Allah estejam sobre ele) como meu Profeta. (três vezes)",
   "@azkarList12": {
     "description": "|رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً |ثلاثَ مرَّاتٍ"
   },
-  "azkarList13": "Ninguém mais é digno da adoração exceto Allah; Ele é o Único; Não possui nenhum parceiro; o Reinado a Ele pertence e todos os Louvores são para Ele. Ele possui poder sobre todas as coisas. (dez vezes)",
+  "azkarList13": "Não há divindade digna de adoração senão Allah. Ele é o Único, sem parceiro algum. A Ele pertence o reinado, e todos os louvores são devidos a Ele. Ele é Poderoso sobre todas as coisas. (dez vezes)",
   "@azkarList13": {
     "description": "|لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ |عشرَ مرَّات"
   },
   "jumuaaScreenTitle": "Hora de Jumu'ah",
-  "jumuaaHadith": "O Profeta ﷺ (Que a paz e a misericórdia de Allah esteja sobre ele) disse: \"Aquele que efectuar a ablução (Wudhu) correctamente e dirigir-se para a oração de Jumu’ah, ouvir o sermão (Khutbah) com atenção e em silêncio, todos os seus pequenos pecados entre aquela hora e o próximo Jumu’ah mais três dias (total 10 dias) serão perdoados. E aquele que durante o sermão brincar com uma pedra (ou seja, distrair-se), na realidade, interrompeu está recompensa.\"",
+  "jumuaaHadith": "O Profeta Muhammad (Sallalláhu Alaihi Wa Sallam) disse: \"Aquele que realizar a ablução (Wudhu) de forma correta, dirigir-se à oração de Jumu’ah, ouvir o sermão (Khutbah) com atenção e permanecer em silêncio, terá os seus pequenos pecados entre essa sexta-feira e a próxima, mais três dias (totalizando dez dias), perdoados. Contudo, aquele que durante o sermão brincar com uma pedra (ou seja, distrair-se), terá interrompido esta recompensa.\"",
   "shuruk": "Nascer do Sol",
   "reset": "Reset",
   "mosqueNotFoundMessage": "Desculpe, a sua mesquita não foi encontrada, pode estar desativada ou temporariamente indisponível.",
@@ -136,12 +136,12 @@
   "shawwal": "Shawwál",
   "dhuAlqidah": "Dhu al-Qadah",
   "dhuAlhijjah": "Dhu al-Hijjah",
-  "duaaBetweenSalahAndAdhan": "De acordo com Anas Ibn Mâlik, Rasulullah (Sallalahu Aleihi Wassalam) disse: O duá efetuado entre o Azán (chamamento para a oração) e o Iqamah (alerta para o início da oração), não é rejeitado.",
+  "duaaBetweenSalahAndAdhan": "De acordo com Anas Ibn Mâlik, Rasulullah (Sallalláhu Alaihi Wa Sallam) disse: O duá efetuado entre o Azán (chamamento para a oração) e o Iqamah (alerta para o início da oração), não é rejeitado.",
   "salatKhayrMinaNawm": "A oração é melhor que o sono",
   "salatElEid": "Salatul Eid",
   "webView": "Ativar Modo Compatível",
   "developersHomeScreen": "Ecrã de programador",
-  "onlineHome": "Home On-line",
+  "onlineHome": "Página Inicial On-line",
   "prayerTimes": "Horário de Orações",
   "alerts": "Alerta",
   "iqamaaCountDown": "Jamaat contagem decrescente",
@@ -154,7 +154,7 @@
   "showSecondaryScreen": "Usar como ecrã secundário (Para Anúncios)",
   "normalScreen": "Usar como ecrã principal",
   "duaaRemainder": "Continuação Duá",
-  "fajrWakeUp": "Acorde no Fajr",
+  "fajrWakeUp": "Despertar no Fajr",
   "changeLanguage": "Mudar idioma",
   "forceScreen": "Forçar Ecrã",
   "clear": "Limpar",
@@ -179,13 +179,13 @@
   "orientation": "Orientação",
   "selectYourMawaqitTvAppOrientation": "Selecione a orientação da aplicação mawaqit tv",
   "deviceDefault": "Dispositivo predefinido",
-  "deviceDefaultBTNDescription": "O Mawaqit seleciona automaticamente a orientação predefinida com base na orientação do ecrã",
+  "deviceDefaultBTNDescription": "O Mawaqit selecionará automaticamente a orientação padrão com base na orientação do ecrã",
   "portrait": "Vertical",
   "portraitBTNDescription": "A orientação vertical é recomendada para mesquitas com espaço reduzido",
   "landscape": "Horizontal",
   "landscapeBTNDescription": "A orientação horizontal é a mais recomendada para a aplicação mawaqit tv e para a maioria das mesquitas",
   "eidMubarak": "Eid Mubarak",
-  "takbeerAleidText": "Allah é Grande, Allah é Grande, Allah é Grande, ninguém mais é digno da adoração exceto Allah, Allah é Grande, Allah é Grande, e louvores para Allah.",
+  "takbeerAleidText": "Allah é Grande, Allah é Grande, Allah é Grande. Não há divindade digna de adoração senão Allah. Allah é Grande, Allah é Grande, e todos os louvores pertencem a Allah.",
   "settings": "Definições",
   "applicationModes": "Modo da aplicação",
   "ifYouAreFacingAnIssueWithTheAppActivateThis": "Se estiver a ter problemas com a aplicação, tente ativar esta opção",
@@ -224,7 +224,7 @@
   "appTimezone": "Fuso horário da aplicação",
   "descTimezone": "Selecione o seu fuso horário para obter os horários das orações mais precisos.",
   "appWifi": "Ligar ao Wi-Fi",
-  "descWifi": "Por favor, escolha o Wi-Fi preferência",
+  "descWifi": "Por favor, ligue-se ao seu Wi-Fi preferido",
   "searchCountries": "Pesquisar países",
   "scanAgain": "Procurar novamente",
   "noScannedResultsFound": "Não foram encontrados pontos de acesso próximos",
