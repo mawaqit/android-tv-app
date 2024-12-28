@@ -233,7 +233,7 @@
   "skip": "Saltar",
   "noSSID": "**SSID Oculto**",
   "close": "Fechar",
-  "search": "Pesquisa",
+  "search": "Pesquisar",
   "wifiSuccess": "Ligação ao Wi-Fi estabelecida com sucesso.",
   "wifiFailure": "Falha ao ligar ao Wi-Fi.",
   "timezoneSuccess": "Fuso horário definido com sucesso.",
