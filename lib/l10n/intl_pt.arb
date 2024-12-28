@@ -60,11 +60,11 @@
   "turnOfPhones": "Por favor, coloque o seu telemóvel em Silêncio",
   "iqamaIn": "Jamaat em",
   "alAthkar": "Zikr",
-  "azkarList0": "Peço perdão a Allah, Peço perdão a Allah, Peço perdão a Allah, Ó Allah! Sois Aquele que concede a Paz e a Paz provém somente de Vós. Sois o Senhor da Bênção, Ó o Senhor da Majestade e Benevolência! Ó Allah! Ajuda-me na Tua recordação, no Teu agradecimento e na Tua boa adoração.",
+  "azkarList0": "Peço perdão a Allah, peço perdão a Allah, peço perdão a Allah. Ó Allah, Vós sois Aquele que concede a paz, e a paz provém somente de Vós. Vós sois o Senhor das bênçãos, Ó Senhor da Majestade e Benevolência. Ó Allah, auxiliai-me na Vossa recordação, no Vosso agradecimento e na prática de uma adoração sincera e virtuosa.",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "Puro de todos os defeitos é Allah, todos os louvores são para Allah e Allah é o maior (33 vezes) Ninguém é digno de adoração excepto Allah, o Único, sem parceiro nenhum, somente a Ele pertence o reinado e somente para Ele são todas as glórias; todo o bem está no Seu poder e Ele tem o poder sobre todas as coisas.",
+  "azkarList1": "Allah está isento de todos os defeitos, todos os louvores pertencem a Allah, e Allah é o Maior (33 vezes). Não há divindade digna de adoração excepto Allah, o Único, sem qualquer parceiro. A Ele pertence o domínio, e a Ele são devidas todas as glórias. Todo o bem está sob o Seu controlo, e Ele é Poderoso sobre todas as coisas.",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -84,19 +84,19 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "Ninguém e digno de adoração exepto Allah, o Único, sem nenhum parceiro, somente a Ele pertence o reinado e somente para Ele são todos os louvores e Ele tem poder sobre todas as coisas. Ó Allah! Ninguém pode negar o que Você concede e ninguém pode conceder aquilo que Você retém; e a grandeza dos grandes será inútil para eles contra Si.",
+  "azkarList6": "Não há divindade digna de adoração senão Allah, o Único, sem qualquer parceiro. Somente a Ele pertence o reino, e somente para Ele são devidos todos os louvores. Ele é Poderoso sobre todas as coisas. Ó Allah! Ninguém pode impedir aquilo que concedeis, e ninguém pode conceder aquilo que retendes; e a grandeza dos poderosos não lhes servirá de nada contra Vós.",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
-  "azkarList7": "Ó Allah! Vós Sois meu Senhor. Não existe mais nenhuma divindade exceto Vossa. Vós criastes-me e sou Vosso servente tanto quanto possível, continuo com a minha solene promessa e convenção (que fiz Convosco). Peço Vossa proteção das consequências dos meus maus atos. Reconheço perfeitamente as graças por Vós a mim concedidas e confesso as minhas faltas. Assim, perdoai-me, pois ninguém exceto Vós poderá perdoar os meus pecados.",
+  "azkarList7": "Ó Allah! Vós sois o meu Senhor. Não existe outra divindade além de Vós. Vós criastes-me, e eu sou Vosso servo. Na medida do possível, permaneço fiel à promessa e ao pacto que fiz Convosco. Busco refúgio em Vós das consequências dos meus atos errados. Reconheço plenamente as bênçãos que me concedestes e confesso os meus pecados. Portanto, perdoai-me, pois ninguém além de Vós pode perdoar os pecados.",
   "@azkarList7": {
     "description": "اللهم أنت ربي، لا إله إلا أنت، خلقتني وأنا عبدُك, وأنا على عهدِك ووعدِك ما استطعتُ، أعوذ بك من شر ما صنعتُ، أبوءُ لَكَ بنعمتكَ عَلَيَّ، وأبوء بذنبي، فاغفر لي، فإنه لا يغفرُ الذنوب إلا أنت"
   },
-  "azkarList8": "Nós, assim como todo o universo, amanhecemos para (a adoração de) Allah. Todos os louvores para Allah. Ninguém mais é digno de adoração exceto Allah. Ele é Único, não possui nenhum parceiro. A Ele pertence todo o universo. E para Ele são todos os louvores. Ó Senhor! Peço-Vos todas as coisas boas relacionadas com este dia e com os dias a seguir; peço a Vossa Proteção contra todos os males relacionados com este dia e os dias a seguir. Ó Senhor! Peço a Vossa ajuda no sentido de salvar-me da indolência e os males da velhice. Ó Allah! Peço a Vossa Proteção contra os castigos do Inferno e da sepultura.",
+  "azkarList8": "Nós, assim como todo o universo, despertamos para a adoração de Allah. Todos os louvores pertencem a Allah. Não há outra divindade digna de adoração senão Allah. Ele é Único, sem parceiro algum. A Ele pertence todo o universo, e a Ele são devidos todos os louvores. Ó Senhor! Suplico-Vos por tudo o que há de bom neste dia e nos dias que se seguem; e peço a Vossa proteção contra todo o mal deste dia e dos dias vindouros. Ó Senhor! Peço a Vossa ajuda para me livrar da preguiça e dos males da velhice. Ó Allah! Rogo pela Vossa proteção contra os tormentos do Inferno e da sepultura.",
   "@azkarList8": {
     "description": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر"
   },
-  "azkarList9": "Ó Allah! Amanheci, Invoco a Vós e aos anjos que carregam o Vosso Trono, e aos Vossos anjos e toda a Vossa criação para que sejam testemunhas que Vós Sois Allah; ninguém mais é digno da adoração exceto Vós; Sois Único; Não possuis parceiro; e que Muhammad (Que a paz e a misericórdia de Allah esteja sobre ele) é vosso Servo e Mensageiro. (quatro vezes) [E a noite dizer: \"Ó Allah! Anoiteceu, Invoco a Vós...\"]",
+  "azkarList9": "Ó Allah! Amanheci invocando a Vós, aos anjos que sustentam o Vosso Trono, a todos os Vossos anjos e a toda a Vossa criação, para que sejam testemunhas de que Vós sois Allah. Não há outra divindade digna de adoração senão Vós. Sois Único, não tendes parceiro, e Muhammad (que a paz e a misericórdia de Allah estejam sobre ele) é Vosso servo e Mensageiro. (quatro vezes). [E a noite, dizer: \"Ó Allah! Anoiteci invocando a Vós...\"]",
   "@azkarList9": {
     "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
