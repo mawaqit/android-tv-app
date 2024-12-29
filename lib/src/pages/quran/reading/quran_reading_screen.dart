@@ -25,6 +25,7 @@ import 'package:provider/provider.dart' as provider;
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
+import 'package:sizer/sizer.dart';
 
 abstract class QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context);
@@ -63,6 +64,7 @@ class FocusNodes {
     required this.switchScreenViewFocusNode,
     required this.switchQuranModeNode,
   });
+
   void setupFocusTraversal({required bool isPortrait}) {
     if (isPortrait) {
       setupPortraitFocusTraversal();
@@ -254,6 +256,85 @@ class FocusNodes {
   }
 }
 
+// New ConsumerStatefulWidget to manage ScrollController
+class AutoScrollReadingView extends ConsumerStatefulWidget {
+  final AutoScrollState autoScrollState;
+
+  AutoScrollReadingView({required this.autoScrollState});
+
+  @override
+  _AutoScrollReadingViewState createState() => _AutoScrollReadingViewState();
+}
+
+class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
+  late ScrollController scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+    // Pass the ScrollController to the notifier
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(autoScrollNotifierProvider.notifier).setScrollController(scrollController);
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scalingFactor = widget.autoScrollState.fontSize;
+    final readingState = ref.watch(quranReadingNotifierProvider);
+    final total = readingState.whenOrNull(data: (data) => data.totalPages) ?? 0;
+    final pages = readingState.whenOrNull(data: (data) => data.svgs) ?? [];
+    final preloadDistance = 3;
+    return Stack(
+      children: [
+        ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          controller: scrollController,
+          itemCount: total,
+          cacheExtent: MediaQuery.of(context).size.height * preloadDistance,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
+                if (widget.autoScrollState.isPlaying) {
+                  autoScrollNotifier.pauseAutoScroll();
+                } else {
+                  autoScrollNotifier.resumeAutoScroll();
+                }
+              },
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * scalingFactor,
+                height: MediaQuery.of(context).size.height * scalingFactor,
+                child: SvgPictureWidget(
+                  svgPicture: pages[index],
+                ),
+              ),
+            );
+          },
+        ),
+        if (widget.autoScrollState.isLoading)
+          Container(
+            color: Colors.black.withOpacity(0.9),
+            child: Center(
+              child: Text(
+                S.of(context).initializingAutoReading,
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+// Update AutoScrollViewStrategy to use AutoScrollReadingView
 class AutoScrollViewStrategy implements QuranViewStrategy {
   final AutoScrollState autoScrollState;
 
@@ -261,32 +342,7 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
 
   @override
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
-    final scalingFactor = autoScrollState.fontSize;
-
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      controller: autoScrollState.scrollController,
-      itemCount: state.totalPages,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
-            if (autoScrollState.isPlaying) {
-              autoScrollNotifier.pauseAutoScroll();
-            } else {
-              autoScrollNotifier.resumeAutoScroll();
-            }
-          },
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * scalingFactor,
-            height: MediaQuery.of(context).size.height * scalingFactor,
-            child: SvgPictureWidget(
-              svgPicture: state.svgs[index],
-            ),
-          ),
-        );
-      },
-    );
+    return AutoScrollReadingView(autoScrollState: autoScrollState);
   }
 
   @override
