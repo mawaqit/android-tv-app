@@ -2,20 +2,15 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
-import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
-import 'package:provider/provider.dart';
 
-/// this screen made to show of the hadith screen
-class HadithWidget extends ConsumerWidget {
-  HadithWidget({
-    Key? key,
+class DisplayTextWidget extends ConsumerWidget {
+  const DisplayTextWidget({
+    super.key,
     this.title,
     this.arabicText,
     this.translatedTitle,
@@ -24,31 +19,64 @@ class HadithWidget extends ConsumerWidget {
     this.maxHeight = 50,
     this.mainAxisAlignment = MainAxisAlignment.center,
     this.padding,
-  }) : super(key: key);
+    this.isHadith = false, // Add this flag to determine the mode
+  });
+
+  // Factory constructor for normal display
+  factory DisplayTextWidget.normal({
+    Key? key,
+    required String title,
+    required String arabicText,
+    required String translatedTitle,
+    required String translatedText,
+    TextDirection? textDirection,
+    double maxHeight = 50,
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
+    EdgeInsetsGeometry? padding,
+  }) {
+    return DisplayTextWidget(
+      key: key,
+      title: title,
+      arabicText: arabicText,
+      translatedTitle: translatedTitle,
+      translatedText: translatedText,
+      textDirection: textDirection,
+      maxHeight: maxHeight,
+      mainAxisAlignment: mainAxisAlignment,
+      padding: padding,
+      isHadith: false,
+    );
+  }
+
+  // Factory constructor for hadith display
+  factory DisplayTextWidget.hadith({
+    Key? key,
+    String? translatedText,
+    TextDirection? textDirection,
+    double maxHeight = 50,
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
+    EdgeInsetsGeometry? padding,
+  }) {
+    return DisplayTextWidget(
+      key: key,
+      translatedText: translatedText,
+      textDirection: textDirection,
+      maxHeight: maxHeight,
+      mainAxisAlignment: mainAxisAlignment,
+      padding: padding,
+      isHadith: true,
+    );
+  }
 
   final EdgeInsetsGeometry? padding;
-
-  /// The main title of the screen
   final String? title;
-
-  /// arabic text of the hadith screen
   final String? arabicText;
-
-  /// translated title of the hadith
   final String? translatedTitle;
-
-  /// translated text of the hadith
   final String? translatedText;
-
-  /// force the text direction of the translated text
-  /// used for random hadith because hadith language is not the same as the app language
   final TextDirection? textDirection;
-
-  /// alignment of the item along the main axis
   final MainAxisAlignment mainAxisAlignment;
-
-  // Max height constraint
   final double maxHeight;
+  final bool isHadith;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,9 +85,7 @@ class HadithWidget extends ConsumerWidget {
         try {
           final lang = state.maybeWhen(
             orElse: () => 'ar',
-            data: (state) {
-              return state.language;
-            },
+            data: (state) => state.language,
           );
           return Locale(lang);
         } catch (e) {
@@ -131,23 +157,29 @@ class HadithWidget extends ConsumerWidget {
     Duration? delay,
   }) {
     return Flexible(
-      fit: FlexFit.tight,
+      fit: isHadith ? FlexFit.tight : FlexFit.loose,
       child: Container(
         constraints: BoxConstraints(maxHeight: maxHeight.vh),
         child: Padding(
           key: ValueKey(text),
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: 8.0,
-            vertical: 16,
+            vertical: isHadith ? 16.0 : 0.0,
           ),
           child: AutoSizeText(
             text,
-            style: context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
-                  color: Colors.white,
-                  shadows: kIqamaCountDownTextShadow,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 600,
-                ),
+            style: isHadith
+                ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
+                      color: Colors.white,
+                      shadows: kIqamaCountDownTextShadow,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 600,
+                    )
+                : TextStyle(
+                    fontSize: 600,
+                    color: Colors.white,
+                    shadows: kIqamaCountDownTextShadow,
+                  ),
             textAlign: TextAlign.center,
             textDirection: textDirection,
           ).animate().fadeIn(delay: delay).addRepaintBoundary(),
