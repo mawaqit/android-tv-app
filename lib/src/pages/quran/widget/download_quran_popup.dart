@@ -76,14 +76,14 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
     // return Container();
     return switch (state) {
       NeededDownloadedQuran() => _buildChooseDownloadMoshaf(context),
-      // UpdateAvailable() => _buildUpdateAvailableDialog(context, state),
+    // UpdateAvailable() => _buildUpdateAvailableDialog(context, state),
       Downloading() => _buildDownloadingDialog(context, state),
       Extracting() => _buildExtractingDialog(context, state),
       Success() => _successDialog(context),
       CancelDownload() => Container(),
-      // NoUpdate() => _buildNoUpdateDialog(context, state),
+    // NoUpdate() => _buildNoUpdateDialog(context, state),
       _ => Container(),
-      // DownloadQuranState() => null,
+    // DownloadQuranState() => null,
     };
   }
 
@@ -133,15 +133,15 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
               final notifier = ref.read(downloadQuranNotifierProvider.notifier);
               final moshafType = ref.watch(moshafTypeNotifierProvider);
               ref.read(moshafTypeNotifierProvider).maybeWhen(
-                    orElse: () {},
-                    data: (state) async {
-                      state.selectedMoshaf.fold(() {
-                        return null;
-                      }, (selectedMoshaf) async {
-                        await notifier.cancelDownload(selectedMoshaf); // Await cancellation
-                      });
-                    },
-                  );
+                orElse: () {},
+                data: (state) async {
+                  state.selectedMoshaf.fold(() {
+                    return null;
+                  }, (selectedMoshaf) async {
+                    await notifier.cancelDownload(selectedMoshaf); // Await cancellation
+                  });
+                },
+              );
               moshafType.when(
                 data: (data) {
                   if (data.isFirstTime) {
@@ -243,12 +243,12 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
   }
 
   Widget _buildMoshafTypeRadio(
-    BuildContext context, {
-    required String title,
-    required MoshafType value,
-    required void Function(VoidCallback fn) setState,
-    bool autofocus = false,
-  }) {
+      BuildContext context, {
+        required String title,
+        required MoshafType value,
+        required void Function(VoidCallback fn) setState,
+        bool autofocus = false,
+      }) {
     return RadioListTile<MoshafType>(
       title: Text(title),
       value: value,
