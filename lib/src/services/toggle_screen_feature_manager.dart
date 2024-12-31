@@ -39,7 +39,7 @@ class ToggleScreenFeature {
 
       if (!beforeDelay.isNegative) {
         final beforeTimer = Timer(beforeDelay, () {
-          timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
+          _toggleTabletScreenOn();
         });
         _scheduledTimers[fajrTime] = [beforeTimer];
       }
@@ -58,7 +58,7 @@ class ToggleScreenFeature {
       final afterDelay = scheduledDateTime.difference(now) + Duration(minutes: afterDelayMinutes);
 
       final afterTimer = Timer(afterDelay, () {
-        timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
+        _toggleTabletScreenOff();
       });
       _scheduledTimers[ishaTime] = [afterTimer];
     } else {
@@ -80,12 +80,12 @@ class ToggleScreenFeature {
           continue;
         }
         final beforeTimer = Timer(beforeDelay, () {
-          timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
+          _toggleTabletScreenOn();
         });
 
         final afterDelay = scheduledDateTime.difference(now) + Duration(minutes: afterDelayMinutes);
         final afterTimer = Timer(afterDelay, () {
-          timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
+          _toggleTabletScreenOff();
         });
 
         _scheduledTimers[timeString] = [beforeTimer, afterTimer];
