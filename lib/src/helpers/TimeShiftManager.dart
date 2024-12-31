@@ -59,9 +59,8 @@ class TimeShiftManager {
 
     _previousTime = DateTime.parse(prefs.getString(_previousTimeKey) ?? DateTime.now().toIso8601String());
     _timeSetFromHour = prefs.getBool(_timeSetFromHourKey) ?? false;
-    if (isBoxOrAndroidTV) {
-      _isLauncherInstalled = await _isPackageInstalled("com.mawaqit.launcher");
-    }
+    _isLauncherInstalled = await _isPackageInstalled("com.mawaqit.launcher");
+
     try {
       final userData = await Api.prepareUserData();
       if (userData != null) {
