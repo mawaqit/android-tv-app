@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
@@ -9,18 +10,20 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/domain/error/recite_exception.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../../../main.dart';
+import 'package:mawaqit/main.dart';
 import 'package:path/path.dart' as path;
 
-import '../../../domain/model/quran/audio_file_model.dart';
+import 'package:mawaqit/src/domain/model/quran/audio_file_model.dart';
 
 class ReciteLocalDataSource {
   final Box<ReciterModel> _reciterBox;
   final Box<int> _favoriteReciterBox;
+  final Box<DateTime> _timestampBox;
 
   ReciteLocalDataSource(
     this._reciterBox,
     this._favoriteReciterBox,
+    this._timestampBox,
   );
 
   Future<void> saveReciters(List<ReciterModel> reciters) async {
@@ -30,6 +33,7 @@ class ReciteLocalDataSource {
       final reciterMap = {for (var r in reciters) r.id: r};
 
       await _reciterBox.putAll(reciterMap);
+      await _timestampBox.put(QuranConstant.kQuranReciterRetentionTime, DateTime.now());
     } catch (e) {
       log('saveReciters: ${e.toString()}');
       throw SaveRecitersException(e.toString());
@@ -117,6 +121,7 @@ class ReciteLocalDataSource {
   Future<void> clearAllReciters() async {
     try {
       await _reciterBox.clear();
+      await _timestampBox.clear(); // Clear the timestamp as well
       log('recite: ReciteLocalDataSource: clearAllReciters: done');
     } catch (e) {
       throw ClearAllRecitersException(e.toString());
@@ -204,10 +209,17 @@ class ReciteLocalDataSource {
     }
     return downloadedSuwar;
   }
+
+  Option<DateTime> getLastUpdatedTimestamp() {
+    return Option.fromNullable(
+      _timestampBox.get(QuranConstant.kQuranReciterRetentionTime),
+    ); // Retrieve the last updated timestamp
+  }
 }
 
 final reciteLocalDataSourceProvider = FutureProvider<ReciteLocalDataSource>((ref) async {
   final reciterBox = await Hive.openBox<ReciterModel>(QuranConstant.kReciterBox);
   final favoriteReciterBox = await Hive.openBox<int>(QuranConstant.kFavoriteReciterBox);
-  return ReciteLocalDataSource(reciterBox, favoriteReciterBox);
+  final timestampBox = await Hive.openBox<DateTime>(QuranConstant.kQuranCacheBoxName);
+  return ReciteLocalDataSource(reciterBox, favoriteReciterBox, timestampBox);
 });
