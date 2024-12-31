@@ -54,6 +54,8 @@ class MainActivity : FlutterActivity() {
                     "checkRoot" -> result.success(checkRoot())
                     "toggleBoxScreenOff" -> toggleBoxScreenOff(call, result)
                     "toggleBoxScreenOn" -> toggleBoxScreenOn(call, result)
+                    "toggleTabletScreenOff" -> toggleTabletScreenOff(call, result)
+                    "toggleTabletScreenOn" -> toggleTabletScreenOn(call, result)
                     "connectToNetworkWPA" -> connectToNetworkWPA(call, result)
                     "addLocationPermission" -> addLocationPermission(call, result)
                     "grantFineLocationPermission" -> grantFineLocationPermission(call, result)
@@ -248,6 +250,30 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
                     "mount -o rw,remount /",
                     "cd /sys/class/hdmi/hdmi/attr",
                     "echo 0 > phy_power"
+                )
+                executeCommand(commands, result) // Lock the device
+            } catch (e: Exception) {
+                handleCommandException(e, result)
+            }
+        }
+    }
+    private fun toggleTabletScreenOff(call: MethodCall, result: MethodChannel.Result) {
+        AsyncTask.execute {
+            try {
+                val commands = listOf(
+"input keyevent 26"
+                )
+                executeCommand(commands, result) // Lock the device
+            } catch (e: Exception) {
+                handleCommandException(e, result)
+            }
+        }
+    }
+    private fun toggleTabletScreenOn(call: MethodCall, result: MethodChannel.Result) {
+        AsyncTask.execute {
+            try {
+                val commands = listOf(
+"input keyevent 82"
                 )
                 executeCommand(commands, result) // Lock the device
             } catch (e: Exception) {

@@ -5,12 +5,14 @@ class ScreenLockState extends Equatable {
   final bool isActive;
   final int selectedMinuteBefore;
   final int selectedMinuteAfter;
+  final bool isfajrIshaonly;
 
   ScreenLockState({
     required this.selectedTime,
     required this.isActive,
     required this.selectedMinuteBefore,
     required this.selectedMinuteAfter,
+    required this.isfajrIshaonly,
   });
 
   ScreenLockState copyWith({
@@ -18,12 +20,14 @@ class ScreenLockState extends Equatable {
     bool? isActive,
     int? selectedMinuteBefore,
     int? selectedMinuteAfter,
+    bool? isfajrIshaonly,
   }) {
     return ScreenLockState(
       selectedTime: selectedTime ?? this.selectedTime,
       isActive: isActive ?? this.isActive,
       selectedMinuteBefore: selectedMinuteBefore ?? this.selectedMinuteBefore,
       selectedMinuteAfter: selectedMinuteAfter ?? this.selectedMinuteAfter,
+      isfajrIshaonly: isfajrIshaonly ?? this.isfajrIshaonly,
     );
   }
 
@@ -32,5 +36,6 @@ class ScreenLockState extends Equatable {
         isActive,
         selectedMinuteBefore,
         selectedMinuteAfter,
+        isfajrIshaonly,
       ];
 }

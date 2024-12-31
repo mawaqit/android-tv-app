@@ -6,7 +6,7 @@ import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/StringUtils.dart';
-import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
+import 'package:mawaqit/src/widgets/display_text_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../const/constants.dart';
@@ -69,7 +69,7 @@ class _AfterAdhanSubScreenState extends State<AfterAdhanSubScreen> {
           fit: BoxFit.cover,
         ),
       ),
-      child: HadithWidget(
+      child: DisplayTextWidget.normal(
         maxHeight: 35,
         title: arTranslation.afterAdhanHadithTitle,
         arabicText: arTranslation.afterSalahHadith,

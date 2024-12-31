@@ -9,6 +9,7 @@ import 'package:mawaqit/src/pages/home/sub_screens/takberat_aleid_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
 import 'package:provider/provider.dart';
 
 const _HadithDuration = Duration(seconds: 90);
@@ -27,6 +28,9 @@ class _NormalWorkflowScreenState extends ConsumerState<NormalWorkflowScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(randomHadithNotifierProvider.notifier).ensureHadithLanguage();
+    });
   }
 
   @override

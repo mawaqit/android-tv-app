@@ -185,7 +185,6 @@ class _AutoScrollingReadingMode extends ConsumerWidget {
         SizedBox(height: 1.h),
         _PlayPauseButton(
           isPortrait: isPortrait,
-          switchToPlayQuranFocusNode: switchToPlayQuranFocusNode,
         ),
       ],
     );
