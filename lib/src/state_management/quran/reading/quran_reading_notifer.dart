@@ -119,9 +119,9 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     final language = sharedPref.getString(SettingsConstant.kLanguageCode) ?? 'en';
     await ref.read(quranNotifierProvider.notifier).getSuwarByLanguage(languageCode: language);
     return ref.read(quranNotifierProvider).maybeWhen(
-      orElse: () => [],
-      data: (quranState) => quranState.suwar,
-    );
+          orElse: () => [],
+          data: (quranState) => quranState.suwar,
+        );
   }
 
   Future<QuranReadingState> _initState(QuranReadingRepository repository) async {

@@ -30,14 +30,14 @@ abstract class QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context);
 
   List<Widget> buildControls(
-      BuildContext context,
-      QuranReadingState state,
-      UserPreferencesManager userPrefs,
-      bool isPortrait,
-      FocusNodes focusNodes,
-      Function(ScrollDirection, bool) onScroll,
-      Function(BuildContext, int, int, bool) showPageSelector,
-      );
+    BuildContext context,
+    QuranReadingState state,
+    UserPreferencesManager userPrefs,
+    bool isPortrait,
+    FocusNodes focusNodes,
+    Function(ScrollDirection, bool) onScroll,
+    Function(BuildContext, int, int, bool) showPageSelector,
+  );
 }
 
 // Helper class to organize focus nodes
@@ -291,14 +291,14 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
 
   @override
   List<Widget> buildControls(
-      BuildContext context,
-      QuranReadingState state,
-      UserPreferencesManager userPrefs,
-      bool isPortrait,
-      FocusNodes focusNodes,
-      Function(ScrollDirection, bool) onScroll,
-      Function(BuildContext, int, int, bool) showPageSelector,
-      ) {
+    BuildContext context,
+    QuranReadingState state,
+    UserPreferencesManager userPrefs,
+    bool isPortrait,
+    FocusNodes focusNodes,
+    Function(ScrollDirection, bool) onScroll,
+    Function(BuildContext, int, int, bool) showPageSelector,
+  ) {
     return [];
   }
 }
@@ -312,23 +312,23 @@ class NormalViewStrategy implements QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
     return isPortrait
         ? VerticalPageViewWidget(
-      quranReadingState: state,
-    )
+            quranReadingState: state,
+          )
         : HorizontalPageViewWidget(
-      quranReadingState: state,
-    );
+            quranReadingState: state,
+          );
   }
 
   @override
   List<Widget> buildControls(
-      BuildContext context,
-      QuranReadingState state,
-      UserPreferencesManager userPrefs,
-      bool isPortrait,
-      FocusNodes focusNodes,
-      Function(ScrollDirection, bool) onScroll,
-      Function(BuildContext, int, int, bool) showPageSelector,
-      ) {
+    BuildContext context,
+    QuranReadingState state,
+    UserPreferencesManager userPrefs,
+    bool isPortrait,
+    FocusNodes focusNodes,
+    Function(ScrollDirection, bool) onScroll,
+    Function(BuildContext, int, int, bool) showPageSelector,
+  ) {
     if (isPortrait) {
       return [
         SurahSelectorWidget(
@@ -387,11 +387,11 @@ class NormalViewStrategy implements QuranViewStrategy {
   }
 
   Widget _buildNavigationButtons(
-      BuildContext context,
-      FocusNodes focusNodes,
-      Function(ScrollDirection, bool) onScroll,
-      bool isPortrait,
-      ) {
+    BuildContext context,
+    FocusNodes focusNodes,
+    Function(ScrollDirection, bool) onScroll,
+    bool isPortrait,
+  ) {
     return Stack(
       children: [
         LeftSwitchButtonWidget(
@@ -570,18 +570,18 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   }
 
   Widget _buildBody(
-      AsyncValue<QuranReadingState> quranReadingState,
-      bool isPortrait,
-      UserPreferencesManager userPrefs,
-      AutoScrollState autoScrollState,
-      ) {
+    AsyncValue<QuranReadingState> quranReadingState,
+    bool isPortrait,
+    UserPreferencesManager userPrefs,
+    AutoScrollState autoScrollState,
+  ) {
     return quranReadingState.when(
       loading: () => _buildLoadingIndicator(),
       error: (error, s) => _buildErrorIndicator(error),
       data: (state) {
         // Initialize the appropriate strategy
         final viewStrategy =
-        autoScrollState.isSinglePageView ? AutoScrollViewStrategy(autoScrollState) : NormalViewStrategy(isPortrait);
+            autoScrollState.isSinglePageView ? AutoScrollViewStrategy(autoScrollState) : NormalViewStrategy(isPortrait);
 
         // Create focus nodes bundle
         final focusNodes = FocusNodes(
@@ -652,10 +652,10 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   }
 
   Widget buildAutoScrollView(
-      QuranReadingState quranReadingState,
-      WidgetRef ref,
-      AutoScrollState autoScrollState,
-      ) {
+    QuranReadingState quranReadingState,
+    WidgetRef ref,
+    AutoScrollState autoScrollState,
+  ) {
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       controller: autoScrollState.scrollController,
@@ -664,7 +664,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         return LayoutBuilder(
           builder: (context, constraints) {
             final pageHeight =
-            constraints.maxHeight.isInfinite ? MediaQuery.of(context).size.height : constraints.maxHeight;
+                constraints.maxHeight.isInfinite ? MediaQuery.of(context).size.height : constraints.maxHeight;
             return Container(
               width: constraints.maxWidth,
               height: pageHeight,
