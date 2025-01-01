@@ -261,7 +261,7 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {
                 val commands = listOf(
-"input keyevent 26"
+"input keyevent 82"
                 )
                 executeCommand(commands, result) // Lock the device
             } catch (e: Exception) {
