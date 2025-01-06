@@ -1,11 +1,10 @@
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mawaqit/src/const/constants.dart';
-import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
+import 'package:mawaqit/src/pages/quran/widget/favorite_overlay.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:sizer/sizer.dart';
@@ -19,60 +18,15 @@ class ReciterListView extends ConsumerStatefulWidget {
   });
 
   @override
-  createState() => _ReciterListViewState();
+  _ReciterListViewState createState() => _ReciterListViewState();
 }
 
 class _ReciterListViewState extends ConsumerState<ReciterListView> {
   final ScrollController _reciterScrollController = ScrollController();
-  late List<FocusNode> _focusNodes;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeFocusNodes();
-  }
-
-  void _initializeFocusNodes() {
-    _focusNodes = List.generate(
-      widget.reciters.length,
-      (index) => FocusNode(debugLabel: 'reciter_focus_node_$index'),
-    );
-    for (var node in _focusNodes) {
-      node.addListener(() => _handleFocusChange(node));
-    }
-  }
-
-  @override
-  void didUpdateWidget(ReciterListView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.reciters.length != oldWidget.reciters.length) {
-      _disposeFocusNodes();
-      _initializeFocusNodes();
-    }
-  }
-
-  void _disposeFocusNodes() {
-    for (var node in _focusNodes) {
-      node.removeListener(() => _handleFocusChange(node));
-      node.dispose();
-    }
-  }
-
-  void _handleFocusChange(FocusNode node) {
-    if (node.hasFocus) {
-      final index = _focusNodes.indexOf(node);
-      if (index >= 0 && index < widget.reciters.length) {
-        ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-              reciterModel: widget.reciters[index],
-            );
-      }
-    }
-  }
 
   @override
   void dispose() {
     _reciterScrollController.dispose();
-    _disposeFocusNodes();
     super.dispose();
   }
 
@@ -85,27 +39,34 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
         scrollDirection: Axis.horizontal,
         itemCount: widget.reciters.length,
         itemBuilder: (context, index) {
-          if (index >= _focusNodes.length) {
-            return SizedBox(); // Return an empty widget if the index is out of bounds
-          }
-          return InkWell(
-            focusNode: _focusNodes[index],
-            focusColor: Colors.transparent,
+          return ReciterCard(
+            reciter: widget.reciters[index],
             onTap: () {
               ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                    reciterModel: widget.reciters[index],
-                  );
-              _focusNodes[index].requestFocus();
+                reciterModel: widget.reciters[index],
+              );
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => OverlayPage(
+                    reciter: widget.reciters[index],
+                  ),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOut;
+
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
             },
-            child: Builder(
-              builder: (context) {
-                return ReciterCard(
-                  reciter: widget.reciters[index],
-                  isSelected: Focus.of(context).hasFocus,
-                  margin: EdgeInsets.only(right: 20),
-                );
-              },
-            ),
+            margin: EdgeInsets.only(right: 20),
           );
         },
       ),
@@ -113,92 +74,151 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
   }
 }
 
-class ReciterCard extends ConsumerWidget {
+class ReciterCard extends ConsumerStatefulWidget {
   final ReciterModel reciter;
-  final bool isSelected;
+  final VoidCallback onTap;
   final EdgeInsetsGeometry margin;
 
   const ReciterCard({
     super.key,
     required this.reciter,
-    required this.isSelected,
+    required this.onTap,
     required this.margin,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      width: 25.w,
-      margin: margin,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // CachedNetworkImage with different sizes for online and offline images
-            FastCachedImage(
-                url: '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
-                fit: BoxFit.fitWidth,
-                loadingBuilder: (context, progress) => Container(color: Colors.transparent),
-                errorBuilder: (context, error, stackTrace) => _buildOfflineImage()),
-            // Gradient overlay
-            Container(
+  _ReciterCardState createState() => _ReciterCardState();
+}
+
+class _ReciterCardState extends ConsumerState<ReciterCard> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onTapDown(TapDownDetails details) {
+    _controller.forward();
+  }
+
+  void _onTapUp(TapUpDetails details) {
+    _controller.reverse();
+  }
+
+  void _onTapCancel() {
+    _controller.reverse();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: child,
+        );
+      },
+      child: InkWell(
+        onTapDown: _onTapDown,
+        onTapUp: _onTapUp,
+        onTapCancel: _onTapCancel,
+
+        onTap: widget.onTap,
+        focusColor: Colors.transparent,
+        child: Builder(
+          builder: (context) {
+            final hasFavorite = Focus.of(context).hasFocus ;
+            return Container(
+              width: 25.w,
+              margin: widget.margin,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Colors.black.withOpacity(1),
-                    Colors.black.withOpacity(0.5),
-                    Colors.transparent,
-                  ],
-                  stops: [0.0, 0.3, 0.4],
-                ),
+                borderRadius: BorderRadius.circular(10),
+                border: hasFavorite? Border.all(color: Colors.white, width: 2) : null,
               ),
-            ),
-            // Name at the bottom
-            Positioned(
-              left: 8,
-              right: 8,
-              bottom: 8,
-              child: AutoSizeText(
-                reciter.name,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                minFontSize: 10,
-                maxFontSize: 14,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  shadows: [
-                    Shadow(
-                      offset: Offset(1, 1),
-                      blurRadius: 3,
-                      color: Colors.black.withOpacity(0.5),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    FastCachedImage(
+                      url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, progress) => _buildOfflineImage(),
+                      errorBuilder: (context, error, stackTrace) => _buildOfflineImage(),
+                    ),
+                    // Gradient overlay
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.black.withOpacity(1),
+                            Colors.black.withOpacity(0.5),
+                            Colors.transparent,
+                          ],
+                          stops: [0.0, 0.3, 0.4],
+                        ),
+                      ),
+                    ),
+                    // Name at the bottom
+                    Positioned(
+                      left: 8,
+                      right: 8,
+                      bottom: 8,
+                      child: AutoSizeText(
+                        widget.reciter.name,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        minFontSize: 10,
+                        maxFontSize: 14,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(1, 1),
+                              blurRadius: 3,
+                              color: Colors.black.withOpacity(0.5),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
   }
 
-  // Helper method to build a smaller offline image
   Widget _buildOfflineImage() {
-    return Center(
-      child: Container(
-        width: 24.w,
-        height: 24.w,
-        padding: EdgeInsets.only(bottom: 2.h),
+    return Container(
+      color: Colors.grey[900],
+      child: Center(
         child: Image.asset(
           R.ASSETS_SVG_RECITER_ICON_PNG,
+          width: 24.w,
+          height: 24.w,
           fit: BoxFit.contain,
         ),
       ),
