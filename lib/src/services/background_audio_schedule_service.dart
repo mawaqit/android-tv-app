@@ -181,10 +181,12 @@ class ScheduleManager {
     final isInTimeRange = _isTimeInRange(currentTime, scheduleData.startTime, scheduleData.endTime);
 
     if (isInTimeRange && !isManuallyPaused) {
-      if (!BackgroundAudioScheduleService.isPlaying()) {
-        await _startScheduledPlayback(scheduleData);
-        FlutterBackgroundService().invoke('kAudioStateChanged', {'isPlaying': true});
+      // Force restart playback with new settings
+      if (BackgroundAudioScheduleService.isPlaying()) {
+        await BackgroundAudioScheduleService.stopPlayback();
       }
+      await _startScheduledPlayback(scheduleData);
+      FlutterBackgroundService().invoke('kAudioStateChanged', {'isPlaying': true});
     } else if (!isInTimeRange) {
       if (BackgroundAudioScheduleService.isPlaying()) {
         await BackgroundAudioScheduleService.stopPlayback();
@@ -328,7 +330,19 @@ void _setupServiceListeners(ServiceInstance service) {
     print("Schedule updated, reloading preferences");
     await ScheduleManager.checkSchedule();
   });
+  service.on('restart_schedule').listen((event) async {
+    // Stop current playback
+    if (BackgroundAudioScheduleService.isPlaying()) {
+      await BackgroundAudioScheduleService.stopPlayback();
+    }
 
+    // Reset the audio player to force new configuration
+    BackgroundAudioScheduleService._audioPlayer?.dispose();
+    BackgroundAudioScheduleService._audioPlayer = null;
+
+    // Check schedule with fresh state
+    await ScheduleManager.checkSchedule();
+  });
   service.on('kStopAudio').listen((event) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(BackgroundScheduleAudioServiceConstant.kManualPause, true);
