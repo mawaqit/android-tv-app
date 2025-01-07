@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
@@ -137,14 +139,24 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                       children: [
                         // Background Image
                         Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
-                              ),
-                              fit: BoxFit.contain, // Fit image to cover the area
-                              alignment: Alignment.topRight,
-                            ),
+                          child: FastCachedImage(
+                            url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
+                            fit: BoxFit.contain,
+                            alignment: Alignment.topRight,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _buildOfflineImage();
+                            },
+                            loadingBuilder: (context, progress) {
+                              return Container(
+                                color: Colors.black,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value: progress.progressPercentage.value,
+                                  ),
+                                ),
+                              );
+                            },
+                            fadeInDuration: const Duration(milliseconds: 500),
                           ),
                         ),
                         // Left Gradient Effect
@@ -263,4 +275,16 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
           },
         ),
       );
+
+  Widget _buildOfflineImage() {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.only(bottom: 2.h),
+        child: Image.asset(
+          R.ASSETS_SVG_RECITER_ICON_PNG,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
 }
