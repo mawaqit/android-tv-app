@@ -79,7 +79,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 3.h),
+                          SizedBox(height: 5.h),
                           Consumer(
                             builder: (context, ref, child) {
                               final isReciterFavorite = ref.watch(reciteNotifierProvider).maybeWhen(
@@ -166,6 +166,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                         ),
                         // Left Gradient Effect
                         Container(
+                          width: 60.w,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: AlignmentDirectional.centerStart,
@@ -175,6 +176,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                                 Colors.transparent,
                               ],
                               stops: [0.2, 1.0],
+
                             ),
                           ),
                         ),
@@ -188,7 +190,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                                 Colors.black,
                                 Colors.transparent,
                               ],
-                              stops: [0.2, 0.6],
+                              stops: [0.1, 0.9],
                             ),
                           ),
                         ),
@@ -246,7 +248,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                 child: Text(
                   moshaf.name,
                   style: TextStyle(
-                    fontSize: 10.sp,
+                    fontSize: 9.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -267,7 +269,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
           ),
         ),
         fixedSize: MaterialStateProperty.all<Size>(
-          Size(42.w, 5.h), // Same size for both buttons
+          Size(60.w, 8.h), // Same size for both buttons
         ),
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
           EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
