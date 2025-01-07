@@ -71,57 +71,53 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                             child: Text(
                               widget.reciter.name,
                               style: TextStyle(
-                                fontFamily: 'Bebas Neue',
-                                fontSize: 20.sp,
+                                fontSize: 22.sp,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 3.h),
                           Consumer(
                             builder: (context, ref, child) {
                               final isReciterFavorite = ref.watch(reciteNotifierProvider).maybeWhen(
                                     data: (reciterState) => reciterState.favoriteReciters.contains(widget.reciter),
                                     orElse: () => false,
                                   );
-                              return ElevatedButton.icon(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                                    (Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.focused)) {
-                                        // Change color when button is focused
-                                        return Colors.deepPurple.shade100;
-                                      } else if (states.contains(MaterialState.hovered)) {
-                                        // Optional change color when button is hovered over
-                                        return Colors.red;
-                                      } else {
-                                        // Default color for other states (pressed, etc.)
-                                        return Theme.of(context).colorScheme.primary;
-                                      }
-                                    },
+                              return SizedBox(
+                                height: 5.h,
+                                child: ElevatedButton.icon(
+                                  style: commonButtonStyle,
+                                  onPressed: () {
+                                    if (isReciterFavorite) {
+                                      ref.read(reciteNotifierProvider.notifier).removeFavoriteReciter(
+                                            widget.reciter,
+                                          );
+                                    } else {
+                                      ref.read(reciteNotifierProvider.notifier).addFavoriteReciter(
+                                            widget.reciter,
+                                          );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    isReciterFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: isReciterFavorite ? Colors.red : Colors.black,
+                                    size: 3.h, // Make icon size consistent
                                   ),
-                                ),
-                                onPressed: () {
-                                  if (isReciterFavorite) {
-                                    ref.read(reciteNotifierProvider.notifier).removeFavoriteReciter(
-                                          widget.reciter,
-                                        );
-                                  } else {
-                                    ref.read(reciteNotifierProvider.notifier).addFavoriteReciter(
-                                          widget.reciter,
-                                        );
-                                  }
-                                },
-                                label: Text(S.of(context).favorites),
-                                icon: Icon(
-                                  isReciterFavorite ? Icons.favorite : Icons.favorite_border,
-                                  color: isReciterFavorite ? Colors.red : Colors.black,
+                                  label: Text(
+                                    S.of(context).favorites,
+                                    style: TextStyle(
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               );
                             },
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 3.h),
                           Expanded(
                             child: SingleChildScrollView(
                               child: Column(
@@ -192,11 +188,9 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
   }
 
   Widget _buildElevatedOption(MoshafModel moshaf, int index) {
-    final focusNode = FocusNode();
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+    return SizedBox(
+      height: 5.h,
       child: ElevatedButton(
-        focusNode: focusNode,
         onPressed: () {
           ref.read(reciteNotifierProvider.notifier).setSelectedMoshaf(
                 moshafModel: widget.reciter.moshaf[index],
@@ -210,6 +204,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                 orElse: () => none(),
                 data: (reciterState) => reciterState.selectedReciter,
               );
+
           selectedReciterId.fold(
             () => null,
             (reciter) => Navigator.push(
@@ -223,37 +218,16 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
             ),
           );
         },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.focused)) {
-                // Change color when button is focused
-                return Colors.deepPurple.shade100;
-              } else if (states.contains(MaterialState.hovered)) {
-                // Optional change color when button is hovered over
-                return Colors.red;
-              } else {
-                // Default color for other states (pressed, etc.)
-                return Theme.of(context).colorScheme.primary;
-              }
-            },
-          ),
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          ),
-          minimumSize: MaterialStateProperty.all<Size>(
-            Size(double.infinity, 2.h),
-          ),
-        ),
+        style: commonButtonStyle,
         child: Row(
           children: [
-            Icon(Icons.play_arrow, size: 24),
-            SizedBox(width: 10),
+            Icon(Icons.play_arrow, size: 3.h),
+            SizedBox(width: 2.w),
             Expanded(
               child: Text(
                 moshaf.name,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -265,4 +239,28 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
       ),
     );
   }
+
+  ButtonStyle get commonButtonStyle => ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.w),
+          ),
+        ),
+        fixedSize: MaterialStateProperty.all<Size>(
+          Size(42.w, 5.h), // Same size for both buttons
+        ),
+        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+        ),
+        backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.focused)) {
+              return Colors.deepPurple.shade100;
+            } else if (states.contains(MaterialState.hovered)) {
+              return Colors.red;
+            }
+            return Theme.of(context).colorScheme.primary;
+          },
+        ),
+      );
 }
