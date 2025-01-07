@@ -129,6 +129,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                               ),
                             ),
                           ),
+
                         ],
                       ),
                     ),
@@ -200,53 +201,56 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
   }
 
   Widget _buildElevatedOption(MoshafModel moshaf, int index) {
-    return SizedBox(
-      height: 5.h,
-      child: ElevatedButton(
-        onPressed: () {
-          ref.read(reciteNotifierProvider.notifier).setSelectedMoshaf(
-                moshafModel: widget.reciter.moshaf[index],
-              );
+    return Padding(
+      padding: EdgeInsets.only(bottom: 2.h),
+      child: SizedBox(
+        height: 5.h,
+        child: ElevatedButton(
+          onPressed: () {
+            ref.read(reciteNotifierProvider.notifier).setSelectedMoshaf(
+                  moshafModel: widget.reciter.moshaf[index],
+                );
 
-          ref.read(quranNotifierProvider.notifier).getSuwarByReciter(
-                selectedMoshaf: widget.reciter.moshaf[index],
-              );
-
-          final Option<ReciterModel> selectedReciterId = ref.watch(reciteNotifierProvider).maybeWhen(
-                orElse: () => none(),
-                data: (reciterState) => reciterState.selectedReciter,
-              );
-
-          selectedReciterId.fold(
-            () => null,
-            (reciter) => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SurahSelectionScreen(
-                  reciterId: reciter.id.toString(),
+            ref.read(quranNotifierProvider.notifier).getSuwarByReciter(
                   selectedMoshaf: widget.reciter.moshaf[index],
+                );
+
+            final Option<ReciterModel> selectedReciterId = ref.watch(reciteNotifierProvider).maybeWhen(
+                  orElse: () => none(),
+                  data: (reciterState) => reciterState.selectedReciter,
+                );
+
+            selectedReciterId.fold(
+              () => null,
+              (reciter) => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SurahSelectionScreen(
+                    reciterId: reciter.id.toString(),
+                    selectedMoshaf: widget.reciter.moshaf[index],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-        style: commonButtonStyle,
-        child: Row(
-          children: [
-            Icon(Icons.play_arrow, size: 3.h),
-            SizedBox(width: 2.w),
-            Expanded(
-              child: Text(
-                moshaf.name,
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+            );
+          },
+          style: commonButtonStyle,
+          child: Row(
+            children: [
+              Icon(Icons.play_arrow, size: 3.h),
+              SizedBox(width: 2.w),
+              Expanded(
+                child: Text(
+                  moshaf.name,
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
