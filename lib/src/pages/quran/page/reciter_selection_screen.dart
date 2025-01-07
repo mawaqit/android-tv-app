@@ -18,6 +18,7 @@ import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_state.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/audio_control_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/audio_control_state.dart';
+import 'package:mawaqit/src/state_management/quran/schedule_listening/schedule_listening_notifier.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -27,6 +28,75 @@ import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
 import '../../../domain/model/quran/reciter_model.dart';
 import '../reading/quran_reading_screen.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class AudioControlWidget extends ConsumerWidget {
+  final double buttonSize;
+  final double iconSize;
+  final FocusNode scheduleListeningFocusNode;
+
+  const AudioControlWidget({
+    Key? key,
+    required this.buttonSize,
+    required this.iconSize,
+    required this.scheduleListeningFocusNode,
+  }) : super(key: key);
+
+  bool _isWithinScheduledTime(TimeOfDay startTime, TimeOfDay endTime) {
+    final now = TimeOfDay.now();
+    final currentMinutes = now.hour * 60 + now.minute;
+    final startMinutes = startTime.hour * 60 + startTime.minute;
+    final endMinutes = endTime.hour * 60 + endTime.minute;
+
+    if (startMinutes <= endMinutes) {
+      return currentMinutes >= startMinutes && currentMinutes < endMinutes;
+    }
+    return currentMinutes >= startMinutes || currentMinutes < endMinutes;
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(audioControlProvider).when(
+          data: (state) {
+            final scheduleState = ref.watch(scheduleProvider);
+
+            return scheduleState.when(
+              data: (schedule) {
+                final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
+
+                final shouldShow = schedule.isScheduleEnabled && isWithinTime;
+
+                if (!shouldShow) {
+                  return const SizedBox.shrink();
+                }
+                return SizedBox(
+                  width: buttonSize, // Set the desired width
+                  height: buttonSize, // Set the desired height
+                  child: FloatingActionButton(
+                    focusNode: scheduleListeningFocusNode,
+                    focusColor: Theme.of(context).primaryColor,
+                    backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
+                    child: Icon(
+                      color: Colors.white,
+                      state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
+                      size: iconSize,
+                    ),
+                    onPressed: () {
+                      ref.read(audioControlProvider.notifier).togglePlayback();
+                    },
+                  ),
+                );
+              },
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            );
+          },
+          loading: () => const CircularProgressIndicator(),
+          error: (error, _) => Text('Error: $error'),
+        );
+  }
+}
 
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
@@ -124,48 +194,40 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   @override
   Widget build(BuildContext context) {
     final audioState = ref.watch(audioControlProvider);
+    final buttonSize = MediaQuery.of(context).size.width * 0.07;
+    final iconSize = buttonSize * 0.5;
+    final spacerWidth = buttonSize * 0.25;
 
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          ref.watch(reciteNotifierProvider).whenOrNull(
+                    data: (reciter) => SizedBox(
+                      width: buttonSize,
+                      height: buttonSize,
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.black.withOpacity(.5),
+                        child: Icon(
+                          Icons.schedule,
+                          color: Colors.white,
+                          size: iconSize,
+                        ),
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
+                          );
+                        },
+                      ),
+                    ),
+                  ) ??
+              const SizedBox.shrink(),
+          SizedBox(width: spacerWidth),
           SizedBox(
-            width: 30.sp, // Set the desired width
-            height: 30.sp, // Set the desired height
-            child: Consumer(
-              builder: (context, ref, child) {
-                return ref.watch(reciteNotifierProvider).when(
-                      data: (reciter) {
-                        return FloatingActionButton(
-                          backgroundColor: Colors.black.withOpacity(.5),
-                          child: Icon(
-                            Icons.schedule,
-                            color: Colors.white,
-                            size: 15.sp,
-                          ),
-                          onPressed: () async {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return ScheduleScreen(reciterList: reciter.reciters);
-                              },
-                            );
-                          },
-                        );
-                      },
-                      loading: () => CircularProgressIndicator(),
-                      error: (error, stackTrace) => Icon(Icons.error, color: Colors.red),
-                    );
-              },
-            ),
-          ),
-          SizedBox(
-            width: 5.sp,
-          ),
-          SizedBox(
-            width: 30.sp, // Set the desired width
-            height: 30.sp, // Set the desired height
+            width: buttonSize,
+            height: buttonSize,
             child: FloatingActionButton(
               focusNode: changeReadingModeFocusNode,
               focusColor: Theme.of(context).primaryColor,
@@ -173,7 +235,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               child: Icon(
                 Icons.menu_book,
                 color: Colors.white,
-                size: 15.sp,
+                size: iconSize,
               ),
               onPressed: () async {
                 ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
@@ -187,33 +249,12 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             ),
           ),
           SizedBox(
-            width: 5.sp,
+            width: spacerWidth,
           ),
-          audioState.when(
-            data: (state) {
-              if (!state.shouldShowControls) {
-                return const SizedBox.shrink(); // Hide controls when scheduling is disabled
-              }
-
-              return SizedBox(
-                width: 30.sp, // Set the desired width
-                height: 30.sp, // Set the desired height
-                child: FloatingActionButton(
-                  focusNode: scheduleListeningFocusNode,
-                  focusColor: Theme.of(context).primaryColor,
-                  backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
-                  child: Icon(
-                    color: Colors.white,
-                    state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
-                  ),
-                  onPressed: () {
-                    ref.read(audioControlProvider.notifier).togglePlayback();
-                  },
-                ),
-              );
-            },
-            loading: () => const CircularProgressIndicator(),
-            error: (error, stack) => Text('Error: $error'),
+          AudioControlWidget(
+            buttonSize: buttonSize,
+            iconSize: iconSize,
+            scheduleListeningFocusNode: scheduleListeningFocusNode,
           )
         ],
       ),
