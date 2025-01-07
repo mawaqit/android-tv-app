@@ -1,6 +1,4 @@
-import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +23,6 @@ import 'package:provider/provider.dart' as provider;
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
-import 'package:sizer/sizer.dart';
 
 abstract class QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context);
@@ -259,30 +256,81 @@ class FocusNodes {
 // New ConsumerStatefulWidget to manage ScrollController
 class AutoScrollReadingView extends ConsumerStatefulWidget {
   final AutoScrollState autoScrollState;
+  final int initialPage;  // Add this
 
-  AutoScrollReadingView({required this.autoScrollState});
+  AutoScrollReadingView({
+    required this.autoScrollState,
+    this.initialPage = 1,  // Default to page 1
+  });
 
   @override
   _AutoScrollReadingViewState createState() => _AutoScrollReadingViewState();
 }
 
+
 class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
   late ScrollController scrollController;
+  bool _isInitialized = false;
+  double? _cachedItemHeight;
 
   @override
   void initState() {
     super.initState();
     scrollController = ScrollController();
-    // Pass the ScrollController to the notifier
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(autoScrollNotifierProvider.notifier).setScrollController(scrollController);
-    });
+    _initializeScrollView();
   }
 
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
+  Future<void> _initializeScrollView() async {
+    try {
+      setState(() => _isInitialized = false);
+
+      // Wait for the widget to be built
+      await Future.delayed(Duration(milliseconds: 100));
+      if (!mounted) return;
+
+      final readingState = ref.read(quranReadingNotifierProvider);
+
+      await readingState.whenOrNull(
+        data: (data) async {
+          // Calculate initial scroll position
+          await _jumpToInitialPage();
+
+          // Set the scroll controller
+          ref.read(autoScrollNotifierProvider.notifier).setScrollController(scrollController);
+        },
+      );
+
+      if (mounted) {
+        setState(() => _isInitialized = true);
+      }
+    } catch (e) {
+      print('Initialization error: $e');
+    }
+  }
+
+  Future<void> _jumpToInitialPage() async {
+    if (widget.initialPage <= 1) return;
+
+    try {
+      // Wait for layout to complete
+      await Future.delayed(Duration(milliseconds: 200));
+      if (!mounted) return;
+
+      // Get the size of a single page
+      final context = this.context;
+      final size = MediaQuery.of(context).size;
+      final scalingFactor = widget.autoScrollState.fontSize;
+      final itemHeight = size.height * scalingFactor;
+      _cachedItemHeight = itemHeight;
+
+      // Calculate scroll position
+      final scrollPosition = (widget.initialPage - 1) * itemHeight;
+
+      // Jump to position
+      scrollController.jumpTo(scrollPosition);
+    } catch (e) {
+      print('Error jumping to initial page: $e');
+    }
   }
 
   @override
@@ -292,6 +340,7 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
     final total = readingState.whenOrNull(data: (data) => data.totalPages) ?? 0;
     final pages = readingState.whenOrNull(data: (data) => data.svgs) ?? [];
     final preloadDistance = 3;
+
     return Stack(
       children: [
         ListView.builder(
@@ -300,6 +349,12 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
           itemCount: total,
           cacheExtent: MediaQuery.of(context).size.height * preloadDistance,
           itemBuilder: (context, index) {
+            if (!_isInitialized) {
+              return SizedBox(
+                height: _cachedItemHeight ?? MediaQuery.of(context).size.height * scalingFactor,
+              );
+            }
+
             return GestureDetector(
               onTap: () {
                 final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
@@ -313,19 +368,27 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
                 width: MediaQuery.of(context).size.width * scalingFactor,
                 height: MediaQuery.of(context).size.height * scalingFactor,
                 child: SvgPictureWidget(
+                  key: ValueKey('page_$index'),
                   svgPicture: pages[index],
                 ),
               ),
             );
           },
         ),
-        if (widget.autoScrollState.isLoading)
+        if (!_isInitialized || widget.autoScrollState.isLoading)
           Container(
             color: Colors.black.withOpacity(0.9),
             child: Center(
-              child: Text(
-                S.of(context).initializingAutoReading,
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: Colors.white),
+                  SizedBox(height: 16),
+                  Text(
+                    S.of(context).initializingAutoReading,
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+                  ),
+                ],
               ),
             ),
           ),
@@ -333,18 +396,20 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
     );
   }
 }
-
 // Update AutoScrollViewStrategy to use AutoScrollReadingView
 class AutoScrollViewStrategy implements QuranViewStrategy {
   final AutoScrollState autoScrollState;
+  final int initialPage;
 
-  AutoScrollViewStrategy(this.autoScrollState);
+  AutoScrollViewStrategy(this.autoScrollState, {this.initialPage = 1});
 
   @override
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
-    return AutoScrollReadingView(autoScrollState: autoScrollState);
+    return AutoScrollReadingView(
+      autoScrollState: autoScrollState,
+      initialPage: initialPage,
+    );
   }
-
   @override
   List<Widget> buildControls(
     BuildContext context,
@@ -636,8 +701,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       error: (error, s) => _buildErrorIndicator(error),
       data: (state) {
         // Initialize the appropriate strategy
-        final viewStrategy =
-            autoScrollState.isSinglePageView ? AutoScrollViewStrategy(autoScrollState) : NormalViewStrategy(isPortrait);
+        final viewStrategy = autoScrollState.isSinglePageView
+            ? AutoScrollViewStrategy(
+          autoScrollState,
+          initialPage: state.currentPage, // Or whatever page you want to start from
+        )
+            : NormalViewStrategy(isPortrait);
 
         // Create focus nodes bundle
         final focusNodes = FocusNodes(
