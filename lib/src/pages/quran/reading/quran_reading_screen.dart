@@ -23,6 +23,8 @@ import 'package:provider/provider.dart' as provider;
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
+import 'dart:math' as math;
+import 'package:flutter_svg/flutter_svg.dart';
 
 abstract class QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context);
@@ -253,25 +255,25 @@ class FocusNodes {
   }
 }
 
-// New ConsumerStatefulWidget to manage ScrollController
 class AutoScrollReadingView extends ConsumerStatefulWidget {
   final AutoScrollState autoScrollState;
-  final int initialPage;  // Add this
+  final int initialPage;
 
   AutoScrollReadingView({
     required this.autoScrollState,
-    this.initialPage = 1,  // Default to page 1
+    this.initialPage = 1,
   });
 
   @override
   _AutoScrollReadingViewState createState() => _AutoScrollReadingViewState();
 }
 
-
 class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
   late ScrollController scrollController;
   bool _isInitialized = false;
+  bool _isLoading = true;
   double? _cachedItemHeight;
+  Map<int, bool> _loadedPages = {};
 
   @override
   void initState() {
@@ -282,29 +284,49 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
 
   Future<void> _initializeScrollView() async {
     try {
-      setState(() => _isInitialized = false);
-
-      // Wait for the widget to be built
-      await Future.delayed(Duration(milliseconds: 100));
       if (!mounted) return;
 
-      final readingState = ref.read(quranReadingNotifierProvider);
+      setState(() {
+        _isLoading = true;
+        _isInitialized = false;
+      });
 
-      await readingState.whenOrNull(
-        data: (data) async {
-          // Calculate initial scroll position
-          await _jumpToInitialPage();
+      // Load initial pages in microtask to prevent UI freeze
+      await Future.microtask(() async {
+        final readingState = ref.read(quranReadingNotifierProvider);
 
-          // Set the scroll controller
-          ref.read(autoScrollNotifierProvider.notifier).setScrollController(scrollController);
-        },
-      );
+        await readingState.whenOrNull(
+          data: (data) async {
+            // Preload pages around initial page
+            final startIndex = math.max(0, widget.initialPage - 1);
+            final endIndex = math.min(data.totalPages, widget.initialPage + 1);
+
+            for (var i = startIndex; i < endIndex; i++) {
+              _loadedPages[i] = true;
+            }
+          },
+        );
+      });
+
+      // Small delay to ensure layout is ready
+      await Future.delayed(Duration(milliseconds: 50));
+
+      if (!mounted) return;
+
+      await _jumpToInitialPage();
+      ref.read(autoScrollNotifierProvider.notifier).setScrollController(scrollController);
 
       if (mounted) {
-        setState(() => _isInitialized = true);
+        setState(() {
+          _isInitialized = true;
+          _isLoading = false;
+        });
       }
     } catch (e) {
       print('Initialization error: $e');
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -312,24 +334,74 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
     if (widget.initialPage <= 1) return;
 
     try {
-      // Wait for layout to complete
-      await Future.delayed(Duration(milliseconds: 200));
       if (!mounted) return;
 
-      // Get the size of a single page
-      final context = this.context;
       final size = MediaQuery.of(context).size;
       final scalingFactor = widget.autoScrollState.fontSize;
       final itemHeight = size.height * scalingFactor;
       _cachedItemHeight = itemHeight;
 
-      // Calculate scroll position
       final scrollPosition = (widget.initialPage - 1) * itemHeight;
-
-      // Jump to position
       scrollController.jumpTo(scrollPosition);
     } catch (e) {
       print('Error jumping to initial page: $e');
+    }
+  }
+
+  Widget _buildPage(int index, SvgPicture svgPicture, double scalingFactor) {
+    // Load page only when it becomes visible
+    if (!_loadedPages.containsKey(index)) {
+      Future.microtask(() {
+        if (mounted) {
+          setState(() => _loadedPages[index] = true);
+        }
+      });
+
+      return SizedBox(
+        width: MediaQuery.of(context).size.width * scalingFactor,
+        height: MediaQuery.of(context).size.height * scalingFactor,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return GestureDetector(
+      onTap: _handleTap,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * scalingFactor,
+        height: MediaQuery.of(context).size.height * scalingFactor,
+        child: SvgPictureWidget(
+          key: ValueKey('page_$index'),
+          svgPicture: svgPicture,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return Container(
+      color: Colors.black.withOpacity(0.9),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(color: Colors.white),
+            SizedBox(height: 16),
+            Text(
+              S.of(context).initializingAutoReading,
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _handleTap() {
+    final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
+    if (widget.autoScrollState.isPlaying) {
+      autoScrollNotifier.pauseAutoScroll();
+    } else {
+      autoScrollNotifier.resumeAutoScroll();
     }
   }
 
@@ -339,61 +411,40 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
     final readingState = ref.watch(quranReadingNotifierProvider);
     final total = readingState.whenOrNull(data: (data) => data.totalPages) ?? 0;
     final pages = readingState.whenOrNull(data: (data) => data.svgs) ?? [];
-    final preloadDistance = 3;
 
     return Stack(
       children: [
-        ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          controller: scrollController,
-          itemCount: total,
-          cacheExtent: MediaQuery.of(context).size.height * preloadDistance,
-          itemBuilder: (context, index) {
-            if (!_isInitialized) {
-              return SizedBox(
-                height: _cachedItemHeight ?? MediaQuery.of(context).size.height * scalingFactor,
-              );
-            }
+        Container(color: Theme.of(context).scaffoldBackgroundColor),
 
-            return GestureDetector(
-              onTap: () {
-                final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
-                if (widget.autoScrollState.isPlaying) {
-                  autoScrollNotifier.pauseAutoScroll();
-                } else {
-                  autoScrollNotifier.resumeAutoScroll();
-                }
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * scalingFactor,
-                height: MediaQuery.of(context).size.height * scalingFactor,
-                child: SvgPictureWidget(
-                  key: ValueKey('page_$index'),
-                  svgPicture: pages[index],
-                ),
-              ),
-            );
-          },
-        ),
-        if (!_isInitialized || widget.autoScrollState.isLoading)
-          Container(
-            color: Colors.black.withOpacity(0.9),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(color: Colors.white),
-                  SizedBox(height: 16),
-                  Text(
-                    S.of(context).initializingAutoReading,
-                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
+        if (pages.isNotEmpty)
+          ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            controller: scrollController,
+            itemCount: total,
+            cacheExtent: MediaQuery.of(context).size.height * 2,
+            itemBuilder: (context, index) {
+              if (!_isInitialized) {
+                return SizedBox(
+                  height: _cachedItemHeight ??
+                      MediaQuery.of(context).size.height * scalingFactor,
+                );
+              }
+
+              return _buildPage(index, pages[index], scalingFactor);
+            },
           ),
+
+        if (_isLoading || widget.autoScrollState.isLoading)
+          _buildLoadingIndicator(),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    _loadedPages.clear();
+    super.dispose();
   }
 }
 // Update AutoScrollViewStrategy to use AutoScrollReadingView
