@@ -89,6 +89,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                               return SizedBox(
                                 height: 5.h,
                                 child: ElevatedButton.icon(
+                                  autofocus: true,
                                   style: commonButtonStyle,
                                   onPressed: () {
                                     if (isReciterFavorite) {
