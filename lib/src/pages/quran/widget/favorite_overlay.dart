@@ -139,25 +139,28 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                     child: Stack(
                       children: [
                         // Background Image
-                        Container(
-                          child: FastCachedImage(
-                            url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
-                            fit: BoxFit.contain,
-                            alignment: Alignment.topRight,
-                            errorBuilder: (context, error, stackTrace) {
-                              return _buildOfflineImage();
-                            },
-                            loadingBuilder: (context, progress) {
-                              return Container(
-                                color: Colors.black,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    value: progress.progressPercentage.value,
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            child: FastCachedImage(
+                              url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
+                              fit: BoxFit.contain,
+                              alignment: Alignment.topRight,
+                              errorBuilder: (context, error, stackTrace) {
+                                return _buildOfflineImage();
+                              },
+                              loadingBuilder: (context, progress) {
+                                return Container(
+                                  color: Colors.black,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      value: progress.progressPercentage.value,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            fadeInDuration: const Duration(milliseconds: 500),
+                                );
+                              },
+                              fadeInDuration: const Duration(milliseconds: 500),
+                            ),
                           ),
                         ),
                         // Left Gradient Effect
