@@ -68,14 +68,14 @@ class AutoScrollState extends Equatable {
 
   @override
   List<Object?> get props => [
-    isSinglePageView,
-    autoScrollSpeed,
-    isVisible,
-    fontSize,
-    maxFontSize,
-    scrollController,
-    isPlaying,
-    isLoading,
-    currentPage,
-  ];
+        isSinglePageView,
+        autoScrollSpeed,
+        isVisible,
+        fontSize,
+        maxFontSize,
+        scrollController,
+        isPlaying,
+        isLoading,
+        currentPage,
+      ];
 }

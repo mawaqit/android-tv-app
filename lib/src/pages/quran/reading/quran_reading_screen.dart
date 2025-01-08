@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -415,7 +414,6 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
     return Stack(
       children: [
         Container(color: Theme.of(context).scaffoldBackgroundColor),
-
         if (pages.isNotEmpty)
           ListView.builder(
             physics: NeverScrollableScrollPhysics(),
@@ -425,17 +423,14 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
             itemBuilder: (context, index) {
               if (!_isInitialized) {
                 return SizedBox(
-                  height: _cachedItemHeight ??
-                      MediaQuery.of(context).size.height * scalingFactor,
+                  height: _cachedItemHeight ?? MediaQuery.of(context).size.height * scalingFactor,
                 );
               }
 
               return _buildPage(index, pages[index], scalingFactor);
             },
           ),
-
-        if (_isLoading || widget.autoScrollState.isLoading)
-          _buildLoadingIndicator(),
+        if (_isLoading || widget.autoScrollState.isLoading) _buildLoadingIndicator(),
       ],
     );
   }
@@ -447,6 +442,7 @@ class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
     super.dispose();
   }
 }
+
 // Update AutoScrollViewStrategy to use AutoScrollReadingView
 class AutoScrollViewStrategy implements QuranViewStrategy {
   final AutoScrollState autoScrollState;
@@ -461,6 +457,7 @@ class AutoScrollViewStrategy implements QuranViewStrategy {
       initialPage: initialPage,
     );
   }
+
   @override
   List<Widget> buildControls(
     BuildContext context,
@@ -754,9 +751,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
         // Initialize the appropriate strategy
         final viewStrategy = autoScrollState.isSinglePageView
             ? AutoScrollViewStrategy(
-          autoScrollState,
-          initialPage: state.currentPage, // Or whatever page you want to start from
-        )
+                autoScrollState,
+                initialPage: state.currentPage, // Or whatever page you want to start from
+              )
             : NormalViewStrategy(isPortrait);
 
         // Create focus nodes bundle

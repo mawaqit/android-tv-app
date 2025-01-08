@@ -31,7 +31,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     scrollController = controller;
   }
 
-
   Future<void> jumpToCurrentPage(int currentPage, double pageHeight) async {
     if (scrollController.hasClients) {
       final offset = (currentPage - 1) * pageHeight;
@@ -47,8 +46,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     }
   }
 
-
-Future<void> startAutoScroll(int currentPage, double pageHeight) async {
+  Future<void> startAutoScroll(int currentPage, double pageHeight) async {
     // Cancel any existing timers
     _autoScrollTimer?.cancel();
     _hideTimer?.cancel();
@@ -69,15 +67,14 @@ Future<void> startAutoScroll(int currentPage, double pageHeight) async {
           // Robust wait for scroll controller
           for (int i = 0; i < 50; i++) {
             // 5 seconds total wait time
-            if (scrollController.hasClients &&
-                scrollController.position.hasContentDimensions) {
-            _initializeScrollController(currentPage, pageHeight);
-            break;
+            if (scrollController.hasClients && scrollController.position.hasContentDimensions) {
+              _initializeScrollController(currentPage, pageHeight);
+              break;
             }
-          await Future.delayed(Duration(milliseconds: 100));
-        }
+            await Future.delayed(Duration(milliseconds: 100));
+          }
         }),
-      
+
         // Additional delay to ensure view is fully rendered
         Future.delayed(Duration(milliseconds: 500))
       ]);
@@ -91,7 +88,6 @@ Future<void> startAutoScroll(int currentPage, double pageHeight) async {
       // Start scrolling with a slight delay
       await Future.delayed(Duration(milliseconds: 100));
       _startScrolling();
-
     } catch (e, stackTrace) {
       print('Auto-scroll initialization error: $e');
       print('Stacktrace: $stackTrace');
@@ -102,14 +98,15 @@ Future<void> startAutoScroll(int currentPage, double pageHeight) async {
         isPlaying: false,
       );
     }
-}
+  }
+
   void _initializeScrollController(int currentPage, double pageHeight) {
     final pageOffset = (currentPage - 1) * pageHeight;
     // Set initial offset to correct position, account for rotation if necessary
     scrollController.jumpTo(pageOffset);
   }
 
-void _startScrolling() {
+  void _startScrolling() {
     // Cancel any existing timer to prevent multiple timers
     _autoScrollTimer?.cancel();
 
@@ -141,20 +138,18 @@ void _startScrolling() {
       }
 
       // Comprehensive client check
-      if (scrollController.hasClients &&
-          scrollController.position.hasContentDimensions) {
+      if (scrollController.hasClients && scrollController.position.hasContentDimensions) {
         try {
-        final maxScroll = scrollController.position.maxScrollExtent;
-        final currentScroll = scrollController.offset;
-        final delta = state.autoScrollSpeed;
+          final maxScroll = scrollController.position.maxScrollExtent;
+          final currentScroll = scrollController.offset;
+          final delta = state.autoScrollSpeed;
 
           // Detailed logging for debugging
-          print(
-              'Max Scroll: $maxScroll, Current Scroll: $currentScroll, Delta: $delta');
+          print('Max Scroll: $maxScroll, Current Scroll: $currentScroll, Delta: $delta');
 
-        if (currentScroll >= maxScroll) {
+          if (currentScroll >= maxScroll) {
             print('Reached max scroll. Stopping auto-scroll.');
-          stopAutoScroll();
+            stopAutoScroll();
             timer.cancel();
             return;
           }
@@ -165,7 +160,7 @@ void _startScrolling() {
           // Page calculation
           final pageHeight = scrollController.position.viewportDimension;
           final newPage = _calculateCurrentPage(scrollController, pageHeight);
-        
+
           if (newPage != state.currentPage) {
             state = state.copyWith(currentPage: newPage);
           }
@@ -178,8 +173,7 @@ void _startScrolling() {
       } else {
         print('ScrollController does not have clients or content dimensions');
         print('HasClients: ${scrollController.hasClients}');
-        print(
-            'HasContentDimensions: ${scrollController.position.hasContentDimensions}');
+        print('HasContentDimensions: ${scrollController.position.hasContentDimensions}');
       }
     });
   }
