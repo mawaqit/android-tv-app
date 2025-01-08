@@ -18,10 +18,48 @@ class ToggleScreenFeature {
   static const String _scheduledTimersKey = TurnOnOffTvConstant.kScheduledTimersKey;
   static final Map<String, List<Timer>> _scheduledTimers = {};
 
+  static Future<void> initializeTimersAfterRestart() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final scheduledTimesJson = prefs.getString('scheduled_prayer_times');
+    final isFeatureActive = await getToggleFeatureState();
+
+    if (!isFeatureActive || scheduledTimesJson == null) return;
+
+    final scheduledData = json.decode(scheduledTimesJson) as Map<String, dynamic>;
+    final timeStrings = List<String>.from(scheduledData['times']);
+    final beforeDelay = scheduledData['beforeDelay'] as int;
+    final afterDelay = scheduledData['afterDelay'] as int;
+    final isFajrIshaOnly = scheduledData['isFajrIshaOnly'] as bool;
+
+    // Reschedule timers
+    await scheduleToggleScreen(isFajrIshaOnly, timeStrings, beforeDelay, afterDelay);
+  }
+
+  static Future<void> saveSchedulingData({
+    required List<String> timeStrings,
+    required int beforeDelayMinutes,
+    required int afterDelayMinutes,
+    required bool isFajrIshaOnly,
+  }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final scheduledData = {
+      'times': timeStrings,
+      'beforeDelay': beforeDelayMinutes,
+      'afterDelay': afterDelayMinutes,
+      'isFajrIshaOnly': isFajrIshaOnly,
+    };
+    await prefs.setString('scheduled_prayer_times', json.encode(scheduledData));
+  }
+
   static Future<void> scheduleToggleScreen(
       bool isfajrIshaonly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
     final timeShiftManager = TimeShiftManager();
-
+    await saveSchedulingData(
+      timeStrings: timeStrings,
+      beforeDelayMinutes: beforeDelayMinutes,
+      afterDelayMinutes: afterDelayMinutes,
+      isFajrIshaOnly: isfajrIshaonly,
+    );
     if (isfajrIshaonly) {
       String fajrTime = timeStrings[0];
       List<String> parts = fajrTime.split(':');
@@ -92,6 +130,7 @@ class ToggleScreenFeature {
       }
     }
     await _saveScheduledTimersToPrefs();
+    await setLastEventDate(AppDateTime.now());
   }
 
   static Future<void> loadScheduledTimersFromPrefs() async {
