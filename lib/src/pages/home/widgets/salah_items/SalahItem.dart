@@ -185,9 +185,7 @@ class SalahItemWidget extends StatelessOrientationWidget {
 
     final mosqueProvider = context.watch<MosqueManager>();
     final mosqueConfig = mosqueProvider.mosqueConfig;
-    // print(isIqamaEnabled);
     final isArabic = context.read<AppLanguage>().isArabic();
-
     final is12period = mosqueConfig?.timeDisplayFormat == "12";
 
     return Container(
@@ -217,39 +215,101 @@ class SalahItemWidget extends StatelessOrientationWidget {
                 ),
               ),
             SizedBox(height: 0.5.vh),
-            if (time.trim().isEmpty)
-              Icon(Icons.dnd_forwardslash, size: 6.vwr)
-            else
-              TimeWidget.fromString(
-                show24hFormat: !is12period,
-                time: time,
-                style: TextStyle(
-                  fontSize: isIqamaMoreImportant ? smallFont : bigFont,
-                  fontWeight: FontWeight.w700,
-                  shadows: kHomeTextShadow,
-                  color: Colors.white,
-                  // fontFamily: StringManager.getFontFamily(context),
-                ),
-              ),
-            if (iqama != null && showIqama)
-              SizedBox(
-                height: isArabic ? 1.5.vr : 1.3.vwr,
-                child: Divider(
-                  thickness: 1,
-                  color: withDivider ? Colors.white : Colors.transparent,
-                ),
-              ),
-            if (iqama != null && showIqama)
-              TimeWidget.fromString(
-                show24hFormat: !is12period,
-                time: iqama!,
-                style: TextStyle(
-                  fontSize: isIqamaMoreImportant ? bigFont : smallFont,
-                  fontWeight: FontWeight.bold,
-                  shadows: kHomeTextShadow,
-                  letterSpacing: 1,
-                  color: Colors.white,
-                ),
+            if (iqama2 != null) // Three times layout
+              Column(
+                children: [
+                  if (time.trim().isEmpty)
+                    Icon(Icons.dnd_forwardslash, size: 6.vwr)
+                  else
+                    TimeWidget.fromString(
+                      show24hFormat: !is12period,
+                      time: time,
+                      style: TextStyle(
+                        fontSize: bigFont,
+                        fontWeight: FontWeight.w700,
+                        shadows: kHomeTextShadow,
+                        color: Colors.white,
+                        height: 1,
+                      ),
+                    ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 1.vr),
+                    width: 20.vwr,
+                    height: 1,
+                    color: Colors.white,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TimeWidget.fromString(
+                        show24hFormat: !is12period,
+                        time: iqama!,
+                        style: TextStyle(
+                          fontSize: smallFont,
+                          fontWeight: FontWeight.w700,
+                          shadows: kHomeTextShadow,
+                          color: Colors.white,
+                          height: 1,
+                        ),
+                      ),
+                      Container(
+                        height: bigFont,
+                        width: 1,
+                        margin: EdgeInsets.symmetric(horizontal: 1.vwr),
+                        color: Colors.white,
+                      ),
+                      TimeWidget.fromString(
+                        show24hFormat: !is12period,
+                        time: iqama2!,
+                        style: TextStyle(
+                          fontSize: smallFont,
+                          fontWeight: FontWeight.w700,
+                          shadows: kHomeTextShadow,
+                          color: Colors.white,
+                          height: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            else // Original two times layout
+              Column(
+                children: [
+                  if (time.trim().isEmpty)
+                    Icon(Icons.dnd_forwardslash, size: 6.vwr)
+                  else
+                    TimeWidget.fromString(
+                      show24hFormat: !is12period,
+                      time: time,
+                      style: TextStyle(
+                        fontSize: isIqamaMoreImportant ? smallFont : bigFont,
+                        fontWeight: FontWeight.w700,
+                        shadows: kHomeTextShadow,
+                        color: Colors.white,
+                      ),
+                    ),
+                  if (iqama != null && showIqama)
+                    SizedBox(
+                      height: isArabic ? 1.5.vr : 1.3.vwr,
+                      child: Divider(
+                        thickness: 1,
+                        color: withDivider ? Colors.white : Colors.transparent,
+                      ),
+                    ),
+                  if (iqama != null && showIqama)
+                    TimeWidget.fromString(
+                      show24hFormat: !is12period,
+                      time: iqama!,
+                      style: TextStyle(
+                        fontSize: isIqamaMoreImportant ? bigFont : smallFont,
+                        fontWeight: FontWeight.bold,
+                        shadows: kHomeTextShadow,
+                        letterSpacing: 1,
+                        color: Colors.white,
+                      ),
+                    ),
+                ],
               ),
           ],
         ),

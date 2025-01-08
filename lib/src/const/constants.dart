@@ -99,6 +99,24 @@ abstract class SystemFeaturesConstant {
   static const String kEthernet = 'android.hardware.ethernet';
 }
 
+class BackgroundScheduleAudioServiceConstant {
+  static const String kManualPause = 'manual_pause_enabled';
+  static const String kPendingSchedule = 'pending_schedule';
+  static const String kScheduleEnabled = 'schedule_enabled';
+  static const String kStartTime = 'start_time';
+  static const String kEndTime = 'end_time';
+  static const String kRandomEnabled = 'isRandomEnabled';
+  static const String kRandomUrls = 'random_urls';
+  static const String kSelectedSurah = 'selected_surah';
+  static const String kSelectedSurahUrl = 'selected_surah_url';
+  static const String kSelectedReciter = 'selected_reciter';
+  static const String kSelectedMoshaf = 'selected_moshaf';
+  static const String kAudioStateChanged = 'kAudioStateChanged';
+  static const String kGetPlaybackState = 'kGetPlaybackState';
+  static const String kStopAudio = 'kStopAudio';
+  static const String kResumeAudio = 'kResumeAudio';
+}
+
 abstract class MawaqitBackendSettingsConstant {
   static const String kSettingsTitle = "Mawaqit";
   static const String kSettingsShare =
@@ -123,4 +141,9 @@ abstract class RtspCameraStreamConstant {
       r'http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?';
 
   static final RegExp youtubeUrlRegex = RegExp(youtubeUrlPattern);
+}
+
+abstract class ScheduleListeningConstant {
+  static const startTime = '08:00';
+  static const endTime = '20:00';
 }
