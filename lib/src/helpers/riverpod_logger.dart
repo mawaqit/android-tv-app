@@ -27,7 +27,7 @@ class RiverpodLogger extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    print('''
+    log('''
        {
           "provider": "${provider.name ?? provider.runtimeType}",
           "newValue": "$newValue",

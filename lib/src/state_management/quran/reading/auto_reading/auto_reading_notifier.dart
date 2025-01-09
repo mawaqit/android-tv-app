@@ -27,7 +27,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
   void setScrollController(ScrollController controller) {
-    print('Setting scroll controller...');
     scrollController = controller;
   }
 
@@ -89,8 +88,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       await Future.delayed(Duration(milliseconds: 100));
       _startScrolling();
     } catch (e, stackTrace) {
-      print('Auto-scroll initialization error: $e');
-      print('Stacktrace: $stackTrace');
 
       // Fallback state reset
       state = state.copyWith(
@@ -112,13 +109,11 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
     // Validate initial state
     if (!state.isPlaying) {
-      print('Auto-scroll not started: state is not playing');
       return;
     }
 
     // Additional safety checks
     if (scrollController == null) {
-      print('ScrollController is null');
       return;
     }
 
@@ -131,7 +126,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
       // Prevent infinite attempts
       if (scrollAttempts > maxScrollAttempts) {
-        print('Max scroll attempts reached. Stopping auto-scroll.');
         timer.cancel();
         state = state.copyWith(isPlaying: false);
         return;
@@ -145,10 +139,8 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
           final delta = state.autoScrollSpeed;
 
           // Detailed logging for debugging
-          print('Max Scroll: $maxScroll, Current Scroll: $currentScroll, Delta: $delta');
 
           if (currentScroll >= maxScroll) {
-            print('Reached max scroll. Stopping auto-scroll.');
             stopAutoScroll();
             timer.cancel();
             return;
@@ -165,15 +157,10 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
             state = state.copyWith(currentPage: newPage);
           }
         } catch (e, stackTrace) {
-          print('Error during auto-scroll: $e');
-          print('Stacktrace: $stackTrace');
           timer.cancel();
           state = state.copyWith(isPlaying: false);
         }
       } else {
-        print('ScrollController does not have clients or content dimensions');
-        print('HasClients: ${scrollController.hasClients}');
-        print('HasContentDimensions: ${scrollController.position.hasContentDimensions}');
       }
     });
   }
