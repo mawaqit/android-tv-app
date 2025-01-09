@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -25,6 +22,8 @@ import 'package:provider/provider.dart' as provider;
 
 import 'package:mawaqit/src/pages/quran/widget/reading/quran_reading_page_selector.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
+import 'dart:math' as math;
+import 'package:flutter_svg/flutter_svg.dart';
 
 abstract class QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context);
@@ -63,6 +62,7 @@ class FocusNodes {
     required this.switchScreenViewFocusNode,
     required this.switchQuranModeNode,
   });
+
   void setupFocusTraversal({required bool isPortrait}) {
     if (isPortrait) {
       setupPortraitFocusTraversal();
@@ -254,38 +254,207 @@ class FocusNodes {
   }
 }
 
+class AutoScrollReadingView extends ConsumerStatefulWidget {
+  final AutoScrollState autoScrollState;
+  final int initialPage;
+
+  AutoScrollReadingView({
+    required this.autoScrollState,
+    this.initialPage = 1,
+  });
+
+  @override
+  _AutoScrollReadingViewState createState() => _AutoScrollReadingViewState();
+}
+
+class _AutoScrollReadingViewState extends ConsumerState<AutoScrollReadingView> {
+  late ScrollController scrollController;
+  bool _isInitialized = false;
+  bool _isLoading = true;
+  double? _cachedItemHeight;
+  Map<int, bool> _loadedPages = {};
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+    _initializeScrollView();
+  }
+
+  Future<void> _initializeScrollView() async {
+    try {
+      if (!mounted) return;
+
+      setState(() {
+        _isLoading = true;
+        _isInitialized = false;
+      });
+
+      // Load initial pages in microtask to prevent UI freeze
+      await Future.microtask(() async {
+        final readingState = ref.read(quranReadingNotifierProvider);
+
+        await readingState.whenOrNull(
+          data: (data) async {
+            // Preload pages around initial page
+            final startIndex = math.max(0, widget.initialPage - 1);
+            final endIndex = math.min(data.totalPages, widget.initialPage + 1);
+
+            for (var i = startIndex; i < endIndex; i++) {
+              _loadedPages[i] = true;
+            }
+          },
+        );
+      });
+
+      // Small delay to ensure layout is ready
+      await Future.delayed(Duration(milliseconds: 50));
+
+      if (!mounted) return;
+
+      await _jumpToInitialPage();
+      ref.read(autoScrollNotifierProvider.notifier).setScrollController(scrollController);
+
+      if (mounted) {
+        setState(() {
+          _isInitialized = true;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Initialization error: $e');
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _jumpToInitialPage() async {
+    if (widget.initialPage <= 1) return;
+
+    try {
+      if (!mounted) return;
+
+      final size = MediaQuery.of(context).size;
+      final scalingFactor = widget.autoScrollState.fontSize;
+      final itemHeight = size.height * scalingFactor;
+      _cachedItemHeight = itemHeight;
+
+      final scrollPosition = (widget.initialPage - 1) * itemHeight;
+      scrollController.jumpTo(scrollPosition);
+    } catch (e) {
+      print('Error jumping to initial page: $e');
+    }
+  }
+
+  Widget _buildPage(int index, SvgPicture svgPicture, double scalingFactor) {
+    // Load page only when it becomes visible
+    if (!_loadedPages.containsKey(index)) {
+      Future.microtask(() {
+        if (mounted) {
+          setState(() => _loadedPages[index] = true);
+        }
+      });
+
+      return SizedBox(
+        width: MediaQuery.of(context).size.width * scalingFactor,
+        height: MediaQuery.of(context).size.height * scalingFactor,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return GestureDetector(
+      onTap: _handleTap,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * scalingFactor,
+        height: MediaQuery.of(context).size.height * scalingFactor,
+        child: SvgPictureWidget(
+          key: ValueKey('page_$index'),
+          svgPicture: svgPicture,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return Container(
+      color: Colors.black.withOpacity(0.9),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(color: Colors.white),
+            SizedBox(height: 16),
+            Text(
+              S.of(context).initializingAutoReading,
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _handleTap() {
+    final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
+    if (widget.autoScrollState.isPlaying) {
+      autoScrollNotifier.pauseAutoScroll();
+    } else {
+      autoScrollNotifier.resumeAutoScroll();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scalingFactor = widget.autoScrollState.fontSize;
+    final readingState = ref.watch(quranReadingNotifierProvider);
+    final total = readingState.whenOrNull(data: (data) => data.totalPages) ?? 0;
+    final pages = readingState.whenOrNull(data: (data) => data.svgs) ?? [];
+
+    return Stack(
+      children: [
+        Container(color: Theme.of(context).scaffoldBackgroundColor),
+        if (pages.isNotEmpty)
+          ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            controller: scrollController,
+            itemCount: total,
+            cacheExtent: MediaQuery.of(context).size.height * 2,
+            itemBuilder: (context, index) {
+              if (!_isInitialized) {
+                return SizedBox(
+                  height: _cachedItemHeight ?? MediaQuery.of(context).size.height * scalingFactor,
+                );
+              }
+
+              return _buildPage(index, pages[index], scalingFactor);
+            },
+          ),
+        if (_isLoading || widget.autoScrollState.isLoading) _buildLoadingIndicator(),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    _loadedPages.clear();
+    super.dispose();
+  }
+}
+
+// Update AutoScrollViewStrategy to use AutoScrollReadingView
 class AutoScrollViewStrategy implements QuranViewStrategy {
   final AutoScrollState autoScrollState;
+  final int initialPage;
 
-  AutoScrollViewStrategy(this.autoScrollState);
+  AutoScrollViewStrategy(this.autoScrollState, {this.initialPage = 1});
 
   @override
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
-    final scalingFactor = autoScrollState.fontSize;
-
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      controller: autoScrollState.scrollController,
-      itemCount: state.totalPages,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            final autoScrollNotifier = ref.read(autoScrollNotifierProvider.notifier);
-            if (autoScrollState.isPlaying) {
-              autoScrollNotifier.pauseAutoScroll();
-            } else {
-              autoScrollNotifier.resumeAutoScroll();
-            }
-          },
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * scalingFactor,
-            height: MediaQuery.of(context).size.height * scalingFactor,
-            child: SvgPictureWidget(
-              svgPicture: state.svgs[index],
-            ),
-          ),
-        );
-      },
+    return AutoScrollReadingView(
+      autoScrollState: autoScrollState,
+      initialPage: initialPage,
     );
   }
 
@@ -580,8 +749,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
       error: (error, s) => _buildErrorIndicator(error),
       data: (state) {
         // Initialize the appropriate strategy
-        final viewStrategy =
-            autoScrollState.isSinglePageView ? AutoScrollViewStrategy(autoScrollState) : NormalViewStrategy(isPortrait);
+        final viewStrategy = autoScrollState.isSinglePageView
+            ? AutoScrollViewStrategy(
+                autoScrollState,
+                initialPage: state.currentPage, // Or whatever page you want to start from
+              )
+            : NormalViewStrategy(isPortrait);
 
         // Create focus nodes bundle
         final focusNodes = FocusNodes(
