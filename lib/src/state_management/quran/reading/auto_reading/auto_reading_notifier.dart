@@ -66,7 +66,8 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
           // Robust wait for scroll controller
           for (int i = 0; i < 50; i++) {
             // 5 seconds total wait time
-            if (scrollController.hasClients && scrollController.position.hasContentDimensions) {
+            if (scrollController.hasClients &&
+                scrollController.position.hasContentDimensions) {
               _initializeScrollController(currentPage, pageHeight);
               break;
             }
@@ -118,7 +119,8 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
     _autoScrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
       // Comprehensive client check
-      if (scrollController.hasClients && scrollController.position.hasContentDimensions) {
+      if (scrollController.hasClients &&
+          scrollController.position.hasContentDimensions) {
         try {
           final maxScroll = scrollController.position.maxScrollExtent;
           final currentScroll = scrollController.offset;
@@ -146,12 +148,13 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
           timer.cancel();
           state = state.copyWith(isPlaying: false);
         }
-      }
+      } else {}
     });
   }
 
   // Function to calculate current page during scrolling
-  int _calculateCurrentPage(ScrollController scrollController, double pageHeight) {
+  int _calculateCurrentPage(
+      ScrollController scrollController, double pageHeight) {
     final viewportOffset = scrollController.offset % pageHeight;
     if (viewportOffset < (pageHeight / 2)) {
       // Scrolled to the left, check if it's possible to navigate to the previous page
@@ -162,7 +165,8 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     }
   }
 
-  void stopAutoScroll({QuranReadingState? quranReadingState, bool isPortairt = false}) async {
+  void stopAutoScroll(
+      {QuranReadingState? quranReadingState, bool isPortairt = false}) async {
     _autoScrollTimer?.cancel();
     _autoScrollTimer = null;
 
@@ -290,6 +294,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 }
 
-final autoScrollNotifierProvider = AutoDisposeNotifierProvider<AutoScrollNotifier, AutoScrollState>(
+final autoScrollNotifierProvider =
+    AutoDisposeNotifierProvider<AutoScrollNotifier, AutoScrollState>(
   AutoScrollNotifier.new,
 );
