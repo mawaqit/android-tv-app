@@ -88,7 +88,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       await Future.delayed(Duration(milliseconds: 100));
       _startScrolling();
     } catch (e, stackTrace) {
-
       // Fallback state reset
       state = state.copyWith(
         isLoading: false,
@@ -160,8 +159,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
           timer.cancel();
           state = state.copyWith(isPlaying: false);
         }
-      } else {
-      }
+      } else {}
     });
   }
 
