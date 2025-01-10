@@ -379,8 +379,10 @@ class NormalViewStrategy implements QuranViewStrategy {
   Widget buildView(
       QuranReadingState state, WidgetRef ref, BuildContext context) {
     final userPrefs = context.watch<UserPreferencesManager>();
-    return (userPrefs.orientationLandscape == true && isPortrait) ||
-            (userPrefs.orientationLandscape != true && !isPortrait)
+    return (MediaQuery.of(context).orientation == Orientation.portrait &&
+                isPortrait) ||
+            (MediaQuery.of(context).orientation == Orientation.portrait &&
+                !isPortrait)
         ? VerticalPageViewWidget(
             quranReadingState: state,
           )
@@ -399,8 +401,10 @@ class NormalViewStrategy implements QuranViewStrategy {
     Function(ScrollDirection, bool) onScroll,
     Function(BuildContext, int, int, bool) showPageSelector,
   ) {
-    if ((userPrefs.orientationLandscape == true && isPortrait) ||
-        (userPrefs.orientationLandscape != true && !isPortrait)) {
+    if ((MediaQuery.of(context).orientation == Orientation.portrait &&
+            isPortrait) ||
+        (MediaQuery.of(context).orientation == Orientation.portrait &&
+            !isPortrait)) {
       return [
         SurahSelectorWidget(
           isPortrait: isPortrait,
