@@ -114,6 +114,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   late FocusNode reciterFocusNode;
 
   late FocusNode changeReadingModeFocusNode;
+
   // late FocusNode scheduleListeningFocusNode;
   //
   // late FocusScopeNode reciteTypeFocusScopeNode;
@@ -206,64 +207,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
     return Scaffold(
       key: _scaffoldKey,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          ref.watch(reciteNotifierProvider).whenOrNull(
-                    data: (reciter) => SizedBox(
-                      width: buttonSize,
-                      height: buttonSize,
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.black.withOpacity(.5),
-                        child: Icon(
-                          Icons.schedule,
-                          color: Colors.white,
-                          size: iconSize,
-                        ),
-                        onPressed: () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
-                          );
-                        },
-                      ),
-                    ),
-                  ) ??
-              const SizedBox.shrink(),
-          SizedBox(width: spacerWidth),
-          SizedBox(
-            width: buttonSize,
-            height: buttonSize,
-            child: FloatingActionButton(
-              focusNode: changeReadingModeFocusNode,
-              focusColor: Theme.of(context).primaryColor,
-              backgroundColor: Colors.black.withOpacity(.5),
-              child: Icon(
-                Icons.menu_book,
-                color: Colors.white,
-                size: iconSize,
-              ),
-              onPressed: () async {
-                ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => QuranReadingScreen(),
-                  ),
-                );
-              },
-            ),
-          ),
-          SizedBox(
-            width: spacerWidth,
-          ),
-          AudioControlWidget(
-            buttonSize: buttonSize,
-            iconSize: iconSize,
-            // scheduleListeningFocusNode: scheduleListeningFocusNode,
-          )
-        ],
-      ),
+      floatingActionButton: buildFloatingColumn(spacerWidth, buttonSize, iconSize, context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
         toolbarHeight: 40,
         backgroundColor: Color(0xFF28262F),
@@ -304,12 +249,16 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         ),
         child: ListView(
           children: [
-            _buildSearchField(),
+            SizedBox(
+              height: 8.h,
+              child: _buildSearchField(),
+            ),
             Consumer(
               builder: (context, ref, child) {
                 return ref.watch(reciteNotifierProvider).when(
                       data: (reciterState) {
-                        final hasSingleFavorite = reciterState.favoriteReciters.length == 1;
+                        final hasFavorites = reciterState.favoriteReciters.isNotEmpty;
+
                         final favoriteSection = [
                           _buildFavoritesHeader(),
                           if (reciterState.favoriteReciters.isEmpty)
@@ -319,6 +268,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                               height: 16.h,
                               child: ReciterListView(
                                 reciters: reciterState.favoriteReciters,
+                                isAtBottom: !hasFavorites, // Only bottom if empty
                               ),
                             ),
                           SizedBox(height: 2.h),
@@ -332,6 +282,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                               focusNode: reciterFocusNode,
                               child: ReciterListView(
                                 reciters: reciterState.reciters,
+                                isAtBottom: hasFavorites, // Bottom if favorites exist
                               ),
                             ),
                           ),
@@ -339,9 +290,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: hasSingleFavorite
-                              ? [...favoriteSection, ...allRecitersSection]
-                              : [...allRecitersSection, ...favoriteSection],
+                          children: hasFavorites
+                              ? [
+                                  ...favoriteSection,
+                                  ...allRecitersSection,
+                                ]
+                              : [
+                                  ...allRecitersSection,
+                                  ...favoriteSection,
+                                ],
                         );
                       },
                       loading: () => Column(
@@ -366,30 +323,90 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     );
   }
 
-  Widget _buildFavoritesHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start, // Aligns items to the start of the row
-        crossAxisAlignment: CrossAxisAlignment.center, // Vertically centers items
-        children: [
-          Icon(
-            Icons.favorite,
-            color: Theme.of(context).primaryColor,
-            size: 18.sp, // Slightly larger icon for better emphasis
-          ),
-          SizedBox(width: 12), // Increased spacing for a cleaner layout
-          Text(
-            S.of(context).favorites,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Roboto',
-              fontSize: 16.sp, // Slightly larger text for better readability
-              fontWeight: FontWeight.w600, // Semi-bold for a polished look
+  Column buildFloatingColumn(double spacerWidth, double buttonSize, double iconSize, BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        ref.watch(reciteNotifierProvider).whenOrNull(
+                  data: (reciter) => Padding(
+                    padding: EdgeInsets.only(bottom: spacerWidth),
+                    child: SizedBox(
+                      width: buttonSize,
+                      height: buttonSize,
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.black.withOpacity(.5),
+                        child: Icon(
+                          Icons.schedule,
+                          color: Colors.white,
+                          size: iconSize,
+                        ),
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ) ??
+            const SizedBox.shrink(),
+        Padding(
+          padding: EdgeInsets.only(bottom: spacerWidth),
+          child: SizedBox(
+            width: buttonSize,
+            height: buttonSize,
+            child: FloatingActionButton(
+              focusNode: changeReadingModeFocusNode,
+              focusColor: Theme.of(context).primaryColor,
+              backgroundColor: Colors.black.withOpacity(.5),
+              child: Icon(
+                Icons.menu_book,
+                color: Colors.white,
+                size: iconSize,
+              ),
+              onPressed: () async {
+                ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QuranReadingScreen(),
+                  ),
+                );
+              },
             ),
           ),
-        ],
-      ),
+        ),
+        AudioControlWidget(
+          buttonSize: buttonSize,
+          iconSize: iconSize,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFavoritesHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start, // Aligns items to the start of the row
+      crossAxisAlignment: CrossAxisAlignment.center, // Vertically centers items
+      children: [
+        Icon(
+          Icons.favorite,
+          color: Theme.of(context).primaryColor,
+          size: 18.sp, // Slightly larger icon for better emphasis
+        ),
+        SizedBox(width: 12), // Increased spacing for a cleaner layout
+        Text(
+          S.of(context).favorites,
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Roboto',
+            fontSize: 16.sp, // Slightly larger text for better readability
+            fontWeight: FontWeight.w600, // Semi-bold for a polished look
+          ),
+        ),
+      ],
     );
   }
 

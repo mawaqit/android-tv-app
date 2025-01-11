@@ -11,10 +11,12 @@ import 'package:sizer/sizer.dart';
 
 class ReciterListView extends ConsumerStatefulWidget {
   final List<ReciterModel> reciters;
+  final bool isAtBottom;
 
   const ReciterListView({
     super.key,
     required this.reciters,
+    required this.isAtBottom,
   });
 
   @override
@@ -32,44 +34,55 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: widget.reciters.isNotEmpty ? 16.h : 0,
-      child: ListView.builder(
-        controller: _reciterScrollController,
-        scrollDirection: Axis.horizontal,
-        itemCount: widget.reciters.length,
-        itemBuilder: (context, index) {
-          return ReciterCard(
-            reciter: widget.reciters[index],
-            onTap: () {
-              ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                reciterModel: widget.reciters[index],
-              );
-              Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => OverlayPage(
-                    reciter: widget.reciters[index],
-                  ),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(1.0, 0.0);
-                    const end = Offset.zero;
-                    const curve = Curves.easeInOut;
+    return Builder(
+      builder: (context) {
+        final isRTL = Directionality.of(context) == TextDirection.rtl;
+        final buttonsPadding = 18.w; // Padding for floating action buttons
 
-                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                    var offsetAnimation = animation.drive(tween);
+        return Container(
+          height: widget.reciters.isNotEmpty ? 16.h : 0,
+          // Only apply padding if this is the bottom list
+          padding: widget.isAtBottom
+              ? EdgeInsets.only(right: isRTL ? 0 : buttonsPadding, left: isRTL ? buttonsPadding : 0)
+              : null,
+          child: ListView.builder(
+            controller: _reciterScrollController,
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.reciters.length,
+            itemBuilder: (context, index) {
+              return ReciterCard(
+                reciter: widget.reciters[index],
+                onTap: () {
+                  ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
+                        reciterModel: widget.reciters[index],
+                      );
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => OverlayPage(
+                        reciter: widget.reciters[index],
+                      ),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        const begin = Offset(1.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.easeInOut;
 
-                    return SlideTransition(
-                      position: offsetAnimation,
-                      child: child,
-                    );
-                  },
-                ),
+                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
+                },
+                margin: EdgeInsets.only(right: 20),
               );
             },
-            margin: EdgeInsets.only(right: 20),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -138,18 +151,17 @@ class _ReciterCardState extends ConsumerState<ReciterCard> with SingleTickerProv
         onTapDown: _onTapDown,
         onTapUp: _onTapUp,
         onTapCancel: _onTapCancel,
-
         onTap: widget.onTap,
         focusColor: Colors.transparent,
         child: Builder(
           builder: (context) {
-            final hasFavorite = Focus.of(context).hasFocus ;
+            final hasFavorite = Focus.of(context).hasFocus;
             return Container(
               width: 25.w,
               margin: widget.margin,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                border: hasFavorite? Border.all(color: Colors.white, width: 2) : null,
+                border: hasFavorite ? Border.all(color: Colors.white, width: 2) : null,
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
