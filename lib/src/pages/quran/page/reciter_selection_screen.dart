@@ -28,6 +28,7 @@ import 'package:mawaqit/src/routes/routes_constant.dart';
 class AudioControlWidget extends ConsumerWidget {
   final double buttonSize;
   final double iconSize;
+
   // final FocusNode scheduleListeningFocusNode;
 
   const AudioControlWidget({
@@ -194,7 +195,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     final spacerWidth = buttonSize * 0.25;
 
     reciterFocusNode.onKey = (node, event) {
-      if(event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
         reciterFocusNode.unfocus();
         changeReadingModeFocusNode.requestFocus();
         return KeyEventResult.handled;
@@ -308,31 +309,39 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               builder: (context, ref, child) {
                 return ref.watch(reciteNotifierProvider).when(
                       data: (reciterState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildFavoritesHeader(),
-                            if (reciterState.favoriteReciters.isEmpty)
-                              _buildEmptyFavorites()
-                            else
-                              SizedBox(
-                                height: 16.h,
-                                child: ReciterListView(
-                                  reciters: reciterState.favoriteReciters,
-                                ),
-                              ),
-                            SizedBox(height: 2.h),
-                            _buildAllRecitersHeader(),
+                        final hasSingleFavorite = reciterState.favoriteReciters.length == 1;
+                        final favoriteSection = [
+                          _buildFavoritesHeader(),
+                          if (reciterState.favoriteReciters.isEmpty)
+                            _buildEmptyFavorites()
+                          else
                             SizedBox(
                               height: 16.h,
-                              child: Focus(
-                                focusNode: reciterFocusNode,
-                                child: ReciterListView(
-                                  reciters: reciterState.reciters,
-                                ),
+                              child: ReciterListView(
+                                reciters: reciterState.favoriteReciters,
                               ),
                             ),
-                          ],
+                          SizedBox(height: 2.h),
+                        ];
+
+                        final allRecitersSection = [
+                          _buildAllRecitersHeader(),
+                          SizedBox(
+                            height: 16.h,
+                            child: Focus(
+                              focusNode: reciterFocusNode,
+                              child: ReciterListView(
+                                reciters: reciterState.reciters,
+                              ),
+                            ),
+                          ),
+                        ];
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: hasSingleFavorite
+                              ? [...favoriteSection, ...allRecitersSection]
+                              : [...allRecitersSection, ...favoriteSection],
                         );
                       },
                       loading: () => Column(
