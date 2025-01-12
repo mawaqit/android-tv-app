@@ -92,15 +92,9 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
     try {
       await _saveFavoriteReciters(reciter.id);
       final updatedFavorites = [...state.value!.favoriteReciters, reciter];
-      final updatedReciters = _sortReciters(state.value!.reciters, updatedFavorites);
-      final updatedFilteredFavorites = _filterReciters(updatedFavorites, _currentQuery);
-      final updatedFilteredReciters = _filterReciters(updatedReciters, _currentQuery);
       state = AsyncData(
         state.value!.copyWith(
           favoriteReciters: updatedFavorites,
-          filteredFavoriteReciters: updatedFilteredFavorites,
-          reciters: updatedReciters,
-          filteredReciters: updatedFilteredReciters,
         ),
       );
     } catch (e, s) {
@@ -113,15 +107,12 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
       final reciteImpl = await ref.read(reciteImplProvider.future);
       await reciteImpl.removeFavoriteReciter(reciter.id);
       final updatedFavorites = state.value!.favoriteReciters.where((r) => r.id != reciter.id).toList();
-      final updatedReciters = _sortReciters(state.value!.reciters, updatedFavorites);
-      final updatedFilteredFavorites = _filterReciters(updatedFavorites, _currentQuery);
-      final updatedFilteredReciters = _filterReciters(updatedReciters, _currentQuery);
+      for(int i = 0; i < updatedFavorites.length; i++) {
+        log('recite: ${updatedFavorites[i].name}');
+      }
       state = AsyncData(
         state.value!.copyWith(
           favoriteReciters: updatedFavorites,
-          filteredFavoriteReciters: updatedFilteredFavorites,
-          reciters: updatedReciters,
-          filteredReciters: updatedFilteredReciters,
         ),
       );
     } catch (e, s) {
@@ -180,13 +171,7 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
 
   Future<List<ReciterModel>> _getAllReciters(List<ReciterModel> favorite, List<ReciterModel> reciters) async {
     try {
-      // Sort reciters: favorites first, then the rest
-      final sortedReciters = [
-        ...favorite,
-        ...reciters.where((reciter) => !favorite.any((fav) => fav.id == reciter.id)),
-      ];
-
-      return sortedReciters;
+      return reciters;
     } catch (e, s) {
       state = AsyncError(e, s);
       return [];

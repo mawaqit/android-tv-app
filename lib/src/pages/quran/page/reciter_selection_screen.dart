@@ -253,70 +253,66 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               height: 8.h,
               child: _buildSearchField(),
             ),
-            Consumer(
-              builder: (context, ref, child) {
-                return ref.watch(reciteNotifierProvider).when(
-                      data: (reciterState) {
-                        final hasFavorites = reciterState.favoriteReciters.isNotEmpty;
-
-                        final favoriteSection = [
-                          _buildFavoritesHeader(),
-                          if (reciterState.favoriteReciters.isEmpty)
-                            _buildEmptyFavorites()
-                          else
-                            SizedBox(
-                              height: 16.h,
-                              child: ReciterListView(
-                                reciters: reciterState.favoriteReciters,
-                                isAtBottom: !hasFavorites, // Only bottom if empty
-                              ),
-                            ),
-                          SizedBox(height: 2.h),
-                        ];
-
-                        final allRecitersSection = [
-                          _buildAllRecitersHeader(),
-                          SizedBox(
-                            height: 16.h,
-                            child: Focus(
-                              focusNode: reciterFocusNode,
-                              child: ReciterListView(
-                                reciters: reciterState.reciters,
-                                isAtBottom: hasFavorites, // Bottom if favorites exist
-                              ),
-                            ),
+            ref.watch(reciteNotifierProvider).when(
+                  data: (reciterState) {
+                    final hasFavorites = reciterState.favoriteReciters.isNotEmpty;
+                    log('hasFavorites: $hasFavorites || ${reciterState.favoriteReciters.map((e) => e.name)}');
+                    final favoriteSection = [
+                      _buildFavoritesHeader(),
+                      if (reciterState.favoriteReciters.isEmpty)
+                        _buildEmptyFavorites()
+                      else
+                        SizedBox(
+                          height: 16.h,
+                          child: ReciterListView(
+                            reciters: reciterState.favoriteReciters,
+                            isAtBottom: !hasFavorites, // Only bottom if empty
                           ),
-                        ];
+                        ),
+                      SizedBox(height: 2.h),
+                    ];
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: hasFavorites
-                              ? [
-                                  ...favoriteSection,
-                                  ...allRecitersSection,
-                                ]
-                              : [
-                                  ...allRecitersSection,
-                                  ...favoriteSection,
-                                ],
-                        );
-                      },
-                      loading: () => Column(
-                        children: [
-                          _buildReciterListShimmer(true),
-                          SizedBox(height: 20),
-                          _buildReciterListShimmer(true),
-                        ],
-                      ),
-                      error: (error, stackTrace) => Center(
-                        child: Text(
-                          'Error: $error',
-                          style: TextStyle(color: Colors.white),
+                    final allRecitersSection = [
+                      _buildAllRecitersHeader(),
+                      SizedBox(
+                        height: 16.h,
+                        child: Focus(
+                          focusNode: reciterFocusNode,
+                          child: ReciterListView(
+                            reciters: reciterState.reciters,
+                            isAtBottom: hasFavorites, // Bottom if favorites exist
+                          ),
                         ),
                       ),
+                    ];
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: hasFavorites
+                          ? [
+                              ...favoriteSection,
+                              ...allRecitersSection,
+                            ]
+                          : [
+                              ...allRecitersSection,
+                              ...favoriteSection,
+                            ],
                     );
-              },
-            ),
+                  },
+                  loading: () => Column(
+                    children: [
+                      _buildReciterListShimmer(true),
+                      SizedBox(height: 20),
+                      _buildReciterListShimmer(true),
+                    ],
+                  ),
+                  error: (error, stackTrace) => Center(
+                    child: Text(
+                      'Error: $error',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
           ],
         ),
       ),

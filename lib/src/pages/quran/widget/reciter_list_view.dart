@@ -51,6 +51,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             itemCount: widget.reciters.length,
             itemBuilder: (context, index) {
               return ReciterCard(
+                key: ValueKey(widget.reciters[index].id),
                 reciter: widget.reciters[index],
                 onTap: () {
                   ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
