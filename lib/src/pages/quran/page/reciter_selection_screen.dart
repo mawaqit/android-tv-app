@@ -112,9 +112,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   double sizeOfContainerReciter = 15.w;
   double marginOfContainerReciter = 16;
 
-  late FocusNode reciterFocusNode;
-
-  late FocusNode changeReadingModeFocusNode;
+  late FocusScopeNode favoritesListFocusNode;
+  late FocusScopeNode allRecitersListFocusNode;
+  late FocusScopeNode changeReadingModeFocusNode;
+  late FocusScopeNode searchFocusScopeNode;
 
   // late FocusNode scheduleListeningFocusNode;
   //
@@ -128,7 +129,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   void initState() {
     super.initState();
 
-    changeReadingModeFocusNode = FocusNode(debugLabel: 'change_reading_mode_focus_node');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(reciteNotifierProvider.notifier);
     });
@@ -151,9 +151,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       }
     });
 
-    reciterFocusNode = FocusNode(debugLabel: 'reciter_focus_node');
-
-    changeReadingModeFocusNode = FocusNode(debugLabel: 'change_reading_mode_focus_node');
+    favoritesListFocusNode = FocusScopeNode(debugLabel: 'favorites_list_focus_node');
+    allRecitersListFocusNode = FocusScopeNode(debugLabel: 'all_reciters_list_focus_node');
+    changeReadingModeFocusNode = FocusScopeNode(debugLabel: 'change_reading_mode_focus_node');
+    searchFocusScopeNode = FocusScopeNode(debugLabel: 'search_focus_scope');
     // scheduleListeningFocusNode = FocusNode(debugLabel: 'scheduleListeningFocusNode');
     // favoriteFocusNode = FocusNode(debugLabel: 'favorite_focus_node');
     //
@@ -167,7 +168,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   void dispose() {
     _reciterScrollController.dispose();
 
-    reciterFocusNode.dispose();
+    favoritesListFocusNode.dispose();
+    allRecitersListFocusNode.dispose();
+    changeReadingModeFocusNode.dispose();
     // favoriteFocusNode.dispose();
     // changeReadingModeFocusNode.dispose();
 
@@ -196,13 +199,47 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     final iconSize = buttonSize * 0.5;
     final spacerWidth = buttonSize * 0.25;
 
-    reciterFocusNode.onKey = (node, event) {
-      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        reciterFocusNode.unfocus();
-        changeReadingModeFocusNode.requestFocus();
-        return KeyEventResult.handled;
+    favoritesListFocusNode.onKey = (node, event) {
+      if (event is RawKeyDownEvent) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+          allRecitersListFocusNode.requestFocus();
+          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+          searchFocusScopeNode.requestFocus();
+          return KeyEventResult.handled;
+        }
       }
+      return KeyEventResult.ignored;
+    };
 
+    allRecitersListFocusNode.onKey = (node, event) {
+      if (event is RawKeyDownEvent) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+          if (_hasFavorites()) {
+            favoritesListFocusNode.requestFocus();
+          } else {
+            searchFocusScopeNode.requestFocus();
+          }
+          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+          changeReadingModeFocusNode.requestFocus();
+          return KeyEventResult.handled;
+        }
+      }
+      return KeyEventResult.ignored;
+    };
+
+    changeReadingModeFocusNode.onKey = (node, event) {
+      if (event is RawKeyDownEvent) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowLeft || event.logicalKey == LogicalKeyboardKey.arrowRight) {
+          if (_hasFavorites()) {
+            favoritesListFocusNode.requestFocus();
+          } else {
+            allRecitersListFocusNode.requestFocus();
+          }
+          return KeyEventResult.handled;
+        }
+      }
       return KeyEventResult.ignored;
     };
 
@@ -259,14 +296,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                     final hasFavorites = reciterState.favoriteReciters.isNotEmpty;
                     final favoriteSection = [
                       _buildFavoritesHeader(),
+                      SizedBox(height: 1.h),
                       if (reciterState.favoriteReciters.isEmpty)
                         _buildEmptyFavorites()
                       else
                         SizedBox(
                           height: 16.h,
-                          child: ReciterListView(
-                            reciters: reciterState.favoriteReciters,
-                            isAtBottom: !hasFavorites, // Only bottom if empty
+                          child: FocusScope(
+                            node: favoritesListFocusNode,
+                            child: ReciterListView(
+                              reciters: reciterState.favoriteReciters,
+                              isAtBottom: !hasFavorites, // Only bottom if empty
+                            ),
                           ),
                         ),
                       SizedBox(height: 2.h),
@@ -274,10 +315,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
                     final allRecitersSection = [
                       _buildAllRecitersHeader(),
+                      SizedBox(height: 1.h),
                       SizedBox(
                         height: 16.h,
-                        child: Focus(
-                          focusNode: reciterFocusNode,
+                        child: FocusScope(
+                          node: allRecitersListFocusNode,
                           child: ReciterListView(
                             reciters: reciterState.reciters,
                             isAtBottom: hasFavorites, // Bottom if favorites exist
@@ -319,72 +361,78 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     );
   }
 
-  Column buildFloatingColumn(double spacerWidth, double buttonSize, double iconSize, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        ref.watch(reciteNotifierProvider).whenOrNull(
-                  data: (reciter) => Padding(
-                    padding: EdgeInsets.only(bottom: spacerWidth),
-                    child: SizedBox(
-                      width: buttonSize,
-                      height: buttonSize,
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.black.withOpacity(.5),
-                        child: Icon(
-                          Icons.schedule,
-                          color: Colors.white,
-                          size: iconSize,
+  FocusScope buildFloatingColumn(double spacerWidth, double buttonSize, double iconSize, BuildContext context) {
+    return FocusScope(
+      node: changeReadingModeFocusNode,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          ref.watch(reciteNotifierProvider).whenOrNull(
+                    data: (reciter) => Padding(
+                      padding: EdgeInsets.only(bottom: spacerWidth),
+                      child: SizedBox(
+                        width: buttonSize,
+                        height: buttonSize,
+                        child: FloatingActionButton(
+                          heroTag: 'schedule',
+                          backgroundColor: Colors.black.withOpacity(.5),
+                          child: Icon(
+                            Icons.schedule,
+                            color: Colors.white,
+                            size: iconSize,
+                          ),
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
+                            );
+                          },
                         ),
-                        onPressed: () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
-                          );
-                        },
                       ),
                     ),
-                  ),
-                ) ??
-            const SizedBox.shrink(),
-        Padding(
-          padding: EdgeInsets.only(bottom: spacerWidth),
-          child: SizedBox(
-            width: buttonSize,
-            height: buttonSize,
-            child: FloatingActionButton(
-              focusNode: changeReadingModeFocusNode,
-              focusColor: Theme.of(context).primaryColor,
-              backgroundColor: Colors.black.withOpacity(.5),
-              child: Icon(
-                Icons.menu_book,
-                color: Colors.white,
-                size: iconSize,
+                  ) ??
+              const SizedBox.shrink(),
+          Padding(
+            padding: EdgeInsets.only(bottom: spacerWidth),
+            child: SizedBox(
+              width: buttonSize,
+              height: buttonSize,
+              child: FloatingActionButton(
+                heroTag: 'change_reading_mode',
+                focusColor: Theme.of(context).primaryColor,
+                backgroundColor: Colors.black.withOpacity(.5),
+                child: Icon(
+                  Icons.menu_book,
+                  color: Colors.white,
+                  size: iconSize,
+                ),
+                onPressed: () async {
+                  ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => QuranReadingScreen(),
+                    ),
+                  );
+                },
               ),
-              onPressed: () async {
-                ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => QuranReadingScreen(),
-                  ),
-                );
-              },
             ),
           ),
-        ),
-        AudioControlWidget(
-          buttonSize: buttonSize,
-          iconSize: iconSize,
-        ),
-      ],
+          AudioControlWidget(
+            buttonSize: buttonSize,
+            iconSize: iconSize,
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildFavoritesHeader() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding),
+      padding: EdgeInsets.symmetric(
+        horizontal: ReciterSelectionScreen.horizontalPadding,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start, // Aligns items to the start of the row
         crossAxisAlignment: CrossAxisAlignment.center, // Vertically centers items
@@ -431,7 +479,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   Widget _buildEmptyFavorites() {
     return Container(
       height: 16.h,
-      margin: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding),
+      margin: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding, vertical: 10),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.black26,
@@ -530,5 +578,12 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         },
       ),
     );
+  }
+
+  bool _hasFavorites() {
+    return ref.read(reciteNotifierProvider).maybeWhen(
+          data: (reciterState) => reciterState.favoriteReciters.isNotEmpty,
+          orElse: () => false,
+        );
   }
 }

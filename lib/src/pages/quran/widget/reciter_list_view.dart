@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
+import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/widget/favorite_overlay.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/const/resource.dart';
@@ -39,48 +40,54 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
         final isRTL = Directionality.of(context) == TextDirection.rtl;
         final buttonsPadding = 18.w; // Padding for floating action buttons
 
-        return Container(
-          height: widget.reciters.isNotEmpty ? 16.h : 0,
-          // Only apply padding if this is the bottom list
-          padding: widget.isAtBottom
-              ? EdgeInsets.only(right: isRTL ? 0 : buttonsPadding, left: isRTL ? buttonsPadding : 0)
-              : null,
-          child: ListView.builder(
-            controller: _reciterScrollController,
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.reciters.length,
-            itemBuilder: (context, index) {
-              return ReciterCard(
-                key: ValueKey(widget.reciters[index].id),
-                reciter: widget.reciters[index],
-                onTap: () {
-                  ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                        reciterModel: widget.reciters[index],
-                      );
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => OverlayPage(
-                        reciter: widget.reciters[index],
-                      ),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        const begin = Offset(1.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.easeInOut;
-
-                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
+        return Padding(
+          padding: EdgeInsets.only(
+            right: isRTL ? ReciterSelectionScreen.horizontalPadding : 0,
+            left: isRTL ? 0 : ReciterSelectionScreen.horizontalPadding,
+          ),
+          child: Container(
+            height: widget.reciters.isNotEmpty ? 16.h : 0,
+            // Only apply padding if this is the bottom list
+            padding: widget.isAtBottom
+                ? EdgeInsets.only(right: isRTL ? 0 : buttonsPadding, left: isRTL ? buttonsPadding : 0)
+                : null,
+            child: ListView.builder(
+              controller: _reciterScrollController,
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.reciters.length,
+              itemBuilder: (context, index) {
+                return ReciterCard(
+                  key: ValueKey(widget.reciters[index].id),
+                  reciter: widget.reciters[index],
+                  onTap: () {
+                    ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
+                          reciterModel: widget.reciters[index],
                         );
-                      },
-                    ),
-                  );
-                },
-                margin: EdgeInsets.only(right: 20),
-              );
-            },
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => OverlayPage(
+                          reciter: widget.reciters[index],
+                        ),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.easeInOut;
+
+                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                          var offsetAnimation = animation.drive(tween);
+
+                          return SlideTransition(
+                            position: offsetAnimation,
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  margin: EdgeInsets.only(right: 20),
+                );
+              },
+            ),
           ),
         );
       },
