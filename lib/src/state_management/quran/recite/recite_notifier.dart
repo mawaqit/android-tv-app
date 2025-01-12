@@ -107,9 +107,6 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
       final reciteImpl = await ref.read(reciteImplProvider.future);
       await reciteImpl.removeFavoriteReciter(reciter.id);
       final updatedFavorites = state.value!.favoriteReciters.where((r) => r.id != reciter.id).toList();
-      for(int i = 0; i < updatedFavorites.length; i++) {
-        log('recite: ${updatedFavorites[i].name}');
-      }
       state = AsyncData(
         state.value!.copyWith(
           favoriteReciters: updatedFavorites,

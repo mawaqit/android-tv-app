@@ -256,7 +256,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             ref.watch(reciteNotifierProvider).when(
                   data: (reciterState) {
                     final hasFavorites = reciterState.favoriteReciters.isNotEmpty;
-                    log('hasFavorites: $hasFavorites || ${reciterState.favoriteReciters.map((e) => e.name)}');
                     final favoriteSection = [
                       _buildFavoritesHeader(),
                       if (reciterState.favoriteReciters.isEmpty)
