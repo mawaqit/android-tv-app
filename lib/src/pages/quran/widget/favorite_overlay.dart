@@ -130,7 +130,6 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                               ),
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -140,29 +139,34 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                     child: Stack(
                       children: [
                         // Background Image
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            child: FastCachedImage(
-                              url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
-                              fit: BoxFit.contain,
-                              alignment: Alignment.topRight,
-                              errorBuilder: (context, error, stackTrace) {
-                                return _buildOfflineImage();
-                              },
-                              loadingBuilder: (context, progress) {
-                                return Container(
-                                  color: Colors.black,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      value: progress.progressPercentage.value,
-                                    ),
-                                  ),
-                                );
-                              },
-                              fadeInDuration: const Duration(milliseconds: 500),
-                            ),
-                          ),
+                        Builder(
+                          builder: (context) {
+                            final isRTL = Directionality.of(context) == TextDirection.rtl;
+                            return Align(
+                              alignment: isRTL ? Alignment.centerLeft : Alignment.centerRight,
+                              child: Container(
+                                child: FastCachedImage(
+                                  url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
+                                  fit: BoxFit.contain,
+                                  alignment: Alignment.topRight,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return _buildOfflineImage();
+                                  },
+                                  loadingBuilder: (context, progress) {
+                                    return Container(
+                                      color: Colors.black,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          value: progress.progressPercentage.value,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  fadeInDuration: const Duration(milliseconds: 500),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         // Left Gradient Effect
                         Container(
@@ -176,7 +180,6 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                                 Colors.transparent,
                               ],
                               stops: [0.2, 1.0],
-
                             ),
                           ),
                         ),

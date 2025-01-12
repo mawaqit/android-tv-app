@@ -95,6 +95,7 @@ class AudioControlWidget extends ConsumerWidget {
 
 class ReciterSelectionScreen extends ConsumerStatefulWidget {
   final String surahName;
+  static double horizontalPadding = 3.w;
 
   const ReciterSelectionScreen({super.key, required this.surahName});
 
@@ -382,32 +383,35 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   }
 
   Widget _buildFavoritesHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start, // Aligns items to the start of the row
-      crossAxisAlignment: CrossAxisAlignment.center, // Vertically centers items
-      children: [
-        Icon(
-          Icons.favorite,
-          color: Theme.of(context).primaryColor,
-          size: 18.sp, // Slightly larger icon for better emphasis
-        ),
-        SizedBox(width: 12), // Increased spacing for a cleaner layout
-        Text(
-          S.of(context).favorites,
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Roboto',
-            fontSize: 16.sp, // Slightly larger text for better readability
-            fontWeight: FontWeight.w600, // Semi-bold for a polished look
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start, // Aligns items to the start of the row
+        crossAxisAlignment: CrossAxisAlignment.center, // Vertically centers items
+        children: [
+          Icon(
+            Icons.favorite,
+            color: Theme.of(context).primaryColor,
+            size: 18.sp, // Slightly larger icon for better emphasis
           ),
-        ),
-      ],
+          SizedBox(width: 12), // Increased spacing for a cleaner layout
+          Text(
+            S.of(context).favorites,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Roboto',
+              fontSize: 16.sp, // Slightly larger text for better readability
+              fontWeight: FontWeight.w600, // Semi-bold for a polished look
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildAllRecitersHeader() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding),
       child: Row(
         children: [
           SizedBox(width: 8),
@@ -427,7 +431,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   Widget _buildEmptyFavorites() {
     return Container(
       height: 16.h,
-      margin: EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.black26,
         borderRadius: BorderRadius.circular(10),
@@ -444,17 +449,14 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           SizedBox(
             height: 12,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              S.of(context).noFavoriteReciters,
-              style: TextStyle(
-                color: Colors.white70,
-                fontFamily: 'Roboto',
-                fontSize: 12.sp,
-              ),
-              textAlign: TextAlign.center,
+          Text(
+            S.of(context).noFavoriteReciters,
+            style: TextStyle(
+              color: Colors.white70,
+              fontFamily: 'Roboto',
+              fontSize: 12.sp,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -463,7 +465,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   Widget _buildSearchField() {
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding, vertical: 10),
       child: TextField(
         controller: _searchController,
         onSubmitted: (_) {
