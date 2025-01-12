@@ -160,8 +160,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     //
     // reciteTypeFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_type_focus_scope_node');
     // reciteFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_focus_scope_node');
-
-    _searchController.addListener(_onSearchChanged);
   }
 
   @override
@@ -182,10 +180,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     super.dispose();
   }
 
-  void _onSearchChanged() {
-    final isAllReciters = true;
-    ref.read(reciteNotifierProvider.notifier).setSearchQuery(_searchController.text, isAllReciters);
-  }
+  bool _isSearching = false;
 
   void _navigateToReading() {
     ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
@@ -294,6 +289,28 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             ref.watch(reciteNotifierProvider).when(
                   data: (reciterState) {
                     final hasFavorites = reciterState.favoriteReciters.isNotEmpty;
+                    if (_isSearching) {
+                      final searchedRecitersSection = [
+                        SizedBox(height: 2.h),
+                        SizedBox(
+                          height: 16.h,
+                          child: FocusScope(
+                            node: allRecitersListFocusNode,
+                            child: ReciterListView(
+                              reciters: reciterState.filteredReciters,
+                              isAtBottom: false, // Bottom if favorites exist
+                            ),
+                          ),
+                        ),
+                      ];
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...searchedRecitersSection,
+                        ],
+                      );
+                    }
                     final favoriteSection = [
                       _buildFavoritesHeader(),
                       SizedBox(height: 1.h),
@@ -516,19 +533,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding, vertical: 10),
       child: TextField(
         controller: _searchController,
-        onSubmitted: (_) {
-          final isEmptyList = ref.read(reciteNotifierProvider).maybeWhen(
-                data: (reciter) => reciter.filteredReciters.isEmpty,
-                orElse: () => false,
-              );
-          // if (isEmptyList) {
-          //   FocusScope.of(context).requestFocus(favoriteFocusNode);
-          // } else {
-          //   FocusScope.of(context).requestFocus(reciteFocusScopeNode);
-          //   if (reciteFocusScopeNode.children.isNotEmpty) {
-          //     reciteFocusScopeNode.children.first.requestFocus();
-          //   }
-          // }
+        onChanged: (value) {
+          setState(() {
+            _isSearching = value.isNotEmpty;
+          });
+          ref.read(reciteNotifierProvider.notifier).setSearchQuery(value);
         },
         style: TextStyle(color: Colors.white),
         decoration: InputDecoration(
@@ -585,5 +594,16 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           data: (reciterState) => reciterState.favoriteReciters.isNotEmpty,
           orElse: () => false,
         );
+  }
+  Widget _buildReciterLists() {
+    return ref.watch(reciteNotifierProvider).when(
+      data: (reciterState) {
+        return Container(
+          color: Colors.redAccent,
+        );
+      },
+      loading: () => _buildReciterListShimmer(true),
+      error: (error, _) => Center(child: Text('Error: $error')),
+    );
   }
 }

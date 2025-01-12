@@ -35,38 +35,9 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
       reciters: aggregatedReciters,
       favoriteReciters: favoriteReciters,
       filteredReciters: aggregatedReciters,
-      filteredFavoriteReciters: favoriteReciters,
     );
   }
 
-  void setSearchQuery(String query, bool isAllReciters) {
-    _currentQuery = query.toLowerCase();
-    _isAllReciters = isAllReciters;
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      _updateFilteredReciters(_currentQuery, _isAllReciters);
-    });
-  }
-
-  Future<void> _updateFilteredReciters(String query, bool isAllReciters) async {
-    final currentState = state.value;
-    if (currentState == null) return;
-    state = await AsyncValue.guard(() async {
-      final updatedFilteredReciters = _filterReciters(currentState.reciters, query);
-      final updatedFilteredFavorites = _filterReciters(currentState.favoriteReciters, query);
-      return currentState.copyWith(
-        filteredReciters: updatedFilteredReciters,
-        filteredFavoriteReciters: updatedFilteredFavorites,
-      );
-    });
-  }
-
-  List<ReciterModel> _filterReciters(List<ReciterModel> reciters, String query) {
-    if (query.length <= 2) {
-      return reciters;
-    }
-    return reciters.where((reciter) => reciter.name.toLowerCase().contains(query)).toList();
-  }
 
   void setSelectedReciter({
     required ReciterModel reciterModel,
@@ -174,6 +145,34 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
       return [];
     }
   }
+
+
+  void setSearchQuery(String query) {
+    _currentQuery = query.toLowerCase();
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      _updateFilteredReciters(_currentQuery);
+    });
+  }
+
+  Future<void> _updateFilteredReciters(String query) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+    state = await AsyncValue.guard(() async {
+      final updatedFilteredReciters = _filterReciters(currentState.reciters, query);
+      return currentState.copyWith(
+        filteredReciters: updatedFilteredReciters,
+      );
+    });
+  }
+
+  List<ReciterModel> _filterReciters(List<ReciterModel> reciters, String query) {
+    if (query.isEmpty) {
+      return reciters;
+    }
+    return reciters.where((reciter) => reciter.name.toLowerCase().contains(query)).toList();
+  }
+
 }
 
 final reciteNotifierProvider = AsyncNotifierProvider<ReciteNotifier, ReciteState>(ReciteNotifier.new);
