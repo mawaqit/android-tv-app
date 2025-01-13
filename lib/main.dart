@@ -54,8 +54,7 @@ Future<void> main() async {
       Hive.registerAdapter(ReciterModelAdapter());
       Hive.registerAdapter(MoshafModelAdapter());
       MediaKit.ensureInitialized();
-/*       await ToggleScreenFeature.restoreScheduledTimers();
- */
+
       runApp(
         riverpod.ProviderScope(
           child: MyApp(),
@@ -65,6 +64,8 @@ Future<void> main() async {
           ],
         ),
       );
+      await Future.delayed(const Duration(seconds: 5));
+      await ToggleScreenFeature.restoreScheduledTimers();
     },
   );
 }

@@ -163,7 +163,8 @@ class ToggleScreenFeature {
     }
   }
 
-  static Future<void> restoreScheduledTimers() async {
+static Future<void> restoreScheduledTimers() async {
+  try {
     print('=== Attempting to restore scheduled timers ===');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final scheduleDataString = prefs.getString(_scheduledInfoKey);
@@ -172,23 +173,31 @@ class ToggleScreenFeature {
     print('Saved schedule data exists: ${scheduleDataString != null}');
     print('Feature is active: $isFeatureActive');
 
-    if (scheduleDataString != null && isFeatureActive) {
-      print('Restoring schedules from saved data');
-      final scheduleData = json.decode(scheduleDataString) as List;
-      _scheduleInfoList = scheduleData.map((data) => TimerScheduleInfo.fromJson(data)).toList();
+    if (scheduleDataString == null || !isFeatureActive) {
+      print('No schedules to restore or feature is inactive');
+      return;
+    }
 
-      final now = AppDateTime.now();
-      final timeShiftManager = TimeShiftManager();
+    print('Restoring schedules from saved data');
+    final scheduleData = json.decode(scheduleDataString) as List;
+    _scheduleInfoList = scheduleData
+        .map((data) => TimerScheduleInfo.fromJson(data))
+        .where((info) => info != null) // Filter out any null entries
+        .toList();
 
-      print('Removing past schedules');
-      _scheduleInfoList.removeWhere((info) {
-        final isPast = info.scheduledTime.isBefore(now);
-        if (isPast) print('Removing past schedule: ${info.scheduledTime}');
-        return isPast;
-      });
+    final now = AppDateTime.now();
+    final timeShiftManager = TimeShiftManager();
 
-      print('Creating new timers for future schedules');
-      for (var info in _scheduleInfoList) {
+    print('Removing past schedules');
+    _scheduleInfoList.removeWhere((info) {
+      final isPast = info.scheduledTime.isBefore(now);
+      if (isPast) print('Removing past schedule: ${info.scheduledTime}');
+      return isPast;
+    });
+
+    print('Creating new timers for future schedules');
+    for (var info in _scheduleInfoList) {
+      try {
         final delay = info.scheduledTime.difference(now);
         if (delay.isNegative) {
           print('Skipping past schedule: ${info.scheduledTime}');
@@ -197,26 +206,32 @@ class ToggleScreenFeature {
 
         print('Scheduling timer for ${info.scheduledTime} (${info.actionType})');
         final timer = Timer(delay, () {
-          print('Timer triggered for ${info.scheduledTime} (${info.actionType})');
-          if (info.actionType == 'screenOn') {
-            timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
-          } else {
-            timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
+          try {
+            print('Timer triggered for ${info.scheduledTime} (${info.actionType})');
+            if (info.actionType == 'screenOn') {
+              timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
+            } else {
+              timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
+            }
+          } catch (e) {
+            print('Error executing timer action: $e');
           }
         });
 
         final timeString = '${info.scheduledTime.hour}:${info.scheduledTime.minute}';
-        if (_scheduledTimers[timeString] != null) {
-          _scheduledTimers[timeString]!.add(timer);
-        } else {
-          _scheduledTimers[timeString] = [timer];
-        }
+        _scheduledTimers[timeString] ??= [];
+        _scheduledTimers[timeString]!.add(timer);
+      } catch (e) {
+        print('Error scheduling timer for ${info.scheduledTime}: $e');
       }
-
-      print('Saving restored schedules');
-      await saveScheduledEventsToLocale();
     }
+
+    print('Saving restored schedules');
+    await saveScheduledEventsToLocale();
+  } catch (e) {
+    print('Error restoring scheduled timers: $e');
   }
+}
 
   static void _scheduleForPrayer(
     String timeString,
