@@ -334,41 +334,39 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       return _buildSearchResults(reciterState);
     }
 
-    final favoriteSection = _buildFavoriteSection(reciterState);
-    final allRecitersSection = _buildAllRecitersSection(reciterState);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: hasFavorites
-          ? [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: favoriteSection,
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: allRecitersSection,
-                ),
-              ),
-            ]
-          : [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: allRecitersSection,
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: favoriteSection,
-                ),
-              ),
-            ],
+      children: [
+        if (hasFavorites) ...[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _buildFavoriteSection(reciterState),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _buildAllRecitersSection(reciterState),
+            ),
+          ),
+        ] else ...[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _buildAllRecitersSection(reciterState),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _buildFavoriteSection(reciterState),
+            ),
+          ),
+        ],
+      ],
     );
+
   }
 
   Widget _buildSearchResults(ReciteState reciterState) {
@@ -392,22 +390,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       );
     }
 
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 2.h),
-          Expanded(
-            child: FocusScope(
-              node: searchListFocusNode,
-              child: ReciterListView(
-                reciters: reciterState.filteredReciters,
-                isAtBottom: false,
-              ),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 2.h),
+        FocusScope(
+          node: searchListFocusNode,
+          child: ReciterListView(
+            reciters: reciterState.filteredReciters,
+            isAtBottom: false,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -520,7 +514,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           Icon(
             Icons.favorite,
             color: Theme.of(context).primaryColor,
-            size: 18.sp,
+            size: 16.sp,
           ),
           SizedBox(width: 12),
           Text(
@@ -528,7 +522,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Roboto',
-              fontSize: 16.sp,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -547,7 +541,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             S.of(context).allReciters,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16.sp,
+              fontSize: 14.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
