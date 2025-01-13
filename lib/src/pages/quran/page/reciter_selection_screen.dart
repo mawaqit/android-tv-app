@@ -13,15 +13,14 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_state.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
+import 'package:mawaqit/src/state_management/quran/recite/recite_state.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/audio_control_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/audio_control_state.dart';
 import 'package:mawaqit/src/state_management/quran/schedule_listening/schedule_listening_notifier.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mawaqit/i18n/l10n.dart';
-
 import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
-
 import '../reading/quran_reading_screen.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
 
@@ -29,13 +28,10 @@ class AudioControlWidget extends ConsumerWidget {
   final double buttonSize;
   final double iconSize;
 
-  // final FocusNode scheduleListeningFocusNode;
-
   const AudioControlWidget({
     Key? key,
     required this.buttonSize,
     required this.iconSize,
-    // required this.scheduleListeningFocusNode,
   }) : super(key: key);
 
   bool _isWithinScheduledTime(TimeOfDay startTime, TimeOfDay endTime) {
@@ -59,17 +55,14 @@ class AudioControlWidget extends ConsumerWidget {
             return scheduleState.when(
               data: (schedule) {
                 final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
-
                 final shouldShow = schedule.isScheduleEnabled && isWithinTime;
 
-                if (!shouldShow) {
-                  return const SizedBox.shrink();
-                }
+                if (!shouldShow) return const SizedBox.shrink();
+
                 return SizedBox(
-                  width: buttonSize, // Set the desired width
-                  height: buttonSize, // Set the desired height
+                  width: buttonSize,
+                  height: buttonSize,
                   child: FloatingActionButton(
-                    // focusNode: scheduleListeningFocusNode,
                     focusColor: Theme.of(context).primaryColor,
                     backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
                     child: Icon(
@@ -107,10 +100,8 @@ class ReciterSelectionScreen extends ConsumerStatefulWidget {
 
 class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   final ScrollController _reciterScrollController = ScrollController();
-  double sizeOfContainerReciter = 15.w;
-  double marginOfContainerReciter = 16;
+  final TextEditingController _searchController = TextEditingController();
 
   late FocusScopeNode favoritesListFocusNode;
   late FocusScopeNode allRecitersListFocusNode;
@@ -118,65 +109,70 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   late FocusScopeNode searchListFocusNode;
   late FocusNode searchFocusScopeNode;
 
-  // late FocusNode scheduleListeningFocusNode;
-  //
-  // late FocusScopeNode reciteTypeFocusScopeNode;
-  // late FocusScopeNode reciteFocusScopeNode;
-
-  final TextEditingController _searchController = TextEditingController();
   late StreamSubscription<bool> keyboardSubscription;
+
+  bool _isSearching = false;
+  bool _foundReciters = false;
 
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(reciteNotifierProvider.notifier);
-    });
-
-    // Set initial focus to favorites list
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_hasFavorites()) {
-        favoritesListFocusNode.requestFocus();
-      } else {
-        allRecitersListFocusNode.requestFocus();
-      }
-    });
-
-    var keyboardVisibilityController = KeyboardVisibilityController();
-    // Setup keyboard listener
-    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
-      if (!visible) {
-        if (_hasFavorites()) {
-          favoritesListFocusNode.requestFocus();
-        } else {
-          allRecitersListFocusNode.requestFocus();
-        }
-      }
-    });
-
-    // Initialize focus nodes
-    searchFocusScopeNode = FocusNode(debugLabel: 'search_focus_scope');
-    favoritesListFocusNode = FocusScopeNode(debugLabel: 'favorites_list_focus_node');
-    allRecitersListFocusNode = FocusScopeNode(debugLabel: 'all_reciters_list_focus_node');
-    searchListFocusNode = FocusScopeNode(debugLabel: 'search_list_focus_node');
-    changeReadingModeFocusNode = FocusScopeNode(debugLabel: 'change_reading_mode_focus_node');
+    _initializeFocusNodes();
+    _setupKeyboardListener();
   }
 
   @override
   void dispose() {
-    searchFocusScopeNode.dispose();
-    favoritesListFocusNode.dispose();
-    allRecitersListFocusNode.dispose();
-    changeReadingModeFocusNode.dispose();
+    _disposeFocusNodes();
     keyboardSubscription.cancel();
-    searchListFocusNode.dispose();
     _searchController.dispose();
     super.dispose();
   }
 
-  bool _isSearching = false;
-  bool _foundReciters = false;
+  void _initializeFocusNodes() {
+    searchFocusScopeNode = FocusNode(debugLabel: 'search_focus_node');
+    favoritesListFocusNode = FocusScopeNode(debugLabel: 'favorites_list_focus_scope_node');
+    allRecitersListFocusNode = FocusScopeNode(debugLabel: 'all_reciters_list_focus_scope_node');
+    searchListFocusNode = FocusScopeNode(debugLabel: 'search_list_focus_scope_node');
+    changeReadingModeFocusNode = FocusScopeNode(debugLabel: 'change_reading_mode_focus_scope_node');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(reciteNotifierProvider.notifier);
+      _setInitialFocus();
+    });
+  }
+
+  void _disposeFocusNodes() {
+    searchFocusScopeNode.dispose();
+    favoritesListFocusNode.dispose();
+    allRecitersListFocusNode.dispose();
+    changeReadingModeFocusNode.dispose();
+    searchListFocusNode.dispose();
+  }
+
+  void _setupKeyboardListener() {
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        _setInitialFocus();
+      }
+    });
+  }
+
+  void _setInitialFocus() {
+    if (_hasFavorites()) {
+      favoritesListFocusNode.requestFocus();
+    } else {
+      allRecitersListFocusNode.requestFocus();
+    }
+  }
+
+  bool _hasFavorites() {
+    return ref.read(reciteNotifierProvider).maybeWhen(
+          data: (reciterState) => reciterState.favoriteReciters.isNotEmpty,
+          orElse: () => false,
+        );
+  }
 
   void _navigateToReading() {
     ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
@@ -189,210 +185,128 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     final iconSize = buttonSize * 0.5;
     final spacerWidth = buttonSize * 0.25;
 
-    favoritesListFocusNode.onKey = (node, event) {
-      if (event is RawKeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-          allRecitersListFocusNode.requestFocus();
-          return KeyEventResult.handled;
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-          searchFocusScopeNode.requestFocus();
-          return KeyEventResult.handled;
-        }
-      }
-      return KeyEventResult.ignored;
-    };
-
-    allRecitersListFocusNode.onKey = (node, event) {
-      if (event is RawKeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-          if (_hasFavorites()) {
-            favoritesListFocusNode.requestFocus();
-          } else {
-            searchFocusScopeNode.requestFocus();
-          }
-          return KeyEventResult.handled;
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-          changeReadingModeFocusNode.requestFocus();
-          return KeyEventResult.handled;
-        }
-      }
-      return KeyEventResult.ignored;
-    };
-
-    changeReadingModeFocusNode.onKey = (node, event) {
-      if (event is RawKeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.arrowLeft || event.logicalKey == LogicalKeyboardKey.arrowRight) {
-          if (_foundReciters && !ref.read(reciteNotifierProvider.notifier).isQueryEmpty) {
-            searchListFocusNode.requestFocus();
-          } else {
-            if (_hasFavorites()) {
-              favoritesListFocusNode.requestFocus();
-            } else {
-              allRecitersListFocusNode.requestFocus();
-            }
-          }
-          return KeyEventResult.handled;
-        }
-      }
-      return KeyEventResult.ignored;
-    };
-
-    searchListFocusNode.onKey = (node, event) {
-      if (event is RawKeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-          searchFocusScopeNode.requestFocus();
-          return KeyEventResult.handled;
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-          changeReadingModeFocusNode.requestFocus();
-          return KeyEventResult.handled;
-        }
-      }
-      return KeyEventResult.ignored;
-    };
+    _setupFocusNodeCallbacks();
 
     return Scaffold(
       key: _scaffoldKey,
-      floatingActionButton: buildFloatingColumn(spacerWidth, buttonSize, iconSize, context),
+      floatingActionButton: _buildFloatingColumn(spacerWidth, buttonSize, iconSize, context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      appBar: AppBar(
-        toolbarHeight: 40,
-        backgroundColor: Color(0xFF28262F),
-        elevation: 0,
-        title: AutoSizeText(
-          S.of(context).chooseReciter,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.bold,
-          ),
-          maxLines: 1,
-          minFontSize: 6.sp.roundToDouble(),
-          maxFontSize: 20.sp.roundToDouble(),
-          stepGranularity: 1,
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+    );
+  }
+
+  void _setupFocusNodeCallbacks() {
+    favoritesListFocusNode.onKey = _handleFavoritesListKeyEvent;
+    allRecitersListFocusNode.onKey = _handleAllRecitersListKeyEvent;
+    changeReadingModeFocusNode.onKey = _handleChangeReadingModeKeyEvent;
+    searchListFocusNode.onKey = _handleSearchListKeyEvent;
+  }
+
+  KeyEventResult _handleFavoritesListKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        allRecitersListFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        searchFocusScopeNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
+  KeyEventResult _handleAllRecitersListKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        if (_hasFavorites()) {
+          favoritesListFocusNode.requestFocus();
+        } else {
+          searchFocusScopeNode.requestFocus();
+        }
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        changeReadingModeFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
+  KeyEventResult _handleChangeReadingModeKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowLeft || event.logicalKey == LogicalKeyboardKey.arrowRight) {
+        if (_foundReciters && !ref.read(reciteNotifierProvider.notifier).isQueryEmpty) {
+          searchListFocusNode.requestFocus();
+        } else {
+          if (_hasFavorites()) {
+            favoritesListFocusNode.requestFocus();
+          } else {
+            allRecitersListFocusNode.requestFocus();
+          }
+        }
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
+  KeyEventResult _handleSearchListKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        searchFocusScopeNode.requestFocus();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        changeReadingModeFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      toolbarHeight: 40,
+      backgroundColor: Color(0xFF28262F),
+      elevation: 0,
+      title: AutoSizeText(
+        S.of(context).chooseReciter,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 14.sp,
+          fontWeight: FontWeight.bold,
         ),
-        centerTitle: true,
-        leading: IconButton(
-          splashRadius: 14.sp,
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        maxLines: 1,
+        minFontSize: 6.sp.roundToDouble(),
+        maxFontSize: 20.sp.roundToDouble(),
+        stepGranularity: 1,
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(R.ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG),
-            fit: BoxFit.cover,
-          ),
-          gradient: ThemeNotifier.quranBackground(),
+      centerTitle: true,
+      leading: IconButton(
+        splashRadius: 14.sp,
+        icon: Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pop(context),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(R.ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG),
+          fit: BoxFit.cover,
         ),
-        child: ListView(
-          children: [
-            SizedBox(
-              height: 8.h,
-              child: _buildSearchField(),
-            ),
-            ref.watch(reciteNotifierProvider).when(
-                  data: (reciterState) {
-                    final hasFavorites = reciterState.favoriteReciters.isNotEmpty;
-                    if (_isSearching) {
-                      // if no reciters found
-                      if (reciterState.filteredReciters.isEmpty) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 2.h),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding),
-                              child: Text(
-                                S.of(context).noReciterSearchResult,
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12.sp,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-
-                      final searchedRecitersSection = [
-                        SizedBox(height: 2.h),
-                        SizedBox(
-                          height: 16.h,
-                          child: FocusScope(
-                            node: searchListFocusNode,
-                            child: ReciterListView(
-                              reciters: reciterState.filteredReciters,
-                              isAtBottom: false, // Bottom if favorites exist
-                            ),
-                          ),
-                        ),
-                      ];
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ...searchedRecitersSection,
-                        ],
-                      );
-                    }
-                    final favoriteSection = [
-                      SizedBox(height: 1.h),
-                      _buildFavoritesHeader(),
-                      SizedBox(height: 1.h),
-                      if (reciterState.favoriteReciters.isEmpty)
-                        _buildEmptyFavorites()
-                      else
-                        SizedBox(
-                          height: 16.h,
-                          child: FocusScope(
-                            node: favoritesListFocusNode,
-                            child: ReciterListView(
-                              reciters: reciterState.favoriteReciters,
-                              isAtBottom: !hasFavorites, // Only bottom if empty
-                            ),
-                          ),
-                        ),
-                      SizedBox(height: 2.h),
-                    ];
-
-                    final allRecitersSection = [
-                      SizedBox(height: 1.h),
-                      _buildAllRecitersHeader(),
-                      SizedBox(height: 1.h),
-                      SizedBox(
-                        height: 16.h,
-                        child: FocusScope(
-                          node: allRecitersListFocusNode,
-                          child: ReciterListView(
-                            reciters: reciterState.reciters,
-                            isAtBottom: hasFavorites, // Bottom if favorites exist
-                          ),
-                        ),
-                      ),
-                    ];
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: hasFavorites
-                          ? [
-                              ...favoriteSection,
-                              ...allRecitersSection,
-                            ]
-                          : [
-                              ...allRecitersSection,
-                              ...favoriteSection,
-                            ],
-                    );
-                  },
+        gradient: ThemeNotifier.quranBackground(),
+      ),
+      child: Column(
+        children: [
+          SizedBox(height: 8.h, child: _buildSearchField()),
+          Expanded(
+            child: ref.watch(reciteNotifierProvider).when(
+                  data: (reciterState) => _buildReciterList(reciterState),
                   loading: () => Column(
                     children: [
                       _buildReciterListShimmer(true),
@@ -407,13 +321,135 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                     ),
                   ),
                 ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  FocusScope buildFloatingColumn(double spacerWidth, double buttonSize, double iconSize, BuildContext context) {
+  Widget _buildReciterList(ReciteState reciterState) {
+    final hasFavorites = reciterState.favoriteReciters.isNotEmpty;
+
+    if (_isSearching) {
+      return _buildSearchResults(reciterState);
+    }
+
+    final favoriteSection = _buildFavoriteSection(reciterState);
+    final allRecitersSection = _buildAllRecitersSection(reciterState);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: hasFavorites
+          ? [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: favoriteSection,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: allRecitersSection,
+                ),
+              ),
+            ]
+          : [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: allRecitersSection,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: favoriteSection,
+                ),
+              ),
+            ],
+    );
+  }
+
+  Widget _buildSearchResults(ReciteState reciterState) {
+    if (reciterState.filteredReciters.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 2.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding),
+            child: Text(
+              S.of(context).noReciterSearchResult,
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 12.sp,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 2.h),
+          Expanded(
+            child: FocusScope(
+              node: searchListFocusNode,
+              child: ReciterListView(
+                reciters: reciterState.filteredReciters,
+                isAtBottom: false,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildFavoriteSection(ReciteState reciterState) {
+    return [
+      SizedBox(height: 1.h),
+      _buildFavoritesHeader(),
+      SizedBox(height: 1.h),
+      if (reciterState.favoriteReciters.isEmpty)
+        _buildEmptyFavorites()
+      else
+        Expanded(
+          child: FocusScope(
+            node: favoritesListFocusNode,
+            child: ReciterListView(
+              reciters: reciterState.favoriteReciters,
+              isAtBottom: !_hasFavorites(),
+            ),
+          ),
+        ),
+      SizedBox(height: 2.h),
+    ];
+  }
+
+  List<Widget> _buildAllRecitersSection(ReciteState reciterState) {
+    return [
+      SizedBox(height: 1.h),
+      _buildAllRecitersHeader(),
+      SizedBox(height: 1.h),
+      Expanded(
+        child: FocusScope(
+          node: allRecitersListFocusNode,
+          child: ReciterListView(
+            reciters: reciterState.reciters,
+            isAtBottom: _hasFavorites(),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  Widget _buildFloatingColumn(double spacerWidth, double buttonSize, double iconSize, BuildContext context) {
     return FocusScope(
       node: changeReadingModeFocusNode,
       child: Column(
@@ -460,13 +496,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                   size: iconSize,
                 ),
                 onPressed: () async {
-                  ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => QuranReadingScreen(),
-                    ),
-                  );
+                  _navigateToReading();
                 },
               ),
             ),
@@ -482,26 +512,24 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   Widget _buildFavoritesHeader() {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: ReciterSelectionScreen.horizontalPadding,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start, // Aligns items to the start of the row
-        crossAxisAlignment: CrossAxisAlignment.center, // Vertically centers items
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(
             Icons.favorite,
             color: Theme.of(context).primaryColor,
-            size: 18.sp, // Slightly larger icon for better emphasis
+            size: 18.sp,
           ),
-          SizedBox(width: 12), // Increased spacing for a cleaner layout
+          SizedBox(width: 12),
           Text(
             S.of(context).favorites,
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Roboto',
-              fontSize: 16.sp, // Slightly larger text for better readability
-              fontWeight: FontWeight.w600, // Semi-bold for a polished look
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -546,9 +574,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             color: Colors.white54,
             size: 22.sp,
           ),
-          SizedBox(
-            height: 12,
-          ),
+          SizedBox(height: 12),
           Text(
             S.of(context).noFavoriteReciters,
             style: TextStyle(
@@ -579,12 +605,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           if (value.isEmpty) {
             _isSearching = false;
             _foundReciters = false;
-            if (_hasFavorites()) {
-              favoritesListFocusNode.requestFocus();
-              print('No reciters found 2');
-            } else {
-              allRecitersListFocusNode.requestFocus();
-            }
+            _setInitialFocus();
             return;
           }
           final state = ref.read(reciteNotifierProvider);
@@ -594,14 +615,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                 searchListFocusNode.requestFocus();
                 _foundReciters = true;
               } else {
-                print('No reciters found');
-                if (_hasFavorites()) {
-                  print('No reciters found 1');
-                  favoritesListFocusNode.requestFocus();
-                } else {
-                  print('No reciters found 3');
-                  allRecitersListFocusNode.requestFocus();
-                }
+                _setInitialFocus();
               }
             },
             orElse: () {},
@@ -640,7 +654,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         itemBuilder: (context, index) {
           return Container(
             width: 25.w,
-            margin: EdgeInsets.only(right: marginOfContainerReciter),
+            margin: EdgeInsets.only(right: 16),
             child: Shimmer.fromColors(
               baseColor: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
               highlightColor: isDarkMode ? Colors.grey[700]! : Colors.grey[100]!,
@@ -655,12 +669,5 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         },
       ),
     );
-  }
-
-  bool _hasFavorites() {
-    return ref.read(reciteNotifierProvider).maybeWhen(
-          data: (reciterState) => reciterState.favoriteReciters.isNotEmpty,
-          orElse: () => false,
-        );
   }
 }
