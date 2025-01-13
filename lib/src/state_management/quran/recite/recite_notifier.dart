@@ -18,7 +18,6 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
   // Option<List<ReciterModel>> _cachedReciters = None();
   Timer? _debounce;
   String _currentQuery = '';
-  bool _isAllReciters = true;
 
   @override
   build() async {
@@ -37,7 +36,6 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
       filteredReciters: aggregatedReciters,
     );
   }
-
 
   void setSelectedReciter({
     required ReciterModel reciterModel,
@@ -146,7 +144,6 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
     }
   }
 
-
   void setSearchQuery(String query) {
     _currentQuery = query.toLowerCase();
     if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -173,6 +170,7 @@ class ReciteNotifier extends AsyncNotifier<ReciteState> {
     return reciters.where((reciter) => reciter.name.toLowerCase().contains(query)).toList();
   }
 
+  bool get isQueryEmpty => _currentQuery.isEmpty;
 }
 
 final reciteNotifierProvider = AsyncNotifierProvider<ReciteNotifier, ReciteState>(ReciteNotifier.new);

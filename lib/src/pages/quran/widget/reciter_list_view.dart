@@ -158,6 +158,7 @@ class _ReciterCardState extends ConsumerState<ReciterCard> with SingleTickerProv
       child: InkWell(
         onTapDown: _onTapDown,
         onTapUp: _onTapUp,
+        autofocus: FocusScope.of(context).hasFocus,
         onTapCancel: _onTapCancel,
         onTap: widget.onTap,
         focusColor: Colors.transparent,
