@@ -378,11 +378,12 @@ class NormalViewStrategy implements QuranViewStrategy {
   @override
   Widget buildView(
       QuranReadingState state, WidgetRef ref, BuildContext context) {
-    final userPrefs = context.watch<UserPreferencesManager>();
-    return (MediaQuery.of(context).orientation == Orientation.portrait &&
-                isPortrait) ||
-            (MediaQuery.of(context).orientation == Orientation.portrait &&
-                !isPortrait)
+bool shouldShowVertical =
+        (MediaQuery.of(context).orientation == Orientation.portrait &&
+                !isPortrait) ||
+            MediaQuery.of(context).orientation == Orientation.landscape &&
+                isPortrait;
+    return shouldShowVertical
         ? VerticalPageViewWidget(
             quranReadingState: state,
           )
