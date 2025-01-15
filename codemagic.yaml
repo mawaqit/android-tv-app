@@ -110,3 +110,74 @@ workflows:
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: $GOOGLE_PLAY_TRACK
+  
+  android-tv-debug:
+    name: Building android TV debug application
+    triggering:
+      events: []  
+      cancel_previous_builds: true
+
+    environment:
+      flutter: 3.13.9
+      vars:
+        PACKAGE_NAME: "com.mawaqit.androidtv"
+
+      android_signing:
+        - Mawaqit Mobile App + Android TV Android keystore
+      groups:
+        - APP
+        - google_credentials
+
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.gradle/caches
+
+    scripts:
+      - name: Retrieve version
+        script: |
+          VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
+          BUILD_NUMBER=1
+          echo "VERSION=$VERSION" >> $CM_ENV
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
+
+      - name: Test version
+        script: |
+          echo "App version: $VERSION"
+          echo "BUILD NUMBER: $BUILD_NUMBER"
+
+          if [ -z ${VERSION} ]; then
+           echo "Version is empty, will not build"
+           exit 1
+          fi
+          if [ -z ${BUILD_NUMBER} ]; then
+           echo "BUILD NUMBER is empty, will not build"
+           exit 1
+          fi
+
+      - name: Install dependencies
+        script: |
+          flutter pub get
+          dart run build_runner build
+
+      - name: Run flutter Unit tests
+        script: |
+          mkdir -p test-results
+          flutter test  \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY  \
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+          > test-results/results.json
+
+      - name: Build APK with Flutter (release)
+        script: |
+          flutter build apk --release \
+            --build-name=$VERSION \
+            --build-number=$BUILD_NUMBER \
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
+
+    artifacts:
+      - build/artifacts/*
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+      - test-results/*
