@@ -126,10 +126,8 @@ class ToggleScreenFeature {
     print('Feature active: $isFeatureActive');
     print('Events scheduled: $areEventsScheduled');
 
-    final shouldReschedule = lastEventDate != null && 
-                           lastEventDate.day != today.day && 
-                           isFeatureActive && 
-                           !areEventsScheduled;
+    final shouldReschedule =
+        lastEventDate != null && lastEventDate.day != today.day && isFeatureActive && !areEventsScheduled;
     print('Should reschedule: $shouldReschedule');
     return shouldReschedule;
   }
@@ -163,75 +161,75 @@ class ToggleScreenFeature {
     }
   }
 
-static Future<void> restoreScheduledTimers() async {
-  try {
-    print('=== Attempting to restore scheduled timers ===');
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final scheduleDataString = prefs.getString(_scheduledInfoKey);
-    final isFeatureActive = await getToggleFeatureState();
+  static Future<void> restoreScheduledTimers() async {
+    try {
+      print('=== Attempting to restore scheduled timers ===');
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final scheduleDataString = prefs.getString(_scheduledInfoKey);
+      final isFeatureActive = await getToggleFeatureState();
 
-    print('Saved schedule data exists: ${scheduleDataString != null}');
-    print('Feature is active: $isFeatureActive');
+      print('Saved schedule data exists: ${scheduleDataString != null}');
+      print('Feature is active: $isFeatureActive');
 
-    if (scheduleDataString == null || !isFeatureActive) {
-      print('No schedules to restore or feature is inactive');
-      return;
-    }
-
-    print('Restoring schedules from saved data');
-    final scheduleData = json.decode(scheduleDataString) as List;
-    _scheduleInfoList = scheduleData
-        .map((data) => TimerScheduleInfo.fromJson(data))
-        .where((info) => info != null) // Filter out any null entries
-        .toList();
-
-    final now = AppDateTime.now();
-    final timeShiftManager = TimeShiftManager();
-
-    print('Removing past schedules');
-    _scheduleInfoList.removeWhere((info) {
-      final isPast = info.scheduledTime.isBefore(now);
-      if (isPast) print('Removing past schedule: ${info.scheduledTime}');
-      return isPast;
-    });
-
-    print('Creating new timers for future schedules');
-    for (var info in _scheduleInfoList) {
-      try {
-        final delay = info.scheduledTime.difference(now);
-        if (delay.isNegative) {
-          print('Skipping past schedule: ${info.scheduledTime}');
-          continue;
-        }
-
-        print('Scheduling timer for ${info.scheduledTime} (${info.actionType})');
-        final timer = Timer(delay, () {
-          try {
-            print('Timer triggered for ${info.scheduledTime} (${info.actionType})');
-            if (info.actionType == 'screenOn') {
-              timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
-            } else {
-              timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
-            }
-          } catch (e) {
-            print('Error executing timer action: $e');
-          }
-        });
-
-        final timeString = '${info.scheduledTime.hour}:${info.scheduledTime.minute}';
-        _scheduledTimers[timeString] ??= [];
-        _scheduledTimers[timeString]!.add(timer);
-      } catch (e) {
-        print('Error scheduling timer for ${info.scheduledTime}: $e');
+      if (scheduleDataString == null || !isFeatureActive) {
+        print('No schedules to restore or feature is inactive');
+        return;
       }
-    }
 
-    print('Saving restored schedules');
-    await saveScheduledEventsToLocale();
-  } catch (e) {
-    print('Error restoring scheduled timers: $e');
+      print('Restoring schedules from saved data');
+      final scheduleData = json.decode(scheduleDataString) as List;
+      _scheduleInfoList = scheduleData
+          .map((data) => TimerScheduleInfo.fromJson(data))
+          .where((info) => info != null) // Filter out any null entries
+          .toList();
+
+      final now = AppDateTime.now();
+      final timeShiftManager = TimeShiftManager();
+
+      print('Removing past schedules');
+      _scheduleInfoList.removeWhere((info) {
+        final isPast = info.scheduledTime.isBefore(now);
+        if (isPast) print('Removing past schedule: ${info.scheduledTime}');
+        return isPast;
+      });
+
+      print('Creating new timers for future schedules');
+      for (var info in _scheduleInfoList) {
+        try {
+          final delay = info.scheduledTime.difference(now);
+          if (delay.isNegative) {
+            print('Skipping past schedule: ${info.scheduledTime}');
+            continue;
+          }
+
+          print('Scheduling timer for ${info.scheduledTime} (${info.actionType})');
+          final timer = Timer(delay, () {
+            try {
+              print('Timer triggered for ${info.scheduledTime} (${info.actionType})');
+              if (info.actionType == 'screenOn') {
+                timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
+              } else {
+                timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
+              }
+            } catch (e) {
+              print('Error executing timer action: $e');
+            }
+          });
+
+          final timeString = '${info.scheduledTime.hour}:${info.scheduledTime.minute}';
+          _scheduledTimers[timeString] ??= [];
+          _scheduledTimers[timeString]!.add(timer);
+        } catch (e) {
+          print('Error scheduling timer for ${info.scheduledTime}: $e');
+        }
+      }
+
+      print('Saving restored schedules');
+      await saveScheduledEventsToLocale();
+    } catch (e) {
+      print('Error restoring scheduled timers: $e');
+    }
   }
-}
 
   static void _scheduleForPrayer(
     String timeString,
@@ -298,11 +296,11 @@ static Future<void> restoreScheduledTimers() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final timersJson = prefs.getString(_scheduledTimersKey);
     print('Saved timers found: ${timersJson != null}');
-    
+
     if (timersJson != null) {
       final timersMap = json.decode(timersJson) as Map<String, dynamic>;
       print('Number of saved timer entries: ${timersMap.length}');
-      
+
       timersMap.forEach((timeString, timerDataList) {
         print('Processing timers for $timeString');
         _scheduledTimers[timeString] = [];
@@ -345,7 +343,7 @@ static Future<void> restoreScheduledTimers() async {
       }
     });
     print('Canceled $canceledTimers timers');
-    
+
     _scheduledTimers.clear();
     _scheduleInfoList.clear();
 

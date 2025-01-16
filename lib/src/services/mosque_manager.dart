@@ -11,6 +11,7 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
@@ -216,8 +217,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       (e) {
         times = e;
         final today = useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
+        final timeShiftManager = TimeShiftManager();
 
-        if (isDeviceRooted && isToggleScreenActivated) {
+        if (isDeviceRooted && isToggleScreenActivated && timeShiftManager.isLauncherInstalled) {
           ToggleScreenFeature.handleDailyRescheduling(
             isIshaFajrOnly: isIshaFajrOnly,
             timeStrings: e.dayTimesStrings(today, salahOnly: false),
