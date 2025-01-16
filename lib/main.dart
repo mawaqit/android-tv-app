@@ -28,6 +28,7 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
@@ -53,6 +54,7 @@ Future<void> main() async {
       Hive.registerAdapter(ReciterModelAdapter());
       Hive.registerAdapter(MoshafModelAdapter());
       MediaKit.ensureInitialized();
+
       runApp(
         riverpod.ProviderScope(
           child: MyApp(),
@@ -62,6 +64,8 @@ Future<void> main() async {
           ],
         ),
       );
+      await Future.delayed(const Duration(seconds: 5));
+      await ToggleScreenFeature.restoreScheduledTimers();
     },
   );
 }

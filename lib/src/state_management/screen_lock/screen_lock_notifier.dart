@@ -23,7 +23,7 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
           DateTime.now().add(Duration(hours: timeShiftManager.shift, minutes: timeShiftManager.shiftInMinutes)),
       isfajrIshaonly: prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false,
       isActive: isActive,
-      selectedMinuteBefore: prefs.getInt(TurnOnOffTvConstant.kMinuteBeforeKey) ?? 10,
+      selectedMinuteBefore: prefs.getInt(TurnOnOffTvConstant.kMinuteBeforeKey) ?? 30,
       selectedMinuteAfter: prefs.getInt(TurnOnOffTvConstant.kMinuteAfterKey) ?? 30,
     );
   }
