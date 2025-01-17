@@ -219,7 +219,7 @@ class ReciterCard extends ConsumerWidget {
         height: 24.w,
         padding: EdgeInsets.only(bottom: 2.h),
         child: Image.asset(
-          "assets/svg/reciter_icon-compressed.png",
+          R.ASSETS_SVG_RECITER_ICON_PNG,
           fit: BoxFit.contain,
         ),
       ),
