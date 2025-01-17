@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class OptimizedCachedImage extends StatefulWidget {
-  final String reciterId;
+  final int reciterId;
   final BoxFit fit;
   final String baseUrl;
   final Widget Function() offlineImageBuilder;
@@ -31,7 +31,7 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage> with Automa
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 100 * int.parse(widget.reciterId)), () {
+    Future.delayed(Duration(milliseconds: 100 * widget.reciterId), () {
       if (mounted) {
         setState(() {
           _shouldLoad = true;

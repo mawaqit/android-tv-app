@@ -156,7 +156,7 @@ class ReciterCard extends ConsumerWidget {
           children: [
             RegExp(r'ONVO.*').hasMatch(deviceModel)
                 ? OptimizedCachedImage(
-                    reciterId: reciter.id.toString(),
+                    reciterId: reciter.id,
                     fit: BoxFit.fitWidth,
                     baseUrl: QuranConstant.kQuranReciterImagesBaseUrl,
                     offlineImageBuilder: _buildOfflineImage,
