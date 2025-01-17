@@ -99,6 +99,8 @@ class ReciterSelectionScreen extends ConsumerStatefulWidget {
 }
 
 class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen> with SingleTickerProviderStateMixin {
+  bool isKeyboardVisible = false;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _reciterScrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
@@ -153,13 +155,14 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   void _setupKeyboardListener() {
     var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
-      if (!visible) {
-        _setInitialFocus();
-      }
+      setState(() {
+        isKeyboardVisible = visible;
+      });
     });
   }
 
   void _setInitialFocus() {
+    if (!mounted) return; // Check if the widget is still mounted
     if (_hasFavorites()) {
       favoritesListFocusNode.requestFocus();
     } else {
@@ -189,6 +192,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: true,
       floatingActionButton: _buildFloatingColumn(spacerWidth, buttonSize, iconSize, context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: _buildAppBar(),
@@ -204,6 +208,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   }
 
   KeyEventResult _handleFavoritesListKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (!mounted) return KeyEventResult.ignored; // Check if the widget is still mounted
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
         allRecitersListFocusNode.requestFocus();
@@ -246,6 +251,13 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           }
         }
         return KeyEventResult.handled;
+      } else if(event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        final changeReadingFloatingActionFocusNode = changeReadingModeFocusNode.children.toList()[0];
+        if(!_foundReciters && changeReadingFloatingActionFocusNode.hasFocus){
+          searchFocusScopeNode.requestFocus();
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
       }
     }
     return KeyEventResult.ignored;
@@ -304,24 +316,26 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       child: Column(
         children: [
           SizedBox(height: 8.h, child: _buildSearchField()),
-          Expanded(
-            child: ref.watch(reciteNotifierProvider).when(
-                  data: (reciterState) => _buildReciterList(reciterState),
-                  loading: () => Column(
-                    children: [
-                      _buildReciterListShimmer(true),
-                      SizedBox(height: 20),
-                      _buildReciterListShimmer(true),
-                    ],
-                  ),
-                  error: (error, stackTrace) => Center(
-                    child: Text(
-                      'Error: $error',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+          isKeyboardVisible
+              ? const SizedBox.shrink()
+              : Expanded(
+                  child: ref.watch(reciteNotifierProvider).when(
+                        data: (reciterState) => _buildReciterList(reciterState),
+                        loading: () => Column(
+                          children: [
+                            _buildReciterListShimmer(true),
+                            SizedBox(height: 20),
+                            _buildReciterListShimmer(true),
+                          ],
+                        ),
+                        error: (error, stackTrace) => Center(
+                          child: Text(
+                            'Error: $error',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
                 ),
-          ),
         ],
       ),
     );
@@ -366,7 +380,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         ],
       ],
     );
-
   }
 
   Widget _buildSearchResults(ReciteState reciterState) {
@@ -457,6 +470,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                         width: buttonSize,
                         height: buttonSize,
                         child: FloatingActionButton(
+                          autofocus: changeReadingModeFocusNode.hasFocus, // it is used here because at change_reading_mode it will break due to up keybind when no result in the search
                           heroTag: 'schedule',
                           backgroundColor: Colors.black.withOpacity(.5),
                           child: Icon(
@@ -597,22 +611,34 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         },
         onSubmitted: (value) {
           if (value.isEmpty) {
-            _isSearching = false;
-            _foundReciters = false;
+            setState(() {
+              _isSearching = false;
+              _foundReciters = false;
+            });
             _setInitialFocus();
             return;
           }
+
           final state = ref.read(reciteNotifierProvider);
           state.maybeWhen(
             data: (reciterState) {
-              if (reciterState.filteredReciters.isNotEmpty) {
+              setState(() {
+                _foundReciters = reciterState.filteredReciters.isNotEmpty;
+              });
+
+              if (_foundReciters) {
                 searchListFocusNode.requestFocus();
-                _foundReciters = true;
               } else {
-                _setInitialFocus();
+                // No results found - focus should stay on change reading mode button
+                changeReadingModeFocusNode.requestFocus();
               }
             },
-            orElse: () {},
+            orElse: () {
+              setState(() {
+                _foundReciters = false;
+              });
+              changeReadingModeFocusNode.requestFocus();
+            },
           );
         },
         style: TextStyle(color: Colors.white),
