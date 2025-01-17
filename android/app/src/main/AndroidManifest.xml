@@ -10,6 +10,9 @@
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
   <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
   <uses-feature android:name="android.hardware.faketouch" android:required="false"/>
   <uses-feature android:name="android.hardware.telephony" android:required="false"/>
@@ -18,14 +21,7 @@
   <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
   <uses-feature android:name="android.hardware.microphone" android:required="false"/>
   <uses-feature android:name="android.hardware.sensor" android:required="false"/>
-<!-- required -->
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-  <!-- foregroundServiceType: dataSync -->
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-
-  <!-- foregroundServiceType: remoteMessaging -->
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
 
 
 
