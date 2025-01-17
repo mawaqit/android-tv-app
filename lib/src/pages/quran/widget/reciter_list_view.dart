@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,9 +7,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
+import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
+import 'package:mawaqit/src/pages/quran/widget/optimized_image_load.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:sizer/sizer.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class ReciterListView extends ConsumerStatefulWidget {
   final List<ReciterModel> reciters;
@@ -25,11 +29,19 @@ class ReciterListView extends ConsumerStatefulWidget {
 class _ReciterListViewState extends ConsumerState<ReciterListView> {
   final ScrollController _reciterScrollController = ScrollController();
   late List<FocusNode> _focusNodes;
-
+  late String _deviceModel;
   @override
   void initState() {
     super.initState();
     _initializeFocusNodes();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _deviceModel = await _getDeviceModel();
+    });
+  }
+
+  Future<String> _getDeviceModel() async {
+    var hardware = await DeviceInfoPlugin().androidInfo;
+    return hardware.model;
   }
 
   void _initializeFocusNodes() {
@@ -100,6 +112,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             child: Builder(
               builder: (context) {
                 return ReciterCard(
+                  deviceModel: _deviceModel,
                   reciter: widget.reciters[index],
                   isSelected: Focus.of(context).hasFocus,
                   margin: EdgeInsets.only(right: 20),
@@ -117,12 +130,14 @@ class ReciterCard extends ConsumerWidget {
   final ReciterModel reciter;
   final bool isSelected;
   final EdgeInsetsGeometry margin;
+  final String deviceModel;
 
   const ReciterCard({
     super.key,
     required this.reciter,
     required this.isSelected,
     required this.margin,
+    required this.deviceModel,
   });
 
   @override
@@ -139,12 +154,18 @@ class ReciterCard extends ConsumerWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // CachedNetworkImage with different sizes for online and offline images
-            FastCachedImage(
-                url: '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
-                fit: BoxFit.fitWidth,
-                loadingBuilder: (context, progress) => Container(color: Colors.transparent),
-                errorBuilder: (context, error, stackTrace) => _buildOfflineImage()),
+            RegExp(r'ONVO.*').hasMatch(deviceModel)
+                ? OptimizedCachedImage(
+                    reciterId: reciter.id.toString(),
+                    fit: BoxFit.fitWidth,
+                    baseUrl: QuranConstant.kQuranReciterImagesBaseUrl,
+                    offlineImageBuilder: _buildOfflineImage,
+                  )
+                : FastCachedImage(
+                    url: '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
+                    fit: BoxFit.fitWidth,
+                    loadingBuilder: (context, progress) => Container(color: Colors.transparent),
+                    errorBuilder: (context, error, stackTrace) => _buildOfflineImage()),
             // Gradient overlay
             Container(
               decoration: BoxDecoration(
@@ -198,7 +219,7 @@ class ReciterCard extends ConsumerWidget {
         height: 24.w,
         padding: EdgeInsets.only(bottom: 2.h),
         child: Image.asset(
-          R.ASSETS_SVG_RECITER_ICON_PNG,
+          "assets/svg/reciter_icon-compressed.png",
           fit: BoxFit.contain,
         ),
       ),
