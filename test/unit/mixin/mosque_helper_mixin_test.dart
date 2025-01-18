@@ -77,8 +77,7 @@ void main() {
     ]);
 
     // Default MosqueConfig
-    when(() => mockConfig.duaAfterPrayerShowTimes)
-        .thenReturn(['10', '10', '10', '10', '10']); // 10 minutes each prayer
+    when(() => mockConfig.duaAfterPrayerShowTimes).thenReturn(['10', '10', '10', '10', '10']); // 10 minutes each prayer
     when(() => mockConfig.iqamaDisplayTime).thenReturn(10);
     when(() => mockConfig.jumuaTimeout).thenReturn(30);
     when(() => mockConfig.randomHadithIntervalDisabling).thenReturn('');
