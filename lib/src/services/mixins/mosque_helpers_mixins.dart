@@ -167,7 +167,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     // Convert iqama times to minutes and handle after-midnight cases
     List<int> timeMinutes = iqamaTimes.mapIndexed((index, time) {
       // For Isha prayer (index 4), if it's very early (e.g. 1:00), treat it as next day
-      if (index == 4 || index == 3 && time.hour < fajrTime.hour) {
+      if ((index == 4 || index == 3)&& time.hour < fajrTime.hour) {
         return (time.hour + 24) * 60 + time.minute;
       }
       return time.hour * 60 + time.minute;
@@ -202,7 +202,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     // Convert prayer times to minutes and handle after-midnight cases
     List<int> timeMinutes = times.mapIndexed((index, time) {
       // For Isha prayer (index 4), if it's very early (e.g. 1:00), treat it as next day
-      if (index == 4 || index == 3 && time.hour < fajrTime.hour) {
+      if ((index == 4 || index == 3) && time.hour < fajrTime.hour) {
         return (time.hour + 24) * 60 + time.minute;
       }
       return time.hour * 60 + time.minute;
