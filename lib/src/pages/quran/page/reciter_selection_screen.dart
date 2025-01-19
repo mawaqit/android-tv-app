@@ -252,7 +252,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         }
         return KeyEventResult.handled;
       } else if(event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        final changeReadingFloatingActionFocusNode = changeReadingModeFocusNode.children.toList()[0];
+        final changeReadingFloatingActionFocusNode = changeReadingModeFocusNode.children.toList()[1];
         if(!_foundReciters && changeReadingFloatingActionFocusNode.hasFocus){
           searchFocusScopeNode.requestFocus();
           return KeyEventResult.handled;
