@@ -63,22 +63,38 @@ class FocusNodes {
     required this.switchQuranModeNode,
   });
 
-  void setupFocusTraversal({required bool isPortrait}) {
-    if (isPortrait) {
-      setupPortraitFocusTraversal();
+  void setupFocusTraversal({required bool isPortrait, required bool settingsOrientation}) {
+    if (isPortrait || settingsOrientation != true) {
+      setupPortraitFocusTraversal(settingsOrientation, isPortrait);
     } else {
       setupLandscapeFocusTraversal();
     }
   }
 
-  void setupPortraitFocusTraversal() {
+  void setupPortraitFocusTraversal(bool settingsOrientation, bool isPortrait) {
     // Setup focus traversal for back button
     backButtonNode.onKey = (node, event) {
-      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown && settingsOrientation == true) {
         pageSelectorNode.requestFocus();
         return KeyEventResult.handled;
       }
-      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowRight) {
+      if (event is RawKeyDownEvent &&
+          event.logicalKey == LogicalKeyboardKey.arrowRight &&
+          settingsOrientation == true &&
+          !isPortrait) {
+        switchQuranNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent &&
+          event.logicalKey == LogicalKeyboardKey.arrowRight &&
+          settingsOrientation != true) {
+        surahSelectorNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent &&
+          event.logicalKey == LogicalKeyboardKey.arrowDown &&
+          settingsOrientation != true &&
+          !isPortrait) {
         switchQuranNode.requestFocus();
         return KeyEventResult.handled;
       }
@@ -87,7 +103,7 @@ class FocusNodes {
 
     // Setup focus traversal for page selector node
     pageSelectorNode.onKey = (node, event) {
-      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp && settingsOrientation == true) {
         switchQuranNode.requestFocus();
         return KeyEventResult.handled;
       }
@@ -101,12 +117,22 @@ class FocusNodes {
 
     // Setup focus traversal for switch quran node
     switchQuranNode.onKey = (node, event) {
-      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowLeft && settingsOrientation == true) {
         backButtonNode.requestFocus();
         return KeyEventResult.handled;
       }
-      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown && settingsOrientation == true) {
         switchToPlayQuranFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent &&
+          event.logicalKey == LogicalKeyboardKey.arrowRight &&
+          settingsOrientation != true) {
+        pageSelectorNode.requestFocus();
+        return KeyEventResult.handled;
+      }
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp && settingsOrientation != true) {
+        backButtonNode.requestFocus();
         return KeyEventResult.handled;
       }
 
@@ -115,15 +141,18 @@ class FocusNodes {
 
     // Setup focus traversal for surah selector node
     switchToPlayQuranFocusNode.onKey = (node, event) {
-      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp && settingsOrientation == true) {
         switchQuranNode.requestFocus();
         return KeyEventResult.handled;
       }
-      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown && settingsOrientation != true) {
         switchScreenViewFocusNode.requestFocus();
         return KeyEventResult.handled;
       }
-
+      if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp && settingsOrientation != true) {
+        surahSelectorNode.requestFocus();
+        return KeyEventResult.handled;
+      }
       return KeyEventResult.ignored;
     };
     // Setup focus traversal for surah selector node
@@ -479,7 +508,9 @@ class NormalViewStrategy implements QuranViewStrategy {
 
   @override
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
-    return isPortrait
+    bool shouldShowVertical = (MediaQuery.of(context).orientation == Orientation.portrait && !isPortrait) ||
+        MediaQuery.of(context).orientation == Orientation.landscape && isPortrait;
+    return shouldShowVertical
         ? VerticalPageViewWidget(
             quranReadingState: state,
           )
@@ -498,7 +529,8 @@ class NormalViewStrategy implements QuranViewStrategy {
     Function(ScrollDirection, bool) onScroll,
     Function(BuildContext, int, int, bool) showPageSelector,
   ) {
-    if (isPortrait) {
+    if ((MediaQuery.of(context).orientation == Orientation.portrait && isPortrait) ||
+        (MediaQuery.of(context).orientation == Orientation.portrait && !isPortrait)) {
       return [
         SurahSelectorWidget(
           isPortrait: isPortrait,
@@ -767,7 +799,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             switchToPlayQuranFocusNode: _switchToPlayQuranFocusNode,
             switchScreenViewFocusNode: _switchScreenViewFocusNode,
             switchQuranModeNode: _switchQuranModeNode);
-        focusNodes.setupFocusTraversal(isPortrait: isPortrait);
+        focusNodes.setupFocusTraversal(isPortrait: isPortrait, settingsOrientation: userPrefs.orientationLandscape);
 
         if (isPortrait) {
           return Stack(
