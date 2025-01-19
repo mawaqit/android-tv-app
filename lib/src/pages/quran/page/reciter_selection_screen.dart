@@ -110,6 +110,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   late FocusScopeNode changeReadingModeFocusNode;
   late FocusScopeNode searchListFocusNode;
   late FocusNode searchFocusScopeNode;
+  late FocusNode changeIntoReadingMode;
 
   late StreamSubscription<bool> keyboardSubscription;
 
@@ -135,8 +136,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     searchFocusScopeNode = FocusNode(debugLabel: 'search_focus_node');
     favoritesListFocusNode = FocusScopeNode(debugLabel: 'favorites_list_focus_scope_node');
     allRecitersListFocusNode = FocusScopeNode(debugLabel: 'all_reciters_list_focus_scope_node');
-    searchListFocusNode = FocusScopeNode(debugLabel: 'search_list_focus_scope_node');
     changeReadingModeFocusNode = FocusScopeNode(debugLabel: 'change_reading_mode_focus_scope_node');
+
+    changeIntoReadingMode = FocusNode(debugLabel: 'change_into_reading_mode_focus_node');
+    searchListFocusNode = FocusScopeNode(debugLabel: 'search_list_focus_scope_node');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(reciteNotifierProvider.notifier);
@@ -252,8 +255,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         }
         return KeyEventResult.handled;
       } else if(event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        final changeReadingFloatingActionFocusNode = changeReadingModeFocusNode.children.toList()[1];
-        if(!_foundReciters && changeReadingFloatingActionFocusNode.hasFocus){
+        if(!_foundReciters && !changeIntoReadingMode.hasFocus){
           searchFocusScopeNode.requestFocus();
           return KeyEventResult.handled;
         }
@@ -496,6 +498,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
               height: buttonSize,
               child: FloatingActionButton(
                 heroTag: 'change_reading_mode',
+                focusNode: changeIntoReadingMode,
                 focusColor: Theme.of(context).primaryColor,
                 backgroundColor: Colors.black.withOpacity(.5),
                 child: Icon(
