@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_notifer.dart';
+import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
 
 class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   Timer? _autoScrollTimer;
   Timer? _hideTimer;
-  late final ScrollController scrollController;
+  late ScrollController scrollController;
 
   @override
   AutoScrollState build() {
@@ -20,6 +24,10 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     return AutoScrollState(
       scrollController: scrollController,
     );
+  }
+
+  void setScrollController(ScrollController controller) {
+    scrollController = controller;
   }
 
   Future<void> jumpToCurrentPage(int currentPage, double pageHeight) async {
@@ -38,71 +46,170 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
   Future<void> startAutoScroll(int currentPage, double pageHeight) async {
+    // Cancel any existing timers
     _autoScrollTimer?.cancel();
+    _hideTimer?.cancel();
 
-    // Store the current scroll position before making changes
-    double? currentScrollPosition;
-    if (scrollController.hasClients) {
-      currentScrollPosition = scrollController.offset;
-    }
-
+    // Reset state with clear initialization
     state = state.copyWith(
       isSinglePageView: true,
+      isLoading: true,
+      fontSize: 1.0,
+      currentPage: currentPage,
+      isPlaying: false, // Start as not playing
     );
 
-    // Ensure the ListView is built
-    await Future.delayed(Duration(milliseconds: 50));
+    try {
+      // Use Future.wait to ensure all async operations complete
+      await Future.wait([
+        Future.microtask(() async {
+          // Robust wait for scroll controller
+          for (int i = 0; i < 50; i++) {
+            // 5 seconds total wait time
+            if (scrollController.hasClients && scrollController.position.hasContentDimensions) {
+              _initializeScrollController(currentPage, pageHeight);
+              break;
+            }
+            await Future.delayed(Duration(milliseconds: 100));
+          }
+        }),
 
-    // Restore the previous scroll position if it exists,
-    // otherwise jump to the current page
-    if (scrollController.hasClients) {
-      if (currentScrollPosition != null) {
-        scrollController.jumpTo(currentScrollPosition);
-      } else {
-        final offset = (currentPage - 1) * pageHeight;
-        scrollController.jumpTo(offset);
-      }
+        // Additional delay to ensure view is fully rendered
+        Future.delayed(Duration(milliseconds: 500))
+      ]);
+
+      // Update state to start auto-scrolling
+      state = state.copyWith(
+        isLoading: false,
+        isPlaying: true,
+      );
+
+      // Start scrolling with a slight delay
+      await Future.delayed(Duration(milliseconds: 100));
+      _startScrolling();
+    } catch (e, stackTrace) {
+      // Fallback state reset
+      state = state.copyWith(
+        isLoading: false,
+        isPlaying: false,
+      );
     }
+  }
 
-    _startScrolling();
+  void _initializeScrollController(int currentPage, double pageHeight) {
+    final pageOffset = (currentPage - 1) * pageHeight;
+    // Set initial offset to correct position, account for rotation if necessary
+    scrollController.jumpTo(pageOffset);
   }
 
   void _startScrolling() {
-    // Only start scrolling if we're in playing state
-    if (!state.isPlaying) return;
+    // Cancel any existing timer to prevent multiple timers
+    _autoScrollTimer?.cancel();
 
-    state = state.copyWith(
-      isPlaying: true,
-    );
+    // Validate initial state
+    if (!state.isPlaying) {
+      return;
+    }
 
-    const duration = Duration(milliseconds: 50);
-    _autoScrollTimer = Timer.periodic(duration, (timer) {
-      // Check if we should be scrolling
-      if (!state.isPlaying) {
+    // Additional safety checks
+    if (scrollController == null) {
+      return;
+    }
+
+    // Track initialization attempts
+    int scrollAttempts = 0;
+    const int maxScrollAttempts = 10;
+
+    _autoScrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
+      scrollAttempts++;
+
+      // Prevent infinite attempts
+      if (scrollAttempts > maxScrollAttempts) {
         timer.cancel();
+        state = state.copyWith(isPlaying: false);
         return;
       }
 
-      if (scrollController.hasClients) {
-        final maxScroll = scrollController.position.maxScrollExtent;
-        final currentScroll = scrollController.offset;
-        final delta = state.autoScrollSpeed;
+      // Comprehensive client check
+      if (scrollController.hasClients && scrollController.position.hasContentDimensions) {
+        try {
+          final maxScroll = scrollController.position.maxScrollExtent;
+          final currentScroll = scrollController.offset;
+          final delta = state.autoScrollSpeed;
 
-        if (currentScroll >= maxScroll) {
-          stopAutoScroll();
-        } else {
-          scrollController.jumpTo(currentScroll + delta);
+          // Detailed logging for debugging
+
+          if (currentScroll >= maxScroll) {
+            stopAutoScroll();
+            timer.cancel();
+            return;
+          }
+
+          // Safe scroll operation
+          scrollController.jumpTo(min(currentScroll + delta, maxScroll));
+
+          // Page calculation
+          final pageHeight = scrollController.position.viewportDimension;
+          final newPage = _calculateCurrentPage(scrollController, pageHeight);
+
+          if (newPage != state.currentPage) {
+            state = state.copyWith(currentPage: newPage);
+          }
+        } catch (e, stackTrace) {
+          timer.cancel();
+          state = state.copyWith(isPlaying: false);
         }
-      }
+      } else {}
     });
   }
 
-  void stopAutoScroll() {
+  // Function to calculate current page during scrolling
+  int _calculateCurrentPage(ScrollController scrollController, double pageHeight) {
+    final viewportOffset = scrollController.offset % pageHeight;
+    if (viewportOffset < (pageHeight / 2)) {
+      // Scrolled to the left, check if it's possible to navigate to the previous page
+      return (scrollController.offset / pageHeight).floor() + 1;
+    } else {
+      // Scrolled to the right, check if it's possible to navigate to the next page
+      return (scrollController.offset / pageHeight).ceil() + 1;
+    }
+  }
+
+  void stopAutoScroll({QuranReadingState? quranReadingState, bool isPortairt = false}) async {
     _autoScrollTimer?.cancel();
     _autoScrollTimer = null;
-    state = state.copyWith(
-      isSinglePageView: false,
-    );
+
+    // Calculate current page before switching views
+    if (scrollController.hasClients) {
+      final pageHeight = scrollController.position.viewportDimension;
+      // Use floor instead of ceil and don't add 1 to stay on current page
+      // if scroll hasn't moved significantly
+      final currentPage = _calculateCurrentPage(scrollController, pageHeight);
+      // First update state to disable auto-scroll
+      state = state.copyWith(
+        isSinglePageView: false,
+        isPlaying: false,
+      );
+
+      // Then update the page after a small delay to allow view transition
+      await Future.delayed(Duration(milliseconds: 100));
+
+      // Update QuranReadingState with current page
+      try {
+        await ref.read(quranReadingNotifierProvider.notifier).updatePage(
+              !isPortairt ? currentPage : quranReadingState!.currentPage,
+              isPortairt: isPortairt,
+            );
+      } catch (e) {
+        // Handle error silently or show a user-friendly message
+        print('Error updating page: $e');
+      }
+    } else {
+      state = state.copyWith(
+        isSinglePageView: false,
+        isPlaying: false,
+      );
+    }
   }
 
   void changeSpeed(double newSpeed) {
