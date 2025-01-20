@@ -165,7 +165,6 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   }
 
   void _setInitialFocus() {
-    if (!mounted) return; // Check if the widget is still mounted
     if (_hasFavorites()) {
       favoritesListFocusNode.requestFocus();
     } else {
@@ -434,6 +433,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         Expanded(
           child: FocusScope(
             node: favoritesListFocusNode,
+            autofocus: _hasFavorites(),
             child: ReciterListView(
               reciters: reciterState.favoriteReciters,
               isAtBottom: !_hasFavorites(),
@@ -452,6 +452,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       Expanded(
         child: FocusScope(
           node: allRecitersListFocusNode,
+          autofocus: _hasFavorites(),
           child: ReciterListView(
             reciters: reciterState.reciters,
             isAtBottom: _hasFavorites(),
