@@ -87,8 +87,8 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
     };
   }
 
-  Widget _buildUpdateAvailableDialog(
-      BuildContext context, UpdateAvailable state) {
+
+  Widget _buildUpdateAvailableDialog(BuildContext context, UpdateAvailable state) {
     final moshafName = switch (state.moshafType) {
       MoshafType.warsh => S.of(context).warsh,
       MoshafType.hafs => S.of(context).hafs,
@@ -96,8 +96,7 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
 
     return AlertDialog(
       title: Text(S.of(context).updateAvailable),
-      content: Text(
-          S.of(context).quranUpdateDialogContent(moshafName, state.version)),
+      content: Text(S.of(context).quranUpdateDialogContent(moshafName, state.version)),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
