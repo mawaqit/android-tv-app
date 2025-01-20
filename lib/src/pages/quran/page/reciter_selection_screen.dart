@@ -49,40 +49,40 @@ class AudioControlWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(audioControlProvider).when(
-          data: (state) {
-            final scheduleState = ref.watch(scheduleProvider);
+      data: (state) {
+        final scheduleState = ref.watch(scheduleProvider);
 
-            return scheduleState.when(
-              data: (schedule) {
-                final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
-                final shouldShow = schedule.isScheduleEnabled && isWithinTime;
+        return scheduleState.when(
+          data: (schedule) {
+            final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
+            final shouldShow = schedule.isScheduleEnabled && isWithinTime;
 
-                if (!shouldShow) return const SizedBox.shrink();
+            if (!shouldShow) return const SizedBox.shrink();
 
-                return SizedBox(
-                  width: buttonSize,
-                  height: buttonSize,
-                  child: FloatingActionButton(
-                    focusColor: Theme.of(context).primaryColor,
-                    backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
-                    child: Icon(
-                      color: Colors.white,
-                      state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
-                      size: iconSize,
-                    ),
-                    onPressed: () {
-                      ref.read(audioControlProvider.notifier).togglePlayback();
-                    },
-                  ),
-                );
-              },
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
+            return SizedBox(
+              width: buttonSize,
+              height: buttonSize,
+              child: FloatingActionButton(
+                focusColor: Theme.of(context).primaryColor,
+                backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
+                child: Icon(
+                  color: Colors.white,
+                  state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
+                  size: iconSize,
+                ),
+                onPressed: () {
+                  ref.read(audioControlProvider.notifier).togglePlayback();
+                },
+              ),
             );
           },
-          loading: () => const CircularProgressIndicator(),
-          error: (error, _) => Text('Error: $error'),
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
         );
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (error, _) => Text('Error: $error'),
+    );
   }
 }
 
@@ -175,9 +175,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   bool _hasFavorites() {
     return ref.read(reciteNotifierProvider).maybeWhen(
-          data: (reciterState) => reciterState.favoriteReciters.isNotEmpty,
-          orElse: () => false,
-        );
+      data: (reciterState) => reciterState.favoriteReciters.isNotEmpty,
+      orElse: () => false,
+    );
   }
 
   void _navigateToReading() {
@@ -321,26 +321,26 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           isKeyboardVisible
               ? const SizedBox.shrink()
               : Expanded(
-                  child: ref.watch(reciteNotifierProvider).when(
-                        data: (reciterState) => _buildReciterList(reciterState),
-                        loading: () => Column(
-                          children: [
-                            SizedBox(height: 1.h),
-                            _buildAllRecitersHeader(),
-                            SizedBox(height: 1.h),
-                            _buildReciterListShimmer(true),
-                            SizedBox(height: 20),
-                            _buildReciterListShimmer(true),
-                          ],
-                        ),
-                        error: (error, stackTrace) => Center(
-                          child: Text(
-                            'Error: $error',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
+            child: ref.watch(reciteNotifierProvider).when(
+              data: (reciterState) => _buildReciterList(reciterState),
+              loading: () => Column(
+                children: [
+                  SizedBox(height: 1.h),
+                  _buildAllRecitersHeader(),
+                  SizedBox(height: 1.h),
+                  _buildReciterListShimmer(true),
+                  SizedBox(height: 20),
+                  _buildReciterListShimmer(true),
+                ],
+              ),
+              error: (error, stackTrace) => Center(
+                child: Text(
+                  'Error: $error',
+                  style: TextStyle(color: Colors.white),
                 ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -469,30 +469,30 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           ref.watch(reciteNotifierProvider).whenOrNull(
-                    data: (reciter) => Padding(
-                      padding: EdgeInsets.only(bottom: spacerWidth),
-                      child: SizedBox(
-                        width: buttonSize,
-                        height: buttonSize,
-                        child: FloatingActionButton(
-                          autofocus: changeReadingModeFocusNode.hasFocus, // it is used here because at change_reading_mode it will break due to up keybind when no result in the search
-                          heroTag: 'schedule',
-                          backgroundColor: Colors.black.withOpacity(.5),
-                          child: Icon(
-                            Icons.schedule,
-                            color: Colors.white,
-                            size: iconSize,
-                          ),
-                          onPressed: () async {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ) ??
+            data: (reciter) => Padding(
+              padding: EdgeInsets.only(bottom: spacerWidth),
+              child: SizedBox(
+                width: buttonSize,
+                height: buttonSize,
+                child: FloatingActionButton(
+                  autofocus: changeReadingModeFocusNode.hasFocus, // it is used here because at change_reading_mode it will break due to up keybind when no result in the search
+                  heroTag: 'schedule',
+                  backgroundColor: Colors.black.withOpacity(.5),
+                  child: Icon(
+                    Icons.schedule,
+                    color: Colors.white,
+                    size: iconSize,
+                  ),
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ) ??
               const SizedBox.shrink(),
           Padding(
             padding: EdgeInsets.only(bottom: spacerWidth),
