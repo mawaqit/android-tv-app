@@ -325,6 +325,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                         data: (reciterState) => _buildReciterList(reciterState),
                         loading: () => Column(
                           children: [
+                            SizedBox(height: 1.h),
+                            _buildAllRecitersHeader(),
+                            SizedBox(height: 1.h),
                             _buildReciterListShimmer(true),
                             SizedBox(height: 20),
                             _buildReciterListShimmer(true),
@@ -672,6 +675,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     return Container(
       height: 16.h,
       child: ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding),
         scrollDirection: Axis.horizontal,
         itemCount: 20,
         itemBuilder: (context, index) {
