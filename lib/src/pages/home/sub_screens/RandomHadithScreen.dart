@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
-import 'package:mawaqit/src/pages/home/widgets/HadithScreen.dart';
+import 'package:mawaqit/src/widgets/display_text_widget.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -64,7 +64,7 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
             // ),
             child: hadithState.when(
               data: (hadith) {
-                return HadithWidget(
+                return DisplayTextWidget.hadith(
                   translatedText: hadith.hadith,
                   textDirection: StringManager.getTextDirectionOfLocal(
                     Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
