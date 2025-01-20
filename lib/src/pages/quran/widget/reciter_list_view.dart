@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
+import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:sizer/sizer.dart';
@@ -141,10 +143,13 @@ class ReciterCard extends ConsumerWidget {
           children: [
             // CachedNetworkImage with different sizes for online and offline images
             FastCachedImage(
-                url: '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
-                fit: BoxFit.fitWidth,
-                loadingBuilder: (context, progress) => Container(color: Colors.transparent),
-                errorBuilder: (context, error, stackTrace) => _buildOfflineImage()),
+              url: '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
+              fit: BoxFit.fitWidth,
+              cacheWidth: QuranConstant.kCacheWidth,
+              cacheHeight: QuranConstant.kCacheHeight,
+              loadingBuilder: (context, progress) => Container(color: Colors.transparent),
+              errorBuilder: (context, error, stackTrace) => _buildOfflineImage(),
+            ),
             // Gradient overlay
             Container(
               decoration: BoxDecoration(
