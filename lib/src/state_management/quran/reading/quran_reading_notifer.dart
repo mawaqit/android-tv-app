@@ -47,9 +47,11 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       if (nextPage < currentState.totalPages) {
         await _saveLastReadPage(nextPage);
 
-        currentState.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        currentState.pageController.nextPage(
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         final newSurahName = _getCurrentSurahName(nextPage, currentState.suwar);
-        return currentState.copyWith(currentPage: nextPage, currentSurahName: newSurahName);
+        return currentState.copyWith(
+            currentPage: nextPage, currentSurahName: newSurahName);
       }
       return currentState;
     });
@@ -59,12 +61,16 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     log('quran: QuranReadingNotifier: nextPage:');
     state = await AsyncValue.guard(() async {
       final currentState = state.value!;
-      final previousPage = isPortrait ? currentState.currentPage : currentState.currentPage - 2;
+      final previousPage =
+          isPortrait ? currentState.currentPage : currentState.currentPage - 2;
       if (previousPage >= 0) {
         await _saveLastReadPage(previousPage);
-        currentState.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-        final newSurahName = _getCurrentSurahName(previousPage, currentState.suwar);
-        return currentState.copyWith(currentPage: previousPage, currentSurahName: newSurahName);
+        currentState.pageController.previousPage(
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        final newSurahName =
+            _getCurrentSurahName(previousPage, currentState.suwar);
+        return currentState.copyWith(
+            currentPage: previousPage, currentSurahName: newSurahName);
       }
       return currentState;
     });
@@ -77,9 +83,13 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       final currentState = state.value!;
       if (page >= 0 && page < currentState.totalPages) {
         await _saveLastReadPage(page);
-        !isPortairt
-            ? currentState.pageController.jumpToPage((page / 2).floor())
-            : currentState.pageController.jumpToPage(page); // Jump to the selected page
+
+        if (currentState.pageController.hasClients) {
+          !isPortairt
+              ? currentState.pageController.jumpToPage((page / 2).floor())
+              : currentState.pageController.jumpToPage(page);
+        }
+
         final newSurahName = _getCurrentSurahName(page, currentState.suwar);
 
         return currentState.copyWith(
@@ -96,8 +106,11 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     state = AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final sharedPref = await ref.read(sharedPreferenceModule.future);
-      final language = sharedPref.getString(SettingsConstant.kLanguageCode) ?? 'en';
-      await ref.read(quranNotifierProvider.notifier).getSuwarByLanguage(languageCode: language);
+      final language =
+          sharedPref.getString(SettingsConstant.kLanguageCode) ?? 'en';
+      await ref
+          .read(quranNotifierProvider.notifier)
+          .getSuwarByLanguage(languageCode: language);
       return ref.read(quranNotifierProvider).maybeWhen(
         orElse: () {
           return state.value!;
@@ -112,27 +125,38 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
 
   Future<List<SurahModel>> getAllSuwar() async {
     final sharedPref = await ref.read(sharedPreferenceModule.future);
-    final language = sharedPref.getString(SettingsConstant.kLanguageCode) ?? 'en';
-    await ref.read(quranNotifierProvider.notifier).getSuwarByLanguage(languageCode: language);
+    final language =
+        sharedPref.getString(SettingsConstant.kLanguageCode) ?? 'en';
+    await ref
+        .read(quranNotifierProvider.notifier)
+        .getSuwarByLanguage(languageCode: language);
     return ref.read(quranNotifierProvider).maybeWhen(
           orElse: () => [],
           data: (quranState) => quranState.suwar,
         );
   }
 
-  Future<QuranReadingState> _initState(QuranReadingRepository repository) async {
+  Future<QuranReadingState> _initState(
+      QuranReadingRepository repository) async {
     final mosqueModel = await ref.read(moshafTypeNotifierProvider.future);
 
     try {
       // Get moshaf type or set default
-      final moshafType = mosqueModel.selectedMoshaf.getOrElse(() => MoshafType.hafs);
+      final moshafType =
+          mosqueModel.selectedMoshaf.getOrElse(() => MoshafType.hafs);
 
       // Set moshaf type if none selected
       if (mosqueModel.selectedMoshaf.isNone()) {
-        await ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(moshafType);
+        await ref
+            .read(moshafTypeNotifierProvider.notifier)
+            .selectMoshafType(moshafType);
       }
 
       state = AsyncLoading();
+
+      // Clear any existing SVGs in memory
+      await _clearSvgCache();
+
       final svgs = await _loadSvgs(moshafType: moshafType);
 
       if (svgs.isEmpty) {
@@ -140,7 +164,8 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       }
 
       final lastReadPage = await repository.getLastReadPage();
-      final pageController = PageController(initialPage: (lastReadPage / 2).floor());
+      final pageController =
+          PageController(initialPage: (lastReadPage / 2).floor());
       final suwar = await getAllSuwar();
 
       return QuranReadingState(
@@ -157,9 +182,21 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
     }
   }
 
+  Future<void> _clearSvgCache() async {
+    // Clear any existing state
+    state = AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      return state.value!.copyWith(
+        svgs: [],
+        pageController: PageController(),
+      );
+    });
+  }
+
   Future<void> _saveLastReadPage(int index) async {
     try {
-      final quranRepository = await ref.read(quranReadingRepositoryProvider.future);
+      final quranRepository =
+          await ref.read(quranReadingRepositoryProvider.future);
       await quranRepository.saveLastReadPage(index);
     } catch (e, s) {
       state = AsyncError(e, s);
@@ -174,7 +211,8 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       int mid = left + (right - left) ~/ 2;
 
       if (currentPage + 1 >= suwar[mid].startPage &&
-          (mid == suwar.length - 1 || currentPage + 1 < suwar[mid + 1].startPage)) {
+          (mid == suwar.length - 1 ||
+              currentPage + 1 < suwar[mid + 1].startPage)) {
         return suwar[mid].name;
       }
 
@@ -202,6 +240,7 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
   }
 }
 
-final quranReadingNotifierProvider = AutoDisposeAsyncNotifierProvider<QuranReadingNotifier, QuranReadingState>(
+final quranReadingNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<QuranReadingNotifier, QuranReadingState>(
   QuranReadingNotifier.new,
 );
