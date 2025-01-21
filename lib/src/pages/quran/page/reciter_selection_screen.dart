@@ -218,6 +218,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
         searchFocusScopeNode.requestFocus();
         return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.space) {
+        favoritesListFocusNode.unfocus();
+        return KeyEventResult.handled;
       }
     }
     return KeyEventResult.ignored;
