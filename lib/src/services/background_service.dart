@@ -3,103 +3,170 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:mawaqit/src/models/times.dart';
 import 'package:notification_overlay/notification_overlay.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_session/audio_session.dart';
 
 import '../../const/resource.dart';
 import '../../i18n/l10n.dart';
-import '../../main.dart';
 import '../const/constants.dart';
 import '../helpers/AppDate.dart';
 import '../models/mosqueConfig.dart';
-import 'mosque_manager.dart';
-import 'audio_manager.dart';
+import '../models/times.dart';
 
 class BackgroundService with WidgetsBindingObserver {
+  static final BackgroundService _instance = BackgroundService._internal();
   static AudioPlayer? _audioPlayer;
-  static Set<DateTime> _scheduledTimes = {};
+  static final Set<DateTime> _scheduledTimes = {};
   static bool _isInitialized = false;
   static Timer? _notificationTimer;
-  static final BackgroundService _instance = BackgroundService._internal();
   static bool _shouldShowNotification = false;
-  static String adhanAsset = "";
-  static bool adhanfromAssets = false;
-  static bool shouldPlayAdhan = false;
-  MosqueManager? mosqueManager;
-  AudioManager? audioManager;
+
   Duration duration = Duration();
-  factory BackgroundService() {
-    return _instance;
-  }
+
+  factory BackgroundService() => _instance;
 
   BackgroundService._internal() {
     WidgetsBinding.instance.addObserver(this);
   }
-  static String salahName(int index) {
-    switch (index) {
-      case 0:
-        return S.current.fajr;
-      case 1:
-        return S.current.duhr;
-      case 2:
-        return S.current.asr;
-      case 3:
-        return S.current.maghrib;
-      case 4:
-        return S.current.isha;
-      default:
-        return '';
-    }
-  }
 
-  static Future<void> setNotificationVisibility(bool shouldShow) async {
-    _shouldShowNotification = shouldShow;
-    // Update the background service
-    final service = FlutterBackgroundService();
-
-    service.invoke('updateNotificationVisibility', {'shouldShow': shouldShow});
-  }
-
-  static String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
-    String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
-
-    if (mosqueConfig!.adhanVoice?.isNotEmpty ?? false) {
-      adhanLink = "$kStaticFilesUrl/mp3/${mosqueConfig.adhanVoice!}.mp3";
-    }
-
-    if (useFajrAdhan && !adhanLink.contains('bip')) {
-      adhanLink = adhanLink.replaceAll('.mp3', '-fajr.mp3');
-    }
-
-    return adhanLink;
-  }
-
-  static Future<void> pauseBackgroundOperations() async {
-    final service = FlutterBackgroundService();
-    service.invoke('pauseOperations');
-
-    // Dismiss any existing notifications
-    await dismissExistingNotification();
-
-    // Stop audio playback if it's playing
-    await _audioPlayer?.stop();
-
-    // Cancel any scheduled timers
-    _notificationTimer?.cancel();
-  }
-
-  static Future<void> resumeBackgroundOperations() async {
-    final service = FlutterBackgroundService();
-    service.invoke('resumeOperations');
+  static String getSalahName(int index) {
+    final names = {
+      0: S.current.fajr,
+      1: S.current.duhr,
+      2: S.current.asr,
+      3: S.current.maghrib,
+      4: S.current.isha,
+    };
+    return names[index] ?? '';
   }
 
   static Future<void> initializeService() async {
     if (_isInitialized) return;
 
+    try {
+      final service = FlutterBackgroundService();
+      await _stopExistingService(service);
+      await _configureAndStartService(service);
+      await dismissExistingNotification();
+      _isInitialized = true;
+    } catch (e) {
+      _isInitialized = false;
+      rethrow;
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        await setNotificationVisibility(false);
+        await pauseBackgroundOperations();
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+        await initializeService();
+        await setNotificationVisibility(true);
+        await resumeBackgroundOperations();
+        break;
+    }
+  }
+
+  static Future<void> setNotificationVisibility(bool shouldShow) async {
+    _shouldShowNotification = shouldShow;
     final service = FlutterBackgroundService();
 
+    if (!await _ensureServiceRunning(service)) return;
+
+    service.invoke('updateNotificationVisibility', {'shouldShow': shouldShow});
+  }
+
+  static Future<void> dismissExistingNotification() async {
+    await NotificationOverlay.hideNotification();
+  }
+
+  static Future<void> pauseBackgroundOperations() async {
+    final service = FlutterBackgroundService();
+    if (!await service.isRunning()) return;
+
+    service.invoke('pauseOperations');
+    await Future.wait([
+      dismissExistingNotification(),
+      _audioPlayer?.stop() ?? Future.value(),
+    ]);
+    _notificationTimer?.cancel();
+  }
+
+  static Future<void> resumeBackgroundOperations() async {
+    final service = FlutterBackgroundService();
+
+    if (!await _ensureServiceRunning(service)) return;
+
+    service.invoke('resumeOperations');
+  }
+
+  static String getAdhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
+    String baseLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
+
+    if (mosqueConfig?.adhanVoice?.isNotEmpty ?? false) {
+      baseLink = "$kStaticFilesUrl/mp3/${mosqueConfig!.adhanVoice!}.mp3";
+    }
+
+    if (useFajrAdhan && !baseLink.contains('bip')) {
+      baseLink = baseLink.replaceAll('.mp3', '-fajr.mp3');
+    }
+
+    return baseLink;
+  }
+
+  static Future<void> schedulePrayerTasks(
+    Times times,
+    MosqueConfig? mosqueConfig,
+    bool isAdhanVoiceEnabled,
+    int salahIndex,
+  ) async {
+    final service = FlutterBackgroundService();
+    if (!await service.isRunning()) return;
+
+    final prayerTimes = times.dayTimesStrings(AppDateTime.now(), salahOnly: true);
+    final now = AppDateTime.now();
+
+    for (var i = 0; i < prayerTimes.length; i++) {
+      final entry = prayerTimes[i];
+      final scheduleTime = _parseScheduleTime(entry, now);
+
+      if (!_shouldSchedulePrayer(scheduleTime)) continue;
+
+      final prayerConfig = _createPrayerConfig(
+        entry,
+        scheduleTime,
+        isAdhanVoiceEnabled,
+        mosqueConfig,
+        salahIndex == 0,
+        i,
+      );
+
+      _schedulePrayerTimer(service, prayerConfig, scheduleTime);
+    }
+  }
+
+  static Future<bool> _ensureServiceRunning(FlutterBackgroundService service) async {
+    if (!await service.isRunning()) {
+      await initializeService();
+      return await service.isRunning();
+    }
+    return true;
+  }
+
+  static Future<void> _stopExistingService(FlutterBackgroundService service) async {
+    if (await service.isRunning()) {
+      service.invoke('stopService');
+    }
+  }
+
+  static Future<void> _configureAndStartService(FlutterBackgroundService service) async {
     await service.configure(
       androidConfiguration: AndroidConfiguration(
         onStart: onStart,
@@ -112,75 +179,70 @@ class BackgroundService with WidgetsBindingObserver {
         onBackground: onIosBackground,
       ),
     );
-
-    _isInitialized = true;
-
-    // Attempt to dismiss any existing notifications on initialization
-    await dismissExistingNotification();
+    await service.startService();
   }
 
-  static Future<void> dismissExistingNotification() async {
-    try {
-      await NotificationOverlay.hideNotification();
-    } catch (e) {
-      logger.e('Error dismissing existing notification: $e', error: e);
-    }
+  static DateTime _parseScheduleTime(String entry, DateTime now) {
+    final timeParts = entry.split(':');
+    return DateTime(
+      now.year,
+      now.month,
+      now.day,
+      int.parse(timeParts[0]),
+      int.parse(timeParts[1]),
+    );
   }
 
-  static Future<void> schedulePrayerTasks(
-      Times times, MosqueConfig? mosqueConfig, bool isAdhanVoiceEnabled, int salahIndex) async {
-    final service = FlutterBackgroundService();
+  static bool _shouldSchedulePrayer(DateTime scheduleTime) {
+    if (_scheduledTimes.contains(scheduleTime)) return false;
+    final delay = scheduleTime.difference(AppDateTime.now());
+    return !delay.isNegative;
+  }
 
-    final prayerTimes = times.dayTimesStrings(AppDateTime.now(), salahOnly: true);
-    for (var entry in prayerTimes) {
-      final now = AppDateTime.now();
-      final timeParts = entry.split(':');
-      final scheduleTime = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        int.parse(timeParts[0]),
-        int.parse(timeParts[1]),
-      );
+  static Map<String, dynamic> _createPrayerConfig(
+    String entry,
+    DateTime scheduleTime,
+    bool isAdhanVoiceEnabled,
+    MosqueConfig? mosqueConfig,
+    bool isFajr,
+    int index,
+  ) {
+    String adhanAsset = "";
+    bool adhanFromAssets = false;
+    bool shouldPlayAdhan = false;
 
-      String adhanAssetToUse = "";
-      bool adhanFromAssetsToUse = false;
-      bool shouldPlayAdhanToUse = false;
-
-      if (isAdhanVoiceEnabled) {
-        shouldPlayAdhanToUse = true;
-        final url = adhanLink(mosqueConfig, useFajrAdhan: salahIndex == 0);
-        if (url.contains('bip')) {
-          adhanFromAssetsToUse = true;
-          adhanAssetToUse = R.ASSETS_VOICES_ADHAN_BIP_MP3;
-        } else {
-          adhanAssetToUse = url;
-        }
+    if (isAdhanVoiceEnabled) {
+      shouldPlayAdhan = true;
+      final url = getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
+      if (url.contains('bip')) {
+        adhanFromAssets = true;
+        adhanAsset = R.ASSETS_VOICES_ADHAN_BIP_MP3;
+      } else {
+        adhanAsset = url;
       }
-
-      if (_scheduledTimes.contains(scheduleTime)) {
-        ;
-        continue;
-      }
-
-      final delay = scheduleTime.difference(now);
-      if (delay.isNegative) continue;
-
-      Timer(delay, () {
-        service.invoke('prayerTime', {
-          'prayer': entry,
-          'time': scheduleTime.toString(),
-          'shouldPlayAdhan': shouldPlayAdhanToUse,
-          'adhanAsset': adhanAssetToUse,
-          'adhanFromAssets': adhanFromAssetsToUse,
-          'salahName': salahName(prayerTimes.indexOf(entry))
-        });
-      });
-
-      _scheduledTimes.add(scheduleTime);
     }
+
+    return {
+      'prayer': entry,
+      'time': scheduleTime.toString(),
+      'shouldPlayAdhan': shouldPlayAdhan,
+      'adhanAsset': adhanAsset,
+      'adhanFromAssets': adhanFromAssets,
+      'salahName': getSalahName(index)
+    };
   }
 
+  static void _schedulePrayerTimer(
+    FlutterBackgroundService service,
+    Map<String, dynamic> config,
+    DateTime scheduleTime,
+  ) {
+    final delay = scheduleTime.difference(AppDateTime.now());
+    Timer(delay, () => service.invoke('prayerTime', config));
+    _scheduledTimes.add(scheduleTime);
+  }
+
+  // Background service handlers
   @pragma('vm:entry-point')
   static Future<bool> onIosBackground(ServiceInstance service) async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -192,130 +254,125 @@ class BackgroundService with WidgetsBindingObserver {
   static void onStart(ServiceInstance service) async {
     DartPluginRegistrant.ensureInitialized();
 
-    if (service is AndroidServiceInstance) {
-      service.on('setAsForeground').listen((event) {
-        service.setAsForegroundService();
-      });
-
-      service.on('setAsBackground').listen((event) {
-        service.setAsBackgroundService();
-      });
-    }
-
-    service.on('stopService').listen((event) {
-      service.stopSelf();
-    });
     bool shouldShowNotification = false;
-
-    service.on('updateNotificationVisibility').listen((event) {
-      if (event != null && event['shouldShow'] != null) {
-        shouldShowNotification = event['shouldShow'] as bool;
-
-        if (!shouldShowNotification) {
-          service.stopSelf();
-        }
-      }
-    });
     bool isPaused = false;
 
-    service.on('pauseOperations').listen((event) {
+    _setupServiceListeners(service, shouldShowNotification, isPaused);
+  }
+
+  static void _setupServiceListeners(
+    ServiceInstance service,
+    bool shouldShowNotification,
+    bool isPaused,
+  ) {
+    if (service is AndroidServiceInstance) {
+      service.on('setAsForeground').listen((_) => service.setAsForegroundService());
+      service.on('setAsBackground').listen((_) => service.setAsBackgroundService());
+    }
+
+    service.on('stopService').listen((_) => service.stopSelf());
+
+    service.on('updateNotificationVisibility').listen((event) {
+      if (event?['shouldShow'] != null) {
+        shouldShowNotification = event!['shouldShow'] as bool;
+      }
+    });
+
+    service.on('pauseOperations').listen((_) {
       isPaused = true;
-      // Stop audio playback
       _audioPlayer?.stop();
-
-      // Dismiss any existing notifications
       dismissExistingNotification();
-
-      // Cancel any scheduled timers
       _notificationTimer?.cancel();
     });
 
-    service.on('resumeOperations').listen((event) {
-      isPaused = false;
-    });
+    service.on('resumeOperations').listen((_) => isPaused = false);
+
     service.on('prayerTime').listen((event) async {
       if (event != null && !isPaused) {
-        final prayerName = event['prayer'] as String;
-        final scheduledTime = DateTime.parse(event['time'] as String);
-        final shouldPlayAdhan = event['shouldPlayAdhan'] as bool;
-        final adhanAsset = event['adhanAsset'] as String;
-        final adhanFromAssets = event['adhanFromAssets'] as bool;
-        final salahName = event['salahName'] as String;
-
-        // Check if we should show the notification
-        if (shouldShowNotification) {
-          // Initialize the audio player
-          _audioPlayer = AudioPlayer();
-
-          // Show notification and play audio
-          try {
-            await dismissExistingNotification();
-            await NotificationOverlay.showNotification('$salahName time ($prayerName) notification');
-
-            if (shouldPlayAdhan) {
-              await playAudio(adhanAsset, adhanFromAssets);
-            }
-
-            // Set up a timer to dismiss the notification
-            _notificationTimer?.cancel();
-            _notificationTimer = Timer(Duration(minutes: 5), () async {
-              await dismissExistingNotification();
-            });
-
-            _audioPlayer!.playbackEventStream.listen((event) {
-              if (event.processingState == ProcessingState.completed) {
-                dismissExistingNotification();
-                _notificationTimer?.cancel();
-              }
-            });
-          } catch (e) {
-            logger.e('Error showing notification or playing audio in background: $e', error: e);
-          }
-        } else {
-          print('App is in foreground, skipping notification');
-        }
+        await _handlePrayerTime(event, shouldShowNotification);
       }
     });
   }
 
-  static Future<void> playAudio(String adhanAsset, bool adhanFromAssets) async {
+  static Future<void> _handlePrayerTime(
+    Map<dynamic, dynamic> event,
+    bool shouldShowNotification,
+  ) async {
+    if (!shouldShowNotification) return;
+
+    final prayerName = event['prayer'] as String;
+    final shouldPlayAdhan = event['shouldPlayAdhan'] as bool;
+    final adhanAsset = event['adhanAsset'] as String;
+    final adhanFromAssets = event['adhanFromAssets'] as bool;
+    final salahName = event['salahName'] as String;
+
+    _audioPlayer = AudioPlayer();
+
     try {
-      // Configure audio session
-      final session = await AudioSession.instance;
-      await session.configure(AudioSessionConfiguration(
-        avAudioSessionCategory: AVAudioSessionCategory.playback,
-        avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.mixWithOthers,
-        avAudioSessionMode: AVAudioSessionMode.defaultMode,
-        avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
-        avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
-        androidAudioAttributes: const AndroidAudioAttributes(
-          contentType: AndroidAudioContentType.music,
-          flags: AndroidAudioFlags.audibilityEnforced,
-          usage: AndroidAudioUsage.alarm,
-        ),
-        androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
-        androidWillPauseWhenDucked: true,
-      ));
+      await dismissExistingNotification();
+      await NotificationOverlay.showNotification(
+        '$salahName time ($prayerName) notification',
+      );
 
-      // Activate the audio session
-      await session.setActive(true);
+      if (shouldPlayAdhan) {
+        await _playPrayerAudio(adhanAsset, adhanFromAssets);
+      }
 
-      // Set the audio source and play
+      _scheduleNotificationDismissal();
+    } catch (e) {
+      await dismissExistingNotification();
+    }
+  }
+
+  static Future<void> _playPrayerAudio(String adhanAsset, bool adhanFromAssets) async {
+    final session = await _configureAudioSession();
+    await session.setActive(true);
+
+    try {
       if (adhanFromAssets) {
         await _audioPlayer?.setAsset(adhanAsset);
       } else {
         await _audioPlayer?.setUrl(adhanAsset);
       }
+
       await _audioPlayer?.play();
 
-      // Deactivate the audio session when done
       _audioPlayer?.playbackEventStream.listen((event) {
         if (event.processingState == ProcessingState.completed) {
           session.setActive(false);
+          dismissExistingNotification();
         }
       });
     } catch (e) {
-      logger.e('Error playing audio: $e', error: e);
+      await session.setActive(false);
+      await dismissExistingNotification();
     }
+  }
+
+  static Future<AudioSession> _configureAudioSession() async {
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playback,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.mixWithOthers,
+      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+      androidAudioAttributes: const AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.music,
+        flags: AndroidAudioFlags.audibilityEnforced,
+        usage: AndroidAudioUsage.alarm,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: true,
+    ));
+    return session;
+  }
+
+  static void _scheduleNotificationDismissal() {
+    _notificationTimer?.cancel();
+    _notificationTimer = Timer(
+      const Duration(minutes: 5),
+      dismissExistingNotification,
+    );
   }
 }

@@ -45,10 +45,20 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       final directory = await getApplicationDocumentsDirectory();
+      final isRooted = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
+        TurnOnOffTvConstant.kCheckRoot,
+      );
+
       final bool isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
+
       if (!isPermissionGranted) {
-        await NotificationOverlay.requestOverlayPermission();
+        if (isRooted) {
+          await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod("grantOverlayPermission");
+        } else {
+          await NotificationOverlay.requestOverlayPermission();
+        }
       }
+
       await BackgroundService.initializeService();
 
       Hive.init(directory.path);
@@ -79,7 +89,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    BackgroundService.setNotificationVisibility(true);
+    BackgroundService.setNotificationVisibility(false);
   }
 
   @override
@@ -91,13 +101,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     BackgroundService().didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      BackgroundService.setNotificationVisibility(false);
-      BackgroundService.pauseBackgroundOperations();
-    } else {
-      BackgroundService.setNotificationVisibility(true);
-      BackgroundService.resumeBackgroundOperations();
-    }
   }
 
   @override
