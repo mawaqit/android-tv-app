@@ -5,7 +5,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
-import 'package:mawaqit/src/pages/quran/widget/favorite_overlay.dart';
+import 'package:mawaqit/src/routes/route_generator.dart';
+import 'package:mawaqit/src/routes/routes_constant.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:sizer/sizer.dart';
@@ -63,24 +64,15 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
                     ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
                           reciterModel: widget.reciters[index],
                         );
+
                     Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => OverlayPage(
-                          reciter: widget.reciters[index],
+                      RouteGenerator.buildReciterFavoriteRoute(
+                        RouteSettings(
+                          name: Routes.quranReciterFavorite,
+                          arguments: {
+                            'reciter': widget.reciters[index],
+                          },
                         ),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(1.0, 0.0);
-                          const end = Offset.zero;
-                          const curve = Curves.easeInOut;
-
-                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                          var offsetAnimation = animation.drive(tween);
-
-                          return SlideTransition(
-                            position: offsetAnimation,
-                            child: child,
-                          );
-                        },
                       ),
                     );
                   },
