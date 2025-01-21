@@ -19,23 +19,29 @@ import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:mawaqit/src/state_management/manual_app_update/manual_update_notifier.dart';
 import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
+import 'package:mawaqit/src/widgets/manual_update_dialog.dart';
 import 'package:provider/provider.dart' hide Consumer;
 import 'package:sizer/sizer.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../../i18n/AppLanguage.dart';
 import '../../main.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../helpers/TimeShiftManager.dart';
 import '../services/FeatureManager.dart';
 import '../state_management/app_update/app_update_notifier.dart';
+import '../state_management/manual_app_update/manual_update_state.dart';
 import '../state_management/quran/download_quran/download_quran_notifier.dart';
 import '../state_management/random_hadith/random_hadith_notifier.dart';
 import '../widgets/screen_lock_widget.dart';
 import '../widgets/time_picker_widget.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
+import 'rtsp_camera_settings_screen.dart';
 
 class SettingScreen extends ConsumerStatefulWidget {
   const SettingScreen({super.key});
@@ -73,7 +79,18 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
-
+    ref.listen(manualUpdateNotifierProvider, (previous, next) {
+      switch (next.value?.status) {
+        case UpdateStatus.available:
+          UpdateDialog.show(context, ref);
+          break;
+        case UpdateStatus.notAvailable:
+          UpdateDialog.showNoUpdateAvailableDialog(context);
+          break;
+        default:
+          break;
+      }
+    });
     return ScreenWithAnimationWidget(
       animation: 'settings',
       child: Padding(
@@ -176,6 +193,40 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       );
                     },
                   ),
+                  _SettingItem(
+                    title: S.of(context).rtspCameraSettingTitle,
+                    subtitle: S.of(context).rtspCameraSettingDesc,
+                    icon: Icon(Icons.video_camera_back, size: 35),
+                    onTap: () async {
+                      await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                      ref.watch(connectivityProvider).maybeWhen(
+                        orElse: () {
+                          showCheckInternetDialog(
+                            context: context,
+                            onRetry: () {
+                              AppRouter.pop();
+                            },
+                            title: checkInternet,
+                            content: S.of(context).checkInternetLiveCamera,
+                          );
+                        },
+                        data: (isConnectedToInternet) {
+                          if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                            showCheckInternetDialog(
+                              context: context,
+                              onRetry: () {
+                                AppRouter.pop();
+                              },
+                              title: checkInternet,
+                              content: S.of(context).checkInternetLiveCamera,
+                            );
+                          } else {
+                            AppRouter.push(RTSPCameraSettingsScreen());
+                          }
+                        },
+                      );
+                    },
+                  ),
                   SizedBox(height: 30),
                   Divider(),
                   SizedBox(height: 10),
@@ -270,6 +321,74 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     },
                   ),
                   _screenLock(context, ref),
+                  Divider(),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return _SettingSwitchItem(
+                        title: S.of(context).automaticUpdate,
+                        subtitle: S.of(context).automaticUpdateDescription,
+                        icon: Icon(Icons.update, size: 35),
+                        onChanged: (value) {
+                          logger.d('setting: disable the update $value');
+                          ref.read(appUpdateProvider.notifier).toggleAutoUpdateChecking();
+                        },
+                        value: ref.watch(appUpdateProvider).maybeWhen(
+                              orElse: () => false,
+                              data: (data) => data.isAutoUpdateChecking,
+                            ),
+                      );
+                    },
+                  ),
+                  _SettingItem(
+                    title: S.of(context).checkForUpdates,
+                    subtitle: S.of(context).checkForNewVersion,
+                    icon: ref.watch(manualUpdateNotifierProvider).isLoading
+                        ? const SizedBox(
+                            width: 35,
+                            height: 35,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Icon(Icons.system_update, size: 35),
+                    onTap: ref.watch(manualUpdateNotifierProvider).isLoading
+                        ? null
+                        : () async {
+                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                            ref.watch(connectivityProvider).maybeWhen(
+                              orElse: () {
+                                showCheckInternetDialog(
+                                  context: context,
+                                  onRetry: () {
+                                    AppRouter.pop();
+                                  },
+                                  title: checkInternet,
+                                  content: S.of(context).checkInternetUpdate,
+                                );
+                              },
+                              data: (isConnectedToInternet) async {
+                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                  showCheckInternetDialog(
+                                    context: context,
+                                    onRetry: () {
+                                      AppRouter.pop();
+                                    },
+                                    title: checkInternet,
+                                    content: S.of(context).checkInternetUpdate,
+                                  );
+                                } else {
+                                  var softwareFuture = await PackageInfo.fromPlatform();
+                                  final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
+                                        orElse: () => false,
+                                        data: (value) => value.isRootedDevice,
+                                      );
+                                  ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(
+                                      softwareFuture.version,
+                                      context.read<AppLanguage>().appLocal.languageCode,
+                                      isDeviceRooted);
+                                }
+                              },
+                            );
+                          },
+                  ),
                 ],
               ),
             ),
@@ -297,19 +416,18 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 style: theme.textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
-              timeShiftManager.isLauncherInstalled
-                  ? _SettingItem(
-                      title: S.of(context).screenLock,
-                      subtitle: S.of(context).screenLockDesc,
-                      icon: Icon(Icons.power_settings_new, size: 35),
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (context) => ScreenLockModal(
-                          timeShiftManager: timeShiftManager,
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
+              if (timeShiftManager.isLauncherInstalled)
+                _SettingItem(
+                  title: S.of(context).screenLock,
+                  subtitle: S.of(context).screenLockDesc,
+                  icon: Icon(Icons.power_settings_new, size: 35),
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => ScreenLockModal(
+                      timeShiftManager: timeShiftManager,
+                    ),
+                  ),
+                ),
               _SettingItem(
                 title: S.of(context).appTimezone,
                 subtitle: S.of(context).descTimezone,

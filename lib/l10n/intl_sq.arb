@@ -54,7 +54,7 @@
   "maghrib": "Akshami ",
   "isha": "Jacia",
   "afterAdhanHadithTitle": "Duaja pas Ezanit",
-  "afterSalahHadith": "O Allahu im, Zot i kësaj thirrje të plotë dhe i namazit që do të falet, jepi Muhamedit ndërmjetësimin dhe nderimin, si dhe dërgoje atë në vendin e lavdishëm të cilin ia ke premtuar. Pa dyshim, Ti e mban premtimin e dhënë. Me të vërtetë Ti nuk e thyen premtimin",
+  "afterSalahHadith": "O Allahu im, Zot i kësaj thirrje të plotë dhe i namazit që do të falet, jepi Muhamedit ndërmjetësimin dhe nderimin, si dhe dërgoje atë në vendin e lavdishëm të cilin ia ke premtuar.",
   "alIqama": "Ikameti",
   "alAdhan": "Ezani",
   "turnOfPhones": "Ju lutemi, bërë telefonin të pazëshëm!",
@@ -68,7 +68,7 @@
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
-  "azkarList2": "\n1. “Thuaj” Mbështetem (mbrohem) me Zotin e njerëzve!\n2. Sunduesin e njerëzve\n3. Të adhuruarin e njerëzve\n4. Prej së keqes së përshpëritësit që fshihet\n5. i cili pëshpërit në zemrat e njerëzve\n6. qoftë ai pëshpëritësi (për të keq) nga exhinët ose nga njerëzit”\n(En-Nas, 1-6)",
+  "azkarList2":"\n1. “Thuaj” Mbështetem (mbrohem) me Zotin e njerëzve!\n2. Sunduesin e njerëzve\n3. Të adhuruarin e njerëzve\n4. Prej së keqes së përshpëritësit që fshihet\n5. i cili pëshpërit në zemrat e njerëzve\n6. qoftë ai pëshpëritësi (për të keq) nga exhinët ose nga njerëzit”\n(En-Nas, 1-6)",
   "@azkarList2": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
   },
@@ -290,6 +290,20 @@
       }
     }
   },
+  "quranReadingPagePortrait": "Faqe {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "Zgjidhni faqen",
   "checkingForUpdates": "Po kontrollon për përditësime...",
   "chooseQuranType": "Zgjidhni Kuranin",
@@ -320,5 +334,23 @@
   "noFavoriteReciters": "Nuk ka recitues të preferuar. Provoni të shtoni një në listë",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
+  },
+  "noReciterSearchResult": "Nuk u gjetën rezultate për kërkimin tuaj",
+  "searchForReciter": "Kërko recituesin",
+  "downloadAllSuwarSuccessfully": "Komplet Kur'ani është shkarkuar",
+  "noSuwarDownload": "Nuk ka Sure të reja për t'u shkarkuar",
+  "connectDownloadQuran": "Ju lutem lidheni internetin për të shkarkuar",
+  "playInOnlineModeQuran": "Për të dëgjuar lidhuni me internetin",
+  "downloaded": "E shkarkuar",
+  "switchQuranType": "Shkoni te {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Zgjidhni Suren"
 }

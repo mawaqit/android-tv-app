@@ -1,13 +1,13 @@
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'dart:async';
-
+import 'dart:developer' as developer;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'
-    show ProviderBase, ProviderContainer, ProviderObserver, ProviderScope;
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:hive_flutter/adapters.dart';
 import 'package:logger/logger.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
@@ -30,12 +30,16 @@ import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/background_service.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:notification_overlay/notification_overlay.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:mawaqit/src/routes/route_generator.dart';
+import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
 @pragma("vm:entry-point")
@@ -62,12 +66,16 @@ Future<void> main() async {
       await BackgroundService.initializeService();
 
       Hive.init(directory.path);
+      await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+
       tz.initializeTimeZones();
       Hive.registerAdapter(SurahModelAdapter());
       Hive.registerAdapter(ReciterModelAdapter());
       Hive.registerAdapter(MoshafModelAdapter());
+      MediaKit.ensureInitialized();
+
       runApp(
-        ProviderScope(
+        riverpod.ProviderScope(
           child: MyApp(),
           observers: [
             RiverpodLogger(),
@@ -75,16 +83,18 @@ Future<void> main() async {
           ],
         ),
       );
+      await Future.delayed(const Duration(seconds: 5));
+      await ToggleScreenFeature.restoreScheduledTimers();
     },
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends riverpod.ConsumerStatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -127,35 +137,43 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               return event;
             }),
             child: Consumer<ThemeNotifier>(
-              builder: (context, theme, _) => Shortcuts(
-                shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
-                child: MaterialApp(
-                  title: kAppName,
-                  themeMode: theme.mode,
-                  localeResolutionCallback: (locale, supportedLocales) {
-                    if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
+              builder: (context, theme, _) {
+                return Shortcuts(
+                  shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
+                  child: MaterialApp(
+                    title: kAppName,
+                    themeMode: theme.mode,
+                    localeResolutionCallback: (locale, supportedLocales) {
+                      if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
 
-                    return locale;
-                  },
-                  theme: theme.lightTheme,
-                  darkTheme: theme.darkTheme,
-                  locale: model.appLocal,
-                  navigatorKey: AppRouter.navigationKey,
-                  navigatorObservers: [AnalyticsWrapper.observer()],
-                  localizationsDelegates: [
-                    S.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    KurdishMaterialLocalizations.delegate,
-                    KurdishWidgetLocalizations.delegate,
-                    KurdishCupertinoLocalizations.delegate
-                  ],
-                  supportedLocales: S.supportedLocales,
-                  debugShowCheckedModeBanner: false,
-                  home: Splash(),
-                ),
-              ),
+                      return locale;
+                    },
+                    theme: theme.lightTheme,
+                    darkTheme: theme.darkTheme,
+                    locale: model.appLocal,
+                    navigatorKey: AppRouter.navigationKey,
+                    navigatorObservers: [
+                      AnalyticsWrapper.observer(),
+                    ],
+                    localizationsDelegates: [
+                      MontenegrinMaterialLocalizations.delegate,
+                      MontenegrinWidgetsLocalizations.delegate,
+                      MontenegrinCupertinoLocalizations.delegate,
+                      S.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      KurdishMaterialLocalizations.delegate,
+                      KurdishWidgetLocalizations.delegate,
+                      KurdishCupertinoLocalizations.delegate
+                    ],
+                    supportedLocales: S.supportedLocales,
+                    debugShowCheckedModeBanner: false,
+                    onGenerateRoute: RouteGenerator.generateRoute,
+                    home: Splash(),
+                  ),
+                );
+              },
             ),
           );
         });

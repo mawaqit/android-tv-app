@@ -74,6 +74,25 @@ class RandomHadithLocalDataSource {
       throw e;
     }
   }
+
+  /// [hasHadithsForLanguage] Checks if hadiths are available in local storage for the specified language.
+  bool hasHadithsForLanguage(String language) {
+    try {
+      final hadithList = box.get(language) as List<String>?;
+      return hadithList != null && hadithList.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// [hasAnyHadiths] Checks if any hadiths are available in local storage.
+  bool hasAnyHadiths() {
+    try {
+      return box.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 /// This provider is responsible for initializing and providing an instance of

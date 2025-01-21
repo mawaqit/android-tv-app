@@ -128,7 +128,7 @@
   "safar": "صفر",
   "rabiAlawwal": "ربيع الأول",
   "rabiAlthani": "ربيع الثاني",
-  "jumadaAlula": "جماد الأول",
+  "jumadaAlula": "جمادى الأولى",
   "jumadaAlakhirah": "جمادة الآخرة",
   "rajab": "رجب",
   "shaban": "شعبان",
@@ -168,11 +168,11 @@
   "announcementOnlyMode": "وضع الإعلانات",
   "normalMode": "الوضع العادي",
   "announcementOnlyModeEXPLINATION": "اختر إذا كنت تود أن تعرض شاشة الإعلانات طوال الوقت، هذا يمكن أن يكون مفيداً إذا قمت بتثبيت الشاشة على سبيل المثال في المدخل.",
-  "duaaElEftarText": "اللهُمَّ إِنِّي لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ، وَإِلَيْكَ انْبَتُّ، وَعَلَيْكَ تَوَكَّلْتُ، ذَهَبَ الظَّمَأُ وَابْتلّت الْعُرُوِقُ، وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ.",
+  "duaaElEftarText": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
-  "secondaryScreenExplanation": "غرفة الصلاة الثانوية )غرفة النساء أو طابق آخر على سبيل المثال(، ستظهر هذه الشاشة البث المباشر للجمعة إذا تم تفعيله على حساب MAWAQIT",
+  "secondaryScreenExplanation": "غرفة الصلاة الثانوية (غرفة النساء أو طابق آخر على سبيل المثال)، ستظهر هذه الشاشة البث المباشر للجمعة إذا تم تفعيله على حساب MAWAQIT",
   "mainScreenExplanation": "غرفة المسجد الرئيسية، هذه الشاشة لن تظهر البث المباشر للجمعة",
   "normalModeExplanation": "ستظهر الشاشة العادية مع أوقات الصلاة والإعلانات.",
   "announcementOnlyModeExplanation": "ستظهر الإعلانات طوال الوقت",
@@ -243,8 +243,8 @@
   "screenLockMode": "وضع تشغيل/إيقاف الشاشة",
   "screenLockDesc": "تشغيل/إيقاف الشاشة قبل وبعد كل صلاة لتوفير الطاقة",
   "screenLockDesc2": "هذه ميزة تشغيل/إيقاف الشاشة قبل وبعد كل صلاة أذان",
-  "before": "دقائق قبل كل وقت للصلاة",
-  "after": "دقائق بعد كل وقت للصلاة",
+  "before": "الدقائق قبل كل صلاة",
+  "after": "الدقائق بعد كل صلاة",
   "updateAvailable": "التحديث متاح",
   "seeMore": "مشاهدة المزيد",
   "whatIsNew": "ما الجديد",
@@ -290,6 +290,20 @@
       }
     }
   },
+  "quranReadingPagePortrait": "الصفحة {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "اختر الصفحة",
   "checkingForUpdates": "التحقق من وجود تحديث...",
   "chooseQuranType": "إختر الرواية",
@@ -323,34 +337,66 @@
   },
   "noReciterSearchResult": "لم يتم العثور على نتائج لبحثك",
   "searchForReciter": "ابحث عن قارئ",
-  "downloadAllSuwarSuccessfully": "تم تحميل القرآن بالكامل",
+  "downloadAllSuwarSuccessfully": "تم تحميل القرآن كاملاً",
   "noSuwarDownload": "لا يوجد سور لتحميلها",
-  "connectDownloadQuran": "الرجاء الاتصال بالإنترنت لتنزيل القرآن",
-  "playInOnlineModeQuran": "الرجاء الاتصال بالإنترنت لتشغيل القرآن",
+  "connectDownloadQuran": "الرجاء الاتصال بالإنترنت للتنزيل",
+  "playInOnlineModeQuran": "الرجاء الاتصال بالإنترنت للتشغيل",
   "downloaded": "تم التحميل",
   "switchQuranType": "انتقل إلى {name}",
   "@switchQuranType": {
-    "description": "رسالة تظهر عند إضافة قارئ إلى المفضلة",
+    "description": "Message shown when a reciter is added to favorites",
     "placeholders": {
       "name": {
         "type": "String",
-        "example": "ورش"
+        "example": "Warsh"
       }
     }
   },
   "surahSelector": "اختر السورة",
-    "quranReadingPagePortrait": "الصفحة {currentPage} / {totalPages}",
-  "@quranReadingPagePortrait": {
-    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+  "checkForUpdates": "التحقق من التحديثات",
+  "checkForNewVersion": "تحقق مما إذا كانت هناك نسخة جديدة متوفرة",
+  "wouldYouLikeToUpdate": "هل ترغب في تحديث التطبيق؟",
+  "updateCompleted": "تم التحديث بنجاح!",
+  "noUpdates": "لا توجد تحديثات",
+  "usingLatestVersion": "أنت تستخدم أحدث إصدار.",
+  "updateCancelled": "تم إلغاء التحديث",
+  "checkingUpdates": "جارٍ التحقق من التحديثات...",
+  "downloadingUpdate": "جارٍ تنزيل التحديث...",
+  "installingUpdate": "جارٍ تنزيل التحديث...",
+  "updateCompletedSuccessfully": "تم التحديث بنجاح",
+  "updateFailed": "فشل التحديث",
+  "save": "حفظ",
+  "enterRtspUrl": "أدخل رابط RTSP أو YouTube Live",
+  "addRtspUrl": "أضف رابط بث كاميرا RTSP الخاص بك أدناه",
+  "enableRtspCamera": "تفعيل بث الكاميرا",
+  "rtspCameraSettings": "إعدادات الكاميرا",
+  "invalidRtspUrl": "رابط RTSP غير صالح. يرجى التحقق من الرابط والمحاولة مرة أخرى.",
+  "validRtspUrl": "تم التحقق من رابط RTSP وحفظه بنجاح.",
+  "rtspCameraSettingTitle": "اتصال الكاميرا المباشر",
+  "rtspCameraSettingDesc": "اتصل بالكاميرا المحلية واعرض بث صلاة الجمعة على شاشة التلفاز.",
+  "rtspCameraSettingScreenDesc": "إذا أدخلت رابطًا هنا، ستتحول شاشتك تلقائيًا إلى وضع بث الفيديو عند وصول وقت الجمعة.",
+  "validatingStream": "جارٍ التحقق من البث...",
+  "checkInternetLiveCamera": "يجب عليك الاتصال بالإنترنت لإعداد الكاميرا ",
+  "somethingWentWrong": "حدث خطأ ما! يرجى المحاولة مرة أخرى",
+  "somethingWrong": "حدث خطأ ما",
+  "tryAgainLater": "يرجى المحاولة لاحقًا",
+  "checkInternetUpdate": "يجب عليك الاتصال بالإنترنت للتحقق من وجود تحديثات جديدة",
+  "appUpdateAvailable": "تطبيقك يعمل بالإصدار {currentVersion}. تحديث جديد (الإصدار {updatedVersion}) متوفر مع أحدث الميزات والتحسينات.",
+  "@appUpdateAvailable": {
+    "description": "نص بديل لعرض رسالة التحديث المتاح",
     "placeholders": {
-      "currentPage": {
-        "type": "int",
+      "currentVersion": {
+        "type": "String",
         "example": "1"
       },
-      "totalPages": {
-        "type": "int",
+      "updatedVersion": {
+        "type": "String",
         "example": "604"
       }
     }
-  }
+  },
+  "ishaAndFajrOnly": "فقط صلاتي الفجر و العشاء",
+  "minutesBeforeFajrPrayer": "دقائق قبل وقت صلاة الفجر",
+  "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء"
+
 }
