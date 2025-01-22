@@ -53,3 +53,19 @@ class AppDateTime {
 
   static bool get isFriday => now().weekday == DateTime.friday;
 }
+
+class MockAppDateTime {
+  static DateTime? _mockNow;
+
+  static void setMockNow(DateTime dateTime) {
+    _mockNow = dateTime;
+  }
+
+  static DateTime now() {
+    return _mockNow ?? DateTime.now();
+  }
+
+  static void reset() {
+    _mockNow = null;
+  }
+}
