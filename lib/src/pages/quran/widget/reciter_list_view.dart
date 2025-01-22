@@ -63,8 +63,8 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
                   reciter: widget.reciters[index],
                   onTap: () {
                     ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                      reciterModel: widget.reciters[index],
-                    );
+                          reciterModel: widget.reciters[index],
+                        );
 
                     Navigator.of(context).pushReplacement(
                       RouteGenerator.buildReciterFavoriteRoute(
