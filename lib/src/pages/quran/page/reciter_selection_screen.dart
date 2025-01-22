@@ -27,19 +27,15 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/quran/widget/reciter_list_view.dart';
 import '../reading/quran_reading_screen.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AudioControlWidget extends ConsumerWidget {
   final double buttonSize;
   final double iconSize;
-  final FocusNode scheduleListeningFocusNode;
 
   const AudioControlWidget({
     Key? key,
     required this.buttonSize,
     required this.iconSize,
-    required this.scheduleListeningFocusNode,
   }) : super(key: key);
 
   bool _isWithinScheduledTime(TimeOfDay startTime, TimeOfDay endTime) {
@@ -67,14 +63,12 @@ class AudioControlWidget extends ConsumerWidget {
 
                 final shouldShow = schedule.isScheduleEnabled && isWithinTime;
 
-                if (!shouldShow) {
-                  return const SizedBox.shrink();
-                }
+                if (!shouldShow) return const SizedBox.shrink();
+
                 return SizedBox(
-                  width: buttonSize, // Set the desired width
-                  height: buttonSize, // Set the desired height
+                  width: buttonSize,
+                  height: buttonSize,
                   child: FloatingActionButton(
-                    focusNode: scheduleListeningFocusNode,
                     focusColor: Theme.of(context).primaryColor,
                     backgroundColor: state.status == AudioStatus.playing
                         ? Colors.red
