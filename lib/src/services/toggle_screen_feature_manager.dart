@@ -69,6 +69,34 @@ void callbackDispatcher() {
   });
 }
 
+class TimerScheduleInfo {
+  final DateTime scheduledTime;
+  final String actionType; // 'screenOn' or 'screenOff'
+  final bool isFajrIsha;
+
+  TimerScheduleInfo({
+    required this.scheduledTime,
+    required this.actionType,
+    required this.isFajrIsha,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'scheduledTime': scheduledTime.toIso8601String(),
+      'actionType': actionType,
+      'isFajrIsha': isFajrIsha,
+    };
+  }
+
+  factory TimerScheduleInfo.fromJson(Map<String, dynamic> json) {
+    return TimerScheduleInfo(
+      scheduledTime: DateTime.parse(json['scheduledTime']),
+      actionType: json['actionType'],
+      isFajrIsha: json['isFajrIsha'],
+    );
+  }
+}
+
 class ToggleScreenFeature {
   static final ToggleScreenFeature _instance = ToggleScreenFeature._internal();
 
@@ -298,7 +326,8 @@ class ToggleScreenFeature {
 
   static Future<bool> getToggleFeatureishaFajrState() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
+    final state = prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
+    return state;
   }
 
   static Future<void> cancelAllScheduledTimers() async {
@@ -353,6 +382,8 @@ class ToggleScreenFeature {
     await prefs.setString(
         TurnOnOffTvConstant.kScheduledTimersKey, json.encode(timersMap));
     await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, true);
+
+    logger.d("Saving into local");
   }
 
   static Future<void> setLastEventDate(DateTime date) async {
