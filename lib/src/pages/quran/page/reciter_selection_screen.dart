@@ -140,7 +140,13 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
     changeIntoReadingMode = FocusNode(debugLabel: 'change_into_reading_mode_focus_node');
     searchListFocusNode = FocusScopeNode(debugLabel: 'search_list_focus_scope_node');
+    var keyboardVisibilityController = KeyboardVisibilityController();
 
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        _setInitialFocus();
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(reciteNotifierProvider.notifier);
       _setInitialFocus();

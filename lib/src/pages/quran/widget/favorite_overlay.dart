@@ -10,6 +10,7 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
+import 'package:mawaqit/src/routes/routes_constant.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:sizer/sizer.dart';
@@ -44,6 +45,10 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => {Navigator.pushReplacementNamed(context, Routes.quranReciter)},
+        ),
       ),
       backgroundColor: Colors.black,
       body: KeyboardVisibilityBuilder(

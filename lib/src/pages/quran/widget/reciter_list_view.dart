@@ -65,7 +65,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
                           reciterModel: widget.reciters[index],
                         );
 
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       RouteGenerator.buildReciterFavoriteRoute(
                         RouteSettings(
                           name: Routes.quranReciterFavorite,
