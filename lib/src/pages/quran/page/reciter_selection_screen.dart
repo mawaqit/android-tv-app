@@ -63,7 +63,8 @@ class AudioControlWidget extends ConsumerWidget {
 
             return scheduleState.when(
               data: (schedule) {
-                final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
+                final isWithinTime = _isWithinScheduledTime(
+                    schedule.startTime, schedule.endTime);
 
                 final shouldShow = schedule.isScheduleEnabled && isWithinTime;
 
@@ -76,10 +77,14 @@ class AudioControlWidget extends ConsumerWidget {
                   child: FloatingActionButton(
                     focusNode: scheduleListeningFocusNode,
                     focusColor: Theme.of(context).primaryColor,
-                    backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
+                    backgroundColor: state.status == AudioStatus.playing
+                        ? Colors.red
+                        : Colors.black.withOpacity(.5),
                     child: Icon(
                       color: Colors.white,
-                      state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
+                      state.status == AudioStatus.playing
+                          ? Icons.pause
+                          : Icons.play_arrow,
                       size: iconSize,
                     ),
                     onPressed: () {
@@ -109,7 +114,8 @@ class ReciterSelectionScreen extends ConsumerStatefulWidget {
   createState() => _ReciterSelectionScreenState();
 }
 
-class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen> with SingleTickerProviderStateMixin {
+class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final ScrollController _reciterScrollController = ScrollController();
@@ -136,7 +142,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     });
     var keyboardVisibilityController = KeyboardVisibilityController();
 
-    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         final isEmptyList = ref.read(reciteNotifierProvider).maybeWhen(
               data: (reciter) => reciter.filteredReciters.isEmpty,
@@ -153,12 +160,16 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       }
     });
 
-    changeReadingModeFocusNode = FocusNode(debugLabel: 'change_reading_mode_focus_node');
-    scheduleListeningFocusNode = FocusNode(debugLabel: 'scheduleListeningFocusNode');
+    changeReadingModeFocusNode =
+        FocusNode(debugLabel: 'change_reading_mode_focus_node');
+    scheduleListeningFocusNode =
+        FocusNode(debugLabel: 'scheduleListeningFocusNode');
     favoriteFocusNode = FocusNode(debugLabel: 'favorite_focus_node');
 
-    reciteTypeFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_type_focus_scope_node');
-    reciteFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_focus_scope_node');
+    reciteTypeFocusScopeNode =
+        FocusScopeNode(debugLabel: 'reciter_type_focus_scope_node');
+    reciteFocusScopeNode =
+        FocusScopeNode(debugLabel: 'reciter_focus_scope_node');
 
     _tabController = TabController(length: 2, vsync: this);
 
@@ -183,7 +194,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   void _onSearchChanged() {
     final isAllReciters = _tabController.index == 0;
-    ref.read(reciteNotifierProvider.notifier).setSearchQuery(_searchController.text, isAllReciters);
+    ref
+        .read(reciteNotifierProvider.notifier)
+        .setSearchQuery(_searchController.text, isAllReciters);
   }
 
   void _navigateToReading() {
@@ -217,7 +230,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                         onPressed: () async {
                           showDialog(
                             context: context,
-                            builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
+                            builder: (BuildContext context) =>
+                                ScheduleScreen(reciterList: reciter.reciters),
                           );
                         },
                       ),
@@ -238,7 +252,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                 size: iconSize,
               ),
               onPressed: () async {
-                ref.read(quranNotifierProvider.notifier).selectModel(QuranMode.reading);
+                ref
+                    .read(quranNotifierProvider.notifier)
+                    .selectModel(QuranMode.reading);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -284,16 +300,20 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                 icon: ref.watch(reciteNotifierProvider).maybeWhen(
                       data: (reciterState) {
                         return reciterState.selectedReciter.fold(
-                          () => Icon(Icons.favorite_border, color: Colors.white),
+                          () =>
+                              Icon(Icons.favorite_border, color: Colors.white),
                           (selectedReciter) => Icon(
-                            ref.read(reciteNotifierProvider.notifier).isReciterFavorite(selectedReciter)
+                            ref
+                                    .read(reciteNotifierProvider.notifier)
+                                    .isReciterFavorite(selectedReciter)
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: Colors.white,
                           ),
                         );
                       },
-                      orElse: () => Icon(Icons.favorite_border, color: Colors.white),
+                      orElse: () =>
+                          Icon(Icons.favorite_border, color: Colors.white),
                     ),
                 onPressed: () {
                   ref.read(reciteNotifierProvider).maybeWhen(
@@ -301,12 +321,17 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                           return reciterState.selectedReciter.fold(
                             () => null,
                             (selectedReciter) async {
-                              final notifier = ref.read(reciteNotifierProvider.notifier);
+                              final notifier =
+                                  ref.read(reciteNotifierProvider.notifier);
 
                               if (notifier.isReciterFavorite(selectedReciter)) {
-                                await notifier.removeFavoriteReciter(selectedReciter);
+                                await notifier
+                                    .removeFavoriteReciter(selectedReciter);
                                 Fluttertoast.showToast(
-                                  msg: S.of(context).reciterRemovedFromFavorites(selectedReciter.name),
+                                  msg: S
+                                      .of(context)
+                                      .reciterRemovedFromFavorites(
+                                          selectedReciter.name),
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
@@ -315,9 +340,11 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                                   fontSize: 10.sp,
                                 );
                               } else {
-                                await notifier.addFavoriteReciter(selectedReciter);
+                                await notifier
+                                    .addFavoriteReciter(selectedReciter);
                                 Fluttertoast.showToast(
-                                  msg: S.of(context).reciterAddedToFavorites(selectedReciter.name),
+                                  msg: S.of(context).reciterAddedToFavorites(
+                                      selectedReciter.name),
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
@@ -396,7 +423,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             margin: EdgeInsets.only(right: marginOfContainerReciter),
             child: Shimmer.fromColors(
               baseColor: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
-              highlightColor: isDarkMode ? Colors.grey[700]! : Colors.grey[100]!,
+              highlightColor:
+                  isDarkMode ? Colors.grey[700]! : Colors.grey[100]!,
               child: Container(
                 decoration: BoxDecoration(
                   color: isDarkMode ? Colors.grey[900] : Colors.white,
@@ -418,7 +446,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           child: ref.watch(reciteNotifierProvider).when(
                 data: (reciter) => _buildReciterContent(reciter, isAllReciters),
                 loading: () => Center(child: CircularProgressIndicator()),
-                error: (error, stackTrace) => Center(child: Text('Error: $error')),
+                error: (error, stackTrace) =>
+                    Center(child: Text('Error: $error')),
               ),
         ),
       ],
@@ -452,7 +481,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           filled: true,
           fillColor: Colors.white24,
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+            borderSide:
+                BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
             borderRadius: BorderRadius.circular(10.0),
           ),
           enabledBorder: OutlineInputBorder(
@@ -469,7 +499,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   }
 
   Widget _buildReciterContent(ReciteState reciter, bool isAllReciters) {
-    final displayReciters = isAllReciters ? reciter.filteredReciters : reciter.filteredFavoriteReciters;
+    final displayReciters = isAllReciters
+        ? reciter.filteredReciters
+        : reciter.filteredFavoriteReciters;
 
     if (!isAllReciters && reciter.favoriteReciters.isEmpty) {
       return _buildCenteredText(S.of(context).noFavoriteReciters);
@@ -564,7 +596,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     );
   }
 
-  KeyEventResult _handleReciteFocusScopeKeyEvent(FocusNode node, KeyEvent event) {
+  KeyEventResult _handleReciteFocusScopeKeyEvent(
+      FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
         reciteFocusScopeNode.unfocus();
@@ -579,12 +612,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     return KeyEventResult.ignored;
   }
 
-  KeyEventResult _handleReciteTypeFocusScopeKeyEvent(FocusNode node, KeyEvent event) {
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowUp) {
+  KeyEventResult _handleReciteTypeFocusScopeKeyEvent(
+      FocusNode node, KeyEvent event) {
+    if (event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.arrowUp) {
       reciteTypeFocusScopeNode.unfocus();
       reciteFocusScopeNode.requestFocus();
       return KeyEventResult.handled;
-    } else if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.arrowDown) {
+    } else if (event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.arrowDown) {
       reciteTypeFocusScopeNode.unfocus();
       changeReadingModeFocusNode.requestFocus();
       return KeyEventResult.handled;

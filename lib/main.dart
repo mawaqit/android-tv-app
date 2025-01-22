@@ -28,6 +28,7 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,7 +47,8 @@ Future<void> main() async {
       await Firebase.initializeApp();
       final directory = await getApplicationDocumentsDirectory();
       Hive.init(directory.path);
-      await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+      await FastCachedImageConfig.init(
+          subDir: directory.path, clearCacheAfter: const Duration(days: 60));
 
       tz.initializeTimeZones();
       Hive.registerAdapter(SurahModelAdapter());
@@ -62,6 +64,8 @@ Future<void> main() async {
           ],
         ),
       );
+      await Future.delayed(const Duration(seconds: 5));
+      await ToggleScreenFeature.restoreScheduledTimers();
     },
   );
 }
@@ -76,15 +80,23 @@ class MyApp extends riverpod.ConsumerWidget {
         ChangeNotifierProvider(create: (context) => MosqueManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => FeatureManager(context)),
-        ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
-        StreamProvider(create: (context) => Api.updateUserStatusStream(), initialData: 0, lazy: false),
+        ChangeNotifierProvider(
+            create: (context) => UserPreferencesManager(), lazy: false),
+        StreamProvider(
+            create: (context) => Api.updateUserStatusStream(),
+            initialData: 0,
+            lazy: false),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) => ConnectivityService().connectionStatusController.stream.map((event) {
-              if (event == ConnectivityStatus.Wifi || event == ConnectivityStatus.Cellular) {
+            create: (context) => ConnectivityService()
+                .connectionStatusController
+                .stream
+                .map((event) {
+              if (event == ConnectivityStatus.Wifi ||
+                  event == ConnectivityStatus.Cellular) {
                 //todo check actual internet
               }
 
@@ -93,12 +105,15 @@ class MyApp extends riverpod.ConsumerWidget {
             child: Consumer<ThemeNotifier>(
               builder: (context, theme, _) {
                 return Shortcuts(
-                  shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
+                  shortcuts: {
+                    SingleActivator(LogicalKeyboardKey.select): ActivateIntent()
+                  },
                   child: MaterialApp(
                     title: kAppName,
                     themeMode: theme.mode,
                     localeResolutionCallback: (locale, supportedLocales) {
-                      if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
+                      if (locale?.languageCode.toLowerCase() == 'ba')
+                        return Locale('en');
 
                       return locale;
                     },
