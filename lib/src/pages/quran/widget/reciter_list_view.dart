@@ -10,6 +10,7 @@ import 'package:mawaqit/src/routes/routes_constant.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:sizer/sizer.dart';
+import 'package:mawaqit/src/const/constants.dart';
 
 class ReciterListView extends ConsumerStatefulWidget {
   final List<ReciterModel> reciters;
@@ -62,8 +63,8 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
                   reciter: widget.reciters[index],
                   onTap: () {
                     ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
-                          reciterModel: widget.reciters[index],
-                        );
+                      reciterModel: widget.reciters[index],
+                    );
 
                     Navigator.of(context).pushReplacement(
                       RouteGenerator.buildReciterFavoriteRoute(
@@ -171,8 +172,10 @@ class _ReciterCardState extends ConsumerState<ReciterCard> with SingleTickerProv
                   children: [
                     FastCachedImage(
                       url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, progress) => _buildOfflineImage(),
+                      fit: BoxFit.fitWidth,
+                      cacheWidth: QuranConstant.kCacheWidth,
+                      cacheHeight: QuranConstant.kCacheHeight,
+                      loadingBuilder: (context, progress) => Container(color: Colors.transparent),
                       errorBuilder: (context, error, stackTrace) => _buildOfflineImage(),
                     ),
                     // Gradient overlay
@@ -225,13 +228,11 @@ class _ReciterCardState extends ConsumerState<ReciterCard> with SingleTickerProv
   }
 
   Widget _buildOfflineImage() {
-    return Container(
-      color: Colors.grey[900],
-      child: Center(
+    return Center(
+      child: Container(
+        padding: EdgeInsets.only(bottom: 2.h),
         child: Image.asset(
           R.ASSETS_SVG_RECITER_ICON_PNG,
-          width: 24.w,
-          height: 24.w,
           fit: BoxFit.contain,
         ),
       ),

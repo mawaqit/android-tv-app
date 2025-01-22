@@ -11,6 +11,7 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/PerformanceHelper.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
@@ -216,29 +217,15 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       (e) {
         times = e;
         final today = useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
-        if (isDeviceRooted) {
-          if (isToggleScreenActivated) {
-            ToggleScreenFeature.getLastEventDate().then((lastEventDate) async {
-              if (lastEventDate != null && lastEventDate.day != today.day) {
-                isEventsSet = false; // Reset the flag if it's a new day
-                await ToggleScreenFeature.cancelAllScheduledTimers();
-                ToggleScreenFeature.toggleFeatureState(false);
-                ToggleScreenFeature.checkEventsScheduled().then((_) {
-                  if (!isEventsSet) {
-                    ToggleScreenFeature.scheduleToggleScreen(
-                      isIshaFajrOnly,
-                      e.dayTimesStrings(today, salahOnly: false),
-                      minuteBefore,
-                      minuteAfter,
-                    );
-                    ToggleScreenFeature.toggleFeatureState(true);
-                    ToggleScreenFeature.setLastEventDate(today);
-                    isEventsSet = true;
-                  }
-                });
-              }
-            });
-          }
+        final timeShiftManager = TimeShiftManager();
+
+        if (isDeviceRooted && isToggleScreenActivated && timeShiftManager.isLauncherInstalled) {
+          ToggleScreenFeature.handleDailyRescheduling(
+            isIshaFajrOnly: isIshaFajrOnly,
+            timeStrings: e.dayTimesStrings(today, salahOnly: false),
+            minuteBefore: minuteBefore,
+            minuteAfter: minuteAfter,
+          );
         }
 
         notifyListeners();
