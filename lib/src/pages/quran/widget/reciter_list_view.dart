@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
 import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
+import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:sizer/sizer.dart';
@@ -113,7 +115,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
   }
 }
 
-class ReciterCard extends ConsumerWidget {
+class ReciterCard extends ConsumerStatefulWidget {
   final ReciterModel reciter;
   final bool isSelected;
   final EdgeInsetsGeometry margin;
@@ -126,13 +128,18 @@ class ReciterCard extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ReciterCardState();
+}
+
+class _ReciterCardState extends ConsumerState<ReciterCard> {
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: 25.w,
-      margin: margin,
+      margin: widget.margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
+        border: widget.isSelected ? Border.all(color: Colors.white, width: 2) : null,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
@@ -141,10 +148,13 @@ class ReciterCard extends ConsumerWidget {
           children: [
             // CachedNetworkImage with different sizes for online and offline images
             FastCachedImage(
-                url: '${QuranConstant.kQuranReciterImagesBaseUrl}${reciter.id}.jpg',
-                fit: BoxFit.fitWidth,
-                loadingBuilder: (context, progress) => Container(color: Colors.transparent),
-                errorBuilder: (context, error, stackTrace) => _buildOfflineImage()),
+              url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
+              fit: BoxFit.fitWidth,
+              cacheWidth: QuranConstant.kCacheWidth,
+              cacheHeight: QuranConstant.kCacheHeight,
+              loadingBuilder: (context, progress) => Container(color: Colors.transparent),
+              errorBuilder: (context, error, stackTrace) => _buildOfflineImage(),
+            ),
             // Gradient overlay
             Container(
               decoration: BoxDecoration(
@@ -166,7 +176,7 @@ class ReciterCard extends ConsumerWidget {
               right: 8,
               bottom: 8,
               child: AutoSizeText(
-                reciter.name,
+                widget.reciter.name,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 minFontSize: 10,
@@ -190,12 +200,10 @@ class ReciterCard extends ConsumerWidget {
     );
   }
 
-  // Helper method to build a smaller offline image
+// Helper method to build a smaller offline image
   Widget _buildOfflineImage() {
     return Center(
       child: Container(
-        width: 24.w,
-        height: 24.w,
         padding: EdgeInsets.only(bottom: 2.h),
         child: Image.asset(
           R.ASSETS_SVG_RECITER_ICON_PNG,
