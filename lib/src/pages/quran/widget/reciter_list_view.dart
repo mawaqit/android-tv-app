@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,7 +52,9 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             height: widget.reciters.isNotEmpty ? 16.h : 0,
             // Only apply padding if this is the bottom list
             padding: widget.isAtBottom
-                ? EdgeInsets.only(right: isRTL ? 0 : buttonsPadding, left: isRTL ? buttonsPadding : 0)
+                ? EdgeInsets.only(
+                    right: isRTL ? 0 : buttonsPadding,
+                    left: isRTL ? buttonsPadding : 0)
                 : null,
             child: ListView.builder(
               controller: _reciterScrollController,
@@ -62,7 +65,9 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
                   key: ValueKey(widget.reciters[index].id),
                   reciter: widget.reciters[index],
                   onTap: () {
-                    ref.read(reciteNotifierProvider.notifier).setSelectedReciter(
+                    ref
+                        .read(reciteNotifierProvider.notifier)
+                        .setSelectedReciter(
                           reciterModel: widget.reciters[index],
                         );
 
@@ -104,7 +109,8 @@ class ReciterCard extends ConsumerStatefulWidget {
   _ReciterCardState createState() => _ReciterCardState();
 }
 
-class _ReciterCardState extends ConsumerState<ReciterCard> with SingleTickerProviderStateMixin {
+class _ReciterCardState extends ConsumerState<ReciterCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -163,7 +169,9 @@ class _ReciterCardState extends ConsumerState<ReciterCard> with SingleTickerProv
               margin: widget.margin,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                border: hasFavorite ? Border.all(color: Colors.white, width: 2) : null,
+                border: hasFavorite
+                    ? Border.all(color: Colors.white, width: 2)
+                    : null,
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -171,12 +179,15 @@ class _ReciterCardState extends ConsumerState<ReciterCard> with SingleTickerProv
                   fit: StackFit.expand,
                   children: [
                     FastCachedImage(
-                      url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
+                      url:
+                          '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
                       fit: BoxFit.fitWidth,
                       cacheWidth: QuranConstant.kCacheWidth,
                       cacheHeight: QuranConstant.kCacheHeight,
-                      loadingBuilder: (context, progress) => Container(color: Colors.transparent),
-                      errorBuilder: (context, error, stackTrace) => _buildOfflineImage(),
+                      loadingBuilder: (context, progress) =>
+                          Container(color: Colors.transparent),
+                      errorBuilder: (context, error, stackTrace) =>
+                          _buildOfflineImage(),
                     ),
                     // Gradient overlay
                     Container(
