@@ -90,12 +90,6 @@ class ToggleScreenFeature {
     await Future.wait([saveScheduledEventsToLocale(), toggleFeatureState(true), setLastEventDate(now)]);
   }
 
-  static Future<void> _saveScheduleInfo() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final scheduleData = _scheduleInfoList.map((info) => info.toJson()).toList();
-    await prefs.setString(_scheduledInfoKey, json.encode(scheduleData));
-  }
-
   static Future<bool> shouldReschedule() async {
     final lastEventDate = await getLastEventDate();
     final today = AppDateTime.now();
@@ -103,7 +97,9 @@ class ToggleScreenFeature {
     final areEventsScheduled = await checkEventsScheduled();
 
     final shouldReschedule =
-        lastEventDate != null && lastEventDate.day != today.day && isFeatureActive && !areEventsScheduled;
+        lastEventDate != null &&
+        lastEventDate.day != today.day &&
+        isFeatureActive;
     return shouldReschedule;
   }
 
