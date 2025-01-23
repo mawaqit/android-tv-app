@@ -90,7 +90,6 @@ class ToggleScreenFeature {
     await Future.wait([saveScheduledEventsToLocale(), toggleFeatureState(true), setLastEventDate(now)]);
   }
 
-
   static Future<bool> shouldReschedule() async {
     final lastEventDate = await getLastEventDate();
     final today = AppDateTime.now();
@@ -100,8 +99,6 @@ class ToggleScreenFeature {
     final shouldReschedule = lastEventDate != null && lastEventDate.day != today.day && isFeatureActive;
     return shouldReschedule;
   }
-
-
 
   static Future<void> handleDailyRescheduling({
     required bool isIshaFajrOnly,
