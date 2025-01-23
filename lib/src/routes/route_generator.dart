@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/domain/model/quran/moshaf_model.dart';
+import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/pages/quran/page/quran_mode_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/page/quran_player_screen.dart';
 import 'package:mawaqit/src/pages/quran/page/reciter_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/page/surah_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/reading/quran_reading_screen.dart';
+import 'package:mawaqit/src/pages/quran/widget/favorite_overlay.dart';
 import 'package:mawaqit/src/routes/routes_constant.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
@@ -84,6 +86,12 @@ class RouteGenerator {
           surah: args['surah'] as SurahModel,
         );
 
+      case Routes.quranReciterFavorite:
+        final args = settings.arguments as Map<String, dynamic>;
+        return OverlayPage(
+          reciter: args['reciter'] as ReciterModel,
+        );
+
       default:
         return const SizedBox();
     }
@@ -95,6 +103,32 @@ class RouteGenerator {
         appBar: AppBar(title: const Text('Error')),
         body: const Center(child: Text('Route not found')),
       ),
+    );
+  }
+
+  // Add this new method for handling the reciter favorite route specifically
+  static Route<dynamic> buildReciterFavoriteRoute(RouteSettings settings) {
+    final args = settings.arguments as Map<String, dynamic>;
+    final reciter = args['reciter'] as ReciterModel;
+
+    return PageRouteBuilder(
+      settings: settings,
+      pageBuilder: (context, animation, secondaryAnimation) => OverlayPage(
+        reciter: reciter,
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
     );
   }
 }

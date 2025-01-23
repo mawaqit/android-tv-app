@@ -9,7 +9,6 @@ import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 class ReciteState extends Equatable {
   final List<ReciterModel> reciters;
   final List<ReciterModel> filteredReciters;
-  final List<ReciterModel> filteredFavoriteReciters;
 
   final List<ReciterModel> favoriteReciters;
   final Option<ReciterModel> selectedReciter;
@@ -21,7 +20,6 @@ class ReciteState extends Equatable {
     this.selectedMoshaf = const None(),
     this.favoriteReciters = const [],
     this.filteredReciters = const [],
-    this.filteredFavoriteReciters = const [],
   });
 
   ReciteState copyWith({
@@ -30,7 +28,6 @@ class ReciteState extends Equatable {
     Option<ReciterModel>? selectedReciter,
     Option<MoshafModel>? selectedMoshaf,
     List<ReciterModel>? filteredReciters,
-    List<ReciterModel>? filteredFavoriteReciters,
   }) {
     return ReciteState(
       reciters: reciters ?? this.reciters,
@@ -38,7 +35,6 @@ class ReciteState extends Equatable {
       favoriteReciters: favoriteReciters ?? this.favoriteReciters,
       selectedMoshaf: selectedMoshaf ?? this.selectedMoshaf,
       filteredReciters: filteredReciters ?? this.filteredReciters,
-      filteredFavoriteReciters: filteredFavoriteReciters ?? this.filteredFavoriteReciters,
     );
   }
 
@@ -48,7 +44,6 @@ class ReciteState extends Equatable {
     return 'ReciteState(reciters: $reciterInfo, selectedReciter: ${selectedReciter.hashCode}, '
         'selectedMoshaf: ${selectedMoshaf.hashCode},'
         'filteredReciters: ${filteredReciters.length},'
-        'filteredFavoriteReciters: ${filteredFavoriteReciters.length},'
         'favoriteReciters: ${favoriteReciters.length})';
   }
 
@@ -59,6 +54,5 @@ class ReciteState extends Equatable {
         selectedReciter,
         favoriteReciters,
         filteredReciters,
-        filteredFavoriteReciters,
       ];
 }

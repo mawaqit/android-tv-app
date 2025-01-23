@@ -424,5 +424,6 @@
   "selectReciter": "Select a Reciter",
   "selectMoshaf": "Select a Mushaf",
   "randomSurahSelection": "Random Surah Selection",
-  "selectSurah": "Select a Surah"
+  "selectSurah": "Select a Surah",
+  "initializingAutoReading": "Initializing in progress..."
 }

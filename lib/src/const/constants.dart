@@ -81,6 +81,8 @@ abstract class QuranConstant {
   static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/tv_config.json';
   static const String kIsFirstTime = 'is_first_time_quran';
   static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
+  static const int kCacheWidth = 50;
+  static const int kCacheHeight = 50;
 }
 
 abstract class AzkarConstant {
