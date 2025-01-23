@@ -96,10 +96,7 @@ class ToggleScreenFeature {
     final isFeatureActive = await getToggleFeatureState();
     final areEventsScheduled = await checkEventsScheduled();
 
-    final shouldReschedule =
-        lastEventDate != null &&
-        lastEventDate.day != today.day &&
-        isFeatureActive;
+    final shouldReschedule = lastEventDate != null && lastEventDate.day != today.day && isFeatureActive;
     return shouldReschedule;
   }
 
