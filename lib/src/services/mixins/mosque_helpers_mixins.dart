@@ -151,18 +151,34 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   int nextIqamaIndex() {
     final now = mosqueDate();
     final iqamaTimes = actualIqamaTimes();
+    final fajrTime = iqamaTimes[0];
 
-    // Adjust the last prayer time (Isha) to be on the next day if it's at midnight
-    if (iqamaTimes.last.hour == 0 && iqamaTimes.last.minute == 0) {
-      iqamaTimes[iqamaTimes.length - 1] = iqamaTimes.last.add(Duration(days: 1));
+    // Convert time to minutes since start of day
+    int toMinutes(DateTime time) {
+      // If time is after midnight but before Fajr, add 24 hours
+      if (time.hour < fajrTime.hour || (time.hour == fajrTime.hour && time.minute < fajrTime.minute)) {
+        return (time.hour + 24) * 60 + time.minute;
+      }
+      return time.hour * 60 + time.minute;
     }
 
-    final nextIqama = iqamaTimes.firstWhere(
-      (element) => element.isAfter(now),
-      orElse: () => iqamaTimes.first,
-    );
+    // Get minutes for current time
+    int nowMinutes = toMinutes(now);
 
-    return iqamaTimes.indexOf(nextIqama);
+    // Convert iqama times to minutes and handle after-midnight cases
+    List<int> timeMinutes = iqamaTimes.mapIndexed((index, time) {
+      // For Isha prayer (index 4), if it's very early (e.g. 1:00), treat it as next day
+      if ((index == 4 || index == 3) && time.hour < fajrTime.hour) {
+        return (time.hour + 24) * 60 + time.minute;
+      }
+      return time.hour * 60 + time.minute;
+    }).toList();
+
+    // Find next iqama
+    int nextIndex = timeMinutes.indexWhere((minutes) => minutes > nowMinutes);
+
+    // If no next iqama found today, return Fajr (0)
+    return nextIndex == -1 ? 0 : nextIndex;
   }
 
   /// return the upcoming salah index
@@ -187,7 +203,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     // Convert prayer times to minutes and handle after-midnight cases
     List<int> timeMinutes = times.mapIndexed((index, time) {
       // For Isha prayer (index 4), if it's very early (e.g. 1:00), treat it as next day
-      if (index == 4 && time.hour < fajrTime.hour) {
+      if ((index == 4 || index == 3) && time.hour < fajrTime.hour) {
         return (time.hour + 24) * 60 + time.minute;
       }
       return time.hour * 60 + time.minute;
@@ -235,12 +251,33 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// the duration until the next salah
   Duration nextSalahAfter() {
     final now = mosqueDate();
-    final duration = actualTimes()[nextSalahIndex()].difference(now);
+    final nextIndex = nextSalahIndex();
+    final nextTime = actualTimes()[nextIndex];
+    final fajrTime = actualTimes()[0];
 
-    /// next salah is tomorrow fajr
+    // Handle Maghrib or Isha after midnight
+    if ((nextIndex == 3 || nextIndex == 4) &&
+        (nextTime.hour < fajrTime.hour || (nextTime.hour == fajrTime.hour && nextTime.minute < fajrTime.minute))) {
+      // For after midnight case (e.g. current time is 00:01)
+      if (now.hour < 12) {
+        final minutes = 60 - now.minute + (nextTime.hour - (now.hour + 1)) * 60 + nextTime.minute;
+        return Duration(minutes: minutes);
+      }
+
+      // For before midnight case (e.g. current time is 23:50)
+      final prayerTime = DateTime(
+          now.year,
+          now.month,
+          now.day + 1, // Add 1 day since it's for tomorrow
+          nextTime.hour,
+          nextTime.minute);
+      return prayerTime.difference(now);
+    }
+
+    // For all other cases, use normal difference
+    final duration = nextTime.difference(now);
     if (duration < Duration.zero) {
       final tomorrowFajr = tomorrowTimes[0].toTimeOfDay()!.toDate(now.add(Duration(days: 1)));
-
       return tomorrowFajr.difference(now);
     }
     return duration;
@@ -248,10 +285,38 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
   /// the duration until the next salah
   Duration nextIqamaaAfter() {
-    final value = actualIqamaTimes()[nextIqamaIndex()].difference(mosqueDate());
+    final now = mosqueDate();
+    final nextIndex = nextIqamaIndex();
+    final nextTime = actualIqamaTimes()[nextIndex];
+    final fajrTime = actualIqamaTimes()[0];
 
-    if (value < Duration.zero) return value + Duration(days: 1);
-    return value;
+    // Handle Maghrib or Isha Iqama times after midnight
+    if ((nextIndex == 3 || nextIndex == 4) &&
+        (nextTime.hour < fajrTime.hour || (nextTime.hour == fajrTime.hour && nextTime.minute < fajrTime.minute))) {
+      // For after midnight case (e.g. current time is 00:01)
+      if (now.hour < 12) {
+        final minutes = 60 - now.minute + (nextTime.hour - (now.hour + 1)) * 60 + nextTime.minute;
+        return Duration(minutes: minutes, seconds: 60 - now.second);
+      }
+
+      // For before midnight case (e.g. current time is 23:50)
+      final iqamaTime = DateTime(now.year, now.month, now.day + 1, nextTime.hour, nextTime.minute, 0 // Set seconds to 0
+          );
+      return iqamaTime.difference(now);
+    }
+
+    // For all other cases, use normal difference
+    final duration = DateTime(now.year, now.month, now.day, nextTime.hour, nextTime.minute, 0 // Set seconds to 0
+            )
+        .difference(now);
+
+    if (duration < Duration.zero) {
+      final tomorrowFajr = DateTime(now.year, now.month, now.day + 1, actualIqamaTimes()[0].hour,
+          actualIqamaTimes()[0].minute, 0 // Set seconds to 0
+          );
+      return tomorrowFajr.difference(now);
+    }
+    return duration;
   }
 
   /// return actual salah duration
