@@ -28,10 +28,10 @@ class AppDateTime {
   static final DateTime _initialRealTime = DateTime.now();
   static final DateTime _initialDebugTime = DateTime(
     _initialRealTime.year,
-    _initialRealTime.month,
-    _initialRealTime.day,
-    13,
-    48,
+    11,
+    1,
+    00,
+    -20,
     00,
   );
 
@@ -52,4 +52,20 @@ class AppDateTime {
   static DateTime tomorrow() => DateTime.now().add(const Duration(days: 1));
 
   static bool get isFriday => now().weekday == DateTime.friday;
+}
+
+class MockAppDateTime {
+  static DateTime? _mockNow;
+
+  static void setMockNow(DateTime dateTime) {
+    _mockNow = dateTime;
+  }
+
+  static DateTime now() {
+    return _mockNow ?? DateTime.now();
+  }
+
+  static void reset() {
+    _mockNow = null;
+  }
 }

@@ -157,7 +157,7 @@ class DisplayTextWidget extends ConsumerWidget {
     Duration? delay,
   }) {
     return Flexible(
-      fit: isHadith ? FlexFit.tight : FlexFit.loose,
+      fit: FlexFit.loose,
       child: Container(
         constraints: BoxConstraints(maxHeight: maxHeight.vh),
         child: Padding(

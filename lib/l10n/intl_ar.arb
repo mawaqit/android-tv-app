@@ -129,7 +129,7 @@
   "rabiAlawwal": "ربيع الأول",
   "rabiAlthani": "ربيع الثاني",
   "jumadaAlula": "جمادى الأولى",
-  "jumadaAlakhirah": "جمادة الآخرة",
+  "jumadaAlakhirah": "جمادى الآخرة",
   "rajab": "رجب",
   "shaban": "شعبان",
   "ramadan": "رمضان",
@@ -397,6 +397,6 @@
   },
   "ishaAndFajrOnly": "فقط صلاتي الفجر و العشاء",
   "minutesBeforeFajrPrayer": "دقائق قبل وقت صلاة الفجر",
-  "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء"
-
+  "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء",
+  "initializingAutoReading": "جاري التهيئة..."
 }
