@@ -22,7 +22,7 @@ class HomeDateWidget extends StatelessWidget {
     var hijriDate = mosqueManager.mosqueHijriDate(userPrefs.hijriAdjustments);
     var hijriDateFormatted = hijriDate.formatMawaqitType();
 
-    final georgianDate = now.formatIntoMawaqitFormat(local: '${lang}_${mosqueManager.mosque?.countryCode}');
+    final georgianDate = now.formatIntoMawaqitFormat(local: '$lang');
 
     return FittedBox(
       fit: BoxFit.scaleDown,
