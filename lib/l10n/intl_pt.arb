@@ -68,15 +68,15 @@
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
-  "azkarList2": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس",
+  "azkarList2": "Em nome de Deus, o Clemente, o mais misericordioso diz: “Busco refúgio no Senhor dos humanos, O Rei dos humanos, O Deus dos humanos, contra o mal murmurante que recua, que murmura sobre os peitos dos humanos, dos jinns ou dos humanos.”",
   "@azkarList2": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
   },
-  "azkarList3": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+  "azkarList3": "Em nome de Deus, o mais gracioso, o mais misericordioso, diz: “Eu busco refúgio no Senhor da criação, Contra o mal que criou, o mal das trevas quando se aproxima, e do mal das trevas. Soprando o nó, e da maldade de tal invejoso quando se aproximar.”",
   "@azkarList3": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
   },
-  "azkarList4": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ",
+  "azkarList4": "Em nome de Deus, o mais gracioso, o mais misericordioso, diz “Ele é deus, único, Deus, o eterno, o Eterno. Já basta.”",
   "@azkarList4": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
   },
@@ -136,7 +136,7 @@
   "shawwal": "Shawwál",
   "dhuAlqidah": "Dhu al-Qadah",
   "dhuAlhijjah": "Dhu al-Hijjah",
-  "duaaBetweenSalahAndAdhan": "De acordo com Anas Ibn Mâlik, Rasulullah (Sallalahu Aleihi Wassalam) disse: O duá efetuado entre o Azán (chamamento para a oração) e o Iqamah (alerta para o início da oração), não é rejeitado.",
+  "duaaBetweenSalahAndAdhan": "Anas ibn Mâlik (Radiyallahu Anhu) relata que Profeta Muhammad (Sallalláhu Alaihi Wa Sallam) disse: \"O duá efetuado entre Azán (chamada para oração) e Iqamah (aviso do início da oração), não é rejeitado.\"",
   "salatKhayrMinaNawm": "A oração é melhor que o sono",
   "salatElEid": "Salatul Eid",
   "webView": "Ativar modo compatível",
@@ -154,7 +154,7 @@
   "showSecondaryScreen": "Usar como tela secundária (para anúncios)",
   "normalScreen": "Usar como tela principal",
   "duaaRemainder": "Continuação Duá",
-  "fajrWakeUp": "Acorde no Fajr",
+  "fajrWakeUp": "Despertar no Fajr",
   "changeLanguage": "Alterar idioma",
   "forceScreen": "Forçar tela",
   "clear": "Limpar",
@@ -265,7 +265,7 @@
   "updatedQuran": "Alcorão atualizado",
   "quranLatestVersion": "O alcorão está atualizado",
   "quranUpdatedVersion": "A nova versão do alcorão é: {version}",
-  "quranIsUpdated": "O alcorão está atualizado",
+  "quranIsUpdated": "O alcorão foi atualizado",
   "quranDownloaded": "Alcorão baixado",
   "quranIsAlreadyDownloaded": "O alcorão já foi baixado",
   "chooseReciter": "Selecionar recitador",
@@ -365,6 +365,22 @@
   "installingUpdate": "Instalando atualização...",
   "updateCompletedSuccessfully": "Atualização concluída com sucesso",
   "updateFailed": "Falhou ao atualizar",
+  "save": "Salvar",
+  "enterRtspUrl": "Insira o RTSP ou URL da transmissão do YouTube",
+  "addRtspUrl": "Adicione o URL de sua câmera de transmissão abaixo",
+  "enableRtspCamera": "Ativar transmissão da câmera",
+  "rtspCameraSettings": "Ajustes da câmera",
+  "invalidRtspUrl": "URL inválido. Verifique o URL e tente novamente.",
+  "validRtspUrl": "URL validado e salvo com sucesso.",
+  "rtspCameraSettingTitle": "Conexão de câmera ao vivo",
+  "rtspCameraSettingDesc": "Conecte-se à sua câmera local e exiba a transmissão ao vivo da oração de Jumu'ah na tela da TV.",
+  "rtspCameraSettingScreenDesc": "Se inserir um URL aqui, sua tela automaticamente alterará para transmissão de vídeo quando o tempo de Jumu'ah chegar",
+  "validatingStream": "Validando transmissão...",
+  "checkInternetLiveCamera": "Você precisa se conectar à rede para configurar a câmera ao vivo",
+  "somethingWentWrong": "Algo deu errado. Tente novamente",
+  "somethingWrong": "Algo deu errado",
+  "tryAgainLater": "Tente novamente mais tarde",
+  "hintTextRtspUrl": "rtsp://... ou https://youtube.com/live/...",
   "checkInternetUpdate": "Você deve conectar-se à internet para verificar por novas atualizações",
   "appUpdateAvailable": "O aplicativo está executando a versão {currentVersion}. Uma nova atualização (versão {updatedVersion}) está disponível com novos recursos e melhorias.",
   "@appUpdateAvailable": {
@@ -379,5 +395,35 @@
         "example": "604"
       }
     }
-  }
+  },
+  "quranUpdateDialogContent": "Uma nova atualização para o {moshafName} Alcorão (versão {version}) está disponível.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Apenas orações de Fajr e Ishá",
+  "minutesBeforeFajrPrayer": "minutos antes da hora de Fajr",
+  "minutesAfterIshaPrayer": "minutos após a hora de Ishá",
+  "scheduleSaved": "Horário salvo.",
+  "completeAllFields": "Preencha os campos antes de salvar.",
+  "endTimeAfter": "O horário de término deve ser após o horário de início.",
+  "scheduleListening": "Escuta programada",
+  "enableScheduling": "Ativar programação",
+  "scheduleDesc": "Ative este recurso para reproduzir automaticamente um Surah nos tempos programados.",
+  "startTime": "Horário de início",
+  "endTime": "Horário de término",
+  "selectReciter": "Selecione um recitador",
+  "selectMoshaf": "Selecione um Mushaf",
+  "randomSurahSelection": "Seleção aleatória de Surah",
+  "selectSurah": "Selecione um Surah"
 }
+
