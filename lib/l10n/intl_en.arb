@@ -168,7 +168,7 @@
   "announcementOnlyMode": "Announcements mode",
   "normalMode": "Normal mode ",
   "announcementOnlyModeEXPLINATION": "Choose if your screen will display announcements all time, this can be useful if you install the screen at the entrance for example.",
-  "duaaElEftarText": "",
+  "duaaElEftarText": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
@@ -365,6 +365,22 @@
   "installingUpdate": "Installing update...",
   "updateCompletedSuccessfully": "Update completed successfully",
   "updateFailed": "Update failed",
+  "save": "Save",
+  "enterRtspUrl": "Enter RTSP or Youtube Live URL",
+  "addRtspUrl": "Add your camera stream URL below",
+  "enableRtspCamera": "Enable Camera Streaming",
+  "rtspCameraSettings": "Camera Settings",
+  "invalidRtspUrl": "Invalid URL. Please check the URL and try again.",
+  "validRtspUrl": "URL validated and saved successfully.",
+  "rtspCameraSettingTitle": "Live camera connection",
+  "rtspCameraSettingDesc": "Connect to your local camera and display jumua prayer stream on the TV screen.",
+  "rtspCameraSettingScreenDesc": "If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+  "validatingStream": "Validating Stream...",
+  "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
+  "somethingWentWrong": "Something went wrong! please try again",
+  "somethingWrong": "Something went wrong",
+  "tryAgainLater": "Please try again later",
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/...",
   "checkInternetUpdate": "You must connect to internet to check for new updates",
   "appUpdateAvailable": "Your app is running version {currentVersion}. A new update (version {updatedVersion}) is available with the latest features and improvements.",
   "@appUpdateAvailable": {
@@ -379,6 +395,34 @@
         "example": "604"
       }
     }
-  }
- 
+  },
+  "quranUpdateDialogContent": "A new update for the {moshafName} Quran (version {version}) is available.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr and Isha prayers only",
+  "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time",
+  "scheduleSaved": "Your schedule has been saved.",
+  "completeAllFields": "Please complete all fields before saving.",
+  "endTimeAfter": "The end time must be after the start time.",
+  "scheduleListening": "Scheduled Listening",
+  "enableScheduling": "Enable Scheduling",
+  "scheduleDesc": "Enable this feature to automatically play a Surah at scheduled times.",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "selectReciter": "Select a Reciter",
+  "selectMoshaf": "Select a Mushaf",
+  "randomSurahSelection": "Random Surah Selection",
+  "selectSurah": "Select a Surah"
 }

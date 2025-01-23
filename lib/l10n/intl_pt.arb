@@ -168,7 +168,7 @@
   "announcementOnlyMode": "Modo de anúncios",
   "normalMode": "Modo normal ",
   "announcementOnlyModeEXPLINATION": "Selecione se sua tela exibirá anunciados todo tempo, isso pode ser útil caso você instalar a tela na entrada, por exemplo.",
-  "duaaElEftarText": "Ó Allah, por você jejuei, e com o sustento vindo de Ti, quebrei o meu jejum. Para você, retorno-me em arrependimento e em ti, deposito minha confiança. A sede já se saciou, as veias foram hidratadas, a recompensa já foi garantida, se Allah desejar.",
+  "duaaElEftarText": "Ó Allah, por você jejuei, com o sustento vindo por você, eu quebrei o jejum, voltei para você e em você, confiei. A sede já foi, as veias se hidrataram, a recompensa já está garantida, se o Allah quiser.",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
@@ -426,3 +426,4 @@
   "randomSurahSelection": "Seleção aleatória de Surah",
   "selectSurah": "Selecione um Surah"
 }
+

@@ -167,15 +167,15 @@
   "duaaElEftar": "دعاء الإفطار",
   "announcementOnlyMode": "وضع الإعلانات",
   "normalMode": "الوضع العادي",
-  "announcementOnlyModeEXPLINATION": "اختر ما إذا كنت تريد عرض الإعلانات على الشاشه طوال الوقت. هذا الخيار مفيد إذا كنت قد وضعت الشاشة عند المدخل مثلاً",
-  "duaaElEftarText": "",
-  "@duaaElEftarText": {
-    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
-  },
   "secondaryScreenExplanation": "للغرفة الثانوية للصلاة (مثل غرفة النساء أو في طابق آخر على سبيل المثال)، ستعرض هذه الشاشة بثًا مباشرًا لصلاة الجمعة",
   "mainScreenExplanation": "بالنسبة للغرفة الرئيسية في المسجد، لن تعرض هذه الشاشة بثًا مباشرًا لصلاة الجمعة",
   "normalModeExplanation": "ستعرض الشاشة العادية مع مواقيت الصلاة والإعلانات",
   "announcementOnlyModeExplanation": "ستعرض الإعلانات طوال الوقت",
+  "announcementOnlyModeEXPLINATION": "اختر إذا كنت تود أن تعرض شاشة الإعلانات طوال الوقت، هذا يمكن أن يكون مفيداً إذا قمت بتثبيت الشاشة على سبيل المثال في المدخل.",
+  "duaaElEftarText": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
   "orientation": "إتجاه الشاشة",
   "selectYourMawaqitTvAppOrientation": "حدد اتجاه تطبيق Mawaqit tv",
   "deviceDefault": "الوضع الافتراضي",
@@ -365,8 +365,23 @@
   "installingUpdate": "جارٍ تنزيل التحديث...",
   "updateCompletedSuccessfully": "تم التحديث بنجاح",
   "updateFailed": "فشل التحديث",
-  "checkInternetUpdate": "يجب عليك الاتصال بالإنترنت للتحقق من التحديثات الجديدة",
-  "appUpdateAvailable": "التطبيق الخاص بك يعمل بالإصدار {currentVersion}. هناك تحديث جديد (الإصدار {updatedVersion}) يتضمن أحدث الميزات والتحسينات",
+  "save": "حفظ",
+  "enterRtspUrl": "أدخل رابط RTSP أو YouTube Live",
+  "addRtspUrl": "أضف رابط بث كاميرا RTSP الخاص بك أدناه",
+  "enableRtspCamera": "تفعيل بث الكاميرا",
+  "rtspCameraSettings": "إعدادات الكاميرا",
+  "invalidRtspUrl": "رابط RTSP غير صالح. يرجى التحقق من الرابط والمحاولة مرة أخرى.",
+  "validRtspUrl": "تم التحقق من رابط RTSP وحفظه بنجاح.",
+  "rtspCameraSettingTitle": "اتصال الكاميرا المباشر",
+  "rtspCameraSettingDesc": "اتصل بالكاميرا المحلية واعرض بث صلاة الجمعة على شاشة التلفاز.",
+  "rtspCameraSettingScreenDesc": "إذا أدخلت رابطًا هنا، ستتحول شاشتك تلقائيًا إلى وضع بث الفيديو عند وصول وقت الجمعة.",
+  "validatingStream": "جارٍ التحقق من البث...",
+  "checkInternetLiveCamera": "يجب عليك الاتصال بالإنترنت لإعداد الكاميرا ",
+  "somethingWentWrong": "حدث خطأ ما! يرجى المحاولة مرة أخرى",
+  "somethingWrong": "حدث خطأ ما",
+  "tryAgainLater": "يرجى المحاولة لاحقًا",
+  "checkInternetUpdate": "يجب عليك الاتصال بالإنترنت للتحقق من وجود تحديثات جديدة",
+  "appUpdateAvailable": "تطبيقك يعمل بالإصدار {currentVersion}. تحديث جديد (الإصدار {updatedVersion}) متوفر مع أحدث الميزات والتحسينات.",
   "@appUpdateAvailable": {
     "description": "Placeholder text for displaying update available message",
     "placeholders": {
@@ -379,5 +394,9 @@
         "example": "604"
       }
     }
-  }
+  },
+  "ishaAndFajrOnly": "فقط صلاتي الفجر و العشاء",
+  "minutesBeforeFajrPrayer": "دقائق قبل وقت صلاة الفجر",
+  "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء"
+
 }

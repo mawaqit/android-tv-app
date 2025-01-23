@@ -27,14 +27,16 @@ import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/services/settings_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
+import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
+import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
 
@@ -51,6 +53,8 @@ Future<void> main() async {
       Hive.registerAdapter(SurahModelAdapter());
       Hive.registerAdapter(ReciterModelAdapter());
       Hive.registerAdapter(MoshafModelAdapter());
+      MediaKit.ensureInitialized();
+
       runApp(
         riverpod.ProviderScope(
           child: MyApp(),
@@ -60,6 +64,8 @@ Future<void> main() async {
           ],
         ),
       );
+      await Future.delayed(const Duration(seconds: 5));
+      await ToggleScreenFeature.restoreScheduledTimers();
     },
   );
 }
@@ -72,7 +78,6 @@ class MyApp extends riverpod.ConsumerWidget {
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => AppLanguage()),
         ChangeNotifierProvider(create: (context) => MosqueManager()),
-        ChangeNotifierProvider(create: (context) => SettingsManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => FeatureManager(context)),
         ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
@@ -109,6 +114,9 @@ class MyApp extends riverpod.ConsumerWidget {
                       AnalyticsWrapper.observer(),
                     ],
                     localizationsDelegates: [
+                      MontenegrinMaterialLocalizations.delegate,
+                      MontenegrinWidgetsLocalizations.delegate,
+                      MontenegrinCupertinoLocalizations.delegate,
                       S.delegate,
                       GlobalCupertinoLocalizations.delegate,
                       GlobalMaterialLocalizations.delegate,

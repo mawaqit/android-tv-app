@@ -6,6 +6,7 @@ import 'package:mawaqit/src/helpers/time_utils.dart';
 class Times {
   final String? jumua;
   final String? jumua2;
+  final String? jumua3;
   final String? aidPrayerTime;
   final String? aidPrayerTime2;
   final int hijriAdjustment;
@@ -70,6 +71,7 @@ class Times {
   const Times({
     required this.jumua,
     required this.jumua2,
+    required this.jumua3,
     required this.aidPrayerTime,
     required this.aidPrayerTime2,
     required this.hijriAdjustment,
@@ -88,6 +90,7 @@ class Times {
           runtimeType == other.runtimeType &&
           jumua == other.jumua &&
           jumua2 == other.jumua2 &&
+          jumua3 == other.jumua3 &&
           aidPrayerTime == other.aidPrayerTime &&
           aidPrayerTime2 == other.aidPrayerTime2 &&
           hijriAdjustment == other.hijriAdjustment &&
@@ -101,6 +104,7 @@ class Times {
   int get hashCode =>
       jumua.hashCode ^
       jumua2.hashCode ^
+      jumua3.hashCode ^
       aidPrayerTime.hashCode ^
       aidPrayerTime2.hashCode ^
       hijriAdjustment.hashCode ^
@@ -115,6 +119,7 @@ class Times {
     return 'Times{' +
         ' jumua: $jumua,' +
         ' jumua2: $jumua2,' +
+        ' jumua3: $jumua3,' +
         ' aidPrayerTime: $aidPrayerTime,' +
         ' aidPrayerTime2: $aidPrayerTime2,' +
         ' hijriAdjustment: $hijriAdjustment,' +
@@ -132,6 +137,7 @@ class Times {
     return Times(
       jumua: map['jumua'] ?? map['jumua2'],
       jumua2: replacedJumua,
+      jumua3: map['jumua3'],
       aidPrayerTime: map['aidPrayerTime'],
       aidPrayerTime2: map['aidPrayerTime2'],
       hijriAdjustment: map['hijriAdjustment'] ?? -1,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:marquee/marquee.dart';
+import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:provider/provider.dart';
@@ -21,15 +23,28 @@ class _FlashWidgetState extends State<FlashWidget> {
     final isFlashEnabled = context.select<MosqueManager, bool>((mosque) => mosque.flashEnabled);
     final flash = context.select<MosqueManager, Flash?>((mosque) => mosque.mosque?.flash);
     if (!isFlashEnabled) return SizedBox();
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final appLanguage = Provider.of<AppLanguage>(context);
+    if (!isFlashEnabled) return SizedBox();
+
+    TextDirection getTextDirection() {
+      if (isPortrait && appLanguage.appLocal.toLanguageTag() == "ar") {
+        return flash?.orientation == 'rtl' ? TextDirection.ltr : TextDirection.rtl;
+      } else {
+        return flash?.orientation == 'rtl' ? TextDirection.rtl : TextDirection.ltr;
+      }
+    }
 
     return RepaintBoundary(
       child: Marquee(
         key: ValueKey(flash!.content),
-        textDirection: flash.orientation == 'rtl' ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: getTextDirection(),
         text: flash.content ?? '',
         velocity: 90,
         blankSpace: 400,
         style: TextStyle(
+          fontFamily:
+              flash.orientation == 'rtl' ? GoogleFonts.notoKufiArabic().fontFamily : GoogleFonts.roboto().fontFamily,
           height: 1,
           fontSize: 3.4.vwr,
           fontWeight: FontWeight.bold,
