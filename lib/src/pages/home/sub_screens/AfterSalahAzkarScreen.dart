@@ -109,7 +109,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
             child: DisplayTextWidget(
               title: widget.azkarTitle,
               arabicText: arabicHadith,
-              translatedText: translatedHadith,
+              translatedText: widget.isAfterAsrOrFajr ? null : translatedHadith,
             ),
           ),
           mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
