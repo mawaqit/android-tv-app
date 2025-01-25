@@ -234,27 +234,34 @@ class _TextAnnouncement extends StatelessWidget {
             children: [
               // title
               SizedBox(height: 10.vh),
-              Text(
-                title ?? '',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  shadows: kAnnouncementTextShadow,
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.amber,
-                  letterSpacing: 1,
+              Flexible(
+                flex: 4,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 2.w),
+                  child: AutoSizeText(
+                    title ?? '',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      shadows: kAnnouncementTextShadow,
+                      fontSize: 8.vwr,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.amber,
+                      letterSpacing: 1,
+                    ),
+                  ).animate().slide().addRepaintBoundary(),
                 ),
-              ).animate().slide().addRepaintBoundary(),
+              ),
               // content
-              SizedBox(height: 3.vh),
-              Expanded(
+              SizedBox(height: 5.vh),
+              Flexible(
+                flex: 10,
                 child: AutoSizeText(
                   content,
                   stepGranularity: 1,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     shadows: kAnnouncementTextShadow,
-                    fontSize: 8.vwr,
+                    fontSize: 6.vwr,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     letterSpacing: 1,
