@@ -235,7 +235,7 @@ class _TextAnnouncement extends StatelessWidget {
               // title
               SizedBox(height: 10.vh),
               Flexible(
-                flex: 4,
+                flex: 6,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 2.w),
                   child: AutoSizeText(
