@@ -243,7 +243,7 @@ class _TextAnnouncement extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       shadows: kAnnouncementTextShadow,
-                      fontSize: 8.vwr,
+                      fontSize: 5.vwr,
                       fontWeight: FontWeight.bold,
                       color: Colors.amber,
                       letterSpacing: 1,
