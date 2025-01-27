@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -70,22 +71,20 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
                       color: Colors.white,
                     ).animate().slideX(begin: -2).addRepaintBoundary(),
                     Flexible(
-                      fit: FlexFit.loose,
-                      flex: 1,
+                      flex: 2,
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
-                        child: FittedBox(
-                          child: Text(
-                            S.of(context).salatKhayrMinaNawm,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14.vw,
-                              // height: 2,
-                              color: Colors.white,
-                              shadows: kHomeTextShadow,
-                            ),
-                          ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
-                        ),
+                        child: AutoSizeText(
+                          S.of(context).salatKhayrMinaNawm,
+                          maxLines: 2,
+                          textAlign: TextAlign.center, // Added text alignment
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 8.vw,
+                            color: Colors.white,
+                            shadows: kHomeTextShadow,
+                          ),
+                        ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
                       ),
                     ),
                     Icon(
