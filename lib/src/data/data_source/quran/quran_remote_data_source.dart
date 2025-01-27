@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/domain/model/quran/language_model.dart';
@@ -37,10 +38,31 @@ class QuranRemoteDataSource {
         'suwar',
         queryParameters: {'language': languageCode},
       );
+      List<String> suwarInArabic = await _getSuwarInArabic();
       // log('quran: QuranRemoteDataSource: getSuwarByLanguage: ${response.data}');
-      return (response.data['suwar'] as List).map((e) => SurahModel.fromJson(e as Map<String, dynamic>)).toList();
+      final output =  (response.data['suwar'] as List).mapIndexed((index,e) {
+        e['arabicName'] = suwarInArabic[index];
+        return SurahModel.fromJson(e as Map<String, dynamic>);
+      }).toList();
+
+      return output;
     } catch (e) {
       throw FetchSuwarByLanguageException(e.toString());
+    }
+  }
+
+  /// [_getSuwarInArabic] get the list of surwars in arabic
+  ///
+  ///  gets the list of surwars in arabic using the api `https://mp3quran.net/api/v3/suwar`
+  Future<List<String>> _getSuwarInArabic() async {
+    try {
+      final response = await _dio.get(
+        'suwar',
+        queryParameters: {'language': 'ar'},
+      );
+      return (response.data['suwar'] as List).map((e) => e['name'] as String).toList();
+    } catch (e, s) {
+      throw FetchSuwarInArabicException(e.toString());
     }
   }
 }
