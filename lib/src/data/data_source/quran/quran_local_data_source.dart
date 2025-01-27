@@ -72,9 +72,9 @@ class QuranLocalDataSource {
     }
   }
 
-  Option<DateTime> getLastUpdateTimestamp(String languageCode)  {
+  Option<DateTime> getLastUpdateTimestamp(String languageCode) {
     try {
-      final timestamp =  _surahBox.get('${languageCode}_last_fetch') as int?;
+      final timestamp = _surahBox.get('${languageCode}_last_fetch') as int?;
       final option = Option.fromNullable(timestamp).map((e) => DateTime.fromMillisecondsSinceEpoch(e));
       return option;
     } catch (e) {

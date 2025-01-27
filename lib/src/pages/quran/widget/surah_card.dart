@@ -93,7 +93,7 @@ class _SurahCardState extends ConsumerState<SurahCard> with SingleTickerProvider
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if(!isArabic)
+                            if (!isArabic)
                               Text(
                                 widget.surahNameArabic,
                                 style: TextStyle(

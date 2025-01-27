@@ -40,7 +40,7 @@ class QuranRemoteDataSource {
       );
       List<String> suwarInArabic = await _getSuwarInArabic();
       // log('quran: QuranRemoteDataSource: getSuwarByLanguage: ${response.data}');
-      final output =  (response.data['suwar'] as List).mapIndexed((index,e) {
+      final output = (response.data['suwar'] as List).mapIndexed((index, e) {
         e['arabicName'] = suwarInArabic[index];
         return SurahModel.fromJson(e as Map<String, dynamic>);
       }).toList();
