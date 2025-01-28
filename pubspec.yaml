@@ -139,7 +139,6 @@ dependencies:
   wakelock_plus: 1.1.4
   wakelock_plus_platform_interface: 1.1.0
   flutter_background_service: ^5.0.9
-  audio_service: ^0.18.10
   notification_overlay:
     git:
       url: https://github.com/mawaqit/android-tv-notification
