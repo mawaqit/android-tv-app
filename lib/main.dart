@@ -54,6 +54,7 @@ Future<void> main() async {
       Hive.registerAdapter(ReciterModelAdapter());
       Hive.registerAdapter(MoshafModelAdapter());
       MediaKit.ensureInitialized();
+
       runApp(
         riverpod.ProviderScope(
           child: MyApp(),

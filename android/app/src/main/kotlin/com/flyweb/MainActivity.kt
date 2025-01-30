@@ -261,7 +261,7 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {
                 val commands = listOf(
-"input keyevent 26"
+"echo 0 > /sys/class/backlight/backlight/brightness"
                 )
                 executeCommand(commands, result) // Lock the device
             } catch (e: Exception) {
@@ -273,7 +273,7 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {
                 val commands = listOf(
-"input keyevent 82"
+"echo 110 > /sys/class/backlight/backlight/brightness"
                 )
                 executeCommand(commands, result) // Lock the device
             } catch (e: Exception) {
