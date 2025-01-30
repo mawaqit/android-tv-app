@@ -310,9 +310,7 @@ class BackgroundService with WidgetsBindingObserver {
 
     try {
       await dismissExistingNotification();
-      await NotificationOverlay.showNotification(
-        '$salahName time ($prayerName) notification',
-      );
+      await NotificationOverlay.showNotification(S.current.prayerTimeNotification(salahName, prayerName));
 
       if (shouldPlayAdhan) {
         await _playPrayerAudio(adhanAsset, adhanFromAssets);
