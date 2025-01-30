@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
+import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,47 +51,51 @@ class ToggleScreenFeature {
 
   static Future<void> scheduleToggleScreen(
       bool isfajrIshaonly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
-    await cancelAllScheduledTimers();
-    _scheduleInfoList.clear();
+    try {
+      await cancelAllScheduledTimers();
+      _scheduleInfoList.clear();
 
-    // Create a copy and remove index 1
-    final List<String> prayerTimes = List.from(timeStrings);
-    final removedTime = prayerTimes.removeAt(1);
-    final now = AppDateTime.now();
-    final timeShiftManager = TimeShiftManager();
+      final List<String> prayerTimes = List.from(timeStrings);
+      final removedTime = prayerTimes.removeAt(1);
+      final now = AppDateTime.now();
+      final timeShiftManager = TimeShiftManager();
 
-    if (isfajrIshaonly) {
-      _scheduleForPrayer(
-        prayerTimes[0],
-        now,
-        beforeDelayMinutes,
-        afterDelayMinutes,
-        true,
-        timeShiftManager,
-      );
-
-      _scheduleForPrayer(
-        prayerTimes[4],
-        now,
-        beforeDelayMinutes,
-        afterDelayMinutes,
-        true,
-        timeShiftManager,
-      );
-    } else {
-      for (int i = 0; i < prayerTimes.length; i++) {
+      if (isfajrIshaonly) {
         _scheduleForPrayer(
-          prayerTimes[i],
+          prayerTimes[0],
           now,
           beforeDelayMinutes,
           afterDelayMinutes,
-          false,
+          true,
           timeShiftManager,
         );
-      }
-    }
 
-    await Future.wait([saveScheduledEventsToLocale(), toggleFeatureState(true), setLastEventDate(now)]);
+        _scheduleForPrayer(
+          prayerTimes[4],
+          now,
+          beforeDelayMinutes,
+          afterDelayMinutes,
+          true,
+          timeShiftManager,
+        );
+      } else {
+        for (int i = 0; i < prayerTimes.length; i++) {
+          _scheduleForPrayer(
+            prayerTimes[i],
+            now,
+            beforeDelayMinutes,
+            afterDelayMinutes,
+            false,
+            timeShiftManager,
+          );
+        }
+      }
+
+      await Future.wait([saveScheduledEventsToLocale(), toggleFeatureState(true), setLastEventDate(now)]);
+    } catch (e) {
+      logger.e('Failed to schedule toggle screen: $e');
+      throw ScheduleToggleScreenException(e.toString());
+    }
   }
 
   static Future<bool> shouldReschedule() async {
@@ -109,22 +114,25 @@ class ToggleScreenFeature {
     required int minuteBefore,
     required int minuteAfter,
   }) async {
-    final shouldSchedule = await shouldReschedule();
+    try {
+      final shouldSchedule = await shouldReschedule();
 
-    if (shouldSchedule) {
-      await cancelAllScheduledTimers();
-      await toggleFeatureState(false);
+      if (shouldSchedule) {
+        await cancelAllScheduledTimers();
+        await toggleFeatureState(false);
 
-      await scheduleToggleScreen(
-        isIshaFajrOnly,
-        timeStrings,
-        minuteBefore,
-        minuteAfter,
-      );
+        await scheduleToggleScreen(
+          isIshaFajrOnly,
+          timeStrings,
+          minuteBefore,
+          minuteAfter,
+        );
 
-      await saveScheduledEventsToLocale();
-    } else {
-      print('No rescheduling needed');
+        await saveScheduledEventsToLocale();
+      }
+    } catch (e) {
+      logger.e('Failed to handle daily rescheduling: $e');
+      throw DailyReschedulingException(e.toString());
     }
   }
 
@@ -165,7 +173,8 @@ class ToggleScreenFeature {
                 timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
               }
             } catch (e) {
-              print('Error executing timer action: $e');
+              logger.e('Error executing timer action: $e');
+              throw ScheduleToggleScreenException('Error executing timer action: $e');
             }
           });
 
@@ -173,13 +182,15 @@ class ToggleScreenFeature {
           _scheduledTimers[timeString] ??= [];
           _scheduledTimers[timeString]!.add(timer);
         } catch (e) {
-          print('Error scheduling timer for ${info.scheduledTime}: $e');
+          logger.e('Error scheduling timer for ${info.scheduledTime}: $e');
+          throw ScheduleToggleScreenException(e.toString());
         }
       }
 
       await saveScheduledEventsToLocale();
     } catch (e) {
-      print('Error restoring scheduled timers: $e');
+      logger.e('Error restoring scheduled timers: $e');
+      throw RestoreScheduledTimersException(e.toString());
     }
   }
 
@@ -191,74 +202,79 @@ class ToggleScreenFeature {
     bool isFajrIsha,
     TimeShiftManager timeShiftManager,
   ) {
-    final parts = timeString.split(':');
-    final hour = int.parse(parts[0]);
-    final minute = int.parse(parts[1]);
+    try {
+      final parts = timeString.split(':');
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
 
-    DateTime scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
-    if (scheduledDateTime.isBefore(now)) {
-      scheduledDateTime = scheduledDateTime.add(Duration(days: 1));
-    }
-
-    final beforeScheduleTime = scheduledDateTime.subtract(Duration(minutes: beforeDelayMinutes));
-
-    if (beforeScheduleTime.isAfter(now)) {
-      // Recheck time difference right before creating Timer
-      final currentDiff = beforeScheduleTime.difference(AppDateTime.now());
-      if (!currentDiff.isNegative) {
-        _scheduleInfoList.add(TimerScheduleInfo(
-          scheduledTime: beforeScheduleTime,
-          actionType: 'screenOn',
-          isFajrIsha: isFajrIsha,
-        ));
-
-        final beforeTimer = Timer(currentDiff, () {
-          timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
-        });
-        _scheduledTimers[timeString] = [beforeTimer];
-      } else {
-        print('Time elapsed during scheduling for ON timer');
+      DateTime scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
+      if (scheduledDateTime.isBefore(now)) {
+        scheduledDateTime = scheduledDateTime.add(Duration(days: 1));
       }
-    } else {
-      print('Screen ON time already passed: $beforeScheduleTime');
-    }
 
-    final afterScheduleTime = scheduledDateTime.add(Duration(minutes: afterDelayMinutes));
+      final beforeScheduleTime = scheduledDateTime.subtract(Duration(minutes: beforeDelayMinutes));
 
-    _scheduleInfoList.add(TimerScheduleInfo(
-      scheduledTime: afterScheduleTime,
-      actionType: 'screenOff',
-      isFajrIsha: isFajrIsha,
-    ));
+      if (beforeScheduleTime.isAfter(now)) {
+        final currentDiff = beforeScheduleTime.difference(AppDateTime.now());
+        if (!currentDiff.isNegative) {
+          _scheduleInfoList.add(TimerScheduleInfo(
+            scheduledTime: beforeScheduleTime,
+            actionType: 'screenOn',
+            isFajrIsha: isFajrIsha,
+          ));
 
-    final afterTimer = Timer(afterScheduleTime.difference(now), () {
-      timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
-    });
+          final beforeTimer = Timer(currentDiff, () {
+            timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
+          });
+          _scheduledTimers[timeString] = [beforeTimer];
+        }
+      }
 
-    if (_scheduledTimers[timeString] != null) {
-      _scheduledTimers[timeString]!.add(afterTimer);
-    } else {
-      _scheduledTimers[timeString] = [afterTimer];
+      final afterScheduleTime = scheduledDateTime.add(Duration(minutes: afterDelayMinutes));
+
+      _scheduleInfoList.add(TimerScheduleInfo(
+        scheduledTime: afterScheduleTime,
+        actionType: 'screenOff',
+        isFajrIsha: isFajrIsha,
+      ));
+
+      final afterTimer = Timer(afterScheduleTime.difference(now), () {
+        timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
+      });
+
+      if (_scheduledTimers[timeString] != null) {
+        _scheduledTimers[timeString]!.add(afterTimer);
+      } else {
+        _scheduledTimers[timeString] = [afterTimer];
+      }
+    } catch (e) {
+      logger.e('Error scheduling prayer time: $e');
+      throw SchedulePrayerTimeException(e.toString());
     }
   }
 
   static Future<void> loadScheduledTimersFromPrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final timersJson = prefs.getString(_scheduledTimersKey);
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final timersJson = prefs.getString(_scheduledTimersKey);
 
-    if (timersJson != null) {
-      final timersMap = json.decode(timersJson) as Map<String, dynamic>;
+      if (timersJson != null) {
+        final timersMap = json.decode(timersJson) as Map<String, dynamic>;
 
-      timersMap.forEach((timeString, timerDataList) {
-        _scheduledTimers[timeString] = [];
-        for (final timerData in timerDataList) {
-          final tick = timerData['tick'] as int;
-          final timer = Timer(Duration(milliseconds: tick), () {});
-          _scheduledTimers[timeString]!.add(timer);
-        }
-      });
-    } else {
-      print('No stored timers found');
+        timersMap.forEach((timeString, timerDataList) {
+          _scheduledTimers[timeString] = [];
+          for (final timerData in timerDataList) {
+            final tick = timerData['tick'] as int;
+            final timer = Timer(Duration(milliseconds: tick), () {});
+            _scheduledTimers[timeString]!.add(timer);
+          }
+        });
+      } else {
+        logger.d('No stored timers found');
+      }
+    } catch (e) {
+      logger.e('Error loading scheduled timers from preferences: $e');
+      throw LoadScheduledTimersException(e.toString());
     }
   }
 
