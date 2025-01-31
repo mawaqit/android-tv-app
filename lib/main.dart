@@ -27,7 +27,7 @@ import 'package:mawaqit/src/helpers/riverpod_sentry_provider_observer.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
-import 'package:mawaqit/src/services/background_service.dart';
+import 'package:mawaqit/src/services/notification_background_service.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
@@ -63,7 +63,7 @@ Future<void> main() async {
         }
       }
 
-      await BackgroundService.initializeService();
+      await NotificationBackgroundService.initializeService();
 
       Hive.init(directory.path);
       await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));

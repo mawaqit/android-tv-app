@@ -15,8 +15,8 @@ import '../helpers/AppDate.dart';
 import '../models/mosqueConfig.dart';
 import '../models/times.dart';
 
-class BackgroundService with WidgetsBindingObserver {
-  static final BackgroundService _instance = BackgroundService._internal();
+class NotificationBackgroundService with WidgetsBindingObserver {
+  static final NotificationBackgroundService _instance = NotificationBackgroundService._internal();
   static AudioPlayer? _audioPlayer;
   static final Set<DateTime> _scheduledTimes = {};
   static bool _isInitialized = false;
@@ -25,9 +25,9 @@ class BackgroundService with WidgetsBindingObserver {
 
   Duration duration = Duration();
 
-  factory BackgroundService() => _instance;
+  factory NotificationBackgroundService() => _instance;
 
-  BackgroundService._internal() {
+  NotificationBackgroundService._internal() {
     WidgetsBinding.instance.addObserver(this);
   }
 

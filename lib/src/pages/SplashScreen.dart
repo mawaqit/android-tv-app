@@ -36,7 +36,7 @@ import '../helpers/AppDate.dart';
 import '../helpers/connectivity_provider.dart';
 import '../models/address_model.dart';
 import '../services/FeatureManager.dart';
-import '../services/background_service.dart';
+import '../services/notification_background_service.dart';
 import 'home/widgets/show_check_internet_dialog.dart';
 import 'onBoarding/widgets/onboarding_timezone_selector.dart';
 import '../services/storage_manager.dart';

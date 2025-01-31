@@ -26,7 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/data_source/device_info_data_source.dart';
 import '../helpers/AppDate.dart';
-import 'background_service.dart';
+import 'notification_background_service.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
 
@@ -239,7 +239,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
           );
         }
 
-        BackgroundService.schedulePrayerTasks(e, mosqueConfig, isAdhanVoiceEnabled, salahIndex);
+        NotificationBackgroundService.schedulePrayerTasks(e, mosqueConfig, isAdhanVoiceEnabled, salahIndex);
 
         notifyListeners();
       },
