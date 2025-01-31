@@ -75,8 +75,6 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
     ToggleScreenFeature.toggleFeatureState(true);
 
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(TurnOnOffTvConstant.kMinuteBeforeKey, state.value!.selectedMinuteBefore);
-    prefs.setInt(TurnOnOffTvConstant.kMinuteAfterKey, state.value!.selectedMinuteAfter);
     prefs.setBool(TurnOnOffTvConstant.kisFajrIshaOnly, isIshaFajrOnly);
   }
 }

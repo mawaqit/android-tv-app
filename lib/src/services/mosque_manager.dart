@@ -91,19 +91,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     return 'https://mawaqit.net/$languageCode/id/${mosque?.id}?view=desktop';
   }
 
-  static const String _minuteBeforeKey = 'selectedMinuteBefore';
-  static const String _minuteAfterKey = 'selectedMinuteAfter';
-
-  static Future<int> getMinuteBefore() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_minuteBeforeKey) ?? 10;
-  }
-
-  static Future<int> getMinuteAfter() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_minuteAfterKey) ?? 10;
-  }
-
   static Future<bool> getisIshaFajr() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
@@ -128,8 +115,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     isDeviceRooted = await checkRoot();
     isToggleScreenActivated = await ToggleScreenFeature.getToggleFeatureState();
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
-    minuteBefore = await getMinuteBefore();
-    minuteAfter = await getMinuteAfter();
+
     isIshaFajrOnly = await getisIshaFajr();
     notifyListeners();
   }
@@ -214,17 +200,19 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     );
 
     _timesSubscription = timesStream.listen(
-      (e) {
+      (e) async {
         times = e;
         final today = useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
-        final timeShiftManager = TimeShiftManager();
 
         if (isDeviceRooted && isToggleScreenActivated) {
+          final newMinuteBefore = await ToggleScreenFeature.getBeforeDelayMinutes();
+          final newMinuteAfter = await ToggleScreenFeature.getAfterDelayMinutes();
+
           ToggleScreenFeature.handleDailyRescheduling(
             isIshaFajrOnly: isIshaFajrOnly,
             timeStrings: e.dayTimesStrings(today, salahOnly: false),
-            minuteBefore: minuteBefore,
-            minuteAfter: minuteAfter,
+            minuteBefore: newMinuteBefore,
+            minuteAfter: newMinuteAfter,
           );
         }
 
