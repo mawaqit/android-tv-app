@@ -230,7 +230,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
         final today = useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
         final timeShiftManager = TimeShiftManager();
 
-        if (isDeviceRooted && isToggleScreenActivated && timeShiftManager.isLauncherInstalled) {
+        if (isDeviceRooted && isToggleScreenActivated) {
           ToggleScreenFeature.handleDailyRescheduling(
             isIshaFajrOnly: isIshaFajrOnly,
             timeStrings: e.dayTimesStrings(today, salahOnly: false),
