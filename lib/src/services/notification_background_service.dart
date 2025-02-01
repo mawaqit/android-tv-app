@@ -8,8 +8,8 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:notification_overlay/notification_overlay.dart';
-import 'notification_service/notification_service.dart';
-import 'notification_service/prayer_audio_service.dart';
+import 'package:mawaqit/src/services/notification/notification_service.dart';
+import 'package:mawaqit/src/services/notification/prayer_audio_service.dart';
 
 class NotificationBackgroundService with WidgetsBindingObserver {
   static final NotificationBackgroundService _instance = NotificationBackgroundService._internal();

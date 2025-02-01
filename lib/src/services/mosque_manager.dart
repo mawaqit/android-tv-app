@@ -21,6 +21,7 @@ import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
+import 'package:mawaqit/src/services/notification/prayer_schedule_service.dart';
 import 'package:mawaqit/src/services/storage_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +31,6 @@ import '../helpers/AppDate.dart';
 import 'notification_background_service.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
-import 'notification_service/prayer_schedule_service.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
