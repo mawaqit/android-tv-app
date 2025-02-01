@@ -3,9 +3,9 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/constants.dart';
-import '../models/mosqueConfig.dart';
-import '../models/times.dart';
-import '../helpers/AppDate.dart';
+import '../../models/mosqueConfig.dart';
+import '../../models/times.dart';
+import '../../helpers/AppDate.dart';
 import 'package:synchronized/synchronized.dart';
 
 class PrayerScheduleService {

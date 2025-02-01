@@ -30,7 +30,7 @@ import '../helpers/AppDate.dart';
 import 'notification_background_service.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
-import 'prayer_schedule_service.dart';
+import 'notification_service/prayer_schedule_service.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
