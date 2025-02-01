@@ -7,6 +7,8 @@ import 'package:mawaqit/main.dart';
 import 'package:notification_overlay/notification_overlay.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_session/audio_session.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../const/resource.dart';
 import '../../i18n/l10n.dart';
@@ -254,12 +256,22 @@ class NotificationBackgroundService with WidgetsBindingObserver {
 
   @pragma('vm:entry-point')
   static void onStart(ServiceInstance service) async {
-    DartPluginRegistrant.ensureInitialized();
+    // Ensure Flutter bindings are initialized
+    WidgetsFlutterBinding.ensureInitialized();
 
-    bool shouldShowNotification = false;
-    bool isPaused = false;
+    // Retrieve the user’s preferred language from SharedPreferences (or use a default)
+    final prefs = await SharedPreferences.getInstance();
+    final langCode = prefs.getString('language_code') ?? 'en';
+    final locale = Locale(langCode);
 
-    _setupServiceListeners(service, shouldShowNotification, isPaused);
+    // Manually load the localized resources for that locale.
+    final localizations = await AppLocalizations.delegate.load(locale);
+
+    // Set the loaded localizations into your S helper so that S.current returns the right instance.
+    S.setCurrent(localizations);
+
+    // Now proceed with the rest of your service initialization
+    _setupServiceListeners(service, false, false);
   }
 
   static void _setupServiceListeners(
@@ -313,11 +325,11 @@ class NotificationBackgroundService with WidgetsBindingObserver {
 
     try {
       await dismissExistingNotification();
-      final notificationText = notificationFormat.replaceAll('{{salah}}', salahName).replaceAll('{{time}}', prayerName);
+      final notificationText = S.current.prayerTimeNotification(salahName, prayerName);
       try {
         await NotificationOverlay.showNotification(notificationText);
       } catch (e) {
-        print(e);
+        logger.e('Failed to show notification: $e');
       }
       if (shouldPlayAdhan) {
         await _playPrayerAudio(adhanAsset, adhanFromAssets);

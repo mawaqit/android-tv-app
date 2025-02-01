@@ -398,5 +398,19 @@
   "ishaAndFajrOnly": "فقط صلاتي الفجر و العشاء",
   "minutesBeforeFajrPrayer": "دقائق قبل وقت صلاة الفجر",
   "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء",
-  "initializingAutoReading": "جاري التهيئة..."
+  "initializingAutoReading": "جاري التهيئة...",
+  "prayerTimeNotification": "حان وقت صلاة {salahName} عند الساعة {prayerTime}",
+  "@prayerTimeNotification": {
+    "description": "إشعار يُعرض عندما يكون التطبيق في الخلفية لتنبيه المستخدم بوقت الصلاة.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "الفجر"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  }
 }
