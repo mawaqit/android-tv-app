@@ -252,6 +252,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
           service,
         );
 
+        NotificationBackgroundService.schedulePrayerTasks(e, mosqueConfig, isAdhanVoiceEnabled, salahIndex);
+
         notifyListeners();
       },
       onError: onItemError,
