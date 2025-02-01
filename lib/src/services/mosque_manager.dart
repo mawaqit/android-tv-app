@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/main.dart';
@@ -29,6 +30,7 @@ import '../helpers/AppDate.dart';
 import 'notification_background_service.dart';
 import 'mixins/audio_mixin.dart';
 import 'mixins/connectivity_mixin.dart';
+import 'prayer_schedule_service.dart';
 
 final mawaqitApi = "https://mawaqit.net/api/2.0";
 
@@ -225,7 +227,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     );
 
     _timesSubscription = timesStream.listen(
-      (e) {
+      (e) async {
         times = e;
         final today = useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
         final timeShiftManager = TimeShiftManager();
@@ -238,8 +240,17 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
             minuteAfter: minuteAfter,
           );
         }
+        // Obtain an instance of the background service.
+        final service = FlutterBackgroundService();
 
-        NotificationBackgroundService.schedulePrayerTasks(e, mosqueConfig, isAdhanVoiceEnabled, salahIndex);
+        // Delegate prayer scheduling to PrayerScheduleService.
+        await PrayerScheduleService.schedulePrayerTasks(
+          e,
+          mosqueConfig,
+          isAdhanVoiceEnabled,
+          salahIndex,
+          service,
+        );
 
         notifyListeners();
       },
