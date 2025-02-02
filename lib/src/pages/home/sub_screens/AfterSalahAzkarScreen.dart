@@ -14,17 +14,49 @@ import 'package:provider/provider.dart';
 import '../../../const/constants.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 
+class AzkarLists {
+  static List<String> getAfterAsrList(AppLocalizations tr) => [
+        tr.azkarList7,
+        tr.azkarList10,
+        tr.azkarList11,
+        tr.azkarList12,
+        tr.azkarList13,
+      ];
+
+  static List<String> getAfterFajrList(AppLocalizations tr) => [
+        tr.azkarList7,
+        tr.azkarList8,
+        tr.azkarList9,
+        tr.azkarList10,
+        tr.azkarList11,
+        tr.azkarList12,
+        tr.azkarList13,
+      ];
+
+  static List<String> getRegularList(AppLocalizations tr) => [
+        tr.azkarList0, // أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله
+        tr.azkarList1, // سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33
+        tr.azkarList4, // قُلۡ هُوَ ٱللَّهُ أَحَدٌ
+        tr.azkarList3, // قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ
+        tr.azkarList2, // قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ
+        tr.azkarList5, // ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ
+        tr.azkarList6, // لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد
+      ];
+}
+
 class AfterSalahAzkar extends StatefulWidget {
   AfterSalahAzkar({
     Key? key,
     this.onDone,
     this.azkarTitle = AzkarConstant.kAzkarAfterPrayer,
     this.isAfterAsrOrFajr = false,
+    this.isAfterAsr = false,
   }) : super(key: key);
 
   final VoidCallback? onDone;
   final String azkarTitle;
   final bool isAfterAsrOrFajr;
+  final bool isAfterAsr;
   @override
   State<AfterSalahAzkar> createState() => _AfterSalahAzkarState();
 }
@@ -35,37 +67,13 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
   final arabicLocal = AppLocalizationsAr();
 
   String getItem(AppLocalizations tr, int index) {
-    return widget.isAfterAsrOrFajr
-        ? [
-            tr.azkarList7,
-            tr.azkarList8,
-            tr.azkarList9,
-            tr.azkarList10,
-            tr.azkarList11,
-            tr.azkarList12,
-            tr.azkarList13,
-          ][index % 7]
-        : [
-            // أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله
-            tr.azkarList0,
+    if (!widget.isAfterAsrOrFajr) {
+      return AzkarLists.getRegularList(tr)[index % 7];
+    }
 
-            // سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33
-            tr.azkarList1,
-            // قُلۡ هُوَ ٱللَّهُ أَحَدٌ
-            tr.azkarList4,
+    final list = widget.isAfterAsr ? AzkarLists.getAfterAsrList(tr) : AzkarLists.getAfterFajrList(tr);
 
-            // قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ
-            tr.azkarList3,
-
-            // قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ
-            tr.azkarList2,
-
-            //ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ
-            tr.azkarList5,
-
-            // لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد
-            tr.azkarList6,
-          ][index % 7];
+    return list[index % list.length];
   }
 
   String arabicItem(int index) => getItem(arabicLocal, index);
