@@ -91,11 +91,37 @@ class ToggleScreenFeature {
         }
       }
 
-      await Future.wait([saveScheduledEventsToLocale(), toggleFeatureState(true), setLastEventDate(now)]);
+      await Future.wait([
+        saveScheduledEventsToLocale(),
+        toggleFeatureState(true),
+        setLastEventDate(now),
+        saveBeforeDelayMinutes(beforeDelayMinutes),
+        saveAfterDelayMinutes(afterDelayMinutes),
+      ]);
     } catch (e) {
       logger.e('Failed to schedule toggle screen: $e');
       throw ScheduleToggleScreenException(e.toString());
     }
+  }
+
+  static Future<int> getBeforeDelayMinutes() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(TurnOnOffTvConstant.kMinuteBeforeKey) ?? 0;
+  }
+
+  static Future<int> getAfterDelayMinutes() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(TurnOnOffTvConstant.kMinuteAfterKey) ?? 0;
+  }
+
+  static Future<void> saveBeforeDelayMinutes(int minutes) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(TurnOnOffTvConstant.kMinuteBeforeKey, minutes);
+  }
+
+  static Future<void> saveAfterDelayMinutes(int minutes) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(TurnOnOffTvConstant.kMinuteAfterKey, minutes);
   }
 
   static Future<bool> shouldReschedule() async {
@@ -116,7 +142,6 @@ class ToggleScreenFeature {
   }) async {
     try {
       final shouldSchedule = await shouldReschedule();
-
       if (shouldSchedule) {
         await cancelAllScheduledTimers();
         await toggleFeatureState(false);
