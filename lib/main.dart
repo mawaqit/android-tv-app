@@ -4,6 +4,7 @@ import 'dart:developer' as developer;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
@@ -26,10 +27,12 @@ import 'package:mawaqit/src/helpers/riverpod_sentry_provider_observer.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
+import 'package:mawaqit/src/services/notification_background_service.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -39,13 +42,29 @@ import 'package:mawaqit/src/routes/route_generator.dart';
 import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
-
+@pragma("vm:entry-point")
 Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       final directory = await getApplicationDocumentsDirectory();
+      final isRooted = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
+        TurnOnOffTvConstant.kCheckRoot,
+      );
+
+      final bool isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
+
+      if (!isPermissionGranted) {
+        if (isRooted) {
+          await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod("grantOverlayPermission");
+        } else {
+          await NotificationOverlay.requestOverlayPermission();
+        }
+      }
+
+      await NotificationBackgroundService.initializeService();
+
       Hive.init(directory.path);
       await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
 
@@ -70,9 +89,32 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends riverpod.ConsumerWidget {
+class MyApp extends riverpod.ConsumerStatefulWidget {
   @override
-  Widget build(BuildContext context, riverpod.WidgetRef ref) {
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    BackgroundService.setNotificationVisibility(false);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    BackgroundService().didChangeAppLifecycleState(state);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),

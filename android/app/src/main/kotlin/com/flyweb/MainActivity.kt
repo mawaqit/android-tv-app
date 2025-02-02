@@ -59,6 +59,7 @@ class MainActivity : FlutterActivity() {
                     "connectToNetworkWPA" -> connectToNetworkWPA(call, result)
                     "addLocationPermission" -> addLocationPermission(call, result)
                     "grantFineLocationPermission" -> grantFineLocationPermission(call, result)
+                    "grantOverlayPermission" -> grantOverlayPermission(call, result)
                     "sendDownArrowEvent" -> sendDownArrowEvent(call, result)
                     "sendTabKeyEvent" -> sendTabKeyEvent(call, result)
                     "clearAppData" -> {
@@ -286,6 +287,19 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
             try {
                 val commands = listOf(
                     "pm grant com.mawaqit.androidtv android.permission.ACCESS_FINE_LOCATION",
+                   
+                )
+                executeCommand(commands, result) // Lock the device
+            } catch (e: Exception) {
+                handleCommandException(e, result)
+            }
+        }
+    }
+    private fun grantOverlayPermission(call: MethodCall, result: MethodChannel.Result) {
+        AsyncTask.execute {
+            try {
+                val commands = listOf(
+                    "appops set com.mawaqit.androidtv SYSTEM_ALERT_WINDOW allow",
                    
                 )
                 executeCommand(commands, result) // Lock the device
