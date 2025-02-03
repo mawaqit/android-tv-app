@@ -1,6 +1,7 @@
 // prayer_audio_service.dart
 import 'package:audio_session/audio_session.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mawaqit/src/services/notification/notification_service.dart';
 
 class PrayerAudioService {
   static AudioPlayer? _audioPlayer;
@@ -22,6 +23,9 @@ class PrayerAudioService {
       _audioPlayer?.playbackEventStream.listen((event) {
         if (event.processingState == ProcessingState.completed) {
           session.setActive(false);
+          if (!adhanFromAssets) {
+            NotificationService.dismissNotification();
+          }
         }
       });
     } catch (e) {

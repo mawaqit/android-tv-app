@@ -23,7 +23,7 @@ class NotificationService {
   static void _scheduleNotificationDismissal() {
     _notificationTimer?.cancel();
     _notificationTimer = Timer(
-      const Duration(minutes: 5),
+      const Duration(minutes: 2),
       dismissNotification,
     );
   }
