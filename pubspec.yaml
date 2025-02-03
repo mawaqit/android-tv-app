@@ -155,6 +155,8 @@ dependencies:
   fast_cached_network_image: ^1.2.0
 
   montenegrin_localization: ^0.1.0+1
+  synchronized: ^3.1.0+1
+
 
 
 dev_dependencies:

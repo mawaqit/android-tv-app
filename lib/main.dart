@@ -42,51 +42,75 @@ import 'package:mawaqit/src/routes/route_generator.dart';
 import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
+
 @pragma("vm:entry-point")
 Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
-      final directory = await getApplicationDocumentsDirectory();
-      final isRooted = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
-        TurnOnOffTvConstant.kCheckRoot,
-      );
+      try {
+        WidgetsFlutterBinding.ensureInitialized();
+        await Firebase.initializeApp();
 
-      final bool isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
+        final directory = await getApplicationDocumentsDirectory();
 
-      if (!isPermissionGranted) {
-        if (isRooted) {
-          await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod("grantOverlayPermission");
-        } else {
-          await NotificationOverlay.requestOverlayPermission();
-        }
+        // Initialize Hive first
+        Hive.init(directory.path);
+        await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+
+        // Check and request permissions
+        await _initializePermissions();
+
+        // Initialize other services
+        await _initializeServices();
+
+        runApp(
+          riverpod.ProviderScope(
+            child: MyApp(),
+            observers: [
+              RiverpodLogger(),
+              RiverpodSentryProviderObserver(),
+            ],
+          ),
+        );
+
+        // Delay the screen toggle feature
+        await Future.delayed(const Duration(seconds: 5));
+        await ToggleScreenFeature.restoreScheduledTimers();
+      } catch (e, stackTrace) {
+        developer.log('Initialization error', error: e, stackTrace: stackTrace);
+        rethrow;
       }
-
-      await NotificationBackgroundService.initializeService();
-
-      Hive.init(directory.path);
-      await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
-
-      tz.initializeTimeZones();
-      Hive.registerAdapter(SurahModelAdapter());
-      Hive.registerAdapter(ReciterModelAdapter());
-      Hive.registerAdapter(MoshafModelAdapter());
-      MediaKit.ensureInitialized();
-
-      runApp(
-        riverpod.ProviderScope(
-          child: MyApp(),
-          observers: [
-            RiverpodLogger(),
-            RiverpodSentryProviderObserver(),
-          ],
-        ),
-      );
-      await Future.delayed(const Duration(seconds: 5));
-      await ToggleScreenFeature.restoreScheduledTimers();
     },
   );
+}
+
+Future<void> _initializePermissions() async {
+  final isRooted =
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
+
+  final bool isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
+
+  if (!isPermissionGranted) {
+    if (isRooted) {
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod("grantOverlayPermission");
+    } else {
+      await NotificationOverlay.requestOverlayPermission();
+    }
+  }
+
+  await NotificationBackgroundService.initializeService();
+}
+
+Future<void> _initializeServices() async {
+  tz.initializeTimeZones();
+
+  // Register Hive adapters
+  Hive.registerAdapter(SurahModelAdapter());
+  Hive.registerAdapter(ReciterModelAdapter());
+  Hive.registerAdapter(MoshafModelAdapter());
+
+  // Initialize media kit
+  MediaKit.ensureInitialized();
 }
 
 class MyApp extends riverpod.ConsumerStatefulWidget {
@@ -99,7 +123,7 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    BackgroundService.setNotificationVisibility(false);
+    NotificationBackgroundService.setNotificationVisibility(false);
   }
 
   @override
@@ -110,7 +134,7 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    BackgroundService().didChangeAppLifecycleState(state);
+    NotificationBackgroundService().didChangeAppLifecycleState(state);
   }
 
   @override
