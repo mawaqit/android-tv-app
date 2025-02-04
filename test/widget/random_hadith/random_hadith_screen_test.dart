@@ -32,6 +32,10 @@ class MockRandomHadithNotifier extends RandomHadithNotifier {
   void updateHadith(String hadith, String language) {
     state = riverpod.AsyncData(RandomHadithState(hadith: hadith, language: language));
   }
+
+  void triggerError([String errorMessage = 'Simulated error']) {
+    state = riverpod.AsyncError(errorMessage, StackTrace.current);
+  }
 }
 
 // FakeTimes now provides fixed prayer times and the needed properties.
@@ -59,22 +63,8 @@ class FakeTimes extends Fake implements Times {
   @override
   bool get isTurki => false;
 
-  // @override
-  // List<String> dayTimesStrings(DateTime date) {
-  //   // Return fixed prayer time strings (format "HH:mm")
-  //   return ["05:00", "12:00", "15:00", "18:00", "20:00"];
-  // }
   @override
   int get imsakNbMinBeforeFajr => 10;
-
-  // @override
-  // DateTime? shuruq(DateTime now) {
-  //   // Example: sunrise at 06:00
-  //   return DateTime(now.year, now.month, now.day, 6, 0);
-  // }
-
-  // @override
-  // Future<int> get hijriDateForceTo30 async => 0;
 
   @override
   int get hijriAdjustment => 0;
@@ -85,11 +75,6 @@ class FakeTimes extends Fake implements Times {
   @override
   bool get jumuaAsDuhr => false;
 
-// @override
-// int? get aidPrayerTime => null;
-//
-// @override
-// int? get aidPrayerTime2 => null;
 }
 
 // FakeMosqueConfig now provides required values for properties used.
@@ -307,10 +292,7 @@ Widget createWidgetForTesting({required Widget child}) {
   return MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
-    home: MediaQuery(
-      data: MediaQueryData(size: Size(400, 800)),
-      child: child,
-    ),
+    home: child,
   );
 }
 
@@ -384,6 +366,59 @@ void main() {
 
       // Verify that the updated text is displayed.
       expect(find.text('Updated hadith text'), findsOneWidget);
+    });
+  });
+
+  group('RandomHadithScreen Error State Test', () {
+    testWidgets('should display error text and call onDone when notifier errors', (WidgetTester tester) async {
+      // Create mocks for the dependencies.
+      final mockMosqueManager = MockMosqueManager();
+      final mockAppLanguage = MockAppLanguage();
+
+      when(() => mockAppLanguage.hadithLanguage).thenReturn('ar');
+      when(() => mockMosqueManager.mosqueConfig).thenReturn(FakeMosqueConfig());
+      when(() => mockMosqueManager.times).thenReturn(FakeTimes());
+      when(() => mockMosqueManager.getColorTheme()).thenReturn(Colors.blue);
+
+      // Create our RandomHadithNotifier instance.
+      final mockNotifier = MockRandomHadithNotifier();
+
+      // Flag to verify if the onDone callback is called.
+      bool onDoneCalled = false;
+
+      await tester.pumpWidget(
+        riverpod.ProviderScope(
+          overrides: [
+            randomHadithNotifierProvider.overrideWith(() => mockNotifier),
+          ],
+          child: provider.MultiProvider(
+            providers: [
+              provider.ChangeNotifierProvider<MosqueManager>.value(value: mockMosqueManager),
+              provider.ChangeNotifierProvider<AppLanguage>.value(value: mockAppLanguage),
+              provider.ChangeNotifierProvider<UserPreferencesManager>.value(value: MockUserPreferencesManager()),
+            ],
+            child: createWidgetForTesting(
+              child: RandomHadithScreen(
+                onDone: () {
+                  onDoneCalled = true;
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Let the widget tree build.
+      await tester.pumpAndSettle();
+
+      // Simulate an error in the notifier.
+      mockNotifier.triggerError("Simulated error");
+      await tester.pumpAndSettle();
+
+      // Verify that the error branch is rendered.
+      expect(find.text('Error: Simulated error'), findsOneWidget);
+      // Verify that the onDone callback was called.
+      expect(onDoneCalled, isTrue);
     });
   });
 }
