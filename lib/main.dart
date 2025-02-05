@@ -72,10 +72,6 @@ Future<void> main() async {
             ],
           ),
         );
-
-        // Delay the screen toggle feature
-        await Future.delayed(const Duration(seconds: 5));
-        await ToggleScreenFeature.restoreScheduledTimers();
       } catch (e, stackTrace) {
         developer.log('Initialization error', error: e, stackTrace: stackTrace);
         rethrow;
@@ -103,6 +99,7 @@ Future<void> _initializePermissions() async {
 
 Future<void> _initializeServices() async {
   tz.initializeTimeZones();
+  await ToggleScreenFeature.initialize();
 
   // Register Hive adapters
   Hive.registerAdapter(SurahModelAdapter());

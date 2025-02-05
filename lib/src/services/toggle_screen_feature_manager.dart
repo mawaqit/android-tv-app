@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:disk_space/disk_space.dart';
 import 'package:flutter/services.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
+import 'package:screen_control/screen_control.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 class TimerScheduleInfo {
   final DateTime scheduledTime;
@@ -37,12 +40,46 @@ class TimerScheduleInfo {
   }
 }
 
+@pragma('vm:entry-point') // Important for background execution
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      final timeShiftManager = TimeShiftManager();
+
+      switch (task) {
+        case 'screenOn':
+          if (timeShiftManager.isLauncherInstalled) {
+            await ScreenControl.toggleBoxScreenOn();
+          } else {
+            await ScreenControl.toggleTabletScreenOn();
+          }
+          break;
+        case 'screenOff':
+          if (timeShiftManager.isLauncherInstalled) {
+            await ScreenControl.toggleBoxScreenOff();
+          } else {
+            await ScreenControl.toggleTabletScreenOff();
+          }
+          break;
+      }
+      return true;
+    } catch (e) {
+      print('Native method execution failed: $e');
+      return false;
+    }
+  });
+}
+
 class ToggleScreenFeature {
   static final ToggleScreenFeature _instance = ToggleScreenFeature._internal();
 
   factory ToggleScreenFeature() => _instance;
 
   ToggleScreenFeature._internal();
+  static Future<void> initialize() async {
+    await Workmanager().initialize(callbackDispatcher, isInDebugMode: true // Set to false in production
+        );
+  }
 
   static const String _scheduledTimersKey = TurnOnOffTvConstant.kScheduledTimersKey;
   static final Map<String, List<Timer>> _scheduledTimers = {};
@@ -53,40 +90,35 @@ class ToggleScreenFeature {
       bool isfajrIshaonly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
     try {
       await cancelAllScheduledTimers();
-      _scheduleInfoList.clear();
 
       final List<String> prayerTimes = List.from(timeStrings);
-      final removedTime = prayerTimes.removeAt(1);
+      prayerTimes.removeAt(1);
       final now = AppDateTime.now();
-      final timeShiftManager = TimeShiftManager();
 
       if (isfajrIshaonly) {
-        _scheduleForPrayer(
+        await _scheduleForPrayer(
           prayerTimes[0],
           now,
           beforeDelayMinutes,
           afterDelayMinutes,
           true,
-          timeShiftManager,
         );
 
-        _scheduleForPrayer(
+        await _scheduleForPrayer(
           prayerTimes[4],
           now,
           beforeDelayMinutes,
           afterDelayMinutes,
           true,
-          timeShiftManager,
         );
       } else {
-        for (int i = 0; i < prayerTimes.length; i++) {
-          _scheduleForPrayer(
-            prayerTimes[i],
+        for (String prayerTime in prayerTimes) {
+          await _scheduleForPrayer(
+            prayerTime,
             now,
             beforeDelayMinutes,
             afterDelayMinutes,
             false,
-            timeShiftManager,
           );
         }
       }
@@ -128,7 +160,6 @@ class ToggleScreenFeature {
     final lastEventDate = await getLastEventDate();
     final today = AppDateTime.now();
     final isFeatureActive = await getToggleFeatureState();
-    final areEventsScheduled = await checkEventsScheduled();
 
     final shouldReschedule = lastEventDate != null && lastEventDate.day != today.day && isFeatureActive;
     return shouldReschedule;
@@ -161,72 +192,13 @@ class ToggleScreenFeature {
     }
   }
 
-  static Future<void> restoreScheduledTimers() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final scheduleDataString = prefs.getString(_scheduledInfoKey);
-      final isFeatureActive = await getToggleFeatureState();
-
-      if (scheduleDataString == null || !isFeatureActive) {
-        return;
-      }
-
-      final scheduleData = json.decode(scheduleDataString) as List;
-      _scheduleInfoList =
-          scheduleData.map((data) => TimerScheduleInfo.fromJson(data)).where((info) => info != null).toList();
-
-      final now = AppDateTime.now();
-      final timeShiftManager = TimeShiftManager();
-
-      _scheduleInfoList.removeWhere((info) {
-        final isPast = info.scheduledTime.isBefore(now);
-        return isPast;
-      });
-
-      for (var info in _scheduleInfoList) {
-        try {
-          final delay = info.scheduledTime.difference(now);
-          if (delay.isNegative) {
-            continue;
-          }
-
-          final timer = Timer(delay, () {
-            try {
-              if (info.actionType == 'screenOn') {
-                timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
-              } else {
-                timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
-              }
-            } catch (e) {
-              logger.e('Error executing timer action: $e');
-              throw ScheduleToggleScreenException('Error executing timer action: $e');
-            }
-          });
-
-          final timeString = '${info.scheduledTime.hour}:${info.scheduledTime.minute}';
-          _scheduledTimers[timeString] ??= [];
-          _scheduledTimers[timeString]!.add(timer);
-        } catch (e) {
-          logger.e('Error scheduling timer for ${info.scheduledTime}: $e');
-          throw ScheduleToggleScreenException(e.toString());
-        }
-      }
-
-      await saveScheduledEventsToLocale();
-    } catch (e) {
-      logger.e('Error restoring scheduled timers: $e');
-      throw RestoreScheduledTimersException(e.toString());
-    }
-  }
-
-  static void _scheduleForPrayer(
+  static Future<void> _scheduleForPrayer(
     String timeString,
     DateTime now,
     int beforeDelayMinutes,
     int afterDelayMinutes,
     bool isFajrIsha,
-    TimeShiftManager timeShiftManager,
-  ) {
+  ) async {
     try {
       final parts = timeString.split(':');
       final hour = int.parse(parts[0]);
@@ -236,42 +208,37 @@ class ToggleScreenFeature {
       if (scheduledDateTime.isBefore(now)) {
         scheduledDateTime = scheduledDateTime.add(Duration(days: 1));
       }
+      print('Scheduled Time for $timeString: $scheduledDateTime');
 
+      // Schedule screen on
       final beforeScheduleTime = scheduledDateTime.subtract(Duration(minutes: beforeDelayMinutes));
-
       if (beforeScheduleTime.isAfter(now)) {
-        final currentDiff = beforeScheduleTime.difference(AppDateTime.now());
-        if (!currentDiff.isNegative) {
-          _scheduleInfoList.add(TimerScheduleInfo(
-            scheduledTime: beforeScheduleTime,
-            actionType: 'screenOn',
-            isFajrIsha: isFajrIsha,
-          ));
+        final uniqueIdOn = 'screenOn_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
+        print('Scheduled screen ON for $uniqueIdOn at $beforeScheduleTime');
 
-          final beforeTimer = Timer(currentDiff, () {
-            timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOn() : _toggleTabletScreenOn();
-          });
-          _scheduledTimers[timeString] = [beforeTimer];
-        }
+        await Workmanager().registerOneOffTask(uniqueIdOn, 'screenOn',
+            initialDelay: beforeScheduleTime.difference(now),
+            constraints: Constraints(
+                networkType: NetworkType.not_required,
+                requiresBatteryNotLow: false,
+                requiresCharging: false,
+                requiresDeviceIdle: false,
+                requiresStorageNotLow: false));
       }
 
+      // Schedule screen off
       final afterScheduleTime = scheduledDateTime.add(Duration(minutes: afterDelayMinutes));
+      final uniqueIdOff = 'screenOff_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
+      print('Scheduled screen OFF for $uniqueIdOff at $afterScheduleTime');
 
-      _scheduleInfoList.add(TimerScheduleInfo(
-        scheduledTime: afterScheduleTime,
-        actionType: 'screenOff',
-        isFajrIsha: isFajrIsha,
-      ));
-
-      final afterTimer = Timer(afterScheduleTime.difference(now), () {
-        timeShiftManager.isLauncherInstalled ? _toggleBoxScreenOff() : _toggleTabletScreenOff();
-      });
-
-      if (_scheduledTimers[timeString] != null) {
-        _scheduledTimers[timeString]!.add(afterTimer);
-      } else {
-        _scheduledTimers[timeString] = [afterTimer];
-      }
+      await Workmanager().registerOneOffTask(uniqueIdOff, 'screenOff',
+          initialDelay: afterScheduleTime.difference(now),
+          constraints: Constraints(
+              networkType: NetworkType.not_required,
+              requiresBatteryNotLow: false,
+              requiresCharging: false,
+              requiresDeviceIdle: false,
+              requiresStorageNotLow: false));
     } catch (e) {
       logger.e('Error scheduling prayer time: $e');
       throw SchedulePrayerTimeException(e.toString());
@@ -321,20 +288,8 @@ class ToggleScreenFeature {
   }
 
   static Future<void> cancelAllScheduledTimers() async {
-    int canceledTimers = 0;
-    _scheduledTimers.forEach((timeString, timers) {
-      for (final timer in timers) {
-        timer.cancel();
-        canceledTimers++;
-      }
-    });
-
-    _scheduledTimers.clear();
-    _scheduleInfoList.clear();
-
+    await Workmanager().cancelAll();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_scheduledInfoKey);
-    await prefs.remove(TurnOnOffTvConstant.kScheduledTimersKey);
     await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, false);
   }
 
