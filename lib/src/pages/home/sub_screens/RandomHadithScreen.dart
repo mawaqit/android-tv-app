@@ -7,6 +7,7 @@ import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/widgets/display_text_widget.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../../i18n/AppLanguage.dart';
 import '../../../const/constants.dart';
@@ -51,38 +52,36 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
       ),
       child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: 8.0),
-            child: AboveSalahBar(),
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: AboveSalahBar(),
+            ),
           ),
           Expanded(
-            // child: HadithWidget(
-            //   translatedText: context.watch<MosqueManager>().hadith,
-            //   textDirection: StringManager.getTextDirectionOfLocal(
-            //     Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
-            //   ),
-            // ),
+            flex: 4,
             child: hadithState.when(
               data: (hadith) {
                 return DisplayTextWidget.hadith(
-                  translatedText: hadith.hadith,
-                  textDirection: StringManager.getTextDirectionOfLocal(
-                    Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
-                  ),
-                );
+                    translatedText: hadith.hadith,
+                    textDirection: StringManager.getTextDirectionOfLocal(
+                        Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en')),
+                  );
               },
-              loading: () => Center(
-                child: CircularProgressIndicator(),
-              ),
+              loading: () => Center(child: CircularProgressIndicator()),
               error: (error, stackTrace) {
                 widget.onDone?.call();
-                return Center(
-                  child: Text('Error: $error'),
-                );
+                return Center(child: Text('Error: $error'));
               },
             ),
           ),
-          mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
+          Container(
+            height: 10.h,
+            child: mosqueManager.times!.isTurki
+                ? ResponsiveMiniSalahBarTurkishWidget()
+                : ResponsiveMiniSalahBarWidget(),
+          ),
           SizedBox(height: 10),
         ],
       ),

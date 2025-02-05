@@ -21,6 +21,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sizer/sizer.dart';
 
 class MockRandomHadithNotifier extends RandomHadithNotifier {
   @override
@@ -289,10 +290,14 @@ class MockAppLocalizations extends Mock implements AppLocalizations {
 
 // --- Helper function to wrap a widget into a MaterialApp ---
 Widget createWidgetForTesting({required Widget child}) {
-  return MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    home: child,
+  return Sizer(
+    builder: (context, orientation, deviceType) {
+      return MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: child,
+      );
+    },
   );
 }
 
