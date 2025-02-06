@@ -82,6 +82,11 @@ class FetchSuwarByLanguageException extends QuranException {
       : super('Error occurred while fetching suwar by language: $message', 'FETCH_SUWAR_BY_LANGUAGE_ERROR');
 }
 
+class FetchSuwarInArabicException extends QuranException {
+  FetchSuwarInArabicException(String message)
+      : super('Error occurred while fetching suwar in Arabic: $message', 'FETCH_SUWAR_IN_ARABIC_ERROR');
+}
+
 /// QuranLocalDataSourceException
 
 class SaveSuwarByLanguageException extends QuranException {
