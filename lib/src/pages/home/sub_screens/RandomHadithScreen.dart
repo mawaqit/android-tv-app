@@ -64,10 +64,10 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
             child: hadithState.when(
               data: (hadith) {
                 return DisplayTextWidget.hadith(
-                    translatedText: hadith.hadith,
-                    textDirection: StringManager.getTextDirectionOfLocal(
-                        Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en')),
-                  );
+                  translatedText: hadith.hadith,
+                  textDirection:
+                      StringManager.getTextDirectionOfLocal(Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en')),
+                );
               },
               loading: () => Center(child: CircularProgressIndicator()),
               error: (error, stackTrace) {
@@ -78,9 +78,8 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
           ),
           Container(
             height: 10.h,
-            child: mosqueManager.times!.isTurki
-                ? ResponsiveMiniSalahBarTurkishWidget()
-                : ResponsiveMiniSalahBarWidget(),
+            child:
+                mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
           ),
           SizedBox(height: 10),
         ],

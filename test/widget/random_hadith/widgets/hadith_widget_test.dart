@@ -21,13 +21,12 @@ class MockRandomHadithNotifier extends RandomHadithNotifier {
   }
 }
 
-
 void setupPathProviderMocks() {
   const MethodChannel channel = MethodChannel('plugins.flutter.io/path_provider');
 
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
     channel,
-        (MethodCall methodCall) async {
+    (MethodCall methodCall) async {
       if (methodCall.method == 'getApplicationSupportDirectory') {
         return '/tmp';
       }
@@ -125,7 +124,8 @@ void main() {
     });
 
     testWidgets('Handles long hadith text without overflow', (WidgetTester tester) async {
-      const String longHadith = 'Very long hadith text that should be automatically resized to fit within the container without causing overflow issues. This tests the AutoSizeText functionality.';
+      const String longHadith =
+          'Very long hadith text that should be automatically resized to fit within the container without causing overflow issues. This tests the AutoSizeText functionality.';
 
       await tester.pumpWidget(
         ProviderScope(
