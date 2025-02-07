@@ -10,6 +10,7 @@ import 'package:mawaqit/src/widgets/display_text_widget.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../const/constants.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
@@ -104,7 +105,10 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
       child: Column(
         children: [
           SizedBox(height: 10),
-          AboveSalahBar(),
+          Expanded(
+            flex: 1,
+            child: AboveSalahBar(),
+          ),
           Expanded(
             child: DisplayTextWidget(
               title: widget.azkarTitle,
@@ -112,7 +116,11 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
               translatedText: translatedHadith,
             ),
           ),
-          mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
+          Container(
+            height: 10.h,
+            child:
+                mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
+          ),
           SizedBox(height: 10),
         ],
       ),
