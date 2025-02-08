@@ -294,4 +294,3 @@ class FakeMosqueConfigWithDuaEnabled extends Fake implements MosqueConfig {
   @override
   bool get duaAfterPrayerEnabled => true;
 }
-
