@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:sizer/sizer.dart';
 
 class SurahCard extends ConsumerStatefulWidget {
   final String surahName;
+  final String surahNameArabic;
   final int surahNumber;
   final int? verses;
   final VoidCallback onTap;
@@ -20,6 +22,7 @@ class SurahCard extends ConsumerStatefulWidget {
     required this.index,
     this.isDownloaded = false,
     required this.downloadProgress,
+    required this.surahNameArabic,
     required this.onDownloadTap,
     this.verses,
   });
@@ -52,6 +55,8 @@ class _SurahCardState extends ConsumerState<SurahCard> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = widget.surahNameArabic == widget.surahName;
+
     return InkWell(
       autofocus: widget.index == 0,
       onTap: widget.onTap,
@@ -88,6 +93,16 @@ class _SurahCardState extends ConsumerState<SurahCard> with SingleTickerProvider
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            if (!isArabic)
+                              Text(
+                                widget.surahNameArabic,
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            SizedBox(height: 5),
                             Text(
                               '${widget.surahNumber}. ${widget.surahName}',
                               textAlign: TextAlign.center,
