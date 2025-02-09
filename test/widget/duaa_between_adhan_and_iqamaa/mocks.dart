@@ -25,23 +25,23 @@ import 'package:sizer/sizer.dart';
 class FakeTimes extends Fake implements Times {
   @override
   List<String> dayTimesStrings(DateTime date, {bool salahOnly = true}) => [
-    "00:00", // extra imsak time
-    "05:00",
-    "12:00",
-    "15:00",
-    "18:00",
-    "20:00",
-    "22:00",
-  ];
+        "00:00", // extra imsak time
+        "05:00",
+        "12:00",
+        "15:00",
+        "18:00",
+        "20:00",
+        "22:00",
+      ];
 
   @override
   List<String> dayIqamaStrings(DateTime date) => [
-    "05:10",
-    "12:10",
-    "15:10",
-    "18:10",
-    "20:10",
-  ];
+        "05:10",
+        "12:10",
+        "15:10",
+        "18:10",
+        "20:10",
+      ];
 
   @override
   bool get isTurki => false;
@@ -180,12 +180,12 @@ class MockMosqueManager extends Mock implements MosqueManager {
 
   @override
   List<String> timesOfDay(DateTime date, {bool forceActualDuhr = false}) => [
-    "05:00",
-    "12:00",
-    "15:00",
-    "18:00",
-    "20:00",
-  ];
+        "05:00",
+        "12:00",
+        "15:00",
+        "18:00",
+        "20:00",
+      ];
 
   @override
   List<String> get todayTimes => timesOfDay(fixedTime);
@@ -195,12 +195,12 @@ class MockMosqueManager extends Mock implements MosqueManager {
 
   @override
   List<String> iqamasOfDay(DateTime date) => [
-    "05:10",
-    "12:10",
-    "15:10",
-    "18:10",
-    "20:10",
-  ];
+        "05:10",
+        "12:10",
+        "15:10",
+        "18:10",
+        "20:10",
+      ];
 
   @override
   DateTime nextFridayDate([DateTime? now]) {
@@ -253,7 +253,7 @@ void setupPathProviderMocks() {
   const MethodChannel channel = MethodChannel('plugins.flutter.io/path_provider');
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
     channel,
-        (MethodCall call) async {
+    (MethodCall call) async {
       if (call.method == 'getApplicationSupportDirectory') {
         return '/tmp';
       }
