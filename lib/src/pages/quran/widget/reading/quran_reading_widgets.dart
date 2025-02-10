@@ -71,49 +71,56 @@ class HorizontalPageViewWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final autoScrollState = ref.watch(autoScrollNotifierProvider);
-    return PageView.builder(
-      reverse: Directionality.of(context) == TextDirection.ltr ? true : false,
-      controller: quranReadingState.pageController,
-      onPageChanged: (index) {
-        final actualPage = index * 2;
-        if (actualPage != quranReadingState.currentPage) {
-          ref.read(quranReadingNotifierProvider.notifier).updatePage(actualPage);
-        }
+    final readingState = ref.watch(quranReadingNotifierProvider);
+    return readingState.maybeWhen(
+      orElse: () {
+        return const SizedBox.shrink();
       },
-      itemCount: (quranReadingState.totalPages / 2).ceil(),
-      itemBuilder: (context, index) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final pageWidth = constraints.maxWidth / 2;
-            final pageHeight = constraints.maxHeight;
-            final bottomPadding = pageHeight * 0.05;
+      data: (readingState) {
+        return PageView.builder(
+          reverse: Directionality.of(context) == TextDirection.ltr ? true : false,
+          controller: quranReadingState.pageController,
+          onPageChanged: (index) {
+            final actualPage = index * 2;
+            if (actualPage != quranReadingState.currentPage) {
+              ref.read(quranReadingNotifierProvider.notifier).updatePage(actualPage);
+            }
+          },
+          itemCount: (quranReadingState.totalPages / 2).ceil(),
+          itemBuilder: (context, index) {
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final pageWidth = constraints.maxWidth / 2;
+                final pageHeight = constraints.maxHeight;
+                final bottomPadding = pageHeight * 0.05;
 
-            final leftPageIndex = index * 2;
-            final rightPageIndex = leftPageIndex + 1;
-            return Stack(
-              children: [
-                if (rightPageIndex < quranReadingState.svgs.length)
-                  Positioned(
-                    left: 12.w,
-                    top: 0,
-                    bottom: bottomPadding,
-                    width: pageWidth * 0.9,
-                    child: SvgPictureWidget(
-                      svgPicture: quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
-                    ),
-                  ),
-                if (leftPageIndex < quranReadingState.svgs.length)
-                  Positioned(
-                    right: 12.w,
-                    top: 0,
-                    bottom: bottomPadding,
-                    width: pageWidth * 0.9,
-                    child: SvgPictureWidget(
-                      svgPicture: quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
-                    ),
-                  ),
-              ],
+                final leftPageIndex = index * 2;
+                final rightPageIndex = leftPageIndex + 1;
+                return Stack(
+                  children: [
+                    if (rightPageIndex < quranReadingState.svgs.length)
+                      Positioned(
+                        left: 12.w,
+                        top: 0,
+                        bottom: bottomPadding,
+                        width: pageWidth * 0.9,
+                        child: SvgPictureWidget(
+                          svgPicture: quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
+                        ),
+                      ),
+                    if (leftPageIndex < quranReadingState.svgs.length)
+                      Positioned(
+                        right: 12.w,
+                        top: 0,
+                        bottom: bottomPadding,
+                        width: pageWidth * 0.9,
+                        child: SvgPictureWidget(
+                          svgPicture: quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
+                        ),
+                      ),
+                  ],
+                );
+              },
             );
           },
         );

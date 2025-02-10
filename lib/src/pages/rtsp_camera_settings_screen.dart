@@ -33,15 +33,6 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         FocusScope.of(context).requestFocus(_saveButtonFocusNode);
       }
     });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final state = ref.read(rtspCameraSettingsProvider);
-      state.whenData((value) {
-        if (value.streamUrl != null) {
-          _urlController.text = value.streamUrl!;
-        }
-      });
-    });
   }
 
   @override
@@ -51,10 +42,19 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     super.dispose();
   }
 
+  void _updateUrlController(RTSPCameraSettingsState state) {
+    if (state.streamUrl != null && _urlController.text != state.streamUrl) {
+      _urlController.text = state.streamUrl!;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final asyncState = ref.watch(rtspCameraSettingsProvider);
     ref.listen(rtspCameraSettingsProvider, (previous, next) {
+      if (next.hasValue) {
+        _updateUrlController(next.value!);
+      }
       if (previous != next && !next.isLoading && next.hasValue && !next.hasError && next.value!.isRTSPEnabled) {
         final state = next.value!;
 

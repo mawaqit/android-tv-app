@@ -4,6 +4,7 @@ class Routes {
   static const String quranReciter = '/quran/reciter';
   static const String quranSurah = '/quran/surah';
   static const String quranPlayer = '/quran/player';
+  static const String quranReciterFavorite = '/quran/reciter_favorite';
 
   static const List<String> quranScreens = [
     quranModeSelection,
@@ -11,5 +12,6 @@ class Routes {
     quranReciter,
     quranSurah,
     quranPlayer,
+    quranReciterFavorite,
   ];
 }

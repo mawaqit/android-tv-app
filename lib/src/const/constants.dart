@@ -51,7 +51,9 @@ class TurnOnOffTvConstant {
   static const String kCheckRoot = "checkRoot";
   static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
   static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
-
+  static const String kToggleTabletScreenOn = "toggleTabletScreenOn";
+  static const String kToggleTabletScreenOff = "toggleTabletScreenOff";
+  static const String kisFajrIshaOnly = "isIshaFajrOnly";
   static const String kMinuteBeforeKey = 'selectedMinuteBefore';
   static const String kMinuteAfterKey = 'selectedMinuteAfter';
 }
@@ -71,7 +73,7 @@ abstract class QuranConstant {
   static const String kWarshQuranLocalVersion = 'warsh_quran_local_version';
   static const String kSelectedMoshafType = 'selected_moshaf_type';
   static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
-  static const String kSurahBox = 'surah_box';
+  static const String kSurahBox = 'surah_box_v2';
   static const String kReciterBox = 'reciter_box_v2';
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
@@ -79,6 +81,8 @@ abstract class QuranConstant {
   static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/tv_config.json';
   static const String kIsFirstTime = 'is_first_time_quran';
   static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
+  static const int kCacheWidth = 50;
+  static const int kCacheHeight = 50;
 }
 
 abstract class AzkarConstant {
@@ -95,6 +99,24 @@ abstract class SystemFeaturesConstant {
   static const String kLeanback = 'android.software.leanback';
   static const String kHdmi = 'android.hardware.hdmi';
   static const String kEthernet = 'android.hardware.ethernet';
+}
+
+class BackgroundScheduleAudioServiceConstant {
+  static const String kManualPause = 'manual_pause_enabled';
+  static const String kPendingSchedule = 'pending_schedule';
+  static const String kScheduleEnabled = 'schedule_enabled';
+  static const String kStartTime = 'start_time';
+  static const String kEndTime = 'end_time';
+  static const String kRandomEnabled = 'isRandomEnabled';
+  static const String kRandomUrls = 'random_urls';
+  static const String kSelectedSurah = 'selected_surah';
+  static const String kSelectedSurahUrl = 'selected_surah_url';
+  static const String kSelectedReciter = 'selected_reciter';
+  static const String kSelectedMoshaf = 'selected_moshaf';
+  static const String kAudioStateChanged = 'kAudioStateChanged';
+  static const String kGetPlaybackState = 'kGetPlaybackState';
+  static const String kStopAudio = 'kStopAudio';
+  static const String kResumeAudio = 'kResumeAudio';
 }
 
 abstract class MawaqitBackendSettingsConstant {
@@ -121,4 +143,9 @@ abstract class RtspCameraStreamConstant {
       r'http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?';
 
   static final RegExp youtubeUrlRegex = RegExp(youtubeUrlPattern);
+}
+
+abstract class ScheduleListeningConstant {
+  static const startTime = '08:00';
+  static const endTime = '20:00';
 }
