@@ -4,6 +4,8 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:fpdart/fpdart.dart';
+import 'package:mawaqit/src/data/countries.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
@@ -27,6 +29,7 @@ import '../../state_management/on_boarding/on_boarding_notifier.dart';
 import '../../widgets/mawaqit_back_icon_button.dart';
 import 'widgets/onboarding_bottom_navigation_bar.dart';
 import 'widgets/onboarding_country_selection_screen.dart';
+import 'widgets/onboarding_time_zone_selection_screen.dart';
 import 'widgets/wifi_selector_widget.dart';
 import 'widgets/onboarding_screen_type.dart';
 
@@ -67,6 +70,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   late FocusNode skipButtonFocusNode;
   late FocusNode nextButtonFocusNode;
   late FocusNode previousButtonFocusNode;
+  Option<Country> country = None();
 
   @override
   void initState() {
@@ -81,69 +85,98 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     });
   }
 
-  late final List<OnBoardingItem> kioskModeonBoardingItems = [
-    OnBoardingItem(
-      animation: 'language',
-      widget: OnBoardingLanguageSelector(
-        nextButtonFocusNode: nextButtonFocusNode,
+  List<OnBoardingItem> get kioskModeonBoardingItems {
+    final baseItems = [
+      OnBoardingItem(
+        animation: 'language',
+        widget: OnBoardingLanguageSelector(
+          nextButtonFocusNode: nextButtonFocusNode,
+        ),
+        enableNextButton: true,
       ),
-      enableNextButton: true,
-    ),
-    OnBoardingItem(
-      animation: 'welcome',
-      widget: OnBoardingOrientationWidget.onboarding(
-        nextButtonFocusNode: nextButtonFocusNode,
-        previousButtonFocusNode: previousButtonFocusNode,
+      OnBoardingItem(
+        animation: 'welcome',
+        widget: OnBoardingOrientationWidget.onboarding(
+          nextButtonFocusNode: nextButtonFocusNode,
+          previousButtonFocusNode: previousButtonFocusNode,
+        ),
+        enableNextButton: true,
+        enablePreviousButton: true,
       ),
-      // removed onSelect parameter
-      enableNextButton: true,
-      enablePreviousButton: true,
-    ),
-    OnBoardingItem(
-      animation: 'welcome',
-      widget: OnBoardingMawaqitAboutWidget(onNext: () {}),
-      enableNextButton: true,
-      enablePreviousButton: true,
-    ),
-    OnBoardingItem(
-      animation: 'settings',
-      widget: CountrySelectionScreen(onSelect: () {}, focusNode: skipButtonFocusNode),
-      enablePreviousButton: true,
-      enableNextButton: true,
-    ),
-    OnBoardingItem(
-      animation: 'settings',
-      widget: OnBoardingWifiSelector(onSelect: () {}, focusNode: skipButtonFocusNode),
-      enablePreviousButton: true,
-      enableNextButton: true,
-    ),
-    OnBoardingItem(
-      animation: 'search',
-      widget: MosqueSearch(
-        onDone: () {},
+      OnBoardingItem(
+        animation: 'welcome',
+        widget: OnBoardingMawaqitAboutWidget(onNext: () {}),
+        enableNextButton: true,
+        enablePreviousButton: true,
       ),
-      enableNextButton: true,
-      enablePreviousButton: true,
-    ),
+      OnBoardingItem(
+        animation: 'settings',
+        widget: CountrySelectionScreen(
+          onSelect: (countrySelected) {
+            setState(() {
+              country = Option.of(countrySelected);
+            });
+            print('country selected $countrySelected');
+          },
+          focusNode: skipButtonFocusNode,
+          nextButtonFocusNode: nextButtonFocusNode,
+        ),
+        enablePreviousButton: true,
+        enableNextButton: true,
+      ),
+    ];
 
-    /// main screen or secondary screen (if user has already selected a mosque)
-    OnBoardingItem(
-      animation: 'search',
-      widget: OnBoardingScreenType.onboarding(),
-      enableNextButton: true,
-      enablePreviousButton: true,
-      skip: () => !context.read<MosqueManager>().typeIsMosque,
-    ),
+    final countryDependentItems = country.match(
+          () {
+        print('No country selected $country');
+        return <OnBoardingItem>[];
+      },
+          (selectedCountry) {
+        print('country selected $country');
+        return [
+          OnBoardingItem(
+            animation: 'settings',
+            widget: TimezoneSelectionScreen(country: selectedCountry),
+            enablePreviousButton: true,
+            enableNextButton: true,
+          ),
+        ];
+      },
+    );
 
-    /// Allow user to select between regular mode or announcement mode
-    OnBoardingItem(
-      animation: 'search',
-      widget: OnBoardingAnnouncementScreens(isOnboarding: true),
-      enableNextButton: true,
-      enablePreviousButton: true,
-      skip: () => !context.read<MosqueManager>().typeIsMosque,
-    ),
-  ];
+    final remainingItems = [
+      OnBoardingItem(
+        animation: 'settings',
+        widget: OnBoardingWifiSelector(onSelect: () {}, focusNode: skipButtonFocusNode),
+        enablePreviousButton: true,
+        enableNextButton: true,
+      ),
+      OnBoardingItem(
+        animation: 'search',
+        widget: MosqueSearch(
+          onDone: () {},
+        ),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+      OnBoardingItem(
+        animation: 'search',
+        widget: OnBoardingScreenType.onboarding(),
+        enableNextButton: true,
+        enablePreviousButton: true,
+        skip: () => !context.read<MosqueManager>().typeIsMosque,
+      ),
+      OnBoardingItem(
+        animation: 'search',
+        widget: OnBoardingAnnouncementScreens(isOnboarding: true),
+        enableNextButton: true,
+        enablePreviousButton: true,
+        skip: () => !context.read<MosqueManager>().typeIsMosque,
+      ),
+    ];
+
+    return [...baseItems, ...countryDependentItems, ...remainingItems];
+  }
 
   late final List<OnBoardingItem> onBoardingItems = [
     OnBoardingItem(

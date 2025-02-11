@@ -10,10 +10,16 @@ import '../../../data/countries.dart';
 import '../../../../i18n/l10n.dart';
 
 class CountrySelectionScreen extends ConsumerStatefulWidget {
-  final void Function()? onSelect;
+  final void Function(Country country)? onSelect;
   final FocusNode? focusNode;
+  final FocusNode? nextButtonFocusNode;
 
-  const CountrySelectionScreen({Key? key, this.onSelect, this.focusNode}) : super(key: key);
+  const CountrySelectionScreen({
+    Key? key,
+    this.onSelect,
+    this.focusNode,
+    this.nextButtonFocusNode,
+  }) : super(key: key);
 
   @override
   _CountrySelectionScreenState createState() => _CountrySelectionScreenState();
@@ -119,16 +125,10 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
   void _handleEnterKey() {
     if (selectedCountryIndex >= 0 && selectedCountryIndex < countriesList.length) {
       var country = countriesList[selectedCountryIndex];
-      // ref.read(nextNodeProvider).requestFocus();
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => TimezoneSelectionScreen(
-      //       timezones: country.timezones,
-      //       onSelect: widget.onSelect,
-      //     ),
-      //   ),
-      // );
+      widget.onSelect?.call(country);
+      if(widget.nextButtonFocusNode != null) {
+        widget.nextButtonFocusNode?.requestFocus();
+      }
     }
   }
 
@@ -221,15 +221,10 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                         onTap: () {
                           setState(() {
                             selectedCountryIndex = index;
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => TimezoneSelectionScreen(
-                            //       timezones: country.timezones,
-                            //       onSelect: widget.onSelect,
-                            //     ),
-                            //   ),
-                            // );
+                            widget.onSelect?.call(country);
+                            if(widget.nextButtonFocusNode != null) {
+                              widget.nextButtonFocusNode?.requestFocus();
+                            }
                           });
                         },
                       );
