@@ -3,25 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
-import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_bottom_navigation_bar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_notifier.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:sizer/sizer.dart'; // Prefix the provider import
 
 class OnBoardingLanguageSelector extends ConsumerStatefulWidget {
   final bool isOnboarding;
   final VoidCallback? onSelect; // Renamed for consistency
+  final FocusNode? nextButtonFocusNode;
 
   // Private constructor
   const OnBoardingLanguageSelector._({
     Key? key,
     required this.isOnboarding,
+    this.nextButtonFocusNode,
     this.onSelect,
   }) : super(key: key);
 
@@ -30,19 +28,26 @@ class OnBoardingLanguageSelector extends ConsumerStatefulWidget {
     Key? key,
     bool isOnboarding = true,
     VoidCallback? onNext,
+    FocusNode? nextButtonFocusNode,
   }) {
     return OnBoardingLanguageSelector._(
       key: key,
       isOnboarding: isOnboarding,
+      nextButtonFocusNode: nextButtonFocusNode,
       onSelect: onNext, // Assigning to onSelect
     );
   }
 
   // Named factory constructor for normal mode
-  factory OnBoardingLanguageSelector.normal({Key? key, required VoidCallback onNext}) {
+  factory OnBoardingLanguageSelector.normal({
+    Key? key,
+    required VoidCallback onNext,
+    FocusNode? nextButtonFocusNode,
+  }) {
     return OnBoardingLanguageSelector._(
       key: key,
       isOnboarding: false,
+      nextButtonFocusNode: nextButtonFocusNode,
       onSelect: onNext,
     );
   }
@@ -147,14 +152,9 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
                 return LanguageTile(
                   onSelect: widget.onSelect ??
                       () {
-                        // print('No callback provided ${FocusScope.of(context).nearestScope.traversalChildren}');
-                        // print('No callback provided ${}');
-
-                        FocusScope.of(context)
-                            .traversalDescendants
-                            .where((e) => e.debugLabel == 'NextButton')
-                            .first
-                            .requestFocus();
+                        if (widget.nextButtonFocusNode != null) {
+                          widget.nextButtonFocusNode?.requestFocus();
+                        }
                       }, // Pass the onSelect callback
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),

@@ -36,6 +36,7 @@ class OnBoardingItem {
   final bool enableNextButton;
   final bool enablePreviousButton;
   final bool Function()? skip;
+
   // final FocusNode nextButtonFocusNode;
   // final FocusNode previousButtonFocusNode;
   //
@@ -63,14 +64,17 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   final sharedPref = SharedPref();
   int currentScreen = 0;
   bool _rootStatus = false;
-  late FocusNode skipButtonFocusNode = FocusNode();
+  late FocusNode skipButtonFocusNode;
+  late FocusNode nextButtonFocusNode;
+  late FocusNode previousButtonFocusNode;
 
   @override
   void initState() {
     super.initState();
-    //
-    // nextButtonFocusNode = FocusNode();
-    // previousButtonFocusNode = FocusNode();
+
+    nextButtonFocusNode = FocusNode(debugLabel: 'next_button_focus_node');
+    previousButtonFocusNode = FocusNode(debugLabel: 'previous_button_focus_node');
+    skipButtonFocusNode = FocusNode(debugLabel: 'skip_button_focus_node');
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(onBoardingProvider.notifier).getSystemLanguage();
@@ -80,7 +84,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   late final List<OnBoardingItem> kioskModeonBoardingItems = [
     OnBoardingItem(
       animation: 'language',
-      widget: OnBoardingLanguageSelector(),
+      widget: OnBoardingLanguageSelector(
+        nextButtonFocusNode: nextButtonFocusNode,
+      ),
       enableNextButton: true,
     ),
     OnBoardingItem(
@@ -139,7 +145,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   late final List<OnBoardingItem> onBoardingItems = [
     OnBoardingItem(
       animation: 'language',
-      widget: OnBoardingLanguageSelector(),
+      widget: OnBoardingLanguageSelector(
+        nextButtonFocusNode: nextButtonFocusNode,
+      ),
       enableNextButton: true,
       // Enable next button for language selection
     ),
@@ -187,9 +195,10 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
 
   @override
   void dispose() {
+    nextButtonFocusNode.dispose();
+    previousButtonFocusNode.dispose();
     skipButtonFocusNode.dispose();
-    // nextButtonFocusNode.dispose();
-    // previousButtonFocusNode.dispose();
+
     super.dispose();
   }
 
@@ -273,7 +282,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
           bottomNavigationBar: OnboardingBottomNavigationBar(
             onPreviousPressed: () => ref.read(onboardingNavigationProvider.notifier).previousPage(),
             onNextPressed: () => ref.read(onboardingNavigationProvider.notifier).nextPage(),
-            nextButtonFocusNode: skipButtonFocusNode,
+            nextButtonFocusNode: nextButtonFocusNode,
           ),
         ),
       ),
