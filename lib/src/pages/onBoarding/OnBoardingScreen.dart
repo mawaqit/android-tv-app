@@ -14,6 +14,7 @@ import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selecto
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mode.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_language_selector.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_notifier.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
@@ -24,6 +25,8 @@ import '../../../i18n/l10n.dart';
 import '../../helpers/LocaleHelper.dart';
 import '../../state_management/on_boarding/on_boarding_notifier.dart';
 import '../../widgets/mawaqit_back_icon_button.dart';
+import 'widgets/onboarding_bottom_navigation_bar.dart';
+import 'widgets/onboarding_country_selection_screen.dart';
 import 'widgets/wifi_selector_widget.dart';
 import 'widgets/onboarding_screen_type.dart';
 
@@ -33,21 +36,24 @@ class OnBoardingItem {
   final bool enableNextButton;
   final bool enablePreviousButton;
   final bool Function()? skip;
+  // final FocusNode nextButtonFocusNode;
+  // final FocusNode previousButtonFocusNode;
+  //
   late FocusNode skipButtonFocusNode;
 
   OnBoardingItem({
     required this.animation,
+    // required this.nextButtonFocusNode,
+    // required this.previousButtonFocusNode,
     this.widget,
     this.enableNextButton = false,
     this.enablePreviousButton = false,
-
-    /// if item is skipped, it will be marked as done
     this.skip,
   });
 }
 
 class OnBoardingScreen extends riverpod.ConsumerStatefulWidget {
-  const OnBoardingScreen();
+  const OnBoardingScreen({Key? key}) : super(key: key);
 
   @override
   _OnBoardingScreenState createState() => _OnBoardingScreenState();
@@ -58,132 +64,57 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   int currentScreen = 0;
   bool _rootStatus = false;
   late FocusNode skipButtonFocusNode = FocusNode();
-  late List<OnBoardingItem> onBoardingItems = [
+
+  @override
+  void initState() {
+    super.initState();
+    //
+    // nextButtonFocusNode = FocusNode();
+    // previousButtonFocusNode = FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(onBoardingProvider.notifier).getSystemLanguage();
+    });
+  }
+
+  late final List<OnBoardingItem> kioskModeonBoardingItems = [
     OnBoardingItem(
       animation: 'language',
       widget: OnBoardingLanguageSelector(),
-      enableNextButton: true, // Enable next button for language selection
+      enableNextButton: true,
     ),
-    OnBoardingItem(
-        animation: 'welcome',
-        widget: OnBoardingOrientationWidget.onboarding(), // remove onSelect parameter
-        enableNextButton: true, // enable next button
-        enablePreviousButton: true),
     OnBoardingItem(
       animation: 'welcome',
-      widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(3)),
+      widget: OnBoardingOrientationWidget.onboarding(),
+      // removed onSelect parameter
       enableNextButton: true,
       enablePreviousButton: true,
     ),
-    OnBoardingItem(
-      animation: 'search',
-      enableNextButton: true,
-      enablePreviousButton: true,
-      widget: MosqueSearch(onDone: () {
-        ref.read(nextNodeProvider).requestFocus();
-      }),
-    ),
-
-    /// main screen or secondary screen (if user has already selected a mosque)
-    OnBoardingItem(
-        animation: 'search',
-        widget: OnBoardingScreenType.onboarding(),
-        enableNextButton: true,
-        skip: () => !context.read<MosqueManager>().typeIsMosque,
-        enablePreviousButton: true),
-
-    /// Allow user to select between regular mode or announcement mode
-    OnBoardingItem(
-      animation: 'search',
-      widget: OnBoardingAnnouncementScreens(isOnboarding: true),
-      skip: () => !context.read<MosqueManager>().typeIsMosque,
-      enablePreviousButton: true,
-      enableNextButton: true,
-    ),
-  ];
-
-  onDone() {
-    sharedPref.save('boarding', 'true');
-    AppRouter.pushReplacement(OfflineHomeScreen());
-  }
-
-  nextPage(int nextScreen) {
-    while (true) {
-      /// this is the last screen
-      if (_rootStatus) {
-        if (nextScreen >= kioskModeonBoardingItems.length) return onDone();
-
-        currentScreen++;
-        // if false or null, don't skip this screen
-        if (kioskModeonBoardingItems[currentScreen].skip?.call() != true) break;
-      } else {
-        if (nextScreen >= onBoardingItems.length) return onDone();
-
-        currentScreen++;
-        // if false or null, don't skip this screen
-        if (onBoardingItems[currentScreen].skip?.call() != true) break;
-      }
-    }
-
-    setState(() {});
-  }
-
-  previousPage(int previousScreen) {
-    while (true) {
-      if (_rootStatus) {
-        currentScreen = previousScreen;
-        // if false or null, don't skip this screen
-        if (kioskModeonBoardingItems[currentScreen].skip?.call() != true) break;
-
-        previousScreen--;
-      } else {
-        currentScreen = previousScreen;
-        // if false or null, don't skip this screen
-        if (onBoardingItems[currentScreen].skip?.call() != true) break;
-
-        previousScreen--;
-      }
-    }
-
-    setState(() {});
-  }
-
-  late final kioskModeonBoardingItems = [
-    OnBoardingItem(
-      animation: 'language',
-      widget: OnBoardingLanguageSelector(),
-      enableNextButton: true, // Enable next button for language selection
-    ),
-    OnBoardingItem(
-        animation: 'welcome',
-        widget: OnBoardingOrientationWidget.onboarding(), // remove onSelect parameter
-        enableNextButton: true, // enable next button
-        enablePreviousButton: true),
     OnBoardingItem(
       animation: 'welcome',
-      widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(5)),
+      widget: OnBoardingMawaqitAboutWidget(onNext: () {}),
       enableNextButton: true,
       enablePreviousButton: true,
     ),
     OnBoardingItem(
-        animation: 'settings',
-        widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2), focusNode: skipButtonFocusNode),
-        enablePreviousButton: true,
-        enableNextButton: true),
+      animation: 'settings',
+      widget: CountrySelectionScreen(onSelect: () {}, focusNode: skipButtonFocusNode),
+      enablePreviousButton: true,
+      enableNextButton: true,
+    ),
     OnBoardingItem(
-        animation: 'settings',
-        widget: OnBoardingWifiSelector(onSelect: () => nextPage(3), focusNode: skipButtonFocusNode),
-        enablePreviousButton: true,
-        enableNextButton: true),
+      animation: 'settings',
+      widget: OnBoardingWifiSelector(onSelect: () {}, focusNode: skipButtonFocusNode),
+      enablePreviousButton: true,
+      enableNextButton: true,
+    ),
     OnBoardingItem(
       animation: 'search',
-      enableNextButton: true,
-      enablePreviousButton: true,
       widget: MosqueSearch(
-        onDone: () {
-          ref.read(nextNodeProvider).requestFocus();
-        },
+        onDone: () {},
       ),
+      enableNextButton: true,
+      enablePreviousButton: true,
     ),
 
     /// main screen or secondary screen (if user has already selected a mosque)
@@ -205,27 +136,66 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     ),
   ];
 
-  static Future<bool> checkRoot() async {
-    try {
-      final result = await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
-      return result;
-    } catch (e) {
-      print('Error checking root access: $e');
-      return false;
-    }
-  }
+  late final List<OnBoardingItem> onBoardingItems = [
+    OnBoardingItem(
+      animation: 'language',
+      widget: OnBoardingLanguageSelector(),
+      enableNextButton: true,
+      // Enable next button for language selection
+    ),
+    OnBoardingItem(
+      animation: 'welcome',
+      widget: OnBoardingOrientationWidget.onboarding(),
+      // removed onSelect parameter
+      enableNextButton: true,
+      // enable next button
+      enablePreviousButton: true,
+    ),
+    OnBoardingItem(
+      animation: 'welcome',
+      widget: OnBoardingMawaqitAboutWidget(),
+      enableNextButton: true,
+      enablePreviousButton: true,
+    ),
+    OnBoardingItem(
+      animation: 'search',
+      widget: MosqueSearch(
+        onDone: () {},
+      ),
+      enableNextButton: true,
+      enablePreviousButton: true,
+    ),
 
-  Future<void> initRootRequest() async {
-    bool rootStatus = await checkRoot();
-    setState(() {
-      _rootStatus = rootStatus;
-    });
-  }
+    /// main screen or secondary screen (if user has already selected a mosque)
+    OnBoardingItem(
+      animation: 'search',
+      widget: OnBoardingScreenType.onboarding(),
+      enableNextButton: true,
+      enablePreviousButton: true,
+      skip: () => !context.read<MosqueManager>().typeIsMosque,
+    ),
+
+    /// Allow user to select between regular mode or announcement mode
+    OnBoardingItem(
+      animation: 'search',
+      widget: OnBoardingAnnouncementScreens(isOnboarding: true),
+      skip: () => !context.read<MosqueManager>().typeIsMosque,
+      enablePreviousButton: true,
+      enableNextButton: true,
+    ),
+  ];
 
   @override
-  void initState() {
-    initRootRequest();
-    super.initState();
+  void dispose() {
+    skipButtonFocusNode.dispose();
+    // nextButtonFocusNode.dispose();
+    // previousButtonFocusNode.dispose();
+    super.dispose();
+  }
+
+  void onDone() {
+    sharedPref.save('boarding', 'true');
+    AppRouter.pushReplacement(OfflineHomeScreen());
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(onBoardingProvider.notifier).getSystemLanguage();
     });
@@ -233,12 +203,10 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final activePage = _rootStatus ? kioskModeonBoardingItems[currentScreen] : onBoardingItems[currentScreen];
+    final items = _rootStatus ? kioskModeonBoardingItems : onBoardingItems;
     final onBoardingState = ref.watch(onBoardingProvider);
     final appLanguage = Provider.of<AppLanguage>(context, listen: false);
-
     final locales = S.supportedLocales;
-
     final sortedLocales = LocaleHelper.getSortedLocales(locales, appLanguage);
 
     ref.listen(onBoardingProvider, (previous, next) {
@@ -258,10 +226,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     });
 
     return onBoardingState.when(
-      data: (state) {
-        return buildWillPopScope(activePage, context);
-      },
-      error: (error, stack) => buildWillPopScope(activePage, context),
+      data: (state) => buildPageView(context),
+      error: (error, stack) => buildPageView(context),
       loading: () => Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -270,97 +236,47 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     );
   }
 
-  WillPopScope buildWillPopScope(OnBoardingItem activePage, BuildContext context) {
-    final isLastItem =
-        currentScreen == (_rootStatus ? kioskModeonBoardingItems.length - 1 : onBoardingItems.length - 1);
+  Widget buildPageView(BuildContext context) {
+    final items = !_rootStatus ? kioskModeonBoardingItems : onBoardingItems;
+    final isLastItem = currentScreen == items.length - 1;
+    final state = ref.watch(onboardingNavigationProvider);
 
     return WillPopScope(
       onWillPop: () async {
         if (currentScreen == 0) return true;
-
-        setState(() => currentScreen--);
+        ref.read(onboardingNavigationProvider.notifier).previousPage();
         return false;
       },
       child: SafeArea(
         child: Scaffold(
-            body: ScreenWithAnimationWidget(
-              animation: activePage.animation,
-              child: activePage.widget ?? SizedBox(),
+          body: state.when(
+            data: (data) => PageView.builder(
+              controller: data.pageController,
+              itemCount: items.length,
+              physics: NeverScrollableScrollPhysics(),
+              onPageChanged: (index) {
+                setState(() {
+                  currentScreen = index;
+                });
+              },
+              itemBuilder: (context, index) {
+                final activePage = items[index];
+                return ScreenWithAnimationWidget(
+                  animation: activePage.animation,
+                  child: activePage.widget ?? SizedBox(),
+                );
+              },
             ),
-            bottomNavigationBar: Container(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-              child: Row(
-                children: [
-                  // Left side - Version Widget
-                  Expanded(
-                    flex: 2,
-                    child: VersionWidget(
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
-                      ),
-                    ),
-                  ),
-                  // Left spacer with specific flex
-                  Expanded(flex: 1, child: SizedBox()),
-                  // Center - Dots Indicator
-                  DotsIndicator(
-                    dotsCount: _rootStatus ? kioskModeonBoardingItems.length : onBoardingItems.length,
-                    position: currentScreen,
-                    decorator: DotsDecorator(
-                      size: const Size.square(9.0),
-                      activeSize: const Size(21.0, 9.0),
-                      activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-                      spacing: EdgeInsets.all(3),
-                    ),
-                  ),
-                  // Right spacer with same flex as left
-                  Expanded(flex: 1, child: SizedBox()),
-                  // Right side - Navigation Buttons
-                  Expanded(
-                    flex: 2,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: Directionality.of(context) == TextDirection.ltr
-                          ? MainAxisAlignment.end
-                          : MainAxisAlignment.start,
-                      children: [
-                        Visibility(
-                          visible: activePage.enablePreviousButton,
-                          replacement: Opacity(
-                            opacity: 0,
-                            child: MawaqitBackIconButton(
-                              icon: Icons.arrow_back_rounded,
-                              label: S.of(context).previous,
-                              onPressed: () => previousPage(currentScreen - 1),
-                            ),
-                          ),
-                          child: MawaqitBackIconButton(
-                            icon: Icons.arrow_back_rounded,
-                            label: S.of(context).previous,
-                            onPressed: () => previousPage(currentScreen - 1),
-                          ),
-                        ),
-                        if (activePage.enablePreviousButton) SizedBox(width: 10),
-                        if (activePage.enableNextButton)
-                          MawaqitIconButton(
-                            focusNode: ref.watch(nextNodeProvider),
-                            icon: isLastItem ? Icons.check : Icons.arrow_forward_rounded,
-                            label: isLastItem ? S.of(context).finish : S.of(context).next,
-                            onPressed: () => nextPage(currentScreen + 1),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )),
+            error: (e, s) => Container(),
+            loading: () => Container(),
+          ),
+          bottomNavigationBar: OnboardingBottomNavigationBar(
+            onPreviousPressed: () => ref.read(onboardingNavigationProvider.notifier).previousPage(),
+            onNextPressed: () => ref.read(onboardingNavigationProvider.notifier).nextPage(),
+            nextButtonFocusNode: skipButtonFocusNode,
+          ),
+        ),
       ),
     );
   }
 }
-
-final nextNodeProvider = riverpod.Provider.autoDispose<FocusNode>((ref) {
-  final focusNode = FocusNode();
-  ref.onDispose(() => focusNode.dispose());
-  return focusNode;
-});

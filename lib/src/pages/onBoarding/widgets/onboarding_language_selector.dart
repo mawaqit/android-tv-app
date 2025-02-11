@@ -8,11 +8,13 @@ import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_bottom_navigation_bar.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_notifier.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:sizer/sizer.dart'; // Prefix the provider import
 
-class OnBoardingLanguageSelector extends StatefulWidget {
+class OnBoardingLanguageSelector extends ConsumerStatefulWidget {
   final bool isOnboarding;
   final VoidCallback? onSelect; // Renamed for consistency
 
@@ -56,10 +58,10 @@ class OnBoardingLanguageSelector extends StatefulWidget {
   }
 
   @override
-  State<OnBoardingLanguageSelector> createState() => _OnBoardingLanguageSelectorState();
+  ConsumerState<OnBoardingLanguageSelector> createState() => _OnBoardingLanguageSelectorState();
 }
 
-class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector> {
+class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageSelector> {
   late ScrollController _scrollController;
 
   @override
@@ -143,14 +145,24 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
                 return LanguageTile(
-                  onSelect: widget.onSelect ?? () {}, // Pass the onSelect callback
+                  onSelect: widget.onSelect ??
+                      () {
+                        // print('No callback provided ${FocusScope.of(context).nearestScope.traversalChildren}');
+                        // print('No callback provided ${}');
+
+                        FocusScope.of(context)
+                            .traversalDescendants
+                            .where((e) => e.debugLabel == 'NextButton')
+                            .first
+                            .requestFocus();
+                      }, // Pass the onSelect callback
                   locale: locale,
                   isSelected: isSelected(locale.languageCode),
                 );
               },
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -212,7 +224,6 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
             onKey: (node, event) {
               if (event is RawKeyDownEvent) {
                 if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
-                  ref.read(nextNodeProvider).requestFocus();
                   handleSelection();
                   return KeyEventResult.handled;
                 }
