@@ -14,8 +14,10 @@ typedef TimezoneSelectedCallback = void Function();
 class TimezoneSelectionScreen extends StatefulWidget {
   final Country country;
   final TimezoneSelectedCallback? onTimezoneSelected;
+  final FocusNode nextButtonFocusNode;
 
-  const TimezoneSelectionScreen({super.key, required this.country, this.onTimezoneSelected});
+  const TimezoneSelectionScreen(
+      {super.key, required this.country, this.onTimezoneSelected, required this.nextButtonFocusNode});
 
   @override
   _TimezoneSelectionScreenState createState() => _TimezoneSelectionScreenState();
@@ -55,6 +57,7 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
     if (selectedTimezoneIndex >= 0 && selectedTimezoneIndex < timezones.length) {
       _setDeviceTimezoneAsync(timezones[selectedTimezoneIndex]).then((_) {
         // Call the callback when selection is successful.
+        widget.nextButtonFocusNode.requestFocus();
         widget.onTimezoneSelected?.call();
       });
     }
@@ -184,7 +187,7 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
                   setState(() {
                     selectedTimezoneIndex = index;
                   });
-                  _handleTimezoneSelect();
+                  // _handleTimezoneSelect();
                 },
               );
             },

@@ -116,7 +116,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
             setState(() {
               country = Option.of(countrySelected);
             });
-            print('country selected $countrySelected');
           },
           focusNode: skipButtonFocusNode,
           nextButtonFocusNode: nextButtonFocusNode,
@@ -127,16 +126,17 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     ];
 
     final countryDependentItems = country.match(
-          () {
-        print('No country selected $country');
+      () {
         return <OnBoardingItem>[];
       },
-          (selectedCountry) {
-        print('country selected $country');
+      (selectedCountry) {
         return [
           OnBoardingItem(
             animation: 'settings',
-            widget: TimezoneSelectionScreen(country: selectedCountry),
+            widget: TimezoneSelectionScreen(
+              country: selectedCountry,
+              nextButtonFocusNode: nextButtonFocusNode,
+            ),
             enablePreviousButton: true,
             enableNextButton: true,
           ),
