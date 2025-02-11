@@ -91,7 +91,10 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     ),
     OnBoardingItem(
       animation: 'welcome',
-      widget: OnBoardingOrientationWidget.onboarding(),
+      widget: OnBoardingOrientationWidget.onboarding(
+        nextButtonFocusNode: nextButtonFocusNode,
+        previousButtonFocusNode: previousButtonFocusNode,
+      ),
       // removed onSelect parameter
       enableNextButton: true,
       enablePreviousButton: true,
@@ -153,7 +156,10 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     ),
     OnBoardingItem(
       animation: 'welcome',
-      widget: OnBoardingOrientationWidget.onboarding(),
+      widget: OnBoardingOrientationWidget.onboarding(
+        previousButtonFocusNode: previousButtonFocusNode,
+        nextButtonFocusNode: nextButtonFocusNode,
+      ),
       // removed onSelect parameter
       enableNextButton: true,
       // enable next button

@@ -6,11 +6,15 @@ import 'package:provider/provider.dart';
 class OnBoardingOrientationWidget extends StatelessWidget {
   final VoidCallback? onNext;
   final bool isOnboarding;
+  final FocusNode? nextButtonFocusNode;
+  final FocusNode? previousButtonFocusNode;
 
   // Private constructor
   const OnBoardingOrientationWidget._({
     Key? key,
     required this.isOnboarding,
+    this.nextButtonFocusNode,
+    this.previousButtonFocusNode,
     this.onNext,
   }) : super(key: key);
 
@@ -28,17 +32,22 @@ class OnBoardingOrientationWidget extends StatelessWidget {
 
   // Factory constructor for onboarding mode
   factory OnBoardingOrientationWidget.onboarding({
+    required FocusNode nextButtonFocusNode,
+    required FocusNode previousButtonFocusNode,
     Key? key,
   }) {
     return OnBoardingOrientationWidget._(
       key: key,
       isOnboarding: true,
+      nextButtonFocusNode: nextButtonFocusNode,
+      previousButtonFocusNode: previousButtonFocusNode,
     );
   }
 
   // Helper method to wrap callbacks with onNext if available
   VoidCallback _wrapWithOnNext(VoidCallback callback) {
     return () {
+      if(nextButtonFocusNode != null) nextButtonFocusNode!.requestFocus();
       callback();
       if (!isOnboarding) {
         onNext?.call();
@@ -86,13 +95,11 @@ class OnBoardingOrientationWidget extends StatelessWidget {
             SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(
-                tr.landscapeBTNDescription,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
-                ),
-                textAlign: TextAlign.center
-              ),
+              child: Text(tr.landscapeBTNDescription,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+                  ),
+                  textAlign: TextAlign.center),
             ),
             SizedBox(height: 20),
             ToggleButtonWidget(
@@ -121,14 +128,14 @@ class ToggleButtonWidget extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onPressed;
   final String label;
-  final TextStyle? textStyle;  // Add this line
+  final TextStyle? textStyle; // Add this line
 
   const ToggleButtonWidget({
     super.key,
     required this.isSelected,
     required this.onPressed,
     required this.label,
-    this.textStyle,  // Add this line
+    this.textStyle, // Add this line
   });
 
   @override
@@ -145,11 +152,11 @@ class ToggleButtonWidget extends StatelessWidget {
               backgroundColor: theme.primaryColor,
               foregroundColor: Colors.white,
             ),
-            child: Text(label, style: textStyle),  // Add style here
+            child: Text(label, style: textStyle), // Add style here
           )
         : OutlinedButton(
             onPressed: onPressed,
-            child: Text(label, style: textStyle),  // Add style here
+            child: Text(label, style: textStyle), // Add style here
           );
   }
 }
