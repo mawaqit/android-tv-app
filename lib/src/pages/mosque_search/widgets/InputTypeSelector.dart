@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_search.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputId.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
@@ -10,9 +11,14 @@ import '../../../helpers/Api.dart';
 import 'chromecast_mosque_input_id.dart';
 
 class InputTypeSelector extends StatefulWidget {
-  const InputTypeSelector({Key? key, this.onDone}) : super(key: key);
+  const InputTypeSelector({
+    required this.nextButtonFocusNode,
+    super.key,
+    this.onDone,
+  });
 
   final void Function()? onDone;
+  final fp.Option<FocusNode> nextButtonFocusNode;
 
   @override
   _InputTypeSelectorState createState() => _InputTypeSelectorState();
@@ -63,6 +69,11 @@ class _InputTypeSelectorState extends State<InputTypeSelector> {
             OutlinedButton(
               autofocus: true,
               onPressed: () {
+                widget.nextButtonFocusNode.match(() => {}, (focus) {
+                  focus.requestFocus();
+                  return;
+                });
+
                 Navigator.push(
                   context,
                   PageTransition(
@@ -78,6 +89,10 @@ class _InputTypeSelectorState extends State<InputTypeSelector> {
             ),
             OutlinedButton(
               onPressed: () {
+                widget.nextButtonFocusNode.match(() => {}, (focus) {
+                  focus.requestFocus();
+                  return;
+                });
                 Navigator.push(
                   context,
                   PageTransition(

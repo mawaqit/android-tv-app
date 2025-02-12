@@ -154,6 +154,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       OnBoardingItem(
         animation: 'search',
         widget: MosqueSearch(
+          nextButtonFocusNode: Some(nextButtonFocusNode),
           onDone: () {},
         ),
         enableNextButton: true,
@@ -207,6 +208,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     OnBoardingItem(
       animation: 'search',
       widget: MosqueSearch(
+        nextButtonFocusNode: Some(nextButtonFocusNode),
         onDone: () {},
       ),
       enableNextButton: true,

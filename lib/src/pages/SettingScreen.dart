@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
+import 'package:fpdart/fpdart.dart';
 
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -110,7 +111,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     title: S.of(context).changeMosque,
                     subtitle: S.of(context).searchMosque,
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
-                    onTap: () => AppRouter.push(MosqueSearchScreen()),
+                    onTap: () => AppRouter.push(MosqueSearchScreen(nextButtonFocusNode: None(),)),
                   ),
                   _SettingItem(
                     title: S.of(context).hijriAdjustments,
