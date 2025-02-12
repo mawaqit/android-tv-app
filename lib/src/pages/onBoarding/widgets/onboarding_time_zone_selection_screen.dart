@@ -43,6 +43,8 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
         _selectFirstVisibleItem();
       }
     });
+
+    _handleTimezoneSelect();
   }
 
   @override
@@ -56,9 +58,7 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
   void _handleTimezoneSelect() {
     if (selectedTimezoneIndex >= 0 && selectedTimezoneIndex < timezones.length) {
       _setDeviceTimezoneAsync(timezones[selectedTimezoneIndex]).then((_) {
-        // Call the callback when selection is successful.
         widget.nextButtonFocusNode.requestFocus();
-        widget.onTimezoneSelected?.call();
       });
     }
   }
@@ -125,10 +125,7 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
-      // Optionally, you can pop the screen after successful selection.
-      Navigator.pop(context);
     } catch (e) {
-      print('Error setting timezone: $e');
       Fluttertoast.showToast(
         msg: S.of(context).timezoneFailure,
         toastLength: Toast.LENGTH_SHORT,
@@ -157,41 +154,68 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.country.name)),
-      body: Shortcuts(
-        shortcuts: <LogicalKeySet, Intent>{
-          LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+    return Shortcuts(
+      shortcuts: <LogicalKeySet, Intent>{
+        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+      },
+      child: Focus(
+        focusNode: timezoneListFocusNode,
+        onFocusChange: (hasFocus) {
+          if (hasFocus) {
+            _selectFirstVisibleItem();
+          }
         },
-        child: Focus(
-          focusNode: timezoneListFocusNode,
-          onFocusChange: (hasFocus) {
-            if (hasFocus) {
-              _selectFirstVisibleItem();
-            }
-          },
-          onKey: (node, event) => _handleKeyEvent(node, event),
-          child: ListView.builder(
-            controller: _timezoneScrollController,
-            padding: const EdgeInsets.only(top: 16),
-            itemCount: timezones.length,
-            itemBuilder: (BuildContext context, int index) {
-              var timezone = timezones[index];
-              var location = tz.getLocation(timezone);
-              var now = tz.TZDateTime.now(location);
-              var timeZoneOffset = now.timeZoneOffset;
-              return ListTile(
-                tileColor: selectedTimezoneIndex == index ? const Color(0xFF490094) : null,
-                title: Text('${_convertToGMTOffset(timeZoneOffset)} $timezone'),
-                onTap: () {
-                  setState(() {
-                    selectedTimezoneIndex = index;
-                  });
-                  // _handleTimezoneSelect();
+        onKey: (node, event) => _handleKeyEvent(node, event),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            Text(
+              S.of(context).appTimezone,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.w700,
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Divider(
+              thickness: 1,
+              color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              S.of(context).descTimezone,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 15,
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                controller: _timezoneScrollController,
+                padding: const EdgeInsets.only(top: 16),
+                itemCount: timezones.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var timezone = timezones[index];
+                  var location = tz.getLocation(timezone);
+                  var now = tz.TZDateTime.now(location);
+                  var timeZoneOffset = now.timeZoneOffset;
+                  return ListTile(
+                    tileColor: selectedTimezoneIndex == index ? const Color(0xFF490094) : null,
+                    title: Text('${_convertToGMTOffset(timeZoneOffset)} $timezone'),
+                    onTap: () {
+                      setState(() {
+                        selectedTimezoneIndex = index;
+                      });
+                      _handleTimezoneSelect();
+                    },
+                  );
                 },
-              );
-            },
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );
