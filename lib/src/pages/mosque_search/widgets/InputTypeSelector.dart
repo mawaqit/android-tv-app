@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart' as fp;
 import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_search.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputId.dart';
@@ -8,9 +9,10 @@ import 'package:page_transition/page_transition.dart';
 import '../../../../i18n/l10n.dart';
 import '../../../../main.dart';
 import '../../../helpers/Api.dart';
+import '../../../state_management/on_boarding/input_selection_provider.dart';
 import 'chromecast_mosque_input_id.dart';
 
-class InputTypeSelector extends StatefulWidget {
+class InputTypeSelector extends ConsumerStatefulWidget {
   const InputTypeSelector({
     required this.nextButtonFocusNode,
     super.key,
@@ -24,7 +26,7 @@ class InputTypeSelector extends StatefulWidget {
   _InputTypeSelectorState createState() => _InputTypeSelectorState();
 }
 
-class _InputTypeSelectorState extends State<InputTypeSelector> {
+class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
   String? _deviceModel;
 
   @override
@@ -73,17 +75,18 @@ class _InputTypeSelectorState extends State<InputTypeSelector> {
                   focus.requestFocus();
                   return;
                 });
-
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: _deviceModel!.contains("Chromecast")
-                        ? ChromeCastMosqueInputId(onDone: widget.onDone)
-                        : MosqueInputId(onDone: widget.onDone),
-                    type: PageTransitionType.fade,
-                    alignment: Alignment.center,
-                  ),
-                );
+                ref.read(inputSelectionProvider.notifier).state = InputSelection.withoutId;
+                
+                // Navigator.push(
+                //   context,
+                //   PageTransition(
+                //     child: _deviceModel!.contains("Chromecast")
+                //         ? ChromeCastMosqueInputId(onDone: widget.onDone)
+                //         : MosqueInputId(onDone: widget.onDone),
+                //     type: PageTransitionType.fade,
+                //     alignment: Alignment.center,
+                //   ),
+                // );
               },
               child: Text(S.current.yes),
             ),
@@ -93,18 +96,20 @@ class _InputTypeSelectorState extends State<InputTypeSelector> {
                   focus.requestFocus();
                   return;
                 });
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: _deviceModel!.contains("Chromecast")
-                        ? ChromeCastMosqueInputSearch(
-                            onDone: widget.onDone,
-                          )
-                        : MosqueInputSearch(onDone: widget.onDone),
-                    type: PageTransitionType.fade,
-                    alignment: Alignment.center,
-                  ),
-                );
+                ref.read(inputSelectionProvider.notifier).state = InputSelection.withoutId;
+
+                // Navigator.push(
+                //   context,
+                //   PageTransition(
+                //     child: _deviceModel!.contains("Chromecast")
+                //         ? ChromeCastMosqueInputSearch(
+                //             onDone: widget.onDone,
+                //           )
+                //         : MosqueInputSearch(onDone: widget.onDone),
+                //     type: PageTransitionType.fade,
+                //     alignment: Alignment.center,
+                //   ),
+                // );
               },
               child: Text(S.current.no),
             ),

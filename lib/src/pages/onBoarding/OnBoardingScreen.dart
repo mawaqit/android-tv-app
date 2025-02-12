@@ -5,21 +5,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:fpdart/fpdart.dart';
+import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/data/countries.dart';
+import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputId.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_id.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_search.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mode.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_language_selector.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/input_selection_provider.dart';
 import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_notifier.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import '../../../i18n/AppLanguage.dart';
@@ -71,10 +79,12 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   late FocusNode nextButtonFocusNode;
   late FocusNode previousButtonFocusNode;
   Option<Country> country = None();
+  String? _deviceModel;
 
   @override
   void initState() {
     super.initState();
+    _fetchDeviceModel();
 
     nextButtonFocusNode = FocusNode(debugLabel: 'next_button_focus_node');
     previousButtonFocusNode = FocusNode(debugLabel: 'previous_button_focus_node');
@@ -83,6 +93,19 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(onBoardingProvider.notifier).getSystemLanguage();
     });
+  }
+// Add this method
+  Future<void> _fetchDeviceModel() async {
+    try {
+      final userData = await Api.prepareUserData();
+      if (userData != null) {
+        setState(() {
+          _deviceModel = userData.$2['model'];
+        });
+      }
+    } catch (e, stackTrace) {
+      logger.e('Error fetching user data: $e', stackTrace: stackTrace);
+    }
   }
 
   List<OnBoardingItem> get kioskModeonBoardingItems {
@@ -275,6 +298,34 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       }
     });
 
+    ref.listen(inputSelectionProvider, (previous, next) {
+      if (next == InputSelection.withoutId) {
+        Navigator.push(
+          context,
+          PageTransition(
+            child: _deviceModel?.contains("Chromecast") ?? false
+                ? ChromeCastMosqueInputId(onDone: onDone)
+                : MosqueInputId(onDone: onDone),
+            type: PageTransitionType.fade,
+            alignment: Alignment.center,
+          ),
+        );
+      } else {
+        Navigator.push(
+          context,
+          PageTransition(
+            child: _deviceModel!.contains("Chromecast")
+                ? ChromeCastMosqueInputSearch(
+              onDone: onDone,
+            )
+                : MosqueInputSearch(onDone: onDone),
+            type: PageTransitionType.fade,
+            alignment: Alignment.center,
+          ),
+        );
+      }
+    });
+
     return onBoardingState.when(
       data: (state) => buildPageView(context),
       error: (error, stack) => buildPageView(context),
@@ -329,4 +380,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       ),
     );
   }
+
+
 }
