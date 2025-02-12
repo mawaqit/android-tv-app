@@ -49,10 +49,6 @@ class TurnOnOffTvConstant {
   /// native methods calls
   static const String kNativeMethodsChannel = "nativeMethodsChannel";
   static const String kCheckRoot = "checkRoot";
-  static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
-  static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
-  static const String kToggleTabletScreenOn = "toggleTabletScreenOn";
-  static const String kToggleTabletScreenOff = "toggleTabletScreenOff";
   static const String kisFajrIshaOnly = "isIshaFajrOnly";
   static const String kMinuteBeforeKey = 'selectedMinuteBefore';
   static const String kMinuteAfterKey = 'selectedMinuteAfter';

@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'dart:async';
 import 'dart:developer' as developer;
@@ -80,21 +81,36 @@ Future<void> main() async {
   );
 }
 
-Future<void> _initializePermissions() async {
-  final isRooted =
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
+Future<void> _handleOverlayPermissions(String deviceModel, bool isRooted) async {
+  final methodChannel = MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
+  final isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
 
-  final bool isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
+  if (RegExp(r'ONVO.*').hasMatch(deviceModel)) {
+    await methodChannel.invokeMethod("grantOnvoOverlayPermission");
+    return;
+  }
 
   if (!isPermissionGranted) {
     if (isRooted) {
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod("grantOverlayPermission");
+      await methodChannel.invokeMethod("grantOverlayPermission");
     } else {
       await NotificationOverlay.requestOverlayPermission();
     }
   }
+}
 
+Future<void> _initializePermissions() async {
+  final isRooted =
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
+  final deviceModel = await _getDeviceModel();
+
+  await _handleOverlayPermissions(deviceModel, isRooted);
   await NotificationBackgroundService.initializeService();
+}
+
+Future<String> _getDeviceModel() async {
+  var hardware = await DeviceInfoPlugin().androidInfo;
+  return hardware.model;
 }
 
 Future<void> _initializeServices() async {

@@ -52,10 +52,6 @@ class MainActivity : FlutterActivity() {
                         }
                     }
                     "checkRoot" -> result.success(checkRoot())
-                    "toggleBoxScreenOff" -> toggleBoxScreenOff(call, result)
-                    "toggleBoxScreenOn" -> toggleBoxScreenOn(call, result)
-                    "toggleTabletScreenOff" -> toggleTabletScreenOff(call, result)
-                    "toggleTabletScreenOn" -> toggleTabletScreenOn(call, result)
                     "connectToNetworkWPA" -> connectToNetworkWPA(call, result)
                     "addLocationPermission" -> addLocationPermission(call, result)
                     "grantFineLocationPermission" -> grantFineLocationPermission(call, result)
@@ -64,6 +60,10 @@ class MainActivity : FlutterActivity() {
                     "sendTabKeyEvent" -> sendTabKeyEvent(call, result)
                     "clearAppData" -> {
                         val isSuccess = clearDataRestart()
+                        result.success(isSuccess)
+                    }
+                    "grantOnvoOverlayPermission" -> {
+                        val isSuccess = grantOnvoOverlayPermission()
                         result.success(isSuccess)
                     }
                             "installApk" -> {
@@ -131,7 +131,24 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
-
+private fun grantOnvoOverlayPermission(): Boolean {
+    return try {
+        val processBuilder = ProcessBuilder()
+        val command = "sh -c appops set com.mawaqit.androidtv SYSTEM_ALERT_WINDOW allow"
+    
+        processBuilder.command("sh", "-c", """
+            appops set com.mawaqit.androidtv SYSTEM_ALERT_WINDOW allow
+        """.trimIndent())
+        
+        val process = processBuilder.start()
+        val exitCode = process.waitFor()
+  
+        exitCode == 0
+    } catch (e: Exception) {
+        e.printStackTrace()
+        false
+    }
+}
     private fun setDeviceTimezone(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {
@@ -244,44 +261,7 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
         }
     }
 
-    private fun toggleBoxScreenOff(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                val commands = listOf(
-                    "mount -o rw,remount /",
-                    "cd /sys/class/hdmi/hdmi/attr",
-                    "echo 0 > phy_power"
-                )
-                executeCommand(commands, result) // Lock the device
-            } catch (e: Exception) {
-                handleCommandException(e, result)
-            }
-        }
-    }
-    private fun toggleTabletScreenOff(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                val commands = listOf(
-"echo 0 > /sys/class/backlight/backlight/brightness"
-                )
-                executeCommand(commands, result) // Lock the device
-            } catch (e: Exception) {
-                handleCommandException(e, result)
-            }
-        }
-    }
-    private fun toggleTabletScreenOn(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                val commands = listOf(
-"echo 110 > /sys/class/backlight/backlight/brightness"
-                )
-                executeCommand(commands, result) // Lock the device
-            } catch (e: Exception) {
-                handleCommandException(e, result)
-            }
-        }
-    }
+
     private fun grantFineLocationPermission(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {
@@ -309,21 +289,6 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
         }
     }
 
-    private fun toggleBoxScreenOn(call: MethodCall, result: MethodChannel.Result) {
-        AsyncTask.execute {
-            try {
-                val commands = listOf(
-                    "mount -o rw,remount /",
-                    "cd /sys/class/hdmi/hdmi/attr",
-                    "echo 1 > phy_power",
-                    "am start -W -n com.mawaqit.androidtv/.MainActivity"
-                )
-                executeCommand(commands, result)
-            } catch (e: Exception) {
-                handleCommandException(e, result)
-            }
-        }
-    }
 
     private fun sendDownArrowEvent(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {

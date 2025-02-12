@@ -64,7 +64,6 @@ void callbackDispatcher() {
       }
       return true;
     } catch (e) {
-      print('Native method execution failed: $e');
       return false;
     }
   });
@@ -208,13 +207,11 @@ class ToggleScreenFeature {
       if (scheduledDateTime.isBefore(now)) {
         scheduledDateTime = scheduledDateTime.add(Duration(days: 1));
       }
-      print('Scheduled Time for $timeString: $scheduledDateTime');
 
       // Schedule screen on
       final beforeScheduleTime = scheduledDateTime.subtract(Duration(minutes: beforeDelayMinutes));
       if (beforeScheduleTime.isAfter(now)) {
         final uniqueIdOn = 'screenOn_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
-        print('Scheduled screen ON for $uniqueIdOn at $beforeScheduleTime');
 
         await Workmanager().registerOneOffTask(uniqueIdOn, 'screenOn',
             initialDelay: beforeScheduleTime.difference(now),
@@ -229,7 +226,6 @@ class ToggleScreenFeature {
       // Schedule screen off
       final afterScheduleTime = scheduledDateTime.add(Duration(minutes: afterDelayMinutes));
       final uniqueIdOff = 'screenOff_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
-      print('Scheduled screen OFF for $uniqueIdOff at $afterScheduleTime');
 
       await Workmanager().registerOneOffTask(uniqueIdOff, 'screenOff',
           initialDelay: afterScheduleTime.difference(now),
@@ -291,42 +287,6 @@ class ToggleScreenFeature {
     await Workmanager().cancelAll();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, false);
-  }
-
-  static Future<void> _toggleBoxScreenOn() async {
-    try {
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
-          .invokeMethod(TurnOnOffTvConstant.kToggleBoxScreenOn);
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
-  static Future<void> _toggleBoxScreenOff() async {
-    try {
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
-          .invokeMethod(TurnOnOffTvConstant.kToggleBoxScreenOff);
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
-  static Future<void> _toggleTabletScreenOn() async {
-    try {
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
-          .invokeMethod(TurnOnOffTvConstant.kToggleTabletScreenOn);
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
-  static Future<void> _toggleTabletScreenOff() async {
-    try {
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
-          .invokeMethod(TurnOnOffTvConstant.kToggleTabletScreenOff);
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
   }
 
   static Future<bool> checkEventsScheduled() async {

@@ -118,7 +118,7 @@ dependencies:
   disk_space: ^0.2.1
   screen_control:
     git:
-      url: https://github.com/ghassenbenzahra123/native_screen_lock
+      url: https://github.com/mawaqit/native_screen_lock_mawaqit_devices
       ref: master  
   equatable: ^2.0.5
   just_audio: ^0.9.37
