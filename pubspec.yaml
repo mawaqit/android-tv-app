@@ -119,7 +119,7 @@ dependencies:
   screen_control:
     git:
       url: https://github.com/mawaqit/native_screen_lock_mawaqit_devices
-      ref: master  
+      ref: master
   equatable: ^2.0.5
   just_audio: ^0.9.37
 
@@ -172,6 +172,7 @@ dev_dependencies:
   dependency_validator:
   build_runner: ^2.4.9
   http_mock_adapter: ^0.6.1
+  flutter_background_service: ^2.1.3
   flutter_lints: 3.0.1
   hive_generator: ^2.0.1
   mocktail: ^1.0.3
