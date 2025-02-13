@@ -383,7 +383,7 @@
   "checkInternetUpdate": "يجب عليك الاتصال بالإنترنت للتحقق من وجود تحديثات جديدة",
   "appUpdateAvailable": "تطبيقك يعمل بالإصدار {currentVersion}. تحديث جديد (الإصدار {updatedVersion}) متوفر مع أحدث الميزات والتحسينات.",
   "@appUpdateAvailable": {
-    "description": "Placeholder text for displaying update available message",
+    "description": "نص بديل لعرض رسالة التحديث المتاح",
     "placeholders": {
       "currentVersion": {
         "type": "String",
@@ -397,6 +397,20 @@
   },
   "ishaAndFajrOnly": "فقط صلاتي الفجر و العشاء",
   "minutesBeforeFajrPrayer": "دقائق قبل وقت صلاة الفجر",
-  "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء"
-
+  "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء",
+  "initializingAutoReading": "جاري التهيئة...",
+  "prayerTimeNotification": "حان وقت صلاة {salahName} عند الساعة {prayerTime}",
+  "@prayerTimeNotification": {
+    "description": "إشعار يُعرض عندما يكون التطبيق في الخلفية لتنبيه المستخدم بوقت الصلاة.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "الفجر"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  }
 }

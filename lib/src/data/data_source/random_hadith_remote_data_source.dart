@@ -54,7 +54,7 @@ class RandomHadithRemoteDataSource {
           final document = XmlDocument.from(response.data)!;
 
           final hadithXmlList = document.getElements('hadith');
-          log('random_hadith: RandomHadithRemoteDataSource: xml list ${hadithXmlList![0]}', time: DateTime.now());
+          log('random_hadith: RandomHadithRemoteDataSource: xml list ${hadithXmlList![3]}', time: DateTime.now());
           return hadithXmlList;
         },
         debugName: 'random_hadith: getRandomHadithXML',
