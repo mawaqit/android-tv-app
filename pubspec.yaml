@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.19.3+1
+version: 1.19.4+1
 
 
 environment:
@@ -116,7 +116,10 @@ dependencies:
   unique_identifier: ^0.3.0
   collection: any
   disk_space: ^0.2.1
-
+  screen_control:
+    git:
+      url: https://github.com/mawaqit/native_screen_lock_mawaqit_devices
+      ref: master  
   equatable: ^2.0.5
   just_audio: ^0.9.37
 
@@ -156,6 +159,7 @@ dependencies:
 
   montenegrin_localization: ^0.1.0+1
   synchronized: ^3.1.0+1
+  workmanager: ^0.5.2
 
 
 
