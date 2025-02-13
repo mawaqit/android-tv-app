@@ -261,7 +261,6 @@ fun connectToNetworkWPA(call: MethodCall, result: MethodChannel.Result) {
         }
     }
 
-
     private fun grantFineLocationPermission(call: MethodCall, result: MethodChannel.Result) {
         AsyncTask.execute {
             try {

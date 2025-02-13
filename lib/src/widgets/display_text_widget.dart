@@ -112,13 +112,17 @@ class DisplayTextWidget extends ConsumerWidget {
               textDirection: TextDirection.rtl,
               delay: .1.seconds,
             ),
-          if (translatedTitle != null && translatedTitle != title && translatedTitle != '')
+          if (translatedTitle != null &&
+              translatedTitle != title &&
+              translatedTitle != '')
             titleText(
               translatedTitle!,
               textDirection: textDirection,
               delay: .2.seconds,
             ),
-          if (translatedText != null && translatedText != arabicText && translatedText != '')
+          if (translatedText != null &&
+              translatedText != arabicText &&
+              translatedText != '')
             contentText(
               translatedText!,
               context,
@@ -169,7 +173,9 @@ class DisplayTextWidget extends ConsumerWidget {
           child: AutoSizeText(
             text,
             style: isHadith
-                ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
+                ? context
+                    .getLocalizedTextStyle(locale: hadithLanguage)
+                    .copyWith(
                       color: Colors.white,
                       shadows: kIqamaCountDownTextShadow,
                       fontWeight: FontWeight.bold,

@@ -50,7 +50,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   ///
   /// Returns `true` if the Hadith feature is disabled for the current Salah time.
   bool isDisableHadithBetweenSalah() {
-    (int, int)? periods = _parseDisablingPeriods(mosqueConfig?.randomHadithIntervalDisabling ?? '');
+    (int, int)? periods = _parseDisablingPeriods(
+        mosqueConfig?.randomHadithIntervalDisabling ?? '');
 
     if (periods == null) {
       return false;
@@ -79,7 +80,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   bool adhanVoiceEnable([int? salahIndex]) {
     salahIndex ??= this.salahIndex;
 
-    return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1' && (mosqueConfig?.adhanVoice?.isNotEmpty ?? false);
+    return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1' &&
+        (mosqueConfig?.adhanVoice?.isNotEmpty ?? false);
   }
 
   bool get isAdhanVoiceEnabled => adhanVoiceEnable();
@@ -94,12 +96,15 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     if (shrukDate == null) return false;
 
-    return AppDateTime.now().isAfter(actualTimes()[0]) && AppDateTime.now().isBefore(shrukDate);
+    return AppDateTime.now().isAfter(actualTimes()[0]) &&
+        AppDateTime.now().isBefore(shrukDate);
   }
 
   String getShurukInString(BuildContext context) {
-    final shurukTime = times!.shuruq(AppDateTime.now())!.difference(AppDateTime.now());
-    return StringManager.getCountDownText(context, shurukTime, S.of(context).shuruk);
+    final shurukTime =
+        times!.shuruq(AppDateTime.now())!.difference(AppDateTime.now());
+    return StringManager.getCountDownText(
+        context, shurukTime, S.of(context).shuruk);
   }
 
   String? getShurukTimeString([DateTime? date]) {
@@ -118,16 +123,20 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   bool isEidFirstDay(int? hijriAdjustment) {
     final hijri = mosqueHijriDate(hijriAdjustment);
 
-    return (hijri.islamicMonth == 9 && hijri.islamicDate == 1) || (hijri.islamicMonth == 11 && hijri.islamicDate == 10);
+    return (hijri.islamicMonth == 9 && hijri.islamicDate == 1) ||
+        (hijri.islamicMonth == 11 && hijri.islamicDate == 10);
   }
 
   bool showEid(int? hijriAdjustment) {
-    if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null) return false;
+    if (times!.aidPrayerTime == null && times!.aidPrayerTime2 == null)
+      return false;
 
     final date = mosqueHijriDate(hijriAdjustment);
     return (date.islamicMonth == 8 && date.islamicDate >= 23) ||
         (date.islamicMonth == 9 && date.islamicDate == 1) ||
-        (date.islamicMonth == 11 && date.islamicDate < 11 && date.islamicDate >= 3);
+        (date.islamicMonth == 11 &&
+            date.islamicDate < 11 &&
+            date.islamicDate >= 3);
   }
 
   /// get today salah prayer times as a list of times
@@ -143,7 +152,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     final times = actualTimes(date);
 
-    return iqamasOfDay(date).mapIndexed((i, e) => e.toTimeOfDay(tryOffset: times[i])!.toDate(date)).toList();
+    return iqamasOfDay(date)
+        .mapIndexed((i, e) => e.toTimeOfDay(tryOffset: times[i])!.toDate(date))
+        .toList();
   }
 
   /// return the upcoming salah index
@@ -156,7 +167,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     // Convert time to minutes since start of day
     int toMinutes(DateTime time) {
       // If time is after midnight but before Fajr, add 24 hours
-      if (time.hour < fajrTime.hour || (time.hour == fajrTime.hour && time.minute < fajrTime.minute)) {
+      if (time.hour < fajrTime.hour ||
+          (time.hour == fajrTime.hour && time.minute < fajrTime.minute)) {
         return (time.hour + 24) * 60 + time.minute;
       }
       return time.hour * 60 + time.minute;
@@ -191,7 +203,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     // Convert time to minutes since start of day
     int toMinutes(DateTime time) {
       // If time is after midnight but before Fajr, add 24 hours
-      if (time.hour < fajrTime.hour || (time.hour == fajrTime.hour && time.minute < fajrTime.minute)) {
+      if (time.hour < fajrTime.hour ||
+          (time.hour == fajrTime.hour && time.minute < fajrTime.minute)) {
         return (time.hour + 24) * 60 + time.minute;
       }
       return time.hour * 60 + time.minute;
@@ -226,7 +239,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     int toMinutes(DateTime time, DateTime fajrTime) {
       // If current time is before fajr and after midnight,
       // or if prayer time is before fajr, add 24 hours
-      bool isAfterMidnight = time.hour < fajrTime.hour || (time.hour == fajrTime.hour && time.minute < fajrTime.minute);
+      bool isAfterMidnight = time.hour < fajrTime.hour ||
+          (time.hour == fajrTime.hour && time.minute < fajrTime.minute);
 
       int hours = isAfterMidnight ? time.hour + 24 : time.hour;
       return hours * 60 + time.minute;
@@ -237,7 +251,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     // Convert prayer times to minutes
     List<int> timeMinutes = times.map((t) {
-      bool isBeforeFajr = t.hour < times[0].hour || (t.hour == times[0].hour && t.minute <= times[0].minute);
+      bool isBeforeFajr = t.hour < times[0].hour ||
+          (t.hour == times[0].hour && t.minute <= times[0].minute);
       return isBeforeFajr ? toMinutes(t, times[0]) : t.hour * 60 + t.minute;
     }).toList();
 
@@ -257,10 +272,15 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     // Handle Maghrib or Isha after midnight
     if ((nextIndex == 3 || nextIndex == 4) &&
-        (nextTime.hour < fajrTime.hour || (nextTime.hour == fajrTime.hour && nextTime.minute < fajrTime.minute))) {
+        (nextTime.hour < fajrTime.hour ||
+            (nextTime.hour == fajrTime.hour &&
+                nextTime.minute < fajrTime.minute))) {
       // For after midnight case (e.g. current time is 00:01)
       if (now.hour < 12) {
-        final minutes = 60 - now.minute + (nextTime.hour - (now.hour + 1)) * 60 + nextTime.minute;
+        final minutes = 60 -
+            now.minute +
+            (nextTime.hour - (now.hour + 1)) * 60 +
+            nextTime.minute;
         return Duration(minutes: minutes);
       }
 
@@ -277,7 +297,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     // For all other cases, use normal difference
     final duration = nextTime.difference(now);
     if (duration < Duration.zero) {
-      final tomorrowFajr = tomorrowTimes[0].toTimeOfDay()!.toDate(now.add(Duration(days: 1)));
+      final tomorrowFajr =
+          tomorrowTimes[0].toTimeOfDay()!.toDate(now.add(Duration(days: 1)));
       return tomorrowFajr.difference(now);
     }
     return duration;
@@ -292,27 +313,39 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     // Handle Maghrib or Isha Iqama times after midnight
     if ((nextIndex == 3 || nextIndex == 4) &&
-        (nextTime.hour < fajrTime.hour || (nextTime.hour == fajrTime.hour && nextTime.minute < fajrTime.minute))) {
+        (nextTime.hour < fajrTime.hour ||
+            (nextTime.hour == fajrTime.hour &&
+                nextTime.minute < fajrTime.minute))) {
       // For after midnight case (e.g. current time is 00:01)
       if (now.hour < 12) {
-        final minutes = 60 - now.minute + (nextTime.hour - (now.hour + 1)) * 60 + nextTime.minute;
+        final minutes = 60 -
+            now.minute +
+            (nextTime.hour - (now.hour + 1)) * 60 +
+            nextTime.minute;
         return Duration(minutes: minutes, seconds: 60 - now.second);
       }
 
       // For before midnight case (e.g. current time is 23:50)
-      final iqamaTime = DateTime(now.year, now.month, now.day + 1, nextTime.hour, nextTime.minute, 0 // Set seconds to 0
+      final iqamaTime = DateTime(now.year, now.month, now.day + 1,
+          nextTime.hour, nextTime.minute, 0 // Set seconds to 0
           );
       return iqamaTime.difference(now);
     }
 
     // For all other cases, use normal difference
-    final duration = DateTime(now.year, now.month, now.day, nextTime.hour, nextTime.minute, 0 // Set seconds to 0
+    final duration = DateTime(now.year, now.month, now.day, nextTime.hour,
+            nextTime.minute, 0 // Set seconds to 0
             )
         .difference(now);
 
     if (duration < Duration.zero) {
-      final tomorrowFajr = DateTime(now.year, now.month, now.day + 1, actualIqamaTimes()[0].hour,
-          actualIqamaTimes()[0].minute, 0 // Set seconds to 0
+      final tomorrowFajr = DateTime(
+          now.year,
+          now.month,
+          now.day + 1,
+          actualIqamaTimes()[0].hour,
+          actualIqamaTimes()[0].minute,
+          0 // Set seconds to 0
           );
       return tomorrowFajr.difference(now);
     }
@@ -324,7 +357,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     if (mosqueConfig == null) return Duration.zero;
 
     return Duration(
-      minutes: int.tryParse(mosqueConfig!.duaAfterPrayerShowTimes[salahIndex]) ?? 10,
+      minutes:
+          int.tryParse(mosqueConfig!.duaAfterPrayerShowTimes[salahIndex]) ?? 10,
     );
   }
 
@@ -339,7 +373,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       /// otherwise show tomorrow imsak
       if (now.isAfter(actualTimes()[0])) tomorrowFajr = tomorrowTimes[0];
 
-      int minutes = tomorrowFajr.toTimeOfDay()!.inMinutes - times!.imsakNbMinBeforeFajr;
+      int minutes =
+          tomorrowFajr.toTimeOfDay()!.inMinutes - times!.imsakNbMinBeforeFajr;
 
       String _timeTwoDigit = timeTwoDigit(
         seconds: minutes % 60,
@@ -358,7 +393,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   @Deprecated('Use AppDateTime.now()')
   DateTime mosqueDate() => AppDateTime.now();
 
-  MawaqitHijriCalendar mosqueHijriDate(int? forceAdjustment) => MawaqitHijriCalendar.fromDateWithAdjustments(
+  MawaqitHijriCalendar mosqueHijriDate(int? forceAdjustment) =>
+      MawaqitHijriCalendar.fromDateWithAdjustments(
         mosqueDate(),
         force30Days: times!.hijriDateForceTo30,
         adjustment: forceAdjustment ?? times!.hijriAdjustment,
@@ -407,7 +443,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// this will modify the duhr time to jumua time if it's mosque and friday
   List<String> get todayTimes => timesOfDay(mosqueDate());
 
-  List<String> get tomorrowTimes => timesOfDay(mosqueDate().add(Duration(days: 1)));
+  List<String> get tomorrowTimes =>
+      timesOfDay(mosqueDate().add(Duration(days: 1)));
 
   @Deprecated('User Times.dayIqamaStrings')
   List<String> iqamasOfDay(DateTime date) => times!.dayIqamaStrings(date);
@@ -416,7 +453,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   List<String> get todayIqama => iqamasOfDay(mosqueDate());
 
   @Deprecated('Use times.dayIqamaStrings')
-  List<String> get tomorrowIqama => iqamasOfDay(mosqueDate().add(Duration(days: 1)));
+  List<String> get tomorrowIqama =>
+      iqamasOfDay(mosqueDate().add(Duration(days: 1)));
 
 /*   /// if jumua as duhr return jumua
   String? get jumuaTime {
@@ -434,13 +472,15 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// cases 3: if Jumuaa is not as Duhr and jumuaa or jumuaa2 is not empty return *jumuaa1* time.
   DateTime activeJumuaaDate([DateTime? now]) {
     final nextFriday = nextFridayDate(now);
-    if (times!.jumuaAsDuhr == true) return timesOfDay(nextFriday)[1].toTimeOfDay()!.toDate(nextFriday);
+    if (times!.jumuaAsDuhr == true)
+      return timesOfDay(nextFriday)[1].toTimeOfDay()!.toDate(nextFriday);
     if (isJumuaOrJumua2EmptyOrNull()) {
       return nextFriday;
     }
 
     final jumuaaTime = times!.jumua; // return jumuaa1 time
-    return jumuaaTime!.toTimeOfDay()!.toDate(nextFriday); // parsing the value of juma to time of day and then to date
+    return jumuaaTime!.toTimeOfDay()!.toDate(
+        nextFriday); // parsing the value of juma to time of day and then to date
   }
 
   bool isJumuaOrJumua2EmptyOrNull() {
@@ -469,7 +509,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     if (!typeIsMosque) return false;
     if (jumuaaStartTime == null) return false;
 
-    if (now.isBefore(jumuaaStartTime) || now.isAfter(jumuaaEndTime!)) return false;
+    if (now.isBefore(jumuaaStartTime) || now.isAfter(jumuaaEndTime!))
+      return false;
 
     return true;
   }
@@ -480,7 +521,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
 
     final lastIqamaIndex = (nextIqamaIndex() - 1) % 5;
     var lastIqamaTime = actualIqamaTimes()[lastIqamaIndex];
-    if (lastIqamaTime.isAfter(now)) lastIqamaTime = lastIqamaTime.subtract(Duration(days: 1));
+    if (lastIqamaTime.isAfter(now))
+      lastIqamaTime = lastIqamaTime.subtract(Duration(days: 1));
 
     final salahDuration = mosqueConfig!.duaAfterPrayerShowTimes[lastIqamaIndex];
     final salahAndAzkarEndTime = lastIqamaTime.add(
@@ -488,7 +530,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     );
 
     /// skip salah workflow in jumuaa duhr
-    if (typeIsMosque && now.weekday == DateTime.friday && nextSalahIndex() == 1) return false;
+    if (typeIsMosque && now.weekday == DateTime.friday && nextSalahIndex() == 1)
+      return false;
 
     if (nextSalahAfter() < Duration(minutes: 5)) {
       return true;
@@ -498,7 +541,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     if (nextSalahIndex() != nextIqamaIndex()) return true;
 
     /// we are in time between iqama end and azkar start
-    if (now.isBefore(salahAndAzkarEndTime) && now.isAfter(lastIqamaTime)) return true;
+    if (now.isBefore(salahAndAzkarEndTime) && now.isAfter(lastIqamaTime))
+      return true;
 
     return false;
   }
@@ -509,7 +553,8 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       final endDate = DateTime.tryParse(element.endDate ?? '');
       final now = mosqueDate();
 
-      final inTime = now.isAfter(startDate ?? DateTime(2000)) && now.isBefore(endDate ?? DateTime(3000));
+      final inTime = now.isAfter(startDate ?? DateTime(2000)) &&
+          now.isBefore(endDate ?? DateTime(3000));
 
       /// on offline mode we don't show videos
       if (element.video != null && !isOnline) return false;
