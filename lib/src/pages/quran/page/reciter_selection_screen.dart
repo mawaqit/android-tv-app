@@ -61,8 +61,7 @@ class AudioControlWidget extends ConsumerWidget {
 
             return scheduleState.when(
               data: (schedule) {
-                final isWithinTime = _isWithinScheduledTime(
-                    schedule.startTime, schedule.endTime);
+                final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
 
                 final shouldShow = schedule.isScheduleEnabled && isWithinTime;
 
@@ -75,14 +74,10 @@ class AudioControlWidget extends ConsumerWidget {
                   child: FloatingActionButton(
                     focusNode: scheduleListeningFocusNode,
                     focusColor: Theme.of(context).primaryColor,
-                    backgroundColor: state.status == AudioStatus.playing
-                        ? Colors.red
-                        : Colors.black.withOpacity(.5),
+                    backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
                     child: Icon(
                       color: Colors.white,
-                      state.status == AudioStatus.playing
-                          ? Icons.pause
-                          : Icons.play_arrow,
+                      state.status == AudioStatus.playing ? Icons.pause : Icons.play_arrow,
                       size: iconSize,
                     ),
                     onPressed: () {
@@ -213,8 +208,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     });
     var keyboardVisibilityController = KeyboardVisibilityController();
 
-    keyboardSubscription =
-        keyboardVisibilityController.onChange.listen((bool visible) {
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         final isEmptyList = ref.read(reciteNotifierProvider).maybeWhen(
               data: (reciter) => reciter.filteredReciters.isEmpty,
@@ -231,16 +225,12 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       }
     });
 
-    changeReadingModeFocusNode =
-        FocusNode(debugLabel: 'change_reading_mode_focus_node');
-    scheduleListeningFocusNode =
-        FocusNode(debugLabel: 'scheduleListeningFocusNode');
+    changeReadingModeFocusNode = FocusNode(debugLabel: 'change_reading_mode_focus_node');
+    scheduleListeningFocusNode = FocusNode(debugLabel: 'scheduleListeningFocusNode');
     favoriteFocusNode = FocusNode(debugLabel: 'favorite_focus_node');
 
-    reciteTypeFocusScopeNode =
-        FocusScopeNode(debugLabel: 'reciter_type_focus_scope_node');
-    reciteFocusScopeNode =
-        FocusScopeNode(debugLabel: 'reciter_focus_scope_node');
+    reciteTypeFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_type_focus_scope_node');
+    reciteFocusScopeNode = FocusScopeNode(debugLabel: 'reciter_focus_scope_node');
 
     _tabController = TabController(length: 2, vsync: this);
 
