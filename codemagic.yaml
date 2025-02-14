@@ -106,7 +106,3 @@ workflows:
       - flutter_drive.log
       - test-results/*
 
-    publishing:
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: $GOOGLE_PLAY_TRACK
