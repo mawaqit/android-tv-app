@@ -2,7 +2,7 @@ name: Check source code quality
 
 on:
   pull_request:
-    branches:
+    branches: 
       - main
       - 'release-*'
 jobs:
@@ -16,7 +16,6 @@ jobs:
         with:
           channel: "stable"
           flutter-version: "3.27.3"
-
       - run: flutter --version
 
       # Check for any formatting issues in the code.
