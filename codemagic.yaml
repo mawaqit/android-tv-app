@@ -1,22 +1,6 @@
-# Reusable environment configuration using YAML anchors
-_android_env: &android_env
-  flutter: 3.13.9
-  vars: &common_vars
-    PACKAGE_NAME: "com.mawaqit.androidtv"
-    GOOGLE_PLAY_TRACK: internal
-  groups: &common_groups
-    - google_credentials
-    - aws_credentials
-    - GITHUB
-    - APP
-
 workflows:
-  # Combined Build, Test, and Deploy Workflow
   android-tv:
-    name: Android TV Build and Deploy
-    max_build_duration: 90
-    environment:
-      <<: *android_env
+    name: Building and deploying android TV application
     triggering:
       events:
         - tag
@@ -24,88 +8,102 @@ workflows:
         - pattern: main
           include: true
           source: true
+
       cancel_previous_builds: true
+
+    environment:
+      flutter: 3.13.9
+      vars:
+        PACKAGE_NAME: "com.mawaqit.androidtv"
+        GOOGLE_PLAY_TRACK: internal
+
+      android_signing:
+        - Mawaqit Mobile App + Android TV Android keystore
+
+      groups:
+        - google_credentials
+        - aws_credentials
+        - GITHUB
+        - APP
+
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - $HOME/.gradle/caches
-        - android/.gradle
-        - android/app/build/intermediates
-        - .dart_tool/build
-        - .dart_tool/package_config.json
+
     scripts:
-      - name: Set version
+      - name: Retrieve version
         script: |
-          set -euo pipefail
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
-
-          # Validate version numbers
-          if [ -z "${VERSION}" ] || [ -z "${BUILD_NUMBER}" ]; then
-            echo "Version or build number is empty"
-            exit 1
-          fi
-
-          # Export for later steps
           echo "VERSION=$VERSION" >> $CM_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
 
+      - name: Test version
+        script: |
+          echo "App version: $VERSION"
+          echo "BUILD NUMBER: $BUILD_NUMBER"
+
+          if [ -z ${VERSION} ]; then
+           echo "Version is empty, will not build"
+           exit 1
+          fi
+          if [ -z ${BUILD_NUMBER} ]; then
+           echo "BUILD NUMBER is empty, will not build"
+           exit 1
+          fi
+
       - name: Install dependencies
         script: |
-          set -euo pipefail
           flutter pub get
           dart run build_runner build
-
       - name: Run flutter Unit tests
         script: |
-          set -euo pipefail
           mkdir -p test-results
-          flutter test \
-            --machine \
-            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY \
+          flutter test  \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY  \
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            > test-results/test-report.json
-        test_report: test-results/test-report.json
+          > test-results/results.json
 
-      - name: Build artifacts
+      - name: Build AAB with Flutter
         script: |
-          set -euo pipefail
-          # Build AAB
           flutter build appbundle --release \
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
             --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
 
-          # Build APK
+      - name: Build APK with Flutter
+        script: |
           flutter build apk --release \
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
             --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
 
-      - name: Prepare artifacts
+      - name: Copy artifacts
         script: |
-          set -euo pipefail
-          mkdir -p build/artifacts
+          mkdir build/artifacts;
           cp build/app/outputs/bundle/release/app-release.aab build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab
           cp build/app/outputs/flutter-apk/app-release.apk build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
 
-      - name: Deploy to S3
+      - name: Upload to AWS S3 bucket
         script: |
-          set -euo pipefail
           aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/tv/apk/
 
-      - name: Upload to GitHub Release
+      - name: Upload apk to the Github release
         script: |
-          set -euo pipefail
-          if [ ! -z "${CM_TAG}" ]; then
-            gh release upload "${CM_TAG}" build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+          if [ -z ${CM_TAG} ]; then
+           echo "Not a tag build, will not upload apk"
+           exit 0
           fi
+
+          gh release upload "${CM_TAG}" build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
 
     artifacts:
       - build/artifacts/*
       - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
       - test-results/*
 
     publishing:
