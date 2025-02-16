@@ -26,10 +26,6 @@ workflows:
         - GITHUB
         - APP
 
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - $HOME/.gradle/caches
 
     scripts:
       - name: Retrieve version
