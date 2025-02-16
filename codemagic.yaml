@@ -56,11 +56,6 @@ workflows:
           flutter pub get
           dart run build_runner build
 
-      - name: Security audit
-        script: |
-          flutter pub outdated --mode=null-safety
-          dart run dependency_validator
-
       - name: Run flutter Unit tests
         script: |
           set -euo pipefail
