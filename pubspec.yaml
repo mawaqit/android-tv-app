@@ -146,7 +146,7 @@ dependencies:
   notification_overlay:
     git:
       url: https://github.com/mawaqit/android-tv-notification
-      ref: main
+      ref: bc40a8e4e669c7b31e0363169ae29373aed65328
 
   percent_indicator: ^4.2.3
 
