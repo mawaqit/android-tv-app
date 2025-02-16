@@ -75,7 +75,8 @@ workflows:
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY \
+            --no-tree-shake-icons
 
       - name: Copy artifacts
         script: |
