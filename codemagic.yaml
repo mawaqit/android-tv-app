@@ -11,10 +11,10 @@ _android_env: &android_env
     - APP
 
 workflows:
-  # Version Calculation Workflow
-  version-calculation:
-    name: Version determination
-    max_build_duration: 30
+  # Combined Build, Test, and Deploy Workflow
+  android-tv:
+    name: Android TV Build and Deploy
+    max_build_duration: 90
     environment:
       <<: *android_env
     triggering:
@@ -46,26 +46,10 @@ workflows:
             exit 1
           fi
 
-          # Export for downstream workflows
+          # Export for later steps
           echo "VERSION=$VERSION" >> $CM_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
 
-  # Build and Test Workflow
-  build-artifacts:
-    name: Build and test
-    needs: version-calculation
-    max_build_duration: 60
-    environment:
-      <<: *android_env
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - $HOME/.gradle/caches
-        - android/.gradle
-        - android/app/build/intermediates
-        - .dart_tool/build
-        - .dart_tool/package_config.json
-    scripts:
       - name: Install dependencies
         script: |
           set -euo pipefail
@@ -112,40 +96,24 @@ workflows:
           cp build/app/outputs/bundle/release/app-release.aab build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab
           cp build/app/outputs/flutter-apk/app-release.apk build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
 
+      - name: Deploy to S3
+        script: |
+          set -euo pipefail
+          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/tv/apk/
+
+      - name: Upload to GitHub Release
+        script: |
+          set -euo pipefail
+          if [ ! -z "${CM_TAG}" ]; then
+            gh release upload "${CM_TAG}" build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+          fi
+
     artifacts:
       - build/artifacts/*
       - build/**/outputs/**/mapping.txt
       - test-results/*
 
-  # Deployment Workflow
-  deployment:
-    name: Deploy to platforms
-    needs: build-artifacts
-    max_build_duration: 30
-    environment:
-      <<: *android_env
-
     publishing:
-      # Google Play Store deployment
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: $GOOGLE_PLAY_TRACK
-
-      # S3 deployment
-      s3:
-        access_key: $AWS_ACCESS_KEY_ID
-        secret_key: $AWS_SECRET_ACCESS_KEY
-        bucket: cdn.mawaqit.net
-        region: eu-west-1
-        paths:
-          - build/artifacts/*.apk
-          - build/artifacts/*.aab
-
-      # GitHub Release
-      github:
-        token: $GITHUB_TOKEN
-        draft: false
-        prerelease: false
-        files:
-          - build/artifacts/*.apk
-          - build/artifacts/*.aab
