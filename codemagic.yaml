@@ -10,20 +10,6 @@ _android_env: &android_env
     - GITHUB
     - APP
 
-# Reusable cache configuration
-_cache_config: &cache_config
-  key:
-    files:
-      - pubspec.lock
-      - android/build.gradle
-  paths:
-    - $FLUTTER_ROOT/.pub-cache
-    - $HOME/.gradle/caches
-    - android/.gradle
-    - android/app/build/intermediates
-    - .dart_tool/build
-    - .dart_tool/package_config.json
-
 workflows:
   # Version Calculation Workflow
   version-calculation:
@@ -40,7 +26,13 @@ workflows:
           source: true
       cancel_previous_builds: true
     cache:
-      <<: *cache_config
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.gradle/caches
+        - android/.gradle
+        - android/app/build/intermediates
+        - .dart_tool/build
+        - .dart_tool/package_config.json
     scripts:
       - name: Set version
         script: |
@@ -66,7 +58,13 @@ workflows:
     environment:
       <<: *android_env
     cache:
-      <<: *cache_config
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.gradle/caches
+        - android/.gradle
+        - android/app/build/intermediates
+        - .dart_tool/build
+        - .dart_tool/package_config.json
     scripts:
       - name: Install dependencies
         script: |
