@@ -1,6 +1,36 @@
+# Reusable environment configuration using YAML anchors
+_android_env: &android_env
+  flutter: 3.13.9
+  vars: &common_vars
+    PACKAGE_NAME: "com.mawaqit.androidtv"
+    GOOGLE_PLAY_TRACK: internal
+  groups: &common_groups
+    - google_credentials
+    - aws_credentials
+    - GITHUB
+    - APP
+
+# Reusable cache configuration
+_cache_config: &cache_config
+  key:
+    files:
+      - pubspec.lock
+      - android/build.gradle
+  paths:
+    - $FLUTTER_ROOT/.pub-cache
+    - $HOME/.gradle/caches
+    - android/.gradle
+    - android/app/build/intermediates
+    - .dart_tool/build
+    - .dart_tool/package_config.json
+
 workflows:
-  android-tv:
-    name: Building and deploying android TV application
+  # Version Calculation Workflow
+  version-calculation:
+    name: Version determination
+    max_build_duration: 30
+    environment:
+      <<: *android_env
     triggering:
       events:
         - tag
@@ -8,105 +38,116 @@ workflows:
         - pattern: main
           include: true
           source: true
-
       cancel_previous_builds: true
-
-    environment:
-      flutter: 3.13.9
-      vars:
-        PACKAGE_NAME: "com.mawaqit.androidtv"
-        GOOGLE_PLAY_TRACK: internal
-
-      android_signing:
-        - Mawaqit Mobile App + Android TV Android keystore
-
-      groups:
-        - google_credentials
-        - aws_credentials
-        - GITHUB
-        - APP
-
     cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - $HOME/.gradle/caches
-
+      <<: *cache_config
     scripts:
-      - name: Retrieve version
+      - name: Set version
         script: |
+          set -euo pipefail
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+
+          # Validate version numbers
+          if [ -z "${VERSION}" ] || [ -z "${BUILD_NUMBER}" ]; then
+            echo "Version or build number is empty"
+            exit 1
+          fi
+
+          # Export for downstream workflows
           echo "VERSION=$VERSION" >> $CM_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
 
-      - name: Test version
-        script: |
-          echo "App version: $VERSION"
-          echo "BUILD NUMBER: $BUILD_NUMBER"
-
-          if [ -z ${VERSION} ]; then
-           echo "Version is empty, will not build"
-           exit 1
-          fi
-          if [ -z ${BUILD_NUMBER} ]; then
-           echo "BUILD NUMBER is empty, will not build"
-           exit 1
-          fi
-
+  # Build and Test Workflow
+  build-artifacts:
+    name: Build and test
+    needs: version-calculation
+    max_build_duration: 60
+    environment:
+      <<: *android_env
+    cache:
+      <<: *cache_config
+    scripts:
       - name: Install dependencies
         script: |
+          set -euo pipefail
           flutter pub get
           dart run build_runner build
+
+      - name: Security audit
+        script: |
+          flutter pub outdated --mode=null-safety
+          dart run dependency_validator
+
       - name: Run flutter Unit tests
         script: |
+          set -euo pipefail
           mkdir -p test-results
-          flutter test  \
-            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY  \
+          flutter test \
+            --machine \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY \
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-          > test-results/results.json
+            > test-results/test-report.json
+        test_report: test-results/test-report.json
 
-      - name: Build AAB with Flutter
+      - name: Build artifacts
         script: |
+          set -euo pipefail
+          # Build AAB
           flutter build appbundle --release \
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
             --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
 
-      - name: Build APK with Flutter
-        script: |
+          # Build APK
           flutter build apk --release \
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
             --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
 
-      - name: Copy artifacts
+      - name: Prepare artifacts
         script: |
-          mkdir build/artifacts;
+          set -euo pipefail
+          mkdir -p build/artifacts
           cp build/app/outputs/bundle/release/app-release.aab build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab
           cp build/app/outputs/flutter-apk/app-release.apk build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
-
-      - name: Upload to AWS S3 bucket
-        script: |
-          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/tv/apk/
-
-      - name: Upload apk to the Github release
-        script: |
-          if [ -z ${CM_TAG} ]; then
-           echo "Not a tag build, will not upload apk"
-           exit 0
-          fi
-
-          gh release upload "${CM_TAG}" build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
 
     artifacts:
       - build/artifacts/*
       - build/**/outputs/**/mapping.txt
-      - flutter_drive.log
       - test-results/*
 
+  # Deployment Workflow
+  deployment:
+    name: Deploy to platforms
+    needs: build-artifacts
+    max_build_duration: 30
+    environment:
+      <<: *android_env
+
     publishing:
+      # Google Play Store deployment
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: $GOOGLE_PLAY_TRACK
+
+      # S3 deployment
+      s3:
+        access_key: $AWS_ACCESS_KEY_ID
+        secret_key: $AWS_SECRET_ACCESS_KEY
+        bucket: cdn.mawaqit.net
+        region: eu-west-1
+        paths:
+          - build/artifacts/*.apk
+          - build/artifacts/*.aab
+
+      # GitHub Release
+      github:
+        token: $GITHUB_TOKEN
+        draft: false
+        prerelease: false
+        files:
+          - build/artifacts/*.apk
+          - build/artifacts/*.aab
