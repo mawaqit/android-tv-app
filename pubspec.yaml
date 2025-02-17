@@ -104,7 +104,7 @@ dependencies:
   sizer: ^2.0.15
 
   timeago_flutter: ^3.4.0
-  timezone:
+  timezone: ^0.9.4
   wifi_scan: ^0.4.1
 
   #  media
