@@ -17,9 +17,9 @@ workflows:
         GOOGLE_PLAY_TRACK: internal
 
       android_signing:
-        debug: true    
-        jks_build_type: release  
-        in_memory: true  
+        - debug: true    
+          jks_build_type: release  
+          in_memory: true  
 
       groups:
         - google_credentials
