@@ -90,7 +90,7 @@ flutter {
 }
 
 dependencies {
-  ext.kotlin_version = '1.8.0'
+  ext.kotlin_version = '1.5.1'
   // FIREBASE PACKAGES
   implementation 'com.android.support:multidex:1.0.3'
 
