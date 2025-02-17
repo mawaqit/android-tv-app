@@ -66,14 +66,6 @@ workflows:
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
           > test-results/results.json
 
-      - name: Build AAB with Flutter
-        script: |
-          flutter build appbundle --release \
-            --build-name=$VERSION \
-            --build-number=$BUILD_NUMBER \
-            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
-
       - name: Build APK with Flutter
         script: |
           flutter build apk --release
