@@ -67,8 +67,6 @@ android {
         keyPassword keystoreProperties['keyPassword']
         storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
         storePassword keystoreProperties['storePassword']
-      }
-
     }
 //        debug {
 //            storeFile file(storeFile_)
