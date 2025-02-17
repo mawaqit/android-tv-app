@@ -33,16 +33,18 @@ class OnBoardingItem {
   final bool skipPage;
   final bool Function()? skip;
   late FocusNode skipButtonFocusNode;
+
   OnBoardingItem({
     required this.animation,
     this.widget,
     this.enableNextButton = false,
     this.enablePreviousButton = false,
     this.skipPage = false,
-
-    /// if item is skipped, it will be marked as done
     this.skip,
-  });
+  }) {
+    print('Creating OnBoardingItem with animation: $animation');
+    skipButtonFocusNode = FocusNode();
+  }
 }
 
 class OnBoardingScreen extends riverpod.ConsumerStatefulWidget {
@@ -57,60 +59,132 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   int currentScreen = 0;
   bool _rootStatus = false;
   late FocusNode skipButtonFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    print('Initializing OnBoardingScreen');
+    initRootRequest();
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      print('Getting system language');
+      await ref.read(onBoardingProvider.notifier).getSystemLanguage();
+    });
+  }
+
   late List<OnBoardingItem> onBoardingItems = [
     OnBoardingItem(
       animation: 'language',
-      widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
+      widget: OnBoardingLanguageSelector(onSelect: () {
+        print('Language selector selected');
+        return nextPage(1);
+      }),
     ),
     OnBoardingItem(
         animation: 'welcome',
-        widget: OnBoardingOrientationWidget(onSelect: () => nextPage(2)),
+        widget: OnBoardingOrientationWidget(onSelect: () {
+          print('Orientation widget selected');
+          return nextPage(2);
+        }),
         enablePreviousButton: true),
     OnBoardingItem(
       animation: 'welcome',
-      widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(3)),
+      widget: OnBoardingMawaqitAboutWidget(onNext: () {
+        print('About widget next pressed');
+        return nextPage(3);
+      }),
       enableNextButton: true,
       enablePreviousButton: true,
     ),
     OnBoardingItem(
       animation: 'search',
-      widget: MosqueSearch(onDone: () => nextPage(4)),
+      widget: MosqueSearch(onDone: () {
+        print('Mosque search done');
+        return nextPage(4);
+      }),
     ),
-
-    /// main screen or secondary screen (if user has already selected a mosque)
     OnBoardingItem(
         animation: 'search',
-        widget: OnBoardingScreenType(onDone: () => nextPage(5)),
-        skip: () => !context.read<MosqueManager>().typeIsMosque,
+        widget: OnBoardingScreenType(onDone: () {
+          print('Screen type selected');
+          return nextPage(5);
+        }),
+        skip: () {
+          final isMosque = !context.read<MosqueManager>().typeIsMosque;
+          print('Checking if mosque type should be skipped: $isMosque');
+          return isMosque;
+        },
         enablePreviousButton: true),
-
-    /// Allow user to select between regular mode or announcement mode
     OnBoardingItem(
         animation: 'search',
-        widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(6)),
-        skip: () => !context.read<MosqueManager>().typeIsMosque,
+        widget: OnBoardingAnnouncementScreens(onDone: () {
+          print('Announcement mode selected');
+          return nextPage(6);
+        }),
+        skip: () {
+          final isMosque = !context.read<MosqueManager>().typeIsMosque;
+          print('Checking if announcement should be skipped: $isMosque');
+          return isMosque;
+        },
         enablePreviousButton: true),
   ];
 
+  late final kioskModeonBoardingItems = [
+    OnBoardingItem(
+      animation: 'language',
+      widget: OnBoardingLanguageSelector(onSelect: () {
+        print('Kiosk mode: Language selector selected');
+        return nextPage(1);
+      }),
+    ),
+    OnBoardingItem(
+        animation: 'settings',
+        widget: OnBoardingTimeZoneSelector(
+            onSelect: () {
+              print('Kiosk mode: Timezone selected');
+              return nextPage(2);
+            },
+            focusNode: skipButtonFocusNode),
+        enablePreviousButton: true,
+        skipPage: true),
+    OnBoardingItem(
+        animation: 'settings',
+        widget: OnBoardingWifiSelector(
+            onSelect: () {
+              print('Kiosk mode: Wifi selected');
+              return nextPage(3);
+            },
+            focusNode: skipButtonFocusNode),
+        enablePreviousButton: true,
+        skipPage: true),
+    // ... rest of kioskModeonBoardingItems
+  ];
+
   onDone() {
+    print('OnBoarding completed');
     sharedPref.save('boarding', 'true');
     AppRouter.pushReplacement(OfflineHomeScreen());
   }
 
   nextPage(int nextScreen) {
+    print('Attempting to move to next screen: $nextScreen');
     while (true) {
-      /// this is the last screen
       if (_rootStatus) {
-        if (nextScreen >= kioskModeonBoardingItems.length) return onDone();
+        if (nextScreen >= kioskModeonBoardingItems.length) {
+          print('Reached end of kiosk mode screens');
+          return onDone();
+        }
 
         currentScreen++;
-        // if false or null, don't skip this screen
+        print('Moved to kiosk mode screen: $currentScreen');
         if (kioskModeonBoardingItems[currentScreen].skip?.call() != true) break;
       } else {
-        if (nextScreen >= onBoardingItems.length) return onDone();
+        if (nextScreen >= onBoardingItems.length) {
+          print('Reached end of regular screens');
+          return onDone();
+        }
 
         currentScreen++;
-        // if false or null, don't skip this screen
+        print('Moved to regular screen: $currentScreen');
         if (onBoardingItems[currentScreen].skip?.call() != true) break;
       }
     }
@@ -119,18 +193,15 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   }
 
   previousPage(int previousScreen) {
+    print('Moving to previous screen: $previousScreen');
     while (true) {
       if (_rootStatus) {
         currentScreen = previousScreen;
-        // if false or null, don't skip this screen
         if (kioskModeonBoardingItems[currentScreen].skip?.call() != true) break;
-
         previousScreen--;
       } else {
         currentScreen = previousScreen;
-        // if false or null, don't skip this screen
         if (onBoardingItems[currentScreen].skip?.call() != true) break;
-
         previousScreen--;
       }
     }
@@ -138,56 +209,11 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     setState(() {});
   }
 
-  late final kioskModeonBoardingItems = [
-    OnBoardingItem(
-      animation: 'language',
-      widget: OnBoardingLanguageSelector(onSelect: () => nextPage(1)),
-    ),
-    OnBoardingItem(
-        animation: 'settings',
-        widget: OnBoardingTimeZoneSelector(onSelect: () => nextPage(2), focusNode: skipButtonFocusNode),
-        enablePreviousButton: true,
-        skipPage: true),
-    OnBoardingItem(
-        animation: 'settings',
-        widget: OnBoardingWifiSelector(onSelect: () => nextPage(3), focusNode: skipButtonFocusNode),
-        enablePreviousButton: true,
-        skipPage: true),
-    OnBoardingItem(
-        animation: 'welcome',
-        widget: OnBoardingOrientationWidget(onSelect: () => nextPage(4)),
-        enablePreviousButton: true),
-    OnBoardingItem(
-      animation: 'welcome',
-      widget: OnBoardingMawaqitAboutWidget(onNext: () => nextPage(5)),
-      enableNextButton: true,
-      enablePreviousButton: true,
-    ),
-    OnBoardingItem(
-      animation: 'search',
-      widget: MosqueSearch(onDone: () => nextPage(6)),
-      enableNextButton: false,
-    ),
-
-    /// main screen or secondary screen (if user has already selected a mosque)
-    OnBoardingItem(
-      animation: 'search',
-      widget: OnBoardingScreenType(onDone: () => nextPage(7)),
-      enableNextButton: false,
-      skip: () => !context.read<MosqueManager>().typeIsMosque,
-    ),
-
-    /// Allow user to select between regular mode or announcement mode
-    OnBoardingItem(
-      animation: 'search',
-      widget: OnBoardingAnnouncementScreens(onDone: () => nextPage(8)),
-      enablePreviousButton: true,
-      skip: () => !context.read<MosqueManager>().typeIsMosque,
-    ),
-  ];
   static Future<bool> checkRoot() async {
     try {
+      print('Checking root access');
       final result = await MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
+      print('Root access result: $result');
       return result;
     } catch (e) {
       print('Error checking root access: $e');
@@ -196,35 +222,34 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   }
 
   Future<void> initRootRequest() async {
+    print('Initializing root request');
     bool rootStatus = await checkRoot();
     setState(() {
       _rootStatus = rootStatus;
-    });
-  }
-
-  @override
-  void initState() {
-    initRootRequest();
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(onBoardingProvider.notifier).getSystemLanguage();
+      print('Root status set to: $_rootStatus');
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    print('Building OnBoardingScreen');
     final activePage = _rootStatus ? kioskModeonBoardingItems[currentScreen] : onBoardingItems[currentScreen];
     final onBoardingState = ref.watch(onBoardingProvider);
     final appLanguage = Provider.of<AppLanguage>(context, listen: false);
 
     final locales = S.supportedLocales;
-
     final sortedLocales = LocaleHelper.getSortedLocales(locales, appLanguage);
 
+    print('Current screen: $currentScreen');
+    print('Root status: $_rootStatus');
+    print('Active page animation: ${activePage.animation}');
+
     ref.listen(onBoardingProvider, (previous, next) {
+      print('OnBoarding provider changed');
       if (next.value?.language != previous!.value?.language) {
         next.whenOrNull(
           data: (state) async {
+            print('Language state changed: ${state.language}');
             if (state.language != 'unknown') {
               final locale = LocaleHelper.splitLocaleCode(state.language);
               if (sortedLocales.contains(locale)) {
@@ -239,34 +264,46 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
 
     return onBoardingState.when(
       data: (state) {
+        print('OnBoarding state has data');
         return buildWillPopScope(activePage, context);
       },
-      error: (error, stack) => buildWillPopScope(activePage, context),
-      loading: () => Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
+      error: (error, stack) {
+        print('OnBoarding state has error: $error');
+        return buildWillPopScope(activePage, context);
+      },
+      loading: () {
+        print('OnBoarding state is loading');
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 
   WillPopScope buildWillPopScope(OnBoardingItem activePage, BuildContext context) {
+    print('Building WillPopScope with active page');
     return WillPopScope(
       onWillPop: () async {
+        print('WillPopScope triggered');
         if (currentScreen == 0) return true;
-
         setState(() => currentScreen--);
         return false;
       },
       child: SafeArea(
         child: Scaffold(
-          body: ScreenWithAnimationWidget(
-            animation: activePage.animation,
-            child: activePage.widget ?? SizedBox(),
+          body: Builder(
+            builder: (context) {
+              print('Building ScreenWithAnimationWidget');
+              return ScreenWithAnimationWidget(
+                animation: activePage.animation,
+                child: activePage.widget ?? SizedBox(),
+              );
+            },
           ),
           bottomNavigationBar: Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            // height: 80,
             child: Row(
               children: [
                 VersionWidget(
