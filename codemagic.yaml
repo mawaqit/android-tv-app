@@ -15,12 +15,6 @@ workflows:
       vars:
         PACKAGE_NAME: "com.mawaqit.androidtv"
         GOOGLE_PLAY_TRACK: internal
-
-      android_signing:
-        - debug: true    
-          jks_build_type: release  
-          in_memory: true  
-
       groups:
         - google_credentials
         - aws_credentials
@@ -28,30 +22,31 @@ workflows:
         - APP
 
     scripts:
-      - name: Set up keystore
+      - name: Generate keystore
         script: |
-          echo "Generating debug keystore..."
-          keytool -genkeypair \
+          echo "Generating keystore..."
+          keytool -genkey -v \
+            -keystore keystore.jks \
             -alias upload \
             -keyalg RSA \
             -keysize 2048 \
-            -validity 9125 \
-            -keystore $CM_KEYSTORE_PATH \
-            -storepass $CM_KEYSTORE_PASSWORD \
-            -keypass $CM_KEY_PASSWORD \
-            -dname "CN=Mawaqit,O=Mawaqit,L=Unknown,C=US"
+            -validity 10000 \
+            -dname "CN=Mawaqit,O=Mawaqit,L=Unknown,C=US" \
+            -storepass android \
+            -keypass android
           
-          echo "keystore_path=$CM_KEYSTORE_PATH" >> $CM_ENV
-          echo "key_alias=upload" >> $CM_ENV
-          echo "key_password=$CM_KEY_PASSWORD" >> $CM_ENV
-          echo "store_password=$CM_KEYSTORE_PASSWORD" >> $CM_ENV
+          # Export the keystore properties
+          echo "storeFile=$(pwd)/keystore.jks" >> $CM_BUILD_DIR/android/key.properties
+          echo "storePassword=android" >> $CM_BUILD_DIR/android/key.properties
+          echo "keyAlias=upload" >> $CM_BUILD_DIR/android/key.properties
+          echo "keyPassword=android" >> $CM_BUILD_DIR/android/key.properties
 
       - name: Retrieve version
         script: |
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
           echo "VERSION=1.22.0" >> $CM_ENV
-          echo "BUILD_NUMBER=3" >> $CM_ENV
+          echo "BUILD_NUMBER=2" >> $CM_ENV
 
       - name: Debug Environment Variables
         script: |
@@ -87,7 +82,13 @@ workflows:
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
           > test-results/results.json
 
-
+      - name: Build AAB with Flutter
+        script: |
+          flutter build appbundle --release \
+            --build-name=$VERSION \
+            --build-number=$BUILD_NUMBER \
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
 
       - name: Build APK with Flutter
         script: |
@@ -118,3 +119,7 @@ workflows:
       - flutter_drive.log
       - test-results/*
 
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: $GOOGLE_PLAY_TRACK
