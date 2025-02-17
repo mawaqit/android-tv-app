@@ -41,7 +41,7 @@ workflows:
           find . -name "Podfile.lock" -delete  # Additional iOS cleanup [3]
           find . -name "*.lock" -delete
           flutter pub cache repair  # Fix corrupted dependencies [4]
-          ./gradlew clean  # Full Gradle cleanup [8]
+#          ./gradlew clean  # Full Gradle cleanup [8]
 
       - name: Version Management
         script: |
