@@ -36,7 +36,6 @@
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/
-**/android/gradlew
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
@@ -74,6 +73,10 @@
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+!gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
+!gradlew
+!gradlew.bat
 /ios/Flutter/.last_build_id
 #Me
 .flutter-plugins-dependencies
