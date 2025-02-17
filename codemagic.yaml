@@ -31,8 +31,8 @@ workflows:
         script: |
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
-          echo "VERSION=$VERSION" >> $CM_ENV
-          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
+          echo "VERSION=1.22.0" >> $CM_ENV
+          echo "BUILD_NUMBER=2" >> $CM_ENV
       - name: Debug Environment Variables
         script: |
           echo "MAWAQIT_API_KEY: $MAWAQIT_API_KEY"
@@ -75,9 +75,7 @@ workflows:
 
       - name: Build APK with Flutter
         script: |
-          flutter build apk --release \
-            --build-name=1.22.0 \
-            --build-number=2 \
+          flutter build apk --release
 
       - name: Copy artifacts
         script: |
