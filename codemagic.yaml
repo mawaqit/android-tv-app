@@ -1,6 +1,7 @@
 workflows:
   android-tv:
     name: Building and deploying android TV application
+    instance_type: windows_x2
     triggering:
       events:
         - tag
