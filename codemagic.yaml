@@ -72,11 +72,8 @@ workflows:
       - name: Build APK with Flutter
         script: |
           flutter build apk --release \
-            --build-name=$VERSION \
-            --build-number=$BUILD_NUMBER \
-            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY \
-            --no-tree-shake-icons
+            --build-name=1.22.0 \
+            --build-number=2 \
 
       - name: Copy artifacts
         script: |
