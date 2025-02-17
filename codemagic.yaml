@@ -1,7 +1,6 @@
 workflows:
   android-tv:
     name: Building and deploying android TV application
-    instance_type: windows_x2
     triggering:
       events:
         - tag
@@ -9,7 +8,6 @@ workflows:
         - pattern: main
           include: true
           source: true
-
       cancel_previous_builds: true
 
     environment:
@@ -19,7 +17,9 @@ workflows:
         GOOGLE_PLAY_TRACK: internal
 
       android_signing:
-        - Mawaqit Mobile App + Android TV Android keystore
+        debug: true    
+        jks_build_type: release  
+        in_memory: true  
 
       groups:
         - google_credentials
@@ -28,18 +28,38 @@ workflows:
         - APP
 
     scripts:
+      - name: Set up keystore
+        script: |
+          echo "Generating debug keystore..."
+          keytool -genkeypair \
+            -alias upload \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 9125 \
+            -keystore $CM_KEYSTORE_PATH \
+            -storepass $CM_KEYSTORE_PASSWORD \
+            -keypass $CM_KEY_PASSWORD \
+            -dname "CN=Mawaqit,O=Mawaqit,L=Unknown,C=US"
+          
+          echo "keystore_path=$CM_KEYSTORE_PATH" >> $CM_ENV
+          echo "key_alias=upload" >> $CM_ENV
+          echo "key_password=$CM_KEY_PASSWORD" >> $CM_ENV
+          echo "store_password=$CM_KEYSTORE_PASSWORD" >> $CM_ENV
+
       - name: Retrieve version
         script: |
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
           echo "VERSION=1.22.0" >> $CM_ENV
-          echo "BUILD_NUMBER=2" >> $CM_ENV
+          echo "BUILD_NUMBER=3" >> $CM_ENV
+
       - name: Debug Environment Variables
         script: |
           echo "MAWAQIT_API_KEY: $MAWAQIT_API_KEY"
           echo "MAWAQIT_SENTRY_DNS: $MAWAQIT_SENTRY_DNS"
           echo "VERSION: $VERSION"
           echo "BUILD_NUMBER: $BUILD_NUMBER"
+
       - name: Test version
         script: |
           echo "App version: $VERSION"
@@ -58,6 +78,7 @@ workflows:
         script: |
           flutter pub get
           dart run build_runner build
+
       - name: Run flutter Unit tests
         script: |
           mkdir -p test-results
@@ -65,6 +86,8 @@ workflows:
             --dart-define mawaqit.api.key=$MAWAQIT_API_KEY  \
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
           > test-results/results.json
+
+
 
       - name: Build APK with Flutter
         script: |
@@ -95,7 +118,3 @@ workflows:
       - flutter_drive.log
       - test-results/*
 
-    publishing:
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: $GOOGLE_PLAY_TRACK
