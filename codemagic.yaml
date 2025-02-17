@@ -35,8 +35,8 @@ workflows:
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
       - name: Debug Environment Variables
         script: |
-          echo "MAWAQIT_API_KEY is set: ${MAWAQIT_API_KEY:+yes}"
-          echo "MAWAQIT_SENTRY_DNS is set: ${MAWAQIT_SENTRY_DNS:+yes}"
+          echo "MAWAQIT_API_KEY: $MAWAQIT_API_KEY"
+          echo "MAWAQIT_SENTRY_DNS: $MAWAQIT_SENTRY_DNS"
           echo "VERSION: $VERSION"
           echo "BUILD_NUMBER: $BUILD_NUMBER"
       - name: Test version
