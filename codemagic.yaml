@@ -81,6 +81,25 @@ workflows:
             --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
             --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
 
+      - name: Copy artifacts
+        script: |
+          mkdir build/artifacts;
+          cp build/app/outputs/bundle/release/app-release.aab build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab
+          cp build/app/outputs/flutter-apk/app-release.apk build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+
+      - name: Upload to AWS S3 bucket
+        script: |
+          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/tv/apk/
+
+      - name: Upload apk to the Github release
+        script: |
+          if [ -z ${CM_TAG} ]; then
+           echo "Not a tag build, will not upload apk"
+           exit 0
+          fi
+
+          gh release upload "${CM_TAG}" build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+
     artifacts:
       - build/artifacts/*
       - build/**/outputs/**/mapping.txt
