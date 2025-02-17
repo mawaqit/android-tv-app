@@ -50,11 +50,7 @@ workflows:
 
       - name: Debug Environment Variables
         script: |
-          echo "MAWAQIT_API_KEY: $MAWAQIT_API_KEY"
-          echo "MAWAQIT_SENTRY_DNS: $MAWAQIT_SENTRY_DNS"
-          echo "VERSION: $VERSION"
-          echo "BUILD_NUMBER: $BUILD_NUMBER"
-
+          flutter doctor --verbose
       - name: Test version
         script: |
           echo "App version: $VERSION"
