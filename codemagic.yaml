@@ -26,7 +26,6 @@ workflows:
         - GITHUB
         - APP
 
-
     scripts:
       - name: Retrieve version
         script: |
@@ -34,7 +33,12 @@ workflows:
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
           echo "VERSION=$VERSION" >> $CM_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
-
+      - name: Debug Environment Variables
+        script: |
+          echo "MAWAQIT_API_KEY is set: ${MAWAQIT_API_KEY:+yes}"
+          echo "MAWAQIT_SENTRY_DNS is set: ${MAWAQIT_SENTRY_DNS:+yes}"
+          echo "VERSION: $VERSION"
+          echo "BUILD_NUMBER: $BUILD_NUMBER"
       - name: Test version
         script: |
           echo "App version: $VERSION"
