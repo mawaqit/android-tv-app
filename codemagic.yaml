@@ -40,7 +40,18 @@ workflows:
           echo "storePassword=android" >> $CM_BUILD_DIR/android/key.properties
           echo "keyAlias=upload" >> $CM_BUILD_DIR/android/key.properties
           echo "keyPassword=android" >> $CM_BUILD_DIR/android/key.properties
-
+      - name: Show current Gradle version
+        script: |
+          cd android
+          ./gradlew --version
+      - name: Set new Gradle Version
+        script: | 
+          cd android
+          ./gradlew wrapper --gradle-version=8.2
+      - name: Verify new Gradle version
+        script: |
+          cd android
+          ./gradlew --version
       - name: Retrieve version
         script: |
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
