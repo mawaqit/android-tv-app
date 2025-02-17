@@ -30,10 +30,6 @@ workflows:
       cache_paths:
         - $FLUTTER_ROOT-$FLUTTER_VERSION/.pub-cache  # Version-specific isolation [4]
         - $HOME/.gradle-$FLUTTER_VERSION/caches  # Prevent cross-version contamination
-      exclude:
-        - pubspec.lock  # Force fresh resolution [4][7]
-        - .packages
-
     scripts:
       - name: Environment Reset
         script: |
