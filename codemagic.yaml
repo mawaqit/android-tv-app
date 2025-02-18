@@ -57,7 +57,17 @@ workflows:
           # Create directory for signed files
           mkdir -p build/signed
           # Sign APK
-          jarsigner -keystore $CM_KEYSTORE_PATH -storepass $CM_KEYSTORE_PASSWORD -keypass $CM_KEY_PASSWORD build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk $CM_KEY_ALIAS
+          $ANDROID_HOME/build-tools/33.0.0/apksigner sign --ks $CM_KEYSTORE_PATH \
+            --ks-pass pass:$CM_KEYSTORE_PASSWORD \
+            --key-pass pass:$CM_KEY_PASSWORD \
+            --ks-key-alias $CM_KEY_ALIAS \
+            --v2-signing-enabled true \
+            --v3-signing-enabled true \
+            build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+          
+          # Verify APK signature
+          $ANDROID_HOME/build-tools/33.0.0/apksigner verify -v build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+          
           # Move signed files to signed directory
           cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk build/signed/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
       - name: Upload to AWS S3 bucket
