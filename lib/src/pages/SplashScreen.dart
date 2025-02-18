@@ -58,100 +58,166 @@ class _SpashState extends ConsumerState<Splash> {
 
   void initState() {
     super.initState();
-
+    print("[DEBUG][Splash] initState called");
     _initApplication().logPerformance('Init application');
   }
 
   // bool applicationProblem = false;
 
   Future<void> initApplicationUI() async {
+    print("[DEBUG][Splash] Starting initApplicationUI");
     await GlobalConfiguration().loadFromAsset("configuration");
+    print("[DEBUG][Splash] GlobalConfiguration loaded");
 
     Hive.initFlutter();
+    print("[DEBUG][Splash] Hive initialized");
 
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+    print("[DEBUG][Splash] Crashlytics configured");
 
     HttpOverrides.global = MyHttpOverrides();
+    print("[DEBUG][Splash] HTTP overrides set");
+    
     FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
+    print("[DEBUG][Splash] Focus highlight strategy set");
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    print("[DEBUG][Splash] System UI mode set to immersive");
+    
     SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
+      print(
+          "[DEBUG][Splash] System UI change callback triggered - overlays visible: $systemOverlaysAreVisible");
       if (systemOverlaysAreVisible) return;
       await Future.delayed(Duration(seconds: 3));
       SystemChrome.restoreSystemUIOverlays();
+      print("[DEBUG][Splash] System UI overlays restored");
     });
-    _saveScheduledEventsToLocale();
+    
+    print("[DEBUG][Splash] About to save scheduled events to locale");
+    await _saveScheduledEventsToLocale();
+    print("[DEBUG][Splash] Completed initApplicationUI");
   }
 
   Future<void> _saveScheduledEventsToLocale() async {
+    print("[DEBUG][Splash] Starting _saveScheduledEventsToLocale");
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("[DEBUG][Splash] SharedPreferences instance obtained");
 
     logger.d("Saving into local");
-
     prefs.setBool("isEventsSet", false);
+    print("[DEBUG][Splash] isEventsSet saved as false");
   }
 
   Future<void> _initSettings() async {
+    print("[DEBUG][Splash] Starting _initSettings");
     FeatureManagerProvider.initialize(context);
+    print("[DEBUG][Splash] FeatureManagerProvider initialized");
+    
     await context.read<AppLanguage>().fetchLocale();
+    print("[DEBUG][Splash] AppLanguage locale fetched");
+    
     await context.read<MosqueManager>().init().logPerformance("Mosque manager");
+    print("[DEBUG][Splash] MosqueManager initialized");
+    
     MosqueManager.setInstance(context.read<MosqueManager>());
+    print("[DEBUG][Splash] MosqueManager instance set");
   }
 
   Future<bool> loadBoarding() async {
+    print("[DEBUG][Splash] Starting loadBoarding");
     var res = await sharedPref.read("boarding");
-
+    print("[DEBUG][Splash] Boarding value read: $res");
     return res == null;
   }
 
   /// navigates to first screen
   Future<void> _initApplication() async {
+    print("[DEBUG][Splash] Starting _initApplication");
     try {
+      print("[DEBUG][Splash] Calling initApplicationUI");
       await initApplicationUI();
-      var settings = await _initSettings();
+      print("[DEBUG][Splash] initApplicationUI completed");
+      
+      print("[DEBUG][Splash] Calling _initSettings");
+      await _initSettings();
+      print("[DEBUG][Splash] _initSettings completed");
 
+      print("[DEBUG][Splash] Checking boarding status");
       var goBoarding = await loadBoarding();
+      print("[DEBUG][Splash] Boarding status: $goBoarding");
+      
       var mosqueManager = context.read<MosqueManager>();
       bool hasNoMosque = mosqueManager.mosqueUUID == null;
+      print(
+          "[DEBUG][Splash] Has no mosque: $hasNoMosque, UUID: ${mosqueManager.mosqueUUID}");
 
       /// waite for the animation if it is not loaded yet
+      print("[DEBUG][Splash] Waiting for animation to complete");
       await animationFuture.future;
+      print("[DEBUG][Splash] Animation completed");
 
       if (hasNoMosque || goBoarding) {
+        print("[DEBUG][Splash] Navigating to OnBoardingScreen");
         AppRouter.pushReplacement(OnBoardingScreen());
       } else {
+        print("[DEBUG][Splash] Navigating to OfflineHomeScreen");
         AppRouter.pushReplacement(OfflineHomeScreen());
       }
+      
+      print("[DEBUG][Splash] Setting up wakelock timer");
       generateStream(Duration(minutes: 10))
-          .listen((event) => WakelockPlus.enable().catchError(CrashlyticsWrapper.sendException));
+          .listen((event) {
+        print("[DEBUG][Splash] Enabling wakelock");
+        WakelockPlus.enable().catchError((e) {
+          print("[DEBUG][Splash] Error enabling wakelock: $e");
+          CrashlyticsWrapper.sendException;
+        });
+      });
+      
     } on DioError catch (e) {
       if (e.response == null) {
-        print('no internet connection');
-        print(e.requestOptions.uri);
-        setState(() => error = ErrorState.noInternet);
+        print(
+            '[DEBUG][Splash] DioError: no internet connection for ${e.requestOptions.uri}');
+        setState(() {
+          error = ErrorState.noInternet;
+          print("[DEBUG][Splash] Error state set to: $error");
+        });
 
         // mosque not found
       } else {
-        setState(() => error = ErrorState.mosqueNotFound);
+        print(
+            '[DEBUG][Splash] DioError: mosque not found, response: ${e.response}');
+        setState(() {
+          error = ErrorState.mosqueNotFound;
+          print("[DEBUG][Splash] Error state set to: $error");
+        });
         // e.response!.data;
       }
     } catch (e, stack) {
+      print('[DEBUG][Splash] Exception during initialization: $e');
       logger.e(e, stackTrace: stack);
-      setState(() => error = ErrorState.mosqueDataError);
+      setState(() {
+        error = ErrorState.mosqueDataError;
+        print("[DEBUG][Splash] Error state set to: $error");
+      });
       rethrow;
     }
   }
 
   /// reset the app
   void _changeMosque() {
+    print("[DEBUG][Splash] Changing mosque - navigating to OnBoardingScreen");
     AppRouter.pushReplacement(OnBoardingScreen());
   }
 
   Widget build(BuildContext context) {
+    print("[DEBUG][Splash] Building Splash widget, error state: $error");
     RelativeSizes.instance.size = MediaQuery.of(context).size;
+    print("[DEBUG][Splash] Screen size: ${MediaQuery.of(context).size}");
 
     switch (error) {
       case ErrorState.mosqueNotFound:
+        print("[DEBUG][Splash] Rendering mosque not found error screen");
         return ErrorScreen(
           title: S.of(context).reset,
           description: S.of(context).mosqueNotFoundMessage,
@@ -160,6 +226,7 @@ class _SpashState extends ConsumerState<Splash> {
           tryAgainText: S.of(context).changeMosque,
         );
       case ErrorState.noInternet:
+        print("[DEBUG][Splash] Rendering no internet error screen");
         return ErrorScreen(
           title: S.of(context).noInternet,
           description: S.of(context).noInternetMessage,
@@ -167,6 +234,7 @@ class _SpashState extends ConsumerState<Splash> {
           onTryAgain: _initApplication,
         );
       case ErrorState.mosqueDataError:
+        print("[DEBUG][Splash] Rendering mosque data error screen");
         return ErrorScreen(
           title: S.of(context).error,
           description: S.of(context).mosqueErrorMessage,
@@ -174,6 +242,7 @@ class _SpashState extends ConsumerState<Splash> {
           onTryAgain: _initApplication,
         );
       case null:
+        print("[DEBUG][Splash] Rendering normal splash screen");
         break;
     }
 
@@ -192,8 +261,15 @@ class _SpashState extends ConsumerState<Splash> {
                 width: double.infinity,
                 child: SplashScreen.callback(
                   isLoading: false,
-                  onSuccess: (e) => animationFuture.complete(),
-                  onError: (error, stacktrace) => animationFuture.completeError(error, stacktrace),
+                  onSuccess: (e) {
+                    print(
+                        "[DEBUG][Splash] Rive animation completed successfully");
+                    animationFuture.complete();
+                  },
+                  onError: (error, stacktrace) {
+                    print("[DEBUG][Splash] Rive animation error: $error");
+                    animationFuture.completeError(error, stacktrace);
+                  },
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
                   startAnimation: 'idle',
