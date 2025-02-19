@@ -25,7 +25,8 @@ workflows:
       - name: Retrieve version
         script: |
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
-          BUILD_NUMBER=488
+          BUILD_NUMBER=490
+          VERSION=1.19.5
           echo "VERSION=$VERSION" >> $CM_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
       - name: Test version
@@ -43,7 +44,7 @@ workflows:
       - name: Download pre-built AAB and APK
         script: |
           mkdir -p build/artifacts
-          APK_URL="https://files.catbox.moe/yaxe15.apk"
+          APK_URL="https://files.catbox.moe/7pm0a5.apk"
           
           curl -o build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.aab "$AAB_URL"
           curl -o build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk "$APK_URL"
