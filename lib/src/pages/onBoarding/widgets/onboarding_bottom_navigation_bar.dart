@@ -22,9 +22,9 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(onboardingNavigationProvider);
-
     return state.when(
-        data: (data) => Container(
+        data: (data) {
+          return Container(
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
               child: Row(
                 children: [
@@ -85,7 +85,8 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                   ),
                 ],
               ),
-            ),
+            );
+        },
         error: (e, s) => Container(),
         loading: () => Container());
   }

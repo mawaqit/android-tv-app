@@ -329,7 +329,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
             data: (data) {
               return PageView.builder(
                 controller: pageController,
-                itemCount: items.length,
+                itemCount: data.screenFlow.length,
                 physics: NeverScrollableScrollPhysics(),
                 onPageChanged: (index) {
                   setState(() {
@@ -338,7 +338,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                 },
                 itemBuilder: (context, index) {
                   final activePage = items[index];
-                  final screenType = state.value?.screenFlow[index];
+                  final screenType = data.screenFlow[index];
 
                   return switch (screenType) {
                     OnboardingScreenType.mosqueId => ScreenWithAnimationWidget(
@@ -378,3 +378,4 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     );
   }
 }
+
