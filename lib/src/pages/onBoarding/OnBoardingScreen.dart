@@ -12,6 +12,7 @@ import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/InputTypeSelector.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputId.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_id.dart';
@@ -24,6 +25,7 @@ import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_language_selecto
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/state_management/on_boarding/input_selection_provider.dart';
 import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_notifier.dart';
+import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_state.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
@@ -73,8 +75,8 @@ class OnBoardingScreen extends riverpod.ConsumerStatefulWidget {
 
 class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   final sharedPref = SharedPref();
+  final PageController pageController = PageController();
   int currentScreen = 0;
-  bool _rootStatus = false;
   late FocusNode skipButtonFocusNode;
   late FocusNode nextButtonFocusNode;
   late FocusNode previousButtonFocusNode;
@@ -84,8 +86,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchDeviceModel();
-
     nextButtonFocusNode = FocusNode(debugLabel: 'next_button_focus_node');
     previousButtonFocusNode = FocusNode(debugLabel: 'previous_button_focus_node');
     skipButtonFocusNode = FocusNode(debugLabel: 'skip_button_focus_node');
@@ -93,19 +93,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(onBoardingProvider.notifier).getSystemLanguage();
     });
-  }
-// Add this method
-  Future<void> _fetchDeviceModel() async {
-    try {
-      final userData = await Api.prepareUserData();
-      if (userData != null) {
-        setState(() {
-          _deviceModel = userData.$2['model'];
-        });
-      }
-    } catch (e, stackTrace) {
-      logger.e('Error fetching user data: $e', stackTrace: stackTrace);
-    }
   }
 
   List<OnBoardingItem> get kioskModeonBoardingItems {
@@ -198,8 +185,11 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
         skip: () => !context.read<MosqueManager>().typeIsMosque,
       ),
     ];
+    final totalList = [...baseItems, ...countryDependentItems, ...remainingItems];
 
-    return [...baseItems, ...countryDependentItems, ...remainingItems];
+    print('kioskModeonBoardingItems: $totalList');
+
+    return totalList;
   }
 
   late final List<OnBoardingItem> onBoardingItems = [
@@ -276,8 +266,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final items = _rootStatus ? kioskModeonBoardingItems : onBoardingItems;
-    final onBoardingState = ref.watch(onBoardingProvider);
+    final onBoardingState = ref.watch(onboardingNavigationProvider);
     final appLanguage = Provider.of<AppLanguage>(context, listen: false);
     final locales = S.supportedLocales;
     final sortedLocales = LocaleHelper.getSortedLocales(locales, appLanguage);
@@ -298,37 +287,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       }
     });
 
-    ref.listen(inputSelectionProvider, (previous, next) {
-      if (next == InputSelection.withoutId) {
-        Navigator.push(
-          context,
-          PageTransition(
-            child: _deviceModel?.contains("Chromecast") ?? false
-                ? ChromeCastMosqueInputId(onDone: onDone)
-                : MosqueInputId(onDone: onDone),
-            type: PageTransitionType.fade,
-            alignment: Alignment.center,
-          ),
-        );
-      } else {
-        Navigator.push(
-          context,
-          PageTransition(
-            child: _deviceModel!.contains("Chromecast")
-                ? ChromeCastMosqueInputSearch(
-              onDone: onDone,
-            )
-                : MosqueInputSearch(onDone: onDone),
-            type: PageTransitionType.fade,
-            alignment: Alignment.center,
-          ),
-        );
-      }
-    });
-
     return onBoardingState.when(
-      data: (state) => buildPageView(context),
-      error: (error, stack) => buildPageView(context),
+      data: (state) => buildPageView(context, state.isRooted),
+      error: (error, stack) => buildPageView(context, false),
       loading: () => Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -337,10 +298,24 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     );
   }
 
-  Widget buildPageView(BuildContext context) {
-    final items = !_rootStatus ? kioskModeonBoardingItems : onBoardingItems;
+  Widget buildPageView(BuildContext context, bool isRooted) {
+    final items = isRooted ? kioskModeonBoardingItems : onBoardingItems;
     final isLastItem = currentScreen == items.length - 1;
     final state = ref.watch(onboardingNavigationProvider);
+
+    ref.listen<riverpod.AsyncValue<OnboardingNavigationState>>(
+      onboardingNavigationProvider,
+      (previous, next) {
+        next.whenData((state) {
+          if (state.currentScreen != currentScreen && pageController.hasClients) {
+            pageController.jumpToPage(state.currentScreen);
+            setState(() {
+              currentScreen = state.currentScreen;
+            });
+          }
+        });
+      },
+    );
 
     return WillPopScope(
       onWillPop: () async {
@@ -351,23 +326,45 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       child: SafeArea(
         child: Scaffold(
           body: state.when(
-            data: (data) => PageView.builder(
-              controller: data.pageController,
-              itemCount: items.length,
-              physics: NeverScrollableScrollPhysics(),
-              onPageChanged: (index) {
-                setState(() {
-                  currentScreen = index;
-                });
-              },
-              itemBuilder: (context, index) {
-                final activePage = items[index];
-                return ScreenWithAnimationWidget(
-                  animation: activePage.animation,
-                  child: activePage.widget ?? SizedBox(),
-                );
-              },
-            ),
+            data: (data) {
+              return PageView.builder(
+                controller: pageController,
+                itemCount: items.length,
+                physics: NeverScrollableScrollPhysics(),
+                onPageChanged: (index) {
+                  setState(() {
+                    currentScreen = index;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  final activePage = items[index];
+                  final screenType = state.value?.screenFlow[index];
+
+                  return switch (screenType) {
+                    OnboardingScreenType.mosqueId => ScreenWithAnimationWidget(
+                        animation: 'search',
+                        child: MosqueInputId(onDone: onDone),
+                      ),
+                    OnboardingScreenType.mosqueName => ScreenWithAnimationWidget(
+                        animation: 'search',
+                        child: MosqueInputSearch(onDone: onDone),
+                      ),
+                    OnboardingScreenType.chromecastMosqueId => ScreenWithAnimationWidget(
+                        animation: 'search',
+                        child: ChromeCastMosqueInputId(onDone: onDone),
+                      ),
+                    OnboardingScreenType.chromecastMosqueName => ScreenWithAnimationWidget(
+                        animation: 'search',
+                        child: ChromeCastMosqueInputSearch(onDone: onDone),
+                      ),
+                    _ => ScreenWithAnimationWidget(
+                        animation: activePage.animation,
+                        child: activePage.widget ?? SizedBox(),
+                      ),
+                  };
+                },
+              );
+            },
             error: (e, s) => Container(),
             loading: () => Container(),
           ),
@@ -380,6 +377,4 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       ),
     );
   }
-
-
 }

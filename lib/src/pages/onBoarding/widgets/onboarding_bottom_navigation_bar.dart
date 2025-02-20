@@ -38,7 +38,7 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                   ),
                   const Expanded(flex: 1, child: SizedBox()),
                   DotsIndicator(
-                    dotsCount: data.totalScreens,
+                    dotsCount: data.screenFlow.length,
                     position: data.currentScreen,
                     decorator: DotsDecorator(
                       size: const Size.square(9.0),

@@ -1,19 +1,35 @@
 import 'package:flutter/widgets.dart';
 
+
+
+enum OnboardingScreenType {
+  language,
+  orientation,
+  about,
+  countrySelection,
+  timezoneSelection,
+  wifiSelection,
+  mosqueSearchType,
+  screenType,
+  announcement,
+  mosqueId,
+  mosqueName,
+  chromecastMosqueId,
+  chromecastMosqueName,
+}
+
 class OnboardingNavigationState {
   final int currentScreen;
-  final int totalScreens;
   final bool enablePreviousButton;
   final bool enableNextButton;
   final bool isLastItem;
   final bool isRooted;
-  final PageController pageController;
+  final List<OnboardingScreenType> screenFlow;
 
   const OnboardingNavigationState({
     required this.isRooted,
-    required this.pageController,
+    required this.screenFlow,
     this.currentScreen = 0,
-    this.totalScreens = 0,
     this.enablePreviousButton = false,
     this.enableNextButton = false,
     this.isLastItem = false,
@@ -26,23 +42,22 @@ class OnboardingNavigationState {
     bool? enableNextButton,
     bool? isLastItem,
     bool? isRooted,
-    PageController? pageController,
+    List<OnboardingScreenType>? screenFlow,
   }) {
     return OnboardingNavigationState(
       currentScreen: currentScreen ?? this.currentScreen,
-      totalScreens: totalScreens ?? this.totalScreens,
       enablePreviousButton: enablePreviousButton ?? this.enablePreviousButton,
       enableNextButton: enableNextButton ?? this.enableNextButton,
       isLastItem: isLastItem ?? this.isLastItem,
       isRooted: isRooted ?? this.isRooted,
-      pageController: pageController ?? this.pageController,
+      screenFlow: screenFlow ?? this.screenFlow,
     );
   }
 
   @override
   String toString() {
-    return 'BottomNavigationState(currentScreen: $currentScreen, totalScreens: $totalScreens, enablePreviousButton: $enablePreviousButton, '
+    return 'BottomNavigationState(currentScreen: $currentScreen, enablePreviousButton: $enablePreviousButton, '
         'enableNextButton: $enableNextButton, isLastItem: $isLastItem'
-        'isRooted: $isRooted, pageController: $pageController)';
+        'isRooted: $isRooted, screenFlow: $screenFlow)';
   }
 }

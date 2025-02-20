@@ -32,20 +32,6 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
   @override
   void initState() {
     super.initState();
-    _fetchDeviceModel();
-  }
-
-  Future<void> _fetchDeviceModel() async {
-    try {
-      final userData = await Api.prepareUserData();
-      if (userData != null) {
-        setState(() {
-          _deviceModel = userData.$2['model'];
-        });
-      }
-    } catch (e, stackTrace) {
-      logger.e('Error fetching user data: $e', stackTrace: stackTrace);
-    }
   }
 
   @override
@@ -71,45 +57,19 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
             OutlinedButton(
               autofocus: true,
               onPressed: () {
-                widget.nextButtonFocusNode.match(() => {}, (focus) {
+                widget.nextButtonFocusNode.map((focus) {
                   focus.requestFocus();
-                  return;
                 });
-                ref.read(inputSelectionProvider.notifier).state = InputSelection.withoutId;
-                
-                // Navigator.push(
-                //   context,
-                //   PageTransition(
-                //     child: _deviceModel!.contains("Chromecast")
-                //         ? ChromeCastMosqueInputId(onDone: widget.onDone)
-                //         : MosqueInputId(onDone: widget.onDone),
-                //     type: PageTransitionType.fade,
-                //     alignment: Alignment.center,
-                //   ),
-                // );
+                ref.read(mosqueInputTypeSelectorProvider.notifier).state = SelectionType.mosqueId;
               },
               child: Text(S.current.yes),
             ),
             OutlinedButton(
               onPressed: () {
-                widget.nextButtonFocusNode.match(() => {}, (focus) {
+                widget.nextButtonFocusNode.map((focus) {
                   focus.requestFocus();
-                  return;
                 });
-                ref.read(inputSelectionProvider.notifier).state = InputSelection.withoutId;
-
-                // Navigator.push(
-                //   context,
-                //   PageTransition(
-                //     child: _deviceModel!.contains("Chromecast")
-                //         ? ChromeCastMosqueInputSearch(
-                //             onDone: widget.onDone,
-                //           )
-                //         : MosqueInputSearch(onDone: widget.onDone),
-                //     type: PageTransitionType.fade,
-                //     alignment: Alignment.center,
-                //   ),
-                // );
+                ref.read(mosqueInputTypeSelectorProvider.notifier).state = SelectionType.mosqueName;
               },
               child: Text(S.current.no),
             ),
@@ -119,3 +79,12 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
     );
   }
 }
+
+enum SelectionType {
+  mosqueId,
+  mosqueName,
+}
+
+final mosqueInputTypeSelectorProvider = StateProvider<SelectionType>((ref) {
+  return SelectionType.mosqueId;
+});

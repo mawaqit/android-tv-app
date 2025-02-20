@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/main.dart';
+import 'package:mawaqit/src/helpers/Api.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/InputTypeSelector.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputId.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
+import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_search.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'onboarding_navigation_state.dart';
 
 class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationState> {
-  late final PageController _pageController;
 
   @override
   Future<OnboardingNavigationState> build() async {
-    _pageController = PageController();
-    ref.onDispose(() {
-      _pageController.dispose();
-    });
-
     // Initialize with root check
     final isRooted = await _checkRoot();
 
     return OnboardingNavigationState(
+      screenFlow: isRooted ? mainKioskModeScreenFlow : mainScreenFlow,
       currentScreen: 0,
-      totalScreens: isRooted ? 8 : 6,
       enablePreviousButton: false,
       enableNextButton: true,
       isLastItem: false,
       isRooted: isRooted,
-      pageController: _pageController,
     );
   }
 
@@ -33,44 +33,38 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
       final result = await const MethodChannel('nativeMethodsChannel').invokeMethod('checkRoot');
       return result ?? false;
     } catch (e) {
-      print('Error checking root access: $e');
       return false;
     }
-  }
-
-  Future<void> updateNavigation({
-    required int currentScreen,
-    required int totalScreens,
-    required bool enablePreviousButton,
-    required bool enableNextButton,
-    bool isLastItem = false,
-  }) async {
-    state = AsyncData(state.value!.copyWith(
-      currentScreen: currentScreen,
-      totalScreens: totalScreens,
-      enablePreviousButton: enablePreviousButton,
-      enableNextButton: enableNextButton,
-      isLastItem: isLastItem,
-    ));
   }
 
   Future<void> nextPage() async {
     if (!state.hasValue) return;
     final currentState = state.value!;
-    if (currentState.currentScreen < currentState.totalScreens - 1) {
-      print('Current screen: ${currentState.currentScreen}');
 
-      await _pageController.animateToPage(
-        currentState.currentScreen + 1,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+    if (currentState.currentScreen < currentState.screenFlow.length) {
+      if (currentState.screenFlow[currentState.currentScreen] == OnboardingScreenType.mosqueSearchType) {
+        final deviceModel = await _fetchDeviceModel() ?? '';
+        final isChromeCast = deviceModel.contains('chromecast');
+        final selectionType = ref.read(mosqueInputTypeSelectorProvider);
+
+        // Determine the next screen based on device type and user selection
+        final screenType = switch ((isChromeCast, selectionType)) {
+          (true, SelectionType.mosqueId) => OnboardingScreenType.chromecastMosqueId,
+          (true, SelectionType.mosqueName) => OnboardingScreenType.chromecastMosqueName,
+          (false, SelectionType.mosqueId) => OnboardingScreenType.mosqueId,
+          (false, SelectionType.mosqueName) => OnboardingScreenType.mosqueName,
+        };
+
+        currentState.screenFlow.insert(currentState.currentScreen + 1, screenType);
+      }
+
+      state = AsyncData(
+        currentState.copyWith(
+          currentScreen: currentState.currentScreen + 1,
+          enablePreviousButton: true,
+          isLastItem: currentState.currentScreen + 1 == currentState.screenFlow.length - 1,
+        ),
       );
-
-      state = AsyncData(currentState.copyWith(
-        currentScreen: currentState.currentScreen + 1,
-        enablePreviousButton: true,
-        isLastItem: currentState.currentScreen + 1 == currentState.totalScreens - 1,
-      ));
     }
   }
 
@@ -79,12 +73,7 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
     final currentState = state.value!;
 
     if (currentState.currentScreen > 0) {
-      await _pageController.animateToPage(
-        currentState.currentScreen - 1,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-
+      currentState.screenFlow.removeLast();
       state = AsyncData(currentState.copyWith(
         currentScreen: currentState.currentScreen - 1,
         isLastItem: false,
@@ -93,19 +82,42 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
     }
   }
 
-  Future<void> jumpToPage(int page) async {
-    if (!state.hasValue) return;
-    final currentState = state.value!;
-
-    if (page >= 0 && page < currentState.totalScreens) {
-      _pageController.jumpToPage(page);
-      state = AsyncData(currentState.copyWith(
-        currentScreen: page,
-        enablePreviousButton: page > 0,
-        isLastItem: page == currentState.totalScreens - 1,
-      ));
+  Future<String?> _fetchDeviceModel() async {
+    try {
+      final userData = await Api.prepareUserData();
+      if (userData != null) {
+        return userData.$2['model'];
+      }
+      return null;
+    } catch (e, stackTrace) {
+      logger.e('Error fetching user data: $e', stackTrace: stackTrace);
+      return null;
     }
   }
+
+  List<OnboardingScreenType> get mainKioskModeScreenFlow => [
+        OnboardingScreenType.language,
+        OnboardingScreenType.orientation,
+        OnboardingScreenType.about,
+        OnboardingScreenType.countrySelection,
+        OnboardingScreenType.timezoneSelection,
+        OnboardingScreenType.wifiSelection,
+        OnboardingScreenType.mosqueSearchType,
+      ];
+
+  List<OnboardingScreenType> get mainScreenFlow => [
+        OnboardingScreenType.language,
+        OnboardingScreenType.orientation,
+        OnboardingScreenType.about,
+        OnboardingScreenType.mosqueSearchType,
+      ];
+
+  List<OnboardingScreenType> get mosqueSearchScreenFlow => [
+        OnboardingScreenType.screenType,
+        OnboardingScreenType.announcement,
+      ];
+
+  List<OnboardingScreenType> get homeScreenFlow => [];
 }
 
 final onboardingNavigationProvider = AsyncNotifierProvider<OnboardingNavigationNotifier, OnboardingNavigationState>(
