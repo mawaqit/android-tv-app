@@ -71,6 +71,9 @@ workflows:
           
           # Move signed files to signed directory
           cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk build/signed/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
+      - name: Upload to AWS S3 bucket
+        script: |
+          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/tv/apk/
 
     artifacts:
       - build/artifacts/*
