@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/services/background_audio_schedule_service.dart';
+import 'package:mawaqit/src/services/background_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import '../../../const/constants.dart';
@@ -21,7 +21,7 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
   @override
   Future<ScheduleState> build() async {
     _prefs = await SharedPreferences.getInstance();
-    await BackgroundAudioScheduleService.initialize();
+    await UnifiedBackgroundService.initializeService();
     return _loadSavedSchedule();
   }
 

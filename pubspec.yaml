@@ -105,11 +105,9 @@ dependencies:
   flutter_svg: ^2.0.5
   dots_indicator: ^3.0.0
   sizer: ^2.0.15
-
   timeago_flutter: ^3.4.0
   timezone:
   wifi_scan: ^0.4.1
-
   #  media
   youtube_player_flutter: ^8.1.2
   youtube_explode_dart: ^1.12.4
@@ -160,6 +158,7 @@ dependencies:
   montenegrin_localization: ^0.1.0+1
   synchronized: ^3.1.0+1
   workmanager: ^0.5.2
+  audio_session: ^0.1.21
 
 
 
