@@ -13,6 +13,7 @@
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
   <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
   <uses-feature android:name="android.hardware.faketouch" android:required="false"/>
   <uses-feature android:name="android.hardware.telephony" android:required="false"/>
@@ -33,22 +34,11 @@
     android:usesCleartextTraffic="true">
     <service
           android:name="id.flutter.flutter_background_service.BackgroundService"
-          android:foregroundServiceType="mediaPlayback"
+          android:foregroundServiceType="mediaPlayback|dataSync"
           >
     </service>
-    <service android:name="com.ryanheise.audioservice.AudioService"
-     android:exported="true">
-      <intent-filter>
-        <action android:name="android.media.browse.MediaBrowserService" />
-      </intent-filter>
-    </service>
 
-    <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver" 
-     android:exported="true">
-      <intent-filter>
-        <action android:name="android.intent.action.MEDIA_BUTTON" />
-      </intent-filter>
-    </receiver> 
+    
     <activity
       android:name=".MainActivity"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

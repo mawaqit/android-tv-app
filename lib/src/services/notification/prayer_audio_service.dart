@@ -14,6 +14,9 @@ class PrayerAudioService {
     try {
       if (adhanFromAssets) {
         await _audioPlayer?.setAsset(adhanAsset);
+        Future.delayed(const Duration(minutes: 1), () {
+          NotificationService.dismissNotification();
+        });
       } else {
         await _audioPlayer?.setUrl(adhanAsset);
       }
