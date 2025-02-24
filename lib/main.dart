@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'dart:async';
@@ -36,6 +38,7 @@ import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -95,6 +98,7 @@ Future<void> _handleOverlayPermissions(String deviceModel, bool isRooted) async 
       await methodChannel.invokeMethod("grantOverlayPermission");
     } else {
       await NotificationOverlay.requestOverlayPermission();
+      await checkAndRequestExactAlarmPermission();
     }
   }
 }
@@ -103,7 +107,6 @@ Future<void> _initializePermissions() async {
   final isRooted =
       await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
   final deviceModel = await _getDeviceModel();
-
   await _handleOverlayPermissions(deviceModel, isRooted);
   await UnifiedBackgroundService.initializeService();
 }
@@ -111,6 +114,25 @@ Future<void> _initializePermissions() async {
 Future<String> _getDeviceModel() async {
   var hardware = await DeviceInfoPlugin().androidInfo;
   return hardware.model;
+}
+
+Future<void> checkAndRequestExactAlarmPermission() async {
+  if (Platform.isAndroid) {
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+
+    if (androidInfo.version.sdkInt >= 33) {
+      final status = await Permission.scheduleExactAlarm.status;
+
+      if (status.isDenied) {
+        final result = await Permission.scheduleExactAlarm.request();
+
+        if (result.isDenied) {
+          developer.log('Exact alarm not granted error');
+        }
+      }
+    }
+  }
 }
 
 Future<void> _initializeServices() async {
