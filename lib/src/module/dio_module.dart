@@ -57,9 +57,17 @@ class DioProviderParameter {
   /// [interceptor]: An optional interceptor for Dio.
   final Interceptor? interceptor;
 
+  /// [connectTimeout]: The connection timeout duration.
+  final Duration? connectTimeout;
+
+  /// [receiveTimeout]: The receive timeout duration.
+  final Duration? receiveTimeout;
+
   DioProviderParameter({
     required this.baseUrl,
     this.interceptor,
+    this.connectTimeout,
+    this.receiveTimeout,
   });
 }
 
@@ -67,9 +75,10 @@ class DioProviderParameter {
 /// It allows creating DioModule with different configurations throughout the app.
 final dioProvider = Provider.family<DioModule, DioProviderParameter>((ref, dioParameter) {
   return DioModule(
-    /// kStaticFilesUrl , kBaseUrl, kStaticFilesUrl
     baseUrl: dioParameter.baseUrl,
     headers: DioModule().defaultHeader,
     interceptor: dioParameter.interceptor,
+    connectTimeout: dioParameter.connectTimeout,
+    receiveTimeout: dioParameter.receiveTimeout,
   );
 });

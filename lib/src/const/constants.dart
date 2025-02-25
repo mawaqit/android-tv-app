@@ -49,11 +49,11 @@ class TurnOnOffTvConstant {
   /// native methods calls
   static const String kNativeMethodsChannel = "nativeMethodsChannel";
   static const String kCheckRoot = "checkRoot";
-  static const String kisFajrIshaOnly = "isIshaFajrOnly";
   static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
   static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
   static const String kToggleTabletScreenOn = "toggleTabletScreenOn";
   static const String kToggleTabletScreenOff = "toggleTabletScreenOff";
+  static const String kisFajrIshaOnly = "isIshaFajrOnly";
   static const String kMinuteBeforeKey = 'selectedMinuteBefore';
   static const String kMinuteAfterKey = 'selectedMinuteAfter';
 }
@@ -81,6 +81,8 @@ abstract class QuranConstant {
   static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/tv_config.json';
   static const String kIsFirstTime = 'is_first_time_quran';
   static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
+  static const String kQuranCacheBoxName = 'timestamp_box';
+  static const String kQuranReciterRetentionTime = 'quran_reciter_retention_time';
   static const int kCacheWidth = 50;
   static const int kCacheHeight = 50;
 }
