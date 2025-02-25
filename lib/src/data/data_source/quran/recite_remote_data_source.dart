@@ -148,17 +148,11 @@ class ReciteRemoteDataSource {
 }
 
 final reciteRemoteDataSourceProvider = Provider<ReciteRemoteDataSource>((ref) {
-  final dio = ref.watch(
-    dioProvider(
-      DioProviderParameter(
-        baseUrl: QuranConstant.kQuranBaseUrl,
-        interceptor: LogInterceptor(
-          requestBody: true,
-          responseBody: true,
-          logPrint: (l) => log('$l', name: 'API'),
-        ),
-      ),
-    ),
+  final dio = DioModule(
+    baseUrl: QuranConstant.kQuranBaseUrl,
+    headers: DioModule().defaultHeader,
+    connectTimeout: Duration(seconds: 30),
+    receiveTimeout: Duration(seconds: 30),
   );
   return ReciteRemoteDataSource(dio.dio);
 });
