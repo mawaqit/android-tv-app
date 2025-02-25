@@ -7,7 +7,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/const/resource.dart';
+import 'package:mawaqit/src/helpers/connectivity_provider.dart';
+import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/pages/quran/page/schedule_screen.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
@@ -50,6 +54,8 @@ class AudioControlWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final connectivityStatus = ref.watch(connectivityProvider);
+
     return ref.watch(audioControlProvider).when(
           data: (state) {
             final scheduleState = ref.watch(scheduleProvider);
@@ -57,7 +63,10 @@ class AudioControlWidget extends ConsumerWidget {
             return scheduleState.when(
               data: (schedule) {
                 final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
-                final shouldShow = schedule.isScheduleEnabled && isWithinTime;
+                final hasInternetConnection =
+                    connectivityStatus.hasValue && connectivityStatus.value == ConnectivityStatus.connected;
+
+                final shouldShow = schedule.isScheduleEnabled && isWithinTime && hasInternetConnection;
 
                 if (!shouldShow) return const SizedBox.shrink();
 
@@ -65,7 +74,6 @@ class AudioControlWidget extends ConsumerWidget {
                   width: buttonSize,
                   height: buttonSize,
                   child: FloatingActionButton(
-                    focusNode: focusNode,
                     focusColor: Theme.of(context).primaryColor,
                     backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
                     child: Icon(
@@ -484,6 +492,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     ];
   }
 
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black87,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
   Widget _buildFloatingColumn(double spacerWidth, double buttonSize, double iconSize, BuildContext context) {
     return FocusScope(
       node: changeReadingModeFocusNode,
@@ -508,10 +528,22 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                             size: iconSize,
                           ),
                           onPressed: () async {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
-                            );
+                            // Check internet connection before showing dialog
+                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+
+                            // Get the latest connectivity status after checking
+                            final updatedConnectivity = ref.read(connectivityProvider);
+                            final isConnected = updatedConnectivity.hasValue &&
+                                updatedConnectivity.value == ConnectivityStatus.connected;
+
+                            if (isConnected) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
+                              );
+                            } else {
+                              showToast(S.of(context).scheduleInOnlineMode);
+                            }
                           },
                         ),
                       ),
