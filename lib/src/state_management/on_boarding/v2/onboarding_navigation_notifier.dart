@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/helpers/Api.dart';
+import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/helpers/SharedPref.dart';
+import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/InputTypeSelector.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputId.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
@@ -10,6 +14,7 @@ import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_
 import 'package:page_transition/page_transition.dart';
 
 import 'onboarding_navigation_state.dart';
+import 'search_selection_type_provider.dart';
 
 class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationState> {
   @override
@@ -18,10 +23,75 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
     final isRooted = await _checkRoot();
     final initialFlow = isRooted ? OnboardingFlowType.kiosk : OnboardingFlowType.main;
 
+    ref.listen(mosqueManagerProvider, (previous, next) {
+      next.fold(() => {}, (mosque) {
+        _updateFlowBasedOnMosqueType(mosque);
+      });
+    });
+
     return OnboardingNavigationState(
       isRooted: isRooted,
       screenFlow: _getInitialScreenFlow(initialFlow),
       flowType: initialFlow,
+    );
+  }
+
+  void _updateFlowBasedOnMosqueType(SearchSelectionType mosqueType) {
+    final currentState = state.value!;
+    final newFlow = [...currentState.screenFlow];
+    final currentIndex = currentState.currentScreen;
+
+    // Remove any screens after the current screen
+    if (currentIndex < newFlow.length - 1) {
+      newFlow.removeRange(currentIndex + 1, newFlow.length);
+    }
+
+    // Add mosque-specific screens if mosque type
+    if (mosqueType == SearchSelectionType.mosque) {
+      newFlow.addAll([
+        OnboardingScreenType.screenType,
+        OnboardingScreenType.announcement,
+      ]);
+    }
+
+    state = AsyncData(
+      currentState.copyWith(
+        screenFlow: newFlow,
+        flowType: mosqueType == SearchSelectionType.mosque
+            ? OnboardingFlowType.mosque
+            : OnboardingFlowType.home,
+        // Keep the current screen position
+        currentScreen: currentState.currentScreen,
+      ),
+    );
+  }
+  // In OnboardingNavigationNotifier
+  void completeOnboarding(BuildContext context) {
+    if (!state.hasValue) return;
+    final currentState = state.value!;
+    final mosqueTypeOption = ref.read(mosqueManagerProvider);
+
+    mosqueTypeOption.fold(
+          () => null,
+          (mosqueType) {
+        final shouldComplete = switch ((mosqueType, currentState.screenFlow.last)) {
+        // Complete immediately for home type
+          (SearchSelectionType.home, _) => currentState.currentScreen == currentState.screenFlow.length - 1,
+        // Complete after announcement screen for mosque type
+          (SearchSelectionType.mosque, OnboardingScreenType.announcement) =>
+          currentState.currentScreen == currentState.screenFlow.length - 1,
+          _ => false,
+        };
+
+        if (shouldComplete) {
+          final sharedPref = SharedPref();
+          sharedPref.save('boarding', 'true').then((_) {
+            if (context.mounted) {
+              AppRouter.pushReplacement(OfflineHomeScreen());
+            }
+          });
+        }
+      },
     );
   }
 
@@ -46,7 +116,7 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
     };
   }
 
-  Future<void> nextPage() async {
+  Future<void> nextPage(BuildContext context) async {
     if (!state.hasValue) return;
     final currentState = state.value!;
 
@@ -67,6 +137,7 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
           screenFlow: newScreenFlow,
         ),
       );
+      completeOnboarding(context);
     }
   }
 
@@ -86,21 +157,11 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
     final newFlow = [...currentState.screenFlow];
     newFlow.insert(currentState.currentScreen + 1, screenType);
 
-    // Add mosque-specific screens if needed
-    // final mosqueManager = ref.read(mosqueManagerProvider);
-    if (true) {
-      newFlow.addAll([
-        OnboardingScreenType.screenType,
-        OnboardingScreenType.announcement,
-      ]);
-    }
-
     state = AsyncData(
       currentState.copyWith(
         currentScreen: currentState.currentScreen + 1,
         enablePreviousButton: true,
         screenFlow: newFlow,
-        flowType: true ? OnboardingFlowType.mosque : OnboardingFlowType.home,
       ),
     );
   }

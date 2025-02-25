@@ -370,7 +370,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
           ),
           bottomNavigationBar: OnboardingBottomNavigationBar(
             onPreviousPressed: () => ref.read(onboardingNavigationProvider.notifier).previousPage(),
-            onNextPressed: () => ref.read(onboardingNavigationProvider.notifier).nextPage(),
+            onNextPressed: () => ref.read(onboardingNavigationProvider.notifier).nextPage(context),
             nextButtonFocusNode: nextButtonFocusNode,
           ),
         ),

@@ -8,6 +8,7 @@ enum OnboardingScreenType {
   timezoneSelection,
   wifiSelection,
   mosqueSearchType,
+  chooseMosqueOrHomeScreen,
   screenType,
   announcement,
   mosqueId,

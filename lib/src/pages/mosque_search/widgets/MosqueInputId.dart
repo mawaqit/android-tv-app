@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/v2/search_selection_type_provider.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -53,6 +55,13 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
         searchOutput = value;
         loading = false;
       });
+
+      if (value.type == "MOSQUE") {
+        ref.read(mosqueManagerProvider.notifier).state = Option.fromNullable(SearchSelectionType.mosque);
+      } else {
+        ref.read(mosqueManagerProvider.notifier).state = Option.fromNullable(SearchSelectionType.home);
+      }
+
     }).catchError((e, stack) {
       debugPrintStack(stackTrace: stack, label: e.toString());
       if (e is InvalidMosqueId) {
@@ -69,10 +78,6 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
     });
   }
 
-  onboardingWorkflowDone() {
-    sharedPref.save('boarding', 'true');
-    AppRouter.pushReplacement(OfflineHomeScreen());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +110,7 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
                     final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
                     ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
 
-                    !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
+                    // !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
                   }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {
                       setState(() {
