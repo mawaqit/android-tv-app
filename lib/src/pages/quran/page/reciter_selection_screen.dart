@@ -27,11 +27,13 @@ import 'package:mawaqit/src/routes/routes_constant.dart';
 class AudioControlWidget extends ConsumerWidget {
   final double buttonSize;
   final double iconSize;
+  final FocusNode focusNode;
 
   const AudioControlWidget({
     Key? key,
     required this.buttonSize,
     required this.iconSize,
+    required this.focusNode,
   }) : super(key: key);
 
   bool _isWithinScheduledTime(TimeOfDay startTime, TimeOfDay endTime) {
@@ -63,6 +65,7 @@ class AudioControlWidget extends ConsumerWidget {
                   width: buttonSize,
                   height: buttonSize,
                   child: FloatingActionButton(
+                    focusNode: focusNode,
                     focusColor: Theme.of(context).primaryColor,
                     backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
                     child: Icon(
@@ -111,6 +114,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   late FocusScopeNode searchListFocusNode;
   late FocusNode searchFocusScopeNode;
   late FocusNode changeIntoReadingMode;
+  late FocusNode playPauseSchedule;
 
   late StreamSubscription<bool> keyboardSubscription;
 
@@ -139,6 +143,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     changeReadingModeFocusNode = FocusScopeNode(debugLabel: 'change_reading_mode_focus_scope_node');
 
     changeIntoReadingMode = FocusNode(debugLabel: 'change_into_reading_mode_focus_node');
+    playPauseSchedule = FocusNode(debugLabel: 'pla_pause_schedule');
     searchListFocusNode = FocusScopeNode(debugLabel: 'search_list_focus_scope_node');
     var keyboardVisibilityController = KeyboardVisibilityController();
 
@@ -212,6 +217,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     favoritesListFocusNode.onKey = _handleFavoritesListKeyEvent;
     allRecitersListFocusNode.onKey = _handleAllRecitersListKeyEvent;
     changeReadingModeFocusNode.onKey = _handleChangeReadingModeKeyEvent;
+    playPauseSchedule.onKey = _handlePlayPauseScheduleKeyEvent;
     searchListFocusNode.onKey = _handleSearchListKeyEvent;
   }
 
@@ -265,6 +271,16 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           return KeyEventResult.handled;
         }
         return KeyEventResult.ignored;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
+  KeyEventResult _handlePlayPauseScheduleKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        changeIntoReadingMode.requestFocus();
+        return KeyEventResult.handled;
       }
     }
     return KeyEventResult.ignored;
@@ -526,6 +542,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           AudioControlWidget(
             buttonSize: buttonSize,
             iconSize: iconSize,
+            focusNode: playPauseSchedule,
           ),
         ],
       ),
