@@ -1,4 +1,3 @@
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:fpdart/fpdart.dart';
@@ -9,6 +8,7 @@ import 'package:mawaqit/src/domain/model/quran/reciter_model.dart';
 import 'package:mawaqit/src/domain/error/recite_exception.dart';
 
 class MockReciteRemoteDataSource extends Mock implements ReciteRemoteDataSource {}
+
 class MockReciteLocalDataSource extends Mock implements ReciteLocalDataSource {}
 
 void main() {
@@ -23,17 +23,12 @@ void main() {
   });
 
   group('getAllReciters with caching', () {
-    final testReciters = [
-      ReciterModel(1, 'Reciter 1', 'A', []),
-      ReciterModel(2, 'Reciter 2', 'B', [])
-    ];
+    final testReciters = [ReciterModel(1, 'Reciter 1', 'A', []), ReciterModel(2, 'Reciter 2', 'B', [])];
 
     test('returns cached data when cache is valid and not empty', () async {
       // Arrange
-      when(() => mockLocalDataSource.getReciters())
-          .thenAnswer((_) async => testReciters);
-      when(() => mockLocalDataSource.getLastUpdatedTimestamp())
-          .thenReturn(Option.of(DateTime.now())); // Cache is fresh
+      when(() => mockLocalDataSource.getReciters()).thenAnswer((_) async => testReciters);
+      when(() => mockLocalDataSource.getLastUpdatedTimestamp()).thenReturn(Option.of(DateTime.now())); // Cache is fresh
 
       // Act
       final result = await reciteImpl.getAllReciters(language: 'en');
@@ -46,16 +41,12 @@ void main() {
     test('fetches from remote when cache is expired', () async {
       // Arrange
       final expiredDate = DateTime.now().subtract(Duration(days: 31));
-      when(() => mockLocalDataSource.getReciters())
-          .thenAnswer((_) async => testReciters);
-      when(() => mockLocalDataSource.getLastUpdatedTimestamp())
-          .thenReturn(Option.of(expiredDate));
+      when(() => mockLocalDataSource.getReciters()).thenAnswer((_) async => testReciters);
+      when(() => mockLocalDataSource.getLastUpdatedTimestamp()).thenReturn(Option.of(expiredDate));
       when(() => mockRemoteDataSource.getReciters(language: any(named: 'language')))
           .thenAnswer((_) async => testReciters);
-      when(() => mockLocalDataSource.clearAllReciters())
-          .thenAnswer((_) async {});
-      when(() => mockLocalDataSource.saveReciters(any()))
-          .thenAnswer((_) async {});
+      when(() => mockLocalDataSource.clearAllReciters()).thenAnswer((_) async {});
+      when(() => mockLocalDataSource.saveReciters(any())).thenAnswer((_) async {});
 
       // Act
       final result = await reciteImpl.getAllReciters(language: 'en');
@@ -68,23 +59,18 @@ void main() {
     });
 
     group('getAllReciters with caching', () {
-      final testReciters = [
-        ReciterModel(1, 'Reciter 1', 'A', []),
-        ReciterModel(2, 'Reciter 2', 'B', [])
-      ];
+      final testReciters = [ReciterModel(1, 'Reciter 1', 'A', []), ReciterModel(2, 'Reciter 2', 'B', [])];
 
       test('fetches from remote when cache is empty', () async {
         // Arrange
-        when(() => mockLocalDataSource.getReciters())
-            .thenAnswer((_) async => []);
-        when(() => mockLocalDataSource.getLastUpdatedTimestamp())
-            .thenReturn(Option.of(DateTime.now()));
+        when(() => mockLocalDataSource.getReciters()).thenAnswer((_) async => []);
+        when(() => mockLocalDataSource.getLastUpdatedTimestamp()).thenReturn(Option.of(DateTime.now()));
         when(() => mockRemoteDataSource.getReciters(language: any(named: 'language')))
             .thenAnswer((_) async => testReciters);
         when(() => mockLocalDataSource.clearAllReciters())
-            .thenAnswer((_) async => Future<void>.value());  // Add this line
+            .thenAnswer((_) async => Future<void>.value()); // Add this line
         when(() => mockLocalDataSource.saveReciters(any()))
-            .thenAnswer((_) async => Future<void>.value());  // Explicit Future<void>
+            .thenAnswer((_) async => Future<void>.value()); // Explicit Future<void>
 
         // Act
         final result = await reciteImpl.getAllReciters(language: 'en');
@@ -98,14 +84,12 @@ void main() {
 
     test('returns cached data when remote fetch fails', () async {
       // Arrange
-      when(() => mockLocalDataSource.getReciters())
-          .thenAnswer((_) async => testReciters);
+      when(() => mockLocalDataSource.getReciters()).thenAnswer((_) async => testReciters);
       when(() => mockLocalDataSource.getLastUpdatedTimestamp())
           .thenReturn(Option.of(DateTime.now().subtract(Duration(days: 31))));
       when(() => mockRemoteDataSource.getReciters(language: any(named: 'language')))
           .thenThrow(Exception('Network error'));
-      when(() => mockLocalDataSource.clearAllReciters())
-          .thenAnswer((_) async {});
+      when(() => mockLocalDataSource.clearAllReciters()).thenAnswer((_) async {});
 
       // Act
       final result = await reciteImpl.getAllReciters(language: 'en');
@@ -117,18 +101,16 @@ void main() {
 
     test('throws exception when remote fails and cache is empty', () async {
       // Arrange
-      when(() => mockLocalDataSource.getReciters())
-          .thenAnswer((_) async => []);
+      when(() => mockLocalDataSource.getReciters()).thenAnswer((_) async => []);
       when(() => mockLocalDataSource.getLastUpdatedTimestamp())
           .thenReturn(Option.of(DateTime.now().subtract(Duration(days: 31))));
       when(() => mockRemoteDataSource.getReciters(language: any(named: 'language')))
           .thenThrow(Exception('Network error'));
-      when(() => mockLocalDataSource.clearAllReciters())
-          .thenAnswer((_) async {});
+      when(() => mockLocalDataSource.clearAllReciters()).thenAnswer((_) async {});
 
       // Act & Assert
       expect(
-            () => reciteImpl.getAllReciters(language: 'en'),
+        () => reciteImpl.getAllReciters(language: 'en'),
         throwsA(isA<FetchRecitersFailedException>()),
       );
     });

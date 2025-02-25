@@ -42,10 +42,8 @@ void main() {
       ];
 
       // Mock both box operations
-      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>()))
-          .thenAnswer((_) async => Future<void>.value());
-      when(() => mockTimestampBox.put(any(), any()))
-          .thenAnswer((_) async => Future<void>.value());
+      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenAnswer((_) async => Future<void>.value());
+      when(() => mockTimestampBox.put(any(), any())).thenAnswer((_) async => Future<void>.value());
 
       await dataSource.saveReciters(reciters);
 
@@ -65,10 +63,8 @@ void main() {
     test('Handles very large list of reciters', () async {
       final largeList = List.generate(10000, (index) => createReciter(index, [1, 2, 3]));
 
-      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>()))
-          .thenAnswer((_) async => Future<void>.value());
-      when(() => mockTimestampBox.put(any(), any()))
-          .thenAnswer((_) async => Future<void>.value());
+      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenAnswer((_) async => Future<void>.value());
+      when(() => mockTimestampBox.put(any(), any())).thenAnswer((_) async => Future<void>.value());
 
       await dataSource.saveReciters(largeList);
 

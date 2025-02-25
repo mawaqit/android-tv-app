@@ -21,10 +21,10 @@ class ReciteLocalDataSource {
   final Box<DateTime> _timestampBox;
 
   ReciteLocalDataSource(
-      this._reciterBox,
-      this._favoriteReciterBox,
-      this._timestampBox,
-      );
+    this._reciterBox,
+    this._favoriteReciterBox,
+    this._timestampBox,
+  );
 
   Future<void> saveReciters(List<ReciterModel> reciters) async {
     try {
@@ -108,7 +108,7 @@ class ReciteLocalDataSource {
       final allReciters = _reciterBox.values.toList();
 
       final recitersForSurah =
-      allReciters.where((reciter) => reciter.moshaf.any((moshaf) => moshaf.surahList.contains(surahId))).toList();
+          allReciters.where((reciter) => reciter.moshaf.any((moshaf) => moshaf.surahList.contains(surahId))).toList();
 
       log('recite: ReciteLocalDataSource: getReciterBySurah: Found ${recitersForSurah.length} reciters for surah $surahId');
 
@@ -123,7 +123,7 @@ class ReciteLocalDataSource {
       await _reciterBox.clear();
       await _timestampBox.clear(); // Clear the timestamp as well
       log('recite: ReciteLocalDataSource: clearAllReciters: done');
-    } catch (e,s) {
+    } catch (e, s) {
       log('clearAllReciters: ${e.toString()} and $s');
       throw ClearAllRecitersException(e.toString());
     }
