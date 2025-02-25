@@ -264,6 +264,127 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     });
   }
 
+  Map<OnboardingScreenType, OnBoardingItem> getScreenWidgets(BuildContext context) {
+    print('getScreenWidgets: $country');
+    final countryDependentItems = country.match(
+      () {
+        return OnBoardingItem(
+          animation: 'settings',
+          widget: TimezoneSelectionScreen(
+            country: Country.empty(),
+            nextButtonFocusNode: nextButtonFocusNode,
+          ),
+          enablePreviousButton: true,
+          enableNextButton: true,
+        );
+      },
+      (selectedCountry) {
+        return OnBoardingItem(
+          animation: 'settings',
+          widget: TimezoneSelectionScreen(
+            country: selectedCountry,
+            nextButtonFocusNode: nextButtonFocusNode,
+          ),
+          enablePreviousButton: true,
+          enableNextButton: true,
+        );
+      },
+    );
+
+    return {
+      OnboardingScreenType.language: OnBoardingItem(
+        animation: 'language',
+        widget: OnBoardingLanguageSelector(
+          nextButtonFocusNode: nextButtonFocusNode,
+        ),
+        enableNextButton: true,
+      ),
+      OnboardingScreenType.orientation: OnBoardingItem(
+        animation: 'welcome',
+        widget: OnBoardingOrientationWidget.onboarding(
+          previousButtonFocusNode: previousButtonFocusNode,
+          nextButtonFocusNode: nextButtonFocusNode,
+        ),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+      OnboardingScreenType.about: OnBoardingItem(
+        animation: 'welcome',
+        widget: OnBoardingMawaqitAboutWidget(),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+      OnboardingScreenType.mosqueSearchType: OnBoardingItem(
+        animation: 'search',
+        widget: MosqueSearch(
+          nextButtonFocusNode: Some(nextButtonFocusNode),
+          onDone: () {},
+        ),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+      OnboardingScreenType.mosqueId: OnBoardingItem(
+        animation: 'search',
+        widget: MosqueInputId(onDone: () {}),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+      OnboardingScreenType.mosqueName: OnBoardingItem(
+        animation: 'search',
+        widget: MosqueInputSearch(onDone: () {}),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+      OnboardingScreenType.chromecastMosqueId: OnBoardingItem(
+        animation: 'search',
+        widget: ChromeCastMosqueInputId(onDone: () {}),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+      OnboardingScreenType.chromecastMosqueName: OnBoardingItem(
+        animation: 'search',
+        widget: ChromeCastMosqueInputSearch(onDone: () {}),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+      OnboardingScreenType.screenType: OnBoardingItem(
+        animation: 'search',
+        widget: OnBoardingScreenType.onboarding(),
+        enableNextButton: true,
+        enablePreviousButton: true,
+        skip: () => !context.read<MosqueManager>().typeIsMosque,
+      ),
+      OnboardingScreenType.announcement: OnBoardingItem(
+        animation: 'search',
+        widget: OnBoardingAnnouncementScreens(isOnboarding: true),
+        enableNextButton: true,
+        enablePreviousButton: true,
+        skip: () => !context.read<MosqueManager>().typeIsMosque,
+      ),
+      // Kiosk mode specific screens
+      OnboardingScreenType.countrySelection: OnBoardingItem(
+        animation: 'settings',
+        widget: CountrySelectionScreen(
+          onSelect: (_) {},
+          focusNode: skipButtonFocusNode,
+          nextButtonFocusNode: nextButtonFocusNode,
+        ),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+      OnboardingScreenType.timezoneSelection: countryDependentItems,
+      OnboardingScreenType.wifiSelection: OnBoardingItem(
+        animation: 'settings',
+        widget: OnBoardingWifiSelector(
+          onSelect: () {},
+          focusNode: skipButtonFocusNode,
+        ),
+        enableNextButton: true,
+        enablePreviousButton: true,
+      ),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final onBoardingState = ref.watch(onboardingNavigationProvider);
@@ -337,31 +458,13 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                   });
                 },
                 itemBuilder: (context, index) {
-                  final activePage = items[index];
                   final screenType = data.screenFlow[index];
+                  final allScreens = getScreenWidgets(context);
 
-                  return switch (screenType) {
-                    OnboardingScreenType.mosqueId => ScreenWithAnimationWidget(
-                        animation: 'search',
-                        child: MosqueInputId(onDone: onDone),
-                      ),
-                    OnboardingScreenType.mosqueName => ScreenWithAnimationWidget(
-                        animation: 'search',
-                        child: MosqueInputSearch(onDone: onDone),
-                      ),
-                    OnboardingScreenType.chromecastMosqueId => ScreenWithAnimationWidget(
-                        animation: 'search',
-                        child: ChromeCastMosqueInputId(onDone: onDone),
-                      ),
-                    OnboardingScreenType.chromecastMosqueName => ScreenWithAnimationWidget(
-                        animation: 'search',
-                        child: ChromeCastMosqueInputSearch(onDone: onDone),
-                      ),
-                    _ => ScreenWithAnimationWidget(
-                        animation: activePage.animation,
-                        child: activePage.widget ?? SizedBox(),
-                      ),
-                  };
+                  return ScreenWithAnimationWidget(
+                    animation: allScreens[screenType]?.animation ?? '',
+                    child: allScreens[screenType]!.widget ?? Container(),
+                  );
                 },
               );
             },
@@ -378,4 +481,3 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     );
   }
 }
-

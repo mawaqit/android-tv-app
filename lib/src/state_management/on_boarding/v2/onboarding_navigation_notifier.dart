@@ -42,16 +42,16 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
     final currentIndex = currentState.currentScreen;
 
     // Remove any screens after the current screen
-    if (currentIndex < newFlow.length - 1) {
+    if (currentIndex < newFlow.length) {
       newFlow.removeRange(currentIndex + 1, newFlow.length);
     }
 
-    // Add mosque-specific screens if mosque type
+    // Add proper screens based on mosque type
     if (mosqueType == SearchSelectionType.mosque) {
-      newFlow.addAll([
-        OnboardingScreenType.screenType,
-        OnboardingScreenType.announcement,
-      ]);
+      // First add the screen type selection
+      newFlow.add(OnboardingScreenType.screenType);
+      // Then add the announcement screen
+      newFlow.add(OnboardingScreenType.announcement);
     }
 
     state = AsyncData(
@@ -60,11 +60,11 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
         flowType: mosqueType == SearchSelectionType.mosque
             ? OnboardingFlowType.mosque
             : OnboardingFlowType.home,
-        // Keep the current screen position
         currentScreen: currentState.currentScreen,
       ),
     );
   }
+
   // In OnboardingNavigationNotifier
   void completeOnboarding(BuildContext context) {
     if (!state.hasValue) return;
