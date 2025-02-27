@@ -19,12 +19,16 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
     final isActive = await ToggleScreenFeature.getToggleFeatureState();
 
     return ScreenLockState(
-      selectedTime:
-          DateTime.now().add(Duration(hours: timeShiftManager.shift, minutes: timeShiftManager.shiftInMinutes)),
-      isfajrIshaonly: prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false,
+      selectedTime: DateTime.now().add(Duration(
+          hours: timeShiftManager.shift,
+          minutes: timeShiftManager.shiftInMinutes)),
+      isfajrIshaonly:
+          prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false,
       isActive: isActive,
-      selectedMinuteBefore: prefs.getInt(TurnOnOffTvConstant.kMinuteBeforeKey) ?? 30,
-      selectedMinuteAfter: prefs.getInt(TurnOnOffTvConstant.kMinuteAfterKey) ?? 30,
+      selectedMinuteBefore:
+          prefs.getInt(TurnOnOffTvConstant.kMinuteBeforeKey) ?? 30,
+      selectedMinuteAfter:
+          prefs.getInt(TurnOnOffTvConstant.kMinuteAfterKey) ?? 30,
     );
   }
 
@@ -46,22 +50,26 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
 
   void selectNextMinuteBefore(int selectMinuteBefore) {
     final newMinute = (selectMinuteBefore + 1) % 60;
-    state = AsyncValue.data(state.value!.copyWith(selectedMinuteBefore: newMinute < 10 ? 10 : newMinute));
+    state = AsyncValue.data(state.value!
+        .copyWith(selectedMinuteBefore: newMinute < 10 ? 10 : newMinute));
   }
 
   void selectPreviousMinuteBefore(int selectMinuteBefore) {
     final newMinute = (selectMinuteBefore - 1 + 60) % 60;
-    state = AsyncValue.data(state.value!.copyWith(selectedMinuteBefore: newMinute < 10 ? 59 : newMinute));
+    state = AsyncValue.data(state.value!
+        .copyWith(selectedMinuteBefore: newMinute < 10 ? 59 : newMinute));
   }
 
   void selectNextMinuteAfter(int selectMinuteAfter) {
     final newMinute = (selectMinuteAfter + 1) % 60;
-    state = AsyncValue.data(state.value!.copyWith(selectedMinuteAfter: newMinute < 10 ? 10 : newMinute));
+    state = AsyncValue.data(state.value!
+        .copyWith(selectedMinuteAfter: newMinute < 10 ? 10 : newMinute));
   }
 
   void selectPreviousMinuteAfter(int selectMinuteAfter) {
     final newMinute = (selectMinuteAfter - 1 + 60) % 60;
-    state = AsyncValue.data(state.value!.copyWith(selectedMinuteAfter: newMinute < 10 ? 59 : newMinute));
+    state = AsyncValue.data(state.value!
+        .copyWith(selectedMinuteAfter: newMinute < 10 ? 59 : newMinute));
   }
 
   Future<void> saveSettings(List<String> times, bool isIshaFajrOnly) async {
@@ -75,10 +83,10 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
     ToggleScreenFeature.toggleFeatureState(true);
 
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(TurnOnOffTvConstant.kMinuteBeforeKey, state.value!.selectedMinuteBefore);
-    prefs.setInt(TurnOnOffTvConstant.kMinuteAfterKey, state.value!.selectedMinuteAfter);
     prefs.setBool(TurnOnOffTvConstant.kisFajrIshaOnly, isIshaFajrOnly);
   }
 }
 
-final screenLockNotifierProvider = AsyncNotifierProvider<ScreenLockNotifier, ScreenLockState>(ScreenLockNotifier.new);
+final screenLockNotifierProvider =
+    AsyncNotifierProvider<ScreenLockNotifier, ScreenLockState>(
+        ScreenLockNotifier.new);

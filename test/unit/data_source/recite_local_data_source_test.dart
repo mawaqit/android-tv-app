@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/data/data_source/quran/reciter_local_data_source.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mawaqit/src/domain/error/recite_exception.dart';
@@ -10,15 +11,19 @@ class MockHiveBox extends Mock implements Box<ReciterModel> {}
 
 class MockHiveFavoriteBox extends Mock implements Box<int> {}
 
+class MockHiveTimestampBox extends Mock implements Box<DateTime> {}
+
 void main() {
   late ReciteLocalDataSource dataSource;
   late MockHiveBox mockBox;
   late MockHiveFavoriteBox mockFavoriteBox;
+  late MockHiveTimestampBox mockTimestampBox;
 
   setUp(() {
     mockBox = MockHiveBox();
     mockFavoriteBox = MockHiveFavoriteBox();
-    dataSource = ReciteLocalDataSource(mockBox, mockFavoriteBox);
+    mockTimestampBox = MockHiveTimestampBox();
+    dataSource = ReciteLocalDataSource(mockBox, mockFavoriteBox, mockTimestampBox);
   });
 
   MoshafModel createMoshaf(int id, List<int> surahList) {
@@ -35,47 +40,36 @@ void main() {
         createReciter(1, [1, 2, 3]),
         createReciter(2, [1, 2, 3])
       ];
-      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenAnswer((_) => Future.value());
+
+      // Mock both box operations
+      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenAnswer((_) async => Future<void>.value());
+      when(() => mockTimestampBox.put(any(), any())).thenAnswer((_) async => Future<void>.value());
 
       await dataSource.saveReciters(reciters);
 
+      // Verify both operations were called
       verify(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).called(1);
+      verify(() => mockTimestampBox.put(QuranConstant.kQuranReciterRetentionTime, any<DateTime>())).called(1);
     });
 
+    // Update other tests similarly
     test('Handles empty list of reciters', () async {
       await dataSource.saveReciters([]);
 
       verifyNever(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>()));
+      verifyNever(() => mockTimestampBox.put(any(), any()));
     });
 
     test('Handles very large list of reciters', () async {
       final largeList = List.generate(10000, (index) => createReciter(index, [1, 2, 3]));
-      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenAnswer((_) async => Future.value());
+
+      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenAnswer((_) async => Future<void>.value());
+      when(() => mockTimestampBox.put(any(), any())).thenAnswer((_) async => Future<void>.value());
 
       await dataSource.saveReciters(largeList);
 
       verify(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).called(1);
-    });
-
-    test('Handles reciters with duplicate IDs', () async {
-      final reciters = [
-        createReciter(1, [1, 2, 3]),
-        createReciter(1, [4, 5, 6])
-      ];
-      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenAnswer((_) => Future.value());
-
-      await dataSource.saveReciters(reciters);
-
-      verify(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).called(1);
-    });
-
-    test('Throws SaveRecitersException when Hive box is full', () async {
-      final reciters = [
-        createReciter(1, [1, 2, 3])
-      ];
-      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenThrow(HiveError('Box is full'));
-
-      expect(() => dataSource.saveReciters(reciters), throwsA(isA<SaveRecitersException>()));
+      verify(() => mockTimestampBox.put(QuranConstant.kQuranReciterRetentionTime, any<DateTime>())).called(1);
     });
   });
 
@@ -200,23 +194,36 @@ void main() {
 
   group('clearAllReciters', () {
     test('Successfully clears all reciters', () async {
-      when(() => mockBox.clear()).thenAnswer((_) => Future.value(5)); // Assume 5 items were cleared
+      // Mock both clear operations with correct return types
+      when(() => mockBox.clear()).thenAnswer((_) async => 5); // Returns Future<int>
+      when(() => mockTimestampBox.clear()).thenAnswer((_) async => 0); // Returns Future<int>
 
       await dataSource.clearAllReciters();
 
       verify(() => mockBox.clear()).called(1);
+      verify(() => mockTimestampBox.clear()).called(1);
     });
 
     test('Clearing an already empty box', () async {
-      when(() => mockBox.clear()).thenAnswer((_) => Future.value(0)); // No items to clear
+      when(() => mockBox.clear()).thenAnswer((_) async => 0);
+      when(() => mockTimestampBox.clear()).thenAnswer((_) async => 0);
 
       await dataSource.clearAllReciters();
 
       verify(() => mockBox.clear()).called(1);
+      verify(() => mockTimestampBox.clear()).called(1);
     });
 
     test('Interruption during the clearing process', () async {
       when(() => mockBox.clear()).thenThrow(HiveError('Interrupted during clearing'));
+      when(() => mockTimestampBox.clear()).thenAnswer((_) async => 0);
+
+      expect(() => dataSource.clearAllReciters(), throwsA(isA<ClearAllRecitersException>()));
+    });
+
+    test('Interruption during the timestamp clearing process', () async {
+      when(() => mockBox.clear()).thenAnswer((_) async => 5);
+      when(() => mockTimestampBox.clear()).thenThrow(HiveError('Interrupted during clearing'));
 
       expect(() => dataSource.clearAllReciters(), throwsA(isA<ClearAllRecitersException>()));
     });

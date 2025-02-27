@@ -30,21 +30,24 @@ class AppDateTime {
     _initialRealTime.year,
     11,
     1,
-    00,
-    -20,
+    15,
+    45,
     00,
   );
 
-  static final Duration _timeDifference = _initialDebugTime.difference(_initialRealTime);
+  static final Duration _timeDifference =
+      _initialDebugTime.difference(_initialRealTime);
 
   static DateTime now() {
     if (kDebugMode) {
       return DateTime.now().add(_timeDifference);
     } else {
-      return FeatureManagerProvider.featureManager.isFeatureEnabled("timezone_shift") &&
+      return FeatureManagerProvider.featureManager
+                  .isFeatureEnabled("timezone_shift") &&
               _timeManager.deviceModel == "MAWABOX" &&
               _timeManager.isLauncherInstalled
-          ? DateTime.now().add(Duration(hours: _timeManager.shift, minutes: _timeManager.shiftInMinutes))
+          ? DateTime.now().add(Duration(
+              hours: _timeManager.shift, minutes: _timeManager.shiftInMinutes))
           : DateTime.now();
     }
   }
