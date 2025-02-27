@@ -416,7 +416,7 @@
   "scheduleSaved": "O seu horário foi guardado.",
   "completeAllFields": "Por favor, preencha todos os campos antes de guardar.",
   "endTimeAfter": "A hora de fim deve ser após a hora de início.",
-  "scheduleListening": "Escuta Agendada",
+  "scheduleListening": "Audição Agendada",
   "enableScheduling": "Ativar agendamento",
   "scheduleDesc": "Ative esta funcionalidade para reproduzir automaticamente um Surah nos horários agendados.",
   "startTime": "Hora de início",
