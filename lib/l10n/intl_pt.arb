@@ -439,5 +439,6 @@
         "example": "16:00"
       }
     }
-  }
+  },
+  "scheduleInOnlineMode": "Por favor, ligue-se à internet para agendar a audição do Alcorão"
 }
