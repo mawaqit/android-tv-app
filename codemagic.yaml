@@ -56,7 +56,14 @@ workflows:
       - name: Install dependencies
         script: |
           flutter pub get
-          dart run build_runner build --delete-conflicting-outputs
+          dart run build_runner build
+      - name: Run flutter Unit tests
+        script: |
+          mkdir -p test-results
+          flutter test  \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY  \
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+          > test-results/results.json
 
       - name: Build AAB with Flutter
         script: |
