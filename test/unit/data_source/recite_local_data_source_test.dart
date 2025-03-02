@@ -377,7 +377,10 @@ void main() {
 
       // Mock the main reciter box
       when(() => mockBox.values).thenReturn([oldReciter]);
-      when(() => mockBox.putAll(any())).thenAnswer((_) => Future<void>.value());
+
+      // Use only one definition for putAll - choose the style that works in other tests
+      when(() => mockBox.putAll(any<Map<dynamic, ReciterModel>>())).thenAnswer((_) => Future<void>.value());
+      when(() => mockTimestampBox.put(any(), any())).thenAnswer((_) => Future<void>.value());
 
       // Mock the favorite box
       when(() => mockFavoriteBox.values).thenReturn([1]);
