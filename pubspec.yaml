@@ -152,6 +152,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  integration_test:
+    sdk: flutter
+
   # to get unused packages run
   # flutter pub run dependency_validator
   dependency_validator:
