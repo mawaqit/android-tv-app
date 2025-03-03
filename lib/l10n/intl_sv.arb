@@ -6,13 +6,14 @@
   "languages": "Språk",
   "appLang": "Språk i appen",
   "descLang": "Välj det språk du föredrar",
+  "hadithLangDesc": "Detta åsidosätter ditt val i administratörskonsolen, du kan välja ett annat språk för skärmen",
   "whoops": "Hoppsan!",
   "noInternet": "Ingen internetuppkoppling",
   "tryAgain": "Försök igen",
   "closeApp": "Stäng appen",
-  "quit": "Sluta med",
-  "forceStaging": "Växla till staging",
-  "disableStaging": "Övergång till produktion",
+  "quit": "Avsluta",
+  "forceStaging": "Byt till staging",
+  "disableStaging": "Byt till produktion",
   "sureCloseApp": "Är du säker på att du vill avsluta programmet?",
   "ok": "OK",
   "cancel": "CANCEL",
@@ -20,27 +21,27 @@
   "lightMode": "Ljusläge",
   "changeMosque": "Ändra moské",
   "in1": "på",
-  "sec": "Sek",
+  "sec": "Sekund",
   "online": "Online",
   "missingMosqueId": "MAWAQIT #ID eller MOSQUE #ID saknas",
-  "mosqueIdIsNotValid": "Tyvärr, {mosqueId} är inte ett giltigt moské-ID.",
+  "mosqueIdIsNotValid": "Tyvärr, {mosqueId} är inte ett giltigt moské-ID",
   "selectMosqueId": "Ange ditt moské-id",
   "mawaqitWelcome": "Välkommen till MAWAQIT",
-  "mawaqitDesc": "Assalamu Alaikom och Baraka'Allah fikom för att du har valt MAWAQIT, världens första och främsta smarta moskénätverk, som används av miljontals muslimer världen över i över 85 länder sedan 2016.\n\nVi ger dig den mest avancerade Smart Mosque Display, tillgänglig på flera enheter (mobil, smartwatch, TV-skärmar), utan att samla in eller dela dina personuppgifter.\n\nStöd gärna detta välsignade projekt här: https://donate.mawaqit.net\n\nVi är en ideell organisation och detta projekt är en \"Waqf fi'sabili Allah\" (Dedikerad donation).\n\nDina donationer håller detta projekt tillgängligt för vem som helst, var som helst, helt GRATIS utan kostnad, utan reklam och utan månadsavgift.\n\nDetta projekt skulle inte vara möjligt utan Allahs hjälp som samlade en passionerad gemenskap av begåvade och passionerade volontärer som arbetar dag och natt för att ge dig bästa möjliga service och ett toppmodernt system som är tillgängligt dygnet runt.\n\nÖverväg att donera för att hålla detta välsignade projekt igång. Baraka'Allah fikom för ditt fortsatta förtroende och stöd.",
+  "mawaqitDesc": "Hej, Tack för att du har valt MAWAQIT, världens första samt #1 smarta moskénätverk, som används av miljontals muslimer runt om världen i över 85 länder sedan 2016.\n\nVi ger dig den mest avancerade Smart moské Display, tillgängligh på flera enheter (mobil, smart klockor, TV-skärmar), utan att samla in eller dela dina personuppgifter.\n\nStöd gärna detta välsignade projekt här: https://donate.mawaqit.net\n\nVi är en ideell organisation och detta projekt (Dedikerad donation).\n\nDina donationer håller detta projekt tillgängligt för vem som helst, var som helst, helt GRATIS utan kostnad, utan reklam och utan månadsavgift.\n\nDetta projekt skulle inte vara möjligt utan Allahs hjälp som samlade en passionerad gemenskap av begåvade och passionerade volontärer som arbetar dag och natt för att ge dig bästa möjliga service och ett toppmodernt system som är tillgängligt 24/7.\n\nÖverväg att donera för att hålla detta välsignade projekt igång. Tack för ditt fortsatta förtroende och stöd.",
   "privacyPolicy": "Integritetspolicy",
   "termsOfService": "Villkor för tjänsten",
   "installationGuide": "Installationsguide",
   "drawerTitle": "MAWAQIT",
   "drawerDesc": "Att koppla samman muslimer med moskéer",
   "backendError": "Tyvärr kunde vi inte ansluta till servern.\nKontrollera att du har tillgång till Internet eller försök igen senare.",
-  "selectWithMosqueId": "Försök: 256, det är ID för \"Grande Mosquée de Paris\"",
-  "searchForMosque": "Vilken moské söker du (ID, namn, stad, postnummer...)?",
+  "selectWithMosqueId": "Försök: 256, det är identiteten på \"Moské de Paris\"",
+  "searchForMosque": "Vilken moské söker du (ID, namn, stad, postnummer...)",
   "searchMosque": "Sök efter en moské",
   "mosqueNameError": "Ange namnet på moskén",
   "slugError": "Är inte en giltig moskésnigel",
-  "doYouKnowMosqueId": "Känner du till ditt installations- eller moské-ID?",
+  "doYouKnowMosqueId": "Känner du till ditt installations ID eller moské-ID?",
   "yes": "Ja",
-  "no": "Ingen",
+  "no": "Nej",
   "networkStatus": "Nätverksstatus",
   "mosqueNoMore": "Inga fler resultat",
   "mosqueNoResults": "Inga resultat",
@@ -52,34 +53,34 @@
   "asr": "Asr",
   "maghrib": "Maghrib",
   "isha": "Isha",
-  "afterAdhanHadithTitle": "Efter adhan Du`aa",
-  "afterSalahHadith": "Allahumma Rabba hadhihid-da'wati-ttammati, was-salatil-qa'imati, ati Muhammadanil-wasilata wal-fadhilata, wab'athu maqaman mahmuda nilladhi wa 'adtahu [O Allah, Rubb av denna perfekta kallelse (Da'wah) och av den etablerade bönen (As-Salat), ge Muhammad Wasilah och överlägsenhet, och höj honom upp till en lovvärd position som Du har lovat honom].",
+  "afterAdhanHadithTitle": "Åkallande efter böneutropen",
+  "afterSalahHadith": "Allahumma Rabba hadhihid-da'wati-ttammati, was-salatil-qa'imati, ati Muhammadanil-wasilata wal-fadhilata, wab'athu maqaman mahmuda nilladhi wa 'adtahu [O Allah, Rabb av denna perfekta kallelse (Da'wah) och av den etablerade bönen (As-Salat), ge Muhammad Wasilah och överlägsenhet, och höj honom upp till en prisvärd position som Du har lovat honom]",
   "alIqama": "Al Iqama",
   "alAdhan": "Al Adan",
   "turnOfPhones": "Vänligen sätt era telefoner i tyst läge",
   "iqamaIn": "Iqama i",
   "alAthkar": "Al-Athkar",
-  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah Allahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram Allahumma A`inni `ala dhikrika wa chukrika wa husni `ibadatik",
+  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah, Allahumma anta Assalam w minka Assalam, tabarakta ya dhal Jalali wal ikram Allahumma A`inni `ala dhikrika wa shukrika wa husni `ibadatik",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "Subhan Allah wal hamdu lillah wallahu akbar (33 gånger) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
+  "azkarList1": "Subhan Allah wal hamdu lilla wallahu akbar (33 gånger) La ilaha illa Allah, wahdahu la sharika hal, lahul mulku wa lahul hamdu, w hus `ala kulli shay in Qadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
-  "azkarList2": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس",
+  "azkarList2": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس",
   "@azkarList2": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
   },
-  "azkarList3": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+  "azkarList3": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
   "@azkarList3": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
   },
-  "azkarList4": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ",
+  "azkarList4": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ",
   "@azkarList4": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
   },
-  "azkarList5": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ",
+  "azkarList5": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ",
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
@@ -91,11 +92,11 @@
   "@azkarList7": {
     "description": "اللهم أنت ربي، لا إله إلا أنت، خلقتني وأنا عبدُك, وأنا على عهدِك ووعدِك ما استطعتُ، أعوذ بك من شر ما صنعتُ، أبوءُ لَكَ بنعمتكَ عَلَيَّ، وأبوء بذنبي، فاغفر لي، فإنه لا يغفرُ الذنوب إلا أنت"
   },
-  "azkarList8": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، رب أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر",
+  "azkarList8": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر",
   "@azkarList8": {
     "description": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر"
   },
-  "azkarList9": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]",
+  "azkarList9": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [وإذا أمسى قال: اللَّهم إني أمسيت",
   "@azkarList9": {
     "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
@@ -175,9 +176,269 @@
   "mainScreenExplanation": "I moskéns huvudrum visas inte jumua-streamingen live på denna skärm.",
   "normalModeExplanation": "Visar den normala skärmen med bönetider och meddelanden.",
   "announcementOnlyModeExplanation": "Kommer att visa meddelanden hela tiden",
+  "orientation": "Orientering",
+  "selectYourMawaqitTvAppOrientation": "Välj din mawaqit tv app orientering",
+  "deviceDefault": "Enhetens standard",
+  "deviceDefaultBTNDescription": "Mawaqit kommer automatiskt att välja standardorientering baserat på skärmorientering",
+  "portrait": "Porträtt",
+  "portraitBTNDescription": "För vertikal orientering rekommenderas för moské med litet utrymme",
+  "landscape": "Landskap",
+  "landscapeBTNDescription": "För horisontell orientering. Huvudlayouten för mawaqit tv app och rekommenderas en för de flesta moskéer",
   "eidMubarak": "Eid Mubarak",
   "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
   "settings": "Inställningar",
   "applicationModes": "Tillämpningssätt",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Om du stöter på problem med appen, aktivera detta alternativ"
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Om du stöter på problem med appen, aktivera detta alternativ",
+  "hijriAdjustments": "Lokala Hijri justeringar",
+  "hijriAdjustmentsDescription": "Justera hijri datumet lokalt i din enhet. Detta kommer inte att påverka inställningarna för moskén online",
+  "backoffice_default": "Standardvärden för backoffice",
+  "recommended": "Rekommenderad",
+  "sabah": "Sabah",
+  "randomHadithLanguage": "Slumpmässigt hadith språk",
+  "en": "Engelska",
+  "fr": "Franska",
+  "ar": "Arabiska",
+  "tr": "Turkiska",
+  "de": "Tyska",
+  "es": "Spanska",
+  "pt": "Portugisiska",
+  "nl": "Holländska",
+  "fr_ar": "Franska & arabiska",
+  "en_ar": "Engelska & arabiska",
+  "de_ar": "Tyska & arabiska",
+  "ta_ar": "Tamil & Arabic",
+  "tr_ar": "Turkiska & Arabiska",
+  "es_ar": "Spanska & Arabiska",
+  "pt_ar": "Portugisiska & Arabiska",
+  "nl_ar": "Holländska & Arabiska",
+  "connectToChangeHadith": "Vänligen anslut till internet för att ändra hadith språket.",
+  "retry": "Försök igen",
+  "timeSetting": "Konfigurera tiden",
+  "timeSettingDesc": "Ange ett anpassat namn",
+  "selectedTime": "Den aktuella valda tiden",
+  "confirmation": "Bekräftelse",
+  "confirmationMessage": "Är du säker på att du vill använda enhetens tid?",
+  "useDeviceTime": "Använd enhetens tid",
+  "selectTime": "Välj tid",
+  "previous": "Föregående",
+  "appTimezone": "App Timezone",
+  "descTimezone": "Välj din tidszon för att få korrekta bönetider.",
+  "appWifi": "Anslut till wifi",
+  "descWifi": "Vänligen anslut till ditt önskade wifi",
+  "searchCountries": "Sök länder",
+  "scanAgain": "Skanna igen",
+  "noScannedResultsFound": "Inga nära åtkomstpunkter hittades",
+  "connect": "Anslut",
+  "wifiPassword": "Lösenord",
+  "skip": "Hoppa",
+  "noSSID": "**Hidden SSID**",
+  "close": "Stäng",
+  "search": "Sök på",
+  "wifiSuccess": "Lyckad anslutning till Wifi.",
+  "wifiFailure": "Det gick inte att ansluta till Wifi.",
+  "timezoneSuccess": "Tidszon har angetts.",
+  "timezoneFailure": "Det gick inte att ange tidszon.",
+  "screenLock": "Skärm på/av",
+  "screenLockConfig": "Konfigurera skärmen på/av",
+  "screenLockMode": "Skärm på/av läge",
+  "screenLockDesc": "Slå på/av TV före och efter varje bön för att spara energi",
+  "screenLockDesc2": "Denna funktion slå på/av enheten före och efter varje bön adhan",
+  "before": "minuter före varje bönetid",
+  "after": "minuter efter varje bönetid",
+  "updateAvailable": "Uppdatering tillgänglig",
+  "seeMore": "Se mer",
+  "whatIsNew": "Vad är nytt",
+  "update": "Uppdatera",
+  "automaticUpdate": "Meddela uppdatering",
+  "automaticUpdateDescription": "Aktivera notifieringsuppdatering för att få de senaste funktionerna och förbättringarna",
+  "checkInternetLegacyMode": "Du måste ansluta till internet för att använda äldre läge",
+  "powerOnScreen": "Slå på skärmen",
+  "powerOffScreen": "Stäng av skärmen",
+  "deviceSettings": "Enhetens inställningar",
+  "later": "Senare",
+  "downloadQuran": "Ladda ner Quran",
+  "quran": "Koranen",
+  "askDownloadQuran": "Vill du ladda ner Koranen?",
+  "download": "Hämta",
+  "downloadingQuran": "Laddar ner Koranen",
+  "extractingQuran": "Extraherar Koranen",
+  "updatedQuran": "Koranen har uppdaterats",
+  "quranLatestVersion": "Quran är upptaderat",
+  "quranUpdatedVersion": "Quran uppdaterad version är: {version}",
+  "quranIsUpdated": "Quran är uppdaterad",
+  "quranDownloaded": "Quran hämtad",
+  "quranIsAlreadyDownloaded": "Quran är redan hämtad",
+  "chooseReciter": "Välj Recitatör",
+  "reciteType": "Recitation typ",
+  "readingMode": "Jag vill läsa",
+  "listeningMode": "Jag vill lyssna",
+  "quranReadingPage": "Sida {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "quranReadingPagePortrait": "Sida {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Välj sida",
+  "checkingForUpdates": "Söker efter uppdateringar...",
+  "chooseQuranType": "Välj quran",
+  "hafs": "Hafs",
+  "warsh": "Warsh",
+  "favorites": "Favoriter",
+  "allReciters": "Alla Recitatörer",
+  "reciterAddedToFavorites": "Recitatör {name} tillagd i favoriter",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Recitatör {name} borttagen från favoriter",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "Inga favoritrecitatörer. Försök att lägga till en i listan",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+  "noReciterSearchResult": "Inga resultat hittades för din sökning",
+  "searchForReciter": "Sök efter en recitatör",
+  "downloadAllSuwarSuccessfully": "Hela quranen laddas ner",
+  "noSuwarDownload": "Inga nya suwars att ladda ner",
+  "connectDownloadQuran": "Anslut till Internet för att ladda ner",
+  "playInOnlineModeQuran": "Anslut till internet för att spela",
+  "downloaded": "Nedladdad",
+  "switchQuranType": "Gå till {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Välj Surah",
+  "checkForUpdates": "Sök efter uppdateringar",
+  "checkForNewVersion": "Kontrollera om en ny version är tillgänglig",
+  "wouldYouLikeToUpdate": "Vill du uppdatera appen?",
+  "updateCompleted": "Uppdateringen slutförd!",
+  "noUpdates": "Inga uppdateringar",
+  "usingLatestVersion": "Du använder den senaste versionen.",
+  "updateCancelled": "Uppdateringen avbruten",
+  "checkingUpdates": "Kontrollerar uppdateringar...",
+  "downloadingUpdate": "Hämtar uppdatering...",
+  "installingUpdate": "Installerar uppdatering...",
+  "updateCompletedSuccessfully": "Uppdateringen har slutförts",
+  "updateFailed": "Uppdateringen misslyckades",
+  "save": "Spara",
+  "enterRtspUrl": "Ange RTSP eller Youtube Live URL",
+  "addRtspUrl": "Lägg till din kameraström URL nedan",
+  "enableRtspCamera": "Aktivera kameraströmning",
+  "rtspCameraSettings": "Kamerainställningar",
+  "invalidRtspUrl": "Ogiltig URL. Kontrollera URL:en och försök igen.",
+  "validRtspUrl": "URL validerad och sparad.",
+  "rtspCameraSettingTitle": "Anslutning till Live kamera",
+  "rtspCameraSettingDesc": "Anslut till din lokala kamera och visa jumua bön ström på TV-skärmen.",
+  "rtspCameraSettingScreenDesc": "Om du anger en URL här, kommer din skärm automatiskt växla till videoströmning när Jumua tid anländer",
+  "validatingStream": "Validerar stream...",
+  "checkInternetLiveCamera": "Du måste ansluta till internet för att installera live-kameran",
+  "somethingWentWrong": "Något gick snett! Försök igen",
+  "somethingWrong": "Något gick fel",
+  "tryAgainLater": "Försök igen senare",
+  "hintTextRtspUrl": "rtsp://... eller https://youtube.com/live/...",
+  "checkInternetUpdate": "Du måste ansluta till internet för att söka efter nya uppdateringar",
+  "appUpdateAvailable": "Din app kör version {currentVersion}. En ny uppdatering (version {updatedVersion}) finns med de senaste funktionerna och förbättringarna.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "En ny uppdatering för {moshafName} Quran (version {version}) är tillgänglig.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr och Isha böner endast",
+  "minutesBeforeFajrPrayer": "minuter före fajr bön tid",
+  "minutesAfterIshaPrayer": "minuter på avstånd isha bön tid",
+  "scheduleSaved": "Ditt schema har sparats.",
+  "completeAllFields": "Vänligen fyll i alla fält innan du sparar.",
+  "endTimeAfter": "Sluttiden måste vara efter starttiden.",
+  "scheduleListening": "Schemalagd lyssning",
+  "enableScheduling": "Aktivera schemaläggning",
+  "scheduleDesc": "Aktivera denna funktion för att automatiskt spela en Surah vid schemalagda tider.",
+  "startTime": "Starttid",
+  "endTime": "Sluttid",
+  "selectReciter": "Välj en Recitatör",
+  "selectMoshaf": "Välj en mushaf",
+  "randomSurahSelection": "Slumpmässig Surah-val",
+  "selectSurah": "Välj en Surah",
+  "initializingAutoReading": "Initiering pågår...",
+  "prayerTimeNotification": "{salahName} tid ({prayerTime}) notifikation",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Vänligen anslut till internet för att schemalägga Quran lyssnande"
 }
