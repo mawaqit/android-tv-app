@@ -382,9 +382,9 @@ class _VideoAnnouncementState extends ConsumerState<_VideoAnnouncement> {
       flags: YoutubePlayerFlags(
         autoPlay: true,
         mute: mosqueManager.typeIsMosque,
-        useHybridComposition: false,
+        useHybridComposition: true,
         hideControls: true,
-        forceHD: true,
+        forceHD: false,
       ),
     );
 
