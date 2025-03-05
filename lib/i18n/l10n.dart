@@ -25,4 +25,9 @@ class S {
   static LocalizationsDelegate<AppLocalizations> get delegate => AppLocalizations.delegate;
 
   static List<Locale> get supportedLocales => AppLocalizations.supportedLocales;
+
+  // Add this method to manually set the current localization.
+  static void setCurrent(AppLocalizations localizations) {
+    _current = localizations;
+  }
 }

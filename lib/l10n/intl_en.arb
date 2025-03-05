@@ -425,5 +425,21 @@
   "selectMoshaf": "Select a Mushaf",
   "randomSurahSelection": "Random Surah Selection",
   "selectSurah": "Select a Surah",
-  "initializingAutoReading": "Initializing in progress..."
+  "initializingAutoReading": "Initializing in progress...",
+  "prayerTimeNotification": "{salahName} time ({prayerTime}) notification",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Please connect to the internet to schedule Quran listening"
+
 }

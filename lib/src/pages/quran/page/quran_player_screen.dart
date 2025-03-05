@@ -256,9 +256,11 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
           children: [
             // Add reciter's image here
             // SizedBox(height: 1.h),
-            FittedBox(
+            SizedBox(
+              width: 80.w,
               child: Text(
                 widget.surahName,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
@@ -266,10 +268,12 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                 ),
               ),
             ),
-            SizedBox(height: 1.h),
-            FittedBox(
+            SizedBox(height: 2.h),
+            SizedBox(
+              width: 80.w,
               child: Text(
                 widget.surahType,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14.sp,
                   color: Colors.grey[400],

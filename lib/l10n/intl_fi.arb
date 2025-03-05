@@ -12,22 +12,22 @@
   "tryAgain": "Yritä uudelleen",
   "closeApp": "Sulje sovellus",
   "quit": "Lopeta",
-  "forceStaging": "Vaihda lavastukseen",
-  "disableStaging": "Siirtyminen tuotantoon",
-  "sureCloseApp": "Haluatko varmasti lopettaa sovelluksen?",
+  "forceStaging": "Vaihda testaukseen",
+  "disableStaging": "Siirry tuotantoon",
+  "sureCloseApp": "Haluatko varmasti sulkea sovelluksen?",
   "ok": "OK",
   "cancel": "CANCEL",
-  "darkMode": "Tumma tila",
-  "lightMode": "Valotila",
+  "darkMode": "Dark-tila",
+  "lightMode": "Light-tila",
   "changeMosque": "Vaihda moskeija",
   "in1": "osoitteessa",
   "sec": "Sec",
   "online": "Online",
   "missingMosqueId": "MAWAQIT #ID tai MOSQUE #ID puuttuu",
-  "mosqueIdIsNotValid": "Anteeksi, {mosqueId} ei ole pätevä moskeijan tunnus.",
+  "mosqueIdIsNotValid": "Anteeksi, {mosqueId} ei ole pätevä moskeijan tunnus",
   "selectMosqueId": "Kirjoita moskeijan tunnus",
-  "mawaqitWelcome": "Tervetuloa MAWAQITiin",
-  "mawaqitDesc": "Assalamu Alaikom ja Baraka'Allah fikom, että valitsit MAWAQITin, maailman ensimmäisen ja suosituimman älykkään moskeijaverkoston, jota miljoonat muslimit ympäri maailmaa yli 85 maassa ovat käyttäneet vuodesta 2016 lähtien.\n\nTarjoamme sinulle edistyksellisimmän Smart Mosque -näytön, joka on saatavilla useilla laitteilla (mobiili, älykello, TV-näytöt), keräämättä tai jakamatta henkilökohtaisia tietojasi.\n\nOle hyvä ja tue tätä siunattua projektia täällä : https://donate.mawaqit.net\n\nOlemme voittoa tavoittelematon organisaatio, ja tämä projekti on \"Waqf fi'sabili Allah\" (omistettu lahjoitus).\n\nLahjoituksesi pitävät tämän projektin kaikkien saatavilla, missä tahansa, täysin ILMAISEKSI ilman mitään maksuja, ilman mainoksia, eikä kuukausittaista liittymää ole.\n\nTätä projektia ei olisi tehty mahdolliseksi ilman Allahin apua, joka kokosi yhteen lahjakkaiden ja intohimoisten vapaaehtoisten intohimoisen yhteisön, jotka työskentelevät yötä päivää tarjotakseen sinulle parhaan mahdollisen palvelun ja huipputason järjestelmän, joka on käytettävissä 24/7.\n\nHarkitkaa lahjoittamista, jotta tämä siunattu hanke pysyy käynnissä. Baraka'Allah fikom jatkuvasta luottamuksestanne ja tuestanne.",
+  "mawaqitWelcome": "Tervetuloa MAWAQIT:iin",
+  "mawaqitDesc": "Assalamu Alaikom ja Baraka'Allah fikom, kiitos että valitsit MAWAQITin, maailman #1 ja suosituimman älykkään moskeijaverkoston, jota miljoonat muslimit ympäri maailmaa yli 85 maassa ovat käyttäneet vuodesta 2016 lähtien.\n\nTarjoamme sinulle edistyksellisimmän Smart Mosque -näytön, joka on saatavilla useilla laitteilla (mobiili, älykello, TV-näytöt), keräämättä tai jakamatta henkilökohtaisia tietojasi.\n\nOle hyvä ja tue tätä siunattua projektia täällä: https://donate.mawaqit.net\n\nOlemme voittoa tavoittelematon organisaatio, ja tämä projekti on \"Waqf fi'sabili Allah\" (omistettu lahjoitus).\n\nLahjoituksesi pitävät tämän projektin kaikkien saatavilla, missä tahansa, täysin ILMAISEKSI ilman mitään maksuja, ilman mainoksia, eikä kuukausittaista liittymää ole.\n\nTätä projektia ei olisi tehty mahdolliseksi ilman Allahin apua, joka kokosi yhteen lahjakkaiden ja intohimoisten vapaaehtoisten intohimoisen yhteisön, jotka työskentelevät yötä päivää tarjotakseen sinulle parhaan mahdollisen palvelun ja huipputason järjestelmän, joka on käytettävissä 24/7.\n\nHarkitkaa lahjoittamista, jotta tämä siunattu hanke pysyy käynnissä. Baraka'Allah fikom jatkuvasta luottamuksestanne ja tuestanne.",
   "privacyPolicy": "Tietosuojakäytäntö",
   "termsOfService": "Käyttöehdot",
   "installationGuide": "Asennusopas",
@@ -38,7 +38,7 @@
   "searchForMosque": "Mitä moskeijaa etsit? (Tunnus, nimi, kaupunki, postinumero...).",
   "searchMosque": "Etsi moskeija",
   "mosqueNameError": "Kirjoita moskeijan nimi",
-  "slugError": "Ei ole pätevä moskeija etana",
+  "slugError": "Ei ole pätevä moskeija tunnus",
   "doYouKnowMosqueId": "Tiedätkö asennustunnuksesi tai moskeijatunnuksesi?",
   "yes": "Kyllä",
   "no": "Ei",
@@ -68,19 +68,19 @@
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
-  "azkarList2": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس",
+  "azkarList2": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس",
   "@azkarList2": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
   },
-  "azkarList3": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+  "azkarList3": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
   "@azkarList3": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
   },
-  "azkarList4": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ",
+  "azkarList4": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ",
   "@azkarList4": {
     "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
   },
-  "azkarList5": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ",
+  "azkarList5": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ",
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
@@ -212,5 +212,172 @@
   "pt_ar": "Portugali Ja Arabia",
   "nl_ar": "Hollanti Ja Arabia",
   "connectToChangeHadith": "Ole hyvä ja yhdistä internetiin vaihtaaksesi hadith kielen.",
-  "retry": "Uudelleenyritys"
+  "retry": "Uudelleenyritys",
+  "timeSetting": "Ajan määrittäminen",
+  "timeSettingDesc": "Aseta mukautettu nimi",
+  "selectedTime": "Nykyinen valittu aika",
+  "confirmation": "Vahvistus",
+  "confirmationMessage": "Oletko varma, että haluat käyttää laitteen aikaa?",
+  "useDeviceTime": "Käytä laitteen aikaa",
+  "selectTime": "Valitse Aika",
+  "previous": "Edellinen",
+  "appTimezone": "App Timezone",
+  "descTimezone": "Valitse aikavyöhyke saadaksesi tarkat rukousajat.",
+  "appWifi": "Yhdistä wifiin",
+  "descWifi": "Yhdistä haluamaasi wifi-verkkoon",
+  "searchCountries": "Etsi maita",
+  "scanAgain": "Skannaa Uudelleen",
+  "noScannedResultsFound": "Lähellä olevia liityntäpisteitä ei löytynyt",
+  "connect": "Yhdistä",
+  "wifiPassword": "Salasana",
+  "skip": "Ohita",
+  "noSSID": "**Hidden SSID**",
+  "close": "Sulje",
+  "search": "Etsi",
+  "wifiSuccess": "Yhdistäminen Wifiin onnistui.",
+  "wifiFailure": "Yhteyden muodostaminen Wifiin epäonnistui.",
+  "timezoneSuccess": "Aikavyöhyke asetettu onnistuneesti.",
+  "timezoneFailure": "Aikavyöhykkeen asettaminen epäonnistui.",
+  "screenLock": "Näyttö päälle/pois",
+  "screenLockConfig": "Aseta näyttö päälle/pois",
+  "screenLockMode": "Näyttö päälle/pois päältä -tila",
+  "screenLockDesc": "Ota televisio käyttöön/pois käytöstä ennen ja jälkeen jokaisen rukouksen energian säästämiseksi",
+  "screenLockDesc2": "Tämä ominaisuus kytketään laitteen päälle ja pois päältä ennen jokaista rukousta ja sen jälkeen",
+  "before": "minuuttia ennen jokaista rukousaikaa",
+  "after": "minuutit jokaisen rukouksen ajan jälkeen",
+  "updateAvailable": "Päivitys saatavilla",
+  "seeMore": "Näytä lisää",
+  "whatIsNew": "Mitä uutta",
+  "update": "Päivitys",
+  "automaticUpdate": "Ilmoita päivityksestä",
+  "automaticUpdateDescription": "Ota käyttöön ilmoituspäivitys saadaksesi uusimmat ominaisuudet ja parannukset",
+  "checkInternetLegacyMode": "Sinun tulee muodostaa yhteys internetiin käyttääksesi legacy moodia",
+  "powerOnScreen": "Virta näytöllä",
+  "powerOffScreen": "Sammuta näyttö",
+  "deviceSettings": "Laitteen Asetukset",
+  "later": "Myöhemmin",
+  "downloadQuran": "Lataa Koraani",
+  "quran": "Koraani",
+  "askDownloadQuran": "Haluatko ladata Koraanin?",
+  "download": "Lataa",
+  "downloadingQuran": "Ladataan Koraania",
+  "extractingQuran": "Puretaan Koraania",
+  "updatedQuran": "Koraani päivitetty",
+  "quranLatestVersion": "Koraani on ajan tasalla",
+  "quranUpdatedVersion": "Quran päivitetty versio on: {version}",
+  "quranIsUpdated": "Koraani on päivitetty",
+  "quranDownloaded": "Quran ladattu",
+  "quranIsAlreadyDownloaded": "Quran on jo ladattu",
+  "chooseReciter": "Valitse Reciter",
+  "reciteType": "Recite Type",
+  "readingMode": "Haluan lukea",
+  "listeningMode": "Haluan kuunnella",
+  "quranReadingPage": "Sivu {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "quranReadingPagePortrait": "Sivu {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Valitse sivu",
+  "checkingForUpdates": "Tarkistetaan päivityksiä...",
+  "chooseQuranType": "Valitse quran",
+  "hafs": "Hafat",
+  "warsh": "Warsh",
+  "favorites": "Suosikit",
+  "allReciters": "Kaikki Lähettimet",
+  "reciterAddedToFavorites": "Reciter {name} lisätty suosikeihin",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Reciter {name} poistettu suosikeista",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "Ei suosikkitunnisteita. Yritä lisätä yksi listaan",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+  "noReciterSearchResult": "Hakuasi ei löytynyt tuloksia",
+  "searchForReciter": "Etsi reciteria",
+  "downloadAllSuwarSuccessfully": "Koko quran ladataan",
+  "noSuwarDownload": "Ei uusia ladattavia apuohjelmia",
+  "connectDownloadQuran": "Ole hyvä ja yhdistä internetiin ladataksesi",
+  "playInOnlineModeQuran": "Yhdistä internetiin pelataksesi",
+  "downloaded": "Ladattu",
+  "switchQuranType": "Siirry {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Select Surah",
+  "checkForUpdates": "Tarkista päivitykset",
+  "checkForNewVersion": "Tarkista, onko uusi versio saatavilla",
+  "wouldYouLikeToUpdate": "Haluatko päivittää tämän sovelluksen?",
+  "updateCompleted": "Päivitys suoritettu onnistuneesti!",
+  "noUpdates": "Ei Päivityksiä",
+  "usingLatestVersion": "Käytössäsi on uusin versio.",
+  "updateCancelled": "Päivitys peruutettu",
+  "checkingUpdates": "Tarkistetaan päivityksiä...",
+  "downloadingUpdate": "Ladataan päivitystä...",
+  "installingUpdate": "Asennetaan päivitystä...",
+  "updateCompletedSuccessfully": "Päivitys suoritettu onnistuneesti",
+  "updateFailed": "Päivitys epäonnistui",
+  "checkInternetUpdate": "Sinun täytyy muodostaa yhteys internetiin, jotta voit tarkistaa uusia päivityksiä",
+  "appUpdateAvailable": "Sovelluksesi on käynnissä versio {currentVersion}. Uusi päivitys (versio {updatedVersion}) on saatavilla uusimmilla ominaisuuksilla ja parannuksilla.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  }
 }

@@ -1,9 +1,13 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
@@ -26,12 +30,15 @@ import 'package:mawaqit/src/helpers/riverpod_sentry_provider_observer.dart';
 import 'package:mawaqit/src/pages/SplashScreen.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
+import 'package:mawaqit/src/services/background_services.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -40,38 +47,133 @@ import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
 
+@pragma("vm:entry-point")
 Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
-      final directory = await getApplicationDocumentsDirectory();
-      Hive.init(directory.path);
-      await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+      try {
+        WidgetsFlutterBinding.ensureInitialized();
+        await Firebase.initializeApp();
 
-      tz.initializeTimeZones();
-      Hive.registerAdapter(SurahModelAdapter());
-      Hive.registerAdapter(ReciterModelAdapter());
-      Hive.registerAdapter(MoshafModelAdapter());
-      MediaKit.ensureInitialized();
-      runApp(
-        riverpod.ProviderScope(
-          child: MyApp(),
-          observers: [
-            RiverpodLogger(),
-            RiverpodSentryProviderObserver(),
-          ],
-        ),
-      );
-      await Future.delayed(const Duration(seconds: 5));
-      await ToggleScreenFeature.restoreScheduledTimers();
+        final directory = await getApplicationDocumentsDirectory();
+
+        // Initialize Hive first
+        Hive.init(directory.path);
+        await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+
+        // Check and request permissions
+        await _initializePermissions();
+
+        // Initialize other services
+        await _initializeServices();
+
+        runApp(
+          riverpod.ProviderScope(
+            child: MyApp(),
+            observers: [
+              RiverpodLogger(),
+              RiverpodSentryProviderObserver(),
+            ],
+          ),
+        );
+      } catch (e, stackTrace) {
+        developer.log('Initialization error', error: e, stackTrace: stackTrace);
+        rethrow;
+      }
     },
   );
 }
 
-class MyApp extends riverpod.ConsumerWidget {
+Future<void> _handleOverlayPermissions(String deviceModel, bool isRooted) async {
+  final methodChannel = MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
+  final isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
+
+  if (RegExp(r'ONVO.*').hasMatch(deviceModel)) {
+    await methodChannel.invokeMethod("grantOnvoOverlayPermission");
+    return;
+  }
+
+  if (!isPermissionGranted) {
+    if (isRooted) {
+      await methodChannel.invokeMethod("grantOverlayPermission");
+    } else {
+      await NotificationOverlay.requestOverlayPermission();
+      await checkAndRequestExactAlarmPermission();
+    }
+  }
+}
+
+Future<void> _initializePermissions() async {
+  final isRooted =
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
+  final deviceModel = await _getDeviceModel();
+  await _handleOverlayPermissions(deviceModel, isRooted);
+  await UnifiedBackgroundService.initializeService();
+}
+
+Future<String> _getDeviceModel() async {
+  var hardware = await DeviceInfoPlugin().androidInfo;
+  return hardware.model;
+}
+
+Future<void> checkAndRequestExactAlarmPermission() async {
+  if (Platform.isAndroid) {
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+
+    if (androidInfo.version.sdkInt >= 33) {
+      final status = await Permission.scheduleExactAlarm.status;
+
+      if (status.isDenied) {
+        final result = await Permission.scheduleExactAlarm.request();
+
+        if (result.isDenied) {
+          developer.log('Exact alarm not granted error');
+        }
+      }
+    }
+  }
+}
+
+Future<void> _initializeServices() async {
+  tz.initializeTimeZones();
+  await ToggleScreenFeature.initialize();
+
+  // Register Hive adapters
+  Hive.registerAdapter(SurahModelAdapter());
+  Hive.registerAdapter(ReciterModelAdapter());
+  Hive.registerAdapter(MoshafModelAdapter());
+
+  // Initialize media kit
+  MediaKit.ensureInitialized();
+}
+
+class MyApp extends riverpod.ConsumerStatefulWidget {
   @override
-  Widget build(BuildContext context, riverpod.WidgetRef ref) {
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    UnifiedBackgroundService.setNotificationVisibility(false);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    UnifiedBackgroundService().didChangeAppLifecycleState(state);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),

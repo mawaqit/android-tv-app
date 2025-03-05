@@ -17,7 +17,9 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 
-version: 1.19.3+1
+
+version: 1.19.5+1
+
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -103,18 +105,19 @@ dependencies:
   flutter_svg: ^2.0.5
   dots_indicator: ^3.0.0
   sizer: ^2.0.15
-
   timeago_flutter: ^3.4.0
   timezone:
   wifi_scan: ^0.4.1
-
   #  media
   youtube_player_flutter: ^8.1.2
   youtube_explode_dart: ^1.12.4
   unique_identifier: ^0.3.0
   collection: any
   disk_space: ^0.2.1
-
+  screen_control:
+    git:
+      url: https://github.com/mawaqit/native_screen_lock_mawaqit_devices
+      ref: master
   equatable: ^2.0.5
   just_audio: ^0.9.37
 
@@ -137,6 +140,12 @@ dependencies:
 
   wakelock_plus: 1.1.4
   wakelock_plus_platform_interface: 1.1.0
+  flutter_background_service: ^5.0.9
+  notification_overlay:
+    git:
+      url: https://github.com/mawaqit/android-tv-notification
+      ref: main
+
   percent_indicator: ^4.2.3
 
   # functional programming
@@ -147,6 +156,12 @@ dependencies:
   fast_cached_network_image: ^1.2.0
 
   montenegrin_localization: ^0.1.0+1
+  synchronized: ^3.1.0+1
+  workmanager: ^0.5.2
+  audio_session: ^0.1.21
+  permission_handler: ^11.0.1
+
+
 
 dev_dependencies:
   flutter_test:
@@ -157,12 +172,12 @@ dev_dependencies:
   dependency_validator:
   build_runner: ^2.4.9
   http_mock_adapter: ^0.6.1
-  flutter_background_service: ^2.1.3
   flutter_lints: 3.0.1
   hive_generator: ^2.0.1
   mocktail: ^1.0.3
   dart_mappable_builder: ^4.2.3
   json_serializable: ^6.8.0
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
