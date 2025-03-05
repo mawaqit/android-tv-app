@@ -127,7 +127,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     isDeviceRooted = await checkRoot();
     isToggleScreenActivated = await ToggleScreenFeature.getToggleFeatureState();
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
-
     isIshaFajrOnly = await getisIshaFajr();
     notifyListeners();
   }
