@@ -66,20 +66,17 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     });
   }
 
-  Future<void> _handleTimeSelection(
-      BuildContext context, bool isStartTime) async {
+  Future<void> _handleTimeSelection(BuildContext context, bool isStartTime) async {
     final scheduleNotifier = ref.read(scheduleProvider.notifier);
     final currentState = ref.read(scheduleProvider).value!;
 
     await showDialog(
       context: context,
       builder: (BuildContext context) => TVFriendlyTimePicker(
-        initialTime:
-            isStartTime ? currentState.startTime : currentState.endTime,
+        initialTime: isStartTime ? currentState.startTime : currentState.endTime,
         onTimeSelected: (TimeOfDay selectedTime) async {
           if (isStartTime) {
-            await _handleStartTimeSelection(
-                selectedTime, currentState, scheduleNotifier);
+            await _handleStartTimeSelection(selectedTime, currentState, scheduleNotifier);
           } else {
             await _handleEndTimeSelection(selectedTime, scheduleNotifier);
           }
@@ -108,8 +105,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
 
   bool _shouldAdjustEndTime(TimeOfDay selectedTime, TimeOfDay endTime) {
     return endTime.hour < selectedTime.hour ||
-        (endTime.hour == selectedTime.hour &&
-            endTime.minute <= selectedTime.minute);
+        (endTime.hour == selectedTime.hour && endTime.minute <= selectedTime.minute);
   }
 
   Future<void> _handleEndTimeSelection(
@@ -137,8 +133,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: scheduleState.when(
-              data: (state) =>
-                  _buildScheduleContent(state, quranState, context),
+              data: (state) => _buildScheduleContent(state, quranState, context),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Text('Error: $error'),
             ),
@@ -193,8 +188,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     );
   }
 
-  List<Widget> _buildScheduleOptions(
-      dynamic state, AsyncValue<dynamic> quranState) {
+  List<Widget> _buildScheduleOptions(dynamic state, AsyncValue<dynamic> quranState) {
     return [
       _buildTimePicker(S.of(context).startTime, state.startTime, true),
       const SizedBox(height: 16),
@@ -208,8 +202,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       ],
       _buildRandomSurahCheckbox(state, context),
       const SizedBox(height: 16),
-      if (state.selectedMoshaf != null && !state.isRandomEnabled)
-        _buildSurahDropdown(state, quranState),
+      if (state.selectedMoshaf != null && !state.isRandomEnabled) _buildSurahDropdown(state, quranState),
     ];
   }
 

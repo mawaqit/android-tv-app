@@ -16,12 +16,10 @@ class RTSPCameraSettingsScreen extends ConsumerStatefulWidget {
   const RTSPCameraSettingsScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RTSPCameraSettingsScreen> createState() =>
-      _RTSPCameraSettingsScreenState();
+  ConsumerState<RTSPCameraSettingsScreen> createState() => _RTSPCameraSettingsScreenState();
 }
 
-class _RTSPCameraSettingsScreenState
-    extends ConsumerState<RTSPCameraSettingsScreen> {
+class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScreen> {
   final TextEditingController _urlController = TextEditingController();
   final FocusNode _saveButtonFocusNode = FocusNode();
   late StreamSubscription<bool> keyboardSubscription;
@@ -30,8 +28,7 @@ class _RTSPCameraSettingsScreenState
   void initState() {
     super.initState();
     var keyboardVisibilityController = KeyboardVisibilityController();
-    keyboardSubscription =
-        keyboardVisibilityController.onChange.listen((bool visible) {
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         FocusScope.of(context).requestFocus(_saveButtonFocusNode);
       }
@@ -58,11 +55,7 @@ class _RTSPCameraSettingsScreenState
       if (next.hasValue) {
         _updateUrlController(next.value!);
       }
-      if (previous != next &&
-          !next.isLoading &&
-          next.hasValue &&
-          !next.hasError &&
-          next.value!.isRTSPEnabled) {
+      if (previous != next && !next.isLoading && next.hasValue && !next.hasError && next.value!.isRTSPEnabled) {
         final state = next.value!;
 
         // Only show snackbar when URL validation status changes
@@ -133,8 +126,7 @@ class _RTSPCameraSettingsScreenState
                         child: Container(
                           margin: const EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).dividerColor),
+                            border: Border.all(color: Theme.of(context).dividerColor),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: AspectRatio(
@@ -238,8 +230,7 @@ class _RTSPCameraSettingsScreenState
   }
 
   Widget _buildVideoPreview(RTSPCameraSettingsState state) {
-    if (state.streamType == StreamType.youtubeLive &&
-        state.youtubeController != null) {
+    if (state.streamType == StreamType.youtubeLive && state.youtubeController != null) {
       return YoutubePlayer(controller: state.youtubeController!);
     }
     if (state.videoController != null) {
@@ -254,16 +245,14 @@ class _RTSPCameraSettingsScreenState
       children: [
         Text(
           S.of(context).rtspCameraSettings,
-          style:
-              Theme.of(context).textTheme.titleMedium?.apply(fontSizeFactor: 2),
+          style: Theme.of(context).textTheme.titleMedium?.apply(fontSizeFactor: 2),
           textAlign: TextAlign.center,
         ),
         const Divider(indent: 50, endIndent: 50),
         const SizedBox(height: 10),
         Text(
           S.of(context).rtspCameraSettingScreenDesc,
-          style:
-              Theme.of(context).textTheme.bodySmall?.apply(fontSizeFactor: 1.5),
+          style: Theme.of(context).textTheme.bodySmall?.apply(fontSizeFactor: 1.5),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
@@ -282,21 +271,17 @@ class _RTSPCameraSettingsScreenState
           const SizedBox(height: 20),
           Text(
             S.of(context).addRtspUrl,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.apply(fontSizeFactor: 1.2),
+            style: Theme.of(context).textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
             textAlign: TextAlign.center,
           ),
           const Divider(indent: 50, endIndent: 50),
           const SizedBox(height: 20),
           TextField(
             controller: _urlController,
-            onSubmitted: (_) =>
-                ref.read(rtspCameraSettingsProvider.notifier).updateStream(
-                      isEnabled: true,
-                      url: _urlController.text,
-                    ),
+            onSubmitted: (_) => ref.read(rtspCameraSettingsProvider.notifier).updateStream(
+                  isEnabled: true,
+                  url: _urlController.text,
+                ),
             decoration: InputDecoration(
               labelText: S.of(context).enterRtspUrl,
               hintText: S.of(context).hintTextRtspUrl,
@@ -308,11 +293,10 @@ class _RTSPCameraSettingsScreenState
           const SizedBox(height: 20),
           ElevatedButton.icon(
             focusNode: _saveButtonFocusNode,
-            onPressed: () =>
-                ref.read(rtspCameraSettingsProvider.notifier).updateStream(
-                      isEnabled: true,
-                      url: _urlController.text,
-                    ),
+            onPressed: () => ref.read(rtspCameraSettingsProvider.notifier).updateStream(
+                  isEnabled: true,
+                  url: _urlController.text,
+                ),
             icon: const Icon(Icons.save),
             label: Text(S.of(context).save),
             style: ButtonStyle(
@@ -324,8 +308,7 @@ class _RTSPCameraSettingsScreenState
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              backgroundColor:
-                  MaterialStateProperty.resolveWith<Color>((states) {
+              backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                 if (states.contains(MaterialState.focused)) {
                   return Theme.of(context).primaryColor;
                 }
@@ -337,8 +320,7 @@ class _RTSPCameraSettingsScreenState
                 }
                 return Colors.black;
               }),
-              foregroundColor:
-                  MaterialStateProperty.resolveWith<Color>((states) {
+              foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                 if (states.contains(MaterialState.focused)) {
                   return Colors.white;
                 }
