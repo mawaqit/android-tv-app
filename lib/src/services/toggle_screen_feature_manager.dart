@@ -288,9 +288,7 @@ class ToggleScreenFeature {
     await Workmanager().cancelAll();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, false);
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final state = prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
-    return state;
+   
   }
 
   static Future<bool> checkEventsScheduled() async {
