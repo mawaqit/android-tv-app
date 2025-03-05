@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:disk_space/disk_space.dart';
+<<<<<<< HEAD
 import 'package:flutter/services.dart';
+=======
+>>>>>>> 5305fa5fd065fbe65be0d3b41c2bdc878503c751
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
@@ -288,6 +291,7 @@ class ToggleScreenFeature {
     await Workmanager().cancelAll();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, false);
+<<<<<<< HEAD
   }
 
   static Future<void> _toggleTabletScreenOn() async {
@@ -306,6 +310,8 @@ class ToggleScreenFeature {
     } on PlatformException catch (e) {
       logger.e(e);
     }
+=======
+>>>>>>> 5305fa5fd065fbe65be0d3b41c2bdc878503c751
   }
 
   static Future<bool> checkEventsScheduled() async {

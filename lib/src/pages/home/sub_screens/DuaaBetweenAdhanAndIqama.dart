@@ -17,10 +17,12 @@ class DuaaBetweenAdhanAndIqamaaScreen extends StatefulWidget {
   final VoidCallback? onDone;
 
   @override
-  State<DuaaBetweenAdhanAndIqamaaScreen> createState() => _DuaaBetweenAdhanAndIqamaaScreenState();
+  State<DuaaBetweenAdhanAndIqamaaScreen> createState() =>
+      _DuaaBetweenAdhanAndIqamaaScreenState();
 }
 
-class _DuaaBetweenAdhanAndIqamaaScreenState extends State<DuaaBetweenAdhanAndIqamaaScreen> {
+class _DuaaBetweenAdhanAndIqamaaScreenState
+    extends State<DuaaBetweenAdhanAndIqamaaScreen> {
   final arabicTr = AppLocalizationsAr();
 
   @override
@@ -28,7 +30,8 @@ class _DuaaBetweenAdhanAndIqamaaScreenState extends State<DuaaBetweenAdhanAndIqa
     final manager = context.read<MosqueManager>();
     final nextIqamaa = manager.nextIqamaaAfter();
 
-    bool skipDuaa = nextIqamaa < Duration(seconds: 30) || nextIqamaa > Duration(minutes: 30);
+    bool skipDuaa = nextIqamaa < Duration(seconds: 30) ||
+        nextIqamaa > Duration(minutes: 30);
 
     if (manager.mosqueConfig!.duaAfterAzanEnabled! && !skipDuaa)
       Future.delayed(30.seconds, widget.onDone);
