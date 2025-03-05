@@ -293,7 +293,6 @@ class ToggleScreenFeature {
     return state;
   }
 
-
   static Future<bool> checkEventsScheduled() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final isEventsSet = prefs.getBool(TurnOnOffTvConstant.kIsEventsSet) ?? false;
