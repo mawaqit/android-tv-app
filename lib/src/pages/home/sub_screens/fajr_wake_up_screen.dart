@@ -75,35 +75,38 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
                     Flexible(
                       fit: FlexFit.loose,
                       flex: 1,
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          // Use a higher threshold to better detect height constraints
-                          final isHeightConstrained = constraints.maxHeight < 300; // Increased from 100
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal:3.vw),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            // Use a higher threshold to better detect height constraints
+                            final isHeightConstrained = constraints.maxHeight < 300; // Increased from 100
 
-                          // Adjust font size more aggressively when height constrained
-                          double fontSize = isHeightConstrained
-                              ? constraints.maxWidth * 0.07 // Smaller font for one line
-                              : constraints.maxWidth * 0.12; // Larger font for two lines
+                            // Adjust font size more aggressively when height constrained
+                            double fontSize = isHeightConstrained
+                                ? constraints.maxWidth * 0.07 // Smaller font for one line
+                                : constraints.maxWidth * 0.12; // Larger font for two lines
 
-                          int maxLines = isHeightConstrained ? 1 : 2;
+                            int maxLines = isHeightConstrained ? 1 : 2;
 
-                          return Center(
-                            child: Text(
-                              S.of(context).salatKhayrMinaNawm,
-                              maxLines: maxLines,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: fontSize,
-                                height: isHeightConstrained ? 1.0 : 1.3,
-                                color: Colors.white,
-                                shadows: kHomeTextShadow,
-                              ),
-                              softWrap: true,
-                              overflow: isHeightConstrained ? TextOverflow.ellipsis : TextOverflow.visible,
-                            ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
-                          );
-                        },
+                            return Center(
+                              child: Text(
+                                S.of(context).salatKhayrMinaNawm,
+                                maxLines: maxLines,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: fontSize,
+                                  height: isHeightConstrained ? 1.0 : 1.3,
+                                  color: Colors.white,
+                                  shadows: kHomeTextShadow,
+                                ),
+                                softWrap: true,
+                                overflow: isHeightConstrained ? TextOverflow.ellipsis : TextOverflow.visible,
+                              ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
+                            );
+                          },
+                        ),
                       ),
                     ),
                     Icon(
