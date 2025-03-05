@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:disk_space/disk_space.dart';
+import 'package:flutter/services.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
@@ -276,6 +277,8 @@ class ToggleScreenFeature {
 
     await prefs.setString(TurnOnOffTvConstant.kScheduledTimersKey, json.encode(timersMap));
     await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, true);
+
+    logger.d("Saving into local");
   }
 
   static Future<void> setLastEventDate(DateTime date) async {

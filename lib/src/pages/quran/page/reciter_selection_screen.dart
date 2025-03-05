@@ -161,7 +161,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(reciteNotifierProvider.notifier);
+      if (mounted) {
+        ref.read(reciteNotifierProvider.notifier);
+      }
       _setInitialFocus();
     });
   }
