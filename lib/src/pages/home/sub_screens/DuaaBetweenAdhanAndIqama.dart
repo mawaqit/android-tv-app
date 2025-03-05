@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/widgets/display_text_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
@@ -16,10 +17,12 @@ class DuaaBetweenAdhanAndIqamaaScreen extends StatefulWidget {
   final VoidCallback? onDone;
 
   @override
-  State<DuaaBetweenAdhanAndIqamaaScreen> createState() => _DuaaBetweenAdhanAndIqamaaScreenState();
+  State<DuaaBetweenAdhanAndIqamaaScreen> createState() =>
+      _DuaaBetweenAdhanAndIqamaaScreenState();
 }
 
-class _DuaaBetweenAdhanAndIqamaaScreenState extends State<DuaaBetweenAdhanAndIqamaaScreen> {
+class _DuaaBetweenAdhanAndIqamaaScreenState
+    extends State<DuaaBetweenAdhanAndIqamaaScreen> {
   final arabicTr = AppLocalizationsAr();
 
   @override
@@ -27,7 +30,8 @@ class _DuaaBetweenAdhanAndIqamaaScreenState extends State<DuaaBetweenAdhanAndIqa
     final manager = context.read<MosqueManager>();
     final nextIqamaa = manager.nextIqamaaAfter();
 
-    bool skipDuaa = nextIqamaa < Duration(seconds: 30) || nextIqamaa > Duration(minutes: 30);
+    bool skipDuaa = nextIqamaa < Duration(seconds: 30) ||
+        nextIqamaa > Duration(minutes: 30);
 
     if (manager.mosqueConfig!.duaAfterAzanEnabled! && !skipDuaa)
       Future.delayed(30.seconds, widget.onDone);
@@ -39,10 +43,18 @@ class _DuaaBetweenAdhanAndIqamaaScreenState extends State<DuaaBetweenAdhanAndIqa
 
   @override
   Widget build(BuildContext context) {
-    return DisplayTextWidget(
-      title: 'الدعاء لا يرد بين الأذان والإقامة',
-      arabicText: arabicTr.duaaBetweenSalahAndAdhan,
-      translatedText: S.of(context).duaaBetweenSalahAndAdhan,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(R.ASSETS_BACKGROUNDS_BACKGROUND_ADHKAR_JPG),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: DisplayTextWidget(
+        title: 'الدعاء لا يرد بين الأذان والإقامة',
+        arabicText: arabicTr.duaaBetweenSalahAndAdhan,
+        translatedText: S.of(context).duaaBetweenSalahAndAdhan,
+      ),
     );
   }
 }
