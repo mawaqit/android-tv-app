@@ -290,24 +290,6 @@ class ToggleScreenFeature {
     await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, false);
   }
 
-  static Future<void> _toggleTabletScreenOn() async {
-    try {
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
-          .invokeMethod(TurnOnOffTvConstant.kToggleTabletScreenOn);
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
-  static Future<void> _toggleTabletScreenOff() async {
-    try {
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
-          .invokeMethod(TurnOnOffTvConstant.kToggleTabletScreenOff);
-    } on PlatformException catch (e) {
-      logger.e(e);
-    }
-  }
-
   static Future<bool> checkEventsScheduled() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final isEventsSet = prefs.getBool(TurnOnOffTvConstant.kIsEventsSet) ?? false;
