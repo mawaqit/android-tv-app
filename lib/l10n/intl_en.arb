@@ -425,5 +425,6 @@
   "selectMoshaf": "Select a Mushaf",
   "randomSurahSelection": "Random Surah Selection",
   "selectSurah": "Select a Surah",
-  "initializingAutoReading": "Initializing in progress..."
+  "initializingAutoReading": "Initializing in progress...",
+  "duaBetweenAdhanIqamah": "Supplication (Du'a) is not rejected between the Adhan and Iqamah."
 }
