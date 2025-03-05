@@ -97,6 +97,35 @@ class TimerScheduleInfo {
   }
 }
 
+@pragma('vm:entry-point') // Important for background execution
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      final timeShiftManager = TimeShiftManager();
+
+      switch (task) {
+        case 'screenOn':
+          if (timeShiftManager.isLauncherInstalled) {
+            await ScreenControl.toggleBoxScreenOn();
+          } else {
+            await ScreenControl.toggleTabletScreenOn();
+          }
+          break;
+        case 'screenOff':
+          if (timeShiftManager.isLauncherInstalled) {
+            await ScreenControl.toggleBoxScreenOff();
+          } else {
+            await ScreenControl.toggleTabletScreenOff();
+          }
+          break;
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  });
+}
+
 class ToggleScreenFeature {
   static final ToggleScreenFeature _instance = ToggleScreenFeature._internal();
 

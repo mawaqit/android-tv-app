@@ -31,11 +31,13 @@ import 'package:mawaqit/src/routes/routes_constant.dart';
 class AudioControlWidget extends ConsumerWidget {
   final double buttonSize;
   final double iconSize;
+  final FocusNode focusNode;
 
   const AudioControlWidget({
     Key? key,
     required this.buttonSize,
     required this.iconSize,
+    required this.focusNode,
   }) : super(key: key);
 
   bool _isWithinScheduledTime(TimeOfDay startTime, TimeOfDay endTime) {
@@ -52,6 +54,8 @@ class AudioControlWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final connectivityStatus = ref.watch(connectivityProvider);
+
     return ref.watch(audioControlProvider).when(
           data: (state) {
             final scheduleState = ref.watch(scheduleProvider);
