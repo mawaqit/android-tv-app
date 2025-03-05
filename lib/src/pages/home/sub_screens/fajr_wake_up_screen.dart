@@ -27,6 +27,7 @@ class FajrWakeUpSubScreen extends StatefulWidget {
 
 class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
   late AudioManager audioManager;
+
   @override
   void initState() {
     final mosqueManager = context.read<MosqueManager>();
@@ -70,21 +71,39 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
                       shadows: kHomeTextShadow,
                       color: Colors.white,
                     ).animate().slideX(begin: -2).addRepaintBoundary(),
+                    // Then replace your LayoutBuilder with:
                     Flexible(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: AutoSizeText(
-                          S.of(context).salatKhayrMinaNawm,
-                          maxLines: 2,
-                          textAlign: TextAlign.center, // Added text alignment
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 8.vw,
-                            color: Colors.white,
-                            shadows: kHomeTextShadow,
-                          ),
-                        ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
+                      fit: FlexFit.loose,
+                      flex: 1,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          // Use a higher threshold to better detect height constraints
+                          final isHeightConstrained = constraints.maxHeight < 300; // Increased from 100
+
+                          // Adjust font size more aggressively when height constrained
+                          double fontSize = isHeightConstrained
+                              ? constraints.maxWidth * 0.07 // Smaller font for one line
+                              : constraints.maxWidth * 0.12; // Larger font for two lines
+
+                          int maxLines = isHeightConstrained ? 1 : 2;
+
+                          return Center(
+                            child: Text(
+                              S.of(context).salatKhayrMinaNawm,
+                              maxLines: maxLines,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: fontSize,
+                                height: isHeightConstrained ? 1.0 : 1.3,
+                                color: Colors.white,
+                                shadows: kHomeTextShadow,
+                              ),
+                              softWrap: true,
+                              overflow: isHeightConstrained ? TextOverflow.ellipsis : TextOverflow.visible,
+                            ).animate().slideY(begin: -1, delay: .5.seconds).fadeIn().addRepaintBoundary(),
+                          );
+                        },
                       ),
                     ),
                     Icon(
