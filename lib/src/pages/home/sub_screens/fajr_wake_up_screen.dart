@@ -76,7 +76,7 @@ class _FajrWakeUpSubScreenState extends State<FajrWakeUpSubScreen> {
                       fit: FlexFit.loose,
                       flex: 1,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal:3.vw),
+                        padding: EdgeInsets.symmetric(horizontal: 3.vw),
                         child: LayoutBuilder(
                           builder: (context, constraints) {
                             // Use a higher threshold to better detect height constraints
