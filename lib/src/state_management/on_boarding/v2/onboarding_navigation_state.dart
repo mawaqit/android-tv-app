@@ -57,6 +57,11 @@ class OnboardingNavigationState {
       flowType: flowType ?? this.flowType,
     );
   }
+
+  @override
+  String toString() {
+    return 'OnboardingNavigationState(currentScreen: $currentScreen, enablePreviousButton: $enablePreviousButton, enableNextButton: $enableNextButton, isLastItem: $isLastItem, isRooted: $isRooted, screenFlow: $screenFlow, flowType: $flowType)';
+  }
 }
 
 enum OnboardingFlowType {
