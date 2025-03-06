@@ -9,7 +9,7 @@ import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart' as Provider;
-
+import 'package:fpdart/fpdart.dart' as fp;
 import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/AppRouter.dart';
 import '../../../helpers/SharedPref.dart';
@@ -18,8 +18,14 @@ import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 
 class ChromeCastMosqueInputSearch extends ConsumerStatefulWidget {
-  const ChromeCastMosqueInputSearch({Key? key, this.onDone}) : super(key: key);
+  const ChromeCastMosqueInputSearch({
+    Key? key,
+    this.onDone,
+    this.selectedNode = const fp.None(),
+  }) : super(key: key);
+
   final void Function()? onDone;
+  final fp.Option<FocusNode> selectedNode;
 
   @override
   ConsumerState<ChromeCastMosqueInputSearch> createState() => _MosqueInputSearchState();
@@ -196,6 +202,7 @@ class _MosqueInputSearchState extends ConsumerState<ChromeCastMosqueInputSearch>
                                   MosqueSimpleTile(
                                     autoFocus: i == 0,
                                     mosque: results[i],
+                                    selectedNode: widget.selectedNode,
                                     onTap: () => _selectMosque(results[i]),
                                   ).animate().slideX(delay: 70.milliseconds * (i % 5)).fade(),
                               ],

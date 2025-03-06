@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
@@ -19,8 +20,14 @@ import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 
 class ChromeCastMosqueInputId extends ConsumerStatefulWidget {
-  const ChromeCastMosqueInputId({Key? key, this.onDone}) : super(key: key);
+  const ChromeCastMosqueInputId({
+    Key? key,
+    this.onDone,
+    this.selectedNode = const None(),
+  }) : super(key: key);
+
   final void Function()? onDone;
+  final Option<FocusNode> selectedNode;
 
   @override
   ConsumerState<ChromeCastMosqueInputId> createState() => _MosqueInputIdState();
@@ -137,6 +144,7 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
                 key: ValueKey(searchOutput!.uuid),
                 autoFocus: true,
                 mosque: searchOutput!,
+                selectedNode: widget.selectedNode,
                 onTap: () {
                   return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) async {
                     final mosqueManager = context.read<MosqueManager>();

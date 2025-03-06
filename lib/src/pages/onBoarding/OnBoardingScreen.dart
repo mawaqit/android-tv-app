@@ -343,13 +343,19 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       ),
       OnboardingScreenType.chromecastMosqueId: OnBoardingItem(
         animation: 'search',
-        widget: ChromeCastMosqueInputId(onDone: () {}),
+        widget: ChromeCastMosqueInputId(
+          onDone: () {},
+          selectedNode: Some(nextButtonFocusNode),
+        ),
         enableNextButton: true,
         enablePreviousButton: true,
       ),
       OnboardingScreenType.chromecastMosqueName: OnBoardingItem(
         animation: 'search',
-        widget: ChromeCastMosqueInputSearch(onDone: () {}),
+        widget: ChromeCastMosqueInputSearch(
+          onDone: () {},
+          selectedNode: Some(nextButtonFocusNode),
+        ),
         enableNextButton: true,
         enablePreviousButton: true,
       ),
