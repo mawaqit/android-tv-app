@@ -27,6 +27,10 @@ class SalahItemWidget extends StatelessOrientationWidget {
   final String? iqama;
   final String? iqama2;
 
+  /// this only applied to Jumma pray as it is might have iqama times
+  /// normal pray will have only one iqama time
+  final String? iqama2;
+
   /// show divider only when both time and iqama exists
   final bool withDivider;
   final bool active;

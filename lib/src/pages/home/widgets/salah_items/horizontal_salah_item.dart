@@ -61,6 +61,7 @@ class HorizontalSalahItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Title
           if (title != null && title!.trim().isNotEmpty)
             Expanded(
               child: Center(
@@ -76,6 +77,7 @@ class HorizontalSalahItem extends StatelessWidget {
                 ),
               ),
             ),
+          // Prayer Time
           Expanded(
             child: FittedBox(
               fit: BoxFit.scaleDown,
@@ -92,22 +94,33 @@ class HorizontalSalahItem extends StatelessWidget {
               ),
             ),
           ),
-          iqama == null
-              ? Container()
-              : Expanded(
-                  child: Center(
-                    child: IqamaTimeWidget(
-                      time: iqama!,
-                      show24hFormat: is24period,
-                      style: TextStyle(
-                        fontSize: isIqamaMoreImportant ? bigFont : smallFont,
-                        fontWeight: FontWeight.w700,
-                        shadows: kHomeTextShadow,
-                        color: Colors.white,
-                      ),
-                    ),
+
+          // Divider (vertical)
+          if (iqama != null && showIqama && withDivider)
+            Container(
+              width: 1,
+              height: bigFont,
+              margin: EdgeInsets.symmetric(horizontal: 1.vwr),
+              color: Colors.white,
+            ),
+
+          // Iqama Time
+          if (iqama != null && showIqama)
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: IqamaTimeWidget(
+                  time: iqama!,
+                  show24hFormat: is24period,
+                  style: TextStyle(
+                    fontSize: isIqamaMoreImportant ? bigFont : smallFont,
+                    fontWeight: FontWeight.w700,
+                    shadows: kHomeTextShadow,
+                    color: Colors.white,
                   ),
                 ),
+              ),
+            ),
         ],
       ),
     );

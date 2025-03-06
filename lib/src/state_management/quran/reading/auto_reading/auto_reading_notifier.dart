@@ -146,7 +146,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
           timer.cancel();
           state = state.copyWith(isPlaying: false);
         }
-      }
+      } else {}
     });
   }
 
