@@ -1,15 +1,32 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:mawaqit/i18n/l10n.dart';
 
-class OnBoardingMawaqitAboutWidget extends StatelessWidget {
+class OnBoardingMawaqitAboutWidget extends StatefulWidget {
   const OnBoardingMawaqitAboutWidget({
     Key? key,
     this.onNext,
+    this.nextButtonFocusNode = const fp.None(),
   }) : super(key: key);
 
   final VoidCallback? onNext;
+  final fp.Option<FocusNode> nextButtonFocusNode;
+
+  @override
+  State<OnBoardingMawaqitAboutWidget> createState() => _OnBoardingMawaqitAboutWidgetState();
+}
+
+class _OnBoardingMawaqitAboutWidgetState extends State<OnBoardingMawaqitAboutWidget> {
+  @override
+  void initState() {
+    widget.nextButtonFocusNode.fold(
+      () => null,
+      (focusNode) => focusNode.requestFocus(),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +38,7 @@ class OnBoardingMawaqitAboutWidget extends StatelessWidget {
         print(event.logicalKey);
 
         if (event.isKeyPressed(LogicalKeyboardKey.select) || event.isKeyPressed(LogicalKeyboardKey.enter)) {
-          onNext?.call();
+          widget.onNext?.call();
           return KeyEventResult.handled;
         }
 

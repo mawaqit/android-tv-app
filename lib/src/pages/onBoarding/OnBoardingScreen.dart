@@ -115,7 +115,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       ),
       OnBoardingItem(
         animation: 'welcome',
-        widget: OnBoardingMawaqitAboutWidget(onNext: () {}),
+        widget: OnBoardingMawaqitAboutWidget(onNext: () {},nextButtonFocusNode: Some(nextButtonFocusNode)),
         enableNextButton: true,
         enablePreviousButton: true,
       ),
