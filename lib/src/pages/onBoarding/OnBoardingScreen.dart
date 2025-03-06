@@ -377,7 +377,11 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       OnboardingScreenType.countrySelection: OnBoardingItem(
         animation: 'settings',
         widget: CountrySelectionScreen(
-          onSelect: (_) {},
+          onSelect: (countrySelected) {
+            setState(() {
+              country = Option.of(countrySelected);
+            });
+          },
           focusNode: skipButtonFocusNode,
           nextButtonFocusNode: nextButtonFocusNode,
         ),
