@@ -18,9 +18,14 @@ import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 
 class MosqueInputSearch extends ConsumerStatefulWidget {
-  const MosqueInputSearch({Key? key, this.onDone}) : super(key: key);
+  const MosqueInputSearch({
+    Key? key,
+    this.onDone,
+    this.selectedNode = const None(),
+  }) : super(key: key);
 
   final void Function()? onDone;
+  final Option<FocusNode> selectedNode;
 
   @override
   ConsumerState<MosqueInputSearch> createState() => _MosqueInputSearchState();
@@ -146,6 +151,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
                 MosqueSimpleTile(
                   autoFocus: i == 0,
                   mosque: results[i],
+                  selectedNode: widget.selectedNode,
                   onTap: () => _selectMosque(results[i]),
                 ).animate().slideX(delay: 70.milliseconds * (i % 5)).fade(),
               // to allow user to scroll to the end of lis

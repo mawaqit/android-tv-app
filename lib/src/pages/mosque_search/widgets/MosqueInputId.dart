@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
@@ -20,9 +20,14 @@ import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 
 class MosqueInputId extends ConsumerStatefulWidget {
-  const MosqueInputId({Key? key, this.onDone}) : super(key: key);
+  const MosqueInputId({
+    super.key,
+    this.onDone,
+    this.selectedNode = const fp.None(),
+  });
 
   final void Function()? onDone;
+  final fp.Option<FocusNode> selectedNode;
 
   @override
   ConsumerState<MosqueInputId> createState() => _MosqueInputIdState();
@@ -57,11 +62,10 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
       });
 
       if (value.type == "MOSQUE") {
-        ref.read(mosqueManagerProvider.notifier).state = Option.fromNullable(SearchSelectionType.mosque);
+        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.mosque);
       } else {
-        ref.read(mosqueManagerProvider.notifier).state = Option.fromNullable(SearchSelectionType.home);
+        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.home);
       }
-
     }).catchError((e, stack) {
       debugPrintStack(stackTrace: stack, label: e.toString());
       if (e is InvalidMosqueId) {
@@ -77,7 +81,6 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +107,7 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
                 key: ValueKey(searchOutput!.uuid),
                 autoFocus: true,
                 mosque: searchOutput!,
+                selectedNode: widget.selectedNode,
                 onTap: () {
                   return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) async {
                     final mosqueManager = context.read<MosqueManager>();

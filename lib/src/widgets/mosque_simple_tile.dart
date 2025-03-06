@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
@@ -10,6 +11,7 @@ class MosqueSimpleTile extends StatefulWidget {
     Key? key,
     required this.mosque,
     this.onTap,
+    this.selectedNode = const fp.None(),
     this.onFocusChange,
     this.focusNode,
     this.autoFocus,
@@ -20,6 +22,7 @@ class MosqueSimpleTile extends StatefulWidget {
   final void Function(bool i)? onFocusChange;
   final FocusNode? focusNode;
   final bool? autoFocus;
+  final fp.Option<FocusNode> selectedNode;
 
   @override
   State<MosqueSimpleTile> createState() => _MosqueSimpleTileState();
@@ -57,6 +60,7 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
             focusColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
             onTap: () async {
               if (loading || widget.onTap == null || !mounted) return;
+              widget.selectedNode.fold(() => {}, (node) => node.requestFocus());
               try {
                 setState(() => loading = true);
                 await widget.onTap?.call();
