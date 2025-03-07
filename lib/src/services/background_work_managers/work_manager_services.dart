@@ -55,4 +55,12 @@ class WorkManagerService {
       throw ScheduleToggleScreenException(e.toString());
     }
   }
+
+  static Future<void> cancelTask(String uniqueId) async {
+    try {
+      await Workmanager().cancelByUniqueName(uniqueId);
+    } catch (e) {
+      throw ScheduleToggleScreenException(e.toString());
+    }
+  }
 }

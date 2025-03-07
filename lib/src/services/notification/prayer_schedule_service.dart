@@ -14,7 +14,7 @@ class PrayerScheduleService {
   static const String PRAYER_TASK_TAG = "prayer_task";
   static final Set<DateTime> _scheduledTimes = {};
   static final Lock _lock = Lock();
-
+  static Map<DateTime, String> _previousAdhanLinks = {};
   static Future<void> schedulePrayerTasks(
     Times times,
     MosqueConfig? mosqueConfig,
@@ -30,8 +30,9 @@ class PrayerScheduleService {
     for (var i = 0; i < prayerTimes.length; i++) {
       final entry = prayerTimes[i];
       final scheduleTime = _parseScheduleTime(entry, now);
-
-      if (!await _shouldSchedulePrayer(scheduleTime)) continue;
+      final bool isFajr = (salahIndex == 0);
+      final String currentAdhanLink = getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
+      if (!await _shouldSchedulePrayer(scheduleTime, currentAdhanLink)) continue;
 
       final prayerConfig = _createPrayerConfig(
         entry,
@@ -43,6 +44,9 @@ class PrayerScheduleService {
       );
 
       await _schedulePrayerWithWorkManager(prayerConfig, scheduleTime);
+      await _lock.synchronized(() {
+        _previousAdhanLinks[scheduleTime] = currentAdhanLink;
+      });
     }
   }
 
@@ -57,11 +61,30 @@ class PrayerScheduleService {
     );
   }
 
-  static Future<bool> _shouldSchedulePrayer(DateTime scheduleTime) async {
+  static Future<bool> _shouldSchedulePrayer(DateTime scheduleTime, String currentAdhanLink) async {
     return await _lock.synchronized(() {
-      if (_scheduledTimes.contains(scheduleTime)) return false;
       final delay = scheduleTime.difference(AppDateTime.now());
-      return !delay.isNegative;
+
+      // Always schedule if the time is in the future
+      if (delay.isNegative) return false;
+
+      // Check if already scheduled and if the Adhan link has changed
+      final bool alreadyScheduled = _scheduledTimes.contains(scheduleTime);
+      final String? previousAdhanLink = _previousAdhanLinks[scheduleTime];
+
+      // If the prayer was already scheduled but the Adhan link has changed,
+      // we should reschedule it
+      if (alreadyScheduled && previousAdhanLink != null && previousAdhanLink != currentAdhanLink) {
+        // Remove from scheduled times to allow rescheduling
+        _scheduledTimes.remove(scheduleTime);
+        print("Rescheduling prayer at $scheduleTime due to Adhan link change");
+        print("Previous: $previousAdhanLink");
+        print("Current: $currentAdhanLink");
+        return true;
+      }
+
+      // Schedule if not already scheduled
+      return !alreadyScheduled;
     });
   }
 
@@ -80,6 +103,7 @@ class PrayerScheduleService {
     if (isAdhanVoiceEnabled) {
       shouldPlayAdhan = true;
       final url = getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
+      print("get adhan link $url");
       if (url.contains('bip')) {
         adhanFromAssets = true;
         adhanAsset = R.ASSETS_VOICES_ADHAN_BIP_MP3;
@@ -129,6 +153,7 @@ class PrayerScheduleService {
   ) async {
     final uniqueId = "${PRAYER_TASK_TAG}_${scheduleTime.millisecondsSinceEpoch}";
     final delay = scheduleTime.difference(AppDateTime.now());
+    await WorkManagerService.cancelTask(uniqueId);
 
     await WorkManagerService.registerPrayerTask(
       uniqueId,
