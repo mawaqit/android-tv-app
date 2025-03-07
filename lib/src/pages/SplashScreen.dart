@@ -79,15 +79,6 @@ class _SpashState extends ConsumerState<Splash> {
       await Future.delayed(Duration(seconds: 3));
       SystemChrome.restoreSystemUIOverlays();
     });
-    _saveScheduledEventsToLocale();
-  }
-
-  Future<void> _saveScheduledEventsToLocale() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    logger.d("Saving into local");
-
-    prefs.setBool("isEventsSet", false);
   }
 
   Future<void> _initSettings() async {
