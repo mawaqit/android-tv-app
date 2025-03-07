@@ -167,6 +167,7 @@ class DisplayTextWidget extends ConsumerWidget {
             vertical: isHadith ? 16.0 : 0.0,
           ),
           child: AutoSizeText(
+            key: const Key('hadith_text'),
             text,
             style: isHadith
                 ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
