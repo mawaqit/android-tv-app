@@ -24,18 +24,15 @@ class PrayerScheduleService {
   ) async {
     if (!await service.isRunning()) return;
 
-    final prayerTimes =
-        times.dayTimesStrings(AppDateTime.now(), salahOnly: true);
+    final prayerTimes = times.dayTimesStrings(AppDateTime.now(), salahOnly: true);
     final now = AppDateTime.now();
 
     for (var i = 0; i < prayerTimes.length; i++) {
       final entry = prayerTimes[i];
       final scheduleTime = _parseScheduleTime(entry, now);
       final bool isFajr = (salahIndex == 0);
-      final String currentAdhanLink =
-          getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
-      if (!await _shouldSchedulePrayer(scheduleTime, currentAdhanLink))
-        continue;
+      final String currentAdhanLink = getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
+      if (!await _shouldSchedulePrayer(scheduleTime, currentAdhanLink)) continue;
 
       final prayerConfig = _createPrayerConfig(
         entry,
@@ -64,8 +61,7 @@ class PrayerScheduleService {
     );
   }
 
-  static Future<bool> _shouldSchedulePrayer(
-      DateTime scheduleTime, String currentAdhanLink) async {
+  static Future<bool> _shouldSchedulePrayer(DateTime scheduleTime, String currentAdhanLink) async {
     return await _lock.synchronized(() {
       final delay = scheduleTime.difference(AppDateTime.now());
 
@@ -78,9 +74,7 @@ class PrayerScheduleService {
 
       // If the prayer was already scheduled but the Adhan link has changed,
       // we should reschedule it
-      if (alreadyScheduled &&
-          previousAdhanLink != null &&
-          previousAdhanLink != currentAdhanLink) {
+      if (alreadyScheduled && previousAdhanLink != null && previousAdhanLink != currentAdhanLink) {
         // Remove from scheduled times to allow rescheduling
         _scheduledTimes.remove(scheduleTime);
         return true;
@@ -135,8 +129,7 @@ class PrayerScheduleService {
     return names[index] ?? '';
   }
 
-  static String getAdhanLink(MosqueConfig? mosqueConfig,
-      {bool useFajrAdhan = false}) {
+  static String getAdhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String baseLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
 
     if (mosqueConfig?.adhanVoice?.isNotEmpty ?? false) {
@@ -154,8 +147,7 @@ class PrayerScheduleService {
     Map<String, dynamic> config,
     DateTime scheduleTime,
   ) async {
-    final uniqueId =
-        "${PRAYER_TASK_TAG}_${scheduleTime.millisecondsSinceEpoch}";
+    final uniqueId = "${PRAYER_TASK_TAG}_${scheduleTime.millisecondsSinceEpoch}";
     final delay = scheduleTime.difference(AppDateTime.now());
     await WorkManagerService.cancelTask(uniqueId);
 
