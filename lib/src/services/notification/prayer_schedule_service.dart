@@ -77,9 +77,6 @@ class PrayerScheduleService {
       if (alreadyScheduled && previousAdhanLink != null && previousAdhanLink != currentAdhanLink) {
         // Remove from scheduled times to allow rescheduling
         _scheduledTimes.remove(scheduleTime);
-        print("Rescheduling prayer at $scheduleTime due to Adhan link change");
-        print("Previous: $previousAdhanLink");
-        print("Current: $currentAdhanLink");
         return true;
       }
 
@@ -103,7 +100,6 @@ class PrayerScheduleService {
     if (isAdhanVoiceEnabled) {
       shouldPlayAdhan = true;
       final url = getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
-      print("get adhan link $url");
       if (url.contains('bip')) {
         adhanFromAssets = true;
         adhanAsset = R.ASSETS_VOICES_ADHAN_BIP_MP3;
