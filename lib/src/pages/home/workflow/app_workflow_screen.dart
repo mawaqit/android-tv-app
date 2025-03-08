@@ -5,6 +5,7 @@ import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
 import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/AppDate.dart';
@@ -23,6 +24,7 @@ class AppWorkflowScreen extends StatelessWidget {
     final now = AppDateTime.now();
     final TimeShiftManager timeManager = TimeShiftManager();
     final featureManager = Provider.of<FeatureManager>(context);
+    final userPrefs = context.watch<UserPreferencesManager>();
 
     ValueKey? key;
 
@@ -38,6 +40,8 @@ class AppWorkflowScreen extends StatelessWidget {
         ? mosqueManager.actualIqamaTimes(now.add(1.days))
         : mosqueManager.actualIqamaTimes(now);
 
+    final hijri = mosqueManager.mosqueHijriDate(userPrefs.hijriAdjustments);
+
     return RepeatingWorkFlowWidget(
       key: key,
       debugName: "App workflow",
@@ -48,11 +52,13 @@ class AppWorkflowScreen extends StatelessWidget {
               builder: (context, next) => SalahWorkflowScreen(onDone: next),
               repeatingDuration: 1.days,
 
-              dateTime: elem,
+              dateTime: hijri.islamicMonth == 8 ? elem.add(-2.minutes) : elem,
 
               /// auto start Workflow if user starts the app during the Salah time
               /// give 4 minute for the salah and 2 for azkar
-              showInitial: () => now.isAfter(elem) && now.isBefore(iqama[index].add(6.minutes)),
+              showInitial: () =>
+                  now.isAfter(hijri.islamicMonth == 8 ? elem.add(-2.minutes) : elem) &&
+                  now.isBefore(iqama[index].add(6.minutes)),
 
               // dateTime: e,
               // disable Duhr if it's Friday
