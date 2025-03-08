@@ -35,6 +35,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
 import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
@@ -137,8 +138,7 @@ Future<void> checkAndRequestExactAlarmPermission() async {
 
 Future<void> _initializeServices() async {
   tz.initializeTimeZones();
-  await ToggleScreenFeature.initialize();
-
+  await WorkManagerService.initialize();
   // Register Hive adapters
   Hive.registerAdapter(SurahModelAdapter());
   Hive.registerAdapter(ReciterModelAdapter());

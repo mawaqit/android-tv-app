@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
+import 'package:workmanager/workmanager.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -9,13 +11,10 @@ import '../../helpers/AppDate.dart';
 import 'package:synchronized/synchronized.dart';
 
 class PrayerScheduleService {
-  /// Shared set of scheduled prayer times.
+  static const String PRAYER_TASK_TAG = "prayer_task";
   static final Set<DateTime> _scheduledTimes = {};
-
-  /// Lock for synchronizing access to [_scheduledTimes].
   static final Lock _lock = Lock();
-
-  /// Schedules prayer tasks for the day.
+  static Map<DateTime, String> _previousAdhanLinks = {};
   static Future<void> schedulePrayerTasks(
     Times times,
     MosqueConfig? mosqueConfig,
@@ -31,9 +30,9 @@ class PrayerScheduleService {
     for (var i = 0; i < prayerTimes.length; i++) {
       final entry = prayerTimes[i];
       final scheduleTime = _parseScheduleTime(entry, now);
-
-      // Check within a lock whether the prayer time should be scheduled.
-      if (!await _shouldSchedulePrayer(scheduleTime)) continue;
+      final bool isFajr = (salahIndex == 0);
+      final String currentAdhanLink = getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
+      if (!await _shouldSchedulePrayer(scheduleTime, currentAdhanLink)) continue;
 
       final prayerConfig = _createPrayerConfig(
         entry,
@@ -44,11 +43,13 @@ class PrayerScheduleService {
         i,
       );
 
-      await _schedulePrayerTimer(service, prayerConfig, scheduleTime);
+      await _schedulePrayerWithWorkManager(prayerConfig, scheduleTime);
+      await _lock.synchronized(() {
+        _previousAdhanLinks[scheduleTime] = currentAdhanLink;
+      });
     }
   }
 
-  /// Converts a prayer time string (e.g. "05:30") into a DateTime object for today.
   static DateTime _parseScheduleTime(String entry, DateTime now) {
     final timeParts = entry.split(':');
     return DateTime(
@@ -60,19 +61,30 @@ class PrayerScheduleService {
     );
   }
 
-  /// Determines whether a prayer should be scheduled.
-  ///
-  /// This method is wrapped in a lock to ensure that [_scheduledTimes]
-  /// is not concurrently modified.
-  static Future<bool> _shouldSchedulePrayer(DateTime scheduleTime) async {
+  static Future<bool> _shouldSchedulePrayer(DateTime scheduleTime, String currentAdhanLink) async {
     return await _lock.synchronized(() {
-      if (_scheduledTimes.contains(scheduleTime)) return false;
       final delay = scheduleTime.difference(AppDateTime.now());
-      return !delay.isNegative;
+
+      // Always schedule if the time is in the future
+      if (delay.isNegative) return false;
+
+      // Check if already scheduled and if the Adhan link has changed
+      final bool alreadyScheduled = _scheduledTimes.contains(scheduleTime);
+      final String? previousAdhanLink = _previousAdhanLinks[scheduleTime];
+
+      // If the prayer was already scheduled but the Adhan link has changed,
+      // we should reschedule it
+      if (alreadyScheduled && previousAdhanLink != null && previousAdhanLink != currentAdhanLink) {
+        // Remove from scheduled times to allow rescheduling
+        _scheduledTimes.remove(scheduleTime);
+        return true;
+      }
+
+      // Schedule if not already scheduled
+      return !alreadyScheduled;
     });
   }
 
-  /// Creates the configuration map for a prayer notification.
   static Map<String, dynamic> _createPrayerConfig(
     String entry,
     DateTime scheduleTime,
@@ -106,7 +118,6 @@ class PrayerScheduleService {
     };
   }
 
-  /// Returns the name of the salah based on its index.
   static String getSalahName(int index) {
     final names = {
       0: S.current.fajr,
@@ -118,7 +129,6 @@ class PrayerScheduleService {
     return names[index] ?? '';
   }
 
-  /// Retrieves the Adhan link based on the mosque configuration.
   static String getAdhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String baseLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
 
@@ -133,18 +143,20 @@ class PrayerScheduleService {
     return baseLink;
   }
 
-  /// Schedules a timer that will invoke the prayer notification at the right time,
-  /// and records the scheduled time in a synchronized manner.
-  static Future<void> _schedulePrayerTimer(
-    FlutterBackgroundService service,
+  static Future<void> _schedulePrayerWithWorkManager(
     Map<String, dynamic> config,
     DateTime scheduleTime,
   ) async {
+    final uniqueId = "${PRAYER_TASK_TAG}_${scheduleTime.millisecondsSinceEpoch}";
     final delay = scheduleTime.difference(AppDateTime.now());
-    Timer(delay, () async {
-      service.invoke('prayerTime', config);
-    });
-    // Safely add the scheduled time to the set.
+    await WorkManagerService.cancelTask(uniqueId);
+
+    await WorkManagerService.registerPrayerTask(
+      uniqueId,
+      config,
+      delay,
+    );
+
     await _lock.synchronized(() {
       _scheduledTimes.add(scheduleTime);
     });
