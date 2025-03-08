@@ -92,7 +92,6 @@ class ToggleScreenFeature {
       }
 
       await Future.wait([
-        saveScheduledEventsToLocale(),
         toggleFeatureState(true),
         setLastEventDate(now),
         saveBeforeDelayMinutes(beforeDelayMinutes),
@@ -151,8 +150,6 @@ class ToggleScreenFeature {
           minuteBefore,
           minuteAfter,
         );
-
-        await saveScheduledEventsToLocale();
       }
     } catch (e) {
       logger.e('Failed to handle daily rescheduling: $e');
@@ -204,31 +201,6 @@ class ToggleScreenFeature {
     }
   }
 
-  static Future<void> loadScheduledTimersFromPrefs() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final timersJson = prefs.getString(_scheduledTimersKey);
-
-      if (timersJson != null) {
-        final timersMap = json.decode(timersJson) as Map<String, dynamic>;
-
-        timersMap.forEach((timeString, timerDataList) {
-          _scheduledTimers[timeString] = [];
-          for (final timerData in timerDataList) {
-            final tick = timerData['tick'] as int;
-            final timer = Timer(Duration(milliseconds: tick), () {});
-            _scheduledTimers[timeString]!.add(timer);
-          }
-        });
-      } else {
-        logger.d('No stored timers found');
-      }
-    } catch (e) {
-      logger.e('Error loading scheduled timers from preferences: $e');
-      throw LoadScheduledTimersException(e.toString());
-    }
-  }
-
   static Future<void> toggleFeatureState(bool isActive) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(TurnOnOffTvConstant.kActivateToggleFeature, isActive);
@@ -257,28 +229,6 @@ class ToggleScreenFeature {
     final isEventsSet = prefs.getBool(TurnOnOffTvConstant.kIsEventsSet) ?? false;
     logger.d("value$isEventsSet");
     return isEventsSet;
-  }
-
-  static Future<void> saveScheduledEventsToLocale() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    final scheduleData = _scheduleInfoList.map((info) => info.toJson()).toList();
-    await prefs.setString(_scheduledInfoKey, json.encode(scheduleData));
-
-    final Map<String, dynamic> timersMap = {};
-    _scheduledTimers.forEach((key, value) {
-      timersMap[key] = value.map((timer) {
-        return {
-          'isActive': timer.isActive,
-          'tick': timer.tick,
-        };
-      }).toList();
-    });
-
-    await prefs.setString(TurnOnOffTvConstant.kScheduledTimersKey, json.encode(timersMap));
-    await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, true);
-
-    logger.d("Saving into local");
   }
 
   static Future<void> setLastEventDate(DateTime date) async {
