@@ -236,6 +236,7 @@ class ToggleButtonWidget extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
+        minimumSize: Size(100.w, 0),
         backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 20.w),
@@ -255,7 +256,8 @@ class ToggleButtonWidget extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        padding: EdgeInsets.symmetric(vertical: 1.2.h, horizontal: 20.w),
+        padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 20.w),
+        minimumSize: Size(100.w, 0),
       ),
       child: Text(label, style: textStyle),
     );
