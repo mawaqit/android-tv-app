@@ -7,6 +7,7 @@ import 'package:timezone/standalone.dart' as tz;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/data/countries.dart';
 import 'package:sizer/sizer.dart';
+import 'package:scroll_to_index/scroll_to_index.dart'; // Import the package
 
 const platform = MethodChannel('nativeMethodsChannel');
 
@@ -17,53 +18,59 @@ class TimezoneSelectionScreen extends StatefulWidget {
   final TimezoneSelectedCallback? onTimezoneSelected;
   final FocusNode nextButtonFocusNode;
 
-  const TimezoneSelectionScreen(
-      {super.key,
-      required this.country,
-      this.onTimezoneSelected,
-      required this.nextButtonFocusNode});
+  const TimezoneSelectionScreen({
+    super.key,
+    required this.country,
+    this.onTimezoneSelected,
+    required this.nextButtonFocusNode
+  });
 
   @override
-  _TimezoneSelectionScreenState createState() =>
-      _TimezoneSelectionScreenState();
+  _TimezoneSelectionScreenState createState() => _TimezoneSelectionScreenState();
 }
 
 class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
   late List<String> timezones;
   final FocusNode timezoneListFocusNode = FocusNode();
   int selectedTimezoneIndex = 0;
-  late ScrollController _timezoneScrollController;
+  late AutoScrollController _scrollController; // Changed to AutoScrollController
   late StreamSubscription<bool> keyboardSubscription;
 
   @override
   void initState() {
     super.initState();
     timezones = widget.country.timezones;
-    _timezoneScrollController = ScrollController();
+
+    // Initialize AutoScrollController instead of standard ScrollController
+    _scrollController = AutoScrollController(
+      viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+      axis: Axis.vertical,
+    );
 
     var keyboardVisibilityController = KeyboardVisibilityController();
-    keyboardSubscription =
-        keyboardVisibilityController.onChange.listen((bool visible) {
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         FocusScope.of(context).requestFocus(timezoneListFocusNode);
         _selectFirstVisibleItem();
       }
     });
 
-    _handleTimezoneSelect();
+    // Add a post-frame callback to ensure scrolling works after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _selectFirstVisibleItem();
+    });
   }
 
   @override
   void dispose() {
     timezoneListFocusNode.dispose();
-    _timezoneScrollController.dispose();
+    _scrollController.dispose();
     keyboardSubscription.cancel();
     super.dispose();
   }
 
   void _handleTimezoneSelect() {
-    if (selectedTimezoneIndex >= 0 &&
-        selectedTimezoneIndex < timezones.length) {
+    if (selectedTimezoneIndex >= 0 && selectedTimezoneIndex < timezones.length) {
       _setDeviceTimezoneAsync(timezones[selectedTimezoneIndex]).then((_) {
         widget.nextButtonFocusNode.requestFocus();
       });
@@ -74,43 +81,27 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
     setState(() {
       if (timezones.isNotEmpty) {
         selectedTimezoneIndex = 0;
-        _scrollToSelectedItem(
-            _timezoneScrollController, selectedTimezoneIndex, 56.0,
-            topPadding: 16.0);
+        _scrollToIndex(selectedTimezoneIndex);
       }
     });
   }
 
-  void _scrollToSelectedItem(
-      ScrollController controller, int selectedIndex, double itemHeight,
-      {double topPadding = 0}) {
-    if (selectedIndex >= 0) {
-      final listViewHeight = controller.position.viewportDimension;
-      final scrollPosition = (selectedIndex * itemHeight) - topPadding;
-      final maxScrollExtent = controller.position.maxScrollExtent;
-      final targetScrollPosition = scrollPosition.clamp(0.0, maxScrollExtent);
-      final centeringOffset = (listViewHeight / 2) - (itemHeight / 2);
-      final centeredScrollPosition =
-          (targetScrollPosition - centeringOffset).clamp(0.0, maxScrollExtent);
-
-      controller.animateTo(
-        centeredScrollPosition,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
+  // New method using scroll_to_index
+  Future<void> _scrollToIndex(int index) async {
+    await _scrollController.scrollToIndex(
+      index,
+      preferPosition: AutoScrollPosition.middle, // Center the item
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
-  // Basic key handling for navigation in the timezone list.
   KeyEventResult _handleKeyEvent(FocusNode node, RawKeyEvent event) {
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
         setState(() {
           if (selectedTimezoneIndex < timezones.length - 1) {
             selectedTimezoneIndex++;
-            _scrollToSelectedItem(
-                _timezoneScrollController, selectedTimezoneIndex, 56.0,
-                topPadding: 16.0);
+            _scrollToIndex(selectedTimezoneIndex);
           }
         });
         return KeyEventResult.handled;
@@ -118,10 +109,23 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
         setState(() {
           if (selectedTimezoneIndex > 0) {
             selectedTimezoneIndex--;
-            _scrollToSelectedItem(
-                _timezoneScrollController, selectedTimezoneIndex, 56.0,
-                topPadding: 16.0);
+            _scrollToIndex(selectedTimezoneIndex);
           }
+        });
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
+        setState(() {
+          final int visibleItems = (_scrollController.position.viewportDimension / 56.0).floor();
+          selectedTimezoneIndex = (selectedTimezoneIndex + visibleItems).clamp(0, timezones.length - 1);
+          _scrollToIndex(selectedTimezoneIndex);
+        });
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.pageUp) {
+        // Add page up functionality
+        setState(() {
+          final int visibleItems = (_scrollController.position.viewportDimension / 56.0).floor();
+          selectedTimezoneIndex = (selectedTimezoneIndex - visibleItems).clamp(0, timezones.length - 1);
+          _scrollToIndex(selectedTimezoneIndex);
         });
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.enter ||
@@ -171,12 +175,14 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
+
     return Shortcuts(
       shortcuts: <LogicalKeySet, Intent>{
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
       child: Focus(
         focusNode: timezoneListFocusNode,
+        autofocus: true,
         onFocusChange: (hasFocus) {
           if (hasFocus) {
             _selectFirstVisibleItem();
@@ -218,30 +224,44 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
             SizedBox(height: 2.h),
             Expanded(
               child: ListView.builder(
-                controller: _timezoneScrollController,
-                padding: EdgeInsets.only(top: 2.h),
+                controller: _scrollController,
+                padding: EdgeInsets.symmetric(vertical: 16.0),
                 itemCount: timezones.length,
+                itemExtent: 56.0, // Fixed height for better scrolling
                 itemBuilder: (BuildContext context, int index) {
                   var timezone = timezones[index];
                   var location = tz.getLocation(timezone);
                   var now = tz.TZDateTime.now(location);
                   var timeZoneOffset = now.timeZoneOffset;
-                  return ListTile(
-                    tileColor: selectedTimezoneIndex == index
-                        ? const Color(0xFF490094)
-                        : null,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.3.h),
-                    title: Text(
-                      '${_convertToGMTOffset(timeZoneOffset)} $timezone',
-                      style: TextStyle(fontSize: 10.sp),
+
+                  return AutoScrollTag(
+                    key: ValueKey(index),
+                    controller: _scrollController,
+                    index: index,
+                    child: ListTile(
+                      tileColor: selectedTimezoneIndex == index
+                          ? const Color(0xFF490094)
+                          : null,
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 3.w,
+                          vertical: 0.3.h
+                      ),
+                      title: Text(
+                        '${_convertToGMTOffset(timeZoneOffset)} $timezone',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: selectedTimezoneIndex == index
+                              ? Colors.white
+                              : null,
+                        ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          selectedTimezoneIndex = index;
+                        });
+                        _handleTimezoneSelect();
+                      },
                     ),
-                    onTap: () {
-                      setState(() {
-                        selectedTimezoneIndex = index;
-                      });
-                      _handleTimezoneSelect();
-                    },
                   );
                 },
               ),
