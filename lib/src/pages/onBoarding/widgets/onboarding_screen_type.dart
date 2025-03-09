@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 import '../../../../i18n/l10n.dart';
 import 'OrientationWidget.dart';
 
@@ -61,18 +62,21 @@ class OnBoardingScreenType extends StatelessWidget {
       children: [
         AutoSizeText(
           tr.mainScreenOrSecondaryScreen,
-          style: theme.textTheme.headlineSmall,
+          style: theme.textTheme.headlineSmall?.copyWith(fontSize: 20.sp),
           textAlign: TextAlign.center,
+          maxLines: 2,
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 1.2.h),
         AutoSizeText(
           tr.mainScreenOrSecondaryScreenEXPLINATION,
           style: theme.textTheme.titleMedium?.copyWith(
             color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
+            fontSize: 12.sp,
           ),
           textAlign: TextAlign.center,
+          maxLines: 2,
         ),
-        SizedBox(height: 30),
+        SizedBox(height: 2.h),
         ToggleButtonWidget(
           isSelected: !userPrefs.isSecondaryScreen,
           onPressed: _wrapWithOnDone(
@@ -81,20 +85,22 @@ class OnBoardingScreenType extends StatelessWidget {
           label: tr.mainScreen,
           textStyle: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
+            fontSize: 12.sp,
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 1.5.h),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          padding: EdgeInsets.symmetric(horizontal: 3.w),
           child: Text(
             tr.mainScreenExplanation,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+              fontSize: 10.sp,
             ),
             textAlign: TextAlign.center,
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 3.h),
         ToggleButtonWidget(
           isSelected: userPrefs.isSecondaryScreen,
           onPressed: _wrapWithOnDone(
@@ -103,15 +109,18 @@ class OnBoardingScreenType extends StatelessWidget {
           label: tr.secondaryScreen,
           textStyle: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
+            fontSize: 12.sp,
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 1.5.h),
         AutoSizeText(
           tr.secondaryScreenExplanation,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+            fontSize: 10.sp,
           ),
           textAlign: TextAlign.center,
+          maxLines: 4,
         ),
       ],
     );
