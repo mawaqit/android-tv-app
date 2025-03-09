@@ -65,7 +65,8 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
                       Navigator.push(
                         context,
                         PageTransition(
-                          type: PageTransitionType.rightToLeft,
+                          type: PageTransitionType.fade,
+                          alignment: Alignment.center,
                           child: ChromeCastMosqueInputId(
                             onDone: widget.onDone,
                           ),
@@ -75,7 +76,8 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
                       Navigator.push(
                         context,
                         PageTransition(
-                          type: PageTransitionType.rightToLeft,
+                          type: PageTransitionType.fade,
+                          alignment: Alignment.center,
                           child: MosqueInputId(
                             onDone: widget.onDone,
                           ),
@@ -101,7 +103,8 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
                       Navigator.push(
                         context,
                         PageTransition(
-                          type: PageTransitionType.rightToLeft,
+                          type: PageTransitionType.fade,
+                          alignment: Alignment.center,
                           child: ChromeCastMosqueInputId(
                             onDone: widget.onDone,
                           ),
@@ -111,7 +114,8 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
                       Navigator.push(
                         context,
                         PageTransition(
-                          type: PageTransitionType.rightToLeft,
+                          type: PageTransitionType.fade,
+                          alignment: Alignment.center,
                           child: MosqueInputSearch(
                             onDone: widget.onDone,
                           ),
