@@ -6,8 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_time_zone_selection_screen.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../../data/countries.dart';
 import '../../../../i18n/l10n.dart';
+import 'package:sizer/sizer.dart';
 
 class CountrySelectionScreen extends ConsumerStatefulWidget {
   final void Function(Country country)? onSelect;
@@ -31,19 +33,35 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
   final FocusNode countryListFocusNode = FocusNode();
   final FocusNode searchfocusNode = FocusNode();
   int selectedCountryIndex = -1;
-  late ScrollController _countryScrollController;
+  late AutoScrollController _autoScrollController;
   late StreamSubscription<bool> keyboardSubscription;
+
+  // Scroll configurations
+  final double _itemHeight = 56.0;
+  final Duration _scrollDuration = Duration(milliseconds: 100);
 
   @override
   void initState() {
     super.initState();
     countriesList = Countries.list;
-    _countryScrollController = ScrollController();
-    var keyboardVisibilityController = KeyboardVisibilityController();
 
+    // Initialize AutoScrollController
+    _autoScrollController = AutoScrollController(
+      viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+      axis: Axis.vertical,
+    );
+
+    var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         FocusScope.of(context).requestFocus(countryListFocusNode);
+        _selectFirstVisibleItem();
+      }
+    });
+
+    // Add post-frame callback to ensure the widget is properly mounted
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
         _selectFirstVisibleItem();
       }
     });
@@ -53,28 +71,21 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
   void dispose() {
     searchController.dispose();
     countryListFocusNode.dispose();
-    _countryScrollController.dispose();
+    _autoScrollController.dispose();
     searchfocusNode.dispose();
     keyboardSubscription.cancel();
     super.dispose();
   }
 
-  void _scrollToSelectedItem(ScrollController controller, int selectedIndex, double itemHeight,
-      {double topPadding = 0}) {
-    if (selectedIndex >= 0) {
-      final listViewHeight = controller.position.viewportDimension;
-      final scrollPosition = (selectedIndex * itemHeight) - topPadding;
-      final maxScrollExtent = controller.position.maxScrollExtent;
-      final targetScrollPosition = scrollPosition.clamp(0.0, maxScrollExtent);
-      final centeringOffset = (listViewHeight / 2) - (itemHeight / 2);
-      final centeredScrollPosition = (targetScrollPosition - centeringOffset).clamp(0.0, maxScrollExtent);
+  // Method to scroll to an indexed item
+  Future<void> _scrollToIndex(int index) async {
+    if (index < 0 || index >= countriesList.length) return;
 
-      controller.animateTo(
-        centeredScrollPosition,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
+    await _autoScrollController.scrollToIndex(
+      index,
+      preferPosition: AutoScrollPosition.middle,
+      duration: _scrollDuration,
+    );
   }
 
   void _filterItems(String query) {
@@ -91,16 +102,15 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
         setState(() {
           if (selectedCountryIndex < countriesList.length - 1) {
             selectedCountryIndex++;
-            _scrollToSelectedItem(_countryScrollController, selectedCountryIndex, 56.0, topPadding: 16.0);
+            _scrollToIndex(selectedCountryIndex);
           }
         });
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        // print('up: ${ref.watch(nextNodeProvider).hasFocus}');
         setState(() {
           if (selectedCountryIndex > 0) {
             selectedCountryIndex--;
-            _scrollToSelectedItem(_countryScrollController, selectedCountryIndex, 56.0, topPadding: 16.0);
+            _scrollToIndex(selectedCountryIndex);
           } else if (selectedCountryIndex == 0) {
             FocusScope.of(context).requestFocus(searchfocusNode);
             selectedCountryIndex = -1;
@@ -117,6 +127,38 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
           FocusScope.of(context).requestFocus(widget.focusNode);
         });
         return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
+        // Page down: move several items down at once
+        setState(() {
+          final int visibleItems = (_autoScrollController.position.viewportDimension / _itemHeight).floor();
+          final int newIndex = (selectedCountryIndex + visibleItems).clamp(0, countriesList.length - 1);
+          selectedCountryIndex = newIndex;
+          _scrollToIndex(selectedCountryIndex);
+        });
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.pageUp) {
+        // Page up: move several items up at once
+        setState(() {
+          final int visibleItems = (_autoScrollController.position.viewportDimension / _itemHeight).floor();
+          final int newIndex = (selectedCountryIndex - visibleItems).clamp(0, countriesList.length - 1);
+          selectedCountryIndex = newIndex;
+          _scrollToIndex(selectedCountryIndex);
+        });
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.home) {
+        // Home: go to the first item
+        setState(() {
+          selectedCountryIndex = 0;
+          _scrollToIndex(selectedCountryIndex);
+        });
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.end) {
+        // End: go to the last item
+        setState(() {
+          selectedCountryIndex = countriesList.length - 1;
+          _scrollToIndex(selectedCountryIndex);
+        });
+        return KeyEventResult.handled;
       }
     }
     return KeyEventResult.ignored;
@@ -126,7 +168,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
     if (selectedCountryIndex >= 0 && selectedCountryIndex < countriesList.length) {
       var country = countriesList[selectedCountryIndex];
       widget.onSelect?.call(country);
-      if(widget.nextButtonFocusNode != null) {
+      if (widget.nextButtonFocusNode != null) {
         widget.nextButtonFocusNode?.requestFocus();
       }
     }
@@ -136,7 +178,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
     setState(() {
       if (countriesList.isNotEmpty && selectedCountryIndex == -1) {
         selectedCountryIndex = 0;
-        _scrollToSelectedItem(_countryScrollController, selectedCountryIndex, 56.0, topPadding: 16.0);
+        _scrollToIndex(selectedCountryIndex);
       }
     });
   }
@@ -154,33 +196,33 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
           node: FocusScopeNode(),
           child: Column(
             children: [
-              const SizedBox(height: 10),
+              SizedBox(height: 1.h),
               Text(
                 S.of(context).appTimezone,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 25.0,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
                   color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 1.h),
               Divider(
                 thickness: 1,
                 color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 1.h),
               Text(
                 S.of(context).descTimezone,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 10.sp,
                   color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 1.h),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
                 child: TextField(
                   autofocus: true,
                   focusNode: searchfocusNode,
@@ -190,16 +232,19 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                   },
                   controller: searchController,
                   onChanged: _filterItems,
+                  style: TextStyle(fontSize: 10.sp),
                   decoration: InputDecoration(
                     hintText: S.of(context).searchCountries,
-                    prefixIcon: Icon(Icons.search),
+                    hintStyle: TextStyle(fontSize: 10.sp),
+                    prefixIcon: Icon(Icons.search, size: 5.w),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 1.5.h),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 1.h),
               Expanded(
                 child: Focus(
                   focusNode: countryListFocusNode,
@@ -210,23 +255,35 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                   },
                   onKey: (node, event) => _handleKeyEvent(node, event),
                   child: ListView.builder(
-                    controller: _countryScrollController,
+                    controller: _autoScrollController,
                     itemCount: countriesList.length,
-                    padding: EdgeInsets.only(top: 16),
+                    padding: EdgeInsets.symmetric(vertical: 1.h),
                     itemBuilder: (BuildContext context, int index) {
                       var country = countriesList[index];
-                      return ListTile(
-                        tileColor: selectedCountryIndex == index ? const Color(0xFF490094) : null,
-                        title: Text(country.name),
-                        onTap: () {
-                          setState(() {
-                            selectedCountryIndex = index;
-                            widget.onSelect?.call(country);
-                            if(widget.nextButtonFocusNode != null) {
-                              widget.nextButtonFocusNode?.requestFocus();
-                            }
-                          });
-                        },
+                      return AutoScrollTag(
+                        key: ValueKey(index),
+                        controller: _autoScrollController,
+                        index: index,
+                        child: ListTile(
+                          tileColor: selectedCountryIndex == index ? const Color(0xFF490094) : null,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+                          title: Text(
+                            country.name,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: selectedCountryIndex == index ? Colors.white : null,
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              selectedCountryIndex = index;
+                              widget.onSelect?.call(country);
+                              if (widget.nextButtonFocusNode != null) {
+                                widget.nextButtonFocusNode?.requestFocus();
+                              }
+                            });
+                          },
+                        ),
                       );
                     },
                   ),
