@@ -56,19 +56,73 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
             SizedBox(height: 10),
             OutlinedButton(
               autofocus: true,
-              onPressed: () {
-                widget.nextButtonFocusNode.map((focus) {
-                  focus.requestFocus();
-                });
+              onPressed: () async {
+                final deviceModel = await _fetchDeviceModel() ?? '';
+                final isChromeCast = deviceModel.contains('chromecast');
+                widget.nextButtonFocusNode.fold(
+                  () {
+                    if (isChromeCast) {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: ChromeCastMosqueInputId(
+                            onDone: widget.onDone,
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: MosqueInputId(
+                            onDone: widget.onDone,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  (focus) {
+                    focus.requestFocus();
+                  },
+                );
                 ref.read(mosqueInputTypeSelectorProvider.notifier).state = SelectionType.mosqueId;
               },
               child: Text(S.current.yes),
             ),
             OutlinedButton(
-              onPressed: () {
-                widget.nextButtonFocusNode.map((focus) {
-                  focus.requestFocus();
-                });
+              onPressed: () async {
+                final deviceModel = await _fetchDeviceModel() ?? '';
+                final isChromeCast = deviceModel.contains('chromecast');
+                widget.nextButtonFocusNode.fold(
+                  () {
+                    if (isChromeCast) {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: ChromeCastMosqueInputId(
+                            onDone: widget.onDone,
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: MosqueInputSearch(
+                            onDone: widget.onDone,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  (focus) {
+                    focus.requestFocus();
+                  },
+                );
                 ref.read(mosqueInputTypeSelectorProvider.notifier).state = SelectionType.mosqueName;
               },
               child: Text(S.current.no),
@@ -77,6 +131,19 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
         ),
       ),
     );
+  }
+
+  Future<String?> _fetchDeviceModel() async {
+    try {
+      final userData = await Api.prepareUserData();
+      if (userData != null) {
+        return userData.$2['model'];
+      }
+      return null;
+    } catch (e, stackTrace) {
+      logger.e('Error fetching user data: $e', stackTrace: stackTrace);
+      return null;
+    }
   }
 }
 
