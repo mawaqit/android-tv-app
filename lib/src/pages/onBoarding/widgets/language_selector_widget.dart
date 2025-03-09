@@ -6,82 +6,106 @@ import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class LanguageSelector extends StatelessWidget {
-  LanguageSelector({
+  const LanguageSelector({
     Key? key,
     required this.onSelect,
     required this.isSelected,
-    required this.languages, // List of languages
+    required this.languages,
     this.title = "",
-    this.description = "", // Description of the screen
+    this.description = "",
     this.isIconActivated = true,
   }) : super(key: key);
 
-  /// [onSelect] is called when user select a language
+  /// Called when user selects a language
   final void Function(String) onSelect;
 
-  /// [languages] is a list of language codes
+  /// List of language codes
   final List<String> languages;
+
+  /// Controls whether to show language icons
   final bool isIconActivated;
 
-  /// [title] is the title of the screen placed at the top of the screen
+  /// Title displayed at the top of the screen
   final String title;
 
-  /// [description] is the description of the screen
+  /// Description of the screen purpose
   final String description;
 
-  /// [isSelected] is a function that return true if the language is selected
+  /// Function to determine if a language is selected
   final bool Function(String) isSelected;
+
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
 
     return Column(
       children: [
-        SizedBox(height: 10),
+        SizedBox(height: 2.h),
+
+        // Title section
+        _buildTitleSection(context, themeData),
+        SizedBox(height: 3.h),
+
+        // Language list section
+        _buildLanguageListSection(context),
+      ],
+    );
+  }
+
+  /// Builds the title and description section
+  Widget _buildTitleSection(BuildContext context, ThemeData themeData) {
+    return Column(
+      children: [
         Text(
           title.isEmpty ? S.of(context).appLang : title,
           style: TextStyle(
-            fontSize: 25.0,
+            fontSize: 16.sp, // Responsive font size
             fontWeight: FontWeight.w700,
             color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ).animate().slideY().fade(),
-        SizedBox(height: 8),
+
+        SizedBox(height: 1.h),
+
         Text(
-          S.of(context).descLang,
+          description.isEmpty ? S.of(context).descLang : description,
           textAlign: TextAlign.center,
           style: GoogleFonts.inter(
-            fontSize: 15,
+            fontSize: 10.sp, // Responsive font size
             color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ).animate().slideX(begin: .5).fade(),
-        SizedBox(height: 20),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.only(top: 5),
-            child: ListView.separated(
-              padding: EdgeInsets.only(
-                top: 5,
-                bottom: 5,
-              ),
-              itemCount: languages.length,
-              separatorBuilder: (BuildContext context, int index) =>
-                  Divider(height: 1).animate().fade(delay: .7.seconds),
-              itemBuilder: (BuildContext context, int index) {
-                final Locale locale = Locale(languages[index]);
-                return LanguageTile(
-                  onTap: () => onSelect(locale.languageCode),
-                  locale: locale,
-                  isSelected: isSelected(locale.languageCode),
-                  isIconActivated: isIconActivated,
-                );
-              },
-            ),
-          ),
-        )
       ],
+    );
+  }
+
+  /// Builds the scrollable language list
+  Widget _buildLanguageListSection(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.only(top: 1.h),
+        child: ListView.separated(
+          padding: EdgeInsets.symmetric(
+            vertical: 0.5.h,
+            horizontal: 2.w,
+          ),
+          itemCount: languages.length,
+          separatorBuilder: (BuildContext context, int index) =>
+              Divider(height: 0.2.h).animate().fade(delay: .7.seconds),
+          itemBuilder: (BuildContext context, int index) {
+            final Locale locale = Locale(languages[index]);
+            return LanguageTile(
+              onTap: () => onSelect(locale.languageCode),
+              locale: locale,
+              isSelected: isSelected(locale.languageCode),
+              isIconActivated: isIconActivated,
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -109,55 +133,77 @@ class _LanguageTileState extends State<LanguageTile> {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
+
     return Material(
-        child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
-      child: Ink(
-        decoration: BoxDecoration(
-          color: widget.isSelected ? themeData.selectedRowColor : null,
-          borderRadius: BorderRadius.circular(10),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 1.w,
+          vertical: 0.3.h,
         ),
-        child: InkWell(
-          // autofocus: widget.isSelected,
-          // onFocusChange: (i) => setState(() => isFocused = i),
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            widget.onTap();
-            setState(() {});
-          },
-          child: ListTile(
-            dense: true,
-            textColor: widget.isSelected ? Colors.white : null,
-            leading: widget.isIconActivated ? flagIcon(widget.locale.languageCode) : null,
-            title: Text(
-              appLanguage.combinedLanguageName(widget.locale.languageCode),
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        child: Ink(
+          decoration: BoxDecoration(
+            color: widget.isSelected ? themeData.selectedRowColor : null,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () {
+              widget.onTap();
+              setState(() {});
+            },
+            child: ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 4.w,
+                vertical: 0.5.h,
+              ),
+              textColor: widget.isSelected ? Colors.white : null,
+              leading: widget.isIconActivated
+                  ? flagIcon(widget.locale.languageCode, size: 10.w)
+                  : null,
+              title: Text(
+                appLanguage.combinedLanguageName(widget.locale.languageCode),
+                style: TextStyle(
+                  fontSize: 11.sp, // Responsive font size
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              trailing: widget.isSelected
+                  ? Icon(
+                MawaqitIcons.icon_checked,
+                color: Colors.white,
+                size: 5.w, // Responsive icon size
+              )
+                  : null,
             ),
-            trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
           ),
         ),
       ),
-    ));
+    );
   }
 
-  Widget flagIcon(String languageCode, {double size = 40}) {
+  Widget flagIcon(String languageCode, {double? size}) {
+    final flagSize = size ?? 15.w; // Default to 10% of screen width if not specified
+
     List<String> codes = languageCode.split('_');
     if (codes.length == 2) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildSingleFlag(codes[0], size: size), // First language flag
-          SizedBox(width: 10), // Space between flags
-          _buildSingleFlag(codes[1], size: size), // Second language flag
+          _buildSingleFlag(codes[0], size: flagSize), // First language flag
+          SizedBox(width: 2.w), // Space between flags
+          _buildSingleFlag(codes[1], size: flagSize), // Second language flag
         ],
       );
     } else {
-      return _buildSingleFlag(languageCode, size: size);
+      return _buildSingleFlag(languageCode, size: flagSize);
     }
   }
 }
 
-Widget _buildSingleFlag(String code, {double size = 40}) {
+Widget _buildSingleFlag(String code, {double? size}) {
+  final flagSize = size ?? 10.w; // Default to 10% of screen width
+
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(300),
@@ -166,8 +212,8 @@ Widget _buildSingleFlag(String code, {double size = 40}) {
     child: Image.asset(
       'assets/img/flag/$code.png',
       fit: BoxFit.fill,
-      width: size,
-      height: size,
+      width: flagSize,
+      height: flagSize,
       errorBuilder: (context, error, stackTrace) {
         FirebaseCrashlytics.instance.recordError(error, stackTrace);
         return SizedBox();
