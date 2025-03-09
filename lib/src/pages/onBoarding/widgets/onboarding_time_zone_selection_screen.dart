@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/data/countries.dart';
+import 'package:sizer/sizer.dart';
 
 const platform = MethodChannel('nativeMethodsChannel');
 
@@ -17,10 +18,14 @@ class TimezoneSelectionScreen extends StatefulWidget {
   final FocusNode nextButtonFocusNode;
 
   const TimezoneSelectionScreen(
-      {super.key, required this.country, this.onTimezoneSelected, required this.nextButtonFocusNode});
+      {super.key,
+      required this.country,
+      this.onTimezoneSelected,
+      required this.nextButtonFocusNode});
 
   @override
-  _TimezoneSelectionScreenState createState() => _TimezoneSelectionScreenState();
+  _TimezoneSelectionScreenState createState() =>
+      _TimezoneSelectionScreenState();
 }
 
 class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
@@ -37,7 +42,8 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
     _timezoneScrollController = ScrollController();
 
     var keyboardVisibilityController = KeyboardVisibilityController();
-    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         FocusScope.of(context).requestFocus(timezoneListFocusNode);
         _selectFirstVisibleItem();
@@ -56,7 +62,8 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
   }
 
   void _handleTimezoneSelect() {
-    if (selectedTimezoneIndex >= 0 && selectedTimezoneIndex < timezones.length) {
+    if (selectedTimezoneIndex >= 0 &&
+        selectedTimezoneIndex < timezones.length) {
       _setDeviceTimezoneAsync(timezones[selectedTimezoneIndex]).then((_) {
         widget.nextButtonFocusNode.requestFocus();
       });
@@ -67,12 +74,15 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
     setState(() {
       if (timezones.isNotEmpty) {
         selectedTimezoneIndex = 0;
-        _scrollToSelectedItem(_timezoneScrollController, selectedTimezoneIndex, 56.0, topPadding: 16.0);
+        _scrollToSelectedItem(
+            _timezoneScrollController, selectedTimezoneIndex, 56.0,
+            topPadding: 16.0);
       }
     });
   }
 
-  void _scrollToSelectedItem(ScrollController controller, int selectedIndex, double itemHeight,
+  void _scrollToSelectedItem(
+      ScrollController controller, int selectedIndex, double itemHeight,
       {double topPadding = 0}) {
     if (selectedIndex >= 0) {
       final listViewHeight = controller.position.viewportDimension;
@@ -80,7 +90,8 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
       final maxScrollExtent = controller.position.maxScrollExtent;
       final targetScrollPosition = scrollPosition.clamp(0.0, maxScrollExtent);
       final centeringOffset = (listViewHeight / 2) - (itemHeight / 2);
-      final centeredScrollPosition = (targetScrollPosition - centeringOffset).clamp(0.0, maxScrollExtent);
+      final centeredScrollPosition =
+          (targetScrollPosition - centeringOffset).clamp(0.0, maxScrollExtent);
 
       controller.animateTo(
         centeredScrollPosition,
@@ -97,7 +108,9 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
         setState(() {
           if (selectedTimezoneIndex < timezones.length - 1) {
             selectedTimezoneIndex++;
-            _scrollToSelectedItem(_timezoneScrollController, selectedTimezoneIndex, 56.0, topPadding: 16.0);
+            _scrollToSelectedItem(
+                _timezoneScrollController, selectedTimezoneIndex, 56.0,
+                topPadding: 16.0);
           }
         });
         return KeyEventResult.handled;
@@ -105,11 +118,14 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
         setState(() {
           if (selectedTimezoneIndex > 0) {
             selectedTimezoneIndex--;
-            _scrollToSelectedItem(_timezoneScrollController, selectedTimezoneIndex, 56.0, topPadding: 16.0);
+            _scrollToSelectedItem(
+                _timezoneScrollController, selectedTimezoneIndex, 56.0,
+                topPadding: 16.0);
           }
         });
         return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.select) {
+      } else if (event.logicalKey == LogicalKeyboardKey.enter ||
+          event.logicalKey == LogicalKeyboardKey.select) {
         _handleTimezoneSelect();
         return KeyEventResult.handled;
       }
@@ -135,7 +151,8 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
   }
 
   Future<void> _setDeviceTimezone(String timezone) async {
-    bool isSuccess = await platform.invokeMethod('setDeviceTimezone', {"timezone": timezone});
+    bool isSuccess = await platform
+        .invokeMethod('setDeviceTimezone', {"timezone": timezone});
     if (!isSuccess) {
       throw Exception('Failed to set timezone');
     }
@@ -168,34 +185,40 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
         onKey: (node, event) => _handleKeyEvent(node, event),
         child: Column(
           children: [
-            const SizedBox(height: 10),
+            SizedBox(height: 1.h),
             Text(
               S.of(context).appTimezone,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 25.0,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w700,
-                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+                color: themeData.brightness == Brightness.dark
+                    ? null
+                    : themeData.primaryColor,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 1.h),
             Divider(
               thickness: 1,
-              color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
+              color: themeData.brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 1.h),
             Text(
               S.of(context).descTimezone,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 15,
-                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+                fontSize: 12.sp,
+                color: themeData.brightness == Brightness.dark
+                    ? null
+                    : themeData.primaryColor,
               ),
             ),
             Expanded(
               child: ListView.builder(
                 controller: _timezoneScrollController,
-                padding: const EdgeInsets.only(top: 16),
+                padding: EdgeInsets.only(top: 2.h),
                 itemCount: timezones.length,
                 itemBuilder: (BuildContext context, int index) {
                   var timezone = timezones[index];
@@ -203,8 +226,15 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
                   var now = tz.TZDateTime.now(location);
                   var timeZoneOffset = now.timeZoneOffset;
                   return ListTile(
-                    tileColor: selectedTimezoneIndex == index ? const Color(0xFF490094) : null,
-                    title: Text('${_convertToGMTOffset(timeZoneOffset)} $timezone'),
+                    tileColor: selectedTimezoneIndex == index
+                        ? const Color(0xFF490094)
+                        : null,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+                    title: Text(
+                      '${_convertToGMTOffset(timeZoneOffset)} $timezone',
+                      style: TextStyle(fontSize: 12.sp),
+                    ),
                     onTap: () {
                       setState(() {
                         selectedTimezoneIndex = index;
