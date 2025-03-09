@@ -190,7 +190,7 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
               S.of(context).appTimezone,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20.sp,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.w700,
                 color: themeData.brightness == Brightness.dark
                     ? null
@@ -215,6 +215,7 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
                     : themeData.primaryColor,
               ),
             ),
+            SizedBox(height: 2.h),
             Expanded(
               child: ListView.builder(
                 controller: _timezoneScrollController,
@@ -230,10 +231,10 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
                         ? const Color(0xFF490094)
                         : null,
                     contentPadding:
-                        EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+                        EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.3.h),
                     title: Text(
                       '${_convertToGMTOffset(timeZoneOffset)} $timezone',
-                      style: TextStyle(fontSize: 12.sp),
+                      style: TextStyle(fontSize: 10.sp),
                     ),
                     onTap: () {
                       setState(() {
