@@ -5,6 +5,7 @@ import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 
 import 'package:mawaqit/src/helpers/CrashlyticsWrapper.dart';
+import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 
 class MosqueSimpleTile extends StatefulWidget {
   const MosqueSimpleTile({
@@ -60,7 +61,6 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
             focusColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
             onTap: () async {
               if (loading || widget.onTap == null || !mounted) return;
-              widget.selectedNode.fold(() => {}, (node) => node.requestFocus());
               try {
                 setState(() => loading = true);
                 await widget.onTap?.call();
@@ -70,6 +70,14 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
                 setState(() => loading = false);
                 throw Exception('MosqueSimpleTile Error $e');
               }
+
+              widget.selectedNode.fold(() {
+                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => OfflineHomeScreen()),
+                  (route) => false,
+                );
+                return widget.onTap?.call();
+              }, (node) => node.requestFocus());
             },
             child: Row(
               children: [
