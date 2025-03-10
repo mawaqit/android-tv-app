@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/toggle_button_widget.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -49,8 +50,13 @@ class OnBoardingOrientationWidget extends StatelessWidget {
   // Helper method to wrap callbacks with onNext if available
   VoidCallback _wrapWithOnNext(VoidCallback callback) {
     return () {
-      if (nextButtonFocusNode != null) nextButtonFocusNode!.requestFocus();
       callback();
+      // Add a small delay before requesting focus to ensure state changes are fully applied
+      Future.delayed(Duration(milliseconds: 300), () {
+        if (nextButtonFocusNode != null && nextButtonFocusNode!.canRequestFocus) {
+          nextButtonFocusNode!.requestFocus();
+        }
+      });
       if (!isOnboarding) {
         onNext?.call();
       }
@@ -62,8 +68,7 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final userPrefs = context.watch<UserPreferencesManager>();
     final tr = S.of(context);
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     // Adjust font sizes based on orientation
     final double headerFontSize = isPortrait ? 16.sp : 20.sp;
@@ -216,95 +221,4 @@ class OnBoardingOrientationWidget extends StatelessWidget {
       ],
     );
   }
-}
-
-class ToggleButtonWidget extends StatelessWidget {
-  final bool isSelected;
-  final VoidCallback onPressed;
-  final String label;
-  final TextStyle? textStyle;
-  final bool isPortrait;
-
-  const ToggleButtonWidget({
-    super.key,
-    required this.isSelected,
-    required this.onPressed,
-    required this.label,
-    this.textStyle,
-    this.isPortrait = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    // Dynamic vertical padding based on screen size and orientation
-    final verticalPadding = isPortrait
-        ? (screenWidth > 600 ? 1.2.h : 1.0.h)
-        : (screenWidth > 600 ? 1.8.h : 1.5.h);
-
-    // Ensure font size is responsive but has a minimum size
-    final effectiveTextStyle =
-        (textStyle ?? TextStyle(fontSize: isPortrait ? 8.sp : 10.sp));
-
-    return isSelected
-        ? _buildSelectedButton(theme, verticalPadding, effectiveTextStyle)
-        : _buildUnselectedButton(theme, verticalPadding, effectiveTextStyle);
-  }
-
-  Widget _buildSelectedButton(
-    ThemeData theme,
-    double verticalPadding,
-    TextStyle textStyle,
-  ) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        minimumSize: Size(100.w, 0),
-        backgroundColor: theme.primaryColor,
-        foregroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(
-            vertical: verticalPadding, horizontal: isPortrait ? 1.w : 2.w),
-      ),
-      child: Text(
-        label,
-        style: textStyle.copyWith(height: 1.2),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  Widget _buildUnselectedButton(
-    ThemeData theme,
-    double verticalPadding,
-    TextStyle textStyle,
-  ) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: EdgeInsets.symmetric(
-            vertical: verticalPadding, horizontal: isPortrait ? 1.w : 2.w),
-        minimumSize: Size(100.w, 0),
-      ),
-      child: Text(
-        label,
-        style: textStyle.copyWith(height: 1.2),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  // Helper to ensure we don't use a font size that's too small
-  double max(double a, double b) => a > b ? a : b;
 }
