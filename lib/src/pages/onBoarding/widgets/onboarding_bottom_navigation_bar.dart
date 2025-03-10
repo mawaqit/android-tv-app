@@ -25,11 +25,11 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
     return state.when(
         data: (data) {
           return Container(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+              padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
               child: Row(
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: 4,
                     child: VersionWidget(
                       style: TextStyle(
                         color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(.5),
@@ -49,7 +49,7 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                   ),
                   const Expanded(flex: 1, child: SizedBox()),
                   Expanded(
-                    flex: 2,
+                    flex: 4,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: Directionality.of(context) == TextDirection.ltr
@@ -72,7 +72,7 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                             onPressed: onPreviousPressed,
                           ),
                         ),
-                        if (data.enablePreviousButton) const SizedBox(width: 10),
+                        if (data.enablePreviousButton) const SizedBox(width: 5),
                         if (data.enableNextButton)
                           MawaqitIconButton(
                             focusNode: nextButtonFocusNode ?? FocusNode(),

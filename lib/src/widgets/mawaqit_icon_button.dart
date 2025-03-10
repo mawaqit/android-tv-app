@@ -52,6 +52,7 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
                       style: theme.textTheme.bodyLarge!.copyWith(
                         color: focused ? Colors.white : color,
                         fontWeight: FontWeight.w700,
+                        fontSize: 10.sp,
                       ),
                     ),
                     SizedBox(width: 12),
