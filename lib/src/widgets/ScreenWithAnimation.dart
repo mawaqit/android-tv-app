@@ -23,7 +23,7 @@ class ScreenWithAnimationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userPrefs = context.watch<UserPreferencesManager>();
-
+    final isOrientationPortrait = userPrefs.calculatedOrientation == Orientation.portrait;
     return Scaffold(
       appBar: hasBackButton
           ? AppBar(
@@ -48,7 +48,7 @@ class ScreenWithAnimationWidget extends StatelessWidget {
               flex: 4,
               child: Align(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Lottie.asset(
                     animation.contains('assets/') ? animation : 'assets/animations/lottie/$animation.json',
                     fit: BoxFit.contain,
@@ -58,7 +58,7 @@ class ScreenWithAnimationWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 6,
+                flex: isOrientationPortrait ? 8 : 6,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: child,
