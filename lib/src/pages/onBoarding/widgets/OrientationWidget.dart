@@ -80,9 +80,10 @@ class OnBoardingOrientationWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
           children: [
             _buildHeader(theme, tr, headerFontSize, subtitleFontSize),
-            SizedBox(height: isPortrait ? 1.h : 2.h),
+            SizedBox(height: isPortrait ? 0.5.h : 1.h),
             _buildOrientationOptions(
               theme: theme,
               tr: tr,
@@ -108,19 +109,26 @@ class OnBoardingOrientationWidget extends StatelessWidget {
       children: [
         Text(
           tr.orientation,
-          style: theme.textTheme.headlineMedium?.copyWith(
+          style: theme.textTheme.headlineSmall?.copyWith(
             fontSize: headerFontSize,
+            height: 1.2, // Tighter line height for better Arabic text display
+            fontWeight: FontWeight.w600,
           ),
           textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
         ),
-        SizedBox(height: 2.h),
+        SizedBox(height: 1.5.h), // Reduced spacing
         Text(
           tr.selectYourMawaqitTvAppOrientation,
-          style: theme.textTheme.titleMedium?.copyWith(
+          style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
             fontSize: subtitleFontSize,
+            height: 1.3, // Better line height for Arabic text
           ),
           textAlign: TextAlign.center,
+          overflow: TextOverflow.visible, // Changed to visible to prevent cutting off text
+          maxLines: 4, // Increased max lines for Arabic text
         ),
       ],
     );
@@ -149,7 +157,7 @@ class OnBoardingOrientationWidget extends StatelessWidget {
           isPortrait: isPortrait,
         ),
 
-        SizedBox(height: isPortrait ? 2.h : 3.h),
+        SizedBox(height: isPortrait ? 1.5.h : 2.h),
 
         // Portrait option
         _buildOrientationOption(
@@ -186,10 +194,11 @@ class OnBoardingOrientationWidget extends StatelessWidget {
           textStyle: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: buttonFontSize,
+            height: 1.2, // Better line height for Arabic text
           ),
           isPortrait: isPortrait,
         ),
-        SizedBox(height: isPortrait ? 1.h : 2.h),
+        SizedBox(height: isPortrait ? 0.8.h : 1.5.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: isPortrait ? 1.w : 2.w),
           child: Text(
@@ -197,8 +206,11 @@ class OnBoardingOrientationWidget extends StatelessWidget {
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
               fontSize: descriptionFontSize,
+              height: 1.3, // Better line height for Arabic text
             ),
             textAlign: TextAlign.center,
+            overflow: TextOverflow.visible,
+            maxLines: 4,
           ),
         ),
       ],
@@ -260,9 +272,10 @@ class ToggleButtonWidget extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: textStyle,
+        style: textStyle.copyWith(height: 1.2),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -284,9 +297,10 @@ class ToggleButtonWidget extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: textStyle,
+        style: textStyle.copyWith(height: 1.2),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
       ),
     );
   }
