@@ -62,28 +62,34 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final userPrefs = context.watch<UserPreferencesManager>();
     final tr = S.of(context);
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
-    // Responsive font sizes based on screen width
-    final double headerFontSize = 20.sp;
-    final double subtitleFontSize = 12.sp;
-    final double buttonFontSize = 12.sp;
-    final double descriptionFontSize = 10.sp;
+    // Adjust font sizes based on orientation
+    final double headerFontSize = isPortrait ? 16.sp : 20.sp;
+    final double subtitleFontSize = isPortrait ? 10.sp : 12.sp;
+    final double buttonFontSize = isPortrait ? 10.sp : 12.sp;
+    final double descriptionFontSize = isPortrait ? 8.sp : 10.sp;
+
+    // Adjust width factor based on orientation
+    final double widthFactor = isPortrait ? 0.9 : 0.75;
 
     return Material(
       child: FractionallySizedBox(
-        widthFactor: .75,
+        widthFactor: widthFactor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildHeader(theme, tr, headerFontSize, subtitleFontSize),
-            SizedBox(height: 2.h),
+            SizedBox(height: isPortrait ? 1.h : 2.h),
             _buildOrientationOptions(
               theme: theme,
               tr: tr,
               userPrefs: userPrefs,
               buttonFontSize: buttonFontSize,
               descriptionFontSize: descriptionFontSize,
+              isPortrait: isPortrait,
             ),
           ],
         ),
@@ -127,6 +133,7 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     required UserPreferencesManager userPrefs,
     required double buttonFontSize,
     required double descriptionFontSize,
+    required bool isPortrait,
   }) {
     return Column(
       children: [
@@ -139,9 +146,10 @@ class OnBoardingOrientationWidget extends StatelessWidget {
           description: tr.landscapeBTNDescription,
           buttonFontSize: buttonFontSize,
           descriptionFontSize: descriptionFontSize,
+          isPortrait: isPortrait,
         ),
 
-        SizedBox(height: 3.h),
+        SizedBox(height: isPortrait ? 2.h : 3.h),
 
         // Portrait option
         _buildOrientationOption(
@@ -152,6 +160,7 @@ class OnBoardingOrientationWidget extends StatelessWidget {
           description: tr.portraitBTNDescription,
           buttonFontSize: buttonFontSize,
           descriptionFontSize: descriptionFontSize,
+          isPortrait: isPortrait,
         ),
       ],
     );
@@ -166,6 +175,7 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     required String description,
     required double buttonFontSize,
     required double descriptionFontSize,
+    required bool isPortrait,
   }) {
     return Column(
       children: [
@@ -177,10 +187,11 @@ class OnBoardingOrientationWidget extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontSize: buttonFontSize,
           ),
+          isPortrait: isPortrait,
         ),
-        SizedBox(height: 2.h),
+        SizedBox(height: isPortrait ? 1.h : 2.h),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2.w),
+          padding: EdgeInsets.symmetric(horizontal: isPortrait ? 1.w : 2.w),
           child: Text(
             description,
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -200,6 +211,7 @@ class ToggleButtonWidget extends StatelessWidget {
   final VoidCallback onPressed;
   final String label;
   final TextStyle? textStyle;
+  final bool isPortrait;
 
   const ToggleButtonWidget({
     super.key,
@@ -207,6 +219,7 @@ class ToggleButtonWidget extends StatelessWidget {
     required this.onPressed,
     required this.label,
     this.textStyle,
+    this.isPortrait = false,
   });
 
   @override
@@ -214,11 +227,14 @@ class ToggleButtonWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Dynamic vertical padding based on screen size
-    final verticalPadding = screenWidth > 600 ? 1.8.h : 1.5.h;
+    // Dynamic vertical padding based on screen size and orientation
+    final verticalPadding = isPortrait
+        ? (screenWidth > 600 ? 1.2.h : 1.0.h)
+        : (screenWidth > 600 ? 1.8.h : 1.5.h);
 
     // Ensure font size is responsive but has a minimum size
-    final effectiveTextStyle = (textStyle ?? TextStyle(fontSize: 10.sp));
+    final effectiveTextStyle =
+        (textStyle ?? TextStyle(fontSize: isPortrait ? 8.sp : 10.sp));
 
     return isSelected
         ? _buildSelectedButton(theme, verticalPadding, effectiveTextStyle)
@@ -239,9 +255,15 @@ class ToggleButtonWidget extends StatelessWidget {
         minimumSize: Size(100.w, 0),
         backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: 1.2.h, horizontal: 2.w),
+        padding: EdgeInsets.symmetric(
+            vertical: verticalPadding, horizontal: isPortrait ? 1.w : 2.w),
       ),
-      child: Text(label, style: textStyle),
+      child: Text(
+        label,
+        style: textStyle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 
@@ -256,10 +278,16 @@ class ToggleButtonWidget extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        padding: EdgeInsets.symmetric(vertical: 1.2.h, horizontal: 2.w),
+        padding: EdgeInsets.symmetric(
+            vertical: verticalPadding, horizontal: isPortrait ? 1.w : 2.w),
         minimumSize: Size(100.w, 0),
       ),
-      child: Text(label, style: textStyle),
+      child: Text(
+        label,
+        style: textStyle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 
