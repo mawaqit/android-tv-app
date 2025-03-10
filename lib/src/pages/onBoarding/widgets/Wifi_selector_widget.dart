@@ -8,6 +8,7 @@ import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_noti
 import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_state.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:wifi_hunter/wifi_hunter_result.dart';
+import 'package:sizer/sizer.dart';
 
 const String nativeMethodsChannel = 'nativeMethodsChannel';
 
@@ -50,35 +51,35 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
 
     return Column(
       children: [
-        SizedBox(height: 10),
         Text(
           S.of(context).appWifi,
           style: TextStyle(
-            fontSize: 25.0,
+            fontSize: 12.sp,
             fontWeight: FontWeight.w700,
             color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 1.h),
         Divider(
-          thickness: 1,
+          thickness: 0.1.h,
           color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 1.h),
         Text(
           S.of(context).descWifi,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 12.sp,
             color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 2.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton.icon(
               style: ButtonStyle(
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h)),
                 backgroundColor: MaterialStateProperty.resolveWith<Color?>(
                   (Set<MaterialState> states) {
                     if (states.contains(MaterialState.focused)) {
@@ -96,17 +97,23 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
                   },
                 ),
               ),
-              icon: const Icon(Icons.refresh),
-              label: Text(S.of(context).scanAgain),
+              icon: Icon(Icons.refresh, size: 16.sp),
+              label: Text(
+                S.of(context).scanAgain,
+                style: TextStyle(fontSize: 10.sp),
+              ),
               onPressed: () async => await ref.read(wifiScanNotifierProvider.notifier).retry(),
             ),
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 2.h),
         Expanded(
           child: wifiScanState.when(
             data: (state) => state.accessPoints.isEmpty
-                ? Text(S.of(context).noScannedResultsFound)
+                ? Text(
+                    S.of(context).noScannedResultsFound,
+                    style: TextStyle(fontSize: 14.sp),
+                  )
                 : _buildAccessPointsList(state.accessPoints, state.hasPermission, accessPointsFocusNode),
             error: (error, s) {
               _showToast('Error fetching access points');
@@ -116,7 +123,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
             loading: () => Align(
               child: SizedBox(
                 child: CircularProgressIndicator(
-                  strokeWidth: 3,
+                  strokeWidth: 0.5.h,
                 ),
               ),
             ),
@@ -144,12 +151,9 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
     final filteredAccessPoints = _filterAccessPoints(accessPoints);
 
     return Container(
-      padding: EdgeInsets.only(top: 5),
+      padding: EdgeInsets.only(top: 0.5.h),
       child: ListView.builder(
-        padding: EdgeInsets.only(
-          top: 5,
-          bottom: 5,
-        ),
+        padding: EdgeInsets.symmetric(vertical: 0.5.h),
         itemCount: filteredAccessPoints.length,
         itemBuilder: (context, i) => _AccessPointTile(
           skipButtonFocusNode: widget.focusNode ?? FocusNode(),
@@ -169,6 +173,7 @@ class _AccessPointTile extends ConsumerStatefulWidget {
   final bool hasPermission;
   final void Function() onSelect;
   final FocusNode focusNode;
+
   _AccessPointTile({
     Key? key,
     required this.focusNode,
@@ -224,8 +229,9 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
       onKey: (node, event) => _handleKeyEvent(node, event),
       child: ListTile(
         visualDensity: VisualDensity.compact,
-        leading: Icon(signalIcon),
-        title: Text(title),
+        leading: Icon(signalIcon, size: 16.sp),
+        title: Text(title, style: TextStyle(fontSize: 12.sp)),
+        contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -306,78 +312,7 @@ class _WifiPasswordPageState extends State<WifiPasswordPage> {
           return true;
         }
       },
-      child: ScreenWithAnimationWidget(
-          hasBackButton: false,
-          animation: R.ASSETS_ANIMATIONS_LOTTIE_SETTINGS_JSON,
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              Text(
-                S.of(context).appWifi,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.w700,
-                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Divider(
-                thickness: 1,
-                color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                widget.ssid,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-                ),
-              ),
-              SizedBox(height: 20),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      focusNode: passwordInputFocusNode,
-                      onSubmitted: (_) {
-                        widget.onConnect(passwordController.text);
-                      },
-                      autofocus: true,
-                      controller: passwordController,
-                      obscureText: !_showPassword,
-                      decoration: InputDecoration(
-                        labelText: S.of(context).wifiPassword,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _showPassword ? Icons.visibility : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _showPassword = !_showPassword;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      focusNode: connectButtonFocusNode,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _buttonColor,
-                        foregroundColor: _textColor, // This will change the text color
-                      ),
-                      onPressed: () {
-                        widget.onConnect(passwordController.text);
-                      },
-                      child: Text(S.of(context).connect),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )),
+      child: Container(),
     );
   }
 }
