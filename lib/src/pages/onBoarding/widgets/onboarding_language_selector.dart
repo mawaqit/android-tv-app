@@ -106,7 +106,7 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
         int selectedIndex =
             sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
         if (selectedIndex != -1) {
-          double position = selectedIndex * 51; // Adjust based on item height
+          double position = selectedIndex * (6.h); // Adjusted based on item height with sizer
           _scrollController.animateTo(
             position,
             duration: Duration(milliseconds: 300),
@@ -118,35 +118,34 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
 
     return Column(
       children: [
-        SizedBox(height: 10),
+        SizedBox(height: 2.h),
         Text(
           S.of(context).appLang,
           style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w700,
                 color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
               ),
         ).animate().slideY().fade(),
-        SizedBox(height: 2.h),
+        SizedBox(height: 1.5.h),
         Text(
           S.of(context).descLang,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontSize: 14.sp,
                 color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
               ),
         ).animate().slideX(begin: .5).fade(),
-        SizedBox(height: 20),
+        SizedBox(height: 3.h),
         Expanded(
           child: Container(
-            padding: EdgeInsets.only(top: 5),
+            padding: EdgeInsets.only(top: 0.5.h),
             child: ListView.separated(
               controller: _scrollController,
-              padding: EdgeInsets.only(
-                top: 5,
-                bottom: 5,
-              ),
+              padding: EdgeInsets.symmetric(vertical: 0.5.h),
               itemCount: sortedLocales.length,
               separatorBuilder: (BuildContext context, int index) =>
-                  Divider(height: 1).animate().fade(delay: .7.seconds),
+                  Divider(height: 0.1.h).animate().fade(delay: .7.seconds),
               itemBuilder: (BuildContext context, int index) {
                 var locale = sortedLocales[index];
                 return LanguageTile(
@@ -207,7 +206,7 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
 
     return Material(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
+        padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.2.h),
         child: Ink(
           decoration: BoxDecoration(
             color: isFocused
@@ -245,13 +244,14 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
               borderRadius: BorderRadius.circular(10),
               child: ListTile(
                 dense: true,
+                contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
                 textColor: isFocused || widget.isSelected ? Colors.white : null,
                 leading: flagIcon(widget.locale.languageCode),
                 title: Text(
                   appLanguage.languageName(widget.locale.languageCode),
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600),
                 ),
-                trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
+                trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white, size: 14.sp) : null,
               ),
             ),
           ),
@@ -260,22 +260,27 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
     );
   }
 
-  Widget flagIcon(String languageCode, {double size = 40}) {
+  Widget flagIcon(String languageCode, {double? size}) {
+    final flagSize = size ?? 6.w; // Responsive size if not provided
     return Container(
+      width: flagSize,
+      height: flagSize,
+      // Add height equal to width for a perfect circle
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(300),
+        borderRadius: BorderRadius.circular(flagSize / 2), // Use half of size for perfect circle
         // color: Colors.white,
       ),
       clipBehavior: Clip.antiAlias,
-      child: Image.asset(
-        'assets/img/flag/${widget.locale.languageCode}.png',
-        fit: BoxFit.fill,
-        width: size,
-        height: size,
-        errorBuilder: (context, error, stackTrace) {
-          FirebaseCrashlytics.instance.recordError(error, stackTrace);
-          return SizedBox();
-        },
+      child: ClipOval(
+        child: Image.asset(
+          'assets/img/flag/${widget.locale.languageCode}.png',
+          fit: BoxFit.cover,
+          width: flagSize,
+          errorBuilder: (context, error, stackTrace) {
+            FirebaseCrashlytics.instance.recordError(error, stackTrace);
+            return SizedBox();
+          },
+        ),
       ),
     );
   }

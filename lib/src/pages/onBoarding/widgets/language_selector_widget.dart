@@ -202,7 +202,7 @@ class _LanguageTileState extends State<LanguageTile> {
 }
 
 Widget _buildSingleFlag(String code, {double? size}) {
-  final flagSize = size ?? 10.w; // Default to 10% of screen width
+  final flagSize = size ?? 6.w; // Responsive size if not provided
 
   return Container(
     decoration: BoxDecoration(
