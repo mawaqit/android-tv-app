@@ -96,11 +96,17 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
     super.initState();
   }
 
+  bool isArabicText(String text) {
+    final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+    return arabicRegex.hasMatch(text);
+  }
+
   @override
   Widget build(BuildContext context) {
     final translatedHadith = translatedItem(activeHadith);
     final arabicHadith = arabicItem(activeHadith);
     final mosqueProvider = context.read<MosqueManager>();
+    final isTranslatedArabic = isArabicText(translatedHadith);
 
     return Container(
       decoration: BoxDecoration(
@@ -117,7 +123,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
             child: DisplayTextWidget(
               title: widget.azkarTitle,
               arabicText: arabicHadith,
-              translatedText: widget.isAfterAsrOrFajr ? null : translatedHadith,
+              translatedText: isTranslatedArabic ? null : translatedHadith,
             ),
           ),
           mosqueProvider.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
