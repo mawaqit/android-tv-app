@@ -143,7 +143,7 @@ class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> {
         WorkFlowItem(
             duration: kAzkarDuration,
             builder: (context, next) => AfterSalahAzkar(
-                isAfterAsrOrFajr: true,
+                isAfterAsrOrFajr: true, /// this is a redundant parameter as it is always should be (isFajrPray | isAsrPray)
                 isAfterAsr: isAsrPray,
                 azkarTitle: isFajrPray ? AzkarConstant.kAzkarSabahAfterPrayer : AzkarConstant.kAzkarAsrAfterPrayer),
             disabled: mosqueConfig.iqamaEnabled == false || (!isFajrPray && !isAsrPray)),
