@@ -143,6 +143,8 @@ class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> {
         WorkFlowItem(
             duration: kAzkarDuration,
             builder: (context, next) => AfterSalahAzkar(
+
+                /// this is a redundant parameter as it is always should be (isFajrPray | isAsrPray)
                 isAfterAsrOrFajr: true,
                 isAfterAsr: isAsrPray,
                 azkarTitle: isFajrPray ? AzkarConstant.kAzkarSabahAfterPrayer : AzkarConstant.kAzkarAsrAfterPrayer),

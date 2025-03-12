@@ -21,6 +21,7 @@ class AzkarLists {
         tr.azkarList11,
         tr.azkarList12,
         tr.azkarList13,
+        tr.azkarList14,
       ];
 
   static List<String> getAfterFajrList(AppLocalizations tr) => [
