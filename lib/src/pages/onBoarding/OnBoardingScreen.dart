@@ -81,7 +81,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   late FocusNode nextButtonFocusNode;
   late FocusNode previousButtonFocusNode;
   Option<Country> country = None();
-  String? _deviceModel;
 
   @override
   void initState() {
