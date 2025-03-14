@@ -41,7 +41,18 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
   bool noMore = false;
   String? error;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(mosqueManagerProvider.notifier).state = None();
+      }
+    });
+  }
+
   void Function()? loadMore;
+
   onboardingWorkflowDone() {
     sharedPref.save('boarding', 'true');
     AppRouter.pushReplacement(OfflineHomeScreen());
@@ -105,6 +116,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
       } else {
         ref.read(mosqueManagerProvider.notifier).state = Option.fromNullable(SearchSelectionType.home);
       }
+      print('choose_mosque: ${mosque.name}');
     }).catchError((e, stack) {
       if (e is InvalidMosqueId) {
         setState(() {

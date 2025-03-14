@@ -41,6 +41,14 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
   bool loading = false;
   String? error;
 
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(mosqueManagerProvider.notifier).state = fp.None();
+    });
+    super.initState();
+  }
+
   void _setMosqueId(String mosqueId) async {
     if (mosqueId.isEmpty) {
       return setState(() => error = S.of(context).missingMosqueId);
@@ -61,11 +69,6 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
         loading = false;
       });
 
-      if (value.type == "MOSQUE") {
-        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.mosque);
-      } else {
-        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.home);
-      }
     }).catchError((e, stack) {
       debugPrintStack(stackTrace: stack, label: e.toString());
       if (e is InvalidMosqueId) {
@@ -113,7 +116,14 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
                     final mosqueManager = context.read<MosqueManager>();
                     final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
                     ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
-
+                    print('choose_mosque: ');
+                    if(searchOutput != null){
+                      if (searchOutput?.type == "MOSQUE") {
+                        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.mosque);
+                      } else {
+                        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.home);
+                      }
+                    }
                     // !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
                   }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {

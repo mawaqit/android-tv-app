@@ -113,7 +113,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
   }
 
   Map<OnboardingScreenType, OnBoardingItem> getScreenWidgets(BuildContext context) {
-    print('getScreenWidgets: $country');
     final countryDependentItems = country.match(
       () {
         return OnBoardingItem(

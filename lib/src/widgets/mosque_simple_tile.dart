@@ -77,7 +77,12 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
                   (route) => false,
                 );
                 return widget.onTap?.call();
-              }, (node) => node.requestFocus());
+              }, (node) {
+                Future.delayed(Duration(milliseconds: 200), () {
+                  node.requestFocus();
+                });
+                return ;
+              });
             },
             child: Row(
               children: [
