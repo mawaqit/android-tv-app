@@ -1,0 +1,40 @@
+appId: "com.mawaqit.androidtv"
+name: Complete Onboarding Flow with Arabic Language
+tags:
+  - onboarding
+  - arabic
+  - end-to-end
+
+onFlowStart:
+  - takeScreenshot: "initial_screen"
+
+
+---
+# أوامر التدفق الرئيسية
+- launchApp
+
+# شاشة اختيار اللغة
+- scrollUntilVisible:
+    element:
+      text: "العربية"
+    direction: UP
+- tapOn: "التالي"
+
+# شاشة اختيار الاتجاه
+- tapOn: "أفقي"
+- tapOn: "التالي"
+
+# شاشة حول التطبيق
+- tapOn: "التالي"
+
+# اختيار نوع البحث عن المسجد
+- tapOn: "نعم"
+- tapOn: "إنهاء"
+
+# إدخال معرف المسجد والبحث
+- inputText: "1"
+- tapOn:
+    id: "search_mosque"  # استبدل بالمعرف الفعلي لزر البحث
+- waitForAnimationToEnd
+- assertVisible: "التالي"
+- tapOn: "التالي"

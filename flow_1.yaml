@@ -1,0 +1,46 @@
+appId: com.mawaqit.androidtv
+name: Complete Onboarding Flow with Arabic Language
+tags:
+  - onboarding
+  - arabic
+  - end-to-end
+
+onFlowStart:
+  - takeScreenshot: "initial_screen"
+
+---
+# Main flow commands
+- launchApp
+
+# Language Selection
+- takeScreenshot: "language_selection_screen"
+
+# Find and tap on Arabic language
+- scrollUntilVisible:
+    element:
+      text: "العربية"
+    direction: UP
+
+- tapOn:
+    text: "العربية"
+- takeScreenshot: "arabic_selected"
+
+# Tap Next button after language selection
+- tapOn:
+    text: "التالي"
+
+# Orientation selection screen
+- tapOn: "الوضع الافقي"
+- waitForAnimationToEnd
+
+# Tap Next button after orientation selection
+- tapOn:
+    text: "التالي"
+
+# Tap Next button again
+- tapOn:
+    text: "التالي"
+
+- tapOn: "نعم"
+
+- tapOn: "Finish"
