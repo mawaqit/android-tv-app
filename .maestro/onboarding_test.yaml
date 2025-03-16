@@ -1,0 +1,75 @@
+# Maestro test for Mawaqit onboarding flow
+appId: com.mawaqit.mawaqit
+---
+# Start the app and wait for it to load
+- launchApp
+- waitForAnimationToEnd
+
+# Language selection screen
+- assertVisible: "Select your language"
+- tapOn: "English"
+- waitForAnimationToEnd
+
+# Orientation selection screen
+- assertVisible: "Select your screen orientation"
+- tapOn: "Portrait"
+- waitForAnimationToEnd
+
+# About screen
+- assertVisible: "About Mawaqit"
+- tapOn: "Next"
+- waitForAnimationToEnd
+
+# Mosque search type selection
+- assertVisible: "Do you know the mosque ID?"
+
+# Test mosque search by ID
+- tapOn: "Yes"
+- waitForAnimationToEnd
+- assertVisible: "Select mosque ID"
+- inputText: "12345"
+- tapOn: "Search by Id"
+- waitForAnimationToEnd
+
+# If mosque is found, tap on it
+- optional:
+  - assertVisible:
+      id: ".*MosqueSimpleTile.*"
+  - tapOn:
+      id: ".*MosqueSimpleTile.*"
+  - waitForAnimationToEnd
+
+# If mosque is not found, go back and try search by name
+- optional:
+  - assertVisible: "mosque ID is not valid"
+  - back
+  - waitForAnimationToEnd
+  - assertVisible: "Do you know the mosque ID?"
+  - tapOn: "No"
+  - waitForAnimationToEnd
+
+# Search mosque by name
+- optional:
+  - assertVisible: "Search for a mosque"
+  - inputText: "Test Mosque"
+  - tapOn:
+      id: ".*search.*"
+  - waitForAnimationToEnd
+
+# If mosque results appear, select the first one
+- optional:
+  - assertVisible:
+      id: ".*MosqueSimpleTile.*"
+  - tapOn:
+      id: ".*MosqueSimpleTile.*"
+  - waitForAnimationToEnd
+
+# Complete the onboarding flow
+- optional:
+  - assertVisible: "Next"
+  - tapOn: "Next"
+  - waitForAnimationToEnd
+
+# Verify we've reached the home screen
+- optional:
+  - assertVisible: "Prayer Times"

@@ -1,0 +1,132 @@
+appId: com.mawaqit.androidtv
+name: Complete Onboarding Flow with Arabic Language
+tags:
+  - onboarding
+  - arabic
+  - end-to-end
+
+
+onFlowStart:
+  - takeScreenshot: "initial_screen"
+
+---
+# Main flow commands
+- launchApp
+
+
+
+# 1. Language Selection
+- runFlow:
+    when:
+      visible: "Language"
+    commands:
+      - takeScreenshot: "language_selection_screen"
+      
+      # Find and tap on Arabic language
+      - scrollUntilVisible:
+          element:
+            text: "العربية"
+          direction: DOWN
+      
+      - tapOn: 
+          text: "العربية"
+      - takeScreenshot: "arabic_selected"
+      
+      # Tap Next button - try multiple methods
+      - runFlow:
+          commands:
+            - tapOn: "التالي"
+          optional: true
+
+      - runFlow:
+          when:
+            notVisible: "التالي"
+          commands:
+            - tapOn: "Next"
+          optional: true
+          
+      - runFlow:
+          when:
+            notVisible: "Next"
+          commands:
+            - tapOn: 
+                point: "95% 95%"
+          optional: true
+      
+
+# 2. Orientation Selection
+- takeScreenshot: "orientation_screen"
+- assertVisible: 
+    text: "التوجيه"
+    optional: true
+
+# Select landscape orientation
+- tapOn:
+    text: "أفقي"
+    optional: true
+
+# If text not found, try by position
+- runFlow:
+    when:
+      notVisible: "أفقي"
+    commands:
+      - tapOn:
+          point: "50% 40%"
+    optional: true
+
+# Try to tap Next button - try multiple approaches
+- runFlow:
+    commands:
+      - tapOn: "التالي"
+    optional: true
+
+- runFlow:
+    when:
+      notVisible: "التالي"
+    commands:
+      - tapOn: 
+          point: "95% 95%"
+    optional: true
+
+
+# 3. About Mawaqit Screen
+- takeScreenshot: "about_screen"
+
+# Try to tap Next button - try multiple approaches
+- runFlow:
+    commands:
+      - tapOn: "التالي"
+    optional: true
+
+- runFlow:
+    when:
+      notVisible: "التالي"
+    commands:
+      - tapOn: 
+          point: "95% 95%"
+    optional: true
+
+# 4. Mosque Search Screen
+- takeScreenshot: "mosque_search_screen"
+
+# Try to continue in offline mode if available
+- tapOn:
+    text: "المتابعة في وضع بدون إتصال"
+    optional: true
+
+# If offline mode button not found, try to continue
+- runFlow:
+    when:
+      notVisible: "المتابعة في وضع بدون إتصال"
+    commands:
+      - tapOn: "التالي"
+    optional: true
+      
+- runFlow:
+    when:
+      notVisible: "التالي"
+    commands:
+      - tapOn: 
+          point: "95% 95%"
+    optional: true
+

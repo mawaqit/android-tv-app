@@ -1,0 +1,11 @@
+# Add these dependencies to your pubspec.yaml file under dev_dependencies:
+
+patrol: ^2.0.0
+integration_test:
+  sdk: flutter
+
+# After adding these dependencies, run:
+# flutter pub get
+
+# Then you can run the Patrol test with:
+# flutter test integration_test/mosque_search_onboarding_test.dart
