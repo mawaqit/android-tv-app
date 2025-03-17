@@ -56,7 +56,7 @@ class OnBoardingScreenType extends StatelessWidget {
       } else {
         nextButtonFocusNode.fold(
           () => null,
-          (focusNode) => Future.delayed(Duration(milliseconds: 100), () {
+          (focusNode) => Future.delayed(Duration(milliseconds: 500), () {
             if (focusNode.canRequestFocus) {
               focusNode.requestFocus();
             }

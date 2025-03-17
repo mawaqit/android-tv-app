@@ -27,7 +27,7 @@ class OnBoardingAnnouncementScreens extends StatelessWidget {
       } else {
         nextButtonFocusNode.fold(
           () => null,
-          (focusNode) => Future.delayed(Duration(milliseconds: 100), () {
+          (focusNode) => Future.delayed(Duration(milliseconds: 500), () {
             if (focusNode.canRequestFocus) {
               focusNode.requestFocus();
             }
@@ -79,11 +79,11 @@ class OnBoardingAnnouncementScreens extends StatelessWidget {
 
   /// Builds the header section with title and subtitle
   Widget _buildHeader(
-      ThemeData theme,
-      AppLocalizations tr,
-      double headerFontSize,
-      double subtitleFontSize,
-      ) {
+    ThemeData theme,
+    AppLocalizations tr,
+    double headerFontSize,
+    double subtitleFontSize,
+  ) {
     return Column(
       children: [
         AutoSizeText(
@@ -95,7 +95,8 @@ class OnBoardingAnnouncementScreens extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
           maxLines: 2,
-          minFontSize: 10, // Minimum readable size
+          minFontSize: 10,
+          // Minimum readable size
           overflow: TextOverflow.ellipsis,
         ),
         SizedBox(height: 1.5.h),
@@ -108,7 +109,8 @@ class OnBoardingAnnouncementScreens extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
           maxLines: 4,
-          minFontSize: 8, // Minimum readable size
+          minFontSize: 8,
+          // Minimum readable size
           overflow: TextOverflow.ellipsis,
         ),
       ],
