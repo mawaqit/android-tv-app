@@ -18,12 +18,8 @@ class TimezoneSelectionScreen extends StatefulWidget {
   final TimezoneSelectedCallback? onTimezoneSelected;
   final FocusNode nextButtonFocusNode;
 
-  const TimezoneSelectionScreen({
-    super.key,
-    required this.country,
-    this.onTimezoneSelected,
-    required this.nextButtonFocusNode
-  });
+  const TimezoneSelectionScreen(
+      {super.key, required this.country, this.onTimezoneSelected, required this.nextButtonFocusNode});
 
   @override
   _TimezoneSelectionScreenState createState() => _TimezoneSelectionScreenState();
@@ -72,6 +68,11 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
   void _handleTimezoneSelect() {
     if (selectedTimezoneIndex >= 0 && selectedTimezoneIndex < timezones.length) {
       _setDeviceTimezoneAsync(timezones[selectedTimezoneIndex]).then((_) {
+        // Call the callback to notify that timezone was selected
+        if (widget.onTimezoneSelected != null) {
+          widget.onTimezoneSelected!();
+        }
+        // Then focus the next button
         widget.nextButtonFocusNode.requestFocus();
       });
     }
@@ -84,6 +85,8 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
         _scrollToIndex(selectedTimezoneIndex);
       }
     });
+    /// select the first zone
+    _setDeviceTimezone(timezones[selectedTimezoneIndex]);
   }
 
   // New method using scroll_to_index
@@ -128,8 +131,7 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
           _scrollToIndex(selectedTimezoneIndex);
         });
         return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.enter ||
-          event.logicalKey == LogicalKeyboardKey.select) {
+      } else if (event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.select) {
         _handleTimezoneSelect();
         return KeyEventResult.handled;
       }
@@ -140,25 +142,33 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
   Future<void> _setDeviceTimezoneAsync(String timezone) async {
     try {
       await _setDeviceTimezone(timezone);
+      // Show success toast
       Fluttertoast.showToast(
         msg: S.of(context).timezoneSuccess,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
+      debugPrint('Timezone set successfully to: $timezone');
     } catch (e) {
+      // Show error toast
       Fluttertoast.showToast(
         msg: S.of(context).timezoneFailure,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
+      debugPrint('Failed to set timezone: $e');
     }
   }
 
   Future<void> _setDeviceTimezone(String timezone) async {
-    bool isSuccess = await platform
-        .invokeMethod('setDeviceTimezone', {"timezone": timezone});
-    if (!isSuccess) {
-      throw Exception('Failed to set timezone');
+    try {
+      bool isSuccess = await platform.invokeMethod('setDeviceTimezone', {"timezone": timezone});
+      if (!isSuccess) {
+        throw Exception('Platform returned false for timezone change');
+      }
+    } catch (e) {
+      debugPrint('Error in platform channel: $e');
+      throw Exception('Failed to set timezone: $e');
     }
   }
 
@@ -198,17 +208,13 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w700,
-                color: themeData.brightness == Brightness.dark
-                    ? null
-                    : themeData.primaryColor,
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
               ),
             ),
             SizedBox(height: 1.h),
             Divider(
               thickness: 1,
-              color: themeData.brightness == Brightness.dark
-                  ? Colors.white
-                  : Colors.black,
+              color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
             ),
             SizedBox(height: 1.h),
             Text(
@@ -216,9 +222,7 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: themeData.brightness == Brightness.dark
-                    ? null
-                    : themeData.primaryColor,
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
               ),
             ),
             SizedBox(height: 2.h),
@@ -227,7 +231,8 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
                 controller: _scrollController,
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 itemCount: timezones.length,
-                itemExtent: 56.0, // Fixed height for better scrolling
+                itemExtent: 56.0,
+                // Fixed height for better scrolling
                 itemBuilder: (BuildContext context, int index) {
                   var timezone = timezones[index];
                   var location = tz.getLocation(timezone);
@@ -239,20 +244,13 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
                     controller: _scrollController,
                     index: index,
                     child: ListTile(
-                      tileColor: selectedTimezoneIndex == index
-                          ? const Color(0xFF490094)
-                          : null,
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: 3.w,
-                          vertical: 0.3.h
-                      ),
+                      tileColor: selectedTimezoneIndex == index ? const Color(0xFF490094) : null,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.3.h),
                       title: Text(
                         '${_convertToGMTOffset(timeZoneOffset)} $timezone',
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: selectedTimezoneIndex == index
-                              ? Colors.white
-                              : null,
+                          color: selectedTimezoneIndex == index ? Colors.white : null,
                         ),
                       ),
                       onTap: () {
