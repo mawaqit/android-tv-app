@@ -192,6 +192,24 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
 
+    widget.nextButtonFocusNode?.onKeyEvent = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        if (searchfocusNode.canRequestFocus) {
+          FocusScope.of(context).requestFocus(searchfocusNode);
+          Future.delayed(Duration(milliseconds: 100), () {
+            if (mounted) {
+              searchController.selection = TextSelection(
+                baseOffset: 0,
+                extentOffset: searchController.text.length,
+              );
+            }
+          });
+        }
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    };
+
     return Shortcuts(
       shortcuts: <LogicalKeySet, Intent>{
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
