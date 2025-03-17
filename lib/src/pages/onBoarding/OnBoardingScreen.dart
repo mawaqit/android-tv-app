@@ -207,14 +207,19 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       ),
       OnboardingScreenType.screenType: OnBoardingItem(
         animation: 'search',
-        widget: OnBoardingScreenType.onboarding(),
+        widget: OnBoardingScreenType.onboarding(
+          nextButtonFocusNode: nextButtonFocusNode,
+        ),
         enableNextButton: true,
         enablePreviousButton: true,
         skip: () => !context.read<MosqueManager>().typeIsMosque,
       ),
       OnboardingScreenType.announcement: OnBoardingItem(
         animation: 'search',
-        widget: OnBoardingAnnouncementScreens(isOnboarding: true),
+        widget: OnBoardingAnnouncementScreens(
+          isOnboarding: true,
+          nextButtonFocusNode: Some(nextButtonFocusNode),
+        ),
         enableNextButton: true,
         enablePreviousButton: true,
         skip: () => !context.read<MosqueManager>().typeIsMosque,

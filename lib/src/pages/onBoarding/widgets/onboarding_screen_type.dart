@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +13,14 @@ import 'onboarding_announcement_mode.dart';
 class OnBoardingScreenType extends StatelessWidget {
   final VoidCallback? onDone;
   final bool isOnboarding;
+  final fp.Option<FocusNode> nextButtonFocusNode;
 
   // Private constructor
   const OnBoardingScreenType._({
     Key? key,
     required this.isOnboarding,
     this.onDone,
+    this.nextButtonFocusNode = const fp.None(),
   }) : super(key: key);
 
   // Factory constructor for normal mode
@@ -35,10 +38,12 @@ class OnBoardingScreenType extends StatelessWidget {
   // Factory constructor for onboarding mode
   factory OnBoardingScreenType.onboarding({
     Key? key,
+    FocusNode? nextButtonFocusNode,
   }) {
     return OnBoardingScreenType._(
       key: key,
       isOnboarding: true,
+      nextButtonFocusNode: fp.Option.fromNullable(nextButtonFocusNode),
     );
   }
 
@@ -48,6 +53,15 @@ class OnBoardingScreenType extends StatelessWidget {
       callback();
       if (!isOnboarding) {
         onDone?.call();
+      } else {
+        nextButtonFocusNode.fold(
+          () => null,
+          (focusNode) => Future.delayed(Duration(milliseconds: 100), () {
+            if (focusNode.canRequestFocus) {
+              focusNode.requestFocus();
+            }
+          }),
+        );
       }
     };
   }

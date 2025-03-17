@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
@@ -9,11 +10,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class OnBoardingAnnouncementScreens extends StatelessWidget {
   final VoidCallback? onNext;
   final bool isOnboarding;
+  final fp.Option<FocusNode> nextButtonFocusNode;
 
   const OnBoardingAnnouncementScreens({
     super.key,
     this.onNext,
     this.isOnboarding = false,
+    this.nextButtonFocusNode = const fp.None(),
   });
 
   VoidCallback _wrapWithOnNext(VoidCallback callback) {
@@ -21,6 +24,15 @@ class OnBoardingAnnouncementScreens extends StatelessWidget {
       callback();
       if (!isOnboarding) {
         onNext?.call();
+      } else {
+        nextButtonFocusNode.fold(
+          () => null,
+          (focusNode) => Future.delayed(Duration(milliseconds: 100), () {
+            if (focusNode.canRequestFocus) {
+              focusNode.requestFocus();
+            }
+          }),
+        );
       }
     };
   }
