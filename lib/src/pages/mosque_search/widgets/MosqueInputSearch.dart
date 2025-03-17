@@ -116,7 +116,6 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
       } else {
         ref.read(mosqueManagerProvider.notifier).state = Option.fromNullable(SearchSelectionType.home);
       }
-      print('choose_mosque: ${mosque.name}');
     }).catchError((e, stack) {
       if (e is InvalidMosqueId) {
         setState(() {

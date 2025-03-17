@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/v2/search_selection_type_provider.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart' as Provider;
-import 'package:fpdart/fpdart.dart' as fp;
 import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/AppRouter.dart';
 import '../../../helpers/SharedPref.dart';
 import '../../../helpers/keyboard_custom.dart';
 import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 
 class ChromeCastMosqueInputSearch extends ConsumerStatefulWidget {
   const ChromeCastMosqueInputSearch({
@@ -132,7 +134,13 @@ class _MosqueInputSearchState extends ConsumerState<ChromeCastMosqueInputSearch>
       final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
       ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
       !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
-      print('choose_mosque: ${mosque.name}');
+
+      if (mosqueManager.typeIsMosque) {
+        // Home flow
+        ref.read(mosqueManagerProvider.notifier).state = Option.fromNullable(SearchSelectionType.mosque);
+      } else {
+        ref.read(mosqueManagerProvider.notifier).state = Option.fromNullable(SearchSelectionType.home);
+      }
     }).catchError((e, stack) {
       if (e is InvalidMosqueId) {
         setState(() {
