@@ -280,6 +280,11 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
     );
   }
 
+  // Helper method to determine if skip button should be shown
+  bool _shouldShowSkipButton(OnboardingScreenType screenType) {
+    return screenType == OnboardingScreenType.countrySelection || screenType == OnboardingScreenType.timezoneSelection;
+  }
+
   Widget buildPageView(BuildContext context, bool isRooted) {
     final state = ref.watch(onboardingNavigationProvider);
 
@@ -303,11 +308,11 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
         ref.read(onboardingNavigationProvider.notifier).previousPage();
         return false;
       },
-      child: SafeArea(
-        child: Scaffold(
-          body: state.when(
-            data: (data) {
-              return PageView.builder(
+      child: state.when(
+        data: (data) {
+          return SafeArea(
+            child: Scaffold(
+              body: PageView.builder(
                 controller: pageController,
                 itemCount: data.screenFlow.length,
                 physics: NeverScrollableScrollPhysics(),
@@ -325,17 +330,20 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                     child: allScreens[screenType]!.widget ?? Container(),
                   );
                 },
-              );
-            },
-            error: (e, s) => Container(),
-            loading: () => Container(),
-          ),
-          bottomNavigationBar: OnboardingBottomNavigationBar(
-            onPreviousPressed: () => ref.read(onboardingNavigationProvider.notifier).previousPage(),
-            onNextPressed: () => ref.read(onboardingNavigationProvider.notifier).nextPage(context),
-            nextButtonFocusNode: nextButtonFocusNode,
-          ),
-        ),
+              ),
+              bottomNavigationBar: OnboardingBottomNavigationBar(
+                onPreviousPressed: () => ref.read(onboardingNavigationProvider.notifier).previousPage(),
+                onNextPressed: () => ref.read(onboardingNavigationProvider.notifier).nextPage(context),
+                nextButtonFocusNode: nextButtonFocusNode,
+                onSkipPressed: _shouldShowSkipButton(data.screenFlow[data.currentScreen]) && country.isNone()
+                    ? () => ref.read(onboardingNavigationProvider.notifier).skipCountryAndTimezoneScreens(context)
+                    : null,
+              ),
+            ),
+          );
+        },
+        error: (e, s) => Container(),
+        loading: () => Container(),
       ),
     );
   }

@@ -13,12 +13,14 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
   final VoidCallback onPreviousPressed;
   final VoidCallback onNextPressed;
   final FocusNode? nextButtonFocusNode;
+  final VoidCallback? onSkipPressed;
 
   const OnboardingBottomNavigationBar({
     super.key,
     required this.onPreviousPressed,
     required this.onNextPressed,
     this.nextButtonFocusNode,
+    this.onSkipPressed,
   });
 
   @override
@@ -35,6 +37,9 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
         };
         final isMosqueSearchSelected = ref.watch(mosqueManagerProvider).fold(() => false, (t) => true);
 
+        // Check if current screen is country or timezone selection
+        final isCountryOrTimezoneScreen =
+            screenType == OnboardingScreenType.countrySelection || screenType == OnboardingScreenType.timezoneSelection;
         return Container(
           padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
           child: Row(
@@ -63,9 +68,8 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                 flex: 4,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: Directionality.of(context) == TextDirection.ltr
-                      ? MainAxisAlignment.end
-                      : MainAxisAlignment.start,
+                  mainAxisAlignment:
+                      Directionality.of(context) == TextDirection.ltr ? MainAxisAlignment.end : MainAxisAlignment.start,
                   children: [
                     Visibility(
                       visible: data.enablePreviousButton,
@@ -87,10 +91,17 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
 
                     // Fixed conditional widget section
                     if (data.enableNextButton)
-                    // Only show the button when it's either:
-                    // 1. Not a mosque search screen, OR
-                    // 2. A mosque search screen WITH a mosque selected
-                      if (!isMosqueSearch || (isMosqueSearch && isMosqueSearchSelected))
+                      // Only show the button when it's either:
+                      // 1. Not a mosque search screen, OR
+                      // 2. A mosque search screen WITH a mosque selected
+                      if (isCountryOrTimezoneScreen && onSkipPressed != null)
+                        MawaqitBackIconButton(
+                          icon: Icons.navigate_next,
+                          label: S.of(context).skip,
+                          onPressed: onSkipPressed,
+                          isAutoFocus: true,
+                        )
+                      else if (!isMosqueSearch || (isMosqueSearch && isMosqueSearchSelected))
                         MawaqitIconButton(
                           focusNode: nextButtonFocusNode ?? FocusNode(),
                           icon: data.isLastItem ? Icons.check : Icons.arrow_forward_rounded,
@@ -98,7 +109,7 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                           onPressed: onNextPressed,
                         )
                       else
-                      // Show disabled button when on mosque search without selection
+                        // Show disabled button when on mosque search without selection
                         Opacity(
                           opacity: 0.5,
                           child: MawaqitIconButton(

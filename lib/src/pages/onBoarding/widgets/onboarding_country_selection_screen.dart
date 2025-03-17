@@ -58,13 +58,6 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
         });
       }
     });
-
-    // Add post-frame callback to ensure the widget is properly mounted
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _selectFirstVisibleItem();
-      }
-    });
   }
 
   @override
@@ -257,7 +250,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
                 child: TextField(
-                  autofocus: true,
+                  // Removed autofocus
                   focusNode: searchfocusNode,
                   onSubmitted: (_) {
                     if (countriesList.isEmpty) {
@@ -288,6 +281,8 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
               Expanded(
                 child: Focus(
                   focusNode: countryListFocusNode,
+                  autofocus: false,
+                  // Remove autofocus from the country list
                   onFocusChange: (hasFocus) {
                     if (hasFocus) {
                       _selectFirstVisibleItem();

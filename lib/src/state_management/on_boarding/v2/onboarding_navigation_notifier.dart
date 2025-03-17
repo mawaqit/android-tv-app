@@ -57,9 +57,7 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
     state = AsyncData(
       currentState.copyWith(
         screenFlow: newFlow,
-        flowType: mosqueType == SearchSelectionType.mosque
-            ? OnboardingFlowType.mosque
-            : OnboardingFlowType.home,
+        flowType: mosqueType == SearchSelectionType.mosque ? OnboardingFlowType.mosque : OnboardingFlowType.home,
         currentScreen: currentState.currentScreen,
       ),
     );
@@ -113,20 +111,20 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
       final mosqueTypeOption = ref.read(mosqueManagerProvider);
 
       final isCompleted = mosqueTypeOption.fold<bool>(
-            () => false,
-            (mosqueType) {
+        () => false,
+        (mosqueType) {
           final shouldComplete = switch ((mosqueType, currentState.screenFlow.last)) {
-          // Complete immediately for home type
+            // Complete immediately for home type
             (SearchSelectionType.home, _) => currentState.currentScreen == currentState.screenFlow.length - 1,
-          // Complete after announcement screen for mosque type
+            // Complete after announcement screen for mosque type
             (SearchSelectionType.mosque, OnboardingScreenType.announcement) =>
-            currentState.currentScreen == currentState.screenFlow.length -1 ,
+              currentState.currentScreen == currentState.screenFlow.length - 1,
             _ => false,
           };
           return shouldComplete;
         },
       );
-      if(isCompleted){
+      if (isCompleted) {
         completeOnboarding(context);
         state = AsyncData(
           currentState.copyWith(
@@ -140,13 +138,12 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
 
       state = AsyncData(
         currentState.copyWith(
-          currentScreen: currentState.currentScreen + 1 ,
+          currentScreen: currentState.currentScreen + 1,
           enablePreviousButton: true,
           isLastItem: currentState.currentScreen + 1 == newScreenFlow.length - 1,
           screenFlow: newScreenFlow,
         ),
       );
-
     }
   }
 
@@ -198,6 +195,49 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
           screenFlow: newScreenFlow,
         ),
       );
+    }
+  }
+
+  // Method to jump directly to a specific screen index
+  void jumpToScreen(int targetIndex) {
+    if (!state.hasValue) return;
+    final currentState = state.value!;
+
+    if (targetIndex >= 0 && targetIndex < currentState.screenFlow.length) {
+      state = AsyncData(
+        currentState.copyWith(
+          currentScreen: targetIndex,
+          enablePreviousButton: targetIndex > 0,
+          isLastItem: targetIndex == currentState.screenFlow.length - 1,
+        ),
+      );
+    }
+  }
+
+  // Method to skip country and timezone selection screens
+  void skipCountryAndTimezoneScreens(BuildContext context) {
+    if (!state.hasValue) return;
+    if (!context.mounted) return;
+
+    final currentState = state.value!;
+
+    // Find the index of the wifi selection screen
+    final screenFlow = currentState.screenFlow;
+    int targetIndex = -1;
+
+    for (int i = 0; i < screenFlow.length; i++) {
+      if (screenFlow[i] == OnboardingScreenType.wifiSelection) {
+        targetIndex = i;
+        break;
+      }
+    }
+
+    // If we found the target screen, jump to it
+    if (targetIndex != -1) {
+      jumpToScreen(targetIndex);
+    } else {
+      // If we can't find the wifi screen, just go to the next screen after timezone
+      nextPage(context);
     }
   }
 

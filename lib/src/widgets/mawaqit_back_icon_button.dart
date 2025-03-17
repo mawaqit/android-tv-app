@@ -7,10 +7,12 @@ class MawaqitBackIconButton extends StatefulWidget {
     required this.icon,
     required this.label,
     this.onPressed,
+    this.isAutoFocus = false,
   }) : super(key: key);
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
+  final bool isAutoFocus;
 
   @override
   State<MawaqitBackIconButton> createState() => _MawaqitIconButtonState();
@@ -32,6 +34,7 @@ class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
         elevation: 0,
         child: InkWell(
           onTap: widget.onPressed,
+          autofocus: widget.isAutoFocus,
           onFocusChange: (value) => setState(() => focused = value),
           focusColor: Color(0xFF490094),
           child: Padding(
