@@ -228,7 +228,6 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
               country = Option.of(countrySelected);
             });
           },
-          focusNode: skipButtonFocusNode,
           nextButtonFocusNode: nextButtonFocusNode,
         ),
         enableNextButton: true,

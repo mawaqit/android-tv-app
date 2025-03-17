@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_time_zone_selection_screen.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../../data/countries.dart';
 import '../../../../i18n/l10n.dart';
@@ -13,13 +11,11 @@ import 'package:sizer/sizer.dart';
 
 class CountrySelectionScreen extends ConsumerStatefulWidget {
   final void Function(Country country)? onSelect;
-  final FocusNode? focusNode;
   final FocusNode? nextButtonFocusNode;
 
   const CountrySelectionScreen({
     Key? key,
     this.onSelect,
-    this.focusNode,
     this.nextButtonFocusNode,
   }) : super(key: key);
 
@@ -54,8 +50,12 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
     var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
-        FocusScope.of(context).requestFocus(countryListFocusNode);
-        _selectFirstVisibleItem();
+        Future.delayed(Duration(milliseconds: 100), () {
+          if (countryListFocusNode.canRequestFocus) {
+            FocusScope.of(context).requestFocus(countryListFocusNode);
+            _selectFirstVisibleItem();
+          }
+        });
       }
     });
 
@@ -112,7 +112,10 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
             selectedCountryIndex--;
             _scrollToIndex(selectedCountryIndex);
           } else if (selectedCountryIndex == 0) {
-            FocusScope.of(context).requestFocus(searchfocusNode);
+            // Check if the focus node can request focus before attempting to focus it
+            if (searchfocusNode.canRequestFocus) {
+              FocusScope.of(context).requestFocus(searchfocusNode);
+            }
             selectedCountryIndex = -1;
           }
         });
@@ -122,10 +125,12 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
           event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        setState(() {
-          FocusScope.of(context).unfocus();
-          FocusScope.of(context).requestFocus(widget.focusNode);
-        });
+        // Check if the focus node exists and can request focus before attempting to focus it
+        if (widget.nextButtonFocusNode != null) {
+          Future.delayed(Duration(milliseconds: 100), () {
+            widget.nextButtonFocusNode?.requestFocus();
+          });
+        }
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
         // Page down: move several items down at once
@@ -227,8 +232,10 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                   autofocus: true,
                   focusNode: searchfocusNode,
                   onSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(countryListFocusNode);
-                    _selectFirstVisibleItem();
+                    if (countryListFocusNode.canRequestFocus) {
+                      FocusScope.of(context).requestFocus(countryListFocusNode);
+                      _selectFirstVisibleItem();
+                    }
                   },
                   controller: searchController,
                   onChanged: _filterItems,
@@ -278,7 +285,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                             setState(() {
                               selectedCountryIndex = index;
                               widget.onSelect?.call(country);
-                              if (widget.nextButtonFocusNode != null) {
+                              if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus) {
                                 widget.nextButtonFocusNode?.requestFocus();
                               }
                             });
