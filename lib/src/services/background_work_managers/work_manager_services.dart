@@ -6,7 +6,6 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
-import 'package:mawaqit/src/services/background_work_managers/workmanager_callback.dart';
 import 'package:screen_control/screen_control.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -91,6 +90,7 @@ class WorkManagerService {
   }
 
   // Prayer task using AlarmManager
+  @pragma('vm:entry-point')
   static Future<void> registerPrayerTask(String uniqueId, Map<String, dynamic> inputData, Duration initialDelay) async {
     try {
       // Convert uniqueId to integer ID for AlarmManager
@@ -132,6 +132,7 @@ class WorkManagerService {
   }
 
   // Screen task using AlarmManager
+  @pragma('vm:entry-point')
   static Future<void> registerScreenTask(String uniqueId, String taskName, Duration initialDelay) async {
     try {
       // Convert uniqueId to integer ID for AlarmManager
@@ -170,7 +171,7 @@ class WorkManagerService {
       throw ScheduleToggleScreenException(e.toString());
     }
   }
-
+  @pragma('vm:entry-point')
   static Future<void> cancelTask(String uniqueId) async {
     try {
       // Get the alarm ID from shared preferences
