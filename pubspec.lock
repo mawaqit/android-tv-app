@@ -25,6 +25,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.0"
+  android_alarm_manager:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "81bd3a2be4d952fc9651d1e2ebc1efcfd399e35b"
+      url: "https://github.com/ghassenbenzahra123/android_alarm_manager"
+    source: git
+    version: "2.0.2"
   android_intent_plus:
     dependency: "direct main"
     description:

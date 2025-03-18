@@ -30,6 +30,8 @@ void callbackDispatcher() {
 
         case 'prayer_task':
           final service = FlutterBackgroundService();
+          print('Prayer task triggered at ${DateTime.now()}');
+          print('Prayer data: $inputData');
           if (inputData != null) {
             service.invoke('prayerTime', inputData);
           }

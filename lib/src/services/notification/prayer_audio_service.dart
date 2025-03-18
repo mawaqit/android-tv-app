@@ -10,6 +10,7 @@ class PrayerAudioService {
     _audioPlayer = AudioPlayer();
     final session = await _configureAudioSession();
     await session.setActive(true);
+    await _audioPlayer?.setVolume(0.1);
 
     try {
       if (adhanFromAssets) {

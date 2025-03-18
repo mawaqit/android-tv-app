@@ -103,7 +103,7 @@ dependencies:
   rive_splash_screen: ^0.1.1
   lottie: ^2.3.2
   flutter_svg: ^2.0.5
-  dots_indicator: ^3.0.0
+  dots_indicator: 3.0.0
   sizer: ^2.0.15
   timeago_flutter: ^3.4.0
   timezone:
@@ -145,6 +145,10 @@ dependencies:
     git:
       url: https://github.com/mawaqit/android-tv-notification
       ref: main
+  android_alarm_manager:
+    git:
+      url: https://github.com/ghassenbenzahra123/android_alarm_manager
+      ref: master
 
   percent_indicator: ^4.2.3
 

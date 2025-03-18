@@ -277,6 +277,8 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     });
     service.on('resumeOperations').listen((_) => isPaused = false);
     service.on('prayerTime').listen((event) async {
+      print("called service prayerTime $shouldShowNotification");
+
       if (event != null && !isPaused && shouldShowNotification) {
         await _handlePrayerTime(event);
       }
@@ -328,6 +330,7 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     final adhanAsset = event['adhanAsset'] as String;
     final adhanFromAssets = event['adhanFromAssets'] as bool;
     final salahName = event['salahName'] as String;
+    print("called service prayerTime $salahName $prayerName");
 
     await NotificationService.showPrayerNotification(salahName, prayerName, shouldPlayAdhan);
 

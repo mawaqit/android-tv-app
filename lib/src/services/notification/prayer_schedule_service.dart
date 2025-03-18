@@ -149,6 +149,7 @@ class PrayerScheduleService {
   ) async {
     final uniqueId = "${PRAYER_TASK_TAG}_${scheduleTime.millisecondsSinceEpoch}";
     final delay = scheduleTime.difference(AppDateTime.now());
+
     await WorkManagerService.cancelTask(uniqueId);
 
     await WorkManagerService.registerPrayerTask(
@@ -157,8 +158,17 @@ class PrayerScheduleService {
       delay,
     );
 
+    // Debug information
+    print("=== PRAYER TASK SCHEDULED ===");
+    print("Task ID: $uniqueId");
+    print("Schedule Time: ${scheduleTime.toString()}");
+    print("Current Time: ${AppDateTime.now().toString()}");
+    print("Delay: ${delay.inMinutes} minutes (${delay.inSeconds} seconds)");
+    print("Config: $config");
+
     await _lock.synchronized(() {
       _scheduledTimes.add(scheduleTime);
+      print("Updated scheduled times: $_scheduledTimes");
     });
   }
 }
