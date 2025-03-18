@@ -30,7 +30,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "81bd3a2be4d952fc9651d1e2ebc1efcfd399e35b"
+      resolved-ref: "b0c5f72cd29b053e4532f85b79ff189b78a1569a"
       url: "https://github.com/ghassenbenzahra123/android_alarm_manager"
     source: git
     version: "2.0.2"
