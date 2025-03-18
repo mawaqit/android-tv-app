@@ -1179,7 +1179,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: eb5481261e8df10aa52d3b142b794a42739bfc97
+      resolved-ref: 9c2662e21dea0d418d76b02828b44d3796e99e89
       url: "https://github.com/mawaqit/android-tv-notification"
     source: git
     version: "0.0.1"
