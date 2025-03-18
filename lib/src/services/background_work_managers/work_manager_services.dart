@@ -68,9 +68,11 @@ void screenOffCallback(int id) async {
   }
 }
 
+@pragma('vm:entry-point')
 class WorkManagerService {
   static bool _isInitialized = false;
-
+  
+  @pragma('vm:entry-point')
   static Future<void> initialize() async {
     if (_isInitialized) return;
 
