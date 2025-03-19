@@ -101,7 +101,7 @@ class DrawerListDeveloper extends StatelessWidget {
         ),
         DrawerListTitle(
           icon: Icons.notifications,
-          text: S.of(context).alerts,
+          text: S.of(context).alAdhan,
           onTap: () {
             AppRouter.popAndPush(MosqueBackgroundScreen(
               child: AdhanSubScreen(),
