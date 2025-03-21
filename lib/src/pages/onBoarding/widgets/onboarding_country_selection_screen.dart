@@ -51,7 +51,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
     keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         Future.delayed(Duration(milliseconds: 100), () {
-          if (countryListFocusNode.canRequestFocus) {
+          if (countryListFocusNode.canRequestFocus && mounted) {
             FocusScope.of(context).requestFocus(countryListFocusNode);
             _selectFirstVisibleItem();
           }
@@ -114,7 +114,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
             _scrollToIndex(selectedCountryIndex);
           } else if (selectedCountryIndex == 0) {
             // Check if the focus node can request focus before attempting to focus it
-            if (searchfocusNode.canRequestFocus) {
+            if (searchfocusNode.canRequestFocus && mounted) {
               FocusScope.of(context).requestFocus(searchfocusNode);
             }
             selectedCountryIndex = -1;
@@ -197,7 +197,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
 
     widget.nextButtonFocusNode?.onKeyEvent = (node, event) {
       if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        if (searchfocusNode.canRequestFocus) {
+        if (searchfocusNode.canRequestFocus && mounted) {
           FocusScope.of(context).requestFocus(searchfocusNode);
           Future.delayed(Duration(milliseconds: 100), () {
             if (mounted) {
@@ -255,10 +255,10 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                   onSubmitted: (_) {
                     if (countriesList.isEmpty) {
                       // Focus next button if the filtered list is empty
-                      if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus) {
+                      if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus && mounted) {
                         widget.nextButtonFocusNode!.requestFocus();
                       }
-                    } else if (countryListFocusNode.canRequestFocus) {
+                    } else if (countryListFocusNode.canRequestFocus && mounted) {
                       FocusScope.of(context).requestFocus(countryListFocusNode);
                       _selectFirstVisibleItem();
                     }
