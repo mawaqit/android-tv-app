@@ -40,6 +40,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
   bool loading = false;
   bool noMore = false;
   String? error;
+  final FocusNode _focusNode = FocusNode(debugLabel: 'mosque_search_node');
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         ref.read(mosqueManagerProvider.notifier).state = None();
+        _focusNode.requestFocus();
       }
     });
   }
@@ -132,6 +134,13 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
   }
 
   @override
+  void dispose() {
+    _focusNode.dispose();
+    inputController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -206,6 +215,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
       onFieldSubmitted: (val) => _searchMosque(val, 1),
       cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
       autofocus: true,
+      focusNode: _focusNode,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         filled: true,

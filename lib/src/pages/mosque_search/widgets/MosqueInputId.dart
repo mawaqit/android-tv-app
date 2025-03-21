@@ -37,6 +37,7 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
   final inputController = TextEditingController();
   Mosque? searchOutput;
   SharedPref sharedPref = SharedPref();
+  final FocusNode _focusNode = FocusNode(debugLabel: 'mosque_search_node');
 
   bool loading = false;
   String? error;
@@ -45,6 +46,7 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(mosqueManagerProvider.notifier).state = fp.None();
+      _focusNode.requestFocus();
     });
     super.initState();
   }
@@ -84,7 +86,11 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
       }
     });
   }
-
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -151,6 +157,7 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         child: TextFormField(
+          focusNode: _focusNode,
           controller: inputController,
           style: GoogleFonts.inter(
             color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
