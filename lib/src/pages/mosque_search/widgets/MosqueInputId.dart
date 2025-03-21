@@ -41,14 +41,32 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
 
   bool loading = false;
   String? error;
+  bool isKeyboardVisible = false;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(mosqueManagerProvider.notifier).state = fp.None();
       _focusNode.requestFocus();
+      isKeyboardVisible = true;
     });
+
+    // Add listener to focus node to detect keyboard close
+    _focusNode.addListener(_onFocusChange);
+
     super.initState();
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus && isKeyboardVisible) {
+      // The focus was lost, which might indicate keyboard was closed
+      isKeyboardVisible = false;
+
+      FocusScope.of(context).focusInDirection(TraversalDirection.up);
+    } else if (_focusNode.hasFocus && !isKeyboardVisible) {
+      // Focus gained, keyboard likely opened
+      isKeyboardVisible = true;
+    }
   }
 
   void _setMosqueId(String mosqueId) async {
@@ -70,7 +88,6 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
         searchOutput = value;
         loading = false;
       });
-
     }).catchError((e, stack) {
       debugPrintStack(stackTrace: stack, label: e.toString());
       if (e is InvalidMosqueId) {
@@ -86,11 +103,14 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
       }
     });
   }
+
   @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -122,11 +142,13 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
                     final mosqueManager = context.read<MosqueManager>();
                     final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
                     ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
-                    if(searchOutput != null){
+                    if (searchOutput != null) {
                       if (searchOutput?.type == "MOSQUE") {
-                        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.mosque);
+                        ref.read(mosqueManagerProvider.notifier).state =
+                            fp.Option.fromNullable(SearchSelectionType.mosque);
                       } else {
-                        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.home);
+                        ref.read(mosqueManagerProvider.notifier).state =
+                            fp.Option.fromNullable(SearchSelectionType.home);
                       }
                     }
                     // !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();

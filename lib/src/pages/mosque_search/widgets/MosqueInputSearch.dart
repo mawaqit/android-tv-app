@@ -40,6 +40,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
   bool loading = false;
   bool noMore = false;
   String? error;
+  bool isKeyboardVisible = false;
   final FocusNode _focusNode = FocusNode(debugLabel: 'mosque_search_node');
 
   @override
@@ -49,8 +50,24 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
       if (mounted) {
         ref.read(mosqueManagerProvider.notifier).state = None();
         _focusNode.requestFocus();
+        isKeyboardVisible = true;
       }
     });
+
+    // Add listener to focus node to detect keyboard close
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus && isKeyboardVisible) {
+      // The focus was lost, which might indicate keyboard was closed
+      isKeyboardVisible = false;
+
+      FocusScope.of(context).focusInDirection(TraversalDirection.up);
+    } else if (_focusNode.hasFocus && !isKeyboardVisible) {
+      // Focus gained, keyboard likely opened
+      isKeyboardVisible = true;
+    }
   }
 
   void Function()? loadMore;
@@ -135,6 +152,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
 
   @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     inputController.dispose();
     super.dispose();

@@ -42,6 +42,7 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
   bool inputHasFocus = false;
   bool loading = false;
   String? error;
+  bool isKeyboardVisible = false;
   FocusNode _focus = FocusNode();
 
   @override
@@ -58,10 +59,18 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
   }
 
   void _onFocusChange() {
-    setState(() {
-      inputHasFocus = _focus.hasFocus ? false : true;
-      showKeyboard = _focus.hasFocus ? false : true;
-    });
+    if (!_focus.hasFocus && isKeyboardVisible) {
+      // The focus was lost, which might indicate keyboard was closed
+      isKeyboardVisible = false;
+      showKeyboard = false;
+      inputHasFocus = false;
+      FocusScope.of(context).focusInDirection(TraversalDirection.up);
+    } else if (_focus.hasFocus && !isKeyboardVisible) {
+      // Focus gained, keyboard likely opened
+      isKeyboardVisible = true;
+      showKeyboard = true;
+      inputHasFocus = true;
+    }
   }
 
   void _setMosqueId(String mosqueId) async {

@@ -44,8 +44,10 @@ class _MosqueInputSearchState extends ConsumerState<ChromeCastMosqueInputSearch>
   String? error;
   bool showKeyboard = true;
   bool inputHasFocus = false;
+  bool isKeyboardVisible = false;
 
   void Function()? loadMore;
+
   onboardingWorkflowDone() {
     sharedPref.save('boarding', 'true');
     AppRouter.pushReplacement(OfflineHomeScreen());
@@ -72,11 +74,18 @@ class _MosqueInputSearchState extends ConsumerState<ChromeCastMosqueInputSearch>
   }
 
   void _onFocusChange() {
-    print("show" + _focus.hasFocus.toString());
-    setState(() {
-      inputHasFocus = _focus.hasFocus ? true : false;
-      showKeyboard = _focus.hasFocus || _focusNodeList.hasFocus ? false : true;
-    });
+    if (!_focus.hasFocus && isKeyboardVisible) {
+      // The focus was lost, which might indicate keyboard was closed
+      isKeyboardVisible = false;
+      showKeyboard = false;
+      inputHasFocus = false;
+      FocusScope.of(context).focusInDirection(TraversalDirection.up);
+    } else if (_focus.hasFocus && !isKeyboardVisible) {
+      // Focus gained, keyboard likely opened
+      isKeyboardVisible = true;
+      showKeyboard = true;
+      inputHasFocus = true;
+    }
   }
 
   void scrollToTheEndOfTheList() {
