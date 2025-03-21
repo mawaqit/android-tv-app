@@ -36,6 +36,10 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
   @override
   void initState() {
     super.initState();
+    // Auto-select the 'Yes' option when the screen opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleYesSelection();
+    });
   }
 
   void _handleYesSelection() async {
