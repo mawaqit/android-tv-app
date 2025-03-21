@@ -7,12 +7,14 @@ class MawaqitIconButton extends StatefulWidget {
     required this.icon,
     required this.label,
     required this.focusNode,
+    this.isAutoFocus = false,
     this.onPressed,
   }) : super(key: key);
   final IconData icon;
   final FocusNode focusNode;
   final String label;
   final VoidCallback? onPressed;
+  final bool isAutoFocus;
   @override
   State<MawaqitIconButton> createState() => _MawaqitIconButtonState();
 }
@@ -43,6 +45,7 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
             child: InkWell(
               focusNode: widget.focusNode,
               onTap: widget.onPressed,
+              autofocus: widget.isAutoFocus,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 child: Row(

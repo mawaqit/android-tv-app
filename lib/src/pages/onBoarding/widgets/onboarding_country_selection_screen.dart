@@ -126,11 +126,8 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
           event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        // Check if the focus node exists and can request focus before attempting to focus it
-        if (widget.nextButtonFocusNode != null) {
-          Future.delayed(Duration(milliseconds: 100), () {
-            widget.nextButtonFocusNode?.requestFocus();
-          });
+        if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus) {
+          widget.nextButtonFocusNode!.requestFocus();
         }
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
@@ -255,7 +252,9 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                   onSubmitted: (_) {
                     if (countriesList.isEmpty) {
                       // Focus next button if the filtered list is empty
-                      if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus && mounted) {
+                      if (widget.nextButtonFocusNode != null &&
+                          widget.nextButtonFocusNode!.canRequestFocus &&
+                          mounted) {
                         widget.nextButtonFocusNode!.requestFocus();
                       }
                     } else if (countryListFocusNode.canRequestFocus && mounted) {

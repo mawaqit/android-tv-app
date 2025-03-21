@@ -95,7 +95,8 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                       // 1. Not a mosque search screen, OR
                       // 2. A mosque search screen WITH a mosque selected
                       if (isCountryOrTimezoneScreen && onSkipPressed != null)
-                        MawaqitBackIconButton(
+                        MawaqitIconButton(
+                          focusNode: nextButtonFocusNode ?? FocusNode(),
                           icon: Icons.navigate_next,
                           label: S.of(context).skip,
                           onPressed: onSkipPressed,
