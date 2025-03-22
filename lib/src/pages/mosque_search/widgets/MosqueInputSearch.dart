@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -41,7 +42,17 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
   bool noMore = false;
   String? error;
   bool isKeyboardVisible = false;
-  final FocusNode _focusNode = FocusNode(debugLabel: 'mosque_search_node');
+  
+  // Focus nodes
+  final FocusNode _searchFocusNode = FocusNode(debugLabel: 'mosque_search_node');
+  final FocusNode _loadMoreFocusNode = FocusNode(debugLabel: 'load_more_node');
+  final FocusNode _mainFocusNode = FocusNode(debugLabel: 'main_focus_node');
+  
+  // Create focus nodes for each result item
+  List<FocusNode> _resultFocusNodes = [];
+  
+  // Current focused index in the result list
+  int _currentFocusIndex = -1;
 
   @override
   void initState() {
@@ -49,24 +60,56 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         ref.read(mosqueManagerProvider.notifier).state = None();
-        _focusNode.requestFocus();
+        _searchFocusNode.requestFocus();
         isKeyboardVisible = true;
       }
     });
 
     // Add listener to focus node to detect keyboard close
-    _focusNode.addListener(_onFocusChange);
+    _searchFocusNode.addListener(_onFocusChange);
+    _loadMoreFocusNode.addListener(_onLoadMoreFocus);
+  }
+  
+  void _onLoadMoreFocus() {
+    if (_loadMoreFocusNode.hasFocus && !loading && !noMore && loadMore != null) {
+      loadMore?.call();
+      scrollToTheEndOfTheList();
+    }
   }
 
   void _onFocusChange() {
-    if (!_focusNode.hasFocus && isKeyboardVisible) {
+    if (!_searchFocusNode.hasFocus && isKeyboardVisible) {
       // The focus was lost, which might indicate keyboard was closed
       isKeyboardVisible = false;
-
       FocusScope.of(context).focusInDirection(TraversalDirection.up);
-    } else if (_focusNode.hasFocus && !isKeyboardVisible) {
+    } else if (_searchFocusNode.hasFocus && !isKeyboardVisible) {
       // Focus gained, keyboard likely opened
       isKeyboardVisible = true;
+    }
+  }
+  
+  // Create or update focus nodes for result items
+  void _updateFocusNodes() {
+    // Clear old focus nodes
+    for (var node in _resultFocusNodes) {
+      node.dispose();
+    }
+    
+    // Create new focus nodes for each result
+    _resultFocusNodes = List.generate(
+      results.length,
+      (index) => FocusNode(debugLabel: 'result_${index}_node'),
+    );
+    
+    // Add listeners to each node
+    for (int i = 0; i < _resultFocusNodes.length; i++) {
+      _resultFocusNodes[i].addListener(() {
+        if (_resultFocusNodes[i].hasFocus) {
+          setState(() {
+            _currentFocusIndex = i;
+          });
+        }
+      });
     }
   }
 
@@ -100,19 +143,39 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
     setState(() {
       error = null;
       loading = true;
-      if (page == 1) results = [];
     });
+    
     final mosqueManager = Provider.Provider.of<MosqueManager>(context, listen: false);
     await mosqueManager
         .searchMosques(mosque, page: page)
         .then((value) => setState(() {
               loading = false;
 
-              if (page == 1) results = [];
+              if (page == 1) {
+                results = [];
+                _currentFocusIndex = -1;
+              }
 
+              // Check if the current batch of results is empty
+              noMore = value.isEmpty;
+              
+              // Save current results length before adding new results
+              final oldResultsLength = results.length;
+              
               results = [...results, ...value];
-
-              noMore = results.isEmpty;
+              
+              // Update focus nodes for the new result list
+              _updateFocusNodes();
+              
+              // If we load more and were on the last item, 
+              // update to focus on the first new item
+              if (page > 1 && _currentFocusIndex == oldResultsLength - 1 && value.isNotEmpty) {
+                _currentFocusIndex = oldResultsLength;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _resultFocusNodes[_currentFocusIndex].requestFocus();
+                  _ensureItemVisible(_currentFocusIndex);
+                });
+              }
             }))
         .catchError((e, stack) => setState(() {
               logger.w(e.toString(), stackTrace: stack);
@@ -150,10 +213,136 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
     });
   }
 
+  // Handle key events for the entire search component
+  KeyEventResult _handleKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (event is! RawKeyDownEvent) {
+      return KeyEventResult.ignored;
+    }
+
+    // If there are no results, no special handling is needed
+    if (results.isEmpty) {
+      return KeyEventResult.ignored;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+      if (_searchFocusNode.hasFocus) {
+        // If search field is focused and user presses up, move to the last result
+        if (results.isNotEmpty) {
+          setState(() {
+            _currentFocusIndex = results.length - 1;
+          });
+          _resultFocusNodes[_currentFocusIndex].requestFocus();
+          _ensureItemVisible(_currentFocusIndex);
+        }
+        return KeyEventResult.handled;
+      } else if (_currentFocusIndex == 0) {
+        // If at first result and user presses up, move focus to search field
+        setState(() {
+          _currentFocusIndex = -1;
+        });
+        _searchFocusNode.requestFocus();
+        return KeyEventResult.handled;
+      } else if (_currentFocusIndex > 0) {
+        // Normal upward navigation within the list
+        setState(() {
+          _currentFocusIndex--;
+        });
+        _resultFocusNodes[_currentFocusIndex].requestFocus();
+        _ensureItemVisible(_currentFocusIndex);
+        return KeyEventResult.handled;
+      }
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      if (_searchFocusNode.hasFocus) {
+        // If search field is focused and user presses down, move to the first result
+        if (results.isNotEmpty) {
+          setState(() {
+            _currentFocusIndex = 0;
+          });
+          _resultFocusNodes[_currentFocusIndex].requestFocus();
+          _ensureItemVisible(_currentFocusIndex);
+        }
+        return KeyEventResult.handled;
+      } else if (_currentFocusIndex == results.length - 1) {
+        // If at last result and user presses down
+        if (!noMore && loadMore != null) {
+          // Load more results when reaching the end and there are more to load
+          loadMore?.call();
+          
+          // Keep the focus on the last item until new results load
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            scrollToTheEndOfTheList();
+          });
+          
+          return KeyEventResult.handled;
+        } else {
+          // If no more results, wrap around to search field
+          setState(() {
+            _currentFocusIndex = -1;
+          });
+          _searchFocusNode.requestFocus();
+          return KeyEventResult.handled;
+        }
+      } else if (_currentFocusIndex >= 0 && _currentFocusIndex < results.length - 1) {
+        // Normal downward navigation within the list
+        setState(() {
+          _currentFocusIndex++;
+        });
+        
+        _resultFocusNodes[_currentFocusIndex].requestFocus();
+        
+        // Auto-scroll to make sure the focused item is visible
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _ensureItemVisible(_currentFocusIndex);
+        });
+        
+        return KeyEventResult.handled;
+      }
+    } else if (event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.space) {
+      // If Enter/Space is pressed and we're on a result item, select it
+      if (_currentFocusIndex >= 0 && _currentFocusIndex < results.length) {
+        _selectMosque(results[_currentFocusIndex]);
+        return KeyEventResult.handled;
+      }
+    }
+
+    return KeyEventResult.ignored;
+  }
+  
+  // Helper method to ensure the item at the given index is visible
+  void _ensureItemVisible(int index) {
+    if (index < 0 || index >= results.length || !scrollController.hasClients) return;
+    
+    // Approximate item height (adjust as needed)
+    final double itemHeight = 80.0;
+    final double listViewHeight = MediaQuery.of(context).size.height * 0.6;
+    
+    // Calculate the approximate position of the item
+    double itemPosition = index * itemHeight;
+    
+    // Ensure item is visible
+    if (itemPosition < scrollController.offset || 
+        itemPosition > scrollController.offset + listViewHeight) {
+      scrollController.animateTo(
+        itemPosition - (listViewHeight / 2) + (itemHeight / 2),
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   void dispose() {
-    _focusNode.removeListener(_onFocusChange);
-    _focusNode.dispose();
+    _searchFocusNode.removeListener(_onFocusChange);
+    _loadMoreFocusNode.removeListener(_onLoadMoreFocus);
+    _searchFocusNode.dispose();
+    _mainFocusNode.dispose();
+    _loadMoreFocusNode.dispose();
+    
+    // Dispose all result focus nodes
+    for (var node in _resultFocusNodes) {
+      node.dispose();
+    }
+    
     inputController.dispose();
     super.dispose();
   }
@@ -163,8 +352,9 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
     final theme = Theme.of(context);
 
     return Material(
-      child: FocusTraversalGroup(
-        policy: OrderedTraversalPolicy(),
+      child: Focus(
+        focusNode: _mainFocusNode,
+        onKey: _handleKeyEvent,
         child: Align(
           alignment: Alignment(0, -.3),
           child: ListView(
@@ -187,36 +377,54 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
               SizedBox(height: 20),
               for (var i = 0; i < results.length; i++)
                 MosqueSimpleTile(
-                  autoFocus: i == 0,
+                  key: Key('mosque_tile_${results[i].uuid}'),
+                  autoFocus: false,
                   mosque: results[i],
                   selectedNode: widget.selectedNode,
+                  focusNode: _resultFocusNodes.isNotEmpty ? _resultFocusNodes[i] : null,
+                  hasFocus: _currentFocusIndex == i, // Pass the focus state for visual indication
                   onTap: () => _selectMosque(results[i]),
                 ).animate().slideX(delay: 70.milliseconds * (i % 5)).fade(),
-              // to allow user to scroll to the end of lis
-              FocusableActionDetector(
-                onFocusChange: (i) {
-                  if (!i) return;
-                  if (noMore) return;
-
-                  loadMore?.call();
-                  scrollToTheEndOfTheList();
-                },
-                child: Center(
-                  child: SizedBox(
-                    height: 40,
-                    child: Builder(
-                      builder: (context) {
-                        if (loading) return CircularProgressIndicator();
-
-                        if (noMore && results.isEmpty) return Text(S.of(context).mosqueNoResults);
-                        if (noMore) return Text(S.of(context).mosqueNoMore);
-
-                        return SizedBox();
-                      },
+              // to allow user to scroll to the end of list
+              if (results.isNotEmpty)
+                Focus(
+                  focusNode: _loadMoreFocusNode,
+                  child: Center(
+                    child: SizedBox(
+                      height: 40,
+                      child: Builder(
+                        builder: (context) {
+                          if (loading) return CircularProgressIndicator();
+                          if (noMore && results.isEmpty) return Text(S.of(context).mosqueNoResults);
+                          if (noMore) return Text(S.of(context).mosqueNoMore);
+                          return GestureDetector(
+                            onTap: () {
+                              if (!noMore && loadMore != null) {
+                                loadMore?.call();
+                                scrollToTheEndOfTheList();
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: theme.brightness == Brightness.dark
+                                    ? Colors.white10
+                                    : theme.primaryColor.withOpacity(0.1),
+                              ),
+                              child: Text(
+                                'load more',
+                                style: TextStyle(
+                                  color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
@@ -233,7 +441,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
       onFieldSubmitted: (val) => _searchMosque(val, 1),
       cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
       autofocus: true,
-      focusNode: _focusNode,
+      focusNode: _searchFocusNode,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         filled: true,
@@ -246,7 +454,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
         ),
         suffixIcon: InkWell(
           borderRadius: BorderRadius.circular(30),
-          onTap: () => _searchMosque(inputController.text, 0),
+          onTap: () => _searchMosque(inputController.text, 1),
           child: Icon(Icons.search_rounded),
         ),
         focusedBorder: OutlineInputBorder(

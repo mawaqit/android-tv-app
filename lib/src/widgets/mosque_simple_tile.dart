@@ -16,6 +16,7 @@ class MosqueSimpleTile extends StatefulWidget {
     this.onFocusChange,
     this.focusNode,
     this.autoFocus,
+    this.hasFocus = false,
   }) : super(key: key);
 
   final Mosque mosque;
@@ -24,101 +25,109 @@ class MosqueSimpleTile extends StatefulWidget {
   final FocusNode? focusNode;
   final bool? autoFocus;
   final fp.Option<FocusNode> selectedNode;
+  final bool hasFocus;
 
   @override
   State<MosqueSimpleTile> createState() => _MosqueSimpleTileState();
 }
 
 class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
-  bool isFocused = false;
-
   bool loading = false;
+  late FocusNode _innerFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _innerFocusNode = widget.focusNode ?? FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // Only dispose if we created it
+    if (widget.focusNode == null) {
+      _innerFocusNode.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
     theme = theme.copyWith(
-      textTheme: isFocused ? theme.textTheme.apply(bodyColor: Colors.white, displayColor: Colors.white) : null,
+      textTheme: widget.hasFocus ? theme.textTheme.apply(bodyColor: Colors.white, displayColor: Colors.white) : null,
       cardColor: theme.brightness == Brightness.dark ? Colors.black45 : theme.primaryColor.withOpacity(.12),
     );
 
     return Theme(
       data: theme,
-      child: Focus(
-        focusNode: widget.focusNode,
-        onFocusChange: (i) {
-          widget.onFocusChange?.call(i);
-          setState(() => isFocused = i);
-        },
-        child: Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000)),
-          color: isFocused ? Theme.of(context).focusColor : null,
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            autofocus: widget.autoFocus ?? false,
-            focusColor: isFocused ? Theme.of(context).focusColor : Colors.transparent,
-            onTap: () async {
-              if (loading || widget.onTap == null || !mounted) return;
-              try {
-                setState(() => loading = true);
-                await widget.onTap?.call();
-                setState(() => loading = false);
-              } catch (e, s) {
-                CrashlyticsWrapper.sendException(e, s);
-                setState(() => loading = false);
-                throw Exception('MosqueSimpleTile Error $e');
-              }
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000)),
+        color: widget.hasFocus ? Theme.of(context).focusColor : null,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          autofocus: widget.autoFocus ?? false,
+          focusColor: widget.selectedNode.fold(() => null, (focus)=> focus.hasFocus ? Theme.of(context).focusColor : null),
+          onTap: () async {
+            if (loading || widget.onTap == null || !mounted) return;
+            try {
+              setState(() => loading = true);
+              await widget.onTap?.call();
+              setState(() => loading = false);
+            } catch (e, s) {
+              CrashlyticsWrapper.sendException(e, s);
+              setState(() => loading = false);
+              throw Exception('MosqueSimpleTile Error $e');
+            }
 
-              widget.selectedNode.fold(() {
-                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => OfflineHomeScreen()),
-                  (route) => false,
-                );
-                return widget.onTap?.call();
-              }, (node) {
-                Future.delayed(Duration(milliseconds: 200), () {
-                  node.requestFocus();
-                });
-                return ;
+            widget.selectedNode.fold(() {
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => OfflineHomeScreen()),
+                (route) => false,
+              );
+              return widget.onTap?.call();
+            }, (node) {
+              Future.delayed(Duration(milliseconds: 200), () {
+                node.requestFocus();
               });
-            },
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    backgroundImage: MawaqitNetworkImageProvider(
-                      widget.mosque.image ?? '',
+              return;
+            });
+          },
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  backgroundImage: MawaqitNetworkImageProvider(
+                    widget.mosque.image ?? '',
+                  ),
+                  radius: 32,
+                ),
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.mosque.label ?? widget.mosque.name,
+                      style: theme.textTheme.titleMedium,
                     ),
-                    radius: 32,
-                  ),
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.mosque.label ?? widget.mosque.name,
-                        style: theme.textTheme.titleMedium,
+                    SizedBox(height: 2),
+                    SizedBox(
+                      width: 45.vw,
+                      child: Text(
+                        overflow: TextOverflow.ellipsis,
+                        widget.mosque.localisation ?? '',
+                        style: theme.textTheme.bodySmall,
                       ),
-                      SizedBox(height: 2),
-                      SizedBox(
-                        width: 45.vw,
-                        child: Text(
-                          overflow: TextOverflow.ellipsis,
-                          widget.mosque.localisation ?? '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                if (loading) Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: CircularProgressIndicator()),
-              ],
-            ),
+              ),
+              if (loading) Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: CircularProgressIndicator()),
+            ],
           ),
         ),
       ),
