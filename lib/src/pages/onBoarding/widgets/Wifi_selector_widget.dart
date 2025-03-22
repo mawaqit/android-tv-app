@@ -10,6 +10,7 @@ import 'package:mawaqit/src/state_management/kiosk_mode/wifi_scan/wifi_scan_stat
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:wifi_hunter/wifi_hunter_result.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter/foundation.dart';
 
 import 'onboarding_timezone_selector.dart';
 
@@ -253,12 +254,42 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
         title: Text(title, style: TextStyle(fontSize: 12.sp)),
         contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
         onTap: () {
+          // Save current focus state for restoration after route transition
+          final currentFocus = widget.focusNode;
+
+          // Only apply web-specific fixes on web platform
+          if (kIsWeb) {
+            // Ensure focus node stays active even during navigation
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              // Keep a reference to return focus here after navigation
+            });
+          }
+
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => WifiPasswordPage(
                 ssid: widget.accessPoint.ssid,
                 capabilities: widget.accessPoint.capabilities,
                 onConnect: (password) async {
+                  // Prevent focus loss on web platform
+                  if (kIsWeb) {
+                    // Save current focus for restoration
+                    final currentFocus = FocusScope.of(context).focusedChild;
+
+                    // Schedule focus restoration after the operation
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (currentFocus != null && currentFocus.canRequestFocus) {
+                        FocusScope.of(context).requestFocus(currentFocus);
+                      } else {
+                        // Fallback to widget's focusNode if available
+                        if (widget.focusNode.canRequestFocus) {
+                          FocusScope.of(context).requestFocus(widget.focusNode);
+                        }
+                      }
+                    });
+                  }
+
                   await ref.read(wifiScanNotifierProvider.notifier).connectToWifi(
                         widget.accessPoint.ssid,
                         widget.accessPoint.capabilities,
@@ -294,8 +325,10 @@ class WifiPasswordPage extends StatefulWidget {
 class _WifiPasswordPageState extends State<WifiPasswordPage> {
   final TextEditingController passwordController = TextEditingController();
   bool _showPassword = false;
+  final FocusNode _parentFocusNode = FocusNode(debugLabel: 'wifi_password_parent');
   final FocusNode connectButtonFocusNode = FocusNode();
   final FocusNode passwordInputFocusNode = FocusNode();
+  final FocusNode cancelButtonFocusNode = FocusNode();
   Color _buttonColor = Colors.white; // Default color
   Color _textColor = Colors.black; // Default color
 
@@ -305,6 +338,12 @@ class _WifiPasswordPageState extends State<WifiPasswordPage> {
 
     passwordInputFocusNode.addListener(_onSearchFocusChange);
     connectButtonFocusNode.addListener(_onConnectButtonFocusChange);
+    cancelButtonFocusNode.addListener(_onCancelButtonFocusChange);
+
+    // Auto-focus on password input when dialog opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      passwordInputFocusNode.requestFocus();
+    });
   }
 
   void _onConnectButtonFocusChange() {
@@ -314,25 +353,234 @@ class _WifiPasswordPageState extends State<WifiPasswordPage> {
     });
   }
 
+  void _onCancelButtonFocusChange() {
+    setState(() {
+      // Apply focus styling to cancel button if needed
+    });
+  }
+
   void _onSearchFocusChange() {
     if (!passwordInputFocusNode.hasFocus) {
-      FocusScope.of(context).requestFocus(connectButtonFocusNode);
+      // Only auto-switch focus in certain cases
     }
+  }
+
+  // Handle key events for the entire dialog
+  KeyEventResult _handleKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (event is! RawKeyDownEvent) {
+      return KeyEventResult.ignored;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.tab || event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      if (passwordInputFocusNode.hasFocus) {
+        FocusScope.of(context).requestFocus(connectButtonFocusNode);
+        return KeyEventResult.handled;
+      } else if (connectButtonFocusNode.hasFocus) {
+        FocusScope.of(context).requestFocus(cancelButtonFocusNode);
+        return KeyEventResult.handled;
+      } else if (cancelButtonFocusNode.hasFocus) {
+        FocusScope.of(context).requestFocus(passwordInputFocusNode);
+        return KeyEventResult.handled;
+      }
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+      if (passwordInputFocusNode.hasFocus) {
+        FocusScope.of(context).requestFocus(cancelButtonFocusNode);
+        return KeyEventResult.handled;
+      } else if (connectButtonFocusNode.hasFocus) {
+        FocusScope.of(context).requestFocus(passwordInputFocusNode);
+        return KeyEventResult.handled;
+      } else if (cancelButtonFocusNode.hasFocus) {
+        FocusScope.of(context).requestFocus(connectButtonFocusNode);
+        return KeyEventResult.handled;
+      }
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+      if (cancelButtonFocusNode.hasFocus) {
+        FocusScope.of(context).requestFocus(connectButtonFocusNode);
+        return KeyEventResult.handled;
+      }
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+      if (connectButtonFocusNode.hasFocus) {
+        FocusScope.of(context).requestFocus(cancelButtonFocusNode);
+        return KeyEventResult.handled;
+      }
+    } else if (event.logicalKey == LogicalKeyboardKey.escape) {
+      Navigator.of(context).pop();
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
+  }
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    passwordInputFocusNode.dispose();
+    connectButtonFocusNode.dispose();
+    cancelButtonFocusNode.dispose();
+    _parentFocusNode.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return WillPopScope(
-      onWillPop: () async {
-        if (!connectButtonFocusNode.hasFocus) {
-          _onSearchFocusChange();
-          return false;
-        } else {
-          return true;
-        }
-      },
-      child: Container(),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Focus(
+        focusNode: _parentFocusNode,
+        onKey: _handleKeyEvent,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 500),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 8,
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title with network name
+                    Text(
+                      S.of(context).appWifi,
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      widget.ssid,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 24),
+
+                    // Password input field
+                    TextFormField(
+                      controller: passwordController,
+                      focusNode: passwordInputFocusNode,
+                      obscureText: !_showPassword,
+                      // Support both physical and virtual keyboards
+                      keyboardType: TextInputType.visiblePassword,
+                      textInputAction: TextInputAction.done,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        labelText: S.of(context).wifiPassword,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        prefixIcon: Icon(Icons.lock),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Password visibility toggle
+                            IconButton(
+                              icon: Icon(
+                                _showPassword ? Icons.visibility_off : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _showPassword = !_showPassword;
+                                });
+                              },
+                            ),
+                            // Virtual keyboard button for TV/remote devices
+                            IconButton(
+                              icon: Icon(Icons.keyboard),
+                              onPressed: () {
+                                // Show on-screen keyboard or toggle focus
+                                passwordInputFocusNode.requestFocus();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      onFieldSubmitted: (_) {
+                        // When user presses enter after typing password, attempt connection
+                        widget.onConnect(passwordController.text);
+                      },
+                    ),
+                    SizedBox(height: 24),
+
+                    // Buttons row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          focusNode: cancelButtonFocusNode,
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            ),
+                            backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return Colors.grey.shade300;
+                              }
+                              return null;
+                            }),
+                          ),
+                          onPressed: () {
+                            // Prevent focus loss on web platform
+                            if (kIsWeb) {
+                              // Ensure parent focus node stays focused
+                              FocusScope.of(context).requestFocus(_parentFocusNode);
+                            }
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            S.of(context).close,
+                            style: TextStyle(fontSize: 12.sp),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        ElevatedButton(
+                          focusNode: connectButtonFocusNode,
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            ),
+                            backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return const Color(0xFF490094);
+                              }
+                              return null;
+                            }),
+                            foregroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return Colors.white;
+                              }
+                              return null;
+                            }),
+                          ),
+                          onPressed: () {
+                            // Prevent focus loss on web platform
+                            if (kIsWeb) {
+                              // Ensure parent focus node stays focused
+                              FocusScope.of(context).requestFocus(_parentFocusNode);
+                            }
+                            widget.onConnect(passwordController.text);
+                          },
+                          child: Text(
+                            S.of(context).connect,
+                            style: TextStyle(fontSize: 12.sp),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
