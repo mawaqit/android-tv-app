@@ -10,18 +10,6 @@ import 'package:provider/provider.dart';
 
 class JumuaWidget extends StatelessWidget {
   const JumuaWidget({super.key});
-
-  List<String> getOrderedJumuaTimes(MosqueManager mosqueManager) {
-    final times = mosqueManager.times;
-    List<String> jumuaTimes = [];
-
-    if (times?.jumua != null) jumuaTimes.add(times!.jumua!);
-    if (times?.jumua2 != null) jumuaTimes.add(times!.jumua2!);
-    if (times?.jumua3 != null) jumuaTimes.add(times!.jumua3!);
-
-    return jumuaTimes;
-  }
-
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
@@ -53,7 +41,7 @@ class JumuaWidget extends StatelessWidget {
   }
 
   Widget jumuaTile(MosqueManager mosqueManager, BuildContext context) {
-    final jumuaTimes = getOrderedJumuaTimes(mosqueManager);
+    final jumuaTimes = mosqueManager.getOrderedJumuaTimes();
 
     if (jumuaTimes.isEmpty) {
       return SalahItemWidget(

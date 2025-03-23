@@ -422,10 +422,18 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return times!.jumuaAsDuhr ? todayTimes[1] : times!.jumua;
   } */
 
+  /// Calculates the next Friday date from the given date
+  /// If no date is provided, it uses the current mosque date
+  /// This is a shared helper method used by both getOrderedJumuaTimes and activeJumuaaDate
   DateTime nextFridayDate([DateTime? now]) {
     now ??= mosqueDate();
 
     return now.add(Duration(days: (7 - now.weekday + DateTime.friday) % 7));
+  }
+
+  /// @deprecated Use nextFridayDate instead
+  DateTime _nextFridayDate([DateTime? now]) {
+    return nextFridayDate(now);
   }
 
   /// cases 1: if Jumuaa is as Duhr return Duhr pray of the day.
@@ -433,7 +441,9 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// cases 3: if Jumuaa is not as Duhr and jumuaa or jumuaa2 is not empty return *jumuaa1* time.
   DateTime activeJumuaaDate([DateTime? now]) {
     final nextFriday = nextFridayDate(now);
-    if (times!.jumuaAsDuhr == true) return timesOfDay(nextFriday)[1].toTimeOfDay()!.toDate(nextFriday);
+    if (times!.jumuaAsDuhr == true) {
+      return timesOfDay(nextFriday)[1].toTimeOfDay()!.toDate(nextFriday);
+    }
     if (isJumuaOrJumua2EmptyOrNull()) {
       return nextFriday;
     }

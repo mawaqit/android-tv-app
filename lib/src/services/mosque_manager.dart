@@ -109,6 +109,26 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     return prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
   }
 
+  /// Returns ordered Jumua times for display
+  /// This method handles both jumuaAsDuhr case and normal case with multiple jumua times
+  List<String> getOrderedJumuaTimes() {
+    List<String> jumuaTimes = [];
+
+    // Handle jumuaAsDuhr case
+    // Get the Duhr time for Friday
+    if (times?.jumuaAsDuhr == true) {
+      final nextFriday = nextFridayDate();
+      final duhrTime = timesOfDay(nextFriday, forceActualDuhr: true)[1];
+      jumuaTimes.add(duhrTime);
+    } else {
+      // Normal case - use configured Jumua times
+      if (times?.jumua != null) jumuaTimes.add(times!.jumua!);
+    }
+    if (times?.jumua2 != null) jumuaTimes.add(times!.jumua2!);
+    if (times?.jumua3 != null) jumuaTimes.add(times!.jumua3!);
+    return jumuaTimes;
+  }
+
   static Future<bool> checkRoot() async {
     try {
       final result = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
