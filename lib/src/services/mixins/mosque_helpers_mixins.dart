@@ -425,7 +425,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
   /// Calculates the next Friday date from the given date
   /// If no date is provided, it uses the current mosque date
   DateTime nextFridayDate([DateTime? now]) {
-    now ??= AppDateTime.now();
+    now ??= mosqueDate();
     return now.add(Duration(days: (7 - now.weekday + DateTime.friday) % 7));
   }
 
