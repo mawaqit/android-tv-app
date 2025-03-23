@@ -9,7 +9,9 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 
 // Create mocks
 class MockTimes extends Mock implements Times {}
+
 class MockMosque extends Mock implements Mosque {}
+
 class MockMosqueConfig extends Mock implements MosqueConfig {}
 
 // Test implementation of MosqueHelpersMixin
@@ -48,10 +50,7 @@ class TestMosqueHelpersMixin extends ChangeNotifier with MosqueHelpersMixin {
     }
 
     // Otherwise, handle the jumuaAsDuhr case manually for testing
-    if (date.weekday == DateTime.friday &&
-        typeIsMosque &&
-        times?.jumua != null &&
-        times?.jumuaAsDuhr == false) {
+    if (date.weekday == DateTime.friday && typeIsMosque && times?.jumua != null && times?.jumuaAsDuhr == false) {
       var result = List<String>.from(_testTimesOfDay);
       result[1] = times!.jumua!;
       return result;
