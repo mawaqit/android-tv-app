@@ -11,7 +11,6 @@ import 'package:mawaqit/src/services/background_work_managers/work_manager_servi
 import 'package:screen_control/screen_control.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
 
 class TimerScheduleInfo {
   final DateTime scheduledTime;
@@ -218,7 +217,6 @@ class ToggleScreenFeature {
   }
 
   static Future<void> cancelAllScheduledTimers() async {
-    await Workmanager().cancelAll();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, false);
   }

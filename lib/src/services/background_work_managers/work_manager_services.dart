@@ -70,7 +70,7 @@ void screenOffCallback(int id) async {
 @pragma('vm:entry-point')
 class WorkManagerService {
   static bool _isInitialized = false;
-  
+
   @pragma('vm:entry-point')
   static Future<void> initialize() async {
     if (_isInitialized) return;
@@ -114,10 +114,9 @@ class WorkManagerService {
         scheduledTime,
         alarmId,
         prayerAlarmCallback,
-        exact: true,
         wakeup: true,
+        alarmClock: true,
         rescheduleOnReboot: true,
-        allowWhileIdle: true,
       );
 
       if (!success) {
@@ -155,10 +154,9 @@ class WorkManagerService {
         scheduledTime,
         alarmId,
         callback,
-        exact: true,
         wakeup: true,
+        alarmClock: true,
         rescheduleOnReboot: true,
-        allowWhileIdle: true,
       );
 
       if (!success) {
@@ -171,6 +169,7 @@ class WorkManagerService {
       throw ScheduleToggleScreenException(e.toString());
     }
   }
+
   @pragma('vm:entry-point')
   static Future<void> cancelTask(String uniqueId) async {
     try {
