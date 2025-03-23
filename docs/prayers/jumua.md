@@ -15,29 +15,29 @@ The Juma prayer time handling is designed to be flexible, allowing for various m
 The following diagram shows the decision flow for determining Juma times:
 
 ```mermaid
-flowchart TD
-    A[Start] --> B{jumuaAsDuhr?}
+graph TD
+    A["Start"] --> B{"jumuaAsDuhr?"}
     
-    B -->|Yes| C[Use Duhr time for Friday]
-    B -->|No| D{Is jumua1 configured?}
+    B -->|"Yes"| C["Use Duhr time for Friday"]
+    B -->|"No"| D{"Is jumua1 configured?"}
     
-    D -->|Yes| E[Use jumua1 as primary time]
-    D -->|No| F{Is jumua2 configured?}
+    D -->|"Yes"| E["Use jumua1 as primary time"]
+    D -->|"No"| F{"Is jumua2 configured?"}
     
-    F -->|Yes| G[Use jumua2 as primary time]
-    F -->|No| H[Return empty list]
+    F -->|"Yes"| G["Use jumua2 as primary time"]
+    F -->|"No"| H["Return empty list"]
     
-    C --> I{Is jumua2 configured?}
+    C --> I{"Is jumua2 configured?"}
     E --> I
     G --> I
     
-    I -->|Yes| J[Add jumua2 as secondary time]
-    I -->|No| L{Is jumua3 configured?}
+    I -->|"Yes"| J["Add jumua2 as secondary time"]
+    I -->|"No"| L{"Is jumua3 configured?"}
     
     J --> L
     
-    L -->|Yes| M[Add jumua3 as tertiary time]
-    L -->|No| N[Finish]
+    L -->|"Yes"| M["Add jumua3 as tertiary time"]
+    L -->|"No"| N["Finish"]
     
     M --> N
 ```
@@ -47,19 +47,19 @@ flowchart TD
 The Juma workflow timing is determined based on the following rules:
 
 ```mermaid
-flowchart TD
-    A[Check if Friday] -->|Yes| B{Check mosque type}
-    A -->|No| C[Not in Juma workflow]
+graph TD
+    A["Check if Friday"] -->|"Yes"| B{"Check mosque type"}
+    A -->|"No"| C["Not in Juma workflow"]
     
-    B -->|Mosque| D{Current time vs Juma time}
-    B -->|Not Mosque| C
+    B -->|"Mosque"| D{"Current time vs Juma time"}
+    B -->|"Not Mosque"| C
     
-    D -->|Before Juma| C
-    D -->|During Juma workflow| E[In Juma workflow]
-    D -->|After Juma workflow| C
+    D -->|"Before Juma"| C
+    D -->|"During Juma workflow"| E["In Juma workflow"]
+    D -->|"After Juma workflow"| C
     
-    E --> F[Show Juma workflow screen]
-    C --> G[Show normal screens]
+    E --> F["Show Juma workflow screen"]
+    C --> G["Show normal screens"]
 ```
 
 The workflow time is defined as the period starting at the Juma time and ending after the Juma timeout (typically 30 minutes) plus Azkar duration.
