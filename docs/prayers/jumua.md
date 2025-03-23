@@ -168,20 +168,3 @@ The core logic is implemented in three main methods:
 3. `jumuaaWorkflowTime()`: Determines if current time is during Juma workflow period
 
 These methods ensure consistent handling of Juma times across the application.
-
-### Code Implementation Details
-
-#### Core Juma prayer time logic implementation
-- Location: `docs/prayers/jumua.md`
-- Description: Core Juma prayer time logic implementation
-- Related Documentation:
-  - [Workflow Timing](docs/prayers/jumua.md#workflow-timing)
-  - [Use Cases](docs/prayers/jumua.md#use-cases)
-  - [Logic Flow](docs/prayers/jumua.md#logic-flow)
-  - [Case 1 Regular Juma](docs/prayers/jumua.md#case-1-regular-juma)
-  - [Technical Implementation](docs/prayers/jumua.md#technical-implementation)
-  - [Workflow Timing](docs/prayers/jumua.md#workflow-timing)
-  - [Technical Implementation](docs/prayers/jumua.md#technical-implementation)
-  - [Workflow Timing](docs/prayers/jumua.md#workflow-timing)
-  - [Ui Representation](docs/prayers/jumua.md#ui-representation)
-
