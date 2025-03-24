@@ -57,8 +57,8 @@ class JumuaWidget extends StatelessWidget {
     // Original condition
     final shouldBeActive = isFriday && (nextIqamaIdx == 1 || isJumuaTime);
 
-    // Use the forced active state
-    final finalActiveState = forceActive;
+    print(
+        'JUMUA_DEBUG: now: $now, isFriday: $isFriday, nextIqamaIdx: $nextIqamaIdx, isJumuaTime: $isJumuaTime, forceActive: $forceActive, shouldBeActive: $shouldBeActive, jumuaTimes: $jumuaTimes');
 
     if (jumuaTimes.isEmpty) {
       developer.log('JUMUA_DEBUG: No Jumua times available');
@@ -79,7 +79,7 @@ class JumuaWidget extends StatelessWidget {
       iqama: jumuaTimes.length > 1 ? jumuaTimes[1] : null,
       iqama2: jumuaTimes.length > 2 ? jumuaTimes[2] : null,
       isIqamaMoreImportant: false,
-      active: finalActiveState,
+      active: shouldBeActive,
     );
   }
 }
