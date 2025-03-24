@@ -243,7 +243,7 @@ void main() {
     // +    _timer = Timer(nextDuration, showNextItem);
     // }
     // }
-   // ========
+    // ========
     // testWidgets('displays Eid widget when in Eid time', (WidgetTester tester) async {
     //   // Setup - During Eid
     //   when(() => mosqueManager.showEid(any())).thenReturn(true);

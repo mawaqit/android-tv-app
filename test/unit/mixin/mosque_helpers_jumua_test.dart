@@ -175,6 +175,22 @@ void main() {
       expect(result, ['12:30', '14:00', '15:00']);
     });
 
+    test('should return duhr time and when jumuaAsDuhr is true and jumua1/2/3 are configured', () {
+      // Setup
+      when(() => mockTimes.jumuaAsDuhr).thenReturn(true);
+      when(() => mockTimes.jumua).thenReturn('12:10');
+      when(() => mockTimes.jumua2).thenReturn('14:00');
+      when(() => mockTimes.jumua3).thenReturn('15:00');
+
+      helper.setTestTimesOfDay(['05:00', '12:30', '16:00', '19:00', '21:00']);
+
+      // Test
+      final result = helper.getOrderedJumuaTimes();
+
+      // Verify
+      expect(result, ['12:30', '14:00', '15:00']);
+    });
+
     test('should return empty list when no jumua times are configured and jumuaAsDuhr is false', () {
       // Setup
       when(() => mockTimes.jumua).thenReturn(null);
