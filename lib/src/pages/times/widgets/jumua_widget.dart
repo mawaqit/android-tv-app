@@ -61,7 +61,7 @@ class JumuaWidget extends StatelessWidget {
       iqama: jumuaTimes.length > 1 ? jumuaTimes[1] : null,
       iqama2: jumuaTimes.length > 2 ? jumuaTimes[2] : null,
       isIqamaMoreImportant: false,
-      active: mosqueManager.jumuaaWorkflowTime(),
+      active: mosqueManager.mosqueDate().weekday == DateTime.friday && (mosqueManager.nextIqamaIndex() == 1 || mosqueManager.jumuaaWorkflowTime()),
     );
   }
 }
