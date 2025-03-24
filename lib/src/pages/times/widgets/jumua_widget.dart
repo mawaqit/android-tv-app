@@ -51,14 +51,8 @@ class JumuaWidget extends StatelessWidget {
     final nextIqamaIdx = mosqueManager.nextIqamaIndex();
     final isJumuaTime = mosqueManager.jumuaaWorkflowTime();
 
-    // FORCE ACTIVE: Always highlight Juma on Fridays
-    final forceActive = isFriday;
-
     // Original condition
     final shouldBeActive = isFriday && (nextIqamaIdx == 1 || isJumuaTime);
-
-    print(
-        'JUMUA_DEBUG: now: $now, isFriday: $isFriday, nextIqamaIdx: $nextIqamaIdx, isJumuaTime: $isJumuaTime, forceActive: $forceActive, shouldBeActive: $shouldBeActive, jumuaTimes: $jumuaTimes');
 
     if (jumuaTimes.isEmpty) {
       developer.log('JUMUA_DEBUG: No Jumua times available');
