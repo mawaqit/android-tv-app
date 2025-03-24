@@ -60,18 +60,6 @@ class JumuaWidget extends StatelessWidget {
     // Use the forced active state
     final finalActiveState = forceActive;
 
-    print('JUMUA_DEBUG: Date=$now isFriday=$isFriday');
-    print('JUMUA_DEBUG: nextIqamaIndex=$nextIqamaIdx isJumuaTime=$isJumuaTime');
-    print('JUMUA_DEBUG: shouldBeActive=$shouldBeActive forceActive=$forceActive finalActive=$finalActiveState');
-    print('JUMUA_DEBUG: jumuaTimes=$jumuaTimes');
-
-    if (kDebugMode) {
-      print('JUMUA_DEBUG_PRINT: Date=$now isFriday=$isFriday');
-      print('JUMUA_DEBUG_PRINT: nextIqamaIndex=$nextIqamaIdx isJumuaTime=$isJumuaTime');
-      print('JUMUA_DEBUG_PRINT: shouldBeActive=$shouldBeActive forceActive=$forceActive finalActive=$finalActiveState');
-      print('JUMUA_DEBUG_PRINT: jumuaTimes=$jumuaTimes');
-    }
-
     if (jumuaTimes.isEmpty) {
       developer.log('JUMUA_DEBUG: No Jumua times available');
       return SalahItemWidget(
