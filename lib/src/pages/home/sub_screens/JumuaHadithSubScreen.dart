@@ -23,26 +23,26 @@ class JumuaHadithSubScreen extends StatelessWidget {
     if (!mosqueConfig!.jumuaDhikrReminderEnabled!) return Scaffold(backgroundColor: Colors.black);
     final mosqueProvider = context.read<MosqueManager>();
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: AboveSalahBar(),
-        ),
-        Expanded(
-          child: DisplayTextWidget(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: AboveSalahBar(),
+          ),
+          DisplayTextWidget(
             title: tr.jumuaaScreenTitle,
             arabicText: jumuaArHadith,
             translatedText: tr.jumuaaHadith,
             mainAxisAlignment: MainAxisAlignment.start,
           ),
-        ),
-        Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: mosqueProvider.times!.isTurki
-                ? ResponsiveMiniSalahBarTurkishWidget(activeItem: 1)
-                : ResponsiveMiniSalahBarWidget(activeItem: 1)),
-      ],
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: mosqueProvider.times!.isTurki
+                  ? ResponsiveMiniSalahBarTurkishWidget(activeItem: 1)
+                  : ResponsiveMiniSalahBarWidget(activeItem: 1)),
+        ],
+      ),
     );
   }
 }
