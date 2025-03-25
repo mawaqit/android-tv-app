@@ -10,6 +10,11 @@ mixin AudioMixin on ChangeNotifier {
   bool get typeIsMosque;
 
   Duration getAdhanDuration(bool isFajrPray) {
+    // If mosqueConfig is null, return a default duration
+    if (mosqueConfig == null) {
+      return Duration(seconds: 150); // Default duration if config is missing
+    }
+
     String? adhanName = mosqueConfig?.adhanVoice;
 
     // If mosque type, use the duration from API
