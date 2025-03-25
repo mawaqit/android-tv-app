@@ -6,9 +6,19 @@ import 'package:mawaqit/src/models/mosqueConfig.dart';
 mixin AudioMixin on ChangeNotifier {
   abstract MosqueConfig? mosqueConfig;
 
+  // Abstract getter that will be implemented by classes that use this mixin
+  bool get typeIsMosque;
+
   Duration getAdhanDuration(bool isFajrPray) {
     String? adhanName = mosqueConfig?.adhanVoice;
-    Duration duration = Duration(seconds: mosqueConfig!.adhanDuration!);
+
+    // If mosque type, use the duration from API
+    if (typeIsMosque && mosqueConfig?.adhanDuration != null) {
+      return Duration(seconds: mosqueConfig!.adhanDuration!);
+    }
+
+    // For home type or if adhanDuration is not set, use predefined durations
+    Duration duration = Duration(seconds: mosqueConfig?.adhanDuration ?? 180);
 
     if (isFajrPray && adhanName != null) {
       adhanName = adhanName + '-fajr';
