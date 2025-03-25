@@ -155,7 +155,37 @@ class TestMosqueConfig implements MosqueConfig {
 
   // For simplicity, these methods aren't fully implemented in the test class
   @override
-  MosqueConfig copyWith({Object? duaAfterPrayerShowTimes, Object? hijriDateEnabled, Object? duaAfterAzanEnabled, Object? duaAfterPrayerEnabled, Object? iqamaDisplayTime, Object? iqamaBip, Object? showLogo, Object? showCityInTitle, Object? backgroundColor, Object? jumuaDhikrReminderEnabled, Object? jumuaTimeout, Object? randomHadithEnabled, Object? blackScreenWhenPraying, Object? wakeForFajrTime, Object? jumuaBlackScreenEnabled, Object? temperatureEnabled, Object? temperatureUnit, Object? hadithLang, Object? iqamaEnabled, Object? randomHadithIntervalDisabling, Object? adhanVoice, Object? footer, Object? iqamaMoreImportant, Object? timeDisplayFormat, Object? backgroundType, Object? backgroundMotif, Object? iqamaFullScreenCountdown, Object? showPrayerTimesOnMessageScreen, Object? theme, Object? adhanDuration}) {
+  MosqueConfig copyWith(
+      {Object? duaAfterPrayerShowTimes,
+      Object? hijriDateEnabled,
+      Object? duaAfterAzanEnabled,
+      Object? duaAfterPrayerEnabled,
+      Object? iqamaDisplayTime,
+      Object? iqamaBip,
+      Object? showLogo,
+      Object? showCityInTitle,
+      Object? backgroundColor,
+      Object? jumuaDhikrReminderEnabled,
+      Object? jumuaTimeout,
+      Object? randomHadithEnabled,
+      Object? blackScreenWhenPraying,
+      Object? wakeForFajrTime,
+      Object? jumuaBlackScreenEnabled,
+      Object? temperatureEnabled,
+      Object? temperatureUnit,
+      Object? hadithLang,
+      Object? iqamaEnabled,
+      Object? randomHadithIntervalDisabling,
+      Object? adhanVoice,
+      Object? footer,
+      Object? iqamaMoreImportant,
+      Object? timeDisplayFormat,
+      Object? backgroundType,
+      Object? backgroundMotif,
+      Object? iqamaFullScreenCountdown,
+      Object? showPrayerTimesOnMessageScreen,
+      Object? theme,
+      Object? adhanDuration}) {
     throw UnimplementedError();
   }
 
@@ -175,10 +205,7 @@ void main() {
 
     test('getAdhanDuration returns mosqueConfig.adhanDuration when typeIsMosque is true', () {
       // Arrange
-      audioMixin.mosqueConfig = TestMosqueConfig(
-        adhanVoice: 'adhan-afassy',
-        adhanDuration: 120
-      );
+      audioMixin.mosqueConfig = TestMosqueConfig(adhanVoice: 'adhan-afassy', adhanDuration: 120);
       audioMixin.typeIsMosque = true;
 
       // Act
@@ -190,10 +217,7 @@ void main() {
 
     test('getAdhanDuration returns predefined duration for home type when typeIsMosque is false', () {
       // Arrange
-      audioMixin.mosqueConfig = TestMosqueConfig(
-        adhanVoice: 'adhan-afassy',
-        adhanDuration: 120
-      );
+      audioMixin.mosqueConfig = TestMosqueConfig(adhanVoice: 'adhan-afassy', adhanDuration: 120);
       audioMixin.typeIsMosque = false;
 
       // Act
@@ -205,10 +229,7 @@ void main() {
 
     test('getAdhanDuration returns fajr-specific duration for fajr prayer in home mode', () {
       // Arrange
-      audioMixin.mosqueConfig = TestMosqueConfig(
-        adhanVoice: 'adhan-afassy',
-        adhanDuration: 120
-      );
+      audioMixin.mosqueConfig = TestMosqueConfig(adhanVoice: 'adhan-afassy', adhanDuration: 120);
       audioMixin.typeIsMosque = false;
 
       // Act
@@ -220,10 +241,7 @@ void main() {
 
     test('getAdhanDuration handles different adhan voices correctly', () {
       // Arrange
-      audioMixin.mosqueConfig = TestMosqueConfig(
-        adhanVoice: 'adhan-egypt',
-        adhanDuration: 120
-      );
+      audioMixin.mosqueConfig = TestMosqueConfig(adhanVoice: 'adhan-egypt', adhanDuration: 120);
       audioMixin.typeIsMosque = false;
 
       // Act
@@ -235,10 +253,7 @@ void main() {
 
     test('getAdhanDuration uses default duration when adhan voice is not recognized', () {
       // Arrange
-      audioMixin.mosqueConfig = TestMosqueConfig(
-        adhanVoice: 'unknown-adhan',
-        adhanDuration: 120
-      );
+      audioMixin.mosqueConfig = TestMosqueConfig(adhanVoice: 'unknown-adhan', adhanDuration: 120);
       audioMixin.typeIsMosque = false;
 
       // Act
@@ -251,10 +266,7 @@ void main() {
 
     test('getAdhanDuration uses fallback 180 seconds when config has no duration', () {
       // Arrange
-      audioMixin.mosqueConfig = TestMosqueConfig(
-        adhanVoice: 'adhan-afassy',
-        adhanDuration: null
-      );
+      audioMixin.mosqueConfig = TestMosqueConfig(adhanVoice: 'adhan-afassy', adhanDuration: null);
       audioMixin.typeIsMosque = false;
 
       // Act
@@ -267,10 +279,7 @@ void main() {
 
     test('getAdhanDuration handles null adhanVoice', () {
       // Arrange
-      audioMixin.mosqueConfig = TestMosqueConfig(
-        adhanVoice: null,
-        adhanDuration: 120
-      );
+      audioMixin.mosqueConfig = TestMosqueConfig(adhanVoice: null, adhanDuration: 120);
       audioMixin.typeIsMosque = false;
 
       // Act
