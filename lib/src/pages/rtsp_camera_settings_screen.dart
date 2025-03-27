@@ -272,7 +272,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           title: Text(S.of(context).replaceWorkflowWithStream),
           subtitle: Text(S.of(context).replaceAppWorkflowWithCameraStream),
           value: state.replaceWorkflow,
-          onChanged: state.isRTSPEnabled 
+          onChanged: state.isRTSPEnabled
               ? (value) {
                   ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(value);
                 }
@@ -293,11 +293,9 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           const SizedBox(height: 20),
           TextField(
             controller: _urlController,
-            onSubmitted: (_) => ref.read(rtspCameraSettingsProvider.notifier).updateStream(
-                  isEnabled: true,
-                  url: _urlController.text,
-                  replaceWorkflow: state.replaceWorkflow,
-                ),
+            onSubmitted: (_) {
+              ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
+            },
             decoration: InputDecoration(
               labelText: S.of(context).enterRtspUrl,
               hintText: S.of(context).hintTextRtspUrl,
@@ -309,11 +307,19 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           const SizedBox(height: 20),
           ElevatedButton.icon(
             focusNode: _saveButtonFocusNode,
-            onPressed: () => ref.read(rtspCameraSettingsProvider.notifier).updateStream(
-                  isEnabled: true,
-                  url: _urlController.text,
-                  replaceWorkflow: state.replaceWorkflow,
-                ),
+            onPressed: () {
+              // Only update the stream if the URL has actually changed
+              if (_urlController.text != state.streamUrl) {
+                ref.read(rtspCameraSettingsProvider.notifier).updateStream(
+                      isEnabled: true,
+                      url: _urlController.text,
+                      replaceWorkflow: state.replaceWorkflow,
+                    );
+              } else if (state.streamUrl != null && state.streamUrl!.isNotEmpty) {
+                // URL hasn't changed, just update the workflow flag if needed
+                ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
+              }
+            },
             icon: const Icon(Icons.save),
             label: Text(S.of(context).save),
             style: ButtonStyle(

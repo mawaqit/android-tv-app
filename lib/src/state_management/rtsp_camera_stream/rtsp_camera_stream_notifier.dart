@@ -55,7 +55,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       final isEnabled = prefs.getBool(RtspCameraStreamConstant.prefKeyEnabled) ?? false;
       final savedUrl = prefs.getString(RtspCameraStreamConstant.prefKeyUrl);
       final replaceWorkflow = prefs.getBool(RtspCameraStreamConstant.prefKeyReplaceWorkflow) ?? false;
-      
+
       if (!isEnabled || savedUrl == null || savedUrl.isEmpty) {
         return RTSPCameraSettingsState(
           isRTSPEnabled: isEnabled,
@@ -65,7 +65,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
         );
       }
       return await _initializeFromSavedUrl(
-        isEnabled: isEnabled, 
+        isEnabled: isEnabled,
         url: savedUrl,
         replaceWorkflow: replaceWorkflow,
       );
@@ -136,7 +136,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
   Future<void> updateStream({
     required bool isEnabled,
     required String url,
-    bool? replaceWorkflow,
+    bool replaceWorkflow = false,
   }) async {
     state = const AsyncValue.loading();
     try {
@@ -147,9 +147,9 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(RtspCameraStreamConstant.prefKeyEnabled, isEnabled);
       await prefs.setString(RtspCameraStreamConstant.prefKeyUrl, url);
-      
+
       // Save replaceWorkflow if provided or use existing value
-      bool replaceWorkflowValue = replaceWorkflow ?? state.value?.replaceWorkflow ?? false;
+      bool replaceWorkflowValue = replaceWorkflow;
       await prefs.setBool(RtspCameraStreamConstant.prefKeyReplaceWorkflow, replaceWorkflowValue);
 
       // Dispose of existing controllers before creating new ones
