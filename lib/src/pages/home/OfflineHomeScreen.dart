@@ -11,6 +11,7 @@ import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/pages/home/workflow/app_workflow_screen.dart';
+import 'package:mawaqit/src/pages/home/workflow/app_workflow_wrapper.dart';
 import 'package:mawaqit/src/pages/home/workflow/jumua_workflow_screen.dart';
 import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
 import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
@@ -58,7 +59,7 @@ class OfflineHomeScreen extends StatelessWidget {
     if (announcementMode) return AnnouncementScreen();
 
     final now = mosqueManager.mosqueDate();
-    return AppWorkflowScreen(
+    return AppWorkflowWrapper(
       key: ValueKey(now.day ^ now.month ^ now.year ^ (mosqueManager.mosque?.id ?? 1)),
     );
   }

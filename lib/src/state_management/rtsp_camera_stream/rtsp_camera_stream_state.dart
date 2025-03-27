@@ -14,6 +14,7 @@ class RTSPCameraSettingsState extends Equatable {
   final VideoController? videoController;
   final YoutubePlayerController? youtubeController;
   final bool isInvalidUrl;
+  final bool replaceWorkflow;
 
   const RTSPCameraSettingsState({
     this.isRTSPEnabled = false,
@@ -22,6 +23,7 @@ class RTSPCameraSettingsState extends Equatable {
     this.videoController,
     this.youtubeController,
     this.isInvalidUrl = false,
+    this.replaceWorkflow = false,
   });
 
   RTSPCameraSettingsState copyWith({
@@ -33,6 +35,7 @@ class RTSPCameraSettingsState extends Equatable {
     bool? invalidStreamUrl,
     bool? showValidationSnackbar,
     bool? isInvalidUrl,
+    bool? replaceWorkflow,
   }) {
     return RTSPCameraSettingsState(
       isRTSPEnabled: isRTSPEnabled ?? this.isRTSPEnabled,
@@ -41,12 +44,13 @@ class RTSPCameraSettingsState extends Equatable {
       videoController: videoController ?? this.videoController,
       youtubeController: youtubeController ?? this.youtubeController,
       isInvalidUrl: isInvalidUrl ?? this.isInvalidUrl,
+      replaceWorkflow: replaceWorkflow ?? this.replaceWorkflow,
     );
   }
 
   @override
   String toString() {
-    return 'RTSPCameraSettingsState(isRTSPEnabled: $isRTSPEnabled, streamUrl: $streamUrl, streamType: $streamType, videoController: $videoController, youtubeController: $youtubeController, isInvalidUrl: $isInvalidUrl)';
+    return 'RTSPCameraSettingsState(isRTSPEnabled: $isRTSPEnabled, streamUrl: $streamUrl, streamType: $streamType, videoController: $videoController, youtubeController: $youtubeController, isInvalidUrl: $isInvalidUrl, replaceWorkflow: $replaceWorkflow)';
   }
 
   @override
@@ -58,6 +62,7 @@ class RTSPCameraSettingsState extends Equatable {
       videoController,
       youtubeController,
       isInvalidUrl,
+      replaceWorkflow,
     ];
   }
 }

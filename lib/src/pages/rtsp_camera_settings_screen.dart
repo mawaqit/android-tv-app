@@ -267,6 +267,21 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
             side: BorderSide(color: Theme.of(context).dividerColor),
           ),
         ),
+        const SizedBox(height: 12),
+        SwitchListTile(
+          title: Text(S.of(context).replaceWorkflowWithStream),
+          subtitle: Text(S.of(context).replaceAppWorkflowWithCameraStream),
+          value: state.replaceWorkflow,
+          onChanged: state.isRTSPEnabled 
+              ? (value) {
+                  ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(value);
+                }
+              : null,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(color: Theme.of(context).dividerColor),
+          ),
+        ),
         if (state.isRTSPEnabled) ...[
           const SizedBox(height: 20),
           Text(
@@ -281,6 +296,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
             onSubmitted: (_) => ref.read(rtspCameraSettingsProvider.notifier).updateStream(
                   isEnabled: true,
                   url: _urlController.text,
+                  replaceWorkflow: state.replaceWorkflow,
                 ),
             decoration: InputDecoration(
               labelText: S.of(context).enterRtspUrl,
@@ -296,6 +312,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
             onPressed: () => ref.read(rtspCameraSettingsProvider.notifier).updateStream(
                   isEnabled: true,
                   url: _urlController.text,
+                  replaceWorkflow: state.replaceWorkflow,
                 ),
             icon: const Icon(Icons.save),
             label: Text(S.of(context).save),

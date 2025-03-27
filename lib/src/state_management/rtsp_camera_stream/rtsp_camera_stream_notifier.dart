@@ -54,14 +54,21 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       final prefs = await SharedPreferences.getInstance();
       final isEnabled = prefs.getBool(RtspCameraStreamConstant.prefKeyEnabled) ?? false;
       final savedUrl = prefs.getString(RtspCameraStreamConstant.prefKeyUrl);
+      final replaceWorkflow = prefs.getBool(RtspCameraStreamConstant.prefKeyReplaceWorkflow) ?? false;
+      
       if (!isEnabled || savedUrl == null || savedUrl.isEmpty) {
         return RTSPCameraSettingsState(
           isRTSPEnabled: isEnabled,
           streamUrl: savedUrl,
           isInvalidUrl: false,
+          replaceWorkflow: replaceWorkflow,
         );
       }
-      return await _initializeFromSavedUrl(isEnabled: isEnabled, url: savedUrl);
+      return await _initializeFromSavedUrl(
+        isEnabled: isEnabled, 
+        url: savedUrl,
+        replaceWorkflow: replaceWorkflow,
+      );
     } catch (e, s) {
       throw RTSPInitializationException(e.toString());
     }
@@ -70,6 +77,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
   Future<RTSPCameraSettingsState> _initializeFromSavedUrl({
     required bool isEnabled,
     required String url,
+    bool? replaceWorkflow,
   }) async {
     try {
       await dispose();
@@ -86,11 +94,13 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
           isRTSPEnabled: isEnabled,
           streamUrl: url,
           isInvalidUrl: true,
+          replaceWorkflow: replaceWorkflow ?? false,
         );
       }
       return RTSPCameraSettingsState(
         isRTSPEnabled: isEnabled,
         streamUrl: url,
+        replaceWorkflow: replaceWorkflow ?? false,
       );
     }
   }
@@ -126,6 +136,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
   Future<void> updateStream({
     required bool isEnabled,
     required String url,
+    bool? replaceWorkflow,
   }) async {
     state = const AsyncValue.loading();
     try {
@@ -136,6 +147,10 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(RtspCameraStreamConstant.prefKeyEnabled, isEnabled);
       await prefs.setString(RtspCameraStreamConstant.prefKeyUrl, url);
+      
+      // Save replaceWorkflow if provided or use existing value
+      bool replaceWorkflowValue = replaceWorkflow ?? state.value?.replaceWorkflow ?? false;
+      await prefs.setBool(RtspCameraStreamConstant.prefKeyReplaceWorkflow, replaceWorkflowValue);
 
       // Dispose of existing controllers before creating new ones
       await dispose();
@@ -152,10 +167,11 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
               streamType: StreamType.youtubeLive,
               streamUrl: url,
               isInvalidUrl: false,
+              replaceWorkflow: replaceWorkflowValue,
             ),
           );
         } else {
-          state = AsyncValue.data(newState);
+          state = AsyncValue.data(newState.copyWith(replaceWorkflow: replaceWorkflowValue));
         }
         return;
       }
@@ -171,10 +187,11 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
               streamType: StreamType.rtsp,
               streamUrl: url,
               isInvalidUrl: false,
+              replaceWorkflow: replaceWorkflowValue,
             ),
           );
         } else {
-          state = AsyncValue.data(newState);
+          state = AsyncValue.data(newState.copyWith(replaceWorkflow: replaceWorkflowValue));
         }
         return;
       }
@@ -185,11 +202,14 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       await dispose();
 
       if (e is InvalidRTSPURLException || e is URLNotProvidedRTSPURLException) {
+        // Preserve replaceWorkflow when handling URL errors
+        bool replaceWorkflowValue = replaceWorkflow ?? state.value?.replaceWorkflow ?? false;
         state = AsyncValue.data(
           state.value!.copyWith(
             isInvalidUrl: true,
             videoController: null,
             youtubeController: null,
+            replaceWorkflow: replaceWorkflowValue,
           ),
         );
       } else {
@@ -228,12 +248,17 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
         ),
       );
 
+      // Get the current replaceWorkflow value
+      final prefs = await SharedPreferences.getInstance();
+      final replaceWorkflow = prefs.getBool(RtspCameraStreamConstant.prefKeyReplaceWorkflow) ?? false;
+
       return RTSPCameraSettingsState(
         isRTSPEnabled: isEnabled,
         streamUrl: url,
         isInvalidUrl: false,
         streamType: StreamType.youtubeLive,
         youtubeController: _youtubeController,
+        replaceWorkflow: replaceWorkflow,
       );
     } catch (e) {
       await dispose();
@@ -250,12 +275,17 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       _videoController = VideoController(_player!);
       await _player!.open(Media(url));
 
+      // Get the current replaceWorkflow value
+      final prefs = await SharedPreferences.getInstance();
+      final replaceWorkflow = prefs.getBool(RtspCameraStreamConstant.prefKeyReplaceWorkflow) ?? false;
+
       return RTSPCameraSettingsState(
         isRTSPEnabled: isEnabled,
         streamUrl: url,
         streamType: StreamType.rtsp,
         isInvalidUrl: false,
         videoController: _videoController,
+        replaceWorkflow: replaceWorkflow,
       );
     } catch (e) {
       await dispose();
@@ -273,6 +303,24 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
   Future<void> resumeStreams() async {
     _youtubeController?.play();
     await _player?.play();
+  }
+
+  Future<void> toggleReplaceWorkflow(bool replaceWorkflow) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(RtspCameraStreamConstant.prefKeyReplaceWorkflow, replaceWorkflow);
+
+      final currentState = state.value;
+      if (currentState != null) {
+        state = AsyncValue.data(
+          currentState.copyWith(
+            replaceWorkflow: replaceWorkflow,
+          ),
+        );
+      }
+    } catch (e, s) {
+      state = AsyncValue.error(RTSPToggleException(e.toString()), s);
+    }
   }
 }
 

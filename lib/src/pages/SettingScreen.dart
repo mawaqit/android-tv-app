@@ -16,6 +16,7 @@ import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/TimezoneScreen.dart';
 import 'package:mawaqit/src/pages/WifiSelectorScreen.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
+import 'package:mawaqit/src/pages/rtsp_camera_settings_screen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -25,8 +26,6 @@ import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:mawaqit/src/widgets/manual_update_dialog.dart';
 import 'package:provider/provider.dart' hide Consumer;
-import 'package:sizer/sizer.dart';
-import 'package:upgrader/upgrader.dart';
 
 import '../../i18n/AppLanguage.dart';
 import '../../main.dart';

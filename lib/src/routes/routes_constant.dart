@@ -5,6 +5,7 @@ class Routes {
   static const String quranSurah = '/quran/surah';
   static const String quranPlayer = '/quran/player';
   static const String quranReciterFavorite = '/quran/reciter_favorite';
+  static const String rtspCameraSettings = '/settings/rtsp-camera';
 
   static const List<String> quranScreens = [
     quranModeSelection,

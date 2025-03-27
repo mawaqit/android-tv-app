@@ -139,6 +139,7 @@ abstract class RtspCameraStreamConstant {
   static const retryDelay = Duration(seconds: 2);
   static const prefKeyEnabled = 'rtsp_enabled';
   static const prefKeyUrl = 'rtsp_url';
+  static const prefKeyReplaceWorkflow = 'rtsp_replace_workflow';
   static const String youtubeUrlPattern =
       r'http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?';
 
