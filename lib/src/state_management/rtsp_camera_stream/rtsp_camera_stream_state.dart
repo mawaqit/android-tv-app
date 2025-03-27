@@ -14,7 +14,7 @@ class RTSPCameraSettingsState extends Equatable {
   final VideoController? videoController;
   final YoutubePlayerController? youtubeController;
   final bool isInvalidUrl;
-
+  final bool autoOverlayEnabled;
   const RTSPCameraSettingsState({
     this.isRTSPEnabled = false,
     this.streamUrl,
@@ -22,6 +22,7 @@ class RTSPCameraSettingsState extends Equatable {
     this.videoController,
     this.youtubeController,
     this.isInvalidUrl = false,
+    this.autoOverlayEnabled = false,
   });
 
   RTSPCameraSettingsState copyWith({
@@ -33,6 +34,7 @@ class RTSPCameraSettingsState extends Equatable {
     bool? invalidStreamUrl,
     bool? showValidationSnackbar,
     bool? isInvalidUrl,
+    bool? autoOverlayEnabled,
   }) {
     return RTSPCameraSettingsState(
       isRTSPEnabled: isRTSPEnabled ?? this.isRTSPEnabled,
@@ -41,6 +43,7 @@ class RTSPCameraSettingsState extends Equatable {
       videoController: videoController ?? this.videoController,
       youtubeController: youtubeController ?? this.youtubeController,
       isInvalidUrl: isInvalidUrl ?? this.isInvalidUrl,
+      autoOverlayEnabled: autoOverlayEnabled ?? this.autoOverlayEnabled,
     );
   }
 
