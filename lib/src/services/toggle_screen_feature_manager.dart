@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:flutter/services.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
@@ -62,20 +63,44 @@ class ToggleScreenFeature {
       final now = AppDateTime.now();
 
       if (isfajrIshaonly) {
-        await _scheduleForPrayer(
-          prayerTimes[0],
-          now,
-          beforeDelayMinutes,
-          afterDelayMinutes,
-          true,
-        );
+        final fajrTimeString = prayerTimes[0];
+        final fajrParts = fajrTimeString.split(':');
+        final fajrHour = int.parse(fajrParts[0]);
+        final fajrMinute = int.parse(fajrParts[1]);
 
-        await _scheduleForPrayer(
-          prayerTimes[4],
-          now,
-          beforeDelayMinutes,
-          afterDelayMinutes,
-          true,
+        DateTime fajrDateTime = DateTime(now.year, now.month, now.day, fajrHour, fajrMinute);
+        if (fajrDateTime.isBefore(now)) {
+          fajrDateTime = fajrDateTime.add(Duration(days: 1));
+        }
+
+        final beforeFajrTime = fajrDateTime.subtract(Duration(minutes: beforeDelayMinutes));
+        if (beforeFajrTime.isAfter(now)) {
+          final uniqueIdOn = 'screenOn_fajr_${DateTime.now().millisecondsSinceEpoch}';
+          await WorkManagerService.registerScreenTask(
+            uniqueIdOn,
+            'screenOn',
+            beforeFajrTime.difference(now),
+          );
+        }
+
+        // Isha prayer - SCREEN OFF
+        final ishaTimeString = prayerTimes[4];
+        final ishaParts = ishaTimeString.split(':');
+        final ishaHour = int.parse(ishaParts[0]);
+        final ishaMinute = int.parse(ishaParts[1]);
+
+        DateTime ishaDateTime = DateTime(now.year, now.month, now.day, ishaHour, ishaMinute);
+        if (ishaDateTime.isBefore(now)) {
+          ishaDateTime = ishaDateTime.add(Duration(days: 1));
+        }
+
+        // Schedule screen OFF after Isha
+        final afterIshaTime = ishaDateTime.add(Duration(minutes: afterDelayMinutes));
+        final uniqueIdOff = 'screenOff_isha_${DateTime.now().millisecondsSinceEpoch}';
+        await WorkManagerService.registerScreenTask(
+          uniqueIdOff,
+          'screenOff',
+          afterIshaTime.difference(now),
         );
       } else {
         for (String prayerTime in prayerTimes) {
@@ -217,8 +242,48 @@ class ToggleScreenFeature {
   }
 
   static Future<void> cancelAllScheduledTimers() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, false);
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      // First set the flag to false
+      await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, false);
+
+      // Get all keys from SharedPreferences
+      final allKeys = prefs.getKeys();
+
+      // Filter keys that start with 'id_mapping_'
+      final mappingKeys = allKeys.where((key) => key.startsWith('screen_task_id_mapping_')).toList();
+
+      // Cancel each alarm and clean up SharedPreferences
+      for (String mappingKey in mappingKeys) {
+        // Extract uniqueId from the key (remove 'id_mapping_' prefix)
+        final uniqueId = mappingKey.substring('screen_task_id_mapping_'.length);
+        // Get the alarm ID
+        final alarmIdString = prefs.getString(mappingKey);
+
+        if (alarmIdString != null) {
+          final int alarmId = int.parse(alarmIdString);
+
+          // Cancel the alarm
+          final bool success = await AndroidAlarmManager.cancel(alarmId);
+
+          if (success) {
+            logger.i('Alarm cancelled successfully: $alarmId');
+          } else {
+            logger.w('Failed to cancel alarm: $alarmId');
+          }
+
+          // Clean up SharedPreferences
+          await prefs.remove('alarm_data_$alarmId');
+          await prefs.remove(mappingKey);
+        }
+      }
+
+      logger.i('All scheduled timers cancelled');
+    } catch (e) {
+      logger.e('Failed to cancel all scheduled timers: $e');
+      throw ScheduleToggleScreenException(e.toString());
+    }
   }
 
   static Future<bool> checkEventsScheduled() async {

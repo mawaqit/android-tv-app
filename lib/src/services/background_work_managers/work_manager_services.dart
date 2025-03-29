@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
+import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:screen_control/screen_control.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -139,7 +140,7 @@ class WorkManagerService {
 
       // Store mapping for later cancellation
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('id_mapping_$uniqueId', alarmId.toString());
+      await prefs.setString('screen_task_id_mapping_$uniqueId', alarmId.toString());
 
       // Calculate exact time for the alarm
       final scheduledTime = DateTime.now().add(initialDelay);
