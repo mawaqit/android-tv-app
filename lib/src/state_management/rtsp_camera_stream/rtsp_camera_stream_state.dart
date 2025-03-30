@@ -7,6 +7,13 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+enum StreamStatus {
+  idle,
+  active,
+  error,
+  ended
+}
+
 class RTSPCameraSettingsState extends Equatable {
   final bool isRTSPEnabled;
   final String? streamUrl;
@@ -14,7 +21,9 @@ class RTSPCameraSettingsState extends Equatable {
   final VideoController? videoController;
   final YoutubePlayerController? youtubeController;
   final bool isInvalidUrl;
-  final bool autoOverlayEnabled;
+  final bool replaceWorkflow;
+  final StreamStatus streamStatus;
+
   const RTSPCameraSettingsState({
     this.isRTSPEnabled = false,
     this.streamUrl,
@@ -22,7 +31,8 @@ class RTSPCameraSettingsState extends Equatable {
     this.videoController,
     this.youtubeController,
     this.isInvalidUrl = false,
-    this.autoOverlayEnabled = false,
+    this.replaceWorkflow = false,
+    this.streamStatus = StreamStatus.idle,
   });
 
   RTSPCameraSettingsState copyWith({
@@ -34,7 +44,8 @@ class RTSPCameraSettingsState extends Equatable {
     bool? invalidStreamUrl,
     bool? showValidationSnackbar,
     bool? isInvalidUrl,
-    bool? autoOverlayEnabled,
+    bool? replaceWorkflow,
+    StreamStatus? streamStatus,
   }) {
     return RTSPCameraSettingsState(
       isRTSPEnabled: isRTSPEnabled ?? this.isRTSPEnabled,
@@ -43,13 +54,14 @@ class RTSPCameraSettingsState extends Equatable {
       videoController: videoController ?? this.videoController,
       youtubeController: youtubeController ?? this.youtubeController,
       isInvalidUrl: isInvalidUrl ?? this.isInvalidUrl,
-      autoOverlayEnabled: autoOverlayEnabled ?? this.autoOverlayEnabled,
+      replaceWorkflow: replaceWorkflow ?? this.replaceWorkflow,
+      streamStatus: streamStatus ?? this.streamStatus,
     );
   }
 
   @override
   String toString() {
-    return 'RTSPCameraSettingsState(isRTSPEnabled: $isRTSPEnabled, streamUrl: $streamUrl, streamType: $streamType, videoController: $videoController, youtubeController: $youtubeController, isInvalidUrl: $isInvalidUrl)';
+    return 'RTSPCameraSettingsState(isRTSPEnabled: $isRTSPEnabled, streamUrl: $streamUrl, streamType: $streamType, videoController: $videoController, youtubeController: $youtubeController, isInvalidUrl: $isInvalidUrl, replaceWorkflow: $replaceWorkflow, streamStatus: $streamStatus)';
   }
 
   @override
@@ -61,6 +73,8 @@ class RTSPCameraSettingsState extends Equatable {
       videoController,
       youtubeController,
       isInvalidUrl,
+      replaceWorkflow,
+      streamStatus,
     ];
   }
 }

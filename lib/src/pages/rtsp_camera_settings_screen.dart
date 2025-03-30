@@ -1,85 +1,54 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/domain/error/rtsp_expceptions.dart';
-import 'package:mawaqit/src/services/stream_monitor.dart';
-import 'package:mawaqit/src/state_management/rtsp_camera_stream/camera_stream_overlay_notifier.dart';
 import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_notifier.dart';
 import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_state.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:sizer/sizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
+import 'package:mawaqit/src/widgets/safe_youtube_player.dart';
 
 class RTSPCameraSettingsScreen extends ConsumerStatefulWidget {
   const RTSPCameraSettingsScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RTSPCameraSettingsScreen> createState() =>
-      _RTSPCameraSettingsScreenState();
+  ConsumerState<RTSPCameraSettingsScreen> createState() => _RTSPCameraSettingsScreenState();
 }
 
-class _RTSPCameraSettingsScreenState
-    extends ConsumerState<RTSPCameraSettingsScreen> {
+class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScreen> {
   final TextEditingController _urlController = TextEditingController();
   final FocusNode _saveButtonFocusNode = FocusNode();
   late StreamSubscription<bool> keyboardSubscription;
-  StreamMonitorService? _streamMonitorService;
 
   @override
   void initState() {
     super.initState();
+    dev.log('🖥️ [RTSP_SCREEN] Initializing RTSP Camera Settings Screen');
     var keyboardVisibilityController = KeyboardVisibilityController();
-    keyboardSubscription =
-        keyboardVisibilityController.onChange.listen((bool visible) {
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
+        dev.log('⌨️ [RTSP_SCREEN] Keyboard hidden, focusing save button');
         FocusScope.of(context).requestFocus(_saveButtonFocusNode);
       }
     });
-    
-    // Initialize stream monitoring
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initializeStreamMonitoring();
-    });
   }
-
-  void _initializeStreamMonitoring() {
-    // Get the stream overlay settings notifier
-    final overlaySettingsNotifier =
-        ref.read(streamOverlaySettingsProvider.notifier);
-
-    // Create a stream monitor service with callback to the settings notifier
-    _streamMonitorService = StreamMonitorService(
-        onStreamStatusChanged:
-            overlaySettingsNotifier.handleStreamStatusChange);
-
-    // Start monitoring if we have a valid URL and RTSP is enabled
-    final rtspState = ref.read(rtspCameraSettingsProvider);
-    if (rtspState.hasValue &&
-        rtspState.value!.isRTSPEnabled &&
-        rtspState.value!.streamUrl != null) {
-      _streamMonitorService?.startMonitoring(rtspState.value!.streamUrl!,
-          rtspState.value!.streamType ?? StreamType.youtubeLive);
-
-      // Immediately check the stream status when initializing
-      _streamMonitorService?.checkAndNotify();
-    }
-}
 
   @override
   void dispose() {
+    dev.log('🧹 [RTSP_SCREEN] Disposing RTSP Camera Settings Screen');
     _urlController.dispose();
     keyboardSubscription.cancel();
-    _streamMonitorService?.dispose();
     super.dispose();
   }
 
   void _updateUrlController(RTSPCameraSettingsState state) {
     if (state.streamUrl != null && _urlController.text != state.streamUrl) {
+      dev.log('📝 [RTSP_SCREEN] Updating URL controller with: ${state.streamUrl}');
       _urlController.text = state.streamUrl!;
     }
   }
@@ -87,33 +56,29 @@ class _RTSPCameraSettingsScreenState
   @override
   Widget build(BuildContext context) {
     final asyncState = ref.watch(rtspCameraSettingsProvider);
-    // Watch stream overlay settings to reflect their current state
-    final overlaySettings = ref.watch(streamOverlaySettingsProvider);
-    
     ref.listen(rtspCameraSettingsProvider, (previous, next) {
       if (next.hasValue) {
         _updateUrlController(next.value!);
-        
-        // If RTSP settings change, update stream monitoring
-        if (previous?.value?.streamUrl != next.value?.streamUrl ||
-            previous?.value?.streamType != next.value?.streamType ||
-            previous?.value?.isRTSPEnabled != next.value?.isRTSPEnabled) {
-          if (next.value!.isRTSPEnabled && next.value!.streamUrl != null) {
-            // Start or update monitoring
-            _streamMonitorService?.startMonitoring(next.value!.streamUrl!,
-                next.value!.streamType ?? StreamType.youtubeLive);
-          } else {
-            // Stop monitoring if disabled
-            _streamMonitorService?.stopMonitoring();
-          }
-        }
       }
-      
-      if (previous != next &&
-          !next.isLoading &&
-          next.hasValue &&
-          !next.hasError &&
-          next.value!.isRTSPEnabled) {
+      if (previous != next && next.hasValue && next.value!.streamStatus == StreamStatus.error) {
+        dev.log('🚨 [RTSP_SCREEN] Stream error detected');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              S.of(context).streamError,
+              style: TextStyle(fontSize: 16.sp),
+            ),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+      if (previous != next && !next.isLoading && next.hasValue && !next.hasError && next.value!.isRTSPEnabled) {
         final state = next.value!;
 
         // Only show snackbar when URL validation status changes
@@ -123,9 +88,11 @@ class _RTSPCameraSettingsScreenState
         Color backgroundColor;
 
         if (state.streamUrl != null && !state.isInvalidUrl) {
+          dev.log('✅ [RTSP_SCREEN] Valid RTSP URL detected: ${state.streamUrl}');
           message = S.of(context).validRtspUrl;
           backgroundColor = Colors.green;
         } else if (state.isInvalidUrl) {
+          dev.log('❌ [RTSP_SCREEN] Invalid RTSP URL detected: ${state.streamUrl}');
           message = S.of(context).invalidRtspUrl;
           backgroundColor = Colors.red;
         } else {
@@ -152,17 +119,12 @@ class _RTSPCameraSettingsScreenState
 
     return asyncState.when(
       data: (state) {
+        dev.log('🏗️ [RTSP_SCREEN] Building screen with state: ${state.isRTSPEnabled ? "Enabled" : "Disabled"}');
         return Scaffold(
           appBar: state.isRTSPEnabled
               ? AppBar(
                   backgroundColor: Colors.transparent,
                   elevation: 0,
-                  leading: IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    iconSize: 12.sp,
-                    splashRadius: 7.sp,
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
                 )
               : null,
           body: SafeArea(
@@ -173,7 +135,7 @@ class _RTSPCameraSettingsScreenState
                     animation: "settings",
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.all(16.0),
-                      child: _buildSettingsContent(state, overlaySettings),
+                      child: _buildSettingsContent(state),
                     ),
                   )
                 else
@@ -184,59 +146,12 @@ class _RTSPCameraSettingsScreenState
                         child: Container(
                           margin: const EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).dividerColor),
+                            border: Border.all(color: Theme.of(context).dividerColor),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Stack(
-                            children: [
-                              AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: _buildVideoPreview(state),
-                              ),
-                              // Show LIVE indicator if stream is live
-                              if (overlaySettings.isStreamActuallyLive)
-                                Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: const Text(
-                                      'LIVE',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                              // Show overlay if it should be visible based on settings
-                              if (overlaySettings.shouldShowOverlay)
-                                Positioned.fill(
-                                  child: Center(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.7),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: const Text(
-                                        'STREAM OVERLAY ACTIVE',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: _buildVideoPreview(state),
                           ),
                         ),
                       ),
@@ -244,7 +159,7 @@ class _RTSPCameraSettingsScreenState
                         flex: 1,
                         child: SingleChildScrollView(
                           padding: const EdgeInsets.all(16.0),
-                          child: _buildSettingsContent(state, overlaySettings),
+                          child: _buildSettingsContent(state),
                         ),
                       ),
                     ],
@@ -254,10 +169,14 @@ class _RTSPCameraSettingsScreenState
           ),
         );
       },
-      loading: () => Scaffold(
-        body: _buildLoadingOverlay(),
-      ),
+      loading: () {
+        dev.log('⏳ [RTSP_SCREEN] Loading state');
+        return Scaffold(
+          body: _buildLoadingOverlay(),
+        );
+      },
       error: (error, stackTrace) {
+        dev.log('🚨 [RTSP_SCREEN] Error state: $error');
         if (error is RTSPCameraException) {
           return _buildErrorScreen(error);
         } else {
@@ -335,9 +254,20 @@ class _RTSPCameraSettingsScreenState
   }
 
   Widget _buildVideoPreview(RTSPCameraSettingsState state) {
-    if (state.streamType == StreamType.youtubeLive &&
-        state.youtubeController != null) {
-      return YoutubePlayer(controller: state.youtubeController!);
+    dev.log('🎥 [RTSP_SCREEN] Building video preview for type: ${state.streamType}');
+    if (state.streamType == StreamType.youtubeLive && state.youtubeController != null) {
+      return SafeYoutubePlayer(
+        controller: state.youtubeController!,
+        placeholder: Center(
+          child: Text(
+            'Loading stream...',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+        onError: (error) {
+          dev.log('⚠️ [RTSP_SCREEN] YouTube player error: $error');
+        },
+      );
     }
     if (state.videoController != null) {
       return Video(controller: state.videoController!);
@@ -345,23 +275,21 @@ class _RTSPCameraSettingsScreenState
     return const SizedBox.shrink();
   }
 
-  Widget _buildSettingsContent(
-      RTSPCameraSettingsState state, StreamOverlaySettings overlaySettings) {
+  Widget _buildSettingsContent(RTSPCameraSettingsState state) {
+    dev.log('⚙️ [RTSP_SCREEN] Building settings content');
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           S.of(context).rtspCameraSettings,
-          style:
-              Theme.of(context).textTheme.titleMedium?.apply(fontSizeFactor: 2),
+          style: Theme.of(context).textTheme.titleMedium?.apply(fontSizeFactor: 2),
           textAlign: TextAlign.center,
         ),
         const Divider(indent: 50, endIndent: 50),
         const SizedBox(height: 10),
         Text(
           S.of(context).rtspCameraSettingScreenDesc,
-          style:
-              Theme.of(context).textTheme.bodySmall?.apply(fontSizeFactor: 1.5),
+          style: Theme.of(context).textTheme.bodySmall?.apply(fontSizeFactor: 1.5),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
@@ -369,6 +297,7 @@ class _RTSPCameraSettingsScreenState
           title: Text(S.of(context).enableRtspCamera),
           value: state.isRTSPEnabled,
           onChanged: (value) {
+            dev.log('🔌 [RTSP_SCREEN] Toggling RTSP enabled state: $value');
             ref.read(rtspCameraSettingsProvider.notifier).toggleEnabled(value);
           },
           shape: RoundedRectangleBorder(
@@ -376,91 +305,42 @@ class _RTSPCameraSettingsScreenState
             side: BorderSide(color: Theme.of(context).dividerColor),
           ),
         ),
+        const SizedBox(height: 12),
+        SwitchListTile(
+          title: Text(S.of(context).replaceWorkflowWithStream),
+          subtitle: Text(S.of(context).replaceAppWorkflowWithCameraStream),
+          value: state.replaceWorkflow,
+          onChanged: state.isRTSPEnabled
+              ? (value) {
+                  dev.log('🔄 [RTSP_SCREEN] Toggling workflow replacement: $value');
+                  ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(value);
+                }
+              : null,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(color: Theme.of(context).dividerColor),
+          ),
+        ),
         if (state.isRTSPEnabled) ...[
-          const SizedBox(height: 20),
-SwitchListTile(
-            title: Text("Auto show overlay when stream is live"),
-            subtitle: Text(overlaySettings.isStreamActuallyLive
-                ? "Stream is currently live"
-                : "Stream is currently offline"),
-            value: overlaySettings.autoOverlayEnabled,
-            onChanged: (value) {
-              ref
-                  .read(streamOverlaySettingsProvider.notifier)
-                  .toggleAutoOverlay(value);
-
-              // If enabling auto overlay, immediately check stream status
-              if (value && _streamMonitorService != null) {
-                // Schedule a micro-task to ensure state is updated first
-                Future.microtask(() => _streamMonitorService!.checkAndNotify());
-              }
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(color: Theme.of(context).dividerColor),
-            ),
-          ),
-          // Display current status
-          Container(
-            padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.only(top: 16),
-            decoration: BoxDecoration(
-              color: overlaySettings.shouldShowOverlay
-                  ? Colors.green.withOpacity(0.1)
-                  : Colors.grey.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: overlaySettings.shouldShowOverlay
-                    ? Colors.green
-                    : Colors.grey,
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  overlaySettings.shouldShowOverlay
-                      ? Icons.check_circle
-                      : Icons.info,
-                  color: overlaySettings.shouldShowOverlay
-                      ? Colors.green
-                      : Colors.grey,
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    overlaySettings.shouldShowOverlay
-                        ? "Overlay is active because stream is live"
-                        : overlaySettings.autoOverlayEnabled
-                            ? "Overlay will show automatically when stream becomes live"
-                            : "Overlay is disabled",
-                    style: TextStyle(
-                      color: overlaySettings.shouldShowOverlay
-                          ? Colors.green
-                          : Colors.grey,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
           const SizedBox(height: 20),
           Text(
             S.of(context).addRtspUrl,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.apply(fontSizeFactor: 1.2),
+            style: Theme.of(context).textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
             textAlign: TextAlign.center,
           ),
           const Divider(indent: 50, endIndent: 50),
           const SizedBox(height: 20),
           TextField(
             controller: _urlController,
-            onSubmitted: (_) =>
-                ref.read(rtspCameraSettingsProvider.notifier).updateStream(
-                      isEnabled: true,
-                      url: _urlController.text,
-                    ),
+            onSubmitted: (_) {
+              dev.log('📤 [RTSP_SCREEN] URL submitted: ${_urlController.text}');
+              // ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
+              ref.read(rtspCameraSettingsProvider.notifier).updateStream(
+                    isEnabled: true,
+                    url: _urlController.text,
+                    replaceWorkflow: state.replaceWorkflow,
+                  );
+            },
             decoration: InputDecoration(
               labelText: S.of(context).enterRtspUrl,
               hintText: S.of(context).hintTextRtspUrl,
@@ -472,11 +352,49 @@ SwitchListTile(
           const SizedBox(height: 20),
           ElevatedButton.icon(
             focusNode: _saveButtonFocusNode,
-            onPressed: () =>
+            onPressed: () async {
+              dev.log('💾 [RTSP_SCREEN] Save button pressed with URL: ${_urlController.text}');
+              // First, show a loading indicator to prevent interactions
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              scaffoldMessenger.showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      const SizedBox(width: 12),
+                      Text('S.of(context).processingRequest'),
+                    ],
+                  ),
+                  duration: const Duration(seconds: 1),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+
+              // Wait a moment to ensure UI updates
+              await Future.delayed(const Duration(milliseconds: 100));
+
+              // Only update the stream if the URL has actually changed
+              if (_urlController.text != state.streamUrl) {
+                dev.log('🔄 [RTSP_SCREEN] URL changed, updating stream');
+                // Set state to loading first to prevent UI from accessing controllers
+                // Let any existing YouTube player instances render their fallback widgets
+                await Future.delayed(const Duration(milliseconds: 500));
+
                 ref.read(rtspCameraSettingsProvider.notifier).updateStream(
                       isEnabled: true,
                       url: _urlController.text,
-                    ),
+                      replaceWorkflow: state.replaceWorkflow,
+                    );
+              } else if (state.streamUrl != null && state.streamUrl!.isNotEmpty) {
+                dev.log('📝 [RTSP_SCREEN] URL unchanged, only updating workflow flag');
+                // URL hasn't changed, just update the workflow flag if needed
+                ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
+              }
+            },
             icon: const Icon(Icons.save),
             label: Text(S.of(context).save),
             style: ButtonStyle(
@@ -488,8 +406,7 @@ SwitchListTile(
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              backgroundColor:
-                  MaterialStateProperty.resolveWith<Color>((states) {
+              backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                 if (states.contains(MaterialState.focused)) {
                   return Theme.of(context).primaryColor;
                 }
@@ -501,8 +418,7 @@ SwitchListTile(
                 }
                 return Colors.black;
               }),
-              foregroundColor:
-                  MaterialStateProperty.resolveWith<Color>((states) {
+              foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                 if (states.contains(MaterialState.focused)) {
                   return Colors.white;
                 }
