@@ -6,36 +6,31 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 enum LiveStreamType { rtsp, youtubeLive }
 
 /// Enumeration of stream statuses
-enum LiveStreamStatus {
-  idle,
-  active,
-  error,
-  ended
-}
+enum LiveStreamStatus { idle, active, error, ended }
 
 /// State class for livestream viewer feature
 class LiveStreamViewerState extends Equatable {
   /// Whether livestream is enabled
   final bool isEnabled;
-  
+
   /// URL of the stream
   final String? streamUrl;
-  
+
   /// Type of stream (RTSP or YouTube)
   final LiveStreamType? streamType;
-  
+
   /// Controller for RTSP video
   final VideoController? videoController;
-  
+
   /// Controller for YouTube video
   final YoutubePlayerController? youtubeController;
-  
+
   /// Whether URL is invalid
   final bool isInvalidUrl;
-  
+
   /// Whether to replace the main workflow with the stream
   final bool replaceWorkflow;
-  
+
   /// Current status of the stream
   final LiveStreamStatus streamStatus;
 
@@ -75,12 +70,12 @@ class LiveStreamViewerState extends Equatable {
 
   @override
   List<Object?> get props => [
-    isEnabled,
-    streamUrl,
-    streamType,
-    // Skip controllers in equality check since they're not equatable
-    isInvalidUrl,
-    replaceWorkflow,
-    streamStatus,
-  ];
-} 
+        isEnabled,
+        streamUrl,
+        streamType,
+        // Skip controllers in equality check since they're not equatable
+        isInvalidUrl,
+        replaceWorkflow,
+        streamStatus,
+      ];
+}

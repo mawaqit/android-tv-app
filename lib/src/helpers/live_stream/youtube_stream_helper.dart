@@ -5,7 +5,6 @@ import 'package:mawaqit/src/domain/error/live_stream_exceptions.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-
 /// Helper class to handle YouTube stream operations
 class YouTubeStreamHelper {
   YoutubePlayerController? _controller;

@@ -5,7 +5,6 @@ import 'package:mawaqit/src/domain/error/live_stream_exceptions.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-
 /// Helper class to handle RTSP stream operations
 class RTSPStreamHelper {
   Player? _player;

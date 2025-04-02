@@ -97,7 +97,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     ConnectivityStatus connectivityStatus,
     MosqueManager mosqueManager,
     bool jumuaaDisableInMosque,
-      LiveStreamViewerState streamState,
+    LiveStreamViewerState streamState,
   ) {
     // First check if we should show Hadith screen or black screen
     if (jumuaaDisableInMosque || connectivityStatus == ConnectivityStatus.disconnected) {

@@ -6,16 +6,16 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class SafeYoutubePlayer extends StatefulWidget {
   /// The YouTube player controller to use
   final YoutubePlayerController controller;
-  
+
   /// Optional placeholder to show when controller is unavailable
   final Widget? placeholder;
-  
+
   /// Optional callback when an error occurs
   final Function(dynamic error)? onError;
-  
+
   /// Optional callback when video ends
   final VoidCallback? onEnded;
-  
+
   /// Optional callback when video is ready
   final VoidCallback? onReady;
 
@@ -78,11 +78,11 @@ class _SafeYoutubePlayerState extends State<SafeYoutubePlayer> {
         isDisposed = true;
         log('Controller detected as disposed: $e');
       }
-      
+
       // Don't check isReady here as it might be false for new controllers
       // just check if the controller is not disposed
       _isControllerValid = !isDisposed;
-      
+
       if (!_isControllerValid && widget.onError != null && !_isDisposed) {
         widget.onError!('Controller is disposed or not ready');
       }
@@ -101,12 +101,13 @@ class _SafeYoutubePlayerState extends State<SafeYoutubePlayer> {
     }
 
     if (!_isControllerValid) {
-      return widget.placeholder ?? Center(
-        child: Text(
-          'Video not available',
-          style: TextStyle(color: Colors.grey),
-        ),
-      );
+      return widget.placeholder ??
+          Center(
+            child: Text(
+              'Video not available',
+              style: TextStyle(color: Colors.grey),
+            ),
+          );
     }
 
     // Only create the YoutubePlayer if controller is valid
@@ -121,7 +122,7 @@ class _SafeYoutubePlayerState extends State<SafeYoutubePlayer> {
         ),
         onReady: () {
           if (_isDisposed) return;
-          
+
           log('YouTube player is ready');
           // Make sure the video is playing
           try {
@@ -135,7 +136,7 @@ class _SafeYoutubePlayerState extends State<SafeYoutubePlayer> {
         },
         onEnded: (data) {
           if (_isDisposed) return;
-          
+
           log('YouTube video ended: ${data.videoId}');
           if (widget.onEnded != null) {
             widget.onEnded!();
@@ -148,13 +149,14 @@ class _SafeYoutubePlayerState extends State<SafeYoutubePlayer> {
       if (widget.onError != null && !_isDisposed) {
         widget.onError!(e);
       }
-      
-      return widget.placeholder ?? Center(
-        child: Text(
-          'Video playback error',
-          style: TextStyle(color: Colors.grey),
-        ),
-      );
+
+      return widget.placeholder ??
+          Center(
+            child: Text(
+              'Video playback error',
+              style: TextStyle(color: Colors.grey),
+            ),
+          );
     }
   }
-} 
+}
