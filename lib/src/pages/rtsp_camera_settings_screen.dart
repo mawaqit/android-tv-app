@@ -5,8 +5,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/domain/error/rtsp_expceptions.dart';
-import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_notifier.dart';
-import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_state.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_notifier.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:sizer/sizer.dart';
@@ -46,7 +46,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     super.dispose();
   }
 
-  void _updateUrlController(RTSPCameraSettingsState state) {
+  void _updateUrlController(LiveStreamViewerState state) {
     if (state.streamUrl != null && _urlController.text != state.streamUrl) {
       dev.log('📝 [RTSP_SCREEN] Updating URL controller with: ${state.streamUrl}');
       _urlController.text = state.streamUrl!;
@@ -55,12 +55,12 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
 
   @override
   Widget build(BuildContext context) {
-    final asyncState = ref.watch(rtspCameraSettingsProvider);
-    ref.listen(rtspCameraSettingsProvider, (previous, next) {
+    final asyncState = ref.watch(liveStreamProvider);
+    ref.listen(liveStreamProvider, (previous, next) {
       if (next.hasValue) {
         _updateUrlController(next.value!);
       }
-      if (previous != next && next.hasValue && next.value!.streamStatus == StreamStatus.error) {
+      if (previous != next && next.hasValue && next.value!.streamStatus == LiveStreamStatus.error) {
         dev.log('🚨 [RTSP_SCREEN] Stream error detected');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -78,7 +78,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           ),
         );
       }
-      if (previous != next && !next.isLoading && next.hasValue && !next.hasError && next.value!.isRTSPEnabled) {
+      if (previous != next && !next.isLoading && next.hasValue && !next.hasError && next.value!.isEnabled) {
         final state = next.value!;
 
         // Only show snackbar when URL validation status changes
@@ -119,9 +119,9 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
 
     return asyncState.when(
       data: (state) {
-        dev.log('🏗️ [RTSP_SCREEN] Building screen with state: ${state.isRTSPEnabled ? "Enabled" : "Disabled"}');
+        dev.log('🏗️ [RTSP_SCREEN] Building screen with state: ${state.isEnabled ? "Enabled" : "Disabled"}');
         return Scaffold(
-          appBar: state.isRTSPEnabled
+          appBar: state.isEnabled
               ? AppBar(
                   backgroundColor: Colors.transparent,
                   elevation: 0,
@@ -130,7 +130,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           body: SafeArea(
             child: Stack(
               children: [
-                if (!state.isRTSPEnabled)
+                if (!state.isEnabled)
                   ScreenWithAnimationWidget(
                     animation: "settings",
                     child: SingleChildScrollView(
@@ -243,7 +243,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(rtspCameraSettingsProvider);
+                ref.invalidate(liveStreamProvider);
               },
               child: Text(S.of(context).tryAgain),
             ),
@@ -253,9 +253,9 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     );
   }
 
-  Widget _buildVideoPreview(RTSPCameraSettingsState state) {
+  Widget _buildVideoPreview(LiveStreamViewerState state) {
     dev.log('🎥 [RTSP_SCREEN] Building video preview for type: ${state.streamType}');
-    if (state.streamType == StreamType.youtubeLive && state.youtubeController != null) {
+    if (state.streamType == LiveStreamType.youtubeLive && state.youtubeController != null) {
       return SafeYoutubePlayer(
         controller: state.youtubeController!,
         placeholder: Center(
@@ -275,7 +275,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     return const SizedBox.shrink();
   }
 
-  Widget _buildSettingsContent(RTSPCameraSettingsState state) {
+  Widget _buildSettingsContent(LiveStreamViewerState state) {
     dev.log('⚙️ [RTSP_SCREEN] Building settings content');
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -295,10 +295,10 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         const SizedBox(height: 20),
         SwitchListTile(
           title: Text(S.of(context).enableRtspCamera),
-          value: state.isRTSPEnabled,
+          value: state.isEnabled,
           onChanged: (value) {
             dev.log('🔌 [RTSP_SCREEN] Toggling RTSP enabled state: $value');
-            ref.read(rtspCameraSettingsProvider.notifier).toggleEnabled(value);
+            ref.read(liveStreamProvider.notifier).toggleEnabled(value);
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -310,10 +310,10 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           title: Text('S.of(context).replaceWorkflowWithStream'),
           subtitle: Text('S.of(context).replaceAppWorkflowWithCameraStream'),
           value: state.replaceWorkflow,
-          onChanged: state.isRTSPEnabled
+          onChanged: state.isEnabled
               ? (value) {
                   dev.log('🔄 [RTSP_SCREEN] Toggling workflow replacement: $value');
-                  ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(value);
+                  ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(value);
                 }
               : null,
           shape: RoundedRectangleBorder(
@@ -321,7 +321,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
             side: BorderSide(color: Theme.of(context).dividerColor),
           ),
         ),
-        if (state.isRTSPEnabled) ...[
+        if (state.isEnabled) ...[
           const SizedBox(height: 20),
           Text(
             S.of(context).addRtspUrl,
@@ -335,7 +335,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
             onSubmitted: (_) {
               dev.log('📤 [RTSP_SCREEN] URL submitted: ${_urlController.text}');
               // ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
-              ref.read(rtspCameraSettingsProvider.notifier).updateStream(
+              ref.read(liveStreamProvider.notifier).updateStream(
                     isEnabled: true,
                     url: _urlController.text,
                     replaceWorkflow: state.replaceWorkflow,
@@ -384,7 +384,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                 // Let any existing YouTube player instances render their fallback widgets
                 await Future.delayed(const Duration(milliseconds: 500));
 
-                ref.read(rtspCameraSettingsProvider.notifier).updateStream(
+                ref.read(liveStreamProvider.notifier).updateStream(
                       isEnabled: true,
                       url: _urlController.text,
                       replaceWorkflow: state.replaceWorkflow,
@@ -392,7 +392,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               } else if (state.streamUrl != null && state.streamUrl!.isNotEmpty) {
                 dev.log('📝 [RTSP_SCREEN] URL unchanged, only updating workflow flag');
                 // URL hasn't changed, just update the workflow flag if needed
-                ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
+                ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
               }
             },
             icon: const Icon(Icons.save),

@@ -134,19 +134,33 @@ abstract class ManualUpdateConstant {
   static const String githubAcceptHeader = 'application/vnd.github.v3+json';
 }
 
-abstract class RtspCameraStreamConstant {
-  static const maxRetries = 3;
-  static const retryDelay = Duration(seconds: 2);
-  static const prefKeyEnabled = 'rtsp_enabled';
-  static const prefKeyUrl = 'rtsp_url';
-  static const prefKeyReplaceWorkflow = 'rtsp_replace_workflow';
-  static const String youtubeUrlPattern =
-      r'(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w\-]+\?(?:&amp;)?v=|live\/|embed\/|v\/|shorts\/)?)([\w\-]{11})(?:(?:\?|&amp;)[\w=]*)?';
-
-  static final RegExp youtubeUrlRegex = RegExp(youtubeUrlPattern);
-}
-
 abstract class ScheduleListeningConstant {
   static const startTime = '08:00';
   static const endTime = '20:00';
+}
+
+abstract class LiveStreamConstants {
+  /// Regular expression to match YouTube URLs
+  static final RegExp youtubeUrlRegex = RegExp(
+    r'^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.*',
+    caseSensitive: false,
+  );
+
+  /// Key for the enabled preference in SharedPreferences
+  static const String prefKeyEnabled = 'livestream_enabled';
+
+  /// Key for the URL preference in SharedPreferences
+  static const String prefKeyUrl = 'livestream_url';
+
+  /// Key for the replace workflow preference in SharedPreferences
+  static const String prefKeyReplaceWorkflow = 'livestream_replace_workflow';
+
+  /// Default buffer timeout in milliseconds
+  static const int bufferTimeoutMs = 10000;
+
+  /// Default status check interval in seconds
+  static const int statusCheckIntervalSeconds = 2;
+
+  /// Default stream initialization delay in milliseconds
+  static const int streamInitDelayMs = 200;
 }

@@ -18,8 +18,8 @@ import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
 import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
-import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_notifier.dart';
-import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_state.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_notifier.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
@@ -72,7 +72,7 @@ class OfflineHomeScreen extends ConsumerWidget {
     RelativeSizes.instance.size = MediaQuery.of(context).size;
     final mosqueProvider = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
-    final streamState = ref.watch(rtspCameraSettingsProvider);
+    final streamState = ref.watch(liveStreamProvider);
 
     if (!mosqueProvider.loaded)
       return ErrorScreen(
@@ -83,10 +83,9 @@ class OfflineHomeScreen extends ConsumerWidget {
         tryAgainText: S.of(context).changeMosque,
       );
 
-    // Check if stream should replace the entire workflow
-    final shouldShowStream = streamState.valueOrNull?.isRTSPEnabled == true &&
+    final shouldShowStream = streamState.valueOrNull?.isEnabled == true &&
                            streamState.valueOrNull?.replaceWorkflow == true &&
-                           streamState.valueOrNull?.streamStatus == StreamStatus.active &&
+                           streamState.valueOrNull?.streamStatus == LiveStreamStatus.active &&
                            !streamState.valueOrNull!.isInvalidUrl;
 
     return WillPopScope(
