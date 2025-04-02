@@ -87,7 +87,7 @@ Before submitting a pull request:
 If you need help or have questions:
 - Open an issue
 - Join our community discussions
-- Check the [MAWAQIT Wiki](https://wiki.mawaqit.net/)
+- Check the [MAWAQIT Volunteer](https://volunteer.mawaqit.net)
 
 ## License
 
