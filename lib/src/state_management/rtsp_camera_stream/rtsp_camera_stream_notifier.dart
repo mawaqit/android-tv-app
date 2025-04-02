@@ -19,6 +19,7 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
   Player? _player;
   VideoController? _videoController;
   Timer? _statusCheckTimer;
+  int? _bufferingStartTime;
 
   Future<void> _dispose() async {
     try {
@@ -726,6 +727,10 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
 
     // Update state to reflect error
     if (state.hasValue) {
+      // Check if we should disable workflow replacement
+      final shouldDisableWorkflowReplacement = state.value!.replaceWorkflow;
+
+      // Update state with error status
       state = AsyncValue.data(
         state.value!.copyWith(
           streamStatus: StreamStatus.error,
@@ -733,8 +738,8 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       );
       dev.log('🔄 [RTSP_NOTIFIER] Updated state for stream error');
 
-      // If replaceWorkflow is enabled, disable it to return to normal workflow
-      if (state.value!.replaceWorkflow) {
+      // If replaceWorkflow is enabled, disable it immediately to return to normal workflow
+      if (shouldDisableWorkflowReplacement) {
         dev.log('🔄 [RTSP_NOTIFIER] Disabling workflow replacement due to stream error');
         await toggleReplaceWorkflow(false);
       }
@@ -746,6 +751,10 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
 
     // Update state to reflect ended stream
     if (state.hasValue) {
+      // Check if we should disable workflow replacement
+      final shouldDisableWorkflowReplacement = state.value!.replaceWorkflow;
+
+      // Update state with ended status
       state = AsyncValue.data(
         state.value!.copyWith(
           streamStatus: StreamStatus.ended,
@@ -753,8 +762,8 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
       );
       dev.log('🔄 [RTSP_NOTIFIER] Updated state for stream ended');
 
-      // If replaceWorkflow is enabled, disable it to return to normal workflow
-      if (state.value!.replaceWorkflow) {
+      // If replaceWorkflow is enabled, disable it immediately to return to normal workflow
+      if (shouldDisableWorkflowReplacement) {
         dev.log('🔄 [RTSP_NOTIFIER] Disabling workflow replacement due to stream ended');
         await toggleReplaceWorkflow(false);
       }
@@ -788,50 +797,98 @@ class RTSPCameraSettingsNotifier extends AutoDisposeAsyncNotifier<RTSPCameraSett
     final currentState = state.value!;
 
     if (currentState.streamType == StreamType.youtubeLive && currentState.youtubeController != null) {
-      final playerValue = currentState.youtubeController!.value;
-      final playerState = playerValue.playerState;
+      try {
+        final playerValue = currentState.youtubeController!.value;
+        final playerState = playerValue.playerState;
 
-      // Only consider stream ended if player is fully initialized AND ended state
-      if (playerValue.metaData.videoId.isNotEmpty && playerValue.isReady && playerState == PlayerState.ended) {
-        dev.log('🏁 [RTSP_NOTIFIER] YouTube stream ended');
-        await _handleStreamEnded();
-      }
-      // Handle errors with error code
-      else if (playerValue.hasError || (playerValue.errorCode != 0)) {
-        dev.log('⚠️ [RTSP_NOTIFIER] YouTube error detected: ${playerValue.errorCode}');
-        await _handleStreamError('YouTube error: ${playerValue.errorCode}');
-      }
-      // If the player is playing, update status to active
-      else if (playerState == PlayerState.playing) {
-        dev.log('▶️ [RTSP_NOTIFIER] YouTube stream is playing');
-        _updateStreamStatus(StreamStatus.active);
+        // Only consider stream ended if player is fully initialized AND ended state
+        if (playerValue.metaData.videoId.isNotEmpty && playerValue.isReady && playerState == PlayerState.ended) {
+          dev.log('🏁 [RTSP_NOTIFIER] YouTube stream ended');
+          await _handleStreamEnded();
+        }
+        // Handle errors with error code
+        else if (playerValue.hasError || (playerValue.errorCode != 0)) {
+          dev.log('⚠️ [RTSP_NOTIFIER] YouTube error detected: ${playerValue.errorCode}');
+          await _handleStreamError('YouTube error: ${playerValue.errorCode}');
+        }
+        // If the player is playing, update status to active
+        else if (playerState == PlayerState.playing) {
+          dev.log('▶️ [RTSP_NOTIFIER] YouTube stream is playing');
+          _updateStreamStatus(StreamStatus.active);
+        }
+        // If the player is buffering for too long, consider it an error
+        else if (playerState == PlayerState.buffering) {
+          // If we're in replaceWorkflow mode, we can't afford long buffering times
+          if (currentState.replaceWorkflow) {
+            // Check if player has been buffering too long - we'll keep track with a timestamp
+            final timestamp = DateTime.now().millisecondsSinceEpoch;
+            if (_bufferingStartTime == null) {
+              _bufferingStartTime = timestamp;
+            } else if (timestamp - _bufferingStartTime! > 10000) {
+              // 10 seconds threshold
+              dev.log('⚠️ [RTSP_NOTIFIER] YouTube buffering timeout');
+              await _handleStreamError('YouTube buffering timeout');
+              _bufferingStartTime = null;
+            }
+          }
+        } else {
+          // Reset buffering timestamp if we're not buffering
+          _bufferingStartTime = null;
+        }
+      } catch (e) {
+        dev.log('⚠️ [RTSP_NOTIFIER] Error checking YouTube stream status: $e');
+        // Treat exception as a stream error
+        await _handleStreamError('YouTube status check error: $e');
       }
     } else if (currentState.streamType == StreamType.rtsp && currentState.videoController != null) {
       try {
         // Check RTSP stream status
         final isPlaying = currentState.videoController!.player.state.playing;
-        final hasError = await currentState.videoController!.player.stream.error.first.timeout(
-          const Duration(seconds: 10),
-          onTimeout: () => '',
-        );
-
-        if (hasError.isNotEmpty) {
-          dev.log('⚠️ [RTSP_NOTIFIER] RTSP error detected');
-          await _handleStreamError(hasError);
-        } else if (!isPlaying) {
-          // Check if stream is just paused or truly ended
-          final isEnded = await currentState.videoController!.player.stream.completed.first.timeout(
-            const Duration(seconds: 10),
-            onTimeout: () => false,
+        try {
+          final hasError = await currentState.videoController!.player.stream.error.first.timeout(
+            const Duration(seconds: 2),
+            onTimeout: () => '',
           );
 
-          if (isEnded) {
-            dev.log('🏁 [RTSP_NOTIFIER] RTSP stream ended');
-            await _handleStreamEnded();
+          if (hasError.isNotEmpty) {
+            dev.log('⚠️ [RTSP_NOTIFIER] RTSP error detected');
+            await _handleStreamError(hasError);
+            return;
+          }
+        } catch (e) {
+          // If we can't check for errors, it's likely the player is in a bad state
+          dev.log('⚠️ [RTSP_NOTIFIER] Error checking RTSP errors: $e');
+          if (currentState.replaceWorkflow) {
+            await _handleStreamError('RTSP status check error: $e');
+          }
+        }
+
+        if (!isPlaying) {
+          // Check if stream is just paused or truly ended
+          try {
+            final isEnded = await currentState.videoController!.player.stream.completed.first.timeout(
+              const Duration(seconds: 2),
+              onTimeout: () => false,
+            );
+
+            if (isEnded) {
+              dev.log('🏁 [RTSP_NOTIFIER] RTSP stream ended');
+              await _handleStreamEnded();
+            }
+          } catch (e) {
+            // If we can't check completion status, it's likely the player is in a bad state
+            dev.log('⚠️ [RTSP_NOTIFIER] Error checking RTSP completion: $e');
+            if (currentState.replaceWorkflow) {
+              await _handleStreamError('RTSP completion check error: $e');
+            }
           }
         }
       } catch (e) {
         dev.log('⚠️ [RTSP_NOTIFIER] Error checking RTSP stream status: $e');
+        // If in workflow replacement mode, treat any exception as a critical error
+        if (currentState.replaceWorkflow) {
+          await _handleStreamError('RTSP status check error: $e');
+        }
       }
     }
   }
