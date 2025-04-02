@@ -40,11 +40,21 @@ void screenOnCallback(int id) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    if (TimeShiftManager().isLauncherInstalled) {
-      await ScreenControl.toggleBoxScreenOn();
-    } else {
-      await ScreenControl.toggleTabletScreenOn();
-    }
+    await ScreenControl.toggleBoxScreenOn();
+
+    logger.i('Screen turned ON at ${DateTime.now()}');
+  } catch (e) {
+    logger.e('Screen ON alarm callback error: $e');
+  }
+}
+
+@pragma('vm:entry-point')
+void screenOnTabletCallback(int id) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await ScreenControl.toggleTabletScreenOn();
+
     logger.i('Screen turned ON at ${DateTime.now()}');
   } catch (e) {
     logger.e('Screen ON alarm callback error: $e');
@@ -57,11 +67,21 @@ void screenOffCallback(int id) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    if (TimeShiftManager().isLauncherInstalled) {
-      await ScreenControl.toggleBoxScreenOff();
-    } else {
-      await ScreenControl.toggleTabletScreenOff();
-    }
+    await ScreenControl.toggleBoxScreenOff();
+
+    logger.i('Screen turned OFF at ${DateTime.now()}');
+  } catch (e) {
+    logger.e('Screen OFF alarm callback error: $e');
+  }
+}
+
+@pragma('vm:entry-point')
+void screenOffTabletCallback(int id) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await ScreenControl.toggleTabletScreenOff();
+
     logger.i('Screen turned OFF at ${DateTime.now()}');
   } catch (e) {
     logger.e('Screen OFF alarm callback error: $e');
@@ -133,7 +153,7 @@ class WorkManagerService {
 
   // Screen task using AlarmManager
   @pragma('vm:entry-point')
-  static Future<void> registerScreenTask(String uniqueId, String taskName, Duration initialDelay) async {
+  static Future<void> registerScreenTask(String uniqueId, String taskName, Duration initialDelay, bool isBox) async {
     try {
       // Convert uniqueId to integer ID for AlarmManager
       final int alarmId = ('screen_$uniqueId').hashCode;
@@ -148,7 +168,9 @@ class WorkManagerService {
       logger.i('Scheduling $taskName for: ${scheduledTime.toString()}');
 
       // Choose the appropriate callback based on task name
-      final callback = taskName == 'screenOn' ? screenOnCallback : screenOffCallback;
+      final callback = taskName == 'screenOn'
+          ? (isBox ? screenOnCallback : screenOnTabletCallback)
+          : (isBox ? screenOffCallback : screenOffTabletCallback);
 
       // Schedule alarm
       final bool success = await AndroidAlarmManager.oneShotAt(

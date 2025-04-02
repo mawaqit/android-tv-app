@@ -74,13 +74,12 @@ class ToggleScreenFeature {
         }
 
         final beforeFajrTime = fajrDateTime.subtract(Duration(minutes: beforeDelayMinutes));
+        final isBox = TimeShiftManager().isLauncherInstalled;
+
         if (beforeFajrTime.isAfter(now)) {
           final uniqueIdOn = 'screenOn_fajr_${DateTime.now().millisecondsSinceEpoch}';
           await WorkManagerService.registerScreenTask(
-            uniqueIdOn,
-            'screenOn',
-            beforeFajrTime.difference(now),
-          );
+              uniqueIdOn, 'screenOn', beforeFajrTime.difference(now), isBox);
         }
 
         // Isha prayer - SCREEN OFF
@@ -97,11 +96,9 @@ class ToggleScreenFeature {
         // Schedule screen OFF after Isha
         final afterIshaTime = ishaDateTime.add(Duration(minutes: afterDelayMinutes));
         final uniqueIdOff = 'screenOff_isha_${DateTime.now().millisecondsSinceEpoch}';
+
         await WorkManagerService.registerScreenTask(
-          uniqueIdOff,
-          'screenOff',
-          afterIshaTime.difference(now),
-        );
+            uniqueIdOff, 'screenOff', afterIshaTime.difference(now), isBox);
       } else {
         for (String prayerTime in prayerTimes) {
           await _scheduleForPrayer(
@@ -150,7 +147,6 @@ class ToggleScreenFeature {
     final lastEventDate = await getLastEventDate();
     final today = AppDateTime.now();
     final isFeatureActive = await getToggleFeatureState();
-
     final shouldReschedule = lastEventDate != null && lastEventDate.day != today.day && isFeatureActive;
     return shouldReschedule;
   }
@@ -201,23 +197,18 @@ class ToggleScreenFeature {
       final beforeScheduleTime = scheduledDateTime.subtract(Duration(minutes: beforeDelayMinutes));
       if (beforeScheduleTime.isAfter(now)) {
         final uniqueIdOn = 'screenOn_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
+        final isBox = TimeShiftManager().isLauncherInstalled;
 
         await WorkManagerService.registerScreenTask(
-          uniqueIdOn,
-          'screenOn',
-          beforeScheduleTime.difference(now),
-        );
+            uniqueIdOn, 'screenOn', beforeScheduleTime.difference(now), isBox);
       }
 
       // Schedule screen off
       final afterScheduleTime = scheduledDateTime.add(Duration(minutes: afterDelayMinutes));
       final uniqueIdOff = 'screenOff_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
-
+      final isBox = TimeShiftManager().isLauncherInstalled;
       await WorkManagerService.registerScreenTask(
-        uniqueIdOff,
-        'screenOff',
-        afterScheduleTime.difference(now),
-      );
+          uniqueIdOff, 'screenOff', afterScheduleTime.difference(now), isBox);
     } catch (e) {
       logger.e('Error scheduling prayer time: $e');
       throw SchedulePrayerTimeException(e.toString());
