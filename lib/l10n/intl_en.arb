@@ -429,5 +429,8 @@
   "duaBetweenAdhanIqamah": "Supplication (Du'a) is not rejected between the Adhan and Iqamah.",
   "processingRequest": "Processing request...",
   "loadingStream": "Loading stream...",
-  "rtspUrlHint": "Enter RTSP URL or YouTube link"
+  "rtspUrlHint": "Enter RTSP URL or YouTube link",
+  "replaceWorkflowWithStream": "Replace Prayer Workflow with Stream",
+  "replaceAppWorkflowWithCameraStream": "Replace the prayer flow with camera stream",
+  "streamError": "An error occurred while streaming"
 }

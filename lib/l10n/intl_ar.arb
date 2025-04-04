@@ -398,5 +398,9 @@
   "ishaAndFajrOnly": "فقط صلاتي الفجر و العشاء",
   "minutesBeforeFajrPrayer": "دقائق قبل وقت صلاة الفجر",
   "minutesAfterIshaPrayer": "دقائق بعد وقت صلاة العشاء",
-  "initializingAutoReading": "جاري التهيئة..."
+  "initializingAutoReading": "جاري التهيئة...",
+  "processingRequest": "جاري معالجة الطلب...",
+  "replaceWorkflowWithStream": "استبدال سير عمل الصلاة بالبث المباشر",
+  "replaceAppWorkflowWithCameraStream": "استبدال سير عمل الصلاة ببث الكاميرا",
+  "streamError": "حدث خطأ أثناء البث"
 }

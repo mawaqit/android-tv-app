@@ -65,7 +65,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'S.of(context).streamError',
+              S.of(context).streamError,
               style: TextStyle(fontSize: 16.sp),
             ),
             backgroundColor: Colors.red,
@@ -307,8 +307,8 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         ),
         const SizedBox(height: 12),
         SwitchListTile(
-          title: Text('S.of(context).replaceWorkflowWithStream'),
-          subtitle: Text('S.of(context).replaceAppWorkflowWithCameraStream'),
+          title: Text(S.of(context).replaceWorkflowWithStream),
+          subtitle: Text(S.of(context).replaceAppWorkflowWithCameraStream),
           value: state.replaceWorkflow,
           onChanged: state.isEnabled
               ? (value) {
@@ -366,7 +366,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
                       const SizedBox(width: 12),
-                      Text('S.of(context).processingRequest'),
+                      Text(S.of(context).processingRequest),
                     ],
                   ),
                   duration: const Duration(seconds: 1),
