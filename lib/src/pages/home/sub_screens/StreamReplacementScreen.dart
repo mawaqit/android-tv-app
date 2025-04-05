@@ -22,9 +22,6 @@ class StreamReplacementScreen extends ConsumerWidget {
 
     return streamState.when(
       data: (state) {
-        // When this widget is shown directly (as a complete replacement),
-        // we don't need these checks anymore as they're handled by OfflineHomeScreen
-        // but we'll keep a minimal check for safety
         if (!state.isEnabled || !state.replaceWorkflow || state.streamStatus != LiveStreamStatus.active) {
           return const SizedBox.shrink();
         }
@@ -89,21 +86,24 @@ class StreamReplacementScreen extends ConsumerWidget {
           // Add hamburger menu to open drawer
           Align(
             alignment: AlignmentDirectional.topStart,
-            child: GestureDetector(
-              onTap: () {
-                scaffoldKey.currentState?.openDrawer();
-              },
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Icon(
-                  Icons.menu,
-                  color: Colors.white,
-                  size: 8.w,
-                  shadows: kHomeTextShadow,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: GestureDetector(
+                onTap: () {
+                  scaffoldKey.currentState?.openDrawer();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                    size: 8.w,
+                    shadows: kHomeTextShadow,
+                  ),
                 ),
               ),
             ),
