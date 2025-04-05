@@ -23,6 +23,7 @@ class RTSPCameraSettingsScreen extends ConsumerStatefulWidget {
 class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScreen> {
   final TextEditingController _urlController = TextEditingController();
   final FocusNode _saveButtonFocusNode = FocusNode();
+  final FocusNode _replaceWorkflowWithStreamButtonFocusNode = FocusNode();
   late StreamSubscription<bool> keyboardSubscription;
 
   @override
@@ -33,7 +34,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         dev.log('⌨️ [RTSP_SCREEN] Keyboard hidden, focusing save button');
-        FocusScope.of(context).requestFocus(_saveButtonFocusNode);
+        FocusScope.of(context).requestFocus(_replaceWorkflowWithStreamButtonFocusNode);
       }
     });
   }
@@ -42,6 +43,8 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
   void dispose() {
     dev.log('🧹 [RTSP_SCREEN] Disposing RTSP Camera Settings Screen');
     _urlController.dispose();
+    _saveButtonFocusNode.dispose();
+    _replaceWorkflowWithStreamButtonFocusNode.dispose();
     keyboardSubscription.cancel();
     super.dispose();
   }
@@ -307,6 +310,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         ),
         const SizedBox(height: 12),
         SwitchListTile(
+          focusNode: _replaceWorkflowWithStreamButtonFocusNode,
           title: Text(S.of(context).replaceWorkflowWithStream),
           subtitle: Text(S.of(context).replaceAppWorkflowWithCameraStream),
           value: state.replaceWorkflow,
@@ -380,8 +384,6 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               // Only update the stream if the URL has actually changed
               if (_urlController.text != state.streamUrl) {
                 dev.log('🔄 [RTSP_SCREEN] URL changed, updating stream');
-                // Set state to loading first to prevent UI from accessing controllers
-                // Let any existing YouTube player instances render their fallback widgets
                 await Future.delayed(const Duration(milliseconds: 500));
 
                 ref.read(liveStreamProvider.notifier).updateStream(
