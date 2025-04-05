@@ -10,7 +10,6 @@ import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:sizer/sizer.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:mawaqit/src/widgets/safe_youtube_player.dart';
 
 class RTSPCameraSettingsScreen extends ConsumerStatefulWidget {
@@ -299,6 +298,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         SwitchListTile(
           title: Text(S.of(context).enableRtspCamera),
           value: state.isEnabled,
+          autofocus: true,
           onChanged: (value) {
             dev.log('🔌 [RTSP_SCREEN] Toggling RTSP enabled state: $value');
             ref.read(liveStreamProvider.notifier).toggleEnabled(value);
