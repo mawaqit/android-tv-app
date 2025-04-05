@@ -35,6 +35,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
+import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
 import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
@@ -59,7 +60,8 @@ Future<void> main() async {
 
         // Initialize Hive first
         Hive.init(directory.path);
-        await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+        await FastCachedImageConfig.init(
+            subDir: directory.path, clearCacheAfter: const Duration(days: 60));
 
         // Check and request permissions
         await _initializePermissions();
@@ -84,9 +86,12 @@ Future<void> main() async {
   );
 }
 
-Future<void> _handleOverlayPermissions(String deviceModel, bool isRooted) async {
-  final methodChannel = MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
-  final isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
+Future<void> _handleOverlayPermissions(
+    String deviceModel, bool isRooted) async {
+  final methodChannel =
+      MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
+  final isPermissionGranted =
+      await NotificationOverlay.checkOverlayPermission();
 
   if (RegExp(r'ONVO.*').hasMatch(deviceModel)) {
     await methodChannel.invokeMethod("grantOnvoOverlayPermission");
@@ -105,7 +110,8 @@ Future<void> _handleOverlayPermissions(String deviceModel, bool isRooted) async 
 
 Future<void> _initializePermissions() async {
   final isRooted =
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
+          .invokeMethod(TurnOnOffTvConstant.kCheckRoot);
   final deviceModel = await _getDeviceModel();
   await _handleOverlayPermissions(deviceModel, isRooted);
   await UnifiedBackgroundService.initializeService();
@@ -137,8 +143,7 @@ Future<void> checkAndRequestExactAlarmPermission() async {
 
 Future<void> _initializeServices() async {
   tz.initializeTimeZones();
-  await ToggleScreenFeature.initialize();
-
+  await WorkManagerService.initialize();
   // Register Hive adapters
   Hive.registerAdapter(SurahModelAdapter());
   Hive.registerAdapter(ReciterModelAdapter());
@@ -153,7 +158,8 @@ class MyApp extends riverpod.ConsumerStatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends riverpod.ConsumerState<MyApp>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -181,15 +187,23 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
         ChangeNotifierProvider(create: (context) => MosqueManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => FeatureManager(context)),
-        ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
-        StreamProvider(create: (context) => Api.updateUserStatusStream(), initialData: 0, lazy: false),
+        ChangeNotifierProvider(
+            create: (context) => UserPreferencesManager(), lazy: false),
+        StreamProvider(
+            create: (context) => Api.updateUserStatusStream(),
+            initialData: 0,
+            lazy: false),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) => ConnectivityService().connectionStatusController.stream.map((event) {
-              if (event == ConnectivityStatus.Wifi || event == ConnectivityStatus.Cellular) {
+            create: (context) => ConnectivityService()
+                .connectionStatusController
+                .stream
+                .map((event) {
+              if (event == ConnectivityStatus.Wifi ||
+                  event == ConnectivityStatus.Cellular) {
                 //todo check actual internet
               }
 
@@ -198,12 +212,15 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
             child: Consumer<ThemeNotifier>(
               builder: (context, theme, _) {
                 return Shortcuts(
-                  shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
+                  shortcuts: {
+                    SingleActivator(LogicalKeyboardKey.select): ActivateIntent()
+                  },
                   child: MaterialApp(
                     title: kAppName,
                     themeMode: theme.mode,
                     localeResolutionCallback: (locale, supportedLocales) {
-                      if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
+                      if (locale?.languageCode.toLowerCase() == 'ba')
+                        return Locale('en');
 
                       return locale;
                     },

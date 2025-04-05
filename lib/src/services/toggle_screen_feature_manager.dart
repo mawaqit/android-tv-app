@@ -8,6 +8,7 @@ import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
+import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
 import 'package:screen_control/screen_control.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,53 +42,25 @@ class TimerScheduleInfo {
   }
 }
 
-@pragma('vm:entry-point') // Important for background execution
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    try {
-      final timeShiftManager = TimeShiftManager();
-
-      switch (task) {
-        case 'screenOn':
-          if (timeShiftManager.isLauncherInstalled) {
-            await ScreenControl.toggleBoxScreenOn();
-          } else {
-            await ScreenControl.toggleTabletScreenOn();
-          }
-          break;
-        case 'screenOff':
-          if (timeShiftManager.isLauncherInstalled) {
-            await ScreenControl.toggleBoxScreenOff();
-          } else {
-            await ScreenControl.toggleTabletScreenOff();
-          }
-          break;
-      }
-      return true;
-    } catch (e) {
-      return false;
-    }
-  });
-}
-
 class ToggleScreenFeature {
   static final ToggleScreenFeature _instance = ToggleScreenFeature._internal();
 
   factory ToggleScreenFeature() => _instance;
 
   ToggleScreenFeature._internal();
-  static Future<void> initialize() async {
-    await Workmanager().initialize(callbackDispatcher, isInDebugMode: true // Set to false in production
-        );
-  }
+  static Future<void> initialize() async {}
 
-  static const String _scheduledTimersKey = TurnOnOffTvConstant.kScheduledTimersKey;
+  static const String _scheduledTimersKey =
+      TurnOnOffTvConstant.kScheduledTimersKey;
   static final Map<String, List<Timer>> _scheduledTimers = {};
   static const String _scheduledInfoKey = 'scheduled_info_key';
   static List<TimerScheduleInfo> _scheduleInfoList = [];
 
   static Future<void> scheduleToggleScreen(
-      bool isfajrIshaonly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
+      bool isfajrIshaonly,
+      List<String> timeStrings,
+      int beforeDelayMinutes,
+      int afterDelayMinutes) async {
     try {
       await cancelAllScheduledTimers();
 
@@ -124,7 +97,6 @@ class ToggleScreenFeature {
       }
 
       await Future.wait([
-        saveScheduledEventsToLocale(),
         toggleFeatureState(true),
         setLastEventDate(now),
         saveBeforeDelayMinutes(beforeDelayMinutes),
@@ -161,7 +133,9 @@ class ToggleScreenFeature {
     final today = AppDateTime.now();
     final isFeatureActive = await getToggleFeatureState();
 
-    final shouldReschedule = lastEventDate != null && lastEventDate.day != today.day && isFeatureActive;
+    final shouldReschedule = lastEventDate != null &&
+        lastEventDate.day != today.day &&
+        isFeatureActive;
     return shouldReschedule;
   }
 
@@ -183,8 +157,6 @@ class ToggleScreenFeature {
           minuteBefore,
           minuteAfter,
         );
-
-        await saveScheduledEventsToLocale();
       }
     } catch (e) {
       logger.e('Failed to handle daily rescheduling: $e');
@@ -204,66 +176,40 @@ class ToggleScreenFeature {
       final hour = int.parse(parts[0]);
       final minute = int.parse(parts[1]);
 
-      DateTime scheduledDateTime = DateTime(now.year, now.month, now.day, hour, minute);
+      DateTime scheduledDateTime =
+          DateTime(now.year, now.month, now.day, hour, minute);
       if (scheduledDateTime.isBefore(now)) {
         scheduledDateTime = scheduledDateTime.add(Duration(days: 1));
       }
 
       // Schedule screen on
-      final beforeScheduleTime = scheduledDateTime.subtract(Duration(minutes: beforeDelayMinutes));
+      final beforeScheduleTime =
+          scheduledDateTime.subtract(Duration(minutes: beforeDelayMinutes));
       if (beforeScheduleTime.isAfter(now)) {
-        final uniqueIdOn = 'screenOn_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
+        final uniqueIdOn =
+            'screenOn_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
 
-        await Workmanager().registerOneOffTask(uniqueIdOn, 'screenOn',
-            initialDelay: beforeScheduleTime.difference(now),
-            constraints: Constraints(
-                networkType: NetworkType.not_required,
-                requiresBatteryNotLow: false,
-                requiresCharging: false,
-                requiresDeviceIdle: false,
-                requiresStorageNotLow: false));
+        await WorkManagerService.registerScreenTask(
+          uniqueIdOn,
+          'screenOn',
+          beforeScheduleTime.difference(now),
+        );
       }
 
       // Schedule screen off
-      final afterScheduleTime = scheduledDateTime.add(Duration(minutes: afterDelayMinutes));
-      final uniqueIdOff = 'screenOff_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
+      final afterScheduleTime =
+          scheduledDateTime.add(Duration(minutes: afterDelayMinutes));
+      final uniqueIdOff =
+          'screenOff_${timeString}_${DateTime.now().millisecondsSinceEpoch}';
 
-      await Workmanager().registerOneOffTask(uniqueIdOff, 'screenOff',
-          initialDelay: afterScheduleTime.difference(now),
-          constraints: Constraints(
-              networkType: NetworkType.not_required,
-              requiresBatteryNotLow: false,
-              requiresCharging: false,
-              requiresDeviceIdle: false,
-              requiresStorageNotLow: false));
+      await WorkManagerService.registerScreenTask(
+        uniqueIdOff,
+        'screenOff',
+        afterScheduleTime.difference(now),
+      );
     } catch (e) {
       logger.e('Error scheduling prayer time: $e');
       throw SchedulePrayerTimeException(e.toString());
-    }
-  }
-
-  static Future<void> loadScheduledTimersFromPrefs() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final timersJson = prefs.getString(_scheduledTimersKey);
-
-      if (timersJson != null) {
-        final timersMap = json.decode(timersJson) as Map<String, dynamic>;
-
-        timersMap.forEach((timeString, timerDataList) {
-          _scheduledTimers[timeString] = [];
-          for (final timerData in timerDataList) {
-            final tick = timerData['tick'] as int;
-            final timer = Timer(Duration(milliseconds: tick), () {});
-            _scheduledTimers[timeString]!.add(timer);
-          }
-        });
-      } else {
-        logger.d('No stored timers found');
-      }
-    } catch (e) {
-      logger.e('Error loading scheduled timers from preferences: $e');
-      throw LoadScheduledTimersException(e.toString());
     }
   }
 
@@ -274,7 +220,8 @@ class ToggleScreenFeature {
 
   static Future<bool> getToggleFeatureState() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final state = prefs.getBool(TurnOnOffTvConstant.kActivateToggleFeature) ?? false;
+    final state =
+        prefs.getBool(TurnOnOffTvConstant.kActivateToggleFeature) ?? false;
     return state;
   }
 
@@ -292,41 +239,22 @@ class ToggleScreenFeature {
 
   static Future<bool> checkEventsScheduled() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final isEventsSet = prefs.getBool(TurnOnOffTvConstant.kIsEventsSet) ?? false;
+    final isEventsSet =
+        prefs.getBool(TurnOnOffTvConstant.kIsEventsSet) ?? false;
     logger.d("value$isEventsSet");
     return isEventsSet;
   }
 
-  static Future<void> saveScheduledEventsToLocale() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    final scheduleData = _scheduleInfoList.map((info) => info.toJson()).toList();
-    await prefs.setString(_scheduledInfoKey, json.encode(scheduleData));
-
-    final Map<String, dynamic> timersMap = {};
-    _scheduledTimers.forEach((key, value) {
-      timersMap[key] = value.map((timer) {
-        return {
-          'isActive': timer.isActive,
-          'tick': timer.tick,
-        };
-      }).toList();
-    });
-
-    await prefs.setString(TurnOnOffTvConstant.kScheduledTimersKey, json.encode(timersMap));
-    await prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, true);
-
-    logger.d("Saving into local");
-  }
-
   static Future<void> setLastEventDate(DateTime date) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(TurnOnOffTvConstant.kLastEventDate, date.toIso8601String());
+    await prefs.setString(
+        TurnOnOffTvConstant.kLastEventDate, date.toIso8601String());
   }
 
   static Future<DateTime?> getLastEventDate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final lastEventDateString = prefs.getString(TurnOnOffTvConstant.kLastEventDate);
+    final lastEventDateString =
+        prefs.getString(TurnOnOffTvConstant.kLastEventDate);
     if (lastEventDateString != null) {
       return DateTime.parse(lastEventDateString);
     } else {
