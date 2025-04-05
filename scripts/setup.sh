@@ -19,8 +19,20 @@ if [ "$is_checkout" = "1" ]; then
 fi
 EOL
 
+# Create post-commit hook
+cat > .git/hooks/post-commit << 'EOL'
+#!/bin/bash
+
+echo "Formatting code after commit..."
+./scripts/format.sh
+
+echo "Format completed!"
+EOL
+
 # Make hooks executable
 chmod +x .git/hooks/*
 
 echo "Setup completed successfully!"
-echo "Git hooks are now configured to run build_runner after checkouts."
+echo "Git hooks are now configured to:"
+echo " - Run build_runner after checkouts"
+echo " - Run code formatter after commits"

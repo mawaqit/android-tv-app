@@ -43,6 +43,16 @@ The project uses `build_runner` for code generation. There are two ways to handl
    ```
    This script runs `build_runner` with the `--delete-conflicting-outputs` flag to handle any conflicts.
 
+### Code Formatting
+
+To ensure consistent code style across the project, you can use the formatting script:
+
+```bash
+./scripts/format.sh
+```
+
+This script will format your code according to the project's standards and run the build_runner if needed. It's recommended to run this before submitting a pull request.
+
 ### Making Changes
 
 1. Create a new branch for your feature/fix:
@@ -64,6 +74,33 @@ The project uses `build_runner` for code generation. There are two ways to handl
    ```
 
 4. Create a Pull Request from your branch to the main repository.
+
+## Testing and Deployment
+
+### Installing APK on Android TV Box
+
+To install the APK specifically for user 0 (primary user) on an Android TV Box:
+
+```bash
+./scripts/install_apk.sh /path/to/your-app.apk
+```
+
+This script will:
+- Verify ADB is installed and a device is connected
+- Install the APK specifically for user 0 (primary user)
+- Display the users on the device
+
+**Additional Notes for APK Installation**:
+
+- To list all users and their corresponding IDs on your device:
+  ```bash
+  adb shell pm list users
+  ```
+
+- For system apps that were previously uninstalled for a specific user:
+  ```bash
+  adb shell cmd package install-existing com.example.app
+  ```
 
 ## Code Style
 
