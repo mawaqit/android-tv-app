@@ -103,7 +103,7 @@ dependencies:
   rive_splash_screen: ^0.1.1
   lottie: ^2.3.2
   flutter_svg: ^2.0.5
-  dots_indicator: ^3.0.0
+  dots_indicator: 3.0.0
   sizer: ^2.0.15
   timeago_flutter: ^3.4.0
   timezone:
