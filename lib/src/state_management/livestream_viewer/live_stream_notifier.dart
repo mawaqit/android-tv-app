@@ -24,6 +24,9 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
   /// Timer for checking stream status
   Timer? _statusCheckTimer;
 
+  /// Timer for stream reconnection attempts
+  Timer? _reconnectTimer;
+
   /// Timestamp for buffering start time
   int? _bufferingStartTime;
 
@@ -35,6 +38,7 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
     ref.onDispose(() async {
       dev.log('🧹 [LIVE_STREAM] Provider disposed, cleaning up');
       _stopStatusCheckTimer();
+      _stopReconnectTimer();
       await _dispose();
     });
 
@@ -411,6 +415,7 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
     _statusCheckTimer = Timer.periodic(
       const Duration(seconds: LiveStreamConstants.statusCheckIntervalSeconds),
       (timer) {
+        dev.log('⏱️ [LIVE_STREAM] Starting periodic statusCheckIntervalSeconds');
         if (state.hasValue && state.value!.isEnabled) {
           checkStreamStatus();
         }
@@ -423,6 +428,83 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
     dev.log('⏱️ [LIVE_STREAM] Stopping periodic stream status check');
     _statusCheckTimer?.cancel();
     _statusCheckTimer = null;
+  }
+
+  /// Start timer for stream reconnection attempts
+  void _startReconnectTimer() {
+    dev.log('⏱️ [LIVE_STREAM] Starting periodic reconnection attempts');
+    _reconnectTimer?.cancel();
+    _reconnectTimer = Timer.periodic(
+      const Duration(seconds: LiveStreamConstants.streamReconnectIntervalSeconds),
+      (timer) async {
+        if (state.hasValue && state.value!.isEnabled &&
+            (state.value!.streamStatus == LiveStreamStatus.ended ||
+             state.value!.streamStatus == LiveStreamStatus.error)) {
+          dev.log('🔄 [LIVE_STREAM] Attempting to reconnect to stream');
+          await _attemptStreamReconnection();
+        } else {
+          _stopReconnectTimer();
+        }
+      },
+    );
+  }
+
+  /// Stop timer for stream reconnection attempts
+  void _stopReconnectTimer() {
+    dev.log('⏱️ [LIVE_STREAM] Stopping reconnection timer');
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+  }
+
+  /// Attempt to reconnect to the stream
+  Future<void> _attemptStreamReconnection() async {
+    if (!state.hasValue || !state.value!.isEnabled) return;
+
+    final currentState = state.value!;
+    final url = currentState.streamUrl;
+
+    if (url == null || url.isEmpty) return;
+
+    dev.log('🔄 [LIVE_STREAM] Attempting reconnection to: $url');
+
+    try {
+      // Temporarily mark status as active to prevent recursive handling during reinitialization
+      state = AsyncValue.data(
+        currentState.copyWith(
+          streamStatus: LiveStreamStatus.active,
+        ),
+      );
+
+      // Reinitialize the stream with the same URL and settings
+      await updateStream(
+        isEnabled: true,
+        url: url,
+        replaceWorkflow: false, // Start without replacing workflow
+      );
+
+      dev.log('✅ [LIVE_STREAM] Successfully reconnected to stream');
+
+      // Check if we need to restore workflow replacement
+      final prefs = await SharedPreferences.getInstance();
+      final shouldRestoreWorkflow = prefs.getBool(LiveStreamConstants.prefKeyPreviousWorkflowReplacement) ?? false;
+
+      if (shouldRestoreWorkflow) {
+        dev.log('🔄 [LIVE_STREAM] Restoring workflow replacement after successful reconnection');
+        // Clear the preference so we don't restore again unnecessarily
+        await prefs.setBool(LiveStreamConstants.prefKeyPreviousWorkflowReplacement, false);
+        await toggleReplaceWorkflow(true);
+      }
+    } catch (e) {
+      dev.log('⚠️ [LIVE_STREAM] Reconnection attempt failed: $e');
+      // If reconnection fails, revert back to ended state but keep trying
+      if (state.hasValue) {
+        state = AsyncValue.data(
+          state.value!.copyWith(
+            streamStatus: LiveStreamStatus.ended,
+          ),
+        );
+      }
+    }
   }
 
   /// Handle stream error
@@ -442,7 +524,10 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
       );
       dev.log('🔄 [LIVE_STREAM] Updated state for stream error');
 
-      // If replaceWorkflow is enabled, disable it immediately to return to normal workflow
+      // Start reconnection attempts instead of immediately disabling workflow
+      _startReconnectTimer();
+
+      // Only disable workflow if the error is critical
       if (shouldDisableWorkflowReplacement) {
         dev.log('🔄 [LIVE_STREAM] Disabling workflow replacement due to stream error');
         await toggleReplaceWorkflow(false);
@@ -456,19 +541,29 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
 
     // Update state to reflect ended stream
     if (state.hasValue) {
-      // Check if we should disable workflow replacement
-      final shouldDisableWorkflowReplacement = state.value!.replaceWorkflow;
+      final currentState = state.value!;
+      final wasReplacingWorkflow = currentState.replaceWorkflow;
+
+      // Store the previous workflow state in SharedPreferences for restoration after reconnection
+      if (wasReplacingWorkflow) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool(LiveStreamConstants.prefKeyPreviousWorkflowReplacement, true);
+        dev.log('💾 [LIVE_STREAM] Saved previous workflow replacement state for restoration');
+      }
 
       // Update state with ended status
       state = AsyncValue.data(
-        state.value!.copyWith(
+        currentState.copyWith(
           streamStatus: LiveStreamStatus.ended,
         ),
       );
       dev.log('🔄 [LIVE_STREAM] Updated state for stream ended');
 
-      // If replaceWorkflow is enabled, disable it immediately to return to normal workflow
-      if (shouldDisableWorkflowReplacement) {
+      // Start reconnection attempts
+      _startReconnectTimer();
+
+      // If we're in workflow replacement mode, we should handle differently
+      if (currentState.replaceWorkflow) {
         dev.log('🔄 [LIVE_STREAM] Disabling workflow replacement due to stream ended');
         await toggleReplaceWorkflow(false);
       }
@@ -525,21 +620,22 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
         }
         // If the player is buffering for too long, consider it an error
         else if (playerState == PlayerState.buffering) {
-          // If we're in replaceWorkflow mode, we can't afford long buffering times
-          if (currentState.replaceWorkflow) {
-            // Check if player has been buffering too long - we'll keep track with a timestamp
-            final timestamp = DateTime.now().millisecondsSinceEpoch;
-            if (_bufferingStartTime == null) {
-              _bufferingStartTime = timestamp;
-            } else if (timestamp - _bufferingStartTime! > LiveStreamConstants.bufferTimeoutMs) {
-              dev.log('⚠️ [LIVE_STREAM] YouTube buffering timeout');
-              await _handleStreamError('YouTube buffering timeout');
-              _bufferingStartTime = null;
-            }
+          // Check if player has been buffering too long - we'll keep track with a timestamp
+          final timestamp = DateTime.now().millisecondsSinceEpoch;
+          if (_bufferingStartTime == null) {
+            _bufferingStartTime = timestamp;
+            dev.log('⏳ [LIVE_STREAM] YouTube buffering started');
+          } else if (timestamp - _bufferingStartTime! > LiveStreamConstants.bufferTimeoutMs) {
+            dev.log('⚠️ [LIVE_STREAM] YouTube buffering timeout detected');
+            await _handleStreamError('YouTube buffering timeout');
+            _bufferingStartTime = null; // Reset after handling error
           }
         } else {
           // Reset buffering timestamp if we're not buffering
-          _bufferingStartTime = null;
+          if (_bufferingStartTime != null) {
+             dev.log('🔄 [LIVE_STREAM] YouTube buffering ended, resetting timestamp');
+             _bufferingStartTime = null;
+          }
         }
       } catch (e) {
         dev.log('⚠️ [LIVE_STREAM] Error checking YouTube stream status: $e');

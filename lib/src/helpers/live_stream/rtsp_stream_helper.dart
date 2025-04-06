@@ -96,11 +96,12 @@ class RTSPStreamHelper {
     if (_player == null || _videoController == null) {
       return false;
     }
+    dev.log('⚠️ [RTSP_HELPER] RTSP checking');
 
     try {
       // Check if there are any errors
       final hasError = await _player!.stream.error.first.timeout(
-        const Duration(seconds: 2),
+        const Duration(seconds: 5),
         onTimeout: () => '',
       );
 
@@ -114,7 +115,7 @@ class RTSPStreamHelper {
       if (!isPlaying) {
         // Check if stream is just paused or truly ended
         final isEnded = await _player!.stream.completed.first.timeout(
-          const Duration(seconds: 2),
+          const Duration(seconds: 5),
           onTimeout: () => false,
         );
 

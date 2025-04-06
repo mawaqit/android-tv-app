@@ -125,8 +125,8 @@ class YouTubeStreamHelper {
         enableCaption: false,
         hideControls: true,
         isLive: true,
-        useHybridComposition: true,
-        forceHD: true,
+        useHybridComposition: false,
+        forceHD: false,
       ),
     );
 
