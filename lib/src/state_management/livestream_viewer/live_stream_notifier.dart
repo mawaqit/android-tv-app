@@ -83,6 +83,12 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
       dev.log(
           '📊 [LIVE_STREAM] Loaded settings - Enabled: $isEnabled, URL: $savedUrl, ReplaceWorkflow: $replaceWorkflow');
 
+      // Start the status check timer if stream is enabled
+      if (isEnabled && savedUrl != null && savedUrl.isNotEmpty) {
+        _startStatusCheckTimer();
+        dev.log('⏱️ [LIVE_STREAM] Started status check timer during initialization');
+      }
+
       if (!isEnabled || savedUrl == null || savedUrl.isEmpty) {
         dev.log('ℹ️ [LIVE_STREAM] No saved settings found, returning default state');
         return LiveStreamViewerState(
@@ -117,10 +123,25 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
       // Determine the stream type and initialize accordingly
       if (LiveStreamConstants.youtubeUrlRegex.hasMatch(url)) {
         dev.log('🎥 [LIVE_STREAM] Detected YouTube URL, handling YouTube stream');
-        return await _handleYoutubeStream(isEnabled, url, replaceWorkflow ?? false);
+        final state = await _handleYoutubeStream(isEnabled, url, replaceWorkflow ?? false);
+
+        // Ensure timer is started if stream is enabled
+        if (isEnabled) {
+          _startStatusCheckTimer();
+          dev.log('⏱️ [LIVE_STREAM] Started status check timer after YouTube stream initialization');
+        }
+
+        return state;
       } else if (url.startsWith('rtsp://')) {
         dev.log('🎬 [LIVE_STREAM] Detected RTSP URL, handling RTSP stream');
-        return await _handleRtspStream(isEnabled, url, replaceWorkflow ?? false);
+        final state = await _handleRtspStream(isEnabled, url, replaceWorkflow ?? false);
+
+        if (isEnabled) {
+          _startStatusCheckTimer();
+          dev.log('⏱️ [LIVE_STREAM] Started status check timer after RTSP stream initialization');
+        }
+
+        return state;
       }
 
       dev.log('❌ [LIVE_STREAM] Invalid URL format: $url');
@@ -279,7 +300,6 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
         } else {
           state = AsyncValue.data(newState.copyWith(replaceWorkflow: replaceWorkflow));
         }
-        return;
       }
       // Handle RTSP URLs
       else if (cleanUrl.startsWith('rtsp://')) {
@@ -303,11 +323,21 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
         } else {
           state = AsyncValue.data(newState.copyWith(replaceWorkflow: replaceWorkflow));
         }
-        return;
+      } else {
+        dev.log('❌ [LIVE_STREAM] Invalid URL format: $cleanUrl');
+        throw InvalidStreamUrlException('Invalid URL format: $cleanUrl');
       }
 
-      dev.log('❌ [LIVE_STREAM] Invalid URL format: $cleanUrl');
-      throw InvalidStreamUrlException('Invalid URL format: $cleanUrl');
+      // Start or stop status check timer based on enabled state
+      if (isEnabled) {
+        _startStatusCheckTimer();
+        dev.log('⏱️ [LIVE_STREAM] Started status check timer after stream update');
+      } else {
+        _stopStatusCheckTimer();
+        dev.log('⏱️ [LIVE_STREAM] Stopped status check timer after stream update');
+      }
+
+      return;
     } catch (e, s) {
       // Clean up on error
       await _dispose();
