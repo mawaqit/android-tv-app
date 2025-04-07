@@ -7,8 +7,11 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 // Mock classes
 class MockYoutubePlayerController extends Mock implements YoutubePlayerController {}
+
 class MockYouTubeExplode extends Mock implements YoutubeExplode {}
+
 class MockVideoClient extends Mock implements VideoClient {}
+
 class MockVideo extends Mock implements Video {}
 
 void main() {
@@ -111,7 +114,6 @@ void main() {
         throwsA(isA<InvalidStreamUrlException>()),
       );
     });
-
   });
 
   group('dispose', () {

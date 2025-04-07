@@ -467,9 +467,10 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
     _reconnectTimer = Timer.periodic(
       const Duration(seconds: LiveStreamConstants.streamReconnectIntervalSeconds),
       (timer) async {
-        if (state.hasValue && state.value!.isEnabled &&
+        if (state.hasValue &&
+            state.value!.isEnabled &&
             (state.value!.streamStatus == LiveStreamStatus.ended ||
-             state.value!.streamStatus == LiveStreamStatus.error)) {
+                state.value!.streamStatus == LiveStreamStatus.error)) {
           dev.log('🔄 [LIVE_STREAM] Attempting to reconnect to stream');
           await _attemptStreamReconnection();
         } else {
@@ -663,8 +664,8 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
         } else {
           // Reset buffering timestamp if we're not buffering
           if (_bufferingStartTime != null) {
-             dev.log('🔄 [LIVE_STREAM] YouTube buffering ended, resetting timestamp');
-             _bufferingStartTime = null;
+            dev.log('🔄 [LIVE_STREAM] YouTube buffering ended, resetting timestamp');
+            _bufferingStartTime = null;
           }
         }
       } catch (e) {
