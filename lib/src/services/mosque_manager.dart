@@ -135,7 +135,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   Future<void> setMosqueUUid(String uuid) async {
     try {
       await fetchMosque(uuid);
-      await ToggleScreenFeature.saveScheduledEventsToLocale();
 
       _saveToLocale();
     } catch (e, stack) {
