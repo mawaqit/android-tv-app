@@ -10,6 +10,7 @@ import '../helpers/AppRouter.dart';
 import '../pages/home/sub_screens/AdhanSubScreen.dart';
 import '../pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
 import '../pages/home/sub_screens/AfterSalahAzkarScreen.dart';
+import '../pages/home/sub_screens/DuaaBetweenAdhanAndIqama.dart';
 import '../pages/home/sub_screens/IqamaSubScreen.dart';
 import '../pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import '../pages/home/sub_screens/JummuaLive.dart';
@@ -53,6 +54,17 @@ class DrawerListDeveloper extends StatelessWidget {
                     builder: (context) => MosqueBackgroundScreen(child: HomeScreen()),
                   ));
             }),
+        DrawerListTitle(
+          icon: Icons.timer_rounded,
+          text: S.of(context).duaaBetweenAdhanAndIqamaaTitle,
+          onTap: () {
+            AppRouter.popAndPush(
+              MosqueBackgroundScreen(
+                child: DuaaBetweenAdhanAndIqamaaScreen(),
+              ),
+            );
+          },
+        ),
         /////////////// drawer test////////////////
         DrawerListTitle(
           icon: Icons.timer_rounded,
