@@ -416,5 +416,6 @@
   "ishaAndFajrOnly": "Seulement les prières Fajr et d'Isha",
   "minutesBeforeFajrPrayer": "minutes avant l'heure de la prière de Fajr",
   "minutesAfterIshaPrayer": "minutes après l'heure de la prière d'Isha",
-  "scheduleInOnlineMode":"Veuillez vous connecter à Internet pour planifier l'écoute du Coran."
+  "scheduleInOnlineMode":"Veuillez vous connecter à Internet pour planifier l'écoute du Coran.",
+  "duaaBetweenAdhanAndIqamaaTitle": "L'invocation n'est pas rejetée entre l'adhan et l'iqama"
 }

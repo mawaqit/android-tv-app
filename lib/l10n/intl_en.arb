@@ -444,6 +444,6 @@
       }
     }
   },
-  "scheduleInOnlineMode": "Please connect to the internet to schedule Quran listening"
-
+  "scheduleInOnlineMode": "Please connect to the internet to schedule Quran listening",
+  "duaaBetweenAdhanAndIqamaaTitle": "Supplication (Du'a) is not rejected between the Adhan and Iqamah"
 }
