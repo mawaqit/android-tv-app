@@ -54,7 +54,9 @@ class _DuaaBetweenAdhanAndIqamaaScreenState extends State<DuaaBetweenAdhanAndIqa
           child: _DuaaDisplay(
             title: S.of(context).duaaBetweenAdhanAndIqamaaTitle,
             arabicText: arabicTr.duaaBetweenSalahAndAdhan,
-            translatedText: S.of(context).duaaBetweenSalahAndAdhan == arabicTr.duaaBetweenSalahAndAdhan
+            translatedText: S.of(context).duaaBetweenSalahAndAdhan ==
+                    arabicTr
+                        .duaaBetweenSalahAndAdhan // this if is to avoid the arabic text to be shown in the translated text
                 ? ""
                 : S.of(context).duaaBetweenSalahAndAdhan,
           ),
