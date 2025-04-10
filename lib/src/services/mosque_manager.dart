@@ -98,18 +98,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     return prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
   }
 
-  static Future<bool> checkRoot() async {
-    try {
-      final result = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
-        TurnOnOffTvConstant.kCheckRoot,
-      );
-      return result;
-    } catch (e, stack) {
-      logger.e(e, stackTrace: stack);
-      return false;
-    }
-  }
-
   static MosqueManager? _instance;
 
   static void setInstance(MosqueManager manager) {
@@ -124,7 +112,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     await Api.init();
     await loadFromLocale();
     listenToConnectivity();
-    isDeviceRooted = await checkRoot();
     isToggleScreenActivated = await ToggleScreenFeature.getToggleFeatureState();
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
     isIshaFajrOnly = await getisIshaFajr();
@@ -212,19 +199,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription = timesStream.listen(
       (e) async {
         times = e;
-        final today = useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
 
-        if (isDeviceRooted && isToggleScreenActivated) {
-          final newMinuteBefore = await ToggleScreenFeature.getBeforeDelayMinutes();
-          final newMinuteAfter = await ToggleScreenFeature.getAfterDelayMinutes();
-
-          ToggleScreenFeature.handleDailyRescheduling(
-            isIshaFajrOnly: isIshaFajrOnly,
-            timeStrings: e.dayTimesStrings(today, salahOnly: false),
-            minuteBefore: newMinuteBefore,
-            minuteAfter: newMinuteAfter,
-          );
-        }
         // Obtain an instance of the background service.
         final service = FlutterBackgroundService();
 

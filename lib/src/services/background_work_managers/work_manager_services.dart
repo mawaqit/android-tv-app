@@ -7,6 +7,7 @@ import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
+import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:screen_control/screen_control.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,6 +42,7 @@ void screenOnCallback(int id) async {
 
   try {
     await ScreenControl.toggleBoxScreenOn();
+    ToggleScreenFeature.recordEventExecution();
 
     logger.i('Screen turned ON at ${DateTime.now()}');
   } catch (e) {
@@ -54,6 +56,7 @@ void screenOnTabletCallback(int id) async {
 
   try {
     await ScreenControl.toggleTabletScreenOn();
+    ToggleScreenFeature.recordEventExecution();
 
     logger.i('Screen turned ON at ${DateTime.now()}');
   } catch (e) {
@@ -68,7 +71,7 @@ void screenOffCallback(int id) async {
 
   try {
     await ScreenControl.toggleBoxScreenOff();
-
+    ToggleScreenFeature.recordEventExecution();
     logger.i('Screen turned OFF at ${DateTime.now()}');
   } catch (e) {
     logger.e('Screen OFF alarm callback error: $e');
@@ -81,6 +84,7 @@ void screenOffTabletCallback(int id) async {
 
   try {
     await ScreenControl.toggleTabletScreenOff();
+    ToggleScreenFeature.recordEventExecution();
 
     logger.i('Screen turned OFF at ${DateTime.now()}');
   } catch (e) {
@@ -107,6 +111,18 @@ class WorkManagerService {
       }
     } catch (e) {
       logger.e('AlarmManager initialization error: $e');
+    }
+  }
+
+  @pragma('vm:entry-point')
+  void backgroundCheckCallback(int id) async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    try {
+      logger.i('Background check started at ${DateTime.now()}');
+      await ToggleScreenFeature.backgroundCheckCallback();
+    } catch (e) {
+      logger.e('Background check error: $e');
     }
   }
 
