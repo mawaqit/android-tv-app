@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
+import 'package:mawaqit/src/state_management/device_info/device_info_notifier.dart';
 import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_notifier.dart';
 import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
@@ -69,6 +70,12 @@ class StreamReplacementScreen extends ConsumerWidget {
   Widget _buildStreamUI(BuildContext context, WidgetRef ref, Widget streamWidget) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+    final isBoxOrAndroidTV = ref.watch(deviceInfoProvider).maybeWhen(
+          data: (value) => value.isBoxOrAndroidTV,
+          orElse: () => false,
+        );
+
+    dev.log('isBoxOrAndroidTV: $isBoxOrAndroidTV');
     return RawKeyboardListener(
       focusNode: FocusNode(),
       autofocus: true,
@@ -92,57 +99,61 @@ class StreamReplacementScreen extends ConsumerWidget {
                 child: streamWidget,
               ),
             ),
-
-            // Add hamburger menu to open drawer
-            Align(
-              alignment: AlignmentDirectional.topStart,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GestureDetector(
-                  onTap: () {
-                    scaffoldKey.currentState?.openDrawer();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(20),
+            !isBoxOrAndroidTV
+                ?
+                // Add hamburger menu to open drawer
+                Align(
+                    alignment: AlignmentDirectional.topStart,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          scaffoldKey.currentState?.openDrawer();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            Icons.menu,
+                            color: Colors.white,
+                            size: 8.w,
+                            shadows: kHomeTextShadow,
+                          ),
+                        ),
+                      ),
                     ),
-                    child: Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                      size: 8.w,
-                      shadows: kHomeTextShadow,
+                  )
+                : Container(),
+            !isBoxOrAndroidTV
+                ?
+                // For top-start (will be top-left in LTR, top-right in RTL)
+                Align(
+                    alignment: AlignmentDirectional.topEnd,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(false);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 8.w,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-
-            // For top-start (will be top-left in LTR, top-right in RTL)
-            Align(
-              alignment: AlignmentDirectional.topEnd,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GestureDetector(
-                  onTap: () {
-                    ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(false);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 8.w,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+                  )
+                : Container(),
           ],
         ),
       ),
