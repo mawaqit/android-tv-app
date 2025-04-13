@@ -340,9 +340,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               dev.log('📤 [RTSP_SCREEN] URL submitted: ${_urlController.text}');
               // ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
               ref.read(liveStreamProvider.notifier).updateStream(
-                    isEnabled: true,
                     url: _urlController.text,
-                    replaceWorkflow: state.replaceWorkflow,
                   );
             },
             decoration: InputDecoration(
@@ -387,9 +385,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                 await Future.delayed(const Duration(milliseconds: 500));
 
                 ref.read(liveStreamProvider.notifier).updateStream(
-                      isEnabled: true,
                       url: _urlController.text,
-                      replaceWorkflow: state.replaceWorkflow,
                     );
               } else if (state.streamUrl != null && state.streamUrl!.isNotEmpty) {
                 dev.log('📝 [RTSP_SCREEN] URL unchanged, only updating workflow flag');

@@ -9,6 +9,13 @@ import 'package:media_kit_video/media_kit_video.dart';
 class RTSPStreamHelper {
   Player? _player;
   VideoController? _videoController;
+  Timer? _playbackCheckTimer;
+
+  bool _isPlaying = false;
+  bool _isCompleted = false;
+
+  Function(String)? _onError;
+  Function()? _onCompleted;
 
   /// Get the current active video controller
   VideoController? get videoController => _videoController;
@@ -16,50 +23,46 @@ class RTSPStreamHelper {
   /// Get the current active player
   Player? get player => _player;
 
-  /// Clean up resources
-  Future<void> dispose() async {
-    if (_player != null) {
-      try {
-        await _player!.pause();
-        await _player!.dispose();
-        dev.log('🎬 [RTSP_HELPER] Disposed media player');
-      } catch (e) {
-        dev.log('⚠️ [RTSP_HELPER] Error disposing media player: $e');
-      }
-      _player = null;
-    }
-
-    if (_videoController != null) {
-      try {
-        // The player disposal should already handle this, but let's be safe
-        await _videoController!.player.dispose();
-        dev.log('🎬 [RTSP_HELPER] Disposed video controller');
-      } catch (e) {
-        dev.log('⚠️ [RTSP_HELPER] Error disposing video controller: $e');
-      }
-      _videoController = null;
-    }
-  }
-
-  /// Initialize RTSP player with the given URL
+  /// Initialize the RTSP player with the given URL
   Future<VideoController> initializePlayer(String url) async {
-    // Dispose existing player if any
+    dev.log('🎬 [RTSP_HELPER] Initializing player with URL: $url');
+
     await dispose();
 
+    _player = Player();
+    _videoController = VideoController(_player!);
+
+    // Setup stream listeners
+    _player!.stream.playing.listen((playing) {
+      _isPlaying = playing;
+      dev.log('🎬 [RTSP_HELPER] Playing status changed: $playing');
+    });
+
+    _player!.stream.completed.listen((completed) {
+      _isCompleted = completed;
+      if (completed) {
+        dev.log('🎬 [RTSP_HELPER] Stream completed');
+        _onCompleted?.call();
+      }
+    });
+
+    // Start periodic playback check
+    _playbackCheckTimer?.cancel();
+    _playbackCheckTimer = Timer.periodic(const Duration(minutes: 2), (timer) {
+      if (!_isPlaying && !_isCompleted) {
+        dev.log('🎬 [RTSP_HELPER] Stream not playing, attempting reconnection');
+        _onError?.call('Stream playback stopped');
+      }
+    });
+
     try {
-      // Create new player and controller
-      _player = Player();
-      _videoController = VideoController(_player!);
-
-      // Open media with the RTSP URL
       await _player!.open(Media(url));
-      dev.log('✅ [RTSP_HELPER] Created and opened RTSP player for URL: $url');
-
+      dev.log('🎬 [RTSP_HELPER] Successfully opened stream');
       return _videoController!;
     } catch (e) {
-      dev.log('🚨 [RTSP_HELPER] Error initializing RTSP player: $e');
-      await dispose();
-      throw LiveStreamInitializationException('Failed to initialize RTSP player: $e');
+      dev.log('🚨 [RTSP_HELPER] Error initializing player: $e');
+      _onError?.call('Failed to initialize stream: $e');
+      rethrow;
     }
   }
 
@@ -68,92 +71,38 @@ class RTSPStreamHelper {
     required Function(String) onError,
     required Function() onCompleted,
   }) {
-    if (_player == null) {
-      dev.log('⚠️ [RTSP_HELPER] Cannot setup listeners, player is null');
-      return;
-    }
-
-    // Listen for errors
-    _player!.stream.error.listen((error) {
-      if (error.isNotEmpty) {
-        dev.log('⚠️ [RTSP_HELPER] RTSP stream error: $error');
-        onError(error);
-      }
-    });
-
-    // Listen for completion
-    _player!.stream.completed.listen((completed) {
-      if (completed) {
-        dev.log('🏁 [RTSP_HELPER] RTSP stream completed');
-        onCompleted();
-      }
-    });
+    _onError = onError;
+    _onCompleted = onCompleted;
   }
 
-  /// Check if the stream is still active
-  /// Returns true if active, false otherwise
+  /// Check if the stream is currently active
   Future<bool> checkStreamActive() async {
-    if (_player == null || _videoController == null) {
-      return false;
-    }
-    dev.log('⚠️ [RTSP_HELPER] RTSP checking');
-
-    try {
-      // Check if there are any errors
-      final hasError = await _player!.stream.error.first.timeout(
-        const Duration(seconds: 5),
-        onTimeout: () => '',
-      );
-
-      if (hasError.isNotEmpty) {
-        dev.log('⚠️ [RTSP_HELPER] RTSP stream error detected during check: $hasError');
-        return false;
-      }
-
-      // Check if player is playing
-      final isPlaying = _player!.state.playing;
-      if (!isPlaying) {
-        // Check if stream is just paused or truly ended
-        final isEnded = await _player!.stream.completed.first.timeout(
-          const Duration(seconds: 5),
-          onTimeout: () => false,
-        );
-
-        if (isEnded) {
-          dev.log('🏁 [RTSP_HELPER] RTSP stream ended during check');
-          return false;
-        }
-      }
-
-      return true;
-    } catch (e) {
-      dev.log('⚠️ [RTSP_HELPER] Error checking RTSP stream status: $e');
-      return false;
-    }
-  }
-
-  /// Play the stream
-  Future<void> play() async {
-    if (_player != null) {
-      try {
-        await _player!.play();
-        dev.log('▶️ [RTSP_HELPER] Playing RTSP stream');
-      } catch (e) {
-        dev.log('⚠️ [RTSP_HELPER] Error playing RTSP stream: $e');
-      }
-    }
+    if (_player == null) return false;
+    return _isPlaying || (!_isCompleted);
   }
 
   /// Pause the stream
   Future<void> pause() async {
-    if (_player != null) {
-      try {
-        await _player!.pause();
-        dev.log('⏸️ [RTSP_HELPER] Paused RTSP stream');
-      } catch (e) {
-        dev.log('⚠️ [RTSP_HELPER] Error pausing RTSP stream: $e');
-      }
-    }
+    dev.log('⏸️ [RTSP_HELPER] Pausing stream');
+    await _player?.pause();
+  }
+
+  /// Resume/play the stream
+  Future<void> play() async {
+    dev.log('▶️ [RTSP_HELPER] Playing stream');
+    await _player?.play();
+  }
+
+  /// Dispose of all resources
+  Future<void> dispose() async {
+    dev.log('🧹 [RTSP_HELPER] Disposing resources');
+    _playbackCheckTimer?.cancel();
+    _playbackCheckTimer = null;
+    await _player?.dispose();
+    _player = null;
+    _videoController = null;
+    _isPlaying = false;
+    _isCompleted = false;
   }
 
   /// Validate RTSP URL format

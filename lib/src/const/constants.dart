@@ -165,8 +165,14 @@ abstract class LiveStreamConstants {
   static const int statusCheckIntervalSeconds = 40;
 
   /// Default stream reconnect attempt interval in seconds
-  static const int streamReconnectIntervalSeconds = 120;
+  static const int streamReconnectIntervalSeconds = 30;
 
   /// Default stream initialization delay in milliseconds
   static const int streamInitDelayMs = 200;
+
+  /// Timeout for reconnection attempts in minutes
+  static const int reconnectionTimeoutMinutes = 1;
+
+  /// Timeout for auto-detection of live camera in minutes
+  static const int autoDetectionTimeoutMinutes = 3;
 }

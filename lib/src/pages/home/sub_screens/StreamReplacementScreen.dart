@@ -23,12 +23,43 @@ class StreamReplacementScreen extends ConsumerWidget {
 
     return streamState.when(
       data: (state) {
-        if (!state.isEnabled || !state.replaceWorkflow || state.streamStatus != LiveStreamStatus.active) {
+        if (!state.isEnabled || !state.replaceWorkflow) {
           return const SizedBox.shrink();
         }
 
+        // Show black screen with message for connecting or unreliable status
+        if (state.streamStatus == LiveStreamStatus.connecting || state.streamStatus == LiveStreamStatus.unreliable) {
+          return Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.wifi_off,
+                    color: Colors.white,
+                    size: 48,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    state.streamStatus == LiveStreamStatus.connecting
+                        ? 'Connecting to stream...'
+                        : 'Stream quality is poor. Please wait...',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
         // Show YouTube stream if available
-        if (state.streamType == LiveStreamType.youtubeLive && state.youtubeController != null) {
+        if (state.streamType == LiveStreamType.youtubeLive &&
+            state.youtubeController != null &&
+            state.streamStatus == LiveStreamStatus.active) {
           return _buildStreamUI(
             context,
             ref,
@@ -43,7 +74,9 @@ class StreamReplacementScreen extends ConsumerWidget {
         }
 
         // Show RTSP stream if available
-        if (state.streamType == LiveStreamType.rtsp && state.videoController != null) {
+        if (state.streamType == LiveStreamType.rtsp &&
+            state.videoController != null &&
+            state.streamStatus == LiveStreamStatus.active) {
           return _buildStreamUI(
             context,
             ref,
@@ -75,7 +108,7 @@ class StreamReplacementScreen extends ConsumerWidget {
           orElse: () => false,
         );
 
-    dev.log('isBoxOrAndroidTV: $isBoxOrAndroidTV');
+
     return RawKeyboardListener(
       focusNode: FocusNode(),
       autofocus: true,
