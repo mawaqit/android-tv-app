@@ -64,11 +64,12 @@ class TimeWidget extends StatelessWidget {
         Text(
           "${time!.hourOfPeriod.toString().padLeft(2, '0')}:${time!.minute.toString().padLeft(2, '0')}",
           style: style,
+          maxLines: 1,
         ),
-        SizedBox(width: 1.vw),
+        SizedBox(width: 0.3.vw),
         TimePeriodWidget(
           dateTime: time!.toDate(),
-          style: amPmStyle ?? style?.apply(color: Colors.grey.shade300, fontSizeFactor: 0.5),
+          style: amPmStyle ?? style,
         ),
       ],
     );
