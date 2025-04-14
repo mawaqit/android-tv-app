@@ -411,5 +411,9 @@
   },
   "ishaAndFajrOnly": "Seulement les prières Fajr et d'Isha",
   "minutesBeforeFajrPrayer": "minutes avant l'heure de la prière de Fajr",
-  "minutesAfterIshaPrayer": "minutes après l'heure de la prière d'Isha"
+  "minutesAfterIshaPrayer": "minutes après l'heure de la prière d'Isha",
+  "processingRequest": "Traitement de votre demande...",
+  "replaceWorkflowWithStream": "Remplacer le flux de prière par un flux vidéo",
+  "replaceAppWorkflowWithCameraStream": "Remplacer le flux de prière par le flux de la caméra",
+  "streamError": "Une erreur est survenue lors du streaming"
 }
