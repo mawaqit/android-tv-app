@@ -14,7 +14,7 @@ import '../../helpers/live_stream/youtube_stream_helper.dart';
 import 'live_stream_state.dart';
 
 /// Notifier for the livestream viewer feature
-class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState> {
+class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
   /// Helper for YouTube streams
   final _youtubeHelper = YouTubeStreamHelper();
 
@@ -109,18 +109,38 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
     try {
       dev.log('🔄 [LIVE_STREAM] Initializing from saved URL: $url');
       await _dispose();
-
       // Determine the stream type and initialize accordingly
       if (LiveStreamConstants.youtubeUrlRegex.hasMatch(url)) {
         dev.log('🎥 [LIVE_STREAM] Detected YouTube URL, handling YouTube stream');
-        _handleYoutubeStream(url);
+        final videoWithString = await _handleYoutubeStream(url);
+
+        return LiveStreamViewerState(
+          isEnabled: isEnabled,
+          streamUrl: videoWithString.$2,
+          streamStatus: LiveStreamStatus.active,
+          streamType: LiveStreamType.youtubeLive,
+          videoController: null,
+          youtubeController: videoWithString.$1,
+          isInvalidUrl: false,
+          replaceWorkflow: replaceWorkflow ?? false,
+        );
       } else if (url.startsWith('rtsp://')) {
         dev.log('🎬 [LIVE_STREAM] Detected RTSP URL, handling RTSP stream');
-        await _handleRtspStream(url);
+        final controller = await _handleRtspStream(url);
+        return LiveStreamViewerState(
+          isEnabled: isEnabled,
+          streamUrl: url,
+          streamStatus: LiveStreamStatus.active,
+          streamType: LiveStreamType.rtsp,
+          videoController: controller,
+          youtubeController: null,
+          isInvalidUrl: false,
+          replaceWorkflow: replaceWorkflow ?? false,
+        );
+      } else {
+        dev.log('🚨 [LIVE_STREAM] Invalid URL format: $url');
+        throw InvalidStreamUrlException('Invalid URL format: $url');
       }
-
-      dev.log('❌ [LIVE_STREAM] Invalid URL format: $url');
-      throw InvalidStreamUrlException('Invalid URL format: $url');
     } catch (e) {
       dev.log('⚠️ [LIVE_STREAM] Error initializing from saved URL: $e');
       if (e is InvalidStreamUrlException) {
@@ -149,17 +169,18 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool(LiveStreamConstants.prefKeyEnabled, isEnabled);
 
-        // // get the value and check the replace if it is active
-        // if (isEnabled) {
-        //   final replaceWorkflow = prefs.getBool(LiveStreamConstants.prefKeyReplaceWorkflow) ?? false;
-        //   if (replaceWorkflow) {
-        //     dev.log('🔄 [LIVE_STREAM] Replacing workflow due to enabled state');
-        //     await toggleReplaceWorkflow(true);
-        //   }
-        // }
+        // get the value and check the replace if it is active
+        if (isEnabled) {
+          final replaceWorkflow = prefs.getBool(LiveStreamConstants.prefKeyReplaceWorkflow) ?? false;
+          if (replaceWorkflow) {
+            dev.log('🔄 [LIVE_STREAM] Replacing workflow due to enabled state');
+            await toggleReplaceWorkflow(true);
+          }
+        }
 
         if (!isEnabled) {
           await _dispose();
+          await toggleReplaceWorkflow(false);
         } else {
           // If the stream is enabled, we need to check if the URL is valid
           final savedUrl = prefs.getString(LiveStreamConstants.prefKeyUrl);
@@ -232,41 +253,55 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
       // Try to cleanup URL - sometimes there are extra parameters or spaces
       String cleanUrl = url.trim();
 
-      if (url != cleanUrl) {
-        // Save settings to SharedPreferences
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(LiveStreamConstants.prefKeyUrl, cleanUrl);
+      // Save settings to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(LiveStreamConstants.prefKeyUrl, cleanUrl);
 
-        dev.log('🧹 [LIVE_STREAM] Disposed controllers before creating new ones');
+      dev.log('🧹 [LIVE_STREAM] Disposed controllers before creating new ones');
 
-        // Explicitly set status to active while initializing to prevent false detections
-        if (state.hasValue) {
-          state = AsyncValue.data(
-            state.value!.copyWith(
-              streamStatus: LiveStreamStatus.connecting,
-              // Clear controllers in state first to prevent UI from using old ones
-              youtubeController: null,
-              videoController: null,
-            ),
-          );
-        }
+      // Explicitly set status to active while initializing to prevent false detections
+      if (state.hasValue) {
+        state = AsyncValue.data(
+          state.value!.copyWith(
+            streamStatus: LiveStreamStatus.connecting,
+            // Clear controllers in state first to prevent UI from using old ones
+            youtubeController: null,
+            videoController: null,
+          ),
+        );
+      }
 
-        // Allow UI to update before creating new controllers
-        await Future.delayed(Duration(milliseconds: 50));
+      // Allow UI to update before creating new controllers
+      await Future.delayed(Duration(milliseconds: 50));
 
-        // Handle YouTube URLs
-        if (LiveStreamConstants.youtubeUrlRegex.hasMatch(cleanUrl)) {
-          dev.log('🎥 [LIVE_STREAM] Initializing YouTube player');
-          _handleYoutubeStream(cleanUrl);
-        }
-        // Handle RTSP URLs
-        else if (cleanUrl.startsWith('rtsp://')) {
-          dev.log('🎬 [LIVE_STREAM] Initializing RTSP player');
-          await _handleRtspStream(cleanUrl);
-        } else {
-          throw InvalidStreamUrlException('Invalid URL format: $cleanUrl');
-        }
-        return;
+      // Handle YouTube URLs
+      if (LiveStreamConstants.youtubeUrlRegex.hasMatch(cleanUrl)) {
+        dev.log('🎥 [LIVE_STREAM] Initializing YouTube player');
+        _handleYoutubeStream(cleanUrl);
+        final videoWithString = await _handleYoutubeStream(cleanUrl);
+        state = AsyncValue.data(
+          state.value!.copyWith(
+            streamStatus: LiveStreamStatus.active,
+            youtubeController: videoWithString.$1,
+            streamUrl: videoWithString.$2,
+            streamType: LiveStreamType.youtubeLive,
+          ),
+        );
+      }
+      // Handle RTSP URLs
+      else if (cleanUrl.startsWith('rtsp://')) {
+        dev.log('🎬 [LIVE_STREAM] Initializing RTSP player');
+        final controller = await _handleRtspStream(cleanUrl);
+        state = AsyncValue.data(
+          state.value!.copyWith(
+            streamStatus: LiveStreamStatus.active,
+            videoController: controller,
+            streamUrl: cleanUrl,
+            streamType: LiveStreamType.rtsp,
+          ),
+        );
+      } else {
+        throw InvalidStreamUrlException('Invalid URL format: $cleanUrl');
       }
     } catch (e, s) {
       // Clean up on error
@@ -292,7 +327,7 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
   }
 
   /// Handle YouTube stream initialization
-  void _handleYoutubeStream(
+  Future<(YoutubePlayerController, String)> _handleYoutubeStream(
     String url,
   ) async {
     try {
@@ -307,14 +342,7 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
       // Form standardized URL
       final standardUrl = 'https://www.youtube.com/watch?v=$videoId';
 
-      state = AsyncValue.data(
-        state.value!.copyWith(
-          streamUrl: standardUrl,
-          youtubeController: controller,
-          isInvalidUrl: false,
-          streamStatus: LiveStreamStatus.active,
-        ),
-      );
+      return (controller, standardUrl);
     } catch (e) {
       dev.log('🚨 [LIVE_STREAM] Error handling YouTube stream: $e');
 
@@ -323,7 +351,7 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
   }
 
   /// Handle RTSP stream initialization
-  Future<void> _handleRtspStream(String url) async {
+  Future<VideoController> _handleRtspStream(String url) async {
     try {
       dev.log('🎬 [LIVE_STREAM] Handling RTSP stream for URL: $url');
 
@@ -336,14 +364,7 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
         onCompleted: () => _handleStreamEnded(),
       );
 
-      state = AsyncValue.data(
-        state.value!.copyWith(
-          streamUrl: url,
-          videoController: videoController,
-          isInvalidUrl: false,
-          streamStatus: LiveStreamStatus.active,
-        ),
-      );
+      return videoController;
     } catch (e) {
       dev.log('🚨 [LIVE_STREAM] Error handling RTSP stream: $e');
       await _rtspHelper.dispose();
@@ -515,7 +536,6 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
     }
   }
 
-
   /// Pause all streams
   Future<void> pauseStreams() async {
     dev.log('⏸️ [LIVE_STREAM] Pausing all streams');
@@ -584,6 +604,6 @@ class LiveStreamNotifier extends AutoDisposeAsyncNotifier<LiveStreamViewerState>
 }
 
 /// Provider for the livestream viewer feature
-final liveStreamProvider = AutoDisposeAsyncNotifierProvider<LiveStreamNotifier, LiveStreamViewerState>(() {
+final liveStreamProvider = AsyncNotifierProvider<LiveStreamNotifier, LiveStreamViewerState>(() {
   return LiveStreamNotifier();
 });
