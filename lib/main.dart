@@ -9,6 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:hive_flutter/adapters.dart';
 import 'package:logger/logger.dart';
+import 'package:mawaqit/firebase_options.dart';
 // import 'package:mawaqit/firebase_options.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
@@ -46,7 +47,7 @@ Future<void> main() async {
         () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(
-        // options: DefaultFirebaseOptions.currentPlatform,
+        options: DefaultFirebaseOptions.currentPlatform,
       );
       final directory = await getApplicationDocumentsDirectory();
       Hive.init(directory.path);
