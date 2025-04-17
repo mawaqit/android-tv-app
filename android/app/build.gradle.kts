@@ -28,23 +28,33 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        
+
         // Add Firebase Crashlytics configuration
         manifestPlaceholders["crashlyticsCollectionEnabled"] = false
     }
 
+    signingConfigs {
+      release {
+        if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+          storeFile file(System.getenv()["CM_KEYSTORE_PATH"])
+          storePassword System.getenv()["CM_KEYSTORE_PASSWORD"]
+          keyAlias System.getenv()["CM_KEY_ALIAS"]
+          keyPassword System.getenv()["CM_KEY_PASSWORD"]
+        } else {
+          keyAlias keystoreProperties['keyAlias']
+          keyPassword keystoreProperties['keyPassword']
+          storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+          storePassword keystoreProperties['storePassword']
+        }
+      }
+      isMinifyEnabled = false
+      isShrinkResources = false
+    }
+
     buildTypes {
-        release {
-            // Disable resource shrinking and code optimization
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = false
-            isShrinkResources = false
-        }
-        debug {
-            isMinifyEnabled = false
-            isShrinkResources = false
-        }
+      release {
+        signingConfig signingConfigs.release
+      }
     }
 }
 
