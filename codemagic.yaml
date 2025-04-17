@@ -12,7 +12,7 @@ workflows:
       cancel_previous_builds: true
 
     environment:
-      flutter: 3.13.9
+      flutter: 3.27.0
       vars:
         PACKAGE_NAME: "com.mawaqit.androidtv"
         GOOGLE_PLAY_TRACK: internal
