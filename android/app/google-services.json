@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "845445133037",
     "project_id": "mawaqit-android-tv",
-    "storage_bucket": "mawaqit-android-tv.appspot.com"
+    "storage_bucket": "mawaqit-android-tv.firebasestorage.app"
   },
   "client": [
     {
@@ -12,12 +12,7 @@
           "package_name": "com.kanout.mawaqit"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyA96rdImI_UIhryGzDddiNqh_BcbY73MnA"
@@ -25,12 +20,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     },
@@ -41,12 +31,7 @@
           "package_name": "com.mawaqit.admin"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyA96rdImI_UIhryGzDddiNqh_BcbY73MnA"
@@ -54,12 +39,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     },
@@ -70,12 +50,7 @@
           "package_name": "com.mawaqit.androidtv"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyA96rdImI_UIhryGzDddiNqh_BcbY73MnA"
@@ -83,12 +58,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     },
@@ -99,12 +69,7 @@
           "package_name": "com.mawaqit.launcher"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyA96rdImI_UIhryGzDddiNqh_BcbY73MnA"
@@ -112,12 +77,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     },
@@ -128,12 +88,7 @@
           "package_name": "me.efesser.flauncher"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyA96rdImI_UIhryGzDddiNqh_BcbY73MnA"
@@ -141,12 +96,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "845445133037-6co9crafubo0h7edvonaijgq2ote8p5v.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

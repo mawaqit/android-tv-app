@@ -128,53 +128,86 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
   }
 
   Padding buildInputWidget(BuildContext context, ThemeData theme) {
+    final bool dark = theme.brightness == Brightness.dark;
+
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        child: TextFormField(
-          controller: inputController,
-          style: GoogleFonts.inter(
-            color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+      padding: const EdgeInsets.all(12),
+      child: Material(
+        elevation: 4,
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(40),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.85,
+          decoration: BoxDecoration(
+            color: dark
+                ? const Color(0xFF262626)
+                : const Color(0xFFF1F1F3),
+            borderRadius: BorderRadius.circular(40),
           ),
-          onFieldSubmitted: _setMosqueId,
-          cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
-          keyboardType: TextInputType.number,
-          autofocus: true,
-          textInputAction: TextInputAction.search,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-          ],
-          decoration: InputDecoration(
-            filled: true,
-            errorText: error,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-            hintText: S.of(context).selectWithMosqueId,
-            hintStyle: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
+          child: TextFormField(
+            controller: inputController,
+            autofocus: true,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.search,
+            cursorColor: Colors.white70,
+            style: GoogleFonts.inter(
+              fontSize: 16,
+              color: Colors.white,
             ),
-            suffixIcon: IconButton(
-              tooltip: "Search by Id",
-              icon: loading ? CircularProgressIndicator() : Icon(Icons.search),
-              color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
-              onPressed: () => _setMosqueId(inputController.text),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(width: 0),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(width: 0),
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 2,
-              horizontal: 20,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            onFieldSubmitted: _setMosqueId,
+            decoration: InputDecoration(
+              // ------- visual bits -------
+              hintText: S.of(context).selectWithMosqueId,
+              hintStyle: GoogleFonts.inter(
+                color: Colors.white.withOpacity(.55),
+                fontWeight: FontWeight.w400,
+              ),
+              filled: true,
+              fillColor: Colors.transparent,     // we use the BoxDecoration color
+              isDense: true,
+              contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              // ------- icon on the right -------
+              suffixIcon: IconButton(
+                tooltip: 'Search by ID',
+                iconSize: 24,
+                splashRadius: 24,
+                icon: loading
+                    ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2))
+                    : const Icon(Icons.search_rounded),
+                color: Colors.white70,
+                onPressed: () => _setMosqueId(inputController.text),
+              ),
+              // ------- invisible borders -------
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: BorderSide.none,
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: BorderSide(color: theme.colorScheme.error),
+              ),
+              errorStyle: const TextStyle(height: 0), // hide text gap
+              errorText: error,
             ),
           ),
         ),
       ),
     );
   }
+
 }

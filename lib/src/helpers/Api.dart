@@ -4,7 +4,7 @@ import 'dart:math' hide log;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
-import 'package:disk_space/disk_space.dart';
+import 'package:disk_space_plus/disk_space_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
@@ -257,27 +257,25 @@ class Api {
 
   static Future<(String, Map<String, dynamic>)?> prepareUserData() async {
     try {
+      double? freeSpace  = await DiskSpacePlus.getFreeDiskSpace;
+      double? totalSpace = await DiskSpacePlus.getTotalDiskSpace;
+
       final userPreferencesManager = UserPreferencesManager();
       await userPreferencesManager.init();
 
       var hardwareFuture = DeviceInfoPlugin().androidInfo;
       var softwareFuture = PackageInfo.fromPlatform();
       var languageFuture = AppLanguage.getCountryCode();
-      var freeSpaceFuture = DiskSpace.getFreeDiskSpace;
-      var totalSpaceFuture = DiskSpace.getTotalDiskSpace;
       var deviceIdFuture = UniqueIdentifier.serial;
 
       // Wait for all futures to complete in a parallel way
-      var results = await Future.wait(
-          [hardwareFuture, softwareFuture, languageFuture, freeSpaceFuture, totalSpaceFuture, deviceIdFuture]);
+      var results = await Future.wait([hardwareFuture, softwareFuture, languageFuture, deviceIdFuture]);
 
       // Extract results
       var hardware = results[0] as AndroidDeviceInfo;
       var software = results[1] as PackageInfo;
       var language = results[2] as String;
-      var freeSpace = results[3] as double;
-      var totalSpace = results[4] as double;
-      var deviceId = results[5] as String;
+      var deviceId = results[3] as String;
 
       final commonDeviceData = {
         'device-id': deviceId,

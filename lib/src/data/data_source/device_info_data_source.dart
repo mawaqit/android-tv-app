@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:disk_space/disk_space.dart';
+import 'package:disk_space_plus/disk_space_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
@@ -18,16 +18,16 @@ import '../../domain/model/device_info_model.dart';
 /// [DeviceInfoDataSource]
 class DeviceInfoDataSource {
   final DeviceInfoPlugin deviceInfoPlugin;
-  final DiskSpace diskSpace;
+  final DiskSpacePlus diskSpace;
 
   /// Constructs a [DeviceInfoDataSource], allowing for optional injection of dependencies
-  /// for [DeviceInfoPlugin] and [DiskSpace] for easier testing and configuration. If not
+  /// for [DeviceInfoPlugin] and [DiskSpacePlus] for easier testing and configuration. If not
   /// injected, defaults are provided.
   DeviceInfoDataSource({
     DeviceInfoPlugin? deviceInfoPlugin,
-    DiskSpace? diskSpace,
+    DiskSpacePlus? diskSpace,
   })  : deviceInfoPlugin = deviceInfoPlugin ?? DeviceInfoPlugin(),
-        diskSpace = diskSpace ?? DiskSpace();
+        diskSpace = diskSpace ?? DiskSpacePlus();
 
   /// [getDeviceInfo]
   /// Gathers device information asynchronously and constructs a [DeviceInfoModel].
@@ -37,8 +37,8 @@ class DeviceInfoDataSource {
   /// the gathered information.
   Future<DeviceInfoModel> getDeviceInfo() async {
     final deviceInfoFuture = deviceInfoPlugin.androidInfo;
-    final freeDeviceFuture = DiskSpace.getFreeDiskSpace;
-    final totalFreeSpaceFuture = DiskSpace.getTotalDiskSpace;
+    final freeDeviceFuture = DiskSpacePlus.getFreeDiskSpace;
+    final totalFreeSpaceFuture = DiskSpacePlus.getTotalDiskSpace;
     final deviceIdFuture = UniqueIdentifier.serial;
 
     // Retrieve the device language synchronously as it's not an async call
@@ -54,8 +54,8 @@ class DeviceInfoDataSource {
 
     // Extract the individual results from the list
     final androidInfo = results[0] as AndroidDeviceInfo;
-    final freeDevice = results[1] as double; // Assuming DiskSpace.getFreeDiskSpace returns double
-    final totalFreeSpace = results[2] as double; // Assuming DiskSpace.getTotalDiskSpace returns double
+    final freeDevice = results[1] as double; // Assuming DiskSpacePlus.getFreeDiskSpace returns double
+    final totalFreeSpace = results[2] as double; // Assuming DiskSpacePlus.getTotalDiskSpace returns double
     final deviceId = results[3] as String;
 
     // Construct the result map
@@ -104,7 +104,7 @@ class DeviceInfoDataSource {
 
 class DeviceInfoDataSourceProviderArgument {
   final DeviceInfoPlugin? deviceInfoPlugin;
-  final DiskSpace? diskSpace;
+  final DiskSpacePlus? diskSpace;
 
   DeviceInfoDataSourceProviderArgument({
     this.deviceInfoPlugin,

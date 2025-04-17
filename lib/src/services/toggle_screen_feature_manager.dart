@@ -188,13 +188,13 @@ class ToggleScreenFeature {
   }
 
   static void _scheduleForPrayer(
-    String timeString,
-    DateTime now,
-    int beforeDelayMinutes,
-    int afterDelayMinutes,
-    bool isFajrIsha,
-    TimeShiftManager timeShiftManager,
-  ) {
+      String timeString,
+      DateTime now,
+      int beforeDelayMinutes,
+      int afterDelayMinutes,
+      bool isFajrIsha,
+      TimeShiftManager timeShiftManager,
+      ) {
     final parts = timeString.split(':');
     final hour = int.parse(parts[0]);
     final minute = int.parse(parts[1]);
