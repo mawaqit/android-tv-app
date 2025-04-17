@@ -93,5 +93,3 @@ emulator.sh
 *.g.dart
 
 
-# Secrets for Firebase
-/lib/firebase_options.dart
