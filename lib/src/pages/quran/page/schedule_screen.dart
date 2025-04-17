@@ -281,7 +281,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
         TextButton(
           style: ButtonStyle(
             overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                  (Set<WidgetState> states) {
+              (Set<WidgetState> states) {
                 if (states.contains(WidgetState.focused)) {
                   return Theme.of(context).primaryColor;
                 }

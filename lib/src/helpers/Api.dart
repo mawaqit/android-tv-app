@@ -257,7 +257,7 @@ class Api {
 
   static Future<(String, Map<String, dynamic>)?> prepareUserData() async {
     try {
-      double? freeSpace  = await DiskSpacePlus.getFreeDiskSpace;
+      double? freeSpace = await DiskSpacePlus.getFreeDiskSpace;
       double? totalSpace = await DiskSpacePlus.getTotalDiskSpace;
 
       final userPreferencesManager = UserPreferencesManager();

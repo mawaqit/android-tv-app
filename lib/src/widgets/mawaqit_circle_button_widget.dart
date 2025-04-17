@@ -26,7 +26,7 @@ class MawaqitCircleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final buttonColor = color ?? theme.focusColor;
-    
+
     return CircleAvatar(
       radius: size,
       child: Container(

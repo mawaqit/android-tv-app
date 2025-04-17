@@ -44,7 +44,7 @@ final logger = Logger();
 
 Future<void> main() async {
   await CrashlyticsWrapper.init(
-        () async {
+    () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,

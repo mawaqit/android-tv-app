@@ -139,9 +139,7 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
         child: Container(
           width: MediaQuery.of(context).size.width * 0.85,
           decoration: BoxDecoration(
-            color: dark
-                ? const Color(0xFF262626)
-                : const Color(0xFFF1F1F3),
+            color: dark ? const Color(0xFF262626) : const Color(0xFFF1F1F3),
             borderRadius: BorderRadius.circular(40),
           ),
           child: TextFormField(
@@ -166,20 +164,16 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
                 fontWeight: FontWeight.w400,
               ),
               filled: true,
-              fillColor: Colors.transparent,     // we use the BoxDecoration color
+              fillColor: Colors.transparent, // we use the BoxDecoration color
               isDense: true,
-              contentPadding:
-              const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               // ------- icon on the right -------
               suffixIcon: IconButton(
                 tooltip: 'Search by ID',
                 iconSize: 24,
                 splashRadius: 24,
                 icon: loading
-                    ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2))
+                    ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.search_rounded),
                 color: Colors.white70,
                 onPressed: () => _setMosqueId(inputController.text),
@@ -209,5 +203,4 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
       ),
     );
   }
-
 }
