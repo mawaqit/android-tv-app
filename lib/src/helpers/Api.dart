@@ -4,7 +4,7 @@ import 'dart:math' hide log;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
-import 'package:disk_space_plus/disk_space_plus.dart';
+import 'package:disk_space_2/disk_space_2.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
@@ -257,8 +257,8 @@ class Api {
 
   static Future<(String, Map<String, dynamic>)?> prepareUserData() async {
     try {
-      double? freeSpace = await DiskSpacePlus.getFreeDiskSpace;
-      double? totalSpace = await DiskSpacePlus.getTotalDiskSpace;
+      double? freeSpace = await DiskSpace.getFreeDiskSpace;
+      double? totalSpace = await DiskSpace.getTotalDiskSpace;
 
       final userPreferencesManager = UserPreferencesManager();
       await userPreferencesManager.init();

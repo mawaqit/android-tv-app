@@ -70,7 +70,7 @@ fun loadKeystoreProperties(): Map<String, Any?> {
     if (keystorePropertiesFile.exists()) {
         keystoreProperties.load(FileInputStream(keystorePropertiesFile))
     }
-    
+
     return keystoreProperties as Map<String, Any?>
 }
 

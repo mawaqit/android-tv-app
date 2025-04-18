@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:disk_space_plus/disk_space_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:unique_identifier/unique_identifier.dart';
+import 'package:disk_space_2/disk_space_2.dart';
 
 import '../../../main.dart';
 import '../../domain/model/device_info_model.dart';
@@ -18,16 +18,16 @@ import '../../domain/model/device_info_model.dart';
 /// [DeviceInfoDataSource]
 class DeviceInfoDataSource {
   final DeviceInfoPlugin deviceInfoPlugin;
-  final DiskSpacePlus diskSpace;
+  final DiskSpace diskSpace;
 
   /// Constructs a [DeviceInfoDataSource], allowing for optional injection of dependencies
   /// for [DeviceInfoPlugin] and [DiskSpacePlus] for easier testing and configuration. If not
   /// injected, defaults are provided.
   DeviceInfoDataSource({
     DeviceInfoPlugin? deviceInfoPlugin,
-    DiskSpacePlus? diskSpace,
+    DiskSpace? diskSpace,
   })  : deviceInfoPlugin = deviceInfoPlugin ?? DeviceInfoPlugin(),
-        diskSpace = diskSpace ?? DiskSpacePlus();
+        diskSpace = diskSpace ?? DiskSpace();
 
   /// [getDeviceInfo]
   /// Gathers device information asynchronously and constructs a [DeviceInfoModel].
@@ -37,8 +37,8 @@ class DeviceInfoDataSource {
   /// the gathered information.
   Future<DeviceInfoModel> getDeviceInfo() async {
     final deviceInfoFuture = deviceInfoPlugin.androidInfo;
-    final freeDeviceFuture = DiskSpacePlus.getFreeDiskSpace;
-    final totalFreeSpaceFuture = DiskSpacePlus.getTotalDiskSpace;
+    final freeDeviceFuture = DiskSpace.getFreeDiskSpace;
+    final totalFreeSpaceFuture = DiskSpace.getTotalDiskSpace;
     final deviceIdFuture = UniqueIdentifier.serial;
 
     // Retrieve the device language synchronously as it's not an async call
@@ -104,7 +104,7 @@ class DeviceInfoDataSource {
 
 class DeviceInfoDataSourceProviderArgument {
   final DeviceInfoPlugin? deviceInfoPlugin;
-  final DiskSpacePlus? diskSpace;
+  final DiskSpace? diskSpace;
 
   DeviceInfoDataSourceProviderArgument({
     this.deviceInfoPlugin,
@@ -115,7 +115,7 @@ class DeviceInfoDataSourceProviderArgument {
 final deviceInfoDataSourceProvider =
     FutureProvider.family<DeviceInfoDataSource, DeviceInfoDataSourceProviderArgument>((ref, args) {
   return DeviceInfoDataSource(
-    deviceInfoPlugin: args?.deviceInfoPlugin,
-    diskSpace: args?.diskSpace,
+    deviceInfoPlugin: args.deviceInfoPlugin,
+    diskSpace: args.diskSpace,
   );
 });
