@@ -67,7 +67,7 @@ dependencies:
   url_launcher: ^6.1.11
   store_redirect: ^2.0.1
   connectivity_plus: ^4.0.0
-  uni_links3: ^0.5.3
+#  uni_links3: ^0.5.3
 
   # TOOLS
   google_fonts: ^4.0.4
