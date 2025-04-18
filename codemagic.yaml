@@ -57,37 +57,7 @@ workflows:
         script: |
           flutter pub get
           dart run build_runner build
-      
-      - name: Fix notification_overlay namespace
-        script: |
-          # Find the notification_overlay plugin in pub cache
-          NOTIFICATION_OVERLAY_PATH=$(find ~/.pub-cache/git -name "android-tv-notification*" -type d | grep -v "cache" | head -n 1)
-          echo "Found notification_overlay at: $NOTIFICATION_OVERLAY_PATH"
-          
-          # Ensure namespace is set in all build.gradle files
-          if [ -f "$NOTIFICATION_OVERLAY_PATH/android/build.gradle" ]; then
-            echo "Adding namespace to main build.gradle if not present"
-            # Check if namespace is already defined
-            if ! grep -q "namespace" "$NOTIFICATION_OVERLAY_PATH/android/build.gradle"; then
-              # Add namespace after compileSdkVersion line
-              sed -i '/compileSdkVersion/a \    namespace "com.example.notification_overlay"' "$NOTIFICATION_OVERLAY_PATH/android/build.gradle"
-            fi
-          fi
-          
-          # Check for nested build.gradle and update it too
-          if [ -f "$NOTIFICATION_OVERLAY_PATH/android/src/main/build.gradle" ]; then
-            echo "Adding namespace to src/main/build.gradle if not present"
-            if ! grep -q "namespace" "$NOTIFICATION_OVERLAY_PATH/android/src/main/build.gradle"; then
-              sed -i '/compileSdkVersion/a \    namespace "com.example.notification_overlay"' "$NOTIFICATION_OVERLAY_PATH/android/src/main/build.gradle"
-            fi
-          fi
-          
-          # Also check the AndroidManifest.xml to make sure package name is correct
-          if [ -f "$NOTIFICATION_OVERLAY_PATH/android/src/main/AndroidManifest.xml" ]; then
-            echo "Checking AndroidManifest.xml"
-            grep -q "package" "$NOTIFICATION_OVERLAY_PATH/android/src/main/AndroidManifest.xml"
-          fi
-      
+
       - name: Run flutter Unit tests
         script: |
           mkdir -p test-results
