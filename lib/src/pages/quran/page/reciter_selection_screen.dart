@@ -485,6 +485,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                           autofocus: changeReadingModeFocusNode
                               .hasFocus, // it is used here because at change_reading_mode it will break due to up keybind when no result in the search
                           heroTag: 'schedule',
+                          focusColor: Theme.of(context).focusColor,
                           backgroundColor: Colors.black.withOpacity(.5),
                           child: Icon(
                             Icons.schedule,

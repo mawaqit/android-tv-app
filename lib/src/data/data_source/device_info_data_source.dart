@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:disk_space/disk_space.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:unique_identifier/unique_identifier.dart';
+import 'package:disk_space_2/disk_space_2.dart';
 
 import '../../../main.dart';
 import '../../domain/model/device_info_model.dart';
@@ -21,7 +21,7 @@ class DeviceInfoDataSource {
   final DiskSpace diskSpace;
 
   /// Constructs a [DeviceInfoDataSource], allowing for optional injection of dependencies
-  /// for [DeviceInfoPlugin] and [DiskSpace] for easier testing and configuration. If not
+  /// for [DeviceInfoPlugin] and [DiskSpacePlus] for easier testing and configuration. If not
   /// injected, defaults are provided.
   DeviceInfoDataSource({
     DeviceInfoPlugin? deviceInfoPlugin,
@@ -54,8 +54,8 @@ class DeviceInfoDataSource {
 
     // Extract the individual results from the list
     final androidInfo = results[0] as AndroidDeviceInfo;
-    final freeDevice = results[1] as double; // Assuming DiskSpace.getFreeDiskSpace returns double
-    final totalFreeSpace = results[2] as double; // Assuming DiskSpace.getTotalDiskSpace returns double
+    final freeDevice = results[1] as double; // Assuming DiskSpacePlus.getFreeDiskSpace returns double
+    final totalFreeSpace = results[2] as double; // Assuming DiskSpacePlus.getTotalDiskSpace returns double
     final deviceId = results[3] as String;
 
     // Construct the result map
@@ -115,7 +115,7 @@ class DeviceInfoDataSourceProviderArgument {
 final deviceInfoDataSourceProvider =
     FutureProvider.family<DeviceInfoDataSource, DeviceInfoDataSourceProviderArgument>((ref, args) {
   return DeviceInfoDataSource(
-    deviceInfoPlugin: args?.deviceInfoPlugin,
-    diskSpace: args?.diskSpace,
+    deviceInfoPlugin: args.deviceInfoPlugin,
+    diskSpace: args.diskSpace,
   );
 });

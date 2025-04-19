@@ -4,11 +4,15 @@ import 'dart:developer' as developer;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
+
+// import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:hive_flutter/adapters.dart';
 import 'package:logger/logger.dart';
+import 'package:mawaqit/firebase_options.dart';
+
+// import 'package:mawaqit/firebase_options.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/constants.dart';
@@ -36,7 +40,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
-import 'package:montenegrin_localization/montenegrin_localization.dart';
+// import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
 
@@ -44,7 +48,19 @@ Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
+
+      final firebaseOptions = FirebaseOptions(
+        apiKey: const String.fromEnvironment('mawaqit.firebase.api_key'),
+        appId: const String.fromEnvironment('mawaqit.firebase.app_id'),
+        messagingSenderId: const String.fromEnvironment('mawaqit.firebase.messaging_sender_id'),
+        projectId: const String.fromEnvironment('mawaqit.firebase.project_id'),
+        storageBucket: const String.fromEnvironment('mawaqit.firebase.storage_bucket'),
+      );
+
+      await Firebase.initializeApp(
+        options: firebaseOptions,
+      );
+
       final directory = await getApplicationDocumentsDirectory();
       Hive.init(directory.path);
       await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
@@ -113,16 +129,16 @@ class MyApp extends riverpod.ConsumerWidget {
                       AnalyticsWrapper.observer(),
                     ],
                     localizationsDelegates: [
-                      MontenegrinMaterialLocalizations.delegate,
-                      MontenegrinWidgetsLocalizations.delegate,
-                      MontenegrinCupertinoLocalizations.delegate,
+                      // MontenegrinMaterialLocalizations.delegate,
+                      // MontenegrinWidgetsLocalizations.delegate,
+                      // MontenegrinCupertinoLocalizations.delegate,
                       S.delegate,
                       GlobalCupertinoLocalizations.delegate,
                       GlobalMaterialLocalizations.delegate,
                       GlobalWidgetsLocalizations.delegate,
-                      KurdishMaterialLocalizations.delegate,
-                      KurdishWidgetLocalizations.delegate,
-                      KurdishCupertinoLocalizations.delegate
+                      // KurdishMaterialLocalizations.delegate,
+                      // KurdishWidgetLocalizations.delegate,
+                      // KurdishCupertinoLocalizations.delegate
                     ],
                     supportedLocales: S.supportedLocales,
                     debugShowCheckedModeBanner: false,

@@ -271,7 +271,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
               children: [
                 VersionWidget(
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1?.color?.withOpacity(.5),
+                    color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(.5),
                   ),
                 ),
                 Spacer(flex: 2),
