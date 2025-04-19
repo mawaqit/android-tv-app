@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -5,8 +8,6 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-import java.util.Properties
-import java.io.FileInputStream
 
 android {
     namespace = "com.mawaqit.androidtv"
@@ -43,12 +44,6 @@ android {
                 storePassword = System.getenv("CM_KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("CM_KEY_ALIAS")
                 keyPassword = System.getenv("CM_KEY_PASSWORD")
-            } else {
-                val keystoreProperties = loadKeystoreProperties()
-                keyAlias = keystoreProperties["keyAlias"] as String?
-                keyPassword = keystoreProperties["keyPassword"] as String?
-                storeFile = keystoreProperties["storeFile"]?.let { file(it.toString()) }
-                storePassword = keystoreProperties["storePassword"] as String?
             }
         }
     }
@@ -62,17 +57,7 @@ android {
     }
 }
 
-// Helper function to load keystore properties
-fun loadKeystoreProperties(): Map<String, Any?> {
-    val keystorePropertiesFile = rootProject.file("key.properties")
-    val keystoreProperties = Properties()
 
-    if (keystorePropertiesFile.exists()) {
-        keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-    }
-
-    return keystoreProperties as Map<String, Any?>
-}
 
 flutter {
     source = "../.."
