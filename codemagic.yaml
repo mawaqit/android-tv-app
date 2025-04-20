@@ -61,14 +61,14 @@ workflows:
       - name: Run flutter Unit tests
         script: |
           mkdir -p test-results
-          flutter test  \
-            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY  \
-            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+          flutter test \
+            --dart-define=mawaqit.api.key=$MAWAQIT_API_KEY \
+            --dart-define=mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
             --dart-define=mawaqit.firebase.api_key=$MAWAQIT_FIREBASE_API_KEY \
             --dart-define=mawaqit.firebase.app_id=$MAWAQIT_FIREBASE_APP_ID \
             --dart-define=mawaqit.firebase.messaging_sender_id=$MAWAQIT_FIREBASE_MESSAGING_SENDER_ID \
             --dart-define=mawaqit.firebase.project_id=$MAWAQIT_FIREBASE_PROJECT_ID \
-            --dart-define=mawaqit.firebase.storage_bucket=$MAWAQIT_FIREBASE_STORAGE_BUCKET
+            --dart-define=mawaqit.firebase.storage_bucket=$MAWAQIT_FIREBASE_STORAGE_BUCKET \
           > test-results/results.json
 
       - name: Build AAB with Flutter
@@ -76,8 +76,8 @@ workflows:
           flutter build appbundle --release \
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
-            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY \
+            --dart-define=mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+            --dart-define=mawaqit.api.key=$MAWAQIT_API_KEY \
             --dart-define=mawaqit.firebase.api_key=$MAWAQIT_FIREBASE_API_KEY \
             --dart-define=mawaqit.firebase.app_id=$MAWAQIT_FIREBASE_APP_ID \
             --dart-define=mawaqit.firebase.messaging_sender_id=$MAWAQIT_FIREBASE_MESSAGING_SENDER_ID \
@@ -89,8 +89,8 @@ workflows:
           flutter build apk --release \
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
-            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY \
+            --dart-define=mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+            --dart-define=mawaqit.api.key=$MAWAQIT_API_KEY \
             --dart-define=mawaqit.firebase.api_key=$MAWAQIT_FIREBASE_API_KEY \
             --dart-define=mawaqit.firebase.app_id=$MAWAQIT_FIREBASE_APP_ID \
             --dart-define=mawaqit.firebase.messaging_sender_id=$MAWAQIT_FIREBASE_MESSAGING_SENDER_ID \
