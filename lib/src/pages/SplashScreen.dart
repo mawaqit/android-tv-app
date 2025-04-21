@@ -26,6 +26,7 @@ import 'package:mawaqit/src/pages/onBoarding/OnBoardingScreen.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
 import 'package:mawaqit/src/widgets/InfoWidget.dart';
+import 'package:notification_overlay/notification_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -78,21 +79,13 @@ class _SpashState extends ConsumerState<Splash> {
       await Future.delayed(Duration(seconds: 3));
       SystemChrome.restoreSystemUIOverlays();
     });
-    _saveScheduledEventsToLocale();
-  }
-
-  Future<void> _saveScheduledEventsToLocale() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    logger.d("Saving into local");
-
-    prefs.setBool("isEventsSet", false);
   }
 
   Future<void> _initSettings() async {
     FeatureManagerProvider.initialize(context);
     await context.read<AppLanguage>().fetchLocale();
     await context.read<MosqueManager>().init().logPerformance("Mosque manager");
+    MosqueManager.setInstance(context.read<MosqueManager>());
   }
 
   Future<bool> loadBoarding() async {

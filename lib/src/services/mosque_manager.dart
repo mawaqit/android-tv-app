@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mawaqit/main.dart';
@@ -20,6 +21,7 @@ import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
+import 'package:mawaqit/src/services/notification/prayer_schedule_service.dart';
 import 'package:mawaqit/src/services/storage_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -91,19 +93,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     return 'https://mawaqit.net/$languageCode/id/${mosque?.id}?view=desktop';
   }
 
-  static const String _minuteBeforeKey = 'selectedMinuteBefore';
-  static const String _minuteAfterKey = 'selectedMinuteAfter';
-
-  static Future<int> getMinuteBefore() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_minuteBeforeKey) ?? 10;
-  }
-
-  static Future<int> getMinuteAfter() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_minuteAfterKey) ?? 10;
-  }
-
   static Future<bool> getisIshaFajr() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
@@ -127,6 +116,16 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     }
   }
 
+  static MosqueManager? _instance;
+
+  static void setInstance(MosqueManager manager) {
+    _instance = manager;
+  }
+
+  static MosqueManager? getInstance() {
+    return _instance;
+  }
+
   Future<void> init() async {
     await Api.init();
     await loadFromLocale();
@@ -134,8 +133,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     isDeviceRooted = await checkRoot();
     isToggleScreenActivated = await ToggleScreenFeature.getToggleFeatureState();
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
-    minuteBefore = await getMinuteBefore();
-    minuteAfter = await getMinuteAfter();
     isIshaFajrOnly = await getisIshaFajr();
     notifyListeners();
   }
@@ -144,7 +141,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   Future<void> setMosqueUUid(String uuid) async {
     try {
       await fetchMosque(uuid);
-      await ToggleScreenFeature.saveScheduledEventsToLocale();
 
       _saveToLocale();
     } catch (e, stack) {
@@ -220,19 +216,32 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     );
 
     _timesSubscription = timesStream.listen(
-      (e) {
+      (e) async {
         times = e;
         final today = useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
-        final timeShiftManager = TimeShiftManager();
 
-        if (isDeviceRooted && isToggleScreenActivated && timeShiftManager.isLauncherInstalled) {
+        if (isDeviceRooted && isToggleScreenActivated) {
+          final newMinuteBefore = await ToggleScreenFeature.getBeforeDelayMinutes();
+          final newMinuteAfter = await ToggleScreenFeature.getAfterDelayMinutes();
+
           ToggleScreenFeature.handleDailyRescheduling(
             isIshaFajrOnly: isIshaFajrOnly,
             timeStrings: e.dayTimesStrings(today, salahOnly: false),
-            minuteBefore: minuteBefore,
-            minuteAfter: minuteAfter,
+            minuteBefore: newMinuteBefore,
+            minuteAfter: newMinuteAfter,
           );
         }
+        // Obtain an instance of the background service.
+        final service = FlutterBackgroundService();
+
+        // Delegate prayer scheduling to PrayerScheduleService.
+        await PrayerScheduleService.schedulePrayerTasks(
+          e,
+          mosqueConfig,
+          isAdhanVoiceEnabled,
+          salahIndex,
+          service,
+        );
 
         notifyListeners();
       },
