@@ -32,11 +32,11 @@ workflows:
         - $HOME/.gradle/caches
 
     scripts:
-#      - name: Load Firebase configuration
-#        script: |
-#          #!/usr/bin/env sh
-#          set -e
-#          echo "$ANDROID_FIREBASE_SECRET" > "$CM_BUILD_DIR/android/app/google-services.json"
+      - name: Load Firebase configuration
+        script: |
+          #!/usr/bin/env sh
+          set -e
+          echo "FIREBASE_SECRET" > "$CM_BUILD_DIR/android/app/google-services.json"
 
       - name: Retrieve version
         script: |
