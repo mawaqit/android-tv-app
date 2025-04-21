@@ -247,7 +247,9 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     final prefs = await SharedPreferences.getInstance();
     final langCode = prefs.getString('language_code') ?? 'en';
     final locale = Locale(langCode);
+
     final localizations = await AppLocalizations.delegate.load(locale);
+
     S.setCurrent(localizations);
 
     _setupServiceListeners(service);
@@ -262,7 +264,15 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
       service.on('setAsForeground').listen((_) => service.setAsForegroundService());
       service.on('setAsBackground').listen((_) => service.setAsBackgroundService());
     }
+    service.on('updateLocalization').listen((event) async {
+      if (event != null && event.containsKey('language_code')) {
+        final langCode = event['language_code'];
+        final locale = Locale(langCode);
 
+        final localizations = await AppLocalizations.delegate.load(locale);
+        S.setCurrent(localizations);
+      }
+    });
     // Notification-related listeners
     service.on('stopService').listen((_) => service.stopSelf());
     service.on('updateNotificationVisibility').listen((event) {
@@ -277,6 +287,8 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     });
     service.on('resumeOperations').listen((_) => isPaused = false);
     service.on('prayerTime').listen((event) async {
+      print("called service prayerTime $shouldShowNotification");
+
       if (event != null && !isPaused && shouldShowNotification) {
         await _handlePrayerTime(event);
       }
@@ -328,6 +340,7 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     final adhanAsset = event['adhanAsset'] as String;
     final adhanFromAssets = event['adhanFromAssets'] as bool;
     final salahName = event['salahName'] as String;
+    print("called service prayerTime $salahName $prayerName");
 
     await NotificationService.showPrayerNotification(salahName, prayerName, shouldPlayAdhan);
 
