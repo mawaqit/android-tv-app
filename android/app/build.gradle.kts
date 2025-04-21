@@ -47,11 +47,15 @@ android {
             storePassword = System.getenv()["CM_KEYSTORE_PASSWORD"]
             keyAlias = System.getenv()["CM_KEY_ALIAS"]
             keyPassword = System.getenv()["CM_KEY_PASSWORD"]
-          } else {
-            storeFile = rootProject.file(keystoreProps["storeFile"] as String)
-            storePassword = keystoreProps["storePassword"] as String
-            keyAlias = keystoreProps["keyAlias"] as String
-            keyPassword = keystoreProps["keyPassword"] as String
+          } else if (keystorePropsFile.exists() &&
+                    keystoreProps["storeFile"] != null &&
+                    keystoreProps["storePassword"] != null &&
+                    keystoreProps["keyAlias"] != null &&
+                    keystoreProps["keyPassword"] != null) {
+            storeFile = rootProject.file(keystoreProps["storeFile"].toString())
+            storePassword = keystoreProps["storePassword"].toString()
+            keyAlias = keystoreProps["keyAlias"].toString()
+            keyPassword = keystoreProps["keyPassword"].toString()
           }
         }
     }
