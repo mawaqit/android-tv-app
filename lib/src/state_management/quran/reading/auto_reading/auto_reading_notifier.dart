@@ -116,20 +116,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       return;
     }
 
-    // Track initialization attempts
-    int scrollAttempts = 0;
-    const int maxScrollAttempts = 10;
-
     _autoScrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
-      scrollAttempts++;
-
-      // Prevent infinite attempts
-      if (scrollAttempts > maxScrollAttempts) {
-        timer.cancel();
-        state = state.copyWith(isPlaying: false);
-        return;
-      }
-
       // Comprehensive client check
       if (scrollController.hasClients && scrollController.position.hasContentDimensions) {
         try {
@@ -155,7 +142,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
           if (newPage != state.currentPage) {
             state = state.copyWith(currentPage: newPage);
           }
-        } catch (e, stackTrace) {
+        } catch (e) {
           timer.cancel();
           state = state.copyWith(isPlaying: false);
         }

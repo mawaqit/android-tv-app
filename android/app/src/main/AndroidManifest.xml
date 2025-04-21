@@ -9,6 +9,11 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
   <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
   <uses-feature android:name="android.hardware.faketouch" android:required="false"/>
   <uses-feature android:name="android.hardware.telephony" android:required="false"/>
@@ -19,11 +24,21 @@
   <uses-feature android:name="android.hardware.sensor" android:required="false"/>
 
 
+
+
+
   <application
     android:banner="@mipmap/ic_banner"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:usesCleartextTraffic="true">
+    <service
+          android:name="id.flutter.flutter_background_service.BackgroundService"
+          android:foregroundServiceType="mediaPlayback|dataSync"
+          >
+    </service>
+
+    
     <activity
       android:name=".MainActivity"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -32,6 +47,7 @@
       android:launchMode="singleTop"
       android:theme="@style/LaunchTheme"
       android:windowSoftInputMode="adjustResize">
+
       <!-- Specifies an Android theme to apply to this Activity as soon as
            the Android process has started. This theme is visible to the user
            while the Flutter UI initializes. After that, this theme continues
