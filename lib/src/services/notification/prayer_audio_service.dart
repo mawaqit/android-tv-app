@@ -6,8 +6,7 @@ import 'package:mawaqit/src/services/notification/notification_service.dart';
 class PrayerAudioService {
   static AudioPlayer? _audioPlayer;
 
-  static Future<void> playPrayer(
-      String adhanAsset, bool adhanFromAssets) async {
+  static Future<void> playPrayer(String adhanAsset, bool adhanFromAssets) async {
     _audioPlayer = AudioPlayer();
     final session = await _configureAudioSession();
     await session.setActive(true);
@@ -46,11 +45,9 @@ class PrayerAudioService {
     final session = await AudioSession.instance;
     await session.configure(AudioSessionConfiguration(
       avAudioSessionCategory: AVAudioSessionCategory.playback,
-      avAudioSessionCategoryOptions:
-          AVAudioSessionCategoryOptions.mixWithOthers,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.mixWithOthers,
       avAudioSessionMode: AVAudioSessionMode.defaultMode,
-      avAudioSessionRouteSharingPolicy:
-          AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
       avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
       androidAudioAttributes: const AndroidAudioAttributes(
         contentType: AndroidAudioContentType.music,
