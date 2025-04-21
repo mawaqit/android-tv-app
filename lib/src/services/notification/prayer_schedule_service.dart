@@ -16,15 +16,13 @@ class PrayerScheduleService {
   static const String PRAYER_TASK_TAG = "prayer_task";
   static const String PREF_SCHEDULED_TIMES = "scheduled_prayer_times";
   static const String PREF_ADHAN_LINKS = "prayer_adhan_links";
-  static const String PREF_TASK_IDS =
-      "prayer_task_ids"; // New constant for storing task IDs
+  static const String PREF_TASK_IDS = "prayer_task_ids"; // New constant for storing task IDs
   static final Lock _lock = Lock();
 
   /// Loads scheduled times from SharedPreferences
   static Future<Set<DateTime>> _loadScheduledTimes() async {
     final prefs = await SharedPreferences.getInstance();
-    final List<String> timeStrings =
-        prefs.getStringList(PREF_SCHEDULED_TIMES) ?? [];
+    final List<String> timeStrings = prefs.getStringList(PREF_SCHEDULED_TIMES) ?? [];
 
     return timeStrings.map((timeStr) => DateTime.parse(timeStr)).toSet();
   }
@@ -32,8 +30,7 @@ class PrayerScheduleService {
   /// Saves scheduled times to SharedPreferences
   static Future<void> _saveScheduledTimes(Set<DateTime> times) async {
     final prefs = await SharedPreferences.getInstance();
-    final List<String> timeStrings =
-        times.map((time) => time.toIso8601String()).toList();
+    final List<String> timeStrings = times.map((time) => time.toIso8601String()).toList();
 
     await prefs.setStringList(PREF_SCHEDULED_TIMES, timeStrings);
   }
@@ -141,8 +138,7 @@ class PrayerScheduleService {
         }
 
         final bool isFajr = (i == 0);
-        final String currentAdhanLink =
-            getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
+        final String currentAdhanLink = getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
 
         // Check if this prayer was scheduled with a different Adhan link
         if (scheduledTimes.contains(scheduleTime) &&
@@ -174,8 +170,7 @@ class PrayerScheduleService {
       // Calculate the date for the current iteration
       final targetDate = now.add(Duration(days: dayOffset));
 
-      logger.v(
-          'Processing Day: ${targetDate.toIso8601String()} (Offset: $dayOffset)');
+      logger.v('Processing Day: ${targetDate.toIso8601String()} (Offset: $dayOffset)');
 
       // Get prayer times for the target date
       final prayerTimes = times.dayTimesStrings(targetDate, salahOnly: true);
@@ -186,15 +181,13 @@ class PrayerScheduleService {
 
         // Skip prayers that have already passed (for today)
         if (dayOffset == 0 && scheduleTime.isBefore(now)) {
-          logger.v(
-              'Skipping Past Prayer: $entry (${scheduleTime.toIso8601String()})');
+          logger.v('Skipping Past Prayer: $entry (${scheduleTime.toIso8601String()})');
           skippedPrayerTimes++;
           continue;
         }
 
         final bool isFajr = (i == 0); // Assuming index 0 is Fajr
-        final String currentAdhanLink =
-            getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
+        final String currentAdhanLink = getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
 
         logger.v({
           'Prayer Time': entry,
@@ -234,9 +227,7 @@ class PrayerScheduleService {
 
         try {
           await _schedulePrayerWithWorkManager(prayerConfig, scheduleTime,
-              uniqueId: uniqueId,
-              scheduledTimes: scheduledTimes,
-              taskIds: taskIds);
+              uniqueId: uniqueId, scheduledTimes: scheduledTimes, taskIds: taskIds);
 
           // Track scheduled prayer details
           scheduledPrayerDetails.add({
@@ -252,8 +243,7 @@ class PrayerScheduleService {
           previousAdhanLinks[scheduleTime] = currentAdhanLink;
           await _saveAdhanLinks(previousAdhanLinks);
         } catch (e, stackTrace) {
-          logger.e('❌ Failed to Schedule Prayer',
-              error: e, stackTrace: stackTrace);
+          logger.e('❌ Failed to Schedule Prayer', error: e, stackTrace: stackTrace);
         }
       }
     }
@@ -294,13 +284,11 @@ class PrayerScheduleService {
         final taskId = entry.value;
 
         try {
-          logger.v(
-              'Attempting to cancel task: $taskId (Scheduled for: $timeKey)');
+          logger.v('Attempting to cancel task: $taskId (Scheduled for: $timeKey)');
           await WorkManagerService.cancelTask(taskId);
           successfulCancellations++;
         } catch (cancelError) {
-          logger.w('Failed to cancel task ID: $taskId for time: $timeKey',
-              error: cancelError);
+          logger.w('Failed to cancel task ID: $taskId for time: $timeKey', error: cancelError);
           failedCancellations++;
         }
       }
@@ -318,8 +306,7 @@ class PrayerScheduleService {
 
       logger.i('✅ All previously scheduled prayers cleared');
     } catch (e, stackTrace) {
-      logger.e('❌ Error during cancellation of previous prayer tasks',
-          error: e, stackTrace: stackTrace);
+      logger.e('❌ Error during cancellation of previous prayer tasks', error: e, stackTrace: stackTrace);
       rethrow;
     }
   }
@@ -382,8 +369,7 @@ class PrayerScheduleService {
     return names[index] ?? '';
   }
 
-  static String getAdhanLink(MosqueConfig? mosqueConfig,
-      {bool useFajrAdhan = false}) {
+  static String getAdhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String baseLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
 
     if (mosqueConfig?.adhanVoice?.isNotEmpty ?? false) {
@@ -404,8 +390,7 @@ class PrayerScheduleService {
     required Set<DateTime> scheduledTimes,
     required Map<String, String> taskIds,
   }) async {
-    final taskId =
-        uniqueId ?? "${PRAYER_TASK_TAG}_${scheduleTime.millisecondsSinceEpoch}";
+    final taskId = uniqueId ?? "${PRAYER_TASK_TAG}_${scheduleTime.millisecondsSinceEpoch}";
     final delay = scheduleTime.difference(AppDateTime.now());
 
     await WorkManagerService.registerPrayerTask(

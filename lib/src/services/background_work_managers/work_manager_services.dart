@@ -128,8 +128,7 @@ class WorkManagerService {
 
   // Prayer task using AlarmManager
   @pragma('vm:entry-point')
-  static Future<void> registerPrayerTask(String uniqueId,
-      Map<String, dynamic> inputData, Duration initialDelay) async {
+  static Future<void> registerPrayerTask(String uniqueId, Map<String, dynamic> inputData, Duration initialDelay) async {
     try {
       // Convert uniqueId to integer ID for AlarmManager
       final int alarmId = uniqueId.hashCode;
@@ -170,16 +169,14 @@ class WorkManagerService {
 
   // Screen task using AlarmManager
   @pragma('vm:entry-point')
-  static Future<void> registerScreenTask(String uniqueId, String taskName,
-      Duration initialDelay, bool isBox) async {
+  static Future<void> registerScreenTask(String uniqueId, String taskName, Duration initialDelay, bool isBox) async {
     try {
       // Convert uniqueId to integer ID for AlarmManager
       final int alarmId = ('screen_$uniqueId').hashCode;
 
       // Store mapping for later cancellation
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-          'screen_task_id_mapping_$uniqueId', alarmId.toString());
+      await prefs.setString('screen_task_id_mapping_$uniqueId', alarmId.toString());
 
       // Calculate exact time for the alarm
       final scheduledTime = DateTime.now().add(initialDelay);
@@ -202,8 +199,7 @@ class WorkManagerService {
       );
 
       if (!success) {
-        throw ScheduleToggleScreenException(
-            'Failed to schedule $taskName alarm');
+        throw ScheduleToggleScreenException('Failed to schedule $taskName alarm');
       }
 
       logger.i('$taskName alarm scheduled successfully with ID: $alarmId');
