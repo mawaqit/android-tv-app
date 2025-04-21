@@ -8,7 +8,6 @@ workflows:
         - pattern: main
           include: true
           source: true
-
       cancel_previous_builds: true
 
     environment:
@@ -25,6 +24,7 @@ workflows:
         - aws_credentials
         - GITHUB
         - APP
+        - mawaqit_firebase
 
     cache:
       cache_paths:
@@ -32,6 +32,12 @@ workflows:
         - $HOME/.gradle/caches
 
     scripts:
+#      - name: Load Firebase configuration
+#        script: |
+#          #!/usr/bin/env sh
+#          set -e
+#          echo "$ANDROID_FIREBASE_SECRET" > "$CM_BUILD_DIR/android/app/google-services.json"
+
       - name: Retrieve version
         script: |
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
