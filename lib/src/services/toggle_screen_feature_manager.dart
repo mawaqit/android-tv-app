@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
@@ -50,27 +49,38 @@ class ToggleScreenFeature {
   ToggleScreenFeature._internal();
 
   static const String _scheduledInfoKey = 'scheduled_info_key';
-  static const int DEFAULT_DAYS_TO_SCHEDULE = 2; // Default: Schedule for current day + 2 more days
-  static const int FAJR_ISHA_DAYS_TO_SCHEDULE = 6; // For Fajr/Isha mode: current day + 6 more days
-  static const int BACKGROUND_CHECK_ALARM_ID = 999888777; // Unique ID for background check
-  static const Duration BACKGROUND_CHECK_INTERVAL = Duration(hours: 12); // Check twice daily
+  static const int DEFAULT_DAYS_TO_SCHEDULE =
+      2; // Default: Schedule for current day + 2 more days
+  static const int FAJR_ISHA_DAYS_TO_SCHEDULE =
+      6; // For Fajr/Isha mode: current day + 6 more days
+  static const int BACKGROUND_CHECK_ALARM_ID =
+      999888777; // Unique ID for background check
+  static const Duration BACKGROUND_CHECK_INTERVAL =
+      Duration(hours: 12); // Check twice daily
 
   /// Schedule screen toggle timers for multiple days
   static Future<void> scheduleToggleScreen(
-      bool isFajrIshaOnly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
+      bool isFajrIshaOnly,
+      List<String> timeStrings,
+      int beforeDelayMinutes,
+      int afterDelayMinutes) async {
     try {
       // Cancel any existing timers before scheduling new ones
       await cancelAllScheduledTimers();
 
       // Determine days to schedule based on the mode
-      final daysToSchedule = isFajrIshaOnly ? FAJR_ISHA_DAYS_TO_SCHEDULE : DEFAULT_DAYS_TO_SCHEDULE;
+      final daysToSchedule = isFajrIshaOnly
+          ? FAJR_ISHA_DAYS_TO_SCHEDULE
+          : DEFAULT_DAYS_TO_SCHEDULE;
 
       // Save scheduling parameters for future rescheduling
-      await _saveSchedulingParameters(isFajrIshaOnly, timeStrings, beforeDelayMinutes, afterDelayMinutes);
+      await _saveSchedulingParameters(
+          isFajrIshaOnly, timeStrings, beforeDelayMinutes, afterDelayMinutes);
 
       // Schedule for multiple days
       for (int dayOffset = 0; dayOffset <= daysToSchedule; dayOffset++) {
-        await _scheduleForDay(isFajrIshaOnly, timeStrings, beforeDelayMinutes, afterDelayMinutes, dayOffset);
+        await _scheduleForDay(isFajrIshaOnly, timeStrings, beforeDelayMinutes,
+            afterDelayMinutes, dayOffset);
       }
 
       // Schedule background check to ensure timers are still active
@@ -81,7 +91,8 @@ class ToggleScreenFeature {
       final prefs = await SharedPreferences.getInstance();
       await Future.wait([
         prefs.setBool(TurnOnOffTvConstant.kActivateToggleFeature, true),
-        prefs.setString(TurnOnOffTvConstant.kLastEventDate, AppDateTime.now().toIso8601String()),
+        prefs.setString(TurnOnOffTvConstant.kLastEventDate,
+            AppDateTime.now().toIso8601String()),
         prefs.setInt(TurnOnOffTvConstant.kMinuteBeforeKey, beforeDelayMinutes),
         prefs.setInt(TurnOnOffTvConstant.kMinuteAfterKey, afterDelayMinutes),
         prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, true),
@@ -96,8 +107,12 @@ class ToggleScreenFeature {
   }
 
   /// Schedule timers for a specific day offset from today
-  static Future<void> _scheduleForDay(bool isFajrIshaOnly, List<String> timeStrings, int beforeDelayMinutes,
-      int afterDelayMinutes, int dayOffset) async {
+  static Future<void> _scheduleForDay(
+      bool isFajrIshaOnly,
+      List<String> timeStrings,
+      int beforeDelayMinutes,
+      int afterDelayMinutes,
+      int dayOffset) async {
     try {
       final List<String> prayerTimes = List.from(timeStrings);
       prayerTimes.removeAt(1); // Remove sunrise
@@ -204,12 +219,14 @@ class ToggleScreenFeature {
       final minute = int.parse(parts[1]);
 
       // Create target prayer time
-      DateTime prayerDateTime = DateTime(targetDate.year, targetDate.month, targetDate.day, hour, minute);
+      DateTime prayerDateTime = DateTime(
+          targetDate.year, targetDate.month, targetDate.day, hour, minute);
 
       // Apply the delay (before or after)
       DateTime scheduledTime;
       if (actionType == 'screenOn') {
-        scheduledTime = prayerDateTime.subtract(Duration(minutes: delayMinutes));
+        scheduledTime =
+            prayerDateTime.subtract(Duration(minutes: delayMinutes));
       } else {
         scheduledTime = prayerDateTime.add(Duration(minutes: delayMinutes));
       }
@@ -218,11 +235,13 @@ class ToggleScreenFeature {
 
       // Only schedule if the time is in the future
       if (scheduledTime.isAfter(now)) {
-        final uniqueId = '${actionType}_${prayerName}_${dayOffset}_${DateTime.now().millisecondsSinceEpoch}';
+        final uniqueId =
+            '${actionType}_${prayerName}_${dayOffset}_${DateTime.now().millisecondsSinceEpoch}';
         final isBox = TimeShiftManager().isLauncherInstalled;
 
         // Schedule the task
-        await WorkManagerService.registerScreenTask(uniqueId, actionType, scheduledTime.difference(now), isBox);
+        await WorkManagerService.registerScreenTask(
+            uniqueId, actionType, scheduledTime.difference(now), isBox);
 
         // Create and return the scheduled info (without saving it yet)
         return TimerScheduleInfo(
@@ -240,7 +259,8 @@ class ToggleScreenFeature {
   }
 
   /// Save a batch of scheduled timer infos for tracking
-  static Future<void> _saveScheduledInfoBatch(List<TimerScheduleInfo> newInfoList) async {
+  static Future<void> _saveScheduledInfoBatch(
+      List<TimerScheduleInfo> newInfoList) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       List<TimerScheduleInfo> existingInfoList = await _getScheduledInfoList();
@@ -250,14 +270,17 @@ class ToggleScreenFeature {
 
       // Remove expired entries to keep the list manageable
       final now = AppDateTime.now();
-      existingInfoList = existingInfoList.where((item) => item.scheduledTime.isAfter(now)).toList();
+      existingInfoList = existingInfoList
+          .where((item) => item.scheduledTime.isAfter(now))
+          .toList();
 
       // Save back to preferences in a single operation
       final jsonList = existingInfoList.map((item) => item.toJson()).toList();
       await prefs.setString(_scheduledInfoKey, jsonEncode(jsonList));
 
       // Log the number of timers saved
-      logger.i('Saved ${newInfoList.length} new timer schedules (total: ${existingInfoList.length})');
+      logger.i(
+          'Saved ${newInfoList.length} new timer schedules (total: ${existingInfoList.length})');
     } catch (e) {
       logger.e('Failed to save scheduled info batch: $e');
     }
@@ -278,7 +301,8 @@ class ToggleScreenFeature {
         rescheduleOnReboot: true,
       );
 
-      logger.i('Background check scheduled with interval of ${BACKGROUND_CHECK_INTERVAL.inHours} hours');
+      logger.i(
+          'Background check scheduled with interval of ${BACKGROUND_CHECK_INTERVAL.inHours} hours');
     } catch (e) {
       logger.e('Failed to schedule background check: $e');
     }
@@ -297,7 +321,8 @@ class ToggleScreenFeature {
       // Check if rescheduling is needed using shouldReschedule
       bool needsReschedule = await shouldReschedule();
       if (needsReschedule) {
-        logger.i('Background check: Rescheduling needed based on shouldReschedule() criteria');
+        logger.i(
+            'Background check: Rescheduling needed based on shouldReschedule() criteria');
         await _rescheduleAllTimers();
         return;
       }
@@ -314,13 +339,16 @@ class ToggleScreenFeature {
 
       // Check if we have any future scheduled timers
       final now = AppDateTime.now();
-      final futureTimers = scheduledTimers.where((timer) => timer.scheduledTime.isAfter(now)).toList();
+      final futureTimers = scheduledTimers
+          .where((timer) => timer.scheduledTime.isAfter(now))
+          .toList();
 
       if (futureTimers.isEmpty) {
         logger.w('No future timers found during background check');
         await _rescheduleAllTimers();
       } else {
-        logger.i('Background check: ${futureTimers.length} future timers active');
+        logger
+            .i('Background check: ${futureTimers.length} future timers active');
       }
     } catch (e) {
       logger.e('Background check error: $e');
@@ -360,7 +388,10 @@ class ToggleScreenFeature {
 
   /// Save scheduling parameters for future rescheduling
   static Future<void> _saveSchedulingParameters(
-      bool isFajrIshaOnly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
+      bool isFajrIshaOnly,
+      List<String> timeStrings,
+      int beforeDelayMinutes,
+      int afterDelayMinutes) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final Map<String, dynamic> params = {
@@ -371,7 +402,8 @@ class ToggleScreenFeature {
         'savedAt': DateTime.now().toIso8601String(),
       };
 
-      await prefs.setString(TurnOnOffTvConstant.kScheduleParamsKey, jsonEncode(params));
+      await prefs.setString(
+          TurnOnOffTvConstant.kScheduleParamsKey, jsonEncode(params));
     } catch (e) {
       logger.e('Failed to save scheduling parameters: $e');
     }
@@ -381,7 +413,8 @@ class ToggleScreenFeature {
   static Future<Map<String, dynamic>?> _getSchedulingParameters() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final paramsString = prefs.getString(TurnOnOffTvConstant.kScheduleParamsKey);
+      final paramsString =
+          prefs.getString(TurnOnOffTvConstant.kScheduleParamsKey);
 
       if (paramsString != null) {
         return jsonDecode(paramsString);
@@ -445,7 +478,8 @@ class ToggleScreenFeature {
     final isFajrIshaOnly = await getToggleFeatureishaFajrState();
 
     // Determine the appropriate scheduling window based on the mode
-    final daysToSchedule = isFajrIshaOnly ? FAJR_ISHA_DAYS_TO_SCHEDULE : DEFAULT_DAYS_TO_SCHEDULE;
+    final daysToSchedule =
+        isFajrIshaOnly ? FAJR_ISHA_DAYS_TO_SCHEDULE : DEFAULT_DAYS_TO_SCHEDULE;
 
     // Reschedule if:
     // 1. Feature is active but no events are scheduled
@@ -484,9 +518,11 @@ class ToggleScreenFeature {
         }
       } else {
         // If no events executed in the last 24 hours
-        final hoursSinceLastExecution = today.difference(lastExecutedEvent).inHours;
+        final hoursSinceLastExecution =
+            today.difference(lastExecutedEvent).inHours;
         if (hoursSinceLastExecution > 24) {
-          logger.w('Rescheduling needed: No events executed in the last 24 hours');
+          logger.w(
+              'Rescheduling needed: No events executed in the last 24 hours');
           return true;
         }
       }
@@ -497,12 +533,14 @@ class ToggleScreenFeature {
 
   static Future<void> recordEventExecution() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(TurnOnOffTvConstant.kLastExecutedEventDate, DateTime.now().toIso8601String());
+    await prefs.setString(TurnOnOffTvConstant.kLastExecutedEventDate,
+        DateTime.now().toIso8601String());
   }
 
   static Future<DateTime?> getLastExecutedEventDate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final lastExecDateString = prefs.getString(TurnOnOffTvConstant.kLastExecutedEventDate);
+    final lastExecDateString =
+        prefs.getString(TurnOnOffTvConstant.kLastExecutedEventDate);
     if (lastExecDateString != null) {
       return DateTime.parse(lastExecDateString);
     } else {
@@ -517,7 +555,8 @@ class ToggleScreenFeature {
 
   static Future<bool> getToggleFeatureState() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final state = prefs.getBool(TurnOnOffTvConstant.kActivateToggleFeature) ?? false;
+    final state =
+        prefs.getBool(TurnOnOffTvConstant.kActivateToggleFeature) ?? false;
     return state;
   }
 
@@ -538,7 +577,9 @@ class ToggleScreenFeature {
       final allKeys = prefs.getKeys().toList();
 
       // Filter keys that start with 'screen_task_id_mapping_'
-      final mappingKeys = allKeys.where((key) => key.startsWith('screen_task_id_mapping_')).toList();
+      final mappingKeys = allKeys
+          .where((key) => key.startsWith('screen_task_id_mapping_'))
+          .toList();
 
       // Cancel each alarm and clean up SharedPreferences
       for (String mappingKey in mappingKeys) {
@@ -580,18 +621,21 @@ class ToggleScreenFeature {
 
   static Future<bool> checkEventsScheduled() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final isEventsSet = prefs.getBool(TurnOnOffTvConstant.kIsEventsSet) ?? false;
+    final isEventsSet =
+        prefs.getBool(TurnOnOffTvConstant.kIsEventsSet) ?? false;
     return isEventsSet;
   }
 
   static Future<void> setLastEventDate(DateTime date) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(TurnOnOffTvConstant.kLastEventDate, date.toIso8601String());
+    await prefs.setString(
+        TurnOnOffTvConstant.kLastEventDate, date.toIso8601String());
   }
 
   static Future<DateTime?> getLastEventDate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final lastEventDateString = prefs.getString(TurnOnOffTvConstant.kLastEventDate);
+    final lastEventDateString =
+        prefs.getString(TurnOnOffTvConstant.kLastEventDate);
     if (lastEventDateString != null) {
       return DateTime.parse(lastEventDateString);
     } else {

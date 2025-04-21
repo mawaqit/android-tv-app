@@ -35,7 +35,8 @@ final mawaqitApi = "https://mawaqit.net/api/2.0";
 
 const kAzkarDuration = const Duration(seconds: 140);
 
-class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
+class MosqueManager extends ChangeNotifier
+    with WeatherMixin, AudioMixin, MosqueHelpersMixin, NetworkConnectivity {
   final sharedPref = SharedPref();
 
   // String? mosqueId;
@@ -53,19 +54,23 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
 
       DateTime? endOfDay;
       if (endDate != null) {
-        endOfDay = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
+        endOfDay =
+            DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
       }
 
       if (startDate == null && endDate == null) {
         _flashEnabled = true;
       } else if (startDate != null && endDate == null) {
-        _flashEnabled = currentDate.isAfter(startDate) || currentDate.isAtSameMomentAs(startDate);
+        _flashEnabled = currentDate.isAfter(startDate) ||
+            currentDate.isAtSameMomentAs(startDate);
       } else if (startDate == null && endDate != null) {
-        _flashEnabled = currentDate.isBefore(endOfDay!) || currentDate.isAtSameMomentAs(endOfDay);
+        _flashEnabled = currentDate.isBefore(endOfDay!) ||
+            currentDate.isAtSameMomentAs(endOfDay);
       } else if (startDate != null && endDate != null) {
-        _flashEnabled = currentDate.isAfter(startDate) && currentDate.isBefore(endOfDay!) ||
-            currentDate.isAtSameMomentAs(startDate) ||
-            currentDate.isAtSameMomentAs(endOfDay!);
+        _flashEnabled =
+            currentDate.isAfter(startDate) && currentDate.isBefore(endOfDay!) ||
+                currentDate.isAtSameMomentAs(startDate) ||
+                currentDate.isAtSameMomentAs(endOfDay!);
       }
       notifyListeners();
     }
@@ -162,7 +167,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     /// if getting item returns an error
     onItemError(e, stack) async {
       logger.e(e, stackTrace: stack);
-      bool hasCachedMosque = await sharedPref.read(MosqueManagerConstant.khasCachedMosque) ?? false;
+      bool hasCachedMosque =
+          await sharedPref.read(MosqueManagerConstant.khasCachedMosque) ??
+              false;
       if (!hasCachedMosque) {
         mosque = null;
         notifyListeners();
@@ -199,7 +206,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription = timesStream.listen(
       (e) async {
         times = e;
-
         // Obtain an instance of the background service.
         final service = FlutterBackgroundService();
 
@@ -238,15 +244,19 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     mosqueUUID = uuid;
   }
 
-  Future<Mosque> searchMosqueWithId(String mosqueId) => Api.searchMosqueWithId(mosqueId);
+  Future<Mosque> searchMosqueWithId(String mosqueId) =>
+      Api.searchMosqueWithId(mosqueId);
 
-  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async => Api.searchMosques(mosque, page: page);
+  Future<List<Mosque>> searchMosques(String mosque, {page = 1}) async =>
+      Api.searchMosques(mosque, page: page);
 
 //todo handle page and get more
   Future<List<Mosque>> searchWithGps() async {
-    final position = await getCurrentLocation().catchError((e) => throw GpsError());
+    final position =
+        await getCurrentLocation().catchError((e) => throw GpsError());
 
-    final url = Uri.parse("$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
+    final url = Uri.parse(
+        "$mawaqitApi/mosque/search?lat=${position.latitude}&lon=${position.longitude}");
     Map<String, String> requestHeaders = {
       // "Api-Access-Token": mawaqitApiToken,
     };
@@ -273,7 +283,9 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   }
 
   Future<Position> getCurrentLocation() async {
-    var enabled = await GeolocatorPlatform.instance.isLocationServiceEnabled().timeout(Duration(seconds: 5));
+    var enabled = await GeolocatorPlatform.instance
+        .isLocationServiceEnabled()
+        .timeout(Duration(seconds: 5));
 
     if (!enabled) {
       enabled = await GeolocatorPlatform.instance.openLocationSettings();
@@ -281,7 +293,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     if (!enabled) throw GpsError();
 
     final permission = await GeolocatorPlatform.instance.requestPermission();
-    if (permission == LocationPermission.deniedForever || permission == LocationPermission.denied) throw GpsError();
+    if (permission == LocationPermission.deniedForever ||
+        permission == LocationPermission.denied) throw GpsError();
 
     return await GeolocatorPlatform.instance.getCurrentPosition();
   }
@@ -296,11 +309,16 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       mosque?.exteriorPicture,
       mosqueConfig?.motifUrl,
       kFooterQrLink,
-      ...mosque?.announcements.map((e) => e.image).where((element) => element != null) ?? <String>[],
+      ...mosque?.announcements
+              .map((e) => e.image)
+              .where((element) => element != null) ??
+          <String>[],
     ].where((e) => e != null).cast<String>();
 
     /// some images isn't existing anymore so we will ignore errors
-    final futures = images.map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {})).toList();
+    final futures = images
+        .map((e) => MawaqitImageCache.cacheImage(e).catchError((e) {}))
+        .toList();
     await Future.wait(futures);
   }
 }
