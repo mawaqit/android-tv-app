@@ -12,18 +12,6 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 
 class JumuaWidget extends StatelessWidget {
   const JumuaWidget({super.key});
-
-  List<String> getOrderedJumuaTimes(MosqueManager mosqueManager) {
-    final times = mosqueManager.times;
-    List<String> jumuaTimes = [];
-
-    if (times?.jumua != null) jumuaTimes.add(times!.jumua!);
-    if (times?.jumua2 != null) jumuaTimes.add(times!.jumua2!);
-    if (times?.jumua3 != null) jumuaTimes.add(times!.jumua3!);
-
-    return jumuaTimes;
-  }
-
   @override
   Widget build(BuildContext context) {
     final mosqueManager = context.watch<MosqueManager>();
@@ -55,9 +43,19 @@ class JumuaWidget extends StatelessWidget {
   }
 
   Widget jumuaTile(MosqueManager mosqueManager, BuildContext context) {
-    final jumuaTimes = getOrderedJumuaTimes(mosqueManager);
+    final jumuaTimes = mosqueManager.getOrderedJumuaTimes();
+
+    // Add detailed logs for debugging
+    final now = mosqueManager.mosqueDate();
+    final isFriday = now.weekday == DateTime.friday;
+    final nextIqamaIdx = mosqueManager.nextIqamaIndex();
+    final isJumuaTime = mosqueManager.jumuaaWorkflowTime();
+
+    // Original condition
+    final shouldBeActive = isFriday && (nextIqamaIdx == 1 || isJumuaTime);
 
     if (jumuaTimes.isEmpty) {
+      developer.log('JUMUA_DEBUG: No Jumua times available');
       return SalahItemWidget(
         withDivider: true,
         removeBackground: true,
@@ -75,7 +73,7 @@ class JumuaWidget extends StatelessWidget {
       iqama: jumuaTimes.length > 1 ? jumuaTimes[1] : null,
       iqama2: jumuaTimes.length > 2 ? jumuaTimes[2] : null,
       isIqamaMoreImportant: false,
-      active: mosqueManager.nextIqamaIndex() == 1 && AppDateTime.isFriday,
+      active: shouldBeActive,
     );
   }
 }
