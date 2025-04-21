@@ -71,7 +71,7 @@ abstract class QuranConstant {
   static const String kWarshQuranLocalVersion = 'warsh_quran_local_version';
   static const String kSelectedMoshafType = 'selected_moshaf_type';
   static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
-  static const String kSurahBox = 'surah_box';
+  static const String kSurahBox = 'surah_box_v2';
   static const String kReciterBox = 'reciter_box_v2';
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
