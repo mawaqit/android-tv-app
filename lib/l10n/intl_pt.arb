@@ -142,7 +142,7 @@
   "dhuAlhijjah": "Dhu al-Hijjah",
   "duaaBetweenSalahAndAdhan": "Anas ibn Mâlik (Radiyallahu Anhu) relata que Profeta Muhammad (Sallalláhu Alaihi Wa Sallam) disse: \"O duá efetuado entre Azán (chamada para oração) e Iqamah (aviso do início da oração), não é rejeitado.\"",
   "salatKhayrMinaNawm": "A oração é melhor que o sono",
-  "salatElEid": "Salatul Eid",
+  "salatElEid": "Eid Salah",
   "webView": "Ativar modo compatível",
   "developersHomeScreen": "Início de desenvolvedor",
   "onlineHome": "Início online",
@@ -444,5 +444,6 @@
       }
     }
   },
-  "scheduleInOnlineMode": "Conecte-se à rede para agendar a audição do Alcorão"
+  "scheduleInOnlineMode": "Conecte-se à rede para agendar a audição do Alcorão",
+  "duaBetweenAdhanIqamah": "O oferecimento (Du'a) não é rejeitado entre o Adhan e Iqamah."
 }
