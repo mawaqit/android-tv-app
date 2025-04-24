@@ -136,6 +136,7 @@ Future<void> checkAndRequestExactAlarmPermission() async {
   }
 }
 
+@pragma("vm:entry-point")
 Future<void> _initializeServices() async {
   tz.initializeTimeZones();
   await WorkManagerService.initialize();

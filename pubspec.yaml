@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.20.1+1
+version: 1.21.0+0
 
 
 environment:
@@ -145,6 +145,10 @@ dependencies:
     git:
       url: https://github.com/mawaqit/android-tv-notification
       ref: main
+  android_alarm_manager:
+    git:
+      url: https://github.com/ghassenbenzahra123/android_alarm_manager
+      ref: master
 
   percent_indicator: ^4.2.3
 
@@ -157,7 +161,6 @@ dependencies:
 
   montenegrin_localization: ^0.1.0+1
   synchronized: ^3.1.0+1
-  workmanager: ^0.5.2
   audio_session: ^0.1.21
   permission_handler: ^11.0.1
 

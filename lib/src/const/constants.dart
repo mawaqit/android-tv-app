@@ -41,21 +41,19 @@ abstract class RandomHadithConstant {
 }
 
 class TurnOnOffTvConstant {
-  static const String kLastEventDate = "lastEventDate";
-  static const String kIsEventsSet = "isEventsSet";
-  static const String kActivateToggleFeature = "activateToggleFeature";
-  static const String kScheduledTimersKey = "scheduledTimers";
+  static const String kActivateToggleFeature = 'activate_toggle_feature';
+  static const String kisFajrIshaOnly = 'is_fajr_isha_only';
+  static const String kScheduledTimersKey = 'scheduled_timers_key';
+  static const String kLastEventDate = 'last_event_date';
+  static const String kMinuteBeforeKey = 'minute_before_key';
+  static const String kMinuteAfterKey = 'minute_after_key';
+  static const String kIsEventsSet = 'is_events_set';
+  static const String kScheduleParamsKey = 'schedule_params_key';
+  static const String kLastExecutedEventDate = 'last_executed_event_date';
 
   /// native methods calls
   static const String kNativeMethodsChannel = "nativeMethodsChannel";
   static const String kCheckRoot = "checkRoot";
-  static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
-  static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
-  static const String kToggleTabletScreenOn = "toggleTabletScreenOn";
-  static const String kToggleTabletScreenOff = "toggleTabletScreenOff";
-  static const String kisFajrIshaOnly = "isIshaFajrOnly";
-  static const String kMinuteBeforeKey = 'selectedMinuteBefore';
-  static const String kMinuteAfterKey = 'selectedMinuteAfter';
 }
 
 abstract class AnnouncementConstant {
@@ -73,7 +71,7 @@ abstract class QuranConstant {
   static const String kWarshQuranLocalVersion = 'warsh_quran_local_version';
   static const String kSelectedMoshafType = 'selected_moshaf_type';
   static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
-  static const String kSurahBox = 'surah_box';
+  static const String kSurahBox = 'surah_box_v2';
   static const String kReciterBox = 'reciter_box_v2';
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
