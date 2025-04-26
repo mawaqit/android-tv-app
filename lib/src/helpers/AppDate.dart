@@ -28,10 +28,10 @@ class AppDateTime {
   static final DateTime _initialRealTime = DateTime.now();
   static final DateTime _initialDebugTime = DateTime(
     _initialRealTime.year,
-    11,
-    1,
+    _initialRealTime.month,
+    _initialRealTime.day,
+    17,
     00,
-    -20,
     00,
   );
 
