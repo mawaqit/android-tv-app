@@ -56,6 +56,7 @@ class _PortraitTurkishHomeState extends riverpod.ConsumerState<PortraitTurkishHo
       ref.read(appUpdateProvider.notifier).startUpdateScheduler(
             mosque,
             context.read<AppLanguage>().appLocal.languageCode,
+            context
           );
     });
     super.initState();

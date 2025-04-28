@@ -38,6 +38,8 @@ android {
         versionCode = appVersionCode
         versionName = flutter.versionName
         manifestPlaceholders["crashlyticsCollectionEnabled"] = false
+        testInstrumentationRunner = "pl.leancode.patrol.PatrolJUnitRunner"
+        testInstrumentationRunnerArguments["clearPackageData"] = "true"
     }
 
     signingConfigs {
@@ -48,10 +50,11 @@ android {
             keyAlias = System.getenv()["CM_KEY_ALIAS"]
             keyPassword = System.getenv()["CM_KEY_PASSWORD"]
           } else if (keystorePropsFile.exists() &&
-                    keystoreProps["storeFile"] != null &&
-                    keystoreProps["storePassword"] != null &&
-                    keystoreProps["keyAlias"] != null &&
-                    keystoreProps["keyPassword"] != null) {
+            keystoreProps["storeFile"] != null &&
+            keystoreProps["storePassword"] != null &&
+            keystoreProps["keyAlias"] != null &&
+            keystoreProps["keyPassword"] != null
+          ) {
             storeFile = rootProject.file(keystoreProps["storeFile"].toString())
             storePassword = keystoreProps["storePassword"].toString()
             keyAlias = keystoreProps["keyAlias"].toString()
@@ -67,10 +70,19 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
+
+  testOptions {
+    execution = "ANDROIDX_TEST_ORCHESTRATOR"
+  }
+}
+
+dependencies {
+  androidTestUtil("androidx.test:orchestrator:1.5.1")
+
 }
 
 
 
 flutter {
-    source = "../.."
+  source = "../.."
 }

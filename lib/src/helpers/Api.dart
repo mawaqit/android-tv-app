@@ -19,7 +19,7 @@ import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unique_identifier/unique_identifier.dart';
-import 'package:xml_parser/xml_parser.dart';
+import 'package:xml/xml.dart';
 
 import '../data/data_source/cache_local_data_source.dart';
 import '../domain/model/failure/mosque/mosque_failure.dart';
@@ -216,15 +216,15 @@ class Api {
 
     final response = await dioStatic.get('/xml/ahadith/$language.xml');
 
-    final document = XmlDocument.from(response.data)!;
+    final document = XmlDocument.parse(response.data);
 
-    final hadiths = document.getElements('hadith');
+    final hadiths = document.findAllElements('hadith');
 
-    if (hadiths == null) return null;
+    if (hadiths.isEmpty) return null;
 
     final random = Random().nextInt(hadiths.length);
 
-    return hadiths[random].text;
+    return hadiths.elementAt(random).innerText;
   }
 
   /// get the hadith from the server directly

@@ -56,17 +56,18 @@ dependencies:
   flutter_inappwebview: ^6.1.5
 
   # CONNECTIVITY
-  http: ^0.13.6
+  http: ^1.3.0
   dio: ^5.1.2
   dio_cache_interceptor: ^3.4.2
   dio_cache_interceptor_hive_store: ^3.2.1
   cached_network_image: ^3.3.1
-  xml_parser: ^1.0.0
+  xml: ^6.5.0
 
   share_plus: ^10.0.0
   url_launcher: ^6.1.11
   store_redirect: ^2.0.1
-  connectivity_plus: ^4.0.0
+  connectivity_plus: ^6.1.3
+#  uni_links3: ^0.5.3
 
   # TOOLS
   google_fonts: ^4.0.4
@@ -74,6 +75,7 @@ dependencies:
   android_intent_plus: ^4.0.0
   global_configuration: ^2.0.0-nullsafety.1
   path_provider: ^2.0.14
+  #  uuid: ^4.5.1
 
   # STATE MANAGEMENT
   provider: ^6.0.5
@@ -109,9 +111,10 @@ dependencies:
 
   #  media
   youtube_player_flutter: ^9.1.1
-  youtube_explode_dart: ^1.12.4
+  youtube_explode_dart: ^2.4.0
   unique_identifier: 0.4.0
   collection: any
+#  disk_space_plus: 0.2.4
   disk_space_2: ^1.0.8
 
   screen_control:
@@ -119,18 +122,19 @@ dependencies:
       url: https://github.com/mawaqit/native_screen_lock_mawaqit_devices
       ref: master
   equatable: ^2.0.5
-  just_audio: ^0.9.37
+  just_audio: ^0.10.0
 
 
   # alert
   flash: ^3.0.5+2
 
   # app update
-  upgrader: ^6.5.0
+  upgrader: ^11.3.1
   open_store: ^0.5.0
 
   # internet connectivity checker
-  internet_connection_checker_plus: ^1.0.1
+  internet_connection_checker_plus: ^2.7.1
+  #  flutter_kurdish_localization: ^1.0.8
   scrollview_observer: ^1.21.0
   # manage files and folders
   flutter_archive: ^6.0.3
@@ -139,7 +143,6 @@ dependencies:
 
   wakelock_plus: 1.1.4
   wakelock_plus_platform_interface: 1.1.0
-
   flutter_background_service: ^5.0.9
   notification_overlay:
     git:
@@ -156,13 +159,14 @@ dependencies:
   fast_cached_network_image: 1.2.9
 
   permission_handler: ^11.4.0
-  workmanager: ^0.5.1
+
   package_info_plus: ^4.2.0
 
   # Added screen control package
   flutter_screen_controller: ^0.0.6
 
-  montenegrin_localization: ^0.1.0+1
+  montenegrin_localization: ^0.1.1
+
   synchronized: ^3.1.0+1
   audio_session: ^0.1.21
 
@@ -172,6 +176,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
+
+  patrol: ^3.15.1
 
   # to get unused packages run
   # flutter pub run dependency_validator
@@ -188,8 +196,9 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 dependency_overrides:
-  #  win32: 5.0.9
-  rive: ^0.9.1
+  fading_edge_scrollview: ^4.1.1
+  rive: ^0.13.20
+
 # The following section is specific to Flutter.
 flutter:
   generate: true
@@ -236,3 +245,8 @@ flutter:
     - family: WeatherIcons
       fonts:
         - asset: assets/fonts/weathericons-regular-webfont.ttf
+
+patrol:
+  app_name: Mawaqit Android TV
+  android:
+    package_name: com.mawaqit.androidtv
