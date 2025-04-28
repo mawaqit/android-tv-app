@@ -142,7 +142,7 @@
   "dhuAlhijjah": "Dhu al-Hijja",
   "duaaBetweenSalahAndAdhan": "Anas bin Malik sade: Allahs budbärare ﷺ sade: \"Jag har aldrig hört talas om det: Jag har inte sagt att bönerna inte återvänder mellan böneutropet och böneutropet.",
   "salatKhayrMinaNawm": "Assalatu khayrun mina nawm",
-  "salatElEid": "Salat El Eid",
+  "salatElEid": "Eid Salah",
   "webView": "Aktivera Legacy Mode (gammalt läge)",
   "developersHomeScreen": "Utvecklarens startskärm",
   "onlineHome": "Hem på nätet",
@@ -444,5 +444,6 @@
       }
     }
   },
-  "scheduleInOnlineMode": "Vänligen anslut till internet för att schemalägga Quran lyssnande"
+  "scheduleInOnlineMode": "Vänligen anslut till internet för att schemalägga Quran lyssnande",
+  "duaBetweenAdhanIqamah": "Åkallelse (Du'a) avvisas inte mellan Adhan och Iqamah."
 }
