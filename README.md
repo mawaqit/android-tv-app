@@ -23,7 +23,7 @@ ___
 
 This license lets others remix, adapt, and build upon our work non-commercially, as long as they credit Mawaqit and license their new creations under the identical terms.
 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0
 
 Intellectual property and copyrights of this application or its plug-ins, add-ons or content are owned by MAWAQIT.
 Other content, plugins and addons used are owned by their respective creators (please see the credits section)
@@ -53,3 +53,7 @@ ___
 ## DONATE
 This project is freely available under simple legal terms because of MAWAQIT, a non-profit that survives on donations. If you love this content, and ❤️ love that it's free for everyone, please consider a donation to support our work.
 👉 https://donate.mawaqit.net/ 
+
+## Contributing
+
+We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for details on our code of conduct and the process for submitting pull requests.
