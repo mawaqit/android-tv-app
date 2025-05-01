@@ -142,7 +142,7 @@ class _LanguageTileState extends State<LanguageTile> {
         ),
         child: Ink(
           decoration: BoxDecoration(
-            color: widget.isSelected ? themeData.selectedRowColor : null,
+            color: widget.isSelected ? themeData.focusColor : null,
             borderRadius: BorderRadius.circular(10),
           ),
           child: InkWell(
