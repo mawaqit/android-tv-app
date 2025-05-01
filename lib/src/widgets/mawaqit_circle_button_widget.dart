@@ -6,7 +6,7 @@ class MawaqitCircleButton extends StatelessWidget {
   final IconData icon;
   final double iconSize;
   final double size;
-  final Color color;
+  final Color? color;
   final String? tooltip;
   final FocusNode? focusNode;
   final void Function()? onPressed;
@@ -18,12 +18,15 @@ class MawaqitCircleButton extends StatelessWidget {
     this.focusNode,
     this.size = 24,
     this.onPressed,
-    this.color = const Color(0xFF490094),
+    this.color,
     this.tooltip,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final buttonColor = color ?? theme.focusColor;
+
     return CircleAvatar(
       radius: size,
       child: Container(
@@ -33,8 +36,8 @@ class MawaqitCircleButton extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color.fromRGBO(73, 0, 148, 1),
-              Color(0xFF490094),
+              buttonColor.withOpacity(0.9),
+              buttonColor,
             ],
           ),
         ),
@@ -50,7 +53,7 @@ class MawaqitCircleButton extends StatelessWidget {
             icon,
             textDirection: TextDirection.ltr,
             size: size - 1,
-            color: color,
+            color: buttonColor,
           ),
           onPressed: onPressed,
         ),

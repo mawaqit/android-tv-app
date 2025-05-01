@@ -82,6 +82,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return mosqueConfig?.adhanEnabledByPrayer?[salahIndex] == '1' && (mosqueConfig?.adhanVoice?.isNotEmpty ?? false);
   }
 
+  bool get isAdhanVoiceEnabled => adhanVoiceEnable();
   int get salahIndex => (nextSalahIndex() - 1) % 5;
 
   bool get isImsakEnabled {
@@ -422,28 +423,57 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return times!.jumuaAsDuhr ? todayTimes[1] : times!.jumua;
   } */
 
+  /// Calculates the next Friday date from the given date
+  /// If no date is provided, it uses the current mosque date
   DateTime nextFridayDate([DateTime? now]) {
     now ??= mosqueDate();
-
     return now.add(Duration(days: (7 - now.weekday + DateTime.friday) % 7));
   }
 
-  /// cases 1: if Jumuaa is as Duhr return Duhr pray of the day.
-  /// cases 2: if Jumuaa is not as Duhr and both jumuaa and jumuaa2 are empty return next friday date.
-  /// cases 3: if Jumuaa is not as Duhr and jumuaa or jumuaa2 is not empty return *jumuaa1* time.
+  /// Returns ordered Jumua times for display
+  /// This method handles both jumuaAsDuhr case and normal case with multiple jumua times
+  List<String> getOrderedJumuaTimes() {
+    List<String> jumuaTimes = [];
+
+    // Handle jumuaAsDuhr case
+    if (times?.jumuaAsDuhr == true) {
+      final nextFriday = nextFridayDate();
+      final duhrTime = timesOfDay(nextFriday, forceActualDuhr: true)[1];
+      jumuaTimes.add(duhrTime);
+    } else {
+      // Normal case - use configured Jumua times
+      if (times?.jumua != null) jumuaTimes.add(times!.jumua!);
+    }
+    if (times?.jumua2 != null) jumuaTimes.add(times!.jumua2!);
+    if (times?.jumua3 != null) jumuaTimes.add(times!.jumua3!);
+    return jumuaTimes;
+  }
+
+  /// Returns the active Jumua time for the next Friday
+  /// This is used for workflow and timing calculations
   DateTime activeJumuaaDate([DateTime? now]) {
     final nextFriday = nextFridayDate(now);
-    if (times!.jumuaAsDuhr == true) return timesOfDay(nextFriday)[1].toTimeOfDay()!.toDate(nextFriday);
-    if (isJumuaOrJumua2EmptyOrNull()) {
+    final jumuaTimes = getOrderedJumuaTimes();
+    if (jumuaTimes.isEmpty) {
       return nextFriday;
     }
 
-    final jumuaaTime = times!.jumua; // return jumuaa1 time
-    return jumuaaTime!.toTimeOfDay()!.toDate(nextFriday); // parsing the value of juma to time of day and then to date
+    // Use the first Jumua time
+    return jumuaTimes[0].toTimeOfDay()!.toDate(nextFriday);
   }
 
-  bool isJumuaOrJumua2EmptyOrNull() {
-    return (times?.jumua ?? '').isEmpty && (times?.jumua2 ?? '').isEmpty;
+  /// Checks if we are currently in Jumua workflow time
+  bool jumuaaWorkflowTime() {
+    final now = mosqueDate();
+    final jumuaaStartTime = activeJumuaaDate();
+    final jumuaaEndTime = jumuaaStartTime.add(
+      Duration(minutes: mosqueConfig?.jumuaTimeout ?? 30) + kAzkarDuration,
+    );
+
+    if (now.weekday != DateTime.friday) return false;
+    if (!typeIsMosque) return false;
+
+    return now.isAfter(jumuaaStartTime) && now.isBefore(jumuaaEndTime);
   }
 
   /// if the iqama is less than 2min
@@ -454,23 +484,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     final currentIqamaDuration = int.tryParse(currentIqamaa) ?? 5;
 
     return currentIqamaDuration <= 2;
-  }
-
-  /// we are in jumuaa workflow time
-  bool jumuaaWorkflowTime() {
-    final now = mosqueDate();
-    final jumuaaStartTime = activeJumuaaDate();
-    final jumuaaEndTime = jumuaaStartTime?.add(
-      Duration(minutes: mosqueConfig?.jumuaTimeout ?? 30) + kAzkarDuration,
-    );
-
-    if (now.weekday != DateTime.friday) return false;
-    if (!typeIsMosque) return false;
-    if (jumuaaStartTime == null) return false;
-
-    if (now.isBefore(jumuaaStartTime) || now.isAfter(jumuaaEndTime!)) return false;
-
-    return true;
   }
 
   /// starting from before salah 5min until after the salah and azker

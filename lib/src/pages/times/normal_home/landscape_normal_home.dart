@@ -51,9 +51,11 @@ class _LandscapeNormalHomeState extends riverpod.ConsumerState<LandscapeNormalHo
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mosque = Provider.of<MosqueManager>(context, listen: false);
-      ref
-          .read(appUpdateProvider.notifier)
-          .startUpdateScheduler(mosque, context.read<AppLanguage>().appLocal.languageCode);
+      ref.read(appUpdateProvider.notifier).startUpdateScheduler(
+            mosque,
+            context.read<AppLanguage>().appLocal.languageCode,
+            context,
+          );
     });
     super.initState();
   }

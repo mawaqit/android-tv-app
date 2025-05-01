@@ -4,7 +4,7 @@ import 'dart:isolate';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
-import 'package:xml_parser/xml_parser.dart';
+import 'package:xml/xml.dart';
 
 import '../../../main.dart';
 import '../../helpers/random_hadith_helper.dart';
@@ -51,10 +51,10 @@ class RandomHadithRemoteDataSource {
       final List<XmlElement>? hadithXML = await Isolate.run(
         () async {
           log('random_hadith: RandomHadithRemoteDataSource: start xml fetch', time: DateTime.now());
-          final document = XmlDocument.from(response.data)!;
+          final document = XmlDocument.parse(response.data);
 
-          final hadithXmlList = document.getElements('hadith');
-          log('random_hadith: RandomHadithRemoteDataSource: xml list ${hadithXmlList![3]}', time: DateTime.now());
+          final hadithXmlList = document.findAllElements('hadith').toList();
+          log('random_hadith: RandomHadithRemoteDataSource: xml list ${hadithXmlList[3]}', time: DateTime.now());
           return hadithXmlList;
         },
         debugName: 'random_hadith: getRandomHadithXML',

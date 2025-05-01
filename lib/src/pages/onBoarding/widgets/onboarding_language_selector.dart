@@ -210,9 +210,9 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
         child: Ink(
           decoration: BoxDecoration(
             color: isFocused
-                ? themeData.selectedRowColor
+                ? Theme.of(context).focusColor
                 : widget.isSelected
-                    ? themeData.selectedRowColor.withGreen(140)
+                    ? Theme.of(context).focusColor
                     : null,
             borderRadius: BorderRadius.circular(10),
           ),
