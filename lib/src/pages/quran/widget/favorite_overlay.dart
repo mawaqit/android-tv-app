@@ -150,9 +150,10 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                             return Align(
                               alignment: isRTL ? Alignment.centerLeft : Alignment.centerRight,
                               child: Container(
+                                height: constraints.maxHeight,
                                 child: FastCachedImage(
                                   url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.fitHeight,
                                   alignment: Alignment.topRight,
                                   errorBuilder: (context, error, stackTrace) {
                                     return _buildOfflineImage();
