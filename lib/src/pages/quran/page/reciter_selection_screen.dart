@@ -651,9 +651,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   Widget _buildEmptyFavorites() {
     return Container(
-      height: 12.h,
       margin: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding, vertical: 10),
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(8.sp),
       decoration: BoxDecoration(
         color: Colors.black26,
         borderRadius: BorderRadius.circular(10),
