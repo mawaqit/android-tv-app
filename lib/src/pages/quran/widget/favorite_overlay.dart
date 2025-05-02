@@ -80,7 +80,7 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                               child: Text(
                                 widget.reciter.name,
                                 style: TextStyle(
-                                  fontSize:20.sp,
+                                  fontSize: 20.sp,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
