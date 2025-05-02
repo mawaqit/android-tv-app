@@ -667,15 +667,17 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             color: Colors.white54,
             size: 22.sp,
           ),
-          SizedBox(height: 12),
-          AutoSizeText(
-            S.of(context).noFavoriteReciters,
-            style: TextStyle(
-              color: Colors.white70,
-              fontFamily: 'Roboto',
-              fontSize: 12.sp,
+          SizedBox(height: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              S.of(context).noFavoriteReciters,
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 12.sp,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
