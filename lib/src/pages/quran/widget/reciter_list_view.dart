@@ -48,7 +48,6 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
             left: isRTL ? 0 : ReciterSelectionScreen.horizontalPadding,
           ),
           child: Container(
-            height: widget.reciters.isNotEmpty ? 16.h : 0,
             // Only apply padding if this is the bottom list
             padding: widget.isAtBottom
                 ? EdgeInsets.only(right: isRTL ? 0 : buttonsPadding, left: isRTL ? buttonsPadding : 0)
@@ -77,7 +76,7 @@ class _ReciterListViewState extends ConsumerState<ReciterListView> {
                       ),
                     );
                   },
-                  margin: EdgeInsets.only(right: 20),
+                  margin: EdgeInsets.only(right: 2.w),
                 );
               },
             ),
@@ -202,11 +201,10 @@ class _ReciterCardState extends ConsumerState<ReciterCard> with SingleTickerProv
                         widget.reciter.name,
                         textAlign: TextAlign.center,
                         maxLines: 2,
-                        minFontSize: 10,
-                        maxFontSize: 14,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
+                          fontSize: 8.sp,
                           shadows: [
                             Shadow(
                               offset: Offset(1, 1),
