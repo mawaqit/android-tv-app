@@ -1,49 +1,118 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/widgets/FlashAnimation.dart';
-import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/prayer_audio/prayer_audio_notifier.dart';
+import 'package:mawaqit/src/state_management/prayer_audio/prayer_audio_state.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
+import 'package:just_audio/just_audio.dart';
 
-class IqamaSubScreen extends StatefulWidget {
+import 'dart:async';
+import 'dart:developer';
+
+class IqamaSubScreen extends ConsumerStatefulWidget {
   const IqamaSubScreen({Key? key, this.onDone}) : super(key: key);
 
   final VoidCallback? onDone;
 
   @override
-  State<IqamaSubScreen> createState() => _IqamaSubScreenState();
+  ConsumerState<IqamaSubScreen> createState() => _IqamaSubScreenState();
 }
 
-class _IqamaSubScreenState extends State<IqamaSubScreen> {
-  AudioManager? audioManager;
+class _IqamaSubScreenState extends ConsumerState<IqamaSubScreen> {
+  bool _audioStarted = false;
 
   @override
   void initState() {
+    super.initState();
+    log('IqamaSubScreen: initState');
+    _playIqamaBipIfNeeded();
+  }
+
+  void _playIqamaBipIfNeeded() {
+    log('IqamaSubScreen: _playIqamaBipIfNeeded');
+
+    // Assume MosqueManager is available via context.read (provider package)
     final mosqueManager = context.read<MosqueManager>();
     final mosqueConfig = mosqueManager.mosqueConfig!;
 
     if (mosqueConfig.iqamaBip) {
-      audioManager = context.read<AudioManager>();
-      audioManager!.loadAndPlayIqamaBipVoice(mosqueManager.mosqueConfig);
+      log('IqamaSubScreen: Will play iqama bip (enabled in config)');
+      _audioStarted = true;
+
+      // Trigger playback on the next frame to ensure build completes first
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        try {
+          log('IqamaSubScreen: Calling playIqamaBip via provider');
+          ref.read(prayerAudioProvider.notifier).playIqamaBip(mosqueManager.mosqueConfig);
+        } catch (e) {
+          log('IqamaSubScreen: Error calling playIqamaBip', error: e);
+        }
+      });
+    } else {
+      log('IqamaSubScreen: Bip not enabled in config, not playing');
     }
-    super.initState();
   }
 
   @override
   void dispose() {
+    log('IqamaSubScreen: Disposing');
+
+    // Stop any potentially playing bip sound if screen is disposed early
+    if (_audioStarted) {
+      log('IqamaSubScreen: Stopping audio in dispose');
+      try {
+        // Use Future.microtask to avoid calling during build/layout
+        Future.microtask(() {
+          ref.read(prayerAudioProvider.notifier).stop();
+        });
+      } catch (e) {
+        log('IqamaSubScreen: Error stopping audio in dispose', error: e);
+      }
+    }
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    log('IqamaSubScreen: Building UI');
+
+    // Set up audio error listener
+    ref.listen<AsyncValue<PrayerAudioState>>(
+      prayerAudioProvider,
+      (previous, next) {
+        // Check for errors
+        if (previous != null && next is AsyncError && !(previous is AsyncError)) {
+          final error = (next as AsyncError).error;
+          log('IqamaSubScreen: Audio error detected: $error');
+        }
+      }
+    );
+
+    // Debug current audio state
+    final audioStateValue = ref.watch(prayerAudioProvider);
+
+    // Log the state in a useful format
+    log('IqamaSubScreen: Current audio state - ${audioStateValue.when(
+      data: (data) => "processingState: ${data.processingState}, duration: ${data.duration}",
+      loading: () => "LOADING",
+      error: (e, _) => "ERROR: $e",
+    )}');
+
     final theme = Theme.of(context);
     final tr = S.of(context);
+
+    // UI doesn't depend on audio state
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

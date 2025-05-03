@@ -45,41 +45,42 @@ class AudioManager extends ChangeNotifier {
     return adhanLink;
   }
 
-  void loadAndPlayAdhanVoice(
+  Future<Duration?> loadAndPlayAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
     bool useFajrAdhan = false,
-  }) {
+  }) async {
     final url = adhanLink(mosqueConfig, useFajrAdhan: useFajrAdhan);
     if (url.contains('bip')) {
-      loadAndPlayIqamaBipVoice(mosqueConfig, onDone: onDone);
+      return loadAndPlayIqamaBipVoice(mosqueConfig, onDone: onDone);
     } else {
-      loadAndPlay(
+      return loadAndPlay(
         url: url,
         onDone: onDone,
       );
     }
   }
 
-  void loadAndPlayIqamaBipVoice(
+  Future<Duration?> loadAndPlayIqamaBipVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
-  }) {
-    loadAssetsAndPlay(R.ASSETS_VOICES_ADHAN_BIP_MP3, onDone: onDone);
+  }) async {
+    return loadAssetsAndPlay(R.ASSETS_VOICES_ADHAN_BIP_MP3, onDone: onDone);
   }
 
-  void loadAndPlayDuaAfterAdhanVoice(
+  Future<Duration?> loadAndPlayDuaAfterAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
-  }) {
-    loadAndPlay(url: duaAfterAdhanLink, onDone: onDone);
+  }) async {
+    return loadAndPlay(url: duaAfterAdhanLink, onDone: onDone);
   }
 
-  Future<void> loadAssetsAndPlay(String assets, {VoidCallback? onDone}) async {
+  Future<Duration?> loadAssetsAndPlay(String assets, {VoidCallback? onDone}) async {
+    Duration? duration;
     try {
-      await player.setAsset(assets);
+      duration = await player.setAsset(assets);
       player.play();
-      log('audio: AudioManager: loadAssetsAndPlay: playing audio file');
+      log('audio: AudioManager: loadAssetsAndPlay: playing audio file, duration: $duration');
       player.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
           log('audio: AudioManager: loadAssetsAndPlay: done playing audio file');
@@ -108,17 +109,21 @@ class AudioManager extends ChangeNotifier {
       );
       onDone?.call();
     }
+    return duration;
   }
 
-  Future<void> loadAndPlay({
+  Future<Duration?> loadAndPlay({
     required String url,
     bool enableCache = true,
     VoidCallback? onDone,
   }) async {
+    Duration? duration;
     try {
       final file = await getFile(url, enableCache: enableCache);
-      await player.setAudioSource(JustAudioBytesSource(file));
+      final source = JustAudioBytesSource(file);
+      duration = await player.setAudioSource(source);
       player.play();
+      log('audio: AudioManager: loadAndPlay: playing audio file, duration: $duration');
       player.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
           log('audio: AudioManager: loadAndPlay: done playing audio file');
@@ -147,6 +152,7 @@ class AudioManager extends ChangeNotifier {
       );
       onDone?.call();
     }
+    return duration;
   }
 
   /// this method will precache all the audio files for this mosque
