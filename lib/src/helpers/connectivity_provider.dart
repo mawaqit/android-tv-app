@@ -41,16 +41,13 @@ class ConnectivityProvider extends StreamNotifier<ConnectivityStatus> {
     state = await AsyncValue.guard(() async {
       final internet = InternetConnection();
       final hasInternet = await internet.hasInternetAccess;
-      return hasInternet
-          ? ConnectivityStatus.connected
-          : ConnectivityStatus.disconnected;
+      return hasInternet ? ConnectivityStatus.connected : ConnectivityStatus.disconnected;
     });
   }
 }
 
 /// A standalone StreamProvider version, if you prefer not to use StreamNotifier.
-final connectivityStreamProvider =
-StreamProvider<ConnectivityStatus>((ref) {
+final connectivityStreamProvider = StreamProvider<ConnectivityStatus>((ref) {
   final internetChecker = InternetConnection.createInstance(
     checkInterval: const Duration(seconds: 10),
   );
@@ -74,7 +71,6 @@ StreamProvider<ConnectivityStatus>((ref) {
 });
 
 /// Global provider for [ConnectivityProvider].
-final connectivityProvider =
-StreamNotifierProvider<ConnectivityProvider, ConnectivityStatus>(
+final connectivityProvider = StreamNotifierProvider<ConnectivityProvider, ConnectivityStatus>(
   ConnectivityProvider.new,
 );

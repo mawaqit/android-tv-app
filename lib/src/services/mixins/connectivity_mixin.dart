@@ -27,11 +27,10 @@ mixin NetworkConnectivity on ChangeNotifier {
 
   void listenToConnectivity() {
     checkIsOnline();
-    _connectivityHardwareSubscription =
-        _connectivity.onConnectivityChanged.listen((result) {
-          // Handle connectivity change
-          checkIsOnline();
-        });
+    _connectivityHardwareSubscription = _connectivity.onConnectivityChanged.listen((result) {
+      // Handle connectivity change
+      checkIsOnline();
+    });
 
     _connectivitySubscription = Stream.periodic(_duration).listen((event) => checkIsOnline());
   }

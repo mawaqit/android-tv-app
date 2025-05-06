@@ -36,7 +36,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
   /// Note: This method assumes that the prayer times are available and valid.
   void startUpdateScheduler(MosqueManager mosque, String languageCode, BuildContext context) {
     final now = AppDateTime.now();
-    if(!context.mounted) {
+    if (!context.mounted) {
       return;
     }
     // Check if today is Friday
@@ -85,7 +85,8 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       );
       await upgrader.initialize(); // Prepares the Upgrader package for use.
       String? releaseNotes = upgrader.releaseNotes; // Retrieves release notes, if available.
-      String message = upgrader.body(upgrader.determineMessages(context)); // Constructs a message for the update prompt.
+      String message =
+          upgrader.body(upgrader.determineMessages(context)); // Constructs a message for the update prompt.
       final isUpdateAvailable = upgrader.isUpdateAvailable(); // Checks if an update is available.
 
       final lastDismissedVersion = shared.getString(CacheKey.kUpdateDismissedVersion) ?? '0.0.0';

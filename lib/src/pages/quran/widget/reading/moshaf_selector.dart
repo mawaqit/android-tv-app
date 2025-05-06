@@ -32,7 +32,7 @@ class MoshafSelector extends ConsumerWidget {
         return state.selectedMoshaf.fold(
           () => Container(),
           (MoshafType selectedMoshaf) {
-            final  moshafName = switch (selectedMoshaf) {
+            final moshafName = switch (selectedMoshaf) {
               MoshafType.warsh => S.of(context).hafs,
               MoshafType.hafs => S.of(context).warsh,
               _ => throw Exception('Unexpected MoshafType: $selectedMoshaf'),
