@@ -39,6 +39,7 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
+import 'package:montenegrin_localization/montenegrin_localization.dart';
 import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
@@ -228,9 +229,10 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                       AnalyticsWrapper.observer(),
                     ],
                     localizationsDelegates: [
-                      // MontenegrinMaterialLocalizations.delegate,
-                      // MontenegrinWidgetsLocalizations.delegate,
-                      // MontenegrinCupertinoLocalizations.delegate,
+                      MontenegrinMaterialLocalizations.delegate,
+                      MontenegrinWidgetsLocalizations.delegate,
+                      MontenegrinCupertinoLocalizations.delegate,
+
                       S.delegate,
                       GlobalCupertinoLocalizations.delegate,
                       GlobalMaterialLocalizations.delegate,
