@@ -74,6 +74,7 @@ class AudioControlWidget extends ConsumerWidget {
                   width: buttonSize,
                   height: buttonSize,
                   child: FloatingActionButton(
+                    focusNode: focusNode,
                     focusColor: Theme.of(context).primaryColor,
                     backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
                     child: Icon(
