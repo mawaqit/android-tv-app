@@ -371,7 +371,8 @@ class PrayerScheduleService {
 
   static String getAdhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String baseLink = "$kStaticFilesUrl/audio/adhan-afassy.mp3";
-    logger.d('[StaticFileURL] PrayerScheduleService: Base adhan link using static URL: $baseLink', time: DateTime.now());
+    logger.d('[StaticFileURL] PrayerScheduleService: Base adhan link using static URL: $baseLink',
+        time: DateTime.now());
 
     if (mosqueConfig?.adhanVoice?.isNotEmpty ?? false) {
       baseLink = "$kStaticFilesUrl/audio/${mosqueConfig!.adhanVoice!}.mp3";

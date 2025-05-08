@@ -44,6 +44,7 @@ class AudioManager extends ChangeNotifier {
 
     return adhanLink;
   }
+
   void loadAndPlayAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
