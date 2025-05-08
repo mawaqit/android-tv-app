@@ -23,7 +23,6 @@ class TimePeriodWidget extends StatelessWidget {
       Localizations.localeOf(context).languageCode,
     ).format(dateTime);
 
-
     final defaultStyle = DefaultTextStyle.of(context).style;
     final textStyle = (style ?? defaultStyle).copyWith(
       height: 3,
