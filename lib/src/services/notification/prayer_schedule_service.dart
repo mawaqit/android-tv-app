@@ -370,14 +370,17 @@ class PrayerScheduleService {
   }
 
   static String getAdhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
-    String baseLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
+    String baseLink = "$kStaticFilesUrl/audio/adhan-afassy.mp3";
+    logger.d('[StaticFileURL] PrayerScheduleService: Base adhan link using static URL: $baseLink', time: DateTime.now());
 
     if (mosqueConfig?.adhanVoice?.isNotEmpty ?? false) {
-      baseLink = "$kStaticFilesUrl/mp3/${mosqueConfig!.adhanVoice!}.mp3";
+      baseLink = "$kStaticFilesUrl/audio/${mosqueConfig!.adhanVoice!}.mp3";
+      logger.d('[StaticFileURL] PrayerScheduleService: Using custom adhan voice: $baseLink', time: DateTime.now());
     }
 
     if (useFajrAdhan && !baseLink.contains('bip')) {
       baseLink = baseLink.replaceAll('.mp3', '-fajr.mp3');
+      logger.d('[StaticFileURL] PrayerScheduleService: Modified for Fajr: $baseLink', time: DateTime.now());
     }
 
     return baseLink;
