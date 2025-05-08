@@ -422,5 +422,17 @@
     }
   },
   "scheduleInOnlineMode":"يرجى الاتصال بالإنترنت لجدولة الاستماع إلى القرآن.",
-  "duaaBetweenAdhanAndIqamaaTitle": "الدعاء لا يرد بين الأذان والإقامة"
+  "duaaBetweenAdhanAndIqamaaTitle": "الدعاء لا يرد بين الأذان والإقامة",
+  "scheduleSaved": "تم حفظ الجدول الزمني.",
+  "completeAllFields": "يرجى إكمال جميع الحقول قبل الحفظ.",
+  "endTimeAfter": "يجب أن يكون وقت الانتهاء بعد وقت البدء.",
+  "scheduleListening": "الاستماع المجدول",
+  "enableScheduling": "تفعيل الجدولة",
+  "scheduleDesc": "فعّل هذه الميزة لتشغيل سورة تلقائيًا في الأوقات المحددة.",
+  "startTime": "وقت البدء",
+  "endTime": "وقت الانتهاء",
+  "selectReciter": "اختر قارئًا",
+  "selectMoshaf": "اختر مصحفًا",
+  "randomSurahSelection": "اختيار سورة عشوائيًا",
+  "selectSurah": "اختر سورة"
 }
