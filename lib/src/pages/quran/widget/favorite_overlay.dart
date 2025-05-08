@@ -75,12 +75,15 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                         children: [
                           FittedBox(
                             fit: BoxFit.scaleDown,
-                            child: Text(
-                              widget.reciter.name,
-                              style: TextStyle(
-                                fontSize: 22.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                widget.reciter.name,
+                                style: TextStyle(
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -112,14 +115,17 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                                     color: isReciterFavorite ? Colors.red : Colors.black,
                                     size: 3.h, // Make icon size consistent
                                   ),
-                                  label: Text(
-                                    S.of(context).favorites,
-                                    style: TextStyle(
-                                      fontSize: 11.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                                  label: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      S.of(context).favorites,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               );
@@ -150,9 +156,10 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
                             return Align(
                               alignment: isRTL ? Alignment.centerLeft : Alignment.centerRight,
                               child: Container(
+                                height: constraints.maxHeight,
                                 child: FastCachedImage(
                                   url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.fitHeight,
                                   alignment: Alignment.topRight,
                                   errorBuilder: (context, error, stackTrace) {
                                     return _buildOfflineImage();
@@ -253,14 +260,17 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
               Icon(Icons.play_arrow, size: 3.h),
               SizedBox(width: 2.w),
               Expanded(
-                child: Text(
-                  moshaf.name,
-                  style: TextStyle(
-                    fontSize: 9.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    moshaf.name,
+                    style: TextStyle(
+                      fontSize: 9.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
