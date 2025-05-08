@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.mawaqit.androidtv">
+  xmlns:tools="http://schemas.android.com/tools">
 
+  <!-- Permissions -->
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -9,36 +10,48 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-  <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
-  <uses-feature android:name="android.hardware.faketouch" android:required="false"/>
-  <uses-feature android:name="android.hardware.telephony" android:required="false"/>
-  <uses-feature android:name="android.hardware.camera" android:required="false"/>
-  <uses-feature android:name="android.hardware.nfc" android:required="false"/>
-  <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
-  <uses-feature android:name="android.hardware.microphone" android:required="false"/>
-  <uses-feature android:name="android.hardware.sensor" android:required="false"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
 
-
-
+  <!-- Hardware/Feature requirements (all optional as specified) -->
+  <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+  <uses-feature android:name="android.hardware.faketouch" android:required="false" />
+  <uses-feature android:name="android.hardware.telephony" android:required="false" />
+  <uses-feature android:name="android.hardware.camera" android:required="false" />
+  <uses-feature android:name="android.hardware.nfc" android:required="false" />
+  <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+  <uses-feature android:name="android.hardware.microphone" android:required="false" />
+  <uses-feature android:name="android.hardware.sensor" android:required="false" />
 
   <application
     android:banner="@mipmap/ic_banner"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
+    android:allowBackup="false"
     android:usesCleartextTraffic="true">
-    <service
-          android:name="id.flutter.flutter_background_service.BackgroundService"
-          android:foregroundServiceType="mediaPlayback|dataSync"
-          >
-    </service>
 
-    
+    <service
+        android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmService"
+        android:permission="android.permission.BIND_JOB_SERVICE"
+        android:exported="false"/>
+    <receiver
+        android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmBroadcastReceiver"
+        android:exported="false"/>
+    <receiver
+        android:name="dev.fluttercommunity.plus.androidalarmmanager.RebootBroadcastReceiver"
+        android:enabled="false"
+        android:exported="false">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+        </intent-filter>
+    </receiver>
+
     <activity
       android:name=".MainActivity"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -47,41 +60,30 @@
       android:launchMode="singleTop"
       android:theme="@style/LaunchTheme"
       android:windowSoftInputMode="adjustResize">
-
-      <!-- Specifies an Android theme to apply to this Activity as soon as
-           the Android process has started. This theme is visible to the user
-           while the Flutter UI initializes. After that, this theme continues
-           to determine the Window background behind the Flutter UI. -->
+      <!-- Flutter's early launch theme -->
       <meta-data
         android:name="io.flutter.embedding.android.NormalTheme"
         android:resource="@style/NormalTheme" />
-      <!-- Displays an Android View that continues showing the launch screen
-           Drawable until Flutter paints its first frame, then this splash
-           screen fades out. A splash screen is useful to avoid any visual
-           gap between the end of Android's launch screen and the painting of
-           Flutter's first frame. -->
+      <!-- Splash screen drawable that persists until Flutter renders the first frame -->
       <meta-data
         android:name="io.flutter.embedding.android.SplashScreenDrawable"
         android:resource="@drawable/launch_background" />
+      <!-- Main launcher intent-filter -->
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-
-      <!-- Deeplink -->
+      <!-- Deeplink support -->
       <meta-data
         android:name="flutter_deeplinking_enabled"
         android:value="true" />
-
       <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
-
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-
         <data android:scheme="app.flyweb.scheme" />
       </intent-filter>
-
+      <!-- For Leanback (Android TV) support -->
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
@@ -89,17 +91,20 @@
         <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
       </intent-filter>
     </activity>
-    
 
+    <!-- Google Analytics related metadata -->
     <meta-data
       android:name="google_analytics_adid_collection_enabled"
       android:value="false" />
 
-    <!-- Don't delete the meta-data below.
-         This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+    <!-- This meta-data is used by Flutter tooling -->
     <meta-data
       android:name="flutterEmbedding"
       android:value="2" />
 
+    <service android:name="id.flutter.flutter_background_service.BackgroundService"
+      android:foregroundServiceType="mediaPlayback|dataSync"
+      android:exported="false"
+      tools:replace="android:exported"/>
   </application>
 </manifest>

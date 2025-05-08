@@ -27,7 +27,10 @@ class SurahModel {
   @HiveField(5)
   final int type;
 
-  SurahModel(this.id, this.name, this.startPage, this.endPage, this.makkia, this.type);
+  @HiveField(6)
+  final String arabicName;
+
+  SurahModel(this.id, this.name, this.startPage, this.endPage, this.makkia, this.type, this.arabicName);
 
   factory SurahModel.fromJson(Map<String, dynamic> map) => _ensureContainer.fromMap<SurahModel>(map);
 

@@ -114,7 +114,7 @@ class _LanguageTileState extends State<LanguageTile> {
       padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
       child: Ink(
         decoration: BoxDecoration(
-          color: widget.isSelected ? themeData.selectedRowColor : null,
+          color: widget.isSelected ? Theme.of(context).focusColor : null,
           borderRadius: BorderRadius.circular(10),
         ),
         child: InkWell(
