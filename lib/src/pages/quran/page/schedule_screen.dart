@@ -279,6 +279,16 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         TextButton(
+          style: ButtonStyle(
+            overlayColor: WidgetStateProperty.resolveWith<Color?>(
+              (Set<WidgetState> states) {
+                if (states.contains(WidgetState.focused)) {
+                  return Theme.of(context).primaryColor;
+                }
+                return null;
+              },
+            ),
+          ),
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             S.of(context).cancel,
@@ -288,9 +298,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
         const SizedBox(width: 8),
         ElevatedButton(
           style: ButtonStyle(
-            overlayColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.focused)) {
+            overlayColor: WidgetStateProperty.resolveWith<Color?>(
+              (Set<WidgetState> states) {
+                if (states.contains(WidgetState.focused)) {
                   return Theme.of(context).primaryColor;
                 }
                 return null;

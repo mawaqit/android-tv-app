@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:open_store/open_store.dart';
@@ -33,8 +34,11 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
   /// The [languageCode] parameter is the language code used for retrieving the app update information.
   ///
   /// Note: This method assumes that the prayer times are available and valid.
-  void startUpdateScheduler(MosqueManager mosque, String languageCode) {
+  void startUpdateScheduler(MosqueManager mosque, String languageCode, BuildContext context) {
     final now = AppDateTime.now();
+    if (!context.mounted) {
+      return;
+    }
     // Check if today is Friday
     if (now.weekday == DateTime.friday) {
       final duration = _calculateDurationUntilThirtyMinutesAfterMaghrib(mosque, now);
@@ -45,6 +49,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
         await _startScheduleUpdate(
           languageCode: languageCode,
           prayerTimeList: prays ?? [],
+          context: context,
         );
       });
     } else {
@@ -58,6 +63,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
   Future<void> _startScheduleUpdate({
     required String languageCode,
     required List<String> prayerTimeList,
+    required BuildContext context,
   }) async {
     state = AsyncLoading();
     final shared = await ref.read(sharedPreferencesProvider.future);
@@ -79,7 +85,8 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       );
       await upgrader.initialize(); // Prepares the Upgrader package for use.
       String? releaseNotes = upgrader.releaseNotes; // Retrieves release notes, if available.
-      String message = upgrader.message(); // Constructs a message for the update prompt.
+      String message =
+          upgrader.body(upgrader.determineMessages(context)); // Constructs a message for the update prompt.
       final isUpdateAvailable = upgrader.isUpdateAvailable(); // Checks if an update is available.
 
       final lastDismissedVersion = shared.getString(CacheKey.kUpdateDismissedVersion) ?? '0.0.0';
@@ -90,7 +97,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       if (isDismissed &&
           isUpdateAvailable &&
           lastDismissedVersion != '0.0.0' &&
-          lastDismissedVersion == upgrader.currentAppStoreVersion()) {
+          lastDismissedVersion == upgrader.currentAppStoreVersion) {
         return state.value!.copyWith(
           appUpdateStatus: AppUpdateStatus.noUpdate,
           isUpdateDismissed: true,
@@ -129,7 +136,7 @@ class AppUpdateNotifier extends AsyncNotifier<AppUpdateState> {
       await upgrader.initialize();
 
       await shared.setInt(CacheKey.kLastPopupDisplay, AppDateTime.now().millisecondsSinceEpoch);
-      final latestAppStoreVersion = upgrader.currentAppStoreVersion();
+      final latestAppStoreVersion = upgrader.currentAppStoreVersion;
       logger.d('AppUpdateNotifier: dismissUpdate: $latestAppStoreVersion');
       await shared.setString(CacheKey.kUpdateDismissedVersion, latestAppStoreVersion ?? '0.0.0');
       return state.value!.copyWith(appUpdateStatus: AppUpdateStatus.noUpdate, isUpdateDismissed: true);
