@@ -358,9 +358,19 @@ class SvgPictureWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    final topPadding = isLandscape
+        ? screenHeight * 0.08 // 6% of screen height in landscape
+        : screenHeight * 0.04; // 4% of screen height in portrait
+
+    // Side padding is also proportional to screen width
+    final sidePadding = MediaQuery.of(context).size.width * 0.02; // 4% of screen width
+
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.all(32.0),
+      padding: EdgeInsets.fromLTRB(sidePadding, topPadding, sidePadding, sidePadding),
       child: SvgPicture(
         svgPicture.bytesLoader,
         fit: BoxFit.contain,

@@ -25,9 +25,11 @@ class SurahSelectorWidget extends ConsumerWidget {
     }
 
     final quranReadingState = ref.watch(quranReadingNotifierProvider);
+    final screenHeight = MediaQuery.of(context).size.height;
+    final topPosition = screenHeight * 0.015; // 1.5% of screen height
 
     return Positioned(
-      top: 8,
+      top: topPosition,
       left: 0,
       right: 0,
       child: Center(
@@ -50,7 +52,7 @@ class SurahSelectorWidget extends ConsumerWidget {
                   return Container(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.4),
+                      color: Colors.black.withOpacity(0.6), // Increased opacity for better visibility
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
