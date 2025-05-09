@@ -62,18 +62,21 @@ Future<void> main() async {
         final firebaseOptions = FirebaseOptions(
           apiKey: const String.fromEnvironment('mawaqit.firebase.api_key'),
           appId: const String.fromEnvironment('mawaqit.firebase.app_id'),
-          messagingSenderId: const String.fromEnvironment('mawaqit.firebase.messaging_sender_id'),
-          projectId: const String.fromEnvironment('mawaqit.firebase.project_id'),
-          storageBucket: const String.fromEnvironment('mawaqit.firebase.storage_bucket'),
+          messagingSenderId: const String.fromEnvironment(
+              'mawaqit.firebase.messaging_sender_id'),
+          projectId:
+              const String.fromEnvironment('mawaqit.firebase.project_id'),
+          storageBucket:
+              const String.fromEnvironment('mawaqit.firebase.storage_bucket'),
         );
 
         await Firebase.initializeApp(
           options: firebaseOptions,
         );
-
         final directory = await getApplicationDocumentsDirectory();
         Hive.init(directory.path);
-        await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+        await FastCachedImageConfig.init(
+            subDir: directory.path, clearCacheAfter: const Duration(days: 60));
 
         // Check and request permissions
         await _initializePermissions();
@@ -98,9 +101,12 @@ Future<void> main() async {
   );
 }
 
-Future<void> _handleOverlayPermissions(String deviceModel, bool isRooted) async {
-  final methodChannel = MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
-  final isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
+Future<void> _handleOverlayPermissions(
+    String deviceModel, bool isRooted) async {
+  final methodChannel =
+      MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
+  final isPermissionGranted =
+      await NotificationOverlay.checkOverlayPermission();
 
   if (RegExp(r'ONVO.*').hasMatch(deviceModel)) {
     await methodChannel.invokeMethod("grantOnvoOverlayPermission");
@@ -119,7 +125,8 @@ Future<void> _handleOverlayPermissions(String deviceModel, bool isRooted) async 
 
 Future<void> _initializePermissions() async {
   final isRooted =
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
+      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
+          .invokeMethod(TurnOnOffTvConstant.kCheckRoot);
   final deviceModel = await _getDeviceModel();
   await _handleOverlayPermissions(deviceModel, isRooted);
   await UnifiedBackgroundService.initializeService();
@@ -152,14 +159,15 @@ Future<void> checkAndRequestExactAlarmPermission() async {
 @pragma("vm:entry-point")
 Future<void> _initializeServices() async {
   tz.initializeTimeZones();
-  await WorkManagerService.initialize();
+  MediaKit.ensureInitialized();
   // Register Hive adapters
   Hive.registerAdapter(SurahModelAdapter());
   Hive.registerAdapter(ReciterModelAdapter());
   Hive.registerAdapter(MoshafModelAdapter());
 
+  await WorkManagerService.initialize();
+
   // Initialize media kit
-  MediaKit.ensureInitialized();
 }
 
 class MyApp extends riverpod.ConsumerStatefulWidget {
@@ -167,7 +175,8 @@ class MyApp extends riverpod.ConsumerStatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends riverpod.ConsumerState<MyApp>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -195,15 +204,23 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
         ChangeNotifierProvider(create: (context) => MosqueManager()),
         ChangeNotifierProvider(create: (context) => AudioManager()),
         ChangeNotifierProvider(create: (context) => FeatureManager(context)),
-        ChangeNotifierProvider(create: (context) => UserPreferencesManager(), lazy: false),
-        StreamProvider(create: (context) => Api.updateUserStatusStream(), initialData: 0, lazy: false),
+        ChangeNotifierProvider(
+            create: (context) => UserPreferencesManager(), lazy: false),
+        StreamProvider(
+            create: (context) => Api.updateUserStatusStream(),
+            initialData: 0,
+            lazy: false),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) => ConnectivityService().connectionStatusController.stream.map((event) {
-              if (event == ConnectivityStatus.Wifi || event == ConnectivityStatus.Cellular) {
+            create: (context) => ConnectivityService()
+                .connectionStatusController
+                .stream
+                .map((event) {
+              if (event == ConnectivityStatus.Wifi ||
+                  event == ConnectivityStatus.Cellular) {
                 //todo check actual internet
               }
 
@@ -212,12 +229,15 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
             child: Consumer<ThemeNotifier>(
               builder: (context, theme, _) {
                 return Shortcuts(
-                  shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
+                  shortcuts: {
+                    SingleActivator(LogicalKeyboardKey.select): ActivateIntent()
+                  },
                   child: MaterialApp(
                     title: kAppName,
                     themeMode: theme.mode,
                     localeResolutionCallback: (locale, supportedLocales) {
-                      if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
+                      if (locale?.languageCode.toLowerCase() == 'ba')
+                        return Locale('en');
 
                       return locale;
                     },
