@@ -100,20 +100,20 @@ class HorizontalPageViewWidget extends ConsumerWidget {
                   children: [
                     if (rightPageIndex < quranReadingState.svgs.length)
                       Positioned(
-                        left: 12.w,
+                        left: 8.w,
                         top: 0,
                         bottom: bottomPadding,
-                        width: pageWidth * 0.9,
+                        width: pageWidth * 0.85,
                         child: SvgPictureWidget(
                           svgPicture: quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
                         ),
                       ),
                     if (leftPageIndex < quranReadingState.svgs.length)
                       Positioned(
-                        right: 12.w,
+                        right: 8.w,
                         top: 0,
                         bottom: bottomPadding,
-                        width: pageWidth * 0.9,
+                        width: pageWidth * 0.85,
                         child: SvgPictureWidget(
                           svgPicture: quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
                         ),
