@@ -57,6 +57,7 @@ class SurahSelectorWidget extends ConsumerWidget {
                     ),
                     child: Text(
                       state.currentSurahName,
+                      maxLines: 1,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 8.sp,
