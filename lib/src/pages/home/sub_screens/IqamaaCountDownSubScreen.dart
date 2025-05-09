@@ -32,17 +32,21 @@ class IqamaaCountDownSubScreen extends StatefulWidget {
 }
 
 class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
-  int _debugSeconds = 59;
-  int _debugMinutes = 4;
-  Timer? _debugTimer;
+  /// The remaining time for the countdown, used for both debug and normal modes
+  Duration _remainingTime = Duration.zero;
+  Timer? _countdownTimer;
 
   @override
   void initState() {
+    super.initState();
     final mosqueManager = context.read<MosqueManager>();
 
     if (widget.isDebug) {
-      _startDebugCountdown();
+      // In debug mode, start with a fixed 5 minute countdown
+      _remainingTime = Duration(minutes: 5);
+      _startCountdown();
     } else {
+      // In normal mode, calculate the time remaining until iqama
       var currentSalahTime = mosqueManager.actualTimes()[widget.currentSalahIndex];
       var currentIqamaTime = mosqueManager.actualIqamaTimes()[widget.currentSalahIndex];
       final now = mosqueManager.mosqueDate();
@@ -50,28 +54,24 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
       /// if the iqama is comming the next day then add one day to the iqama time
       if (currentIqamaTime.isBefore(currentSalahTime)) currentIqamaTime = currentIqamaTime.add(Duration(days: 1));
 
-      final nextIqamaaAfter = currentIqamaTime.difference(now);
+      _remainingTime = currentIqamaTime.difference(now);
+
+      // Schedule the onDone callback to be called when countdown finishes
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Future.delayed(nextIqamaaAfter, widget.onDone);
+        Future.delayed(_remainingTime, widget.onDone);
       });
     }
-
-    super.initState();
   }
 
-  void _startDebugCountdown() {
-    _debugTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+  /// Start the countdown timer
+  void _startCountdown() {
+    _countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        if (_debugSeconds > 0) {
-          _debugSeconds--;
+        if (_remainingTime.inSeconds > 0) {
+          _remainingTime = _remainingTime - Duration(seconds: 1);
         } else {
-          if (_debugMinutes > 0) {
-            _debugMinutes--;
-            _debugSeconds = 59;
-          } else {
-            _debugTimer?.cancel();
-            widget.onDone?.call();
-          }
+          _countdownTimer?.cancel();
+          widget.onDone?.call();
         }
       });
     });
@@ -79,12 +79,13 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
 
   @override
   void dispose() {
-    _debugTimer?.cancel();
+    _countdownTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('IqamaaCountDownSubScreen build');
     final mosqueManager = context.read<MosqueManager>();
 
     final tr = S.of(context);
@@ -122,42 +123,31 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
         StreamBuilder(
             stream: Stream.periodic(Duration(seconds: 1)),
             builder: (context, snapshot) {
-              if (widget.isDebug) {
-                String _timeTwoDigit = timeTwoDigit(
-                  seconds: _debugSeconds,
-                  minutes: _debugMinutes,
-                );
-                return Text(
-                  _timeTwoDigit,
-                  style: TextStyle(
-                    fontSize: 25.vw,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    shadows: kIqamaCountDownTextShadow,
-                  ),
-                ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
-              } else {
-                final remaining = mosqueManager.nextIqamaaAfter();
-                if (remaining <= Duration.zero) {
+              // For normal mode, we need to update the remaining time on each tick
+              if (!widget.isDebug) {
+                _remainingTime = mosqueManager.nextIqamaaAfter();
+                if (_remainingTime <= Duration.zero) {
                   Future.delayed(Duration(milliseconds: 80), widget.onDone);
                 }
-
-                int seconds = remaining.inSeconds % 60;
-                int minutes = remaining.inMinutes;
-                String _timeTwoDigit = timeTwoDigit(
-                  seconds: seconds,
-                  minutes: minutes,
-                );
-                return Text(
-                  _timeTwoDigit,
-                  style: TextStyle(
-                    fontSize: 25.vw,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    shadows: kIqamaCountDownTextShadow,
-                  ),
-                ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
               }
+
+              // Format the remaining time into a string
+              final minutes = _remainingTime.inMinutes;
+              final seconds = _remainingTime.inSeconds % 60;
+              final formattedTime = timeTwoDigit(
+                seconds: seconds,
+                minutes: minutes,
+              );
+
+              return Text(
+                formattedTime,
+                style: TextStyle(
+                  fontSize: 25.vw,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  shadows: kIqamaCountDownTextShadow,
+                ),
+              ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
             }),
         Spacer(),
         mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
