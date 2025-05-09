@@ -85,7 +85,6 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('IqamaaCountDownSubScreen build');
     final mosqueManager = context.read<MosqueManager>();
 
     final tr = S.of(context);
