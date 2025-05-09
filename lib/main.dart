@@ -8,11 +8,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
+
+// import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:hive_flutter/adapters.dart';
 import 'package:logger/logger.dart';
+import 'package:mawaqit/firebase_options.dart';
+
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/constants.dart';
@@ -36,6 +39,7 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
+import 'package:montenegrin_localization/montenegrin_localization.dart';
 import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
@@ -44,7 +48,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
-import 'package:montenegrin_localization/montenegrin_localization.dart';
+// import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
 
@@ -54,11 +58,20 @@ Future<void> main() async {
     () async {
       try {
         WidgetsFlutterBinding.ensureInitialized();
-        await Firebase.initializeApp();
+
+        final firebaseOptions = FirebaseOptions(
+          apiKey: const String.fromEnvironment('mawaqit.firebase.api_key'),
+          appId: const String.fromEnvironment('mawaqit.firebase.app_id'),
+          messagingSenderId: const String.fromEnvironment('mawaqit.firebase.messaging_sender_id'),
+          projectId: const String.fromEnvironment('mawaqit.firebase.project_id'),
+          storageBucket: const String.fromEnvironment('mawaqit.firebase.storage_bucket'),
+        );
+
+        await Firebase.initializeApp(
+          options: firebaseOptions,
+        );
 
         final directory = await getApplicationDocumentsDirectory();
-
-        // Initialize Hive first
         Hive.init(directory.path);
         await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
 
@@ -219,13 +232,14 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                       MontenegrinMaterialLocalizations.delegate,
                       MontenegrinWidgetsLocalizations.delegate,
                       MontenegrinCupertinoLocalizations.delegate,
+
                       S.delegate,
                       GlobalCupertinoLocalizations.delegate,
                       GlobalMaterialLocalizations.delegate,
                       GlobalWidgetsLocalizations.delegate,
-                      KurdishMaterialLocalizations.delegate,
-                      KurdishWidgetLocalizations.delegate,
-                      KurdishCupertinoLocalizations.delegate
+                      // KurdishMaterialLocalizations.delegate,
+                      // KurdishWidgetLocalizations.delegate,
+                      // KurdishCupertinoLocalizations.delegate
                     ],
                     supportedLocales: S.supportedLocales,
                     debugShowCheckedModeBanner: false,

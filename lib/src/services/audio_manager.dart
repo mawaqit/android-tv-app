@@ -14,9 +14,9 @@ import '../../main.dart';
 import 'audio_stream_offline_manager.dart';
 
 class AudioManager extends ChangeNotifier {
-  String bipLink = "$kStaticFilesUrl/mp3/bip.mp3";
+  String bipLink = "$kStaticFilesUrl/audio/bip.mp3";
 
-  String duaAfterAdhanLink = "$kStaticFilesUrl/mp3/duaa-after-adhan.mp3";
+  String duaAfterAdhanLink = "$kStaticFilesUrl/audio/duaa-after-adhan.mp3";
 
   late AudioPlayer player;
 
@@ -33,9 +33,9 @@ class AudioManager extends ChangeNotifier {
   late final dio = Dio()..interceptors.add(DioCacheInterceptor(options: option));
 
   String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
-    String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
+    String adhanLink = "$kStaticFilesUrl/audio/adhan-afassy.mp3";
     if (mosqueConfig!.adhanVoice?.isNotEmpty ?? false) {
-      adhanLink = "$kStaticFilesUrl/mp3/${mosqueConfig.adhanVoice!}.mp3";
+      adhanLink = "$kStaticFilesUrl/audio/${mosqueConfig.adhanVoice!}.mp3";
     }
 
     if (useFajrAdhan && !adhanLink.contains('bip')) {
@@ -83,7 +83,6 @@ class AudioManager extends ChangeNotifier {
       log('audio: AudioManager: loadAssetsAndPlay: playing audio file, duration: $duration');
       player.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
-          log('audio: AudioManager: loadAssetsAndPlay: done playing audio file');
           onDone?.call();
         }
       });
@@ -126,7 +125,6 @@ class AudioManager extends ChangeNotifier {
       log('audio: AudioManager: loadAndPlay: playing audio file, duration: $duration');
       player.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
-          log('audio: AudioManager: loadAndPlay: done playing audio file');
           onDone?.call();
         }
       });

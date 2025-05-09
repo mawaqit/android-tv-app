@@ -74,6 +74,7 @@ class AudioControlWidget extends ConsumerWidget {
                   width: buttonSize,
                   height: buttonSize,
                   child: FloatingActionButton(
+                    focusNode: focusNode,
                     focusColor: Theme.of(context).primaryColor,
                     backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
                     child: Icon(
@@ -311,27 +312,32 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   AppBar _buildAppBar() {
     return AppBar(
-      toolbarHeight: 40,
+      toolbarHeight: 5.h,
       backgroundColor: Color(0xFF28262F),
-      elevation: 0,
-      title: AutoSizeText(
-        S.of(context).chooseReciter,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.bold,
+      title: SizedBox(
+        height: 4.h,
+        child: FittedBox(
+          fit: BoxFit.scaleDown, // shrink/grow to fit the box
+          child: Text(
+            S.of(context).chooseReciter,
+            maxLines: 1,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.bold,
+              height: 1.0, // make line-height = fontSize
+            ),
+          ),
         ),
-        maxLines: 1,
-        minFontSize: 6.sp.roundToDouble(),
-        maxFontSize: 20.sp.roundToDouble(),
-        stepGranularity: 1,
       ),
       centerTitle: true,
-      leading: IconButton(
-        splashRadius: 14.sp,
-        icon: Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
+      // leading: IconButton(
+      //   icon: Icon(
+      //     Icons.arrow_back,
+      //     color: Colors.white,
+      //   ),
+      //   onPressed: () => Navigator.pop(context),
+      // ),
     );
   }
 
@@ -348,10 +354,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       ),
       child: Column(
         children: [
-          SizedBox(height: 8.h, child: _buildSearchField()),
+          SizedBox(height: 0.5.h),
+          Expanded(
+            flex: 2,
+            child: _buildSearchField(),
+          ),
           isKeyboardVisible
               ? const SizedBox.shrink()
               : Expanded(
+                  flex: 10,
                   child: ref.watch(reciteNotifierProvider).when(
                         data: (reciterState) => _buildReciterList(reciterState),
                         loading: () => Column(
@@ -457,12 +468,16 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   List<Widget> _buildFavoriteSection(ReciteState reciterState) {
     return [
       SizedBox(height: 1.h),
-      _buildFavoritesHeader(),
+      Expanded(
+        flex: 1,
+        child: _buildFavoritesHeader(),
+      ),
       SizedBox(height: 1.h),
       if (reciterState.favoriteReciters.isEmpty)
         _buildEmptyFavorites()
       else
         Expanded(
+          flex: 5,
           child: FocusScope(
             node: favoritesListFocusNode,
             autofocus: _hasFavorites(),
@@ -478,10 +493,14 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   List<Widget> _buildAllRecitersSection(ReciteState reciterState) {
     return [
-      SizedBox(height: 1.h),
-      _buildAllRecitersHeader(),
-      SizedBox(height: 1.h),
+      SizedBox(height: 0.8.h),
       Expanded(
+        flex: 1,
+        child: _buildAllRecitersHeader(),
+      ),
+      SizedBox(height: 0.8.h),
+      Expanded(
+        flex: 5,
         child: FocusScope(
           node: allRecitersListFocusNode,
           autofocus: _hasFavorites(),
@@ -520,9 +539,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                         width: buttonSize,
                         height: buttonSize,
                         child: FloatingActionButton(
-                          autofocus: changeReadingModeFocusNode
-                              .hasFocus, // it is used here because at change_reading_mode it will break due to up keybind when no result in the search
+                          autofocus: changeReadingModeFocusNode.hasFocus,
+                          // it is used here because at change_reading_mode it will break due to up keybind when no result in the search
                           heroTag: 'schedule',
+                          focusColor: Theme.of(context).focusColor,
                           backgroundColor: Colors.black.withOpacity(.5),
                           child: Icon(
                             Icons.schedule,
@@ -596,7 +616,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             size: 16.sp,
           ),
           SizedBox(width: 12),
-          Text(
+          AutoSizeText(
             S.of(context).favorites,
             style: TextStyle(
               color: Colors.white,
@@ -616,7 +636,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       child: Row(
         children: [
           SizedBox(width: 8),
-          Text(
+          AutoSizeText(
             S.of(context).allReciters,
             style: TextStyle(
               color: Colors.white,
@@ -631,9 +651,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   Widget _buildEmptyFavorites() {
     return Container(
-      height: 12.h,
       margin: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding, vertical: 10),
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(8.sp),
       decoration: BoxDecoration(
         color: Colors.black26,
         borderRadius: BorderRadius.circular(10),
@@ -647,15 +666,17 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             color: Colors.white54,
             size: 22.sp,
           ),
-          SizedBox(height: 12),
-          Text(
-            S.of(context).noFavoriteReciters,
-            style: TextStyle(
-              color: Colors.white70,
-              fontFamily: 'Roboto',
-              fontSize: 12.sp,
+          SizedBox(height: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              S.of(context).noFavoriteReciters,
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 12.sp,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -666,6 +687,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding, vertical: 10),
       child: TextField(
+        maxLines: 1,
         focusNode: searchFocusScopeNode,
         controller: _searchController,
         onChanged: (value) {
@@ -706,11 +728,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             },
           );
         },
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.white, fontSize: 10.sp),
         decoration: InputDecoration(
           hintText: S.of(context).searchForReciter,
           hintStyle: TextStyle(color: Colors.white70),
-          prefixIcon: Icon(Icons.search, color: Colors.white70),
+          prefixIcon: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 1.w),
+            child: Icon(
+              Icons.search,
+              color: Colors.white70,
+              size: 12.sp,
+            ),
+          ),
           filled: true,
           fillColor: Colors.white24,
           focusedBorder: OutlineInputBorder(

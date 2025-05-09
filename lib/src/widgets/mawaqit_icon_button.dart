@@ -38,7 +38,7 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
         child: Focus(
           onFocusChange: (value) => setState(() => focused = value),
           child: Material(
-            color: focused ? Color(0xFF490094) : theme.colorScheme.primary,
+            color: focused ? theme.focusColor : theme.colorScheme.primary,
             child: InkWell(
               focusNode: widget.focusNode,
               onTap: widget.onPressed,
