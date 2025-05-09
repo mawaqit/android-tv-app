@@ -147,12 +147,15 @@ class RightSwitchButtonWidget extends ConsumerWidget {
         right: 10,
         top: 0,
         bottom: 0,
-        child: SwitchButton(
-          focusNode: focusNode,
-          opacity: 0.7,
-          iconSize: 14.sp,
-          icon: Directionality.of(context) == TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-          onPressed: onPressed,
+        child: Material(
+          color: Colors.transparent,
+          child: SwitchButton(
+            focusNode: focusNode,
+            opacity: 0.7,
+            iconSize: 14.sp,
+            icon: Directionality.of(context) == TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+            onPressed: onPressed,
+          ),
         ),
       ),
     );
@@ -177,12 +180,15 @@ class LeftSwitchButtonWidget extends ConsumerWidget {
         left: 10,
         top: 0,
         bottom: 0,
-        child: SwitchButton(
-          focusNode: focusNode,
-          opacity: 0.7,
-          iconSize: 14.sp,
-          icon: Directionality.of(context) != TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-          onPressed: onPressed,
+        child: Material(
+          color: Colors.transparent,
+          child: SwitchButton(
+            focusNode: focusNode,
+            opacity: 0.7,
+            iconSize: 14.sp,
+            icon: Directionality.of(context) != TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+            onPressed: onPressed,
+          ),
         ),
       ),
     );
