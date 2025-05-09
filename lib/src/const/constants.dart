@@ -7,8 +7,8 @@ const kDeviceInfo = 'device_info';
 
 const kBaseUrl = 'https://mawaqit.net/api';
 const kStagingUrl = 'https://staging.mawaqit.net/api';
-const kStaticFilesUrl = 'https://mawaqit.net/static';
-const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
+const kStaticFilesUrl = 'https://cdn.mawaqit.net';
+const kStagingStaticFilesUrl = 'https://cdn.mawaqit.net';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
@@ -81,8 +81,8 @@ abstract class QuranConstant {
   static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
   static const String kQuranCacheBoxName = 'timestamp_box';
   static const String kQuranReciterRetentionTime = 'quran_reciter_retention_time';
-  static const int kCacheWidth = 50;
-  static const int kCacheHeight = 50;
+  static const int kCacheWidth = 300;
+  static const int kCacheHeight = 300;
 }
 
 abstract class AzkarConstant {
