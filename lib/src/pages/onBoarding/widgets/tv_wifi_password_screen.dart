@@ -114,7 +114,8 @@ class _TvWifiPasswordScreenState extends ConsumerState<TvWifiPasswordScreen> {
 
   // Cancel and return to previous screen
   void _cancel() {
-    Navigator.of(context).pop();
+    // Return true to indicate this was a user cancellation
+    Navigator.of(context).pop(true);
     // Focus will be restored by the calling widget after navigation completes
   }
 
@@ -201,7 +202,8 @@ class _TvWifiPasswordScreenState extends ConsumerState<TvWifiPasswordScreen> {
           _showToast(S.of(context).wifiSuccess);
           widget.onComplete(true);
           // Just navigate back, focus will be handled by the calling widget
-          Navigator.of(context).pop();
+          // Pass false to indicate this was a successful connection, not cancellation
+          Navigator.of(context).pop(false);
         } else if (next.value!.status == Status.error) {
           _showToast(S.of(context).wifiFailure);
           widget.onComplete(false);

@@ -29,6 +29,9 @@ class OnBoardingWifiSelector extends ConsumerStatefulWidget {
 }
 
 class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector> {
+  // Add a focus node for the scan again button
+  final FocusNode _scanAgainButtonFocusNode = FocusNode(debugLabel: 'scan_again_button');
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,12 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
       await _addFineLocationPermission();
       await ref.read(wifiScanNotifierProvider.notifier).retry();
     });
+  }
+
+  @override
+  void dispose() {
+    _scanAgainButtonFocusNode.dispose();
+    super.dispose();
   }
 
   Future<void> _addLocationPermission() async {
@@ -101,6 +110,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton.icon(
+              focusNode: _scanAgainButtonFocusNode,
               style: ButtonStyle(
                 padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h)),
                 backgroundColor: MaterialStateProperty.resolveWith<Color?>(
@@ -179,6 +189,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
         padding: EdgeInsets.symmetric(vertical: 0.5.h),
         itemCount: filteredAccessPoints.length,
         itemBuilder: (context, i) => _AccessPointTile(
+          scanAgainFocusNode: _scanAgainButtonFocusNode,
           skipButtonFocusNode: widget.focusNode ?? FocusNode(),
           focusNode: node,
           onSelect: widget.onSelect,
@@ -193,6 +204,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
 class _AccessPointTile extends ConsumerStatefulWidget {
   final WiFiHunterResultEntry accessPoint;
   final FocusNode skipButtonFocusNode;
+  final FocusNode scanAgainFocusNode;
   final bool hasPermission;
   final void Function() onSelect;
   final FocusNode focusNode;
@@ -201,6 +213,7 @@ class _AccessPointTile extends ConsumerStatefulWidget {
     Key? key,
     required this.focusNode,
     required this.skipButtonFocusNode,
+    required this.scanAgainFocusNode,
     required this.onSelect,
     required this.accessPoint,
     required this.hasPermission,
@@ -276,22 +289,14 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
               ),
             ),
           )
-              .then((_) {
-            print('output');
-            // Only try to request focus after navigation completes and if we're still mounted
-            // Use a timeout to prevent indefinite focus issues
-            final timeout = Future.delayed(Duration(seconds: 2), () {
-              // No focus was requested within timeout, nothing to do
-            });
-
+              .then((wasCancelled) {
             Future.delayed(
               Duration(milliseconds: 500),
               () {
-                // Cancel timeout since we're handling it
-                timeout.ignore();
-
-                if (mounted && widget.focusNode.canRequestFocus) {
-                  FocusScope.of(context).requestFocus(widget.focusNode);
+                if (wasCancelled == true) {
+                  widget.scanAgainFocusNode.requestFocus();
+                } else {
+                  widget.focusNode.requestFocus();
                 }
               },
             );
