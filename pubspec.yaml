@@ -171,6 +171,7 @@ dependencies:
   audio_session: ^0.1.21
 
   android_alarm_manager_plus: ^4.0.7
+  flutter_cache_manager: ^3.4.1
 
 
 dev_dependencies:
