@@ -278,48 +278,6 @@ class PrayerAudioNotifier extends AutoDisposeAsyncNotifier<PrayerAudioState> {
     }
   }
 
-  Future<void> _playUrl(String url) async {
-    log('PrayerAudioNotifier: _playUrl called with URL: $url');
-
-    if (state is AsyncLoading) {
-      log('PrayerAudioNotifier: Already loading, ignoring request.');
-      return; // Avoid concurrent loading
-    }
-    await stop(); // Ensure previous playback is stopped
-
-    state = const AsyncLoading(); // Set AsyncLoading state
-    log('PrayerAudioNotifier: Set state to loading');
-
-    try {
-      String formattedUrl = url;
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        formattedUrl = 'https:$url';
-      }
-
-      log('PrayerAudioNotifier: Setting audio source: $formattedUrl');
-      final duration = await _audioPlayer.setUrl(formattedUrl, headers: {
-        'User-Agent': 'Mozilla/5.0 (Android) Flutter-just_audio (+https://pub.dev)',
-        'Range': 'bytes=0-',
-      });
-      log('PrayerAudioNotifier: Audio source set, duration: $duration');
-
-      _subscribeToPlayerState();
-
-      // Set initial AsyncData state after loading source
-      state = AsyncData(PrayerAudioState(duration: duration, processingState: _audioPlayer.processingState));
-      log('PrayerAudioNotifier: Set initial data state, starting playback');
-
-      await _audioPlayer.play();
-      log('PrayerAudioNotifier: Play() called');
-    } catch (e, s) {
-      log('PrayerAudioNotifier: Error playing URL: $url | $e | $s', error: e, stackTrace: s);
-      final error = e is PrayerAudioException
-          ? e
-          : PlayAdhanException("Failed to play URL: ${e.toString()}"); // Or more specific error
-      state = AsyncError(error, s); // Set AsyncError state
-    }
-  }
-
   Future<void> _playAsset(String assetPath) async {
     log('PrayerAudioNotifier: _playAsset called with path: $assetPath');
 
