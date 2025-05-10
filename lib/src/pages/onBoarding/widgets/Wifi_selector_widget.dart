@@ -11,8 +11,10 @@ import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:wifi_hunter/wifi_hunter_result.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 
 import 'onboarding_timezone_selector.dart';
+import 'tv_wifi_password_screen.dart';
 
 const String nativeMethodsChannel = 'nativeMethodsChannel';
 
@@ -254,52 +256,46 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
         title: Text(title, style: TextStyle(fontSize: 12.sp)),
         contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
         onTap: () {
-          // Save current focus state for restoration after route transition
-          final currentFocus = widget.focusNode;
-
-          // Only apply web-specific fixes on web platform
-          if (kIsWeb) {
-            // Ensure focus node stays active even during navigation
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              FocusManager.instance.primaryFocus?.unfocus();
-              // Keep a reference to return focus here after navigation
-            });
-          }
-
-          Navigator.of(context).push(
+          // Always use the TV-friendly Wi-Fi password screen
+          Navigator.of(context)
+              .push(
             MaterialPageRoute(
-              builder: (context) => WifiPasswordPage(
+              builder: (context) => TvWifiPasswordScreen(
                 ssid: widget.accessPoint.ssid,
                 capabilities: widget.accessPoint.capabilities,
-                onConnect: (password) async {
-                  // Prevent focus loss on web platform
-                  if (kIsWeb) {
-                    // Save current focus for restoration
-                    final currentFocus = FocusScope.of(context).focusedChild;
-
-                    // Schedule focus restoration after the operation
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (currentFocus != null && currentFocus.canRequestFocus) {
-                        FocusScope.of(context).requestFocus(currentFocus);
-                      } else {
-                        // Fallback to widget's focusNode if available
-                        if (widget.focusNode.canRequestFocus) {
-                          FocusScope.of(context).requestFocus(widget.focusNode);
-                        }
-                      }
-                    });
+                returnFocusNode: fp.Option.of(widget.focusNode),
+                onComplete: (success) {
+                  // Handle completion
+                  if (success) {
+                    widget.onSelect();
                   }
 
-                  await ref.read(wifiScanNotifierProvider.notifier).connectToWifi(
-                        widget.accessPoint.ssid,
-                        widget.accessPoint.capabilities,
-                        password,
-                      );
-                  Navigator.of(context).pop();
+                  // We don't need to request focus here - the TvWifiPasswordScreen
+                  // will ensure focus is handled properly when returning
                 },
               ),
             ),
-          );
+          )
+              .then((_) {
+            print('output');
+            // Only try to request focus after navigation completes and if we're still mounted
+            // Use a timeout to prevent indefinite focus issues
+            final timeout = Future.delayed(Duration(seconds: 2), () {
+              // No focus was requested within timeout, nothing to do
+            });
+
+            Future.delayed(
+              Duration(milliseconds: 500),
+              () {
+                // Cancel timeout since we're handling it
+                timeout.ignore();
+
+                if (mounted && widget.focusNode.canRequestFocus) {
+                  FocusScope.of(context).requestFocus(widget.focusNode);
+                }
+              },
+            );
+          });
         },
       ),
     );

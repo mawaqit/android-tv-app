@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/models/mosque.dart';
+import 'package:mawaqit/src/services/focus_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/state_management/on_boarding/v2/search_selection_type_provider.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
@@ -52,15 +53,19 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
   List<FocusNode> _resultFocusNodes = [];
   
   // Current focused index in the result list
-  int _currentFocusIndex = -1;
+  final ValueNotifier<int> _currentFocusIndexNotifier = ValueNotifier<int>(-1);
+  int get _currentFocusIndex => _currentFocusIndexNotifier.value;
+  set _currentFocusIndex(int value) => _currentFocusIndexNotifier.value = value;
 
   @override
   void initState() {
     super.initState();
+    
+    // Request initial focus after widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         ref.read(mosqueManagerProvider.notifier).state = None();
-        _searchFocusNode.requestFocus();
+        ref.read(focusManagerProvider).requestFocus(_searchFocusNode, context: context);
         isKeyboardVisible = true;
       }
     });
@@ -68,6 +73,22 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
     // Add listener to focus node to detect keyboard close
     _searchFocusNode.addListener(_onFocusChange);
     _loadMoreFocusNode.addListener(_onLoadMoreFocus);
+    
+    // Listen to focus index changes
+    _currentFocusIndexNotifier.addListener(_onFocusIndexChanged);
+  }
+  
+  void _onFocusIndexChanged() {
+    // When focus index changes, request focus on the appropriate node
+    if (_currentFocusIndex >= 0 && _currentFocusIndex < _resultFocusNodes.length) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(focusManagerProvider).requestFocus(
+          _resultFocusNodes[_currentFocusIndex], 
+          context: context
+        );
+        _ensureItemVisible(_currentFocusIndex);
+      });
+    }
   }
   
   void _onLoadMoreFocus() {
@@ -103,10 +124,11 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
     
     // Add listeners to each node
     for (int i = 0; i < _resultFocusNodes.length; i++) {
+      final int capturedIndex = i; // Capture index for the closure
       _resultFocusNodes[i].addListener(() {
-        if (_resultFocusNodes[i].hasFocus) {
+        if (_resultFocusNodes[capturedIndex].hasFocus && _currentFocusIndex != capturedIndex) {
           setState(() {
-            _currentFocusIndex = i;
+            _currentFocusIndex = capturedIndex;
           });
         }
       });
@@ -148,40 +170,44 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
     final mosqueManager = Provider.Provider.of<MosqueManager>(context, listen: false);
     await mosqueManager
         .searchMosques(mosque, page: page)
-        .then((value) => setState(() {
-              loading = false;
+        .then((value) {
+          if (!mounted) return; // Check if widget is still mounted before updating state
+          
+          setState(() {
+            loading = false;
 
-              if (page == 1) {
-                results = [];
-                _currentFocusIndex = -1;
-              }
+            if (page == 1) {
+              results = [];
+              _currentFocusIndex = -1;
+            }
 
-              // Check if the current batch of results is empty
-              noMore = value.isEmpty;
-              
-              // Save current results length before adding new results
-              final oldResultsLength = results.length;
-              
-              results = [...results, ...value];
-              
-              // Update focus nodes for the new result list
-              _updateFocusNodes();
-              
-              // If we load more and were on the last item, 
-              // update to focus on the first new item
-              if (page > 1 && _currentFocusIndex == oldResultsLength - 1 && value.isNotEmpty) {
-                _currentFocusIndex = oldResultsLength;
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _resultFocusNodes[_currentFocusIndex].requestFocus();
-                  _ensureItemVisible(_currentFocusIndex);
-                });
-              }
-            }))
-        .catchError((e, stack) => setState(() {
-              logger.w(e.toString(), stackTrace: stack);
-              loading = false;
-              error = S.of(context).backendError;
-            }));
+            // Check if the current batch of results is empty
+            noMore = value.isEmpty;
+            
+            // Save current results length before adding new results
+            final oldResultsLength = results.length;
+            
+            results = [...results, ...value];
+            
+            // Update focus nodes for the new result list
+            _updateFocusNodes();
+            
+            // If we load more and were on the last item, 
+            // update to focus on the first new item
+            if (page > 1 && _currentFocusIndex == oldResultsLength - 1 && value.isNotEmpty) {
+              _currentFocusIndex = oldResultsLength;
+            }
+          });
+        })
+        .catchError((e, stack) {
+          if (!mounted) return; // Check if widget is still mounted
+          
+          setState(() {
+            logger.w(e.toString(), stackTrace: stack);
+            loading = false;
+            error = S.of(context).backendError;
+          });
+        });
   }
 
   /// handle on mosque tile clicked
@@ -190,7 +216,6 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
       final mosqueManager = context.read<MosqueManager>();
       final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
       ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
-      // !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
 
       if (mosqueManager.typeIsMosque) {
         // Home flow
@@ -231,8 +256,6 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
           setState(() {
             _currentFocusIndex = results.length - 1;
           });
-          _resultFocusNodes[_currentFocusIndex].requestFocus();
-          _ensureItemVisible(_currentFocusIndex);
         }
         return KeyEventResult.handled;
       } else if (_currentFocusIndex == 0) {
@@ -240,15 +263,13 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
         setState(() {
           _currentFocusIndex = -1;
         });
-        _searchFocusNode.requestFocus();
+        ref.read(focusManagerProvider).requestFocus(_searchFocusNode, context: context);
         return KeyEventResult.handled;
       } else if (_currentFocusIndex > 0) {
         // Normal upward navigation within the list
         setState(() {
           _currentFocusIndex--;
         });
-        _resultFocusNodes[_currentFocusIndex].requestFocus();
-        _ensureItemVisible(_currentFocusIndex);
         return KeyEventResult.handled;
       }
     } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
@@ -258,8 +279,6 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
           setState(() {
             _currentFocusIndex = 0;
           });
-          _resultFocusNodes[_currentFocusIndex].requestFocus();
-          _ensureItemVisible(_currentFocusIndex);
         }
         return KeyEventResult.handled;
       } else if (_currentFocusIndex == results.length - 1) {
@@ -279,7 +298,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
           setState(() {
             _currentFocusIndex = -1;
           });
-          _searchFocusNode.requestFocus();
+          ref.read(focusManagerProvider).requestFocus(_searchFocusNode, context: context);
           return KeyEventResult.handled;
         }
       } else if (_currentFocusIndex >= 0 && _currentFocusIndex < results.length - 1) {
@@ -287,14 +306,6 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
         setState(() {
           _currentFocusIndex++;
         });
-        
-        _resultFocusNodes[_currentFocusIndex].requestFocus();
-        
-        // Auto-scroll to make sure the focused item is visible
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _ensureItemVisible(_currentFocusIndex);
-        });
-        
         return KeyEventResult.handled;
       }
     } else if (event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.space) {
@@ -334,9 +345,12 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
   void dispose() {
     _searchFocusNode.removeListener(_onFocusChange);
     _loadMoreFocusNode.removeListener(_onLoadMoreFocus);
+    _currentFocusIndexNotifier.removeListener(_onFocusIndexChanged);
+    
     _searchFocusNode.dispose();
     _mainFocusNode.dispose();
     _loadMoreFocusNode.dispose();
+    _currentFocusIndexNotifier.dispose();
     
     // Dispose all result focus nodes
     for (var node in _resultFocusNodes) {

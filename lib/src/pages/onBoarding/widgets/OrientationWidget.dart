@@ -51,12 +51,22 @@ class OnBoardingOrientationWidget extends StatelessWidget {
   VoidCallback _wrapWithOnNext(VoidCallback callback) {
     return () {
       callback();
+
+      // Add a timeout to avoid indefinite stuck states
+      final timeout = Future.delayed(Duration(seconds: 2), () {
+        // No focus was requested within timeout, nothing more to do
+      });
+
       // Add a small delay before requesting focus to ensure state changes are fully applied
       Future.delayed(Duration(milliseconds: 300), () {
+        // Cancel the timeout since we're handling it
+        timeout.ignore();
+
         if (nextButtonFocusNode != null && nextButtonFocusNode!.canRequestFocus) {
           nextButtonFocusNode!.requestFocus();
         }
       });
+
       if (!isOnboarding) {
         onNext?.call();
       }

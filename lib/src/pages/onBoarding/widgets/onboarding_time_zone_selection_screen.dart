@@ -85,8 +85,11 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
         _scrollToIndex(selectedTimezoneIndex);
       }
     });
-    /// select the first zone
-    _setDeviceTimezone(timezones[selectedTimezoneIndex]);
+
+    // Only try to set timezone if the list isn't empty
+    if (timezones.isNotEmpty) {
+      _setDeviceTimezone(timezones[selectedTimezoneIndex]);
+    }
   }
 
   // New method using scroll_to_index

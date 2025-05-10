@@ -27,11 +27,23 @@ class OnBoardingAnnouncementScreens extends StatelessWidget {
       } else {
         nextButtonFocusNode.fold(
           () => null,
-          (focusNode) => Future.delayed(Duration(milliseconds: 500), () {
-            if (focusNode.canRequestFocus) {
-              focusNode.requestFocus();
-            }
-          }),
+          (focusNode) {
+            // Add a timeout to avoid indefinite stuck states
+            final timeout = Future.delayed(Duration(seconds: 2), () {
+              // No focus was requested within timeout, nothing more to do
+            });
+
+            // Attempt to request focus with safety checks
+            Future.delayed(Duration(milliseconds: 500), () {
+              // Cancel the timeout since we're handling it
+              timeout.ignore();
+
+              // Only request focus if the node can accept it
+              if (focusNode.canRequestFocus) {
+                focusNode.requestFocus();
+              }
+            });
+          },
         );
       }
     };

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart' as fp;
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
 import 'package:mawaqit/src/models/mosque.dart';
+import 'package:mawaqit/src/services/focus_manager.dart';
 
 import 'package:mawaqit/src/helpers/CrashlyticsWrapper.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 
-class MosqueSimpleTile extends StatefulWidget {
+class MosqueSimpleTile extends ConsumerStatefulWidget {
   const MosqueSimpleTile({
     Key? key,
     required this.mosque,
@@ -28,10 +30,10 @@ class MosqueSimpleTile extends StatefulWidget {
   final bool hasFocus;
 
   @override
-  State<MosqueSimpleTile> createState() => _MosqueSimpleTileState();
+  ConsumerState<MosqueSimpleTile> createState() => _MosqueSimpleTileState();
 }
 
-class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
+class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
   bool loading = false;
   late FocusNode _innerFocusNode;
 
@@ -88,9 +90,12 @@ class _MosqueSimpleTileState extends State<MosqueSimpleTile> {
               );
               return widget.onTap?.call();
             }, (node) {
-              Future.delayed(Duration(milliseconds: 200), () {
-                node.requestFocus();
-              });
+              // Use the FocusManager to reliably request focus
+              ref.read(focusManagerProvider).requestFocus(
+                node, 
+                context: context,
+                timeout: const Duration(seconds: 2)
+              );
               return;
             });
           },

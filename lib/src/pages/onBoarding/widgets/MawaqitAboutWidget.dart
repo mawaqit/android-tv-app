@@ -23,9 +23,25 @@ class _OnBoardingMawaqitAboutWidgetState extends State<OnBoardingMawaqitAboutWid
   @override
   void initState() {
     super.initState();
+
+    // Use a timeout to prevent indefinite focus issues
+    final timeout = Future.delayed(Duration(seconds: 2), () {
+      // No focus was requested within timeout, nothing to do
+    });
+
     widget.nextButtonFocusNode.fold(
       () => null,
-      (focusNode) => focusNode.requestFocus(),
+      (focusNode) {
+        // Small delay to ensure the widget is fully built
+        Future.delayed(Duration(milliseconds: 300), () {
+          // Cancel timeout since we're handling it
+          timeout.ignore();
+
+          if (mounted && focusNode.canRequestFocus) {
+            focusNode.requestFocus();
+          }
+        });
+      },
     );
   }
 
