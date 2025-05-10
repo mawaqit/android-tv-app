@@ -88,16 +88,13 @@ class _IqamaSubScreenState extends ConsumerState<IqamaSubScreen> {
     log('IqamaSubScreen: Building UI');
 
     // Set up audio error listener
-    ref.listen<AsyncValue<PrayerAudioState>>(
-      prayerAudioProvider,
-      (previous, next) {
-        // Check for errors
-        if (previous != null && next is AsyncError && !(previous is AsyncError)) {
-          final error = (next as AsyncError).error;
-          log('IqamaSubScreen: Audio error detected: $error');
-        }
+    ref.listen<AsyncValue<PrayerAudioState>>(prayerAudioProvider, (previous, next) {
+      // Check for errors
+      if (previous != null && next is AsyncError && !(previous is AsyncError)) {
+        final error = (next as AsyncError).error;
+        log('IqamaSubScreen: Audio error detected: $error');
       }
-    );
+    });
 
     // Debug current audio state
     final audioStateValue = ref.watch(prayerAudioProvider);

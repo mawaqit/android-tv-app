@@ -168,41 +168,38 @@ class _AfterAdhanSubScreenState extends ConsumerState<AfterAdhanSubScreen> {
 
     // Set up audio completion listener
     if (_audioStarted && !_closeCalled) {
-      ref.listen<AsyncValue<PrayerAudioState>>(
-        prayerAudioProvider,
-        (previous, next) {
-          // Don't act on the initial state
-          if (previous == null) return;
+      ref.listen<AsyncValue<PrayerAudioState>>(prayerAudioProvider, (previous, next) {
+        // Don't act on the initial state
+        if (previous == null) return;
 
-          // Get data from AsyncValue states
-          final previousData = previous.valueOrNull;
-          final nextData = next.valueOrNull;
+        // Get data from AsyncValue states
+        final previousData = previous.valueOrNull;
+        final nextData = next.valueOrNull;
 
-          // Skip if we don't have both values
-          if (previousData == null || nextData == null) return;
+        // Skip if we don't have both values
+        if (previousData == null || nextData == null) return;
 
-          // Log state transitions for debugging
-          log('AfterAdhanSubScreen: Audio state changed - previous: ${previousData.processingState}, next: ${nextData.processingState}, hasError: ${next is AsyncError}');
+        // Log state transitions for debugging
+        log('AfterAdhanSubScreen: Audio state changed - previous: ${previousData.processingState}, next: ${nextData.processingState}, hasError: ${next is AsyncError}');
 
-          // Detect completion: Was playing, now is completed or idle
-          final wasPlaying = previousData.processingState == ProcessingState.ready;
-          final isNowStopped = nextData.processingState == ProcessingState.completed ||
-                               nextData.processingState == ProcessingState.idle;
-          final justCompleted = wasPlaying && isNowStopped && next is! AsyncError;
+        // Detect completion: Was playing, now is completed or idle
+        final wasPlaying = previousData.processingState == ProcessingState.ready;
+        final isNowStopped =
+            nextData.processingState == ProcessingState.completed || nextData.processingState == ProcessingState.idle;
+        final justCompleted = wasPlaying && isNowStopped && next is! AsyncError;
 
-          // Detect error: State is AsyncError
-          final justErrored = next is AsyncError && previous is! AsyncError;
+        // Detect error: State is AsyncError
+        final justErrored = next is AsyncError && previous is! AsyncError;
 
-          if (justCompleted) {
-            log('AfterAdhanSubScreen: Playback COMPLETED detected - closing screen');
-            _closeScreenSafely();
-          } else if (justErrored) {
-            final error = (next as AsyncError).error;
-            log('AfterAdhanSubScreen: Playback ERROR detected: $error');
-            // Fallback timer will handle closing on error
-          }
+        if (justCompleted) {
+          log('AfterAdhanSubScreen: Playback COMPLETED detected - closing screen');
+          _closeScreenSafely();
+        } else if (justErrored) {
+          final error = (next as AsyncError).error;
+          log('AfterAdhanSubScreen: Playback ERROR detected: $error');
+          // Fallback timer will handle closing on error
         }
-      );
+      });
     }
     // Debug current audio state
     final audioStateValue = ref.watch(prayerAudioProvider);

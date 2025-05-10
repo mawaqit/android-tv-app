@@ -17,20 +17,17 @@ class AudioInitializationTimeoutException extends PrayerAudioException {
 
 /// Exception thrown when playing adhan fails
 class PlayAdhanException extends PrayerAudioException {
-  PlayAdhanException(String message)
-      : super('Error occurred while playing Adhan: $message', 'PLAY_ADHAN_ERROR');
+  PlayAdhanException(String message) : super('Error occurred while playing Adhan: $message', 'PLAY_ADHAN_ERROR');
 }
 
 /// Exception thrown when playing iqama fails
 class PlayIqamaException extends PrayerAudioException {
-  PlayIqamaException(String message)
-      : super('Error occurred while playing Iqama: $message', 'PLAY_IQAMA_ERROR');
+  PlayIqamaException(String message) : super('Error occurred while playing Iqama: $message', 'PLAY_IQAMA_ERROR');
 }
 
 /// Exception thrown when playing dua fails
 class PlayDuaException extends PrayerAudioException {
-  PlayDuaException(String message)
-      : super('Error occurred while playing Dua: $message', 'PLAY_DUA_ERROR');
+  PlayDuaException(String message) : super('Error occurred while playing Dua: $message', 'PLAY_DUA_ERROR');
 }
 
 /// Exception for general unknown errors

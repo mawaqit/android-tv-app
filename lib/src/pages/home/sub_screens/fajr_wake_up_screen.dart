@@ -59,9 +59,9 @@ class _FajrWakeUpSubScreenState extends ConsumerState<FajrWakeUpSubScreen> {
         log('FajrWakeUpSubScreen: Calling playAdhan via provider');
         // Trigger playback via Riverpod notifier
         ref.read(prayerAudioProvider.notifier).playAdhan(
-          mosqueManager.mosqueConfig!,
-          useFajrAdhan: true, // Always true for this screen
-        );
+              mosqueManager.mosqueConfig!,
+              useFajrAdhan: true, // Always true for this screen
+            );
       } catch (e) {
         log('FajrWakeUpSubScreen: Error calling playAdhan', error: e);
       }
@@ -131,41 +131,38 @@ class _FajrWakeUpSubScreenState extends ConsumerState<FajrWakeUpSubScreen> {
 
     // Set up audio completion listener
     if (_audioStarted && !_closeCalled) {
-      ref.listen<AsyncValue<PrayerAudioState>>(
-        prayerAudioProvider,
-        (previous, next) {
-          // Don't act on the initial state
-          if (previous == null) return;
+      ref.listen<AsyncValue<PrayerAudioState>>(prayerAudioProvider, (previous, next) {
+        // Don't act on the initial state
+        if (previous == null) return;
 
-          // Get data from AsyncValue states
-          final previousData = previous.valueOrNull;
-          final nextData = next.valueOrNull;
-          
-          // Skip if we don't have both values
-          if (previousData == null || nextData == null) return;
-          
-          // Log state transitions for debugging
-          log('FajrWakeUpSubScreen: Audio state changed - previous: ${previousData.processingState}, next: ${nextData.processingState}, hasError: ${next is AsyncError}');
+        // Get data from AsyncValue states
+        final previousData = previous.valueOrNull;
+        final nextData = next.valueOrNull;
 
-          // Detect completion: Was playing, now is completed or idle
-          final wasPlaying = previousData.processingState == ProcessingState.ready;
-          final isNowStopped = nextData.processingState == ProcessingState.completed || 
-                               nextData.processingState == ProcessingState.idle;
-          final justCompleted = wasPlaying && isNowStopped && !(next is AsyncError);
+        // Skip if we don't have both values
+        if (previousData == null || nextData == null) return;
 
-          // Detect error: State is AsyncError
-          final justErrored = next is AsyncError && !(previous is AsyncError);
+        // Log state transitions for debugging
+        log('FajrWakeUpSubScreen: Audio state changed - previous: ${previousData.processingState}, next: ${nextData.processingState}, hasError: ${next is AsyncError}');
 
-          if (justCompleted) {
-            log('FajrWakeUpSubScreen: Playback COMPLETED detected - closing screen');
-            _closeScreenSafely();
-          } else if (justErrored) {
-            final error = (next as AsyncError).error;
-            log('FajrWakeUpSubScreen: Playback ERROR detected: $error');
-            // Fallback timer will handle closing on error
-          }
+        // Detect completion: Was playing, now is completed or idle
+        final wasPlaying = previousData.processingState == ProcessingState.ready;
+        final isNowStopped =
+            nextData.processingState == ProcessingState.completed || nextData.processingState == ProcessingState.idle;
+        final justCompleted = wasPlaying && isNowStopped && !(next is AsyncError);
+
+        // Detect error: State is AsyncError
+        final justErrored = next is AsyncError && !(previous is AsyncError);
+
+        if (justCompleted) {
+          log('FajrWakeUpSubScreen: Playback COMPLETED detected - closing screen');
+          _closeScreenSafely();
+        } else if (justErrored) {
+          final error = (next as AsyncError).error;
+          log('FajrWakeUpSubScreen: Playback ERROR detected: $error');
+          // Fallback timer will handle closing on error
         }
-      );
+      });
     }
 
     // Watch MosqueManager for UI updates
@@ -174,7 +171,7 @@ class _FajrWakeUpSubScreenState extends ConsumerState<FajrWakeUpSubScreen> {
 
     // Debug current audio state
     final audioStateValue = ref.watch(prayerAudioProvider);
-    
+
     // Log the state in a useful format
     log('FajrWakeUpSubScreen: Current audio state - ${audioStateValue.when(
       data: (data) => "processingState: ${data.processingState}, duration: ${data.duration}",
@@ -212,9 +209,8 @@ class _FajrWakeUpSubScreenState extends ConsumerState<FajrWakeUpSubScreen> {
                           builder: (context, constraints) {
                             final isHeightConstrained = constraints.maxHeight < 300;
 
-                            double fontSize = isHeightConstrained
-                                ? constraints.maxWidth * 0.07
-                                : constraints.maxWidth * 0.12;
+                            double fontSize =
+                                isHeightConstrained ? constraints.maxWidth * 0.07 : constraints.maxWidth * 0.12;
 
                             int maxLines = isHeightConstrained ? 1 : 2;
 

@@ -26,9 +26,7 @@ class PrayerAudioState {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is PrayerAudioState &&
-        other.duration == duration &&
-        other.processingState == processingState;
+    return other is PrayerAudioState && other.duration == duration && other.processingState == processingState;
   }
 
   @override
