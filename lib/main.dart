@@ -49,6 +49,7 @@ import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
 // import 'package:montenegrin_localization/montenegrin_localization.dart';
+import 'package:rive/rive.dart';
 
 final logger = Logger();
 
@@ -77,6 +78,7 @@ Future<void> main() async {
         Hive.init(directory.path);
         await FastCachedImageConfig.init(
             subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+        await RiveFile.initialize();
 
         // Check and request permissions
         await _initializePermissions();
