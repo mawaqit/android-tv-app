@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class MawaqitBackIconButton extends StatefulWidget {
   const MawaqitBackIconButton({
@@ -6,16 +7,20 @@ class MawaqitBackIconButton extends StatefulWidget {
     required this.icon,
     required this.label,
     this.onPressed,
+    this.isAutoFocus = false,
   }) : super(key: key);
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
+  final bool isAutoFocus;
+
   @override
   State<MawaqitBackIconButton> createState() => _MawaqitIconButtonState();
 }
 
 class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
   bool focused = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -29,6 +34,7 @@ class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
         elevation: 0,
         child: InkWell(
           onTap: widget.onPressed,
+          autofocus: widget.isAutoFocus,
           onFocusChange: (value) => setState(() => focused = value),
           focusColor: theme.focusColor,
           child: Padding(
@@ -44,7 +50,11 @@ class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
                 SizedBox(width: 10),
                 Text(
                   widget.label,
-                  style: theme.textTheme.bodySmall!.copyWith(color: focused ? Colors.white : color),
+                  style: theme.textTheme.bodyLarge!.copyWith(
+                    color: focused ? Colors.white : color,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 10.sp,
+                  ),
                 ),
               ],
             ),

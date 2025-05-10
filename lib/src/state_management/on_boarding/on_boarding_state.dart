@@ -14,7 +14,6 @@ class OnboardingState extends Equatable {
   MosqueMode mosqueMode;
   bool termsAccepted;
   final bool isRootedDevice;
-
   OnboardingState({
     required this.language,
     required this.orientation,

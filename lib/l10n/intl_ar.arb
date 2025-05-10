@@ -422,6 +422,7 @@
     }
   },
   "scheduleInOnlineMode":"يرجى الاتصال بالإنترنت لجدولة الاستماع إلى القرآن.",
+  "finish": "انتهاء",
   "duaaBetweenAdhanAndIqamaaTitle": "الدعاء لا يرد بين الأذان والإقامة",
   "scheduleSaved": "تم حفظ الجدول الزمني.",
   "completeAllFields": "يرجى إكمال جميع الحقول قبل الحفظ.",
