@@ -122,7 +122,7 @@ dependencies:
       url: https://github.com/mawaqit/native_screen_lock_mawaqit_devices
       ref: master
   equatable: ^2.0.5
-  just_audio: ^0.10.0
+  just_audio: ^0.9.37
 
 
   # alert
