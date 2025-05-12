@@ -94,7 +94,6 @@ class _QuranModeButton extends ConsumerWidget {
       child: FloatingActionButton(
         focusNode: switchQuranModeNode,
         backgroundColor: Colors.black.withOpacity(.3),
-        focusColor: Theme.of(context).focusColor,
         child: Icon(
           Icons.headset,
           color: Colors.white,
@@ -317,7 +316,6 @@ class _ActionButton extends StatelessWidget {
         autofocus: autoFocus,
         focusNode: focusNode,
         backgroundColor: Colors.black.withOpacity(.3),
-        focusColor: Theme.of(context).focusColor,
         child: Icon(
           icon,
           color: Colors.white,
@@ -355,7 +353,6 @@ class _OrientationToggleButton extends ConsumerWidget {
           child: FloatingActionButton(
             focusNode: switchScreenViewFocusNode,
             backgroundColor: Colors.black.withOpacity(.3),
-            focusColor: Theme.of(context).focusColor,
             child: Icon(
               !state.isRotated ? Icons.stay_current_portrait : Icons.stay_current_landscape,
               color: Colors.white,

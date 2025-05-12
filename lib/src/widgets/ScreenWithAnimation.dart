@@ -30,19 +30,15 @@ class ScreenWithAnimationWidget extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                // Set your desired size here
+                icon: Icon(Icons.arrow_back), // Set your desired size here
                 iconSize: 12.sp,
-                focusColor: Theme.of(context).focusColor,
+                splashRadius: 7.sp,
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
             )
-          : AppBar(
-              scrolledUnderElevation: 0,
-              elevation: 0,
-            ),
+          : AppBar(elevation: 0),
       body: SafeArea(
         child: Flex(
           direction: userPrefs.calculatedOrientation == Orientation.portrait ? Axis.vertical : Axis.horizontal,

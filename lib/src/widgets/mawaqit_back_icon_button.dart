@@ -30,7 +30,7 @@ class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
         child: InkWell(
           onTap: widget.onPressed,
           onFocusChange: (value) => setState(() => focused = value),
-          focusColor: theme.focusColor,
+          focusColor: Color(0xFF490094),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
             child: Row(
