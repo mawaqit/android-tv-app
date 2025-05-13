@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' hide Page;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show ConsumerWidget, WidgetRef;
 import 'package:flutter_svg/svg.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/constants.dart';
@@ -26,8 +27,6 @@ import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import '../pages/quran/page/quran_mode_selection_screen.dart';
 import 'package:mawaqit/src/pages/quran/reading/quran_reading_screen.dart';
 import '../state_management/quran/quran/quran_state.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:open_store/open_store.dart';
 
 class MawaqitDrawer extends ConsumerWidget {
   const MawaqitDrawer({Key? key, required this.goHome}) : super(key: key);
@@ -203,9 +202,7 @@ class MawaqitDrawer extends ConsumerWidget {
               DrawerListTitle(
                 icon: Icons.star,
                 text: S.of(context).rate,
-                onTap: () => OpenStore.instance.open(
-                  androidAppBundleId: kAppId,
-                ),
+                onTap: () => LaunchReview.launch(androidAppId: kAppId),
               ),
               SizedBox(height: 20),
             ],

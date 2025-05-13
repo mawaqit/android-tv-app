@@ -53,9 +53,10 @@ class _PortraitTurkishHomeState extends riverpod.ConsumerState<PortraitTurkishHo
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mosque = Provider.of<MosqueManager>(context, listen: false);
-      ref
-          .read(appUpdateProvider.notifier)
-          .startUpdateScheduler(mosque, context.read<AppLanguage>().appLocal.languageCode, context);
+      ref.read(appUpdateProvider.notifier).startUpdateScheduler(
+            mosque,
+            context.read<AppLanguage>().appLocal.languageCode,
+          );
     });
     super.initState();
   }

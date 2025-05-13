@@ -57,7 +57,6 @@ class _PortraitNormalHomeState extends riverpod.ConsumerState<PortraitNormalHome
       ref.read(appUpdateProvider.notifier).startUpdateScheduler(
             mosque,
             context.read<AppLanguage>().appLocal.languageCode,
-            context,
           );
     });
     super.initState();
