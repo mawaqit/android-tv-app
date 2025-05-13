@@ -1,9 +1,8 @@
 import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +31,7 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/background_services.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/services/permissions_manager.dart'; // New import
+import 'package:mawaqit/src/services/permissions_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
@@ -47,25 +46,23 @@ import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
 
+// Create global completer to track critical initialization
+final criticalInitCompleter = Completer<void>();
+
 @pragma("vm:entry-point")
 Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
       try {
         WidgetsFlutterBinding.ensureInitialized();
-        await Firebase.initializeApp();
-
-        final directory = await getApplicationDocumentsDirectory();
-
-        // Initialize Hive first
-        Hive.init(directory.path);
-        await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
-
-        await PermissionsManager.initializePermissions();
-
-        // Initialize other services
-        await _initializeServices();
-
+        
+        // Start Firebase initialization early but don't await
+        final firebaseInit = Firebase.initializeApp();
+        
+        // Initialize only critical services before rendering UI
+        await _initializeCriticalServices();
+        
+        // Start the app immediately after critical services
         runApp(
           riverpod.ProviderScope(
             child: MyApp(),
@@ -75,6 +72,10 @@ Future<void> main() async {
             ],
           ),
         );
+        
+        // Continue with non-critical initialization in background
+        _initializeNonCriticalServices(firebaseInit);
+        
       } catch (e, stackTrace) {
         developer.log('Initialization error', error: e, stackTrace: stackTrace);
         rethrow;
@@ -84,21 +85,65 @@ Future<void> main() async {
 }
 
 @pragma("vm:entry-point")
-Future<void> _initializeServices() async {
-  tz.initializeTimeZones();
-  final permissionsGranted = await PermissionsManager.arePermissionsGranted();
-  if (permissionsGranted) {
-    await WorkManagerService.initialize();
-  }
-  await UnifiedBackgroundService.initializeService();
+Future<void> _initializeCriticalServices() async {
+  // Only include services that are absolutely required for app to start
+  final directory = await getApplicationDocumentsDirectory();
 
-  // Register Hive adapters
+  // Initialize Hive with minimal setup
+  await Hive.initFlutter();
+
+  // Register critical Hive adapters
   Hive.registerAdapter(SurahModelAdapter());
   Hive.registerAdapter(ReciterModelAdapter());
   Hive.registerAdapter(MoshafModelAdapter());
 
-  // Initialize media kit
-  MediaKit.ensureInitialized();
+  // Initialize timezone data
+  tz.initializeTimeZones();
+}
+
+@pragma("vm:entry-point")
+Future<void> _initializeNonCriticalServices(
+    Future<FirebaseApp> firebaseInit) async {
+  try {
+    // Complete firebase initialization
+    await firebaseInit;
+
+    // Initialize cache in background
+    final directory = await getApplicationDocumentsDirectory();
+    FastCachedImageConfig.init(
+            subDir: directory.path, clearCacheAfter: const Duration(days: 60))
+        .then((_) => developer.log('Image cache initialized'));
+
+    // Initialize permissions
+    await PermissionsManager.initializePermissions();
+
+    // Initialize media kit
+    MediaKit.ensureInitialized();
+
+    // Initialize background services based on permissions
+    final permissionsGranted = await PermissionsManager.arePermissionsGranted();
+    if (permissionsGranted) {
+      await WorkManagerService.initialize();
+    }
+    
+    await UnifiedBackgroundService.initializeService();
+    
+    // Signal that critical initialization is complete
+    if (!criticalInitCompleter.isCompleted) {
+      criticalInitCompleter.complete();
+    }
+
+    developer.log('All services initialized successfully');
+  } catch (e, stackTrace) {
+    developer.log('Non-critical initialization error',
+        error: e, stackTrace: stackTrace);
+    // Don't rethrow to avoid crashing the app for non-critical services
+    
+    // Still complete the completer to avoid deadlocks
+    if (!criticalInitCompleter.isCompleted) {
+      criticalInitCompleter.complete();
+    }
+  }
 }
 
 class MyApp extends riverpod.ConsumerStatefulWidget {

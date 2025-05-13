@@ -49,94 +49,158 @@ class Splash extends ConsumerStatefulWidget {
   ConsumerState createState() => _SpashState();
 }
 
-class _SpashState extends ConsumerState<Splash> {
-  final animationFuture = Completer<void>();
-
-  SharedPref sharedPref = SharedPref();
+class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
+  final SharedPref sharedPref = SharedPref();
   ErrorState? error;
-
+  bool _isNavigating = false;
+  late final Future<bool> _boardingStatus;
+  late final Future<void> _mosqueInitFuture;
+  late final Future<void> _uiInitFuture;
+  
+  @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    
+    // Start parallel initialization processes
+    _uiInitFuture = _initAppUI();
+    _boardingStatus = _loadBoardingStatus();
+    _mosqueInitFuture = _initMosqueData();
 
-    _initApplication().logPerformance('Init application');
+    // Start navigation process after minimal delay
+    // This ensures animation starts playing before checking navigation conditions
+    Future.delayed(Duration(milliseconds: 300), _prepareNavigation);
+  }
+  
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
-  // bool applicationProblem = false;
-
-  Future<void> initApplicationUI() async {
-    await GlobalConfiguration().loadFromAsset("configuration");
-
-    Hive.initFlutter();
-
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
-
-    HttpOverrides.global = MyHttpOverrides();
-    FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
-
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
-      if (systemOverlaysAreVisible) return;
-      await Future.delayed(Duration(seconds: 3));
-      SystemChrome.restoreSystemUIOverlays();
-    });
-  }
-
-  Future<void> _initSettings() async {
-    FeatureManagerProvider.initialize(context);
-    await context.read<AppLanguage>().fetchLocale();
-    await context.read<MosqueManager>().init().logPerformance("Mosque manager");
-    MosqueManager.setInstance(context.read<MosqueManager>());
-  }
-
-  Future<bool> loadBoarding() async {
-    var res = await sharedPref.read("boarding");
-
-    return res == null;
-  }
-
-  /// navigates to first screen
-  Future<void> _initApplication() async {
+  // Initialize UI components with highest priority
+  Future<void> _initAppUI() async {
     try {
-      await initApplicationUI();
-      var settings = await _initSettings();
+      await GlobalConfiguration().loadFromAsset("configuration");
+      
+      // Set system UI configurations
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+      SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
+        if (systemOverlaysAreVisible) return;
+        await Future.delayed(Duration(seconds: 3));
+        SystemChrome.restoreSystemUIOverlays();
+      });
+      
+      // Initialize HTTP overrides and focus settings
+      HttpOverrides.global = MyHttpOverrides();
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
 
-      var goBoarding = await loadBoarding();
-      var mosqueManager = context.read<MosqueManager>();
-      bool hasNoMosque = mosqueManager.mosqueUUID == null;
+      // Low priority initializations to run in parallel
+      FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
-      /// waite for the animation if it is not loaded yet
-      await animationFuture.future;
+      // Initialize wakelock as a background task
+      generateStream(Duration(minutes: 10)).listen((event) =>
+          WakelockPlus.enable().catchError(CrashlyticsWrapper.sendException));
+    } catch (e, stack) {
+      logger.e("UI initialization error $e", stackTrace: stack);
+      // Continue with app startup even if there are UI initialization errors
+    }
+  }
 
-      if (hasNoMosque || goBoarding) {
-        AppRouter.pushReplacement(OnBoardingScreen());
-      } else {
-        AppRouter.pushReplacement(OfflineHomeScreen());
-      }
-      generateStream(Duration(minutes: 10))
-          .listen((event) => WakelockPlus.enable().catchError(CrashlyticsWrapper.sendException));
+  // Load boarding status in parallel
+  Future<bool> _loadBoardingStatus() async {
+    try {
+      var res = await sharedPref.read("boarding");
+      return res == null;
+    } catch (e) {
+      logger.e("Error loading boarding status $e");
+      // Default to showing boarding if there's an error
+      return true;
+    }
+  }
+
+  // Initialize mosque data
+  Future<void> _initMosqueData() async {
+    try {
+      // Feature manager initialization
+      FeatureManagerProvider.initialize(context);
+      
+      // Initialize language preferences
+      await context.read<AppLanguage>().fetchLocale();
+      
+      // Initialize mosque manager
+      await context.read<MosqueManager>().init();
+      MosqueManager.setInstance(context.read<MosqueManager>());
     } on DioError catch (e) {
       if (e.response == null) {
         print('no internet connection');
         print(e.requestOptions.uri);
-        setState(() => error = ErrorState.noInternet);
-
-        // mosque not found
+        if (mounted) setState(() => error = ErrorState.noInternet);
       } else {
-        setState(() => error = ErrorState.mosqueNotFound);
-        // e.response!.data;
+        if (mounted) setState(() => error = ErrorState.mosqueNotFound);
       }
     } catch (e, stack) {
-      logger.e(e, stackTrace: stack);
-      setState(() => error = ErrorState.mosqueDataError);
-      rethrow;
+      logger.e("Mosque data initialization error $e", stackTrace: stack);
+      if (mounted) setState(() => error = ErrorState.mosqueDataError);
     }
   }
 
-  /// reset the app
+  // Prepare for navigation once minimal requirements are met
+  Future<void> _prepareNavigation() async {
+    // Check if we're already navigating to avoid duplicate navigation
+    if (_isNavigating) return;
+
+    try {
+      // Wait for boarding status check
+      final goBoarding = await _boardingStatus;
+
+      // Wait for minimum animation time (at least show splash for 1 second)
+      await Future.delayed(Duration(seconds: 1));
+
+      // Start navigation process
+      if (!mounted) return;
+      _navigateToNextScreen(goBoarding);
+    } catch (e, stack) {
+      logger.e("Navigation preparation error $e", stackTrace: stack);
+    }
+  }
+
+  // Navigate to the appropriate screen
+  void _navigateToNextScreen(bool showBoarding) {
+    if (_isNavigating || !mounted) return;
+
+    _isNavigating = true;
+
+    final mosqueManager = context.read<MosqueManager>();
+    bool hasNoMosque = mosqueManager.mosqueUUID == null;
+
+    if (hasNoMosque || showBoarding) {
+      AppRouter.pushReplacement(OnBoardingScreen());
+    } else {
+      AppRouter.pushReplacement(OfflineHomeScreen());
+    }
+  }
+
+  // Reset the app and go to boarding
   void _changeMosque() {
+    if (_isNavigating) return;
+    _isNavigating = true;
     AppRouter.pushReplacement(OnBoardingScreen());
   }
 
+  // Retry initialization
+  void _retryInitialization() {
+    setState(() {
+      error = null;
+      _isNavigating = false;
+    });
+
+    _mosqueInitFuture = _initMosqueData();
+    _prepareNavigation();
+  }
+
+  @override
   Widget build(BuildContext context) {
     RelativeSizes.instance.size = MediaQuery.of(context).size;
 
@@ -154,14 +218,14 @@ class _SpashState extends ConsumerState<Splash> {
           title: S.of(context).noInternet,
           description: S.of(context).noInternetMessage,
           image: R.ASSETS_SVG_NO_WI_FI_SVG,
-          onTryAgain: _initApplication,
+          onTryAgain: _retryInitialization,
         );
       case ErrorState.mosqueDataError:
         return ErrorScreen(
           title: S.of(context).error,
           description: S.of(context).mosqueErrorMessage,
           image: R.ASSETS_IMG_ICON_EXIT_PNG,
-          onTryAgain: _initApplication,
+          onTryAgain: _retryInitialization,
         );
       case null:
         break;
@@ -182,8 +246,15 @@ class _SpashState extends ConsumerState<Splash> {
                 width: double.infinity,
                 child: SplashScreen.callback(
                   isLoading: false,
-                  onSuccess: (e) => animationFuture.complete(),
-                  onError: (error, stacktrace) => animationFuture.completeError(error, stacktrace),
+                  onSuccess: (e) {
+                    // Trigger navigation preparation if not already started
+                    _prepareNavigation();
+                  },
+                  onError: (error, stacktrace) {
+                    logger.e("Animation error $error", stackTrace: stacktrace);
+                    // Still try to navigate even if animation fails
+                    _prepareNavigation();
+                  },
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
                   startAnimation: 'idle',
