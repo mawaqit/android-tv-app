@@ -8,10 +8,11 @@ workflows:
         - pattern: main
           include: true
           source: true
+
       cancel_previous_builds: true
 
     environment:
-      flutter: 3.27.0
+      flutter: 3.13.9
       vars:
         PACKAGE_NAME: "com.mawaqit.androidtv"
         GOOGLE_PLAY_TRACK: internal
@@ -24,7 +25,6 @@ workflows:
         - aws_credentials
         - GITHUB
         - APP
-        - mawaqit_firebase
 
     cache:
       cache_paths:
@@ -32,12 +32,6 @@ workflows:
         - $HOME/.gradle/caches
 
     scripts:
-      - name: Load Firebase configuration
-        script: |
-          #!/usr/bin/env sh
-          set -e
-          echo "FIREBASE_SECRET" > "$CM_BUILD_DIR/android/app/google-services.json"
-
       - name: Retrieve version
         script: |
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
@@ -63,18 +57,12 @@ workflows:
         script: |
           flutter pub get
           dart run build_runner build
-
       - name: Run flutter Unit tests
         script: |
           mkdir -p test-results
-          flutter test \
-            --dart-define=mawaqit.api.key=$MAWAQIT_API_KEY \
-            --dart-define=mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            --dart-define=mawaqit.firebase.api_key=$MAWAQIT_FIREBASE_API_KEY \
-            --dart-define=mawaqit.firebase.app_id=$MAWAQIT_FIREBASE_APP_ID \
-            --dart-define=mawaqit.firebase.messaging_sender_id=$MAWAQIT_FIREBASE_MESSAGING_SENDER_ID \
-            --dart-define=mawaqit.firebase.project_id=$MAWAQIT_FIREBASE_PROJECT_ID \
-            --dart-define=mawaqit.firebase.storage_bucket=$MAWAQIT_FIREBASE_STORAGE_BUCKET \
+          flutter test  \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY  \
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
           > test-results/results.json
 
       - name: Build AAB with Flutter
@@ -82,26 +70,16 @@ workflows:
           flutter build appbundle --release \
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
-            --dart-define=mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            --dart-define=mawaqit.api.key=$MAWAQIT_API_KEY \
-            --dart-define=mawaqit.firebase.api_key=$MAWAQIT_FIREBASE_API_KEY \
-            --dart-define=mawaqit.firebase.app_id=$MAWAQIT_FIREBASE_APP_ID \
-            --dart-define=mawaqit.firebase.messaging_sender_id=$MAWAQIT_FIREBASE_MESSAGING_SENDER_ID \
-            --dart-define=mawaqit.firebase.project_id=$MAWAQIT_FIREBASE_PROJECT_ID \
-            --dart-define=mawaqit.firebase.storage_bucket=$MAWAQIT_FIREBASE_STORAGE_BUCKET
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
 
       - name: Build APK with Flutter
         script: |
           flutter build apk --release \
             --build-name=$VERSION \
             --build-number=$BUILD_NUMBER \
-            --dart-define=mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            --dart-define=mawaqit.api.key=$MAWAQIT_API_KEY \
-            --dart-define=mawaqit.firebase.api_key=$MAWAQIT_FIREBASE_API_KEY \
-            --dart-define=mawaqit.firebase.app_id=$MAWAQIT_FIREBASE_APP_ID \
-            --dart-define=mawaqit.firebase.messaging_sender_id=$MAWAQIT_FIREBASE_MESSAGING_SENDER_ID \
-            --dart-define=mawaqit.firebase.project_id=$MAWAQIT_FIREBASE_PROJECT_ID \
-            --dart-define=mawaqit.firebase.storage_bucket=$MAWAQIT_FIREBASE_STORAGE_BUCKET
+            --dart-define mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+            --dart-define mawaqit.api.key=$MAWAQIT_API_KEY
 
       - name: Copy artifacts
         script: |

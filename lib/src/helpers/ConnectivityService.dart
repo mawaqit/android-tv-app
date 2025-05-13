@@ -1,32 +1,29 @@
 import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mawaqit/src/domain/model/connectivity_status.dart';
 
 class ConnectivityService {
-  final StreamController<ConnectivityStatus> connectionStatusController = StreamController<ConnectivityStatus>();
-
-  late final StreamSubscription<List<ConnectivityResult>> _subscription;
+  StreamController<ConnectivityStatus> connectionStatusController = StreamController<ConnectivityStatus>();
 
   ConnectivityService() {
-    _subscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
-      // Determine the current status based on the list of connectivity results
-      final status = _getStatusFromResults(results);
-      connectionStatusController.add(status);
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      var connectionsStatus = _getStatusFromResult(result);
+
+      connectionStatusController.add(connectionsStatus);
     });
   }
 
-  ConnectivityStatus _getStatusFromResults(List<ConnectivityResult> results) {
-    if (results.contains(ConnectivityResult.mobile)) {
-      return ConnectivityStatus.Cellular;
-    } else if (results.contains(ConnectivityResult.wifi)) {
-      return ConnectivityStatus.Wifi;
-    } else {
-      return ConnectivityStatus.Offline;
+  ConnectivityStatus _getStatusFromResult(ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.mobile:
+        return ConnectivityStatus.Cellular;
+      case ConnectivityResult.wifi:
+        return ConnectivityStatus.Wifi;
+      case ConnectivityResult.none:
+        return ConnectivityStatus.Offline;
+      default:
+        return ConnectivityStatus.Offline;
     }
-  }
-
-  void dispose() {
-    _subscription.cancel();
-    connectionStatusController.close();
   }
 }
