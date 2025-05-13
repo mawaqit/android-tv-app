@@ -46,23 +46,25 @@ import 'package:montenegrin_localization/montenegrin_localization.dart';
 
 final logger = Logger();
 
-// Create global completer to track critical initialization
-final criticalInitCompleter = Completer<void>();
+// Create global completer to track initialization status
+final appInitialized = Completer<void>();
 
 @pragma("vm:entry-point")
 Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
       try {
+        // Must be called first
         WidgetsFlutterBinding.ensureInitialized();
+
+        // Initialize Firebase first as it's needed for most features
+        // This must be awaited to avoid the "[core/no-app]" error
+        await Firebase.initializeApp();
         
-        // Start Firebase initialization early but don't await
-        final firebaseInit = Firebase.initializeApp();
-        
-        // Initialize only critical services before rendering UI
+        // Initialize critical services before rendering UI
         await _initializeCriticalServices();
         
-        // Start the app immediately after critical services
+        // Start the app with critical services ready
         runApp(
           riverpod.ProviderScope(
             child: MyApp(),
@@ -74,7 +76,7 @@ Future<void> main() async {
         );
         
         // Continue with non-critical initialization in background
-        _initializeNonCriticalServices(firebaseInit);
+        _initializeNonCriticalServices();
         
       } catch (e, stackTrace) {
         developer.log('Initialization error', error: e, stackTrace: stackTrace);
@@ -86,33 +88,38 @@ Future<void> main() async {
 
 @pragma("vm:entry-point")
 Future<void> _initializeCriticalServices() async {
-  // Only include services that are absolutely required for app to start
-  final directory = await getApplicationDocumentsDirectory();
+  try {
+    // Only include services that are absolutely required for app to start
+    final directory = await getApplicationDocumentsDirectory();
 
-  // Initialize Hive with minimal setup
-  await Hive.initFlutter();
+    // Initialize Hive with minimal setup
+    await Hive.initFlutter();
 
-  // Register critical Hive adapters
-  Hive.registerAdapter(SurahModelAdapter());
-  Hive.registerAdapter(ReciterModelAdapter());
-  Hive.registerAdapter(MoshafModelAdapter());
+    // Register critical Hive adapters
+    Hive.registerAdapter(SurahModelAdapter());
+    Hive.registerAdapter(ReciterModelAdapter());
+    Hive.registerAdapter(MoshafModelAdapter());
 
-  // Initialize timezone data
-  tz.initializeTimeZones();
+    // Initialize timezone data
+    tz.initializeTimeZones();
+    
+    developer.log('Critical services initialized successfully');
+  } catch (e, stackTrace) {
+    developer.log('Critical services initialization error',
+        error: e, stackTrace: stackTrace);
+    // Rethrow to prevent app from starting in a broken state
+    rethrow;
+  }
 }
 
 @pragma("vm:entry-point")
-Future<void> _initializeNonCriticalServices(
-    Future<FirebaseApp> firebaseInit) async {
+Future<void> _initializeNonCriticalServices() async {
   try {
-    // Complete firebase initialization
-    await firebaseInit;
-
     // Initialize cache in background
     final directory = await getApplicationDocumentsDirectory();
-    FastCachedImageConfig.init(
-            subDir: directory.path, clearCacheAfter: const Duration(days: 60))
-        .then((_) => developer.log('Image cache initialized'));
+    await FastCachedImageConfig.init(
+        subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+    developer.log('Image cache initialized');
 
     // Initialize permissions
     await PermissionsManager.initializePermissions();
@@ -128,20 +135,19 @@ Future<void> _initializeNonCriticalServices(
     
     await UnifiedBackgroundService.initializeService();
     
-    // Signal that critical initialization is complete
-    if (!criticalInitCompleter.isCompleted) {
-      criticalInitCompleter.complete();
+    // Signal that all initialization is complete
+    if (!appInitialized.isCompleted) {
+      appInitialized.complete();
     }
 
     developer.log('All services initialized successfully');
   } catch (e, stackTrace) {
     developer.log('Non-critical initialization error',
         error: e, stackTrace: stackTrace);
-    // Don't rethrow to avoid crashing the app for non-critical services
     
     // Still complete the completer to avoid deadlocks
-    if (!criticalInitCompleter.isCompleted) {
-      criticalInitCompleter.complete();
+    if (!appInitialized.isCompleted) {
+      appInitialized.complete();
     }
   }
 }
@@ -186,11 +192,10 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) => ConnectivityService().connectionStatusController.stream.map((event) {
-              if (event == ConnectivityStatus.Wifi || event == ConnectivityStatus.Cellular) {
-                //todo check actual internet
-              }
-
+            create: (context) => ConnectivityService()
+                .connectionStatusController
+                .stream
+                .map((event) {
               return event;
             }),
             child: Consumer<ThemeNotifier>(
@@ -201,8 +206,8 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                     title: kAppName,
                     themeMode: theme.mode,
                     localeResolutionCallback: (locale, supportedLocales) {
-                      if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
-
+                      if (locale?.languageCode.toLowerCase() == 'ba')
+                        return Locale('en');
                       return locale;
                     },
                     theme: theme.lightTheme,

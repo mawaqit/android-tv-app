@@ -54,22 +54,59 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
   ErrorState? error;
   bool _isNavigating = false;
   late final Future<bool> _boardingStatus;
-  late final Future<void> _mosqueInitFuture;
-  late final Future<void> _uiInitFuture;
+  bool _isLoading = true;
   
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     
-    // Start parallel initialization processes
-    _uiInitFuture = _initAppUI();
-    _boardingStatus = _loadBoardingStatus();
-    _mosqueInitFuture = _initMosqueData();
+    // Start initialization
+    _initialize();
+  }
 
-    // Start navigation process after minimal delay
-    // This ensures animation starts playing before checking navigation conditions
-    Future.delayed(Duration(milliseconds: 300), _prepareNavigation);
+  Future<void> _initialize() async {
+    try {
+      // Wait for app initialization (Firebase and critical services)
+      // This ensures Firebase is properly initialized before we use it
+      if (!appInitialized.isCompleted) {
+        await appInitialized.future.timeout(Duration(seconds: 5),
+            onTimeout: () {
+          logger.w("App initialization timed out, continuing with splash flow");
+        });
+      }
+
+      // Initialize UI components
+      await _initAppUI();
+
+      // Load boarding status
+      _boardingStatus = _loadBoardingStatus();
+      
+      // Initialize mosque data
+      await _initMosqueData();
+
+      // Ready to navigate
+      setState(() {
+        _isLoading = false;
+      });
+
+      // Allow minimal time for animation
+      await Future.delayed(Duration(milliseconds: 300));
+
+      // Navigate to next screen
+      final showBoarding = await _boardingStatus;
+      _navigateToNextScreen(showBoarding);
+    } catch (e, stack) {
+      logger.e("Splash initialization error: $e", stackTrace: stack);
+
+      // Still try to navigate after delay to avoid getting stuck
+      Future.delayed(Duration(seconds: 2), () {
+        if (!mounted) return;
+        final mosqueManager = context.read<MosqueManager>();
+        bool hasNoMosque = mosqueManager.mosqueUUID == null;
+        _navigateToNextScreen(hasNoMosque);
+      });
+    }
   }
   
   @override
@@ -78,7 +115,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // Initialize UI components with highest priority
+  // Initialize UI components
   Future<void> _initAppUI() async {
     try {
       await GlobalConfiguration().loadFromAsset("configuration");
@@ -96,7 +133,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
       FocusManager.instance.highlightStrategy =
           FocusHighlightStrategy.alwaysTraditional;
 
-      // Low priority initializations to run in parallel
+      // Configure crashlytics
       FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
       // Initialize wakelock as a background task
@@ -108,7 +145,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
     }
   }
 
-  // Load boarding status in parallel
+  // Load boarding status
   Future<bool> _loadBoardingStatus() async {
     try {
       var res = await sharedPref.read("boarding");
@@ -134,8 +171,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
       MosqueManager.setInstance(context.read<MosqueManager>());
     } on DioError catch (e) {
       if (e.response == null) {
-        print('no internet connection');
-        print(e.requestOptions.uri);
+        logger.w('No internet connection: ${e.requestOptions.uri}');
         if (mounted) setState(() => error = ErrorState.noInternet);
       } else {
         if (mounted) setState(() => error = ErrorState.mosqueNotFound);
@@ -143,26 +179,6 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
     } catch (e, stack) {
       logger.e("Mosque data initialization error $e", stackTrace: stack);
       if (mounted) setState(() => error = ErrorState.mosqueDataError);
-    }
-  }
-
-  // Prepare for navigation once minimal requirements are met
-  Future<void> _prepareNavigation() async {
-    // Check if we're already navigating to avoid duplicate navigation
-    if (_isNavigating) return;
-
-    try {
-      // Wait for boarding status check
-      final goBoarding = await _boardingStatus;
-
-      // Wait for minimum animation time (at least show splash for 1 second)
-      await Future.delayed(Duration(seconds: 1));
-
-      // Start navigation process
-      if (!mounted) return;
-      _navigateToNextScreen(goBoarding);
-    } catch (e, stack) {
-      logger.e("Navigation preparation error $e", stackTrace: stack);
     }
   }
 
@@ -194,10 +210,10 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
     setState(() {
       error = null;
       _isNavigating = false;
+      _isLoading = true;
     });
 
-    _mosqueInitFuture = _initMosqueData();
-    _prepareNavigation();
+    _initialize();
   }
 
   @override
@@ -245,15 +261,20 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
               child: Container(
                 width: double.infinity,
                 child: SplashScreen.callback(
-                  isLoading: false,
+                  isLoading: _isLoading,
                   onSuccess: (e) {
-                    // Trigger navigation preparation if not already started
-                    _prepareNavigation();
+                    // Animation completed successfully
+                    if (!_isLoading) {
+                      // Immediately navigate if data is ready
+                      _boardingStatus.then(_navigateToNextScreen);
+                    }
                   },
                   onError: (error, stacktrace) {
                     logger.e("Animation error $error", stackTrace: stacktrace);
-                    // Still try to navigate even if animation fails
-                    _prepareNavigation();
+                    // Try to navigate even if animation fails
+                    if (!_isLoading) {
+                      _boardingStatus.then(_navigateToNextScreen);
+                    }
                   },
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,
