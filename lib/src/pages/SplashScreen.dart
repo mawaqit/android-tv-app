@@ -55,12 +55,12 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
   bool _isNavigating = false;
   late final Future<bool> _boardingStatus;
   bool _isLoading = true;
-  
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    
+
     // Start initialization
     _initialize();
   }
@@ -70,8 +70,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
       // Wait for app initialization (Firebase and critical services)
       // This ensures Firebase is properly initialized before we use it
       if (!appInitialized.isCompleted) {
-        await appInitialized.future.timeout(Duration(seconds: 5),
-            onTimeout: () {
+        await appInitialized.future.timeout(Duration(seconds: 5), onTimeout: () {
           logger.w("App initialization timed out, continuing with splash flow");
         });
       }
@@ -81,7 +80,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
 
       // Load boarding status
       _boardingStatus = _loadBoardingStatus();
-      
+
       // Initialize mosque data
       await _initMosqueData();
 
@@ -108,7 +107,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
       });
     }
   }
-  
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -119,7 +118,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
   Future<void> _initAppUI() async {
     try {
       await GlobalConfiguration().loadFromAsset("configuration");
-      
+
       // Set system UI configurations
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
       SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
@@ -127,21 +126,19 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
         await Future.delayed(Duration(seconds: 3));
         SystemChrome.restoreSystemUIOverlays();
       });
-      
+
       // Initialize HTTP overrides and focus settings
       HttpOverrides.global = MyHttpOverrides();
-      FocusManager.instance.highlightStrategy =
-          FocusHighlightStrategy.alwaysTraditional;
+      FocusManager.instance.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
 
       // Configure crashlytics
       FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
       // Initialize wakelock as a background task
-      generateStream(Duration(minutes: 10)).listen((event) =>
-          WakelockPlus.enable().catchError(CrashlyticsWrapper.sendException));
+      generateStream(Duration(minutes: 10))
+          .listen((event) => WakelockPlus.enable().catchError(CrashlyticsWrapper.sendException));
     } catch (e, stack) {
       logger.e("UI initialization error $e", stackTrace: stack);
-      // Continue with app startup even if there are UI initialization errors
     }
   }
 
@@ -152,7 +149,6 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
       return res == null;
     } catch (e) {
       logger.e("Error loading boarding status $e");
-      // Default to showing boarding if there's an error
       return true;
     }
   }
@@ -162,10 +158,10 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
     try {
       // Feature manager initialization
       FeatureManagerProvider.initialize(context);
-      
+
       // Initialize language preferences
       await context.read<AppLanguage>().fetchLocale();
-      
+
       // Initialize mosque manager
       await context.read<MosqueManager>().init();
       MosqueManager.setInstance(context.read<MosqueManager>());
@@ -263,15 +259,12 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
                 child: SplashScreen.callback(
                   isLoading: _isLoading,
                   onSuccess: (e) {
-                    // Animation completed successfully
                     if (!_isLoading) {
-                      // Immediately navigate if data is ready
                       _boardingStatus.then(_navigateToNextScreen);
                     }
                   },
                   onError: (error, stacktrace) {
                     logger.e("Animation error $error", stackTrace: stacktrace);
-                    // Try to navigate even if animation fails
                     if (!_isLoading) {
                       _boardingStatus.then(_navigateToNextScreen);
                     }

@@ -54,16 +54,13 @@ Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
       try {
-        // Must be called first
         WidgetsFlutterBinding.ensureInitialized();
 
-        // Initialize Firebase first as it's needed for most features
-        // This must be awaited to avoid the "[core/no-app]" error
         await Firebase.initializeApp();
-        
+
         // Initialize critical services before rendering UI
         await _initializeCriticalServices();
-        
+
         // Start the app with critical services ready
         runApp(
           riverpod.ProviderScope(
@@ -74,10 +71,9 @@ Future<void> main() async {
             ],
           ),
         );
-        
+
         // Continue with non-critical initialization in background
         _initializeNonCriticalServices();
-        
       } catch (e, stackTrace) {
         developer.log('Initialization error', error: e, stackTrace: stackTrace);
         rethrow;
@@ -89,9 +85,6 @@ Future<void> main() async {
 @pragma("vm:entry-point")
 Future<void> _initializeCriticalServices() async {
   try {
-    // Only include services that are absolutely required for app to start
-    final directory = await getApplicationDocumentsDirectory();
-
     // Initialize Hive with minimal setup
     await Hive.initFlutter();
 
@@ -102,11 +95,10 @@ Future<void> _initializeCriticalServices() async {
 
     // Initialize timezone data
     tz.initializeTimeZones();
-    
+
     developer.log('Critical services initialized successfully');
   } catch (e, stackTrace) {
-    developer.log('Critical services initialization error',
-        error: e, stackTrace: stackTrace);
+    developer.log('Critical services initialization error', error: e, stackTrace: stackTrace);
     // Rethrow to prevent app from starting in a broken state
     rethrow;
   }
@@ -117,8 +109,7 @@ Future<void> _initializeNonCriticalServices() async {
   try {
     // Initialize cache in background
     final directory = await getApplicationDocumentsDirectory();
-    await FastCachedImageConfig.init(
-        subDir: directory.path, clearCacheAfter: const Duration(days: 60));
+    await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
     developer.log('Image cache initialized');
 
     // Initialize permissions
@@ -132,9 +123,9 @@ Future<void> _initializeNonCriticalServices() async {
     if (permissionsGranted) {
       await WorkManagerService.initialize();
     }
-    
+
     await UnifiedBackgroundService.initializeService();
-    
+
     // Signal that all initialization is complete
     if (!appInitialized.isCompleted) {
       appInitialized.complete();
@@ -142,9 +133,8 @@ Future<void> _initializeNonCriticalServices() async {
 
     developer.log('All services initialized successfully');
   } catch (e, stackTrace) {
-    developer.log('Non-critical initialization error',
-        error: e, stackTrace: stackTrace);
-    
+    developer.log('Non-critical initialization error', error: e, stackTrace: stackTrace);
+
     // Still complete the completer to avoid deadlocks
     if (!appInitialized.isCompleted) {
       appInitialized.complete();
@@ -192,10 +182,7 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
         return Sizer(builder: (context, orientation, size) {
           return StreamProvider(
             initialData: ConnectivityStatus.Offline,
-            create: (context) => ConnectivityService()
-                .connectionStatusController
-                .stream
-                .map((event) {
+            create: (context) => ConnectivityService().connectionStatusController.stream.map((event) {
               return event;
             }),
             child: Consumer<ThemeNotifier>(
@@ -206,8 +193,7 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                     title: kAppName,
                     themeMode: theme.mode,
                     localeResolutionCallback: (locale, supportedLocales) {
-                      if (locale?.languageCode.toLowerCase() == 'ba')
-                        return Locale('en');
+                      if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
                       return locale;
                     },
                     theme: theme.lightTheme,
