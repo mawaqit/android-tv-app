@@ -56,6 +56,9 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
   late final Future<bool> _boardingStatus;
   bool _isLoading = true;
 
+  // Create our own initialization tracking
+  final Completer<void> _initializationCompleter = Completer<void>();
+
   @override
   void initState() {
     super.initState();
@@ -67,22 +70,19 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
 
   Future<void> _initialize() async {
     try {
-      // Wait for app initialization (Firebase and critical services)
-      // This ensures Firebase is properly initialized before we use it
-      if (!appInitialized.isCompleted) {
-        await appInitialized.future.timeout(Duration(seconds: 5), onTimeout: () {
-          logger.w("App initialization timed out, continuing with splash flow");
-        });
-      }
-
-      // Initialize UI components
+      // Initialize UI components first
       await _initAppUI();
 
-      // Load boarding status
+      // Load boarding status in parallel
       _boardingStatus = _loadBoardingStatus();
 
       // Initialize mosque data
       await _initMosqueData();
+
+      // Complete our initialization process
+      if (!_initializationCompleter.isCompleted) {
+        _initializationCompleter.complete();
+      }
 
       // Ready to navigate
       setState(() {
@@ -97,6 +97,11 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
       _navigateToNextScreen(showBoarding);
     } catch (e, stack) {
       logger.e("Splash initialization error: $e", stackTrace: stack);
+
+      // Complete the completer even on error to avoid deadlocks
+      if (!_initializationCompleter.isCompleted) {
+        _initializationCompleter.complete();
+      }
 
       // Still try to navigate after delay to avoid getting stuck
       Future.delayed(Duration(seconds: 2), () {
