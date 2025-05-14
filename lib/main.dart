@@ -32,14 +32,13 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/background_services.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/permissions_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
-import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -61,11 +60,9 @@ Future<void> main() async {
 
         final directory = await getApplicationDocumentsDirectory();
 
-        // Initialize Hive first
         Hive.init(directory.path);
         await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
 
-        // Initialize core services (but NOT background services)
         await _initializeCoreServices();
 
         runApp(
@@ -85,29 +82,6 @@ Future<void> main() async {
   );
 }
 
-Future<void> _handleOverlayPermissions(String deviceModel, bool isRooted) async {
-  try {
-    final methodChannel = MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
-    final isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
-
-    if (RegExp(r'ONVO.*').hasMatch(deviceModel)) {
-      await methodChannel.invokeMethod("grantOnvoOverlayPermission");
-      return;
-    }
-
-    if (!isPermissionGranted) {
-      if (isRooted) {
-        await methodChannel.invokeMethod("grantOverlayPermission");
-      } else {
-        await NotificationOverlay.requestOverlayPermission();
-      }
-    }
-  } catch (e) {
-    developer.log('Error handling overlay permissions', error: e);
-    // Continue even if this fails
-  }
-}
-
 // Only initialize non-background services
 @pragma("vm:entry-point")
 Future<void> _initializeCoreServices() async {
@@ -123,36 +97,6 @@ Future<void> _initializeCoreServices() async {
     MediaKit.ensureInitialized();
   } catch (e, stackTrace) {
     developer.log('Core services initialization error', error: e, stackTrace: stackTrace);
-    // Continue even if there's an error
-  }
-}
-
-Future<String> _getDeviceModel() async {
-  var hardware = await DeviceInfoPlugin().androidInfo;
-  return hardware.model;
-}
-
-Future<void> checkAndRequestExactAlarmPermission() async {
-  if (Platform.isAndroid) {
-    try {
-      final deviceInfo = DeviceInfoPlugin();
-      final androidInfo = await deviceInfo.androidInfo;
-
-      if (androidInfo.version.sdkInt >= 33) {
-        final status = await Permission.scheduleExactAlarm.status;
-
-        if (status.isDenied) {
-          final result = await Permission.scheduleExactAlarm.request();
-
-          if (result.isDenied) {
-            developer.log('Exact alarm permission not granted');
-          }
-        }
-      }
-    } catch (e) {
-      developer.log('Error checking alarm permission', error: e);
-      // Continue even if this fails
-    }
   }
 }
 
@@ -167,44 +111,33 @@ Future<void> _safelyInitializeBackgroundServices() async {
 
     developer.log('Starting background services initialization');
 
-    // Try to initialize permissions first
+    // Initialize permissions using the PermissionsManager
     try {
-      final isRooted =
-          await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
-      final deviceModel = await _getDeviceModel();
-      await _handleOverlayPermissions(deviceModel, isRooted);
-      await checkAndRequestExactAlarmPermission();
+      await PermissionsManager.initializePermissions();
       developer.log('Permissions initialized successfully');
     } catch (e) {
       developer.log('Permissions initialization error', error: e);
-      // Continue even if permissions fail
     }
 
-    // Try WorkManagerService
     try {
       await WorkManagerService.initialize();
       developer.log('WorkManagerService initialized successfully');
     } catch (e) {
       developer.log('WorkManagerService initialization error', error: e);
-      // Continue if this fails
     }
 
-    // Try UnifiedBackgroundService
     try {
       await UnifiedBackgroundService.initializeService();
       developer.log('UnifiedBackgroundService initialized successfully');
 
-      // Only if successful, set notification visibility
       UnifiedBackgroundService.setNotificationVisibility(false);
     } catch (e) {
       developer.log('UnifiedBackgroundService initialization error', error: e);
-      // Continue if this fails
     }
 
     developer.log('Background services initialization completed');
   } catch (e, stackTrace) {
     developer.log('Background services initialization error', error: e, stackTrace: stackTrace);
-    // Catch all errors to prevent app crash
   }
 }
 
