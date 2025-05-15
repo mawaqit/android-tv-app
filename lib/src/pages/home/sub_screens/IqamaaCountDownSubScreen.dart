@@ -91,30 +91,36 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
           ),
         ).animate().slide(delay: .5.seconds).fade().addRepaintBoundary(),
         SizedBox(height: 1.vh),
-        StreamBuilder(
-            stream: Stream.periodic(Duration(seconds: 1)),
-            builder: (context, snapshot) {
-              final remaining = mosqueManager.nextIqamaaAfter();
-              if (remaining <= Duration.zero) {
-                Future.delayed(Duration(milliseconds: 80), widget.onDone);
-              }
+        Expanded(
+          flex: 12,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: StreamBuilder(
+              stream: Stream.periodic(Duration(seconds: 1)),
+              builder: (context, snapshot) {
+                final remaining = mosqueManager.nextIqamaaAfter();
+                if (remaining <= Duration.zero) {
+                  Future.delayed(Duration(milliseconds: 80), widget.onDone);
+                }
 
-              int seconds = remaining.inSeconds % 60;
-              int minutes = remaining.inMinutes;
-              String _timeTwoDigit = timeTwoDigit(
-                seconds: seconds,
-                minutes: minutes,
-              );
-              return Text(
-                _timeTwoDigit,
-                style: TextStyle(
-                  fontSize: 25.vw,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  shadows: kIqamaCountDownTextShadow,
-                ),
-              ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
-            }),
+                int seconds = remaining.inSeconds % 60;
+                int minutes = remaining.inMinutes;
+                String _timeTwoDigit = timeTwoDigit(
+                  seconds: seconds,
+                  minutes: minutes,
+                );
+                return Text(
+                  _timeTwoDigit,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    // shadows: kIqamaCountDownTextShadow,
+                  ),
+                ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary();
+              }
+            ),
+          ),
+        ),
         Spacer(),
         mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
         SizedBox(height: 1.vh),
