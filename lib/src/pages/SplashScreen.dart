@@ -53,62 +53,66 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
   final SharedPref sharedPref = SharedPref();
   ErrorState? error;
   bool _isNavigating = false;
-  late final Future<bool> _boardingStatus;
   bool _isLoading = true;
-
-  // Create our own initialization tracking
-  final Completer<void> _initializationCompleter = Completer<void>();
+  bool _showBoarding = true;
+  bool _isAnimationComplete = false;
+  bool _isDataLoadingComplete = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-    // Start initialization
-    _initialize();
+    _initializeApp();
   }
 
-  Future<void> _initialize() async {
+  Future<void> _initializeApp() async {
     try {
       // Initialize UI components first
       await _initAppUI();
 
-      // Load boarding status in parallel
-      _boardingStatus = _loadBoardingStatus();
+      // Load boarding status
+      _showBoarding = await _loadBoardingStatus();
 
       // Initialize mosque data
       await _initMosqueData();
 
-      // Complete our initialization process
-      if (!_initializationCompleter.isCompleted) {
-        _initializationCompleter.complete();
-      }
-
-      // Ready to navigate
+      // Mark data loading as complete
       setState(() {
-        _isLoading = false;
+        _isDataLoadingComplete = true;
       });
 
-      // Allow minimal time for animation
-      await Future.delayed(Duration(milliseconds: 300));
-
-      // Navigate to next screen
-      final showBoarding = await _boardingStatus;
-      _navigateToNextScreen(showBoarding);
+      // Try to navigate if animation is already complete
+      _tryNavigate();
     } catch (e, stack) {
       logger.e("Splash initialization error: $e", stackTrace: stack);
-
-      // Complete the completer even on error to avoid deadlocks
-      if (!_initializationCompleter.isCompleted) {
-        _initializationCompleter.complete();
-      }
 
       // Still try to navigate after delay to avoid getting stuck
       Future.delayed(Duration(seconds: 2), () {
         if (!mounted) return;
         final mosqueManager = context.read<MosqueManager>();
-        bool hasNoMosque = mosqueManager.mosqueUUID == null;
-        _navigateToNextScreen(hasNoMosque);
+        _showBoarding = mosqueManager.mosqueUUID == null;
+
+        setState(() {
+          _isDataLoadingComplete = true;
+        });
+
+        _tryNavigate();
+      });
+    }
+  }
+
+  // Try to navigate if both animation and data loading are complete
+  void _tryNavigate() {
+    if (!mounted) return;
+
+    if (_isAnimationComplete && _isDataLoadingComplete) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      // Small delay for animation to finish
+      Future.delayed(Duration(milliseconds: 300), () {
+        _navigateToNextScreen();
       });
     }
   }
@@ -184,7 +188,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
   }
 
   // Navigate to the appropriate screen
-  void _navigateToNextScreen(bool showBoarding) {
+  void _navigateToNextScreen() {
     if (_isNavigating || !mounted) return;
 
     _isNavigating = true;
@@ -192,7 +196,7 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
     final mosqueManager = context.read<MosqueManager>();
     bool hasNoMosque = mosqueManager.mosqueUUID == null;
 
-    if (hasNoMosque || showBoarding) {
+    if (hasNoMosque || _showBoarding) {
       AppRouter.pushReplacement(OnBoardingScreen());
     } else {
       AppRouter.pushReplacement(OfflineHomeScreen());
@@ -212,9 +216,10 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
       error = null;
       _isNavigating = false;
       _isLoading = true;
+      _isDataLoadingComplete = false;
     });
 
-    _initialize();
+    _initializeApp();
   }
 
   @override
@@ -264,15 +269,19 @@ class _SpashState extends ConsumerState<Splash> with WidgetsBindingObserver {
                 child: SplashScreen.callback(
                   isLoading: _isLoading,
                   onSuccess: (e) {
-                    if (!_isLoading) {
-                      _boardingStatus.then(_navigateToNextScreen);
-                    }
+                    // Mark animation as complete and try to navigate
+                    setState(() {
+                      _isAnimationComplete = true;
+                    });
+                    _tryNavigate();
                   },
                   onError: (error, stacktrace) {
                     logger.e("Animation error $error", stackTrace: stacktrace);
-                    if (!_isLoading) {
-                      _boardingStatus.then(_navigateToNextScreen);
-                    }
+                    // Mark animation as complete even on error
+                    setState(() {
+                      _isAnimationComplete = true;
+                    });
+                    _tryNavigate();
                   },
                   name: R.ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV,
                   fit: BoxFit.cover,

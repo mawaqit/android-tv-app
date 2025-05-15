@@ -11,9 +11,41 @@ class PermissionsManager {
   static const String _permissionsGrantedKey = 'permissions_granted';
 
   /// Checks if permissions have already been granted
+
   static Future<bool> arePermissionsGranted() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_permissionsGrantedKey) ?? false;
+    bool previouslyGranted = prefs.getBool(_permissionsGrantedKey) ?? false;
+
+    if (!previouslyGranted) {
+      // If SharedPreferences says not granted, then definitely not granted.
+      return false;
+    }
+
+    // If SharedPreferences says granted, we must verify with the system.
+    // This is crucial if permissions were revoked by the user externally.
+
+    bool overlayCurrentlyGranted = await NotificationOverlay.checkOverlayPermission();
+    bool alarmCurrentlyGranted = true; // Assume true if not Android or < SDK 33
+
+    if (Platform.isAndroid) {
+      final deviceInfo = DeviceInfoPlugin();
+      final androidInfo = await deviceInfo.androidInfo;
+      if (androidInfo.version.sdkInt >= 33) {
+        // Check for Android 13+ (API 33)
+        final alarmStatus = await Permission.scheduleExactAlarm.status;
+        alarmCurrentlyGranted = alarmStatus.isGranted;
+      }
+    }
+
+    final allCurrentlyGranted = overlayCurrentlyGranted && alarmCurrentlyGranted;
+
+    if (!allCurrentlyGranted) {
+      // Permissions were revoked. Update SharedPreferences.
+      await prefs.setBool(_permissionsGrantedKey, false);
+      return false;
+    }
+
+    return true; // Both SharedPreferences and system confirm granted.
   }
 
   /// Marks permissions as granted in shared preferences
