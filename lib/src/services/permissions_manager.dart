@@ -16,6 +16,20 @@ class PermissionsManager {
     final prefs = await SharedPreferences.getInstance();
     bool previouslyGranted = prefs.getBool(_permissionsGrantedKey) ?? false;
 
+    // Check if device is rooted first
+    final isRooted =
+        await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
+
+    // If rooted, assume all permissions are granted
+    if (isRooted) {
+      // Update SharedPreferences to indicate permissions are granted
+      if (!previouslyGranted) {
+        await prefs.setBool(_permissionsGrantedKey, true);
+      }
+      return true;
+    }
+
+    // For non-rooted devices, continue with normal permission checks
     if (!previouslyGranted) {
       // If SharedPreferences says not granted, then definitely not granted.
       return false;
@@ -23,7 +37,6 @@ class PermissionsManager {
 
     // If SharedPreferences says granted, we must verify with the system.
     // This is crucial if permissions were revoked by the user externally.
-
     bool overlayCurrentlyGranted = await NotificationOverlay.checkOverlayPermission();
     bool alarmCurrentlyGranted = true; // Assume true if not Android or < SDK 33
 
