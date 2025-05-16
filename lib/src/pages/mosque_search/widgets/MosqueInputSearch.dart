@@ -90,6 +90,8 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
       final mosqueManager = context.read<MosqueManager>();
       final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
       ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
+      ref.read(randomHadithNotifierProvider.notifier).setHadithLanguage(hadithLangCode);
+
       !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
     }).catchError((e, stack) {
       if (e is InvalidMosqueId) {

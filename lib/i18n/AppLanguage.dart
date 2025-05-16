@@ -56,12 +56,13 @@ class AppLanguage extends ChangeNotifier {
 
   Future<void> fetchLocale() async {
     var prefs = await SharedPreferences.getInstance();
+
     if (prefs.getString('language_code') == null) {
       _appLocale = Locale(GlobalConfiguration().getValue('defaultLanguage'), '');
-      notifyListeners();
-      return null;
+    } else {
+      _appLocale = Locale(prefs.getString('language_code')!);
     }
-    _appLocale = Locale(prefs.getString('language_code')!);
+
     notifyListeners();
   }
 
@@ -124,15 +125,22 @@ class AppLanguage extends ChangeNotifier {
   /// if there is no language saved, return the api default language
   Future<String> getHadithLanguage(MosqueManager mosqueManager) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String mosqueHadithLang = "ar";
     final String? hadithLanguage = prefs.getString(RandomHadithConstant.kHadithLanguage);
-    if (hadithLanguage != null) {
+    if (hadithLanguage != null && hadithLanguage.isNotEmpty) {
       _hadithLanguage = hadithLanguage;
       notifyListeners();
       return hadithLanguage;
-    } else {
-      _hadithLanguage = mosqueManager.mosqueConfig!.hadithLang ?? "ar";
-      return mosqueManager.mosqueConfig!.hadithLang ?? "ar";
     }
+
+    if (mosqueManager.mosqueConfig != null && mosqueManager.mosqueConfig!.hadithLang != null) {
+      mosqueHadithLang = mosqueManager.mosqueConfig!.hadithLang!;
+    }
+
+    _hadithLanguage = mosqueHadithLang;
+    await prefs.setString(RandomHadithConstant.kHadithLanguage, mosqueHadithLang);
+    notifyListeners();
+    return mosqueHadithLang;
   }
 
   /// getters for the hadith language
