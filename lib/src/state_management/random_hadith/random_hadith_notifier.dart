@@ -45,10 +45,22 @@ class RandomHadithNotifier extends AsyncNotifier<RandomHadithState> {
 
   Future<void> ensureHadithLanguage() async {
     final prefs = await SharedPreferences.getInstance();
-    final language = prefs.getString(RandomHadithConstant.kHadithLanguage) ?? AppLanguage().hadithLanguage;
+    final storedLanguage = prefs.getString(RandomHadithConstant.kHadithLanguage);
+
+    // Get effective language - prioritize stored preference, then app language, default to Arabic
+    final language = (storedLanguage != null && storedLanguage.isNotEmpty)
+        ? storedLanguage
+        : (AppLanguage().hadithLanguage.isNotEmpty ? AppLanguage().hadithLanguage : 'ar');
+
+    if (storedLanguage == null || storedLanguage.isEmpty) {
+      await prefs.setString(RandomHadithConstant.kHadithLanguage, language);
+    }
+
     // Ensure hadiths are cached during initialization
     final randomHadithRepository = await ref.read(randomHadithRepositoryProvider.future);
     await randomHadithRepository.ensureHadithsAreCached(language);
+
+    await getRandomHadith(language: language);
   }
 }
 

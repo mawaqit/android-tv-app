@@ -125,13 +125,17 @@ class AppLanguage extends ChangeNotifier {
   Future<String> getHadithLanguage(MosqueManager mosqueManager) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? hadithLanguage = prefs.getString(RandomHadithConstant.kHadithLanguage);
-    if (hadithLanguage != null) {
+    if (hadithLanguage != null && hadithLanguage.isNotEmpty) {
       _hadithLanguage = hadithLanguage;
       notifyListeners();
       return hadithLanguage;
     } else {
-      _hadithLanguage = mosqueManager.mosqueConfig!.hadithLang ?? "ar";
-      return mosqueManager.mosqueConfig!.hadithLang ?? "ar";
+      final fallbackLang = mosqueManager.mosqueConfig?.hadithLang ?? "ar";
+      _hadithLanguage = fallbackLang;
+      // Save the fallback language to shared preferences so it persists
+      await prefs.setString(RandomHadithConstant.kHadithLanguage, fallbackLang);
+      notifyListeners();
+      return fallbackLang;
     }
   }
 
