@@ -116,53 +116,55 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
       }
     });
 
-    return Column(
-      children: [
-        SizedBox(height: 2.h),
-        Text(
-          S.of(context).appLang,
-          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
-                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+    return FocusScope(
+      child: Column(
+        children: [
+          SizedBox(height: 2.h),
+          Text(
+            S.of(context).appLang,
+            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+                ),
+          ).animate().slideY().fade(),
+          SizedBox(height: 1.5.h),
+          Text(
+            S.of(context).descLang,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  fontSize: 14.sp,
+                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+                ),
+          ).animate().slideX(begin: .5).fade(),
+          SizedBox(height: 3.h),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 0.5.h),
+              child: ListView.separated(
+                controller: _scrollController,
+                padding: EdgeInsets.symmetric(vertical: 0.5.h),
+                itemCount: sortedLocales.length,
+                separatorBuilder: (BuildContext context, int index) =>
+                    Divider(height: 0.1.h).animate().fade(delay: .7.seconds),
+                itemBuilder: (BuildContext context, int index) {
+                  var locale = sortedLocales[index];
+                  return LanguageTile(
+                    onSelect: widget.onSelect ??
+                        () {
+                          if (widget.nextButtonFocusNode != null) {
+                            widget.nextButtonFocusNode?.requestFocus();
+                          }
+                        }, // Pass the onSelect callback
+                    locale: locale,
+                    isSelected: isSelected(locale.languageCode),
+                  );
+                },
               ),
-        ).animate().slideY().fade(),
-        SizedBox(height: 1.5.h),
-        Text(
-          S.of(context).descLang,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontSize: 14.sp,
-                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-              ),
-        ).animate().slideX(begin: .5).fade(),
-        SizedBox(height: 3.h),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.only(top: 0.5.h),
-            child: ListView.separated(
-              controller: _scrollController,
-              padding: EdgeInsets.symmetric(vertical: 0.5.h),
-              itemCount: sortedLocales.length,
-              separatorBuilder: (BuildContext context, int index) =>
-                  Divider(height: 0.1.h).animate().fade(delay: .7.seconds),
-              itemBuilder: (BuildContext context, int index) {
-                var locale = sortedLocales[index];
-                return LanguageTile(
-                  onSelect: widget.onSelect ??
-                      () {
-                        if (widget.nextButtonFocusNode != null) {
-                          widget.nextButtonFocusNode?.requestFocus();
-                        }
-                      }, // Pass the onSelect callback
-                  locale: locale,
-                  isSelected: isSelected(locale.languageCode),
-                );
-              },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
