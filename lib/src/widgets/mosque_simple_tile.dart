@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart' as fp;
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_image_cache.dart';
+import 'package:mawaqit/src/mawaqit_image/mawaqit_network_image.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/focus_manager.dart';
 
@@ -35,22 +36,6 @@ class MosqueSimpleTile extends ConsumerStatefulWidget {
 
 class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
   bool loading = false;
-  late FocusNode _innerFocusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _innerFocusNode = widget.focusNode ?? FocusNode();
-  }
-
-  @override
-  void dispose() {
-    // Only dispose if we created it
-    if (widget.focusNode == null) {
-      _innerFocusNode.dispose();
-    }
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,27 +62,34 @@ class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
               setState(() => loading = true);
               await widget.onTap?.call();
               setState(() => loading = false);
+
+              // Handle focus transfer after successful mosque selection
+              widget.selectedNode.fold(
+                () {
+                  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => OfflineHomeScreen()),
+                    (route) => false,
+                  );
+                  return widget.onTap?.call();
+                },
+                (node) async {
+                  // Add a small delay to ensure state updates are complete
+                  await Future.delayed(Duration(milliseconds: 100));
+                  if (mounted && node.canRequestFocus) {
+                    // Use the FocusManager with proper error handling
+                    await ref.read(focusManagerProvider).requestFocus(
+                      node,
+                      context: context,
+                      timeout: const Duration(seconds: 2),
+                    );
+                  }
+                },
+              );
             } catch (e, s) {
               CrashlyticsWrapper.sendException(e, s);
               setState(() => loading = false);
               throw Exception('MosqueSimpleTile Error $e');
             }
-
-            widget.selectedNode.fold(() {
-              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => OfflineHomeScreen()),
-                (route) => false,
-              );
-              return widget.onTap?.call();
-            }, (node) {
-              // Use the FocusManager to reliably request focus
-              ref.read(focusManagerProvider).requestFocus(
-                node, 
-                context: context,
-                timeout: const Duration(seconds: 2)
-              );
-              return;
-            });
           },
           child: Row(
             children: [
