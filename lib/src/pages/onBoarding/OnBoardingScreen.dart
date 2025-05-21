@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/main.dart';
@@ -316,33 +317,56 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       child: state.when(
         data: (data) {
           return SafeArea(
-            child: Scaffold(
-              body: PageView.builder(
-                controller: pageController,
-                itemCount: data.screenFlow.length,
-                physics: NeverScrollableScrollPhysics(),
-                onPageChanged: (index) {
-                  setState(() {
-                    currentScreen = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  final screenType = data.screenFlow[index];
-                  final allScreens = getScreenWidgets(context);
+            child: FocusTraversalGroup(
+              policy: ReadingOrderTraversalPolicy(),
+              child: Scaffold(
+                body: PageView.builder(
+                  controller: pageController,
+                  itemCount: data.screenFlow.length,
+                  physics: NeverScrollableScrollPhysics(),
+                  onPageChanged: (index) {
+                    setState(() {
+                      currentScreen = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    final screenType = data.screenFlow[index];
+                    final allScreens = getScreenWidgets(context);
 
-                  return ScreenWithAnimationWidget(
-                    animation: allScreens[screenType]?.animation ?? '',
-                    child: allScreens[screenType]!.widget ?? Container(),
-                  );
-                },
-              ),
-              bottomNavigationBar: OnboardingBottomNavigationBar(
-                onPreviousPressed: () => ref.read(onboardingNavigationProvider.notifier).previousPage(),
-                onNextPressed: () => ref.read(onboardingNavigationProvider.notifier).nextPage(context),
-                nextButtonFocusNode: nextButtonFocusNode,
-                onSkipPressed: _shouldShowSkipButton(data.screenFlow[data.currentScreen]) && country.isNone()
-                    ? () => ref.read(onboardingNavigationProvider.notifier).skipCountryAndTimezoneScreens(context)
-                    : null,
+                    return ScreenWithAnimationWidget(
+                      animation: allScreens[screenType]?.animation ?? '',
+                      child: allScreens[screenType]!.widget ?? Container(),
+                    );
+                  },
+                ),
+                bottomNavigationBar: FocusScope(
+                  onKeyEvent: (FocusNode node, KeyEvent event){
+                    if(event is KeyDownEvent) {
+                      if(event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                        final screenType = data.screenFlow[currentScreen];
+
+                        if(screenType == OnboardingScreenType.about){
+                          return KeyEventResult.ignored;
+                        }
+                        final FocusScopeNode rootScope = FocusScope.of(context);
+                        rootScope.unfocus();
+                        Future.delayed(Duration(milliseconds: 100), () {
+                          rootScope.focusInDirection(TraversalDirection.up);
+                        });
+                        return KeyEventResult.handled;
+                      }
+                    }
+                    return KeyEventResult.ignored;
+                  },
+                  child: OnboardingBottomNavigationBar(
+                    onPreviousPressed: () => ref.read(onboardingNavigationProvider.notifier).previousPage(),
+                    onNextPressed: () => ref.read(onboardingNavigationProvider.notifier).nextPage(context),
+                    nextButtonFocusNode: nextButtonFocusNode,
+                    onSkipPressed: _shouldShowSkipButton(data.screenFlow[data.currentScreen]) && country.isNone()
+                        ? () => ref.read(onboardingNavigationProvider.notifier).skipCountryAndTimezoneScreens(context)
+                        : null,
+                  ),
+                ),
               ),
             ),
           );

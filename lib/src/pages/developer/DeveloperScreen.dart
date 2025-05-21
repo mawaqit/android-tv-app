@@ -61,7 +61,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         (builder: (context) => AdhanSubScreen(), name: S.current.alAdhan),
         (builder: (context) => AfterAdhanSubScreen(), name: S.current.afterAdhanHadith),
         (builder: (context) => DuaaBetweenAdhanAndIqamaaScreen(), name: S.current.duaaRemainder),
-        (builder: (context) => IqamaaCountDownSubScreen(isDebug: true), name: S.current.iqamaaCountDown),
+        (builder: (context) => IqamaaCountDownSubScreen(), name: S.current.iqamaaCountDown),
         (builder: (context) => IqamaSubScreen(), name: S.current.iqama),
         (builder: (context) => AfterSalahAzkar(), name: S.current.afterSalahAzkar),
         (builder: (context) => JumuaHadithSubScreen(), name: S.current.jumua),
