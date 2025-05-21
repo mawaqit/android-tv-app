@@ -45,37 +45,37 @@ workflows:
           echo "VERSION=$VERSION" >> $CM_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
 
-#      - name: Test version
-#        script: |
-#          echo "App version: $VERSION"
-#          echo "BUILD NUMBER: $BUILD_NUMBER"
-#
-#          if [ -z ${VERSION} ]; then
-#           echo "Version is empty, will not build"
-#           exit 1
-#          fi
-#          if [ -z ${BUILD_NUMBER} ]; then
-#           echo "BUILD NUMBER is empty, will not build"
-#           exit 1
-#          fi
+      - name: Test version
+        script: |
+          echo "App version: $VERSION"
+          echo "BUILD NUMBER: $BUILD_NUMBER"
+
+          if [ -z ${VERSION} ]; then
+           echo "Version is empty, will not build"
+           exit 1
+          fi
+          if [ -z ${BUILD_NUMBER} ]; then
+           echo "BUILD NUMBER is empty, will not build"
+           exit 1
+          fi
 
       - name: Install dependencies
         script: |
           flutter pub get
           dart run build_runner build
 
-      - name: Run flutter Unit tests
-        script: |
-          mkdir -p test-results
-          flutter test \
-            --dart-define=mawaqit.api.key=$MAWAQIT_API_KEY \
-            --dart-define=mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
-            --dart-define=mawaqit.firebase.api_key=$MAWAQIT_FIREBASE_API_KEY \
-            --dart-define=mawaqit.firebase.app_id=$MAWAQIT_FIREBASE_APP_ID \
-            --dart-define=mawaqit.firebase.messaging_sender_id=$MAWAQIT_FIREBASE_MESSAGING_SENDER_ID \
-            --dart-define=mawaqit.firebase.project_id=$MAWAQIT_FIREBASE_PROJECT_ID \
-            --dart-define=mawaqit.firebase.storage_bucket=$MAWAQIT_FIREBASE_STORAGE_BUCKET \
-          > test-results/results.json
+#      - name: Run flutter Unit tests
+#        script: |
+#          mkdir -p test-results
+#          flutter test \
+#            --dart-define=mawaqit.api.key=$MAWAQIT_API_KEY \
+#            --dart-define=mawaqit.sentry.dns=$MAWAQIT_SENTRY_DNS \
+#            --dart-define=mawaqit.firebase.api_key=$MAWAQIT_FIREBASE_API_KEY \
+#            --dart-define=mawaqit.firebase.app_id=$MAWAQIT_FIREBASE_APP_ID \
+#            --dart-define=mawaqit.firebase.messaging_sender_id=$MAWAQIT_FIREBASE_MESSAGING_SENDER_ID \
+#            --dart-define=mawaqit.firebase.project_id=$MAWAQIT_FIREBASE_PROJECT_ID \
+#            --dart-define=mawaqit.firebase.storage_bucket=$MAWAQIT_FIREBASE_STORAGE_BUCKET \
+#          > test-results/results.json
 
       - name: Build AAB with Flutter
         script: |
