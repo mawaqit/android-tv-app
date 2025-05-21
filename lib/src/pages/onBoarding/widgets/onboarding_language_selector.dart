@@ -9,6 +9,7 @@ import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:sizer/sizer.dart'; // Prefix the provider import
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class OnBoardingLanguageSelector extends ConsumerStatefulWidget {
   final bool isOnboarding;
@@ -67,18 +68,46 @@ class OnBoardingLanguageSelector extends ConsumerStatefulWidget {
 }
 
 class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageSelector> {
-  late ScrollController _scrollController;
+  late AutoScrollController _scrollController;
+  int _focusedIndex = 0;
+  List<FocusNode> _focusNodes = [];
+  List<Locale> _sortedLocales = [];
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
+    _scrollController = AutoScrollController();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
     super.dispose();
+  }
+
+  void _scrollToIndex(int index) {
+    if (_scrollController.hasClients) {
+      _scrollController.scrollToIndex(
+        index,
+        duration: Duration(milliseconds: 200),
+      );
+    }
+  }
+
+  void _changeFocus(int newIndex) {
+    if (newIndex < 0 || newIndex >= _focusNodes.length) {
+      return; // Don't go outside bounds
+    }
+
+    setState(() {
+      _focusedIndex = newIndex;
+      _focusNodes[newIndex].requestFocus();
+    });
+
+    _scrollToIndex(newIndex);
   }
 
   @override
@@ -90,7 +119,7 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
     /// Check if the [langCode] is the currently used language
     bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
 
-    final sortedLocales = [
+    _sortedLocales = [
       Locale('ar'),
       ...locales.where((element) => element.languageCode != 'ar' && element.languageCode != 'ba').toList()
         ..sort((a, b) => appLanguage
@@ -99,20 +128,35 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
             .compareTo(appLanguage.languageName(b.languageCode).toLowerCase())),
     ];
 
+    // Initialize focus nodes for each item if needed
+    if (_focusNodes.length != _sortedLocales.length) {
+      // Dispose previous nodes if any
+      for (var node in _focusNodes) {
+        node.dispose();
+      }
+
+      // Create new focus nodes
+      _focusNodes = List.generate(
+        _sortedLocales.length,
+            (index) => FocusNode(),
+      );
+
+      // Find the selected language index
+      int selectedIndex = _sortedLocales.indexWhere(
+              (locale) => appLanguage.appLocal.languageCode == locale.languageCode
+      );
+
+      if (selectedIndex != -1) {
+        _focusedIndex = selectedIndex;
+      }
+    }
+
     // Scroll to the selected language after frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        final appLanguage = provider.Provider.of<AppLanguage>(context, listen: false); // Use prefixed Provider
-        int selectedIndex =
-            sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
-        if (selectedIndex != -1) {
-          double position = selectedIndex * (6.h); // Adjusted based on item height with sizer
-          _scrollController.animateTo(
-            position,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
-        }
+      _scrollToIndex(_focusedIndex);
+      // Also request focus for the initial selection
+      if (_focusNodes.isNotEmpty && _focusedIndex < _focusNodes.length) {
+        _focusNodes[_focusedIndex].requestFocus();
       }
     });
 
@@ -123,19 +167,19 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
           Text(
             S.of(context).appLang,
             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w700,
-                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-                ),
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+              color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+            ),
           ).animate().slideY().fade(),
           SizedBox(height: 1.5.h),
           Text(
             S.of(context).descLang,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontSize: 14.sp,
-                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-                ),
+              fontSize: 14.sp,
+              color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+            ),
           ).animate().slideX(begin: .5).fade(),
           SizedBox(height: 3.h),
           Expanded(
@@ -144,20 +188,50 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
               child: ListView.separated(
                 controller: _scrollController,
                 padding: EdgeInsets.symmetric(vertical: 0.5.h),
-                itemCount: sortedLocales.length,
+                itemCount: _sortedLocales.length,
                 separatorBuilder: (BuildContext context, int index) =>
                     Divider(height: 0.1.h).animate().fade(delay: .7.seconds),
                 itemBuilder: (BuildContext context, int index) {
-                  var locale = sortedLocales[index];
-                  return LanguageTile(
-                    onSelect: widget.onSelect ??
-                        () {
-                          if (widget.nextButtonFocusNode != null) {
-                            widget.nextButtonFocusNode?.requestFocus();
+                  var locale = _sortedLocales[index];
+                  return AutoScrollTag(
+                    key: ValueKey(index),
+                    controller: _scrollController,
+                    index: index,
+                    child: LanguageTile(
+                      onSelect: widget.onSelect ??
+                              () {
+                            if (widget.nextButtonFocusNode != null) {
+                              widget.nextButtonFocusNode?.requestFocus();
+                            }
+                          }, // Pass the onSelect callback
+                      locale: locale,
+                      isSelected: isSelected(locale.languageCode),
+                      focusNode: _focusNodes[index],
+                      isFocused: _focusedIndex == index,
+                      index: index,
+                      onFocusChange: (hasFocus) {
+                        if (hasFocus && _focusedIndex != index) {
+                          setState(() {
+                            _focusedIndex = index;
+                          });
+                          _scrollToIndex(index);
+                        }
+                      },
+                      onKeyEvent: (event, index) {
+                        if (event is RawKeyDownEvent) {
+                          if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                            _changeFocus(index + 1);
+                            return KeyEventResult.handled;
                           }
-                        }, // Pass the onSelect callback
-                    locale: locale,
-                    isSelected: isSelected(locale.languageCode),
+
+                          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                            _changeFocus(index - 1);
+                            return KeyEventResult.handled;
+                          }
+                        }
+                        return KeyEventResult.ignored;
+                      },
+                    ),
                   );
                 },
               ),
@@ -175,26 +249,27 @@ class LanguageTile extends ConsumerStatefulWidget {
     required this.isSelected,
     required this.locale,
     required this.onSelect,
+    required this.focusNode,
+    required this.isFocused,
+    required this.index,
+    required this.onFocusChange,
+    required this.onKeyEvent,
   }) : super(key: key);
 
   final bool isSelected;
   final Locale locale;
   final VoidCallback onSelect;
+  final FocusNode focusNode;
+  final bool isFocused;
+  final int index;
+  final Function(bool) onFocusChange;
+  final Function(RawKeyEvent, int) onKeyEvent;
 
   @override
   ConsumerState<LanguageTile> createState() => _LanguageTileState();
 }
 
 class _LanguageTileState extends ConsumerState<LanguageTile> {
-  late bool isFocused = widget.isSelected;
-  final focusNode = FocusNode();
-
-  @override
-  void dispose() {
-    focusNode.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
@@ -211,31 +286,27 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
         padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.2.h),
         child: Ink(
           decoration: BoxDecoration(
-            color: isFocused
+            color: widget.isFocused
                 ? Theme.of(context).focusColor
                 : widget.isSelected
-                    ? Theme.of(context).focusColor
-                    : null,
+                ? Theme.of(context).focusColor
+                : null,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Focus(
-            focusNode: focusNode,
+            focusNode: widget.focusNode,
             autofocus: widget.isSelected,
-            onFocusChange: (hasFocus) => setState(() => isFocused = hasFocus),
+            onFocusChange: widget.onFocusChange,
             onKey: (node, event) {
+              final result = widget.onKeyEvent(event, widget.index);
+              if (result == KeyEventResult.handled) {
+                return result;
+              }
+
               if (event is RawKeyDownEvent) {
-                if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+                if (event.logicalKey == LogicalKeyboardKey.select ||
+                    event.logicalKey == LogicalKeyboardKey.enter) {
                   handleSelection();
-                  return KeyEventResult.handled;
-                }
-
-                if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                  node.nextFocus();
-                  return KeyEventResult.handled;
-                }
-
-                if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                  node.previousFocus();
                   return KeyEventResult.handled;
                 }
               }
@@ -247,7 +318,7 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
               child: ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
-                textColor: isFocused || widget.isSelected ? Colors.white : null,
+                textColor: widget.isFocused || widget.isSelected ? Colors.white : null,
                 leading: flagIcon(widget.locale.languageCode),
                 title: Text(
                   appLanguage.languageName(widget.locale.languageCode),
