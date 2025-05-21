@@ -201,7 +201,9 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
                       onSelect: widget.onSelect ??
                               () {
                             if (widget.nextButtonFocusNode != null) {
-                              widget.nextButtonFocusNode?.requestFocus();
+                              Future.delayed(Duration(milliseconds: 300), () {
+                                widget.nextButtonFocusNode!.requestFocus();
+                              });
                             }
                           }, // Pass the onSelect callback
                       locale: locale,
