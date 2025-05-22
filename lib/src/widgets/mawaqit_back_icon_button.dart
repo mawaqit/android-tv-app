@@ -49,6 +49,7 @@ class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
                   widget.label,
                   style: theme.textTheme.bodySmall!.copyWith(
                     color: focused ? Colors.white : color,
+                    fontWeight: FontWeight.w700,
                     fontSize: 10.sp,
                   ),
                 ),
