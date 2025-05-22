@@ -260,7 +260,7 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: TextField(
-                  autofocus: true,
+                  autofocus: false,
                   focusNode: searchfocusNode,
                   onSubmitted: (_) {
                     FocusScope.of(context).requestFocus(countryListFocusNode);

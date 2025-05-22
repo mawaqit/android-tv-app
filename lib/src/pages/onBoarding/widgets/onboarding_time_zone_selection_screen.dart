@@ -195,7 +195,7 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
       },
       child: Focus(
         focusNode: timezoneListFocusNode,
-        autofocus: true,
+        autofocus: false,
         onFocusChange: (hasFocus) {
           if (hasFocus) {
             _selectFirstVisibleItem();
