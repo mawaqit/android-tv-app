@@ -350,7 +350,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                         }
                         final FocusScopeNode rootScope = FocusScope.of(context);
                         rootScope.unfocus();
-                        Future.delayed(Duration(milliseconds: 100), () {
+                        Future.delayed(Duration(milliseconds: 200), () {
                           rootScope.focusInDirection(TraversalDirection.up);
                         });
                         return KeyEventResult.handled;
