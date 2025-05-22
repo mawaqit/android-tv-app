@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/v2/search_selection_type_provider.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart';
-
+import 'package:fpdart/fpdart.dart' as fp;
 import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/AppRouter.dart';
 import '../../../helpers/SharedPref.dart';
@@ -19,8 +21,14 @@ import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 
 class ChromeCastMosqueInputId extends ConsumerStatefulWidget {
-  const ChromeCastMosqueInputId({Key? key, this.onDone}) : super(key: key);
+  const ChromeCastMosqueInputId({
+    Key? key,
+    this.onDone,
+    this.selectedNode = const None(),
+  }) : super(key: key);
+
   final void Function()? onDone;
+  final Option<FocusNode> selectedNode;
 
   @override
   ConsumerState<ChromeCastMosqueInputId> createState() => _MosqueInputIdState();
@@ -34,6 +42,7 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
   bool inputHasFocus = false;
   bool loading = false;
   String? error;
+  bool isKeyboardVisible = false;
   FocusNode _focus = FocusNode();
 
   @override
@@ -50,10 +59,18 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
   }
 
   void _onFocusChange() {
-    setState(() {
-      inputHasFocus = _focus.hasFocus ? false : true;
-      showKeyboard = _focus.hasFocus ? false : true;
-    });
+    if (!_focus.hasFocus && isKeyboardVisible) {
+      // The focus was lost, which might indicate keyboard was closed
+      isKeyboardVisible = false;
+      showKeyboard = false;
+      inputHasFocus = false;
+      FocusScope.of(context).focusInDirection(TraversalDirection.up);
+    } else if (_focus.hasFocus && !isKeyboardVisible) {
+      // Focus gained, keyboard likely opened
+      isKeyboardVisible = true;
+      showKeyboard = true;
+      inputHasFocus = true;
+    }
   }
 
   void _setMosqueId(String mosqueId) async {
@@ -137,12 +154,20 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
                 key: ValueKey(searchOutput!.uuid),
                 autoFocus: true,
                 mosque: searchOutput!,
+                selectedNode: widget.selectedNode,
                 onTap: () {
                   return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) async {
                     final mosqueManager = context.read<MosqueManager>();
                     final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
                     ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
                     !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
+                    if(searchOutput != null){
+                      if (searchOutput?.type == "MOSQUE") {
+                        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.mosque);
+                      } else {
+                        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.home);
+                      }
+                    }
                   }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {
                       setState(() {
