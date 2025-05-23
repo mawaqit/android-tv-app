@@ -243,7 +243,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       OnboardingScreenType.wifiSelection: OnBoardingItem(
         animation: 'settings',
         widget: OnBoardingWifiSelector(
-          onSelect: () {},
+          onSelect: () => ref.read(onboardingNavigationProvider.notifier).nextPage(context),
           focusNode: skipButtonFocusNode,
         ),
         enableNextButton: true,
@@ -348,11 +348,8 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                         if(screenType == OnboardingScreenType.about){
                           return KeyEventResult.ignored;
                         }
-                        final FocusScopeNode rootScope = FocusScope.of(context);
-                        rootScope.unfocus();
-                        Future.delayed(Duration(milliseconds: 200), () {
-                          rootScope.focusInDirection(TraversalDirection.up);
-                        });
+                        
+                        FocusScope.of(context).focusInDirection(TraversalDirection.up);
                         return KeyEventResult.handled;
                       }
                     }
