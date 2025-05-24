@@ -31,6 +31,8 @@ class OnBoardingWifiSelector extends ConsumerStatefulWidget {
 class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector> {
   // Add a focus node for the scan again button
   final FocusNode _scanAgainButtonFocusNode = FocusNode(debugLabel: 'scan_again_button');
+  // Fallback focus node for skip button when widget.focusNode is null
+  final FocusNode _fallbackSkipButtonFocusNode = FocusNode(debugLabel: 'fallback_skip_button');
 
   @override
   void initState() {
@@ -45,6 +47,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
   @override
   void dispose() {
     _scanAgainButtonFocusNode.dispose();
+    _fallbackSkipButtonFocusNode.dispose();
     super.dispose();
   }
 
@@ -79,7 +82,6 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final wifiScanState = ref.watch(wifiScanNotifierProvider);
-    final FocusNode accessPointsFocusNode = FocusNode();
 
     return Column(
       children: [
@@ -147,7 +149,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
                     S.of(context).noScannedResultsFound,
                     style: TextStyle(fontSize: 14.sp),
                   )
-                : _buildAccessPointsList(state.accessPoints, state.hasPermission, accessPointsFocusNode),
+                : _buildAccessPointsList(state.accessPoints, state.hasPermission),
             error: (error, s) {
               _showToast('Error fetching access points');
 
@@ -180,7 +182,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
     }).toList();
   }
 
-  _buildAccessPointsList(List<WiFiHunterResultEntry> accessPoints, bool _hasPermission, FocusNode node) {
+  _buildAccessPointsList(List<WiFiHunterResultEntry> accessPoints, bool _hasPermission) {
     final filteredAccessPoints = _filterAccessPoints(accessPoints);
 
     return Container(
@@ -190,8 +192,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
         itemCount: filteredAccessPoints.length,
         itemBuilder: (context, i) => _AccessPointTile(
           scanAgainFocusNode: _scanAgainButtonFocusNode,
-          skipButtonFocusNode: widget.focusNode ?? FocusNode(),
-          focusNode: node,
+          skipButtonFocusNode: widget.focusNode ?? _fallbackSkipButtonFocusNode,
           onSelect: widget.onSelect,
           accessPoint: filteredAccessPoints[i],
           hasPermission: _hasPermission,
@@ -207,11 +208,9 @@ class _AccessPointTile extends ConsumerStatefulWidget {
   final FocusNode scanAgainFocusNode;
   final bool hasPermission;
   final void Function() onSelect;
-  final FocusNode focusNode;
 
   _AccessPointTile({
     Key? key,
-    required this.focusNode,
     required this.skipButtonFocusNode,
     required this.scanAgainFocusNode,
     required this.onSelect,
@@ -224,6 +223,20 @@ class _AccessPointTile extends ConsumerStatefulWidget {
 }
 
 class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
+  late final FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode(debugLabel: 'access_point_${widget.accessPoint.ssid}');
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   void _showToast(String message) {
     showToast(
       message,
@@ -261,7 +274,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
     }
 
     return Focus(
-      focusNode: widget.focusNode,
+      focusNode: _focusNode,
       onKey: (node, event) => _handleKeyEvent(node, event),
       child: ListTile(
         visualDensity: VisualDensity.compact,
@@ -276,7 +289,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
               builder: (context) => TvWifiPasswordScreen(
                 ssid: widget.accessPoint.ssid,
                 capabilities: widget.accessPoint.capabilities,
-                returnFocusNode: fp.Option.of(widget.focusNode),
+                returnFocusNode: fp.Option.of(_focusNode),
                 onComplete: (success) {
                   // Handle completion
                   if (success) {
@@ -296,7 +309,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
                 if (wasCancelled == true) {
                   widget.scanAgainFocusNode.requestFocus();
                 } else {
-                  widget.focusNode.requestFocus();
+                  _focusNode.requestFocus();
                 }
               },
             );
