@@ -12,6 +12,8 @@ import 'package:wifi_hunter/wifi_hunter_result.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart' as fp;
+import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'onboarding_timezone_selector.dart';
 import 'tv_wifi_password_screen.dart';
@@ -34,9 +36,16 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
   // Fallback focus node for skip button when widget.focusNode is null
   final FocusNode _fallbackSkipButtonFocusNode = FocusNode(debugLabel: 'fallback_skip_button');
 
+  // Auto scroll controller for WiFi list
+  late AutoScrollController _scrollController;
+  int _focusedIndex = 0;
+  List<FocusNode> _focusNodes = [];
+  List<WiFiHunterResultEntry> _filteredAccessPoints = [];
+
   @override
   void initState() {
     super.initState();
+    _scrollController = AutoScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _addLocationPermission();
       await _addFineLocationPermission();
@@ -48,6 +57,10 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
   void dispose() {
     _scanAgainButtonFocusNode.dispose();
     _fallbackSkipButtonFocusNode.dispose();
+    _scrollController.dispose();
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -78,11 +91,54 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
     );
   }
 
+  void _scrollToIndex(int index) {
+    if (_scrollController.hasClients) {
+      _scrollController.scrollToIndex(
+        index,
+        duration: Duration(milliseconds: 200),
+      );
+    }
+  }
+
+  void _changeFocus(int newIndex) {
+    // Handle navigation to scan button when going up from the first item
+    if (newIndex < 0) {
+      setState(() {
+        _focusedIndex = -1; // Explicitly set no list item as focused
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) { // Ensure the widget is still in the tree
+          _scanAgainButtonFocusNode.requestFocus();
+        }
+      });
+      return;
+    }
+
+    // Handle navigation to scan button when going down from the last item
+    if (newIndex >= _focusNodes.length) {
+      setState(() {
+        _focusedIndex = -1; // Explicitly set no list item as focused
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) { // Ensure the widget is still in the tree
+          _scanAgainButtonFocusNode.requestFocus();
+        }
+      });
+      return;
+    }
+
+    setState(() {
+      _focusedIndex = newIndex;
+      _focusNodes[newIndex].requestFocus();
+    });
+
+    _scrollToIndex(newIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final wifiScanState = ref.watch(wifiScanNotifierProvider);
-
     return Column(
       children: [
         Text(
@@ -111,33 +167,65 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton.icon(
-              focusNode: _scanAgainButtonFocusNode,
-              style: ButtonStyle(
-                padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h)),
-                backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.focused)) {
-                      return const Color(0xFF490094); // Focus color
+            Flexible(
+              child: Focus(
+                focusNode: _scanAgainButtonFocusNode,
+                onKey: (node, event) {
+                  if (event is RawKeyDownEvent) {
+                    if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                      // Navigate to first WiFi item if available
+                      if (_focusNodes.isNotEmpty) {
+                        setState(() {
+                          _focusedIndex = 0;
+                        });
+                        _focusNodes[0].requestFocus();
+                        _scrollToIndex(0);
+                        return KeyEventResult.handled;
+                      }
                     }
-                    return null; // Use the default color
-                  },
-                ),
-                foregroundColor: MaterialStateProperty.resolveWith<Color?>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.focused)) {
-                      return Colors.white; // Text and icon color when focused
-                    }
-                    return null; // Use the default color
+                  }
+                  return KeyEventResult.ignored;
+                },
+                child: Builder(
+                  builder: (context) {
+                    final currentFocus = Focus.of(context);
+                    final isFocused = currentFocus.hasFocus;
+                    return InkWell(
+                      onTap: () async => await ref.read(wifiScanNotifierProvider.notifier).retry(),
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+                        decoration: BoxDecoration(
+                          color: isFocused ? Color(0xFF490094) : Colors.grey.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: isFocused ? Color(0xFF490094) : Colors.grey.withOpacity(0.5),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.refresh,
+                              size: 16.sp,
+                              color: isFocused ? Colors.white : Theme.of(context).textTheme.bodyLarge?.color,
+                            ),
+                            SizedBox(width: 1.w),
+                            Text(
+                              S.of(context).scanAgain,
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: isFocused ? Colors.white : Theme.of(context).textTheme.bodyLarge?.color,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),
-              icon: Icon(Icons.refresh, size: 16.sp),
-              label: Text(
-                S.of(context).scanAgain,
-                style: TextStyle(fontSize: 10.sp),
-              ),
-              onPressed: () async => await ref.read(wifiScanNotifierProvider.notifier).retry(),
             ),
           ],
         ),
@@ -183,19 +271,90 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
   }
 
   _buildAccessPointsList(List<WiFiHunterResultEntry> accessPoints, bool _hasPermission) {
-    final filteredAccessPoints = _filterAccessPoints(accessPoints);
+    _filteredAccessPoints = _filterAccessPoints(accessPoints);
+
+    // Initialize focus nodes for each item if needed
+    if (_focusNodes.length != _filteredAccessPoints.length) {
+      // Dispose previous nodes if any
+      for (var node in _focusNodes) {
+        node.dispose();
+      }
+
+      // Create new focus nodes
+      _focusNodes = List.generate(
+        _filteredAccessPoints.length,
+        (index) => FocusNode(debugLabel: 'wifi_item_$index'),
+      );
+
+      // Reset focused index
+      _focusedIndex = 0;
+    }
+
+    // Scroll to the selected WiFi after frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_filteredAccessPoints.isNotEmpty) {
+        // Only scroll and focus a list item if a valid list item is actually focused
+        if (_focusedIndex >= 0 && _focusedIndex < _focusNodes.length) {
+          _scrollToIndex(_focusedIndex);
+          // Also request focus for the initial selection
+          if (_focusNodes.isNotEmpty) { // _focusNodes.isNotEmpty is redundant if _focusedIndex < _focusNodes.length and _focusedIndex >=0
+            _focusNodes[_focusedIndex].requestFocus();
+          }
+        }
+      }
+    });
 
     return Container(
       padding: EdgeInsets.only(top: 0.5.h),
-      child: ListView.builder(
+      child: ListView.separated(
+        controller: _scrollController,
         padding: EdgeInsets.symmetric(vertical: 0.5.h),
-        itemCount: filteredAccessPoints.length,
-        itemBuilder: (context, i) => _AccessPointTile(
-          scanAgainFocusNode: _scanAgainButtonFocusNode,
-          skipButtonFocusNode: widget.focusNode ?? _fallbackSkipButtonFocusNode,
-          onSelect: widget.onSelect,
-          accessPoint: filteredAccessPoints[i],
-          hasPermission: _hasPermission,
+        itemCount: _filteredAccessPoints.length,
+        separatorBuilder: (BuildContext context, int index) =>
+            Divider(height: 0.1.h).animate().fade(delay: .7.seconds),
+        itemBuilder: (context, i) => AutoScrollTag(
+          key: ValueKey(i),
+          controller: _scrollController,
+          index: i,
+          child: _AccessPointTile(
+            scanAgainFocusNode: _scanAgainButtonFocusNode,
+            skipButtonFocusNode: widget.focusNode ?? _fallbackSkipButtonFocusNode,
+            onSelect: widget.onSelect,
+            accessPoint: _filteredAccessPoints[i],
+            hasPermission: _hasPermission,
+            focusNode: _focusNodes[i],
+            isFocused: _focusedIndex == i,
+            index: i,
+            onFocusChange: (hasFocus) {
+              if (hasFocus && _focusedIndex != i) {
+                setState(() {
+                  _focusedIndex = i;
+                });
+                _scrollToIndex(i);
+              }
+            },
+            onKeyEvent: (event, index) {
+              if (event is RawKeyDownEvent) {
+                if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                  _changeFocus(index + 1);
+                  return KeyEventResult.handled;
+                }
+
+                if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                  // If at the first item, focus the scan again button
+                  _changeFocus(index - 1);
+                  return KeyEventResult.handled;
+                }
+
+                if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
+                    event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+                  _scanAgainButtonFocusNode.requestFocus();
+                  return KeyEventResult.handled;
+                }
+              }
+              return KeyEventResult.ignored;
+            },
+          ),
         ),
       ),
     );
@@ -208,6 +367,11 @@ class _AccessPointTile extends ConsumerStatefulWidget {
   final FocusNode scanAgainFocusNode;
   final bool hasPermission;
   final void Function() onSelect;
+  final FocusNode focusNode;
+  final bool isFocused;
+  final int index;
+  final void Function(bool) onFocusChange;
+  final KeyEventResult Function(RawKeyEvent, int) onKeyEvent;
 
   _AccessPointTile({
     Key? key,
@@ -216,6 +380,11 @@ class _AccessPointTile extends ConsumerStatefulWidget {
     required this.onSelect,
     required this.accessPoint,
     required this.hasPermission,
+    required this.focusNode,
+    required this.isFocused,
+    required this.index,
+    required this.onFocusChange,
+    required this.onKeyEvent,
   }) : super(key: key);
 
   @override
@@ -228,12 +397,12 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode(debugLabel: 'access_point_${widget.accessPoint.ssid}');
+    _focusNode = widget.focusNode;
   }
 
   @override
   void dispose() {
-    _focusNode.dispose();
+    // Don't dispose _focusNode here since it's managed by the parent
     super.dispose();
   }
 
@@ -262,59 +431,90 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
       }
     });
 
-    KeyEventResult _handleKeyEvent(FocusNode focusNode, RawKeyEvent event) {
-      if (event is RawKeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.arrowRight || event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-          FocusScope.of(context).requestFocus(widget.skipButtonFocusNode);
+    void handleSelection() {
+      // Always use the TV-friendly Wi-Fi password screen
+      Navigator.of(context)
+          .push(
+        MaterialPageRoute(
+          builder: (context) => TvWifiPasswordScreen(
+            ssid: widget.accessPoint.ssid,
+            capabilities: widget.accessPoint.capabilities,
+            returnFocusNode: fp.Option.of(_focusNode),
+            onComplete: (success) {
+              // Handle completion
+              if (success) {
+                widget.onSelect();
+              }
 
-          return KeyEventResult.handled;
-        }
-      }
-      return KeyEventResult.ignored;
+              // We don't need to request focus here - the TvWifiPasswordScreen
+              // will ensure focus is handled properly when returning
+            },
+          ),
+        ),
+      )
+          .then((wasCancelled) {
+        Future.delayed(
+          Duration(milliseconds: 500),
+          () {
+            if (wasCancelled == true) {
+              widget.scanAgainFocusNode.requestFocus();
+            } else {
+              _focusNode.requestFocus();
+            }
+          },
+        );
+      });
     }
 
-    return Focus(
-      focusNode: _focusNode,
-      onKey: (node, event) => _handleKeyEvent(node, event),
-      child: ListTile(
-        visualDensity: VisualDensity.compact,
-        leading: Icon(signalIcon, size: 16.sp),
-        title: Text(title, style: TextStyle(fontSize: 12.sp)),
-        contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
-        onTap: () {
-          // Always use the TV-friendly Wi-Fi password screen
-          Navigator.of(context)
-              .push(
-            MaterialPageRoute(
-              builder: (context) => TvWifiPasswordScreen(
-                ssid: widget.accessPoint.ssid,
-                capabilities: widget.accessPoint.capabilities,
-                returnFocusNode: fp.Option.of(_focusNode),
-                onComplete: (success) {
-                  // Handle completion
-                  if (success) {
-                    widget.onSelect();
-                  }
+    return Material(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.2.h),
+        child: Ink(
+          decoration: BoxDecoration(
+            color: widget.isFocused ? Theme.of(context).focusColor : null,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Focus(
+            focusNode: _focusNode,
+            onFocusChange: widget.onFocusChange,
+            onKey: (node, event) {
+              // Pass the event to the parent's onKeyEvent handler FIRST
+              final result = widget.onKeyEvent(event, widget.index);
+              if (result == KeyEventResult.handled) {
+                return result;
+              }
 
-                  // We don't need to request focus here - the TvWifiPasswordScreen
-                  // will ensure focus is handled properly when returning
-                },
-              ),
-            ),
-          )
-              .then((wasCancelled) {
-            Future.delayed(
-              Duration(milliseconds: 500),
-              () {
-                if (wasCancelled == true) {
-                  widget.scanAgainFocusNode.requestFocus();
-                } else {
-                  _focusNode.requestFocus();
+              // Then handle select/enter locally
+              if (event is RawKeyDownEvent) {
+                if (event.logicalKey == LogicalKeyboardKey.select ||
+                    event.logicalKey == LogicalKeyboardKey.enter) {
+                  handleSelection();
+                  return KeyEventResult.handled;
                 }
+                // Left/Right arrow keys are now handled by the onKeyEvent passed from the parent
+              }
+              return KeyEventResult.ignored;
+            },
+            child: Builder(
+              builder: (context) {
+                return InkWell(
+                  onTap: handleSelection,
+                  borderRadius: BorderRadius.circular(10),
+                  child: ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+                    textColor: widget.isFocused ? Colors.white : null,
+                    leading: Icon(signalIcon, size: 16.sp),
+                    title: Text(
+                      title,
+                      style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                );
               },
-            );
-          });
-        },
+            ),
+          ),
+        ),
       ),
     );
   }
