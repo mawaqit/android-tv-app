@@ -4,7 +4,9 @@ appId: com.mawaqit.androidtv
 
 # Onboarding Language Selection
 - waitForAnimationToEnd
-- tapOn: "English" # Assuming "English" is an option
+- assertVisible: "English" # Check if "English" is on screen
+- pressKey: enter
+- waitForAnimationToEnd     # Wait for selection to process and animations to end
 
 # Onboarding Orientation
 - tapOn: "Landscape" # Or "Portrait"
