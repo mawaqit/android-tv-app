@@ -452,7 +452,10 @@ class _ChromeCastMosqueInputSearchState extends ConsumerState<ChromeCastMosqueIn
       decoration: InputDecoration(
         filled: true,
         errorText: error,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: theme.primaryColor, width: 2),
+        ),
         hintText: S.of(context).searchForMosque,
         hintStyle: TextStyle(
           fontWeight: FontWeight.normal,
@@ -465,11 +468,11 @@ class _ChromeCastMosqueInputSearchState extends ConsumerState<ChromeCastMosqueIn
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide(width: 0),
+          borderSide: BorderSide(color: theme.primaryColor, width: 2),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide(width: 0),
+          borderSide: BorderSide(color: theme.primaryColor, width: 1),
         ),
         contentPadding: EdgeInsets.symmetric(
           vertical: 2,
