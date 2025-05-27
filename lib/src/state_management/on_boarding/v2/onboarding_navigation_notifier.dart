@@ -17,6 +17,8 @@ import 'onboarding_navigation_state.dart';
 import 'search_selection_type_provider.dart';
 
 class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationState> {
+  bool _skippedCountryAndTimezone = false;
+
   @override
   Future<OnboardingNavigationState> build() async {
     // Initialize with root check
@@ -100,6 +102,11 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
     final currentState = state.value!;
 
     if (currentState.currentScreen < currentState.screenFlow.length) {
+      // Reset skip flag if user is navigating normally from country selection
+      if (currentState.screenFlow[currentState.currentScreen] == OnboardingScreenType.countrySelection) {
+        _skippedCountryAndTimezone = false;
+      }
+
       // Handle mosque search type selection
       if (currentState.screenFlow[currentState.currentScreen] == OnboardingScreenType.mosqueSearchType) {
         await _handleMosqueSearchNavigation(currentState);
@@ -187,6 +194,36 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
         }
       }
 
+      // Special handling for going back from wifi selection in kiosk mode when user skipped
+      if (_skippedCountryAndTimezone &&
+          currentState.flowType == OnboardingFlowType.kiosk &&
+          currentState.screenFlow[currentState.currentScreen] == OnboardingScreenType.wifiSelection) {
+        // Reset the flag
+        _skippedCountryAndTimezone = false;
+
+        // Find the country selection screen index
+        int countrySelectionIndex = -1;
+        for (int i = 0; i < currentState.screenFlow.length; i++) {
+          if (currentState.screenFlow[i] == OnboardingScreenType.countrySelection) {
+            countrySelectionIndex = i;
+            break;
+          }
+        }
+
+        // If we found country selection, go directly to it
+        if (countrySelectionIndex != -1) {
+          state = AsyncData(
+            currentState.copyWith(
+              currentScreen: countrySelectionIndex,
+              isLastItem: false,
+              enablePreviousButton: countrySelectionIndex > 0,
+              screenFlow: newScreenFlow,
+            ),
+          );
+          return;
+        }
+      }
+
       state = AsyncData(
         currentState.copyWith(
           currentScreen: currentState.currentScreen - 1,
@@ -234,6 +271,8 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
 
     // If we found the target screen, jump to it
     if (targetIndex != -1) {
+      // Set the flag to indicate we skipped
+      _skippedCountryAndTimezone = true;
       jumpToScreen(targetIndex);
     } else {
       // If we can't find the wifi screen, just go to the next screen after timezone
