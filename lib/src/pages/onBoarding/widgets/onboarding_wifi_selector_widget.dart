@@ -113,14 +113,14 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
       return;
     }
 
-    // Handle navigation to scan button when going down from the last item
+    // Handle navigation to next/previous buttons when going down from the last item
     if (newIndex >= _focusNodes.length) {
       setState(() {
         _focusedIndex = -1; // Explicitly set no list item as focused
       });
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) { // Ensure the widget is still in the tree
-          _scanAgainButtonFocusNode.requestFocus();
+        if (mounted && widget.focusNode != null && widget.focusNode!.canRequestFocus) {
+          widget.focusNode!.requestFocus();
         }
       });
       return;
@@ -180,7 +180,16 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
                         _focusNodes[0].requestFocus();
                         _scrollToIndex(0);
                         return KeyEventResult.handled;
+                      } else {
+                        widget.focusNode!.requestFocus();
                       }
+                    } else if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
+                               event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+                      // Navigate to next/previous buttons in onboarding flow
+                      if (widget.focusNode != null && widget.focusNode!.canRequestFocus) {
+                        widget.focusNode!.requestFocus();
+                      }
+                      return KeyEventResult.handled;
                     }
                   }
                   return KeyEventResult.ignored;
@@ -347,7 +356,10 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
 
                 if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
                     event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-                  _scanAgainButtonFocusNode.requestFocus();
+                  // Navigate to next/previous buttons in onboarding flow
+                  if (widget.focusNode != null && widget.focusNode!.canRequestFocus) {
+                    widget.focusNode!.requestFocus();
+                  }
                   return KeyEventResult.handled;
                 }
               }

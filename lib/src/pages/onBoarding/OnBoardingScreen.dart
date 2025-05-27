@@ -244,7 +244,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
         animation: 'settings',
         widget: OnBoardingWifiSelector(
           onSelect: () => ref.read(onboardingNavigationProvider.notifier).nextPage(context),
-          focusNode: skipButtonFocusNode,
+          focusNode: nextButtonFocusNode,
         ),
         enableNextButton: true,
         enablePreviousButton: true,
