@@ -218,9 +218,9 @@ class _TvWifiPasswordScreenState extends ConsumerState<TvWifiPasswordScreen> {
       }
     });
 
-    return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.5),
-      body: Focus(
+    return Container(
+      color: Colors.black.withOpacity(0.5),
+      child: Focus(
         focusNode: _parentFocusNode,
         onKey: _handleKeyEvent,
         child: Center(

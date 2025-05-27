@@ -227,10 +227,9 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
       shortcuts: <LogicalKeySet, Intent>{
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
-      child: Scaffold(
-        body: FocusScope(
-          node: FocusScopeNode(),
-          child: Column(
+      child: FocusScope(
+        node: FocusScopeNode(),
+        child: Column(
             children: [
               const SizedBox(height: 10),
               Text(
@@ -291,7 +290,6 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
                 ),
               ),
             ],
-          ),
         ),
       ),
     );

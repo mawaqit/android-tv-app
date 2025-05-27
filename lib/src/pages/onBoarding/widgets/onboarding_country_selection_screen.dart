@@ -246,10 +246,9 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
       shortcuts: <LogicalKeySet, Intent>{
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
-      child: Scaffold(
-        body: FocusScope(
-          node: FocusScopeNode(),
-          child: Column(
+      child: FocusScope(
+        node: FocusScopeNode(),
+        child: Column(
             children: [
               SizedBox(height: 1.h),
               Text(
@@ -360,7 +359,6 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                 ),
               ),
             ],
-          ),
         ),
       ),
     );
