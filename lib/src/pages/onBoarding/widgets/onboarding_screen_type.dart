@@ -7,8 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../i18n/l10n.dart';
-import 'onboarding_orientation_widget.dart';
-import 'onboarding_announcement_mode.dart';
+import 'widgets.dart';
 
 class OnBoardingScreenType extends StatelessWidget {
   final VoidCallback? onDone;
