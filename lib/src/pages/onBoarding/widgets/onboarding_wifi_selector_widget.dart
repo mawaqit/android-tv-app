@@ -15,8 +15,7 @@ import 'package:fpdart/fpdart.dart' as fp;
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import 'onboarding_timezone_selector.dart';
-import 'tv_wifi_password_screen.dart';
+import 'widgets.dart';
 
 const String nativeMethodsChannel = 'nativeMethodsChannel';
 

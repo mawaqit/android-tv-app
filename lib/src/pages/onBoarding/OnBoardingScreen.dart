@@ -1,48 +1,30 @@
 import 'dart:async';
 
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/data/countries.dart';
-import 'package:mawaqit/src/helpers/Api.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/SharedPref.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
 import 'package:mawaqit/src/pages/mosque_search/MosqueSearch.dart';
-import 'package:mawaqit/src/pages/mosque_search/widgets/InputTypeSelector.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputId.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_id.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_search.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/MawaqitAboutWidget.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_announcement_mode.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_language_selector.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/widgets.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/state_management/on_boarding/input_selection_provider.dart';
 import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_notifier.dart';
 import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_state.dart';
-import 'package:mawaqit/src/widgets/InfoWidget.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
-import 'package:mawaqit/src/widgets/mawaqit_icon_button.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import '../../../i18n/AppLanguage.dart';
 import '../../../i18n/l10n.dart';
 import '../../helpers/LocaleHelper.dart';
 import '../../state_management/on_boarding/on_boarding_notifier.dart';
-import '../../widgets/mawaqit_back_icon_button.dart';
-import 'widgets/onboarding_bottom_navigation_bar.dart';
-import 'widgets/onboarding_country_selection_screen.dart';
-import 'widgets/onboarding_time_zone_selection_screen.dart';
-import 'widgets/wifi_selector_widget.dart';
-import 'widgets/onboarding_screen_type.dart';
 
 class OnBoardingItem {
   final String animation;
@@ -291,7 +273,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
           },
         );
       }
-      
+
       // Listen for country changes
       if (next.value?.selectedCountry != previous?.value?.selectedCountry) {
         next.whenOrNull(
@@ -379,7 +361,7 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                         if(screenType == OnboardingScreenType.about){
                           return KeyEventResult.ignored;
                         }
-                        
+
                         FocusScope.of(context).focusInDirection(TraversalDirection.up);
                         return KeyEventResult.handled;
                       }

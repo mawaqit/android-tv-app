@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import '../helpers/AppRouter.dart';
-import 'onBoarding/widgets/onboarding_language_selector.dart';
-import 'onBoarding/widgets/language_selector_widget.dart';
+import 'onBoarding/widgets/widgets.dart';
 
 class LanguageScreen extends StatelessWidget {
   // Private constructor with all attributes
