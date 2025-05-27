@@ -92,7 +92,23 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(onBoardingProvider.notifier).getSystemLanguage();
+      // Load previously selected country
+      await _loadSavedCountry();
     });
+  }
+
+  /// Load previously selected country from SharedPreferences
+  Future<void> _loadSavedCountry() async {
+    try {
+      final savedCountry = await ref.read(onBoardingProvider.notifier).loadSelectedCountry();
+      if (savedCountry != null && mounted) {
+        setState(() {
+          country = Option.of(savedCountry);
+        });
+      }
+    } catch (e, stackTrace) {
+      logger.e('Error loading saved country: $e', stackTrace: stackTrace);
+    }
   }
 
   @override
@@ -229,7 +245,9 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
       OnboardingScreenType.countrySelection: OnBoardingItem(
         animation: 'settings',
         widget: CountrySelectionScreen(
-          onSelect: (countrySelected) {
+          onSelect: (countrySelected) async {
+            // Save the country through the notifier (this will also update the state)
+            await ref.read(onBoardingProvider.notifier).saveSelectedCountry(countrySelected);
             setState(() {
               country = Option.of(countrySelected);
             });
@@ -269,6 +287,19 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                 String language = locale.languageCode;
                 ref.read(onBoardingProvider.notifier).setLanguage(language, context);
               }
+            }
+          },
+        );
+      }
+      
+      // Listen for country changes
+      if (next.value?.selectedCountry != previous?.value?.selectedCountry) {
+        next.whenOrNull(
+          data: (state) {
+            if (state.selectedCountry != null) {
+              setState(() {
+                country = Option.of(state.selectedCountry!);
+              });
             }
           },
         );

@@ -8,6 +8,8 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../../data/countries.dart';
 import '../../../../i18n/l10n.dart';
 import 'package:sizer/sizer.dart';
+import '../../../state_management/on_boarding/on_boarding_notifier.dart';
+import '../../../../main.dart';
 
 class CountrySelectionScreen extends ConsumerStatefulWidget {
   final void Function(Country country)? onSelect;
@@ -58,6 +60,38 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
         });
       }
     });
+
+    // Load previously selected country and navigate to it
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadAndNavigateToSelectedCountry();
+    });
+  }
+
+  /// Load previously selected country and navigate to it in the list
+  Future<void> _loadAndNavigateToSelectedCountry() async {
+    try {
+      final savedCountry = await ref.read(onBoardingProvider.notifier).loadSelectedCountry();
+      if (savedCountry != null && mounted) {
+        final countryIndex = countriesList.indexWhere(
+          (country) => country.isoCode == savedCountry.isoCode,
+        );
+        
+        if (countryIndex != -1) {
+          setState(() {
+            selectedCountryIndex = countryIndex;
+          });
+          
+          widget.onSelect?.call(countriesList[countryIndex]);
+
+          await _scrollToIndex(countryIndex);
+          if (countryListFocusNode.canRequestFocus) {
+            countryListFocusNode.requestFocus();
+          }
+        }
+      }
+    } catch (e, stackTrace) {
+      logger.e('Error loading and processing selected country: $e', stackTrace: stackTrace);
+    }
   }
 
   @override
@@ -170,9 +204,25 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
   void _handleEnterKey() {
     if (selectedCountryIndex >= 0 && selectedCountryIndex < countriesList.length) {
       var country = countriesList[selectedCountryIndex];
+      _selectCountry(country);
+    }
+  }
+
+  /// Handle country selection - save to state and call onSelect callback
+  void _selectCountry(Country country) async {
+    try {
+      widget.onSelect?.call(country); 
+      
+      // Focus the next button
+      if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus) {
+        widget.nextButtonFocusNode!.requestFocus();
+      }
+    } catch (e, stackTrace) {
+      // Handle error - still call onSelect even if something goes wrong
+      logger.e('Error during country selection or focusing next button: $e', stackTrace: stackTrace);
       widget.onSelect?.call(country);
-      if (widget.nextButtonFocusNode != null) {
-        widget.nextButtonFocusNode?.requestFocus();
+      if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus) {
+        widget.nextButtonFocusNode!.requestFocus();
       }
     }
   }
@@ -300,12 +350,8 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                                 onTap: () {
                                   setState(() {
                                     selectedCountryIndex = index;
-                                    widget.onSelect?.call(country);
-                                    if (widget.nextButtonFocusNode != null &&
-                                        widget.nextButtonFocusNode!.canRequestFocus) {
-                                      widget.nextButtonFocusNode?.requestFocus();
-                                    }
                                   });
+                                  _selectCountry(country);
                                 },
                               ),
                             );
