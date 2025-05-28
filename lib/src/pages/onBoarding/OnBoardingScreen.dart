@@ -16,15 +16,13 @@ import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_
 import 'package:mawaqit/src/pages/mosque_search/widgets/chromecast_mosque_input_search.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/widgets.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_notifier.dart';
-import 'package:mawaqit/src/state_management/on_boarding/v2/onboarding_navigation_state.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:provider/provider.dart';
 
 import '../../../i18n/AppLanguage.dart';
 import '../../../i18n/l10n.dart';
 import '../../helpers/LocaleHelper.dart';
-import '../../state_management/on_boarding/on_boarding_notifier.dart';
 
 class OnBoardingItem {
   final String animation;

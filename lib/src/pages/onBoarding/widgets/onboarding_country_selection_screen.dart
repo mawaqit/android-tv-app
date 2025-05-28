@@ -5,10 +5,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import '../../../data/countries.dart';
-import '../../../../i18n/l10n.dart';
+import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/data/countries.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'package:sizer/sizer.dart';
-import '../../../state_management/on_boarding/on_boarding_notifier.dart';
 import '../../../../main.dart';
 
 class CountrySelectionScreen extends ConsumerStatefulWidget {
@@ -75,12 +75,12 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
         final countryIndex = countriesList.indexWhere(
           (country) => country.isoCode == savedCountry.isoCode,
         );
-        
+
         if (countryIndex != -1) {
           setState(() {
             selectedCountryIndex = countryIndex;
           });
-          
+
           widget.onSelect?.call(countriesList[countryIndex]);
 
           await _scrollToIndex(countryIndex);
@@ -211,8 +211,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
   /// Handle country selection - save to state and call onSelect callback
   void _selectCountry(Country country) async {
     try {
-      widget.onSelect?.call(country); 
-      
+      widget.onSelect?.call(country);
       // Focus the next button
       if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus) {
         widget.nextButtonFocusNode!.requestFocus();

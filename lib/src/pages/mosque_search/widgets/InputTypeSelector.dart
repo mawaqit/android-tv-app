@@ -11,7 +11,7 @@ import 'package:sizer/sizer.dart';
 import '../../../../i18n/l10n.dart';
 import '../../../../main.dart';
 import '../../../helpers/Api.dart';
-import '../../../state_management/on_boarding/input_selection_provider.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'chromecast_mosque_input_id.dart';
 
 class InputTypeSelector extends ConsumerStatefulWidget {
