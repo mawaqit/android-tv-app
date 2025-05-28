@@ -38,6 +38,7 @@ class AdhanSubScreen extends ConsumerStatefulWidget {
 
 class _AdhanSubScreenState extends ConsumerState<AdhanSubScreen> {
   Timer? _fallbackTimer;
+  Timer? _noAdhanDisplayTimer;
   bool _audioStarted = false;
   bool _closeCalled = false;
 
@@ -84,7 +85,13 @@ class _AdhanSubScreenState extends ConsumerState<AdhanSubScreen> {
         }
       });
     } else {
-      log('AdhanSubScreen: Adhan playback not triggered (forceAdhan=${widget.forceAdhan}, adhanVoiceEnable=${mosqueManager.adhanVoiceEnable()})');
+      // No Adhan audio will be played. Start a 150-second timer to close the screen.
+      log('AdhanSubScreen: No Adhan audio activated. Starting 150-second display timer.');
+      _noAdhanDisplayTimer?.cancel(); // Cancel any existing one
+      _noAdhanDisplayTimer = Timer(const Duration(seconds: 150), () {
+        log('AdhanSubScreen: 150-second display timer elapsed. Closing screen.');
+        _closeScreenSafely();
+      });
     }
   }
 
@@ -118,10 +125,10 @@ class _AdhanSubScreenState extends ConsumerState<AdhanSubScreen> {
 
   void _cancelTimers() {
     log('AdhanSubScreen: Cancelling timers');
-    if (_fallbackTimer != null) {
-      _fallbackTimer!.cancel();
-      _fallbackTimer = null;
-    }
+    _fallbackTimer?.cancel();
+    _fallbackTimer = null;
+    _noAdhanDisplayTimer?.cancel(); // Cancel the no-Adhan display timer as well
+    _noAdhanDisplayTimer = null;
   }
 
   @override
