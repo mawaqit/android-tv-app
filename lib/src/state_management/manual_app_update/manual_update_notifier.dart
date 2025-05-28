@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/state_management/manual_app_update/manual_update_state.dart';
-import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';

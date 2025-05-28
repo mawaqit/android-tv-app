@@ -1,78 +1,74 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:fpdart/fpdart.dart' as fp;
-import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/toggle_button_widget.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../../../i18n/l10n.dart';
-import 'widgets.dart';
 
-class OnBoardingScreenType extends StatelessWidget {
-  final VoidCallback? onDone;
+class OnBoardingOrientationWidget extends StatelessWidget {
+  final VoidCallback? onNext;
   final bool isOnboarding;
-  final fp.Option<FocusNode> nextButtonFocusNode;
+  final FocusNode? nextButtonFocusNode;
+  final FocusNode? previousButtonFocusNode;
 
   // Private constructor
-  const OnBoardingScreenType._({
+  const OnBoardingOrientationWidget._({
     Key? key,
     required this.isOnboarding,
-    this.onDone,
-    this.nextButtonFocusNode = const fp.None(),
+    this.nextButtonFocusNode,
+    this.previousButtonFocusNode,
+    this.onNext,
   }) : super(key: key);
 
   // Factory constructor for normal mode
-  factory OnBoardingScreenType({
+  factory OnBoardingOrientationWidget({
     Key? key,
-    required VoidCallback onDone,
+    required VoidCallback onNext,
   }) {
-    return OnBoardingScreenType._(
+    return OnBoardingOrientationWidget._(
       key: key,
       isOnboarding: false,
-      onDone: onDone,
+      onNext: onNext,
     );
   }
 
   // Factory constructor for onboarding mode
-  factory OnBoardingScreenType.onboarding({
+  factory OnBoardingOrientationWidget.onboarding({
+    required FocusNode nextButtonFocusNode,
+    required FocusNode previousButtonFocusNode,
     Key? key,
-    FocusNode? nextButtonFocusNode,
   }) {
-    return OnBoardingScreenType._(
+    return OnBoardingOrientationWidget._(
       key: key,
       isOnboarding: true,
-      nextButtonFocusNode: fp.Option.fromNullable(nextButtonFocusNode),
+      nextButtonFocusNode: nextButtonFocusNode,
+      previousButtonFocusNode: previousButtonFocusNode,
     );
   }
 
-  // Helper method to wrap callbacks with onDone
-  VoidCallback _wrapWithOnDone(VoidCallback callback) {
+  // Helper method to wrap callbacks with onNext if available
+  VoidCallback _wrapWithOnNext(VoidCallback callback) {
     return () {
       callback();
+
+      // Add a timeout to avoid indefinite stuck states
+      final timeout = Future.delayed(Duration(seconds: 2), () {
+        // No focus was requested within timeout, nothing more to do
+      });
+
+      // Add a small delay before requesting focus to ensure state changes are fully applied
+      Future.delayed(Duration(milliseconds: 300), () {
+        // Cancel the timeout since we're handling it
+        timeout.ignore();
+
+        if (nextButtonFocusNode != null && nextButtonFocusNode!.canRequestFocus) {
+          nextButtonFocusNode!.requestFocus();
+        }
+      });
+
       if (!isOnboarding) {
-        onDone?.call();
-      } else {
-        nextButtonFocusNode.fold(
-          () => null,
-          (focusNode) {
-            // Add a timeout to avoid indefinite stuck states
-            final timeout = Future.delayed(Duration(seconds: 2), () {
-              // No focus was requested within timeout, nothing more to do
-            });
-
-            // Attempt to request focus with safety checks
-            Future.delayed(Duration(milliseconds: 500), () {
-              // Cancel the timeout since we're handling it
-              timeout.ignore();
-
-              // Only request focus if the node can accept it
-              if (focusNode.canRequestFocus) {
-                focusNode.requestFocus();
-              }
-            });
-          },
-        );
+        onNext?.call();
       }
     };
   }
@@ -85,10 +81,10 @@ class OnBoardingScreenType extends StatelessWidget {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     // Adjust font sizes based on orientation
-    final double headerFontSize = 16.sp;
-    final double subtitleFontSize = 8.sp;
-    final double buttonFontSize = 10.sp;
-    final double descriptionFontSize = 8.sp;
+    final double headerFontSize = isPortrait ? 16.sp : 20.sp;
+    final double subtitleFontSize = isPortrait ? 10.sp : 12.sp;
+    final double buttonFontSize = isPortrait ? 10.sp : 12.sp;
+    final double descriptionFontSize = isPortrait ? 8.sp : 10.sp;
 
     // Adjust width factor based on orientation
     final double widthFactor = isPortrait ? 0.9 : 0.75;
@@ -103,7 +99,7 @@ class OnBoardingScreenType extends StatelessWidget {
           children: [
             _buildHeader(theme, tr, headerFontSize, subtitleFontSize),
             SizedBox(height: isPortrait ? 0.5.h : 1.h),
-            _buildScreenTypeOptions(
+            _buildOrientationOptions(
               theme: theme,
               tr: tr,
               userPrefs: userPrefs,
@@ -127,7 +123,7 @@ class OnBoardingScreenType extends StatelessWidget {
     return Column(
       children: [
         Text(
-          tr.mainScreenOrSecondaryScreen,
+          tr.orientation,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontSize: headerFontSize,
             height: 1.2, // Tighter line height for better Arabic text display
@@ -139,7 +135,7 @@ class OnBoardingScreenType extends StatelessWidget {
         ),
         SizedBox(height: 1.5.h), // Reduced spacing
         Text(
-          tr.mainScreenOrSecondaryScreenEXPLINATION,
+          tr.selectYourMawaqitTvAppOrientation,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
             fontSize: subtitleFontSize,
@@ -153,8 +149,8 @@ class OnBoardingScreenType extends StatelessWidget {
     );
   }
 
-  /// Builds the screen type options (main and secondary)
-  Widget _buildScreenTypeOptions({
+  /// Builds the orientation options (landscape and portrait)
+  Widget _buildOrientationOptions({
     required ThemeData theme,
     required AppLocalizations tr,
     required UserPreferencesManager userPrefs,
@@ -164,13 +160,13 @@ class OnBoardingScreenType extends StatelessWidget {
   }) {
     return Column(
       children: [
-        // Main screen option
-        _buildScreenTypeOption(
+        // Landscape option
+        _buildOrientationOption(
           theme: theme,
-          isSelected: !userPrefs.isSecondaryScreen,
-          onToggle: () => userPrefs.isSecondaryScreen = false,
-          label: tr.mainScreen,
-          description: tr.mainScreenExplanation,
+          isSelected: userPrefs.orientationLandscape,
+          onToggle: () => userPrefs.orientationLandscape = true,
+          label: tr.landscape,
+          description: tr.landscapeBTNDescription,
           buttonFontSize: buttonFontSize,
           descriptionFontSize: descriptionFontSize,
           isPortrait: isPortrait,
@@ -178,13 +174,13 @@ class OnBoardingScreenType extends StatelessWidget {
 
         SizedBox(height: isPortrait ? 1.5.h : 2.h),
 
-        // Secondary screen option
-        _buildScreenTypeOption(
+        // Portrait option
+        _buildOrientationOption(
           theme: theme,
-          isSelected: userPrefs.isSecondaryScreen,
-          onToggle: () => userPrefs.isSecondaryScreen = true,
-          label: tr.secondaryScreen,
-          description: tr.secondaryScreenExplanation,
+          isSelected: !userPrefs.orientationLandscape,
+          onToggle: () => userPrefs.orientationLandscape = false,
+          label: tr.portrait,
+          description: tr.portraitBTNDescription,
           buttonFontSize: buttonFontSize,
           descriptionFontSize: descriptionFontSize,
           isPortrait: isPortrait,
@@ -193,8 +189,8 @@ class OnBoardingScreenType extends StatelessWidget {
     );
   }
 
-  /// Builds a single screen type option with button and description
-  Widget _buildScreenTypeOption({
+  /// Builds a single orientation option with button and description
+  Widget _buildOrientationOption({
     required ThemeData theme,
     required bool isSelected,
     required VoidCallback onToggle,
@@ -208,7 +204,7 @@ class OnBoardingScreenType extends StatelessWidget {
       children: [
         ToggleButtonWidget(
           isSelected: isSelected,
-          onPressed: _wrapWithOnDone(onToggle),
+          onPressed: _wrapWithOnNext(onToggle),
           label: label,
           textStyle: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
