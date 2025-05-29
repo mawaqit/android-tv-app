@@ -48,7 +48,7 @@ class AudioCacheMissingException extends PrayerAudioException {
       : super('Audio cache is missing and network is unavailable: $message', 'AUDIO_CACHE_MISSING_ERROR');
 }
 
-/// Exception when cache file is corrupted
+/// Exception for corrupted audio cache files
 class AudioCacheCorruptedException extends PrayerAudioException {
   AudioCacheCorruptedException(String message)
       : super('Audio cache file is corrupted: $message', 'AUDIO_CACHE_CORRUPTED_ERROR');

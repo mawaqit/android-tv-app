@@ -168,36 +168,18 @@ class _AfterAdhanSubScreenState extends ConsumerState<AfterAdhanSubScreen> {
 
     // Set up audio completion listener
     if (_audioStarted && !_closeCalled) {
-      ref.listen<AsyncValue<PrayerAudioState>>(prayerAudioProvider, (previous, next) {
+      ref.listen<PrayerAudioState>(prayerAudioProvider, (previous, next) {
         // Don't act on the initial state
         if (previous == null) return;
 
-        // Get data from AsyncValue states
-        final previousData = previous.valueOrNull;
-        final nextData = next.valueOrNull;
-
-        // Skip if we don't have both values
-        if (previousData == null || nextData == null) return;
-
         // Log state transitions for debugging
-        log('AfterAdhanSubScreen: Audio state changed - previous: ${previousData.processingState}, next: ${nextData.processingState}, hasError: ${next is AsyncError}');
+        log('AfterAdhanSubScreen: Audio state changed - previous: ${previous.processingState}, '
+            'next: ${next.processingState}');
 
-        // Detect completion: Was playing, now is completed or idle
-        final wasPlaying = previousData.processingState == ProcessingState.ready;
-        final isNowStopped =
-            nextData.processingState == ProcessingState.completed || nextData.processingState == ProcessingState.idle;
-        final justCompleted = wasPlaying && isNowStopped && next is! AsyncError;
-
-        // Detect error: State is AsyncError
-        final justErrored = next is AsyncError && previous is! AsyncError;
-
-        if (justCompleted) {
+        // Detect completion: if the new state is completed
+        if (next.processingState == ProcessingState.completed) {
           log('AfterAdhanSubScreen: Playback COMPLETED detected - closing screen');
           _closeScreenSafely();
-        } else if (justErrored) {
-          final error = (next as AsyncError).error;
-          log('AfterAdhanSubScreen: Playback ERROR detected: $error');
-          // Fallback timer will handle closing on error
         }
       });
     }
@@ -205,11 +187,7 @@ class _AfterAdhanSubScreenState extends ConsumerState<AfterAdhanSubScreen> {
     final audioStateValue = ref.watch(prayerAudioProvider);
 
     // Log the state in a useful format
-    log('AfterAdhanSubScreen: Current audio state - ${audioStateValue.when(
-      data: (data) => "processingState: ${data.processingState}, duration: ${data.duration}",
-      loading: () => "LOADING",
-      error: (e, _) => "ERROR: $e",
-    )}');
+    log('AfterAdhanSubScreen: Current audio state - processingState: ${audioStateValue.processingState}, duration: ${audioStateValue.duration}');
 
     // UI doesn't depend on audio state here, just displays text
     return Container(

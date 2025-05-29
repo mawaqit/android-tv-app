@@ -88,11 +88,18 @@ class _IqamaSubScreenState extends ConsumerState<IqamaSubScreen> {
     log('IqamaSubScreen: Building UI');
 
     // Set up audio error listener
-    ref.listen<AsyncValue<PrayerAudioState>>(prayerAudioProvider, (previous, next) {
-      // Check for errors
-      if (previous != null && next is AsyncError && !(previous is AsyncError)) {
-        final error = (next as AsyncError).error;
-        log('IqamaSubScreen: Audio error detected: $error');
+    ref.listen<PrayerAudioState>(prayerAudioProvider, (previous, next) {
+      // Don't act on the initial state
+      if (previous == null) return;
+
+      // Log state transitions for debugging
+      log('IqamaSubScreen: Audio state changed - previous: ${previous.processingState}, '
+          'next: ${next.processingState}');
+
+      // Detect completion: if the new state is completed
+      if (next.processingState == ProcessingState.completed) {
+        log('IqamaSubScreen: Playback COMPLETED detected - closing screen');
+        widget.onDone?.call();
       }
     });
 
@@ -100,11 +107,7 @@ class _IqamaSubScreenState extends ConsumerState<IqamaSubScreen> {
     final audioStateValue = ref.watch(prayerAudioProvider);
 
     // Log the state in a useful format
-    log('IqamaSubScreen: Current audio state - ${audioStateValue.when(
-      data: (data) => "processingState: ${data.processingState}, duration: ${data.duration}",
-      loading: () => "LOADING",
-      error: (e, _) => "ERROR: $e",
-    )}');
+    log('IqamaSubScreen: Current audio state - processingState: ${audioStateValue.processingState}, duration: ${audioStateValue.duration}');
 
     final theme = Theme.of(context);
     final tr = S.of(context);
