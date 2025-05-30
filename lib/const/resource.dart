@@ -214,8 +214,8 @@ class R {
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/adhan-madina.mp3)
   static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_MP3 = 'assets/voices/adhan/adhan-madina.mp3';
 
-  /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/bip.mp3)
-  static const String ASSETS_VOICES_ADHAN_BIP_MP3 = 'assets/voices/adhan/bip.mp3';
+  /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/bip_extended.mp3)
+  static const String ASSETS_VOICES_ADHAN_BIP_MP3 = 'assets/voices/adhan/bip_extended.mp3';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/duaa_iftar.mp3)
   static const String ASSETS_VOICES_DUAA_IFTAR_MP3 = 'assets/voices/duaa_iftar.mp3';

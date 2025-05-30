@@ -149,3 +149,14 @@ abstract class ScheduleListeningConstant {
   static const startTime = '08:00';
   static const endTime = '20:00';
 }
+
+abstract class PrayerAudioConstant {
+  static const String kDefaultAdhanFileName = 'adhan-afassy.mp3';
+  static const String kFajrAdhanSuffix = '-fajr.mp3';
+  static const String kDuaAfterAdhanFileName = 'duaa-after-adhan.mp3';
+  static const String kMp3Directory = '/audio/';
+  static const String kMp3Extension = '.mp3';
+  static const String kHttpProtocol = 'http://';
+  static const String kHttpsProtocol = 'https://';
+  static const String kHttpsPrefix = 'https:';
+}
