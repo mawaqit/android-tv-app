@@ -155,4 +155,8 @@ abstract class PrayerAudioConstant {
   static const String kFajrAdhanSuffix = '-fajr.mp3';
   static const String kDuaAfterAdhanFileName = 'duaa-after-adhan.mp3';
   static const String kMp3Directory = '/audio/';
+  static const String kMp3Extension = '.mp3';
+  static const String kHttpProtocol = 'http://';
+  static const String kHttpsProtocol = 'https://';
+  static const String kHttpsPrefix = 'https:';
 }

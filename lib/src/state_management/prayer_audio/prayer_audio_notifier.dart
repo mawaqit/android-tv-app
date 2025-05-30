@@ -99,8 +99,8 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
 
       // Format URL
       String formattedUrl = url;
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        formattedUrl = 'https:$url';
+      if (!url.startsWith(PrayerAudioConstant.kHttpProtocol) && !url.startsWith(PrayerAudioConstant.kHttpsProtocol)) {
+        formattedUrl = '${PrayerAudioConstant.kHttpsPrefix}$url';
       }
 
       // Download and set audio source
@@ -213,11 +213,11 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
     String adhanLink = "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${PrayerAudioConstant.kDefaultAdhanFileName}"; // Default
 
     if (mosqueConfig.adhanVoice?.isNotEmpty ?? false) {
-      adhanLink = "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${mosqueConfig.adhanVoice!}.mp3";
+      adhanLink = "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${mosqueConfig.adhanVoice!}${PrayerAudioConstant.kMp3Extension}";
     }
 
     if (useFajrAdhan && !adhanLink.contains('bip')) {
-      adhanLink = adhanLink.replaceAll('.mp3', PrayerAudioConstant.kFajrAdhanSuffix);
+      adhanLink = adhanLink.replaceAll(PrayerAudioConstant.kMp3Extension, PrayerAudioConstant.kFajrAdhanSuffix);
     }
 
     return adhanLink;
