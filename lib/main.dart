@@ -8,7 +8,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:hive_flutter/adapters.dart';
@@ -34,11 +33,11 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/background_services.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/services/permissions_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
-
+import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
-import 'package:montenegrin_localization/montenegrin_localization.dart';
 import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
@@ -47,11 +46,14 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
-// import 'package:montenegrin_localization/montenegrin_localization.dart';
 
+import 'package:montenegrin_localization/montenegrin_localization.dart';
 import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 
 final logger = Logger();
+
+// Flag to track whether the app is in foreground
+bool _isAppInForeground = false;
 
 @pragma("vm:entry-point")
 Future<void> main() async {
@@ -76,11 +78,7 @@ Future<void> main() async {
         Hive.init(directory.path);
         await FastCachedImageConfig.init(subDir: directory.path, clearCacheAfter: const Duration(days: 60));
 
-        // Check and request permissions
-        await _initializePermissions();
-
-        // Initialize other services
-        await _initializeServices();
+        await _initializeCoreServices();
 
         runApp(
           riverpod.ProviderScope(
@@ -99,68 +97,63 @@ Future<void> main() async {
   );
 }
 
-Future<void> _handleOverlayPermissions(String deviceModel, bool isRooted) async {
-  final methodChannel = MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel);
-  final isPermissionGranted = await NotificationOverlay.checkOverlayPermission();
-
-  if (RegExp(r'ONVO.*').hasMatch(deviceModel)) {
-    await methodChannel.invokeMethod("grantOnvoOverlayPermission");
-    return;
-  }
-
-  if (!isPermissionGranted) {
-    if (isRooted) {
-      await methodChannel.invokeMethod("grantOverlayPermission");
-    } else {
-      await NotificationOverlay.requestOverlayPermission();
-      await checkAndRequestExactAlarmPermission();
-    }
-  }
-}
-
-Future<void> _initializePermissions() async {
-  final isRooted =
-      await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(TurnOnOffTvConstant.kCheckRoot);
-  final deviceModel = await _getDeviceModel();
-  await _handleOverlayPermissions(deviceModel, isRooted);
-  await UnifiedBackgroundService.initializeService();
-}
-
-Future<String> _getDeviceModel() async {
-  var hardware = await DeviceInfoPlugin().androidInfo;
-  return hardware.model;
-}
-
-Future<void> checkAndRequestExactAlarmPermission() async {
-  if (Platform.isAndroid) {
-    final deviceInfo = DeviceInfoPlugin();
-    final androidInfo = await deviceInfo.androidInfo;
-
-    if (androidInfo.version.sdkInt >= 33) {
-      final status = await Permission.scheduleExactAlarm.status;
-
-      if (status.isDenied) {
-        final result = await Permission.scheduleExactAlarm.request();
-
-        if (result.isDenied) {
-          developer.log('Exact alarm not granted error');
-        }
-      }
-    }
-  }
-}
-
+// Only initialize non-background services
 @pragma("vm:entry-point")
-Future<void> _initializeServices() async {
-  tz.initializeTimeZones();
-  await WorkManagerService.initialize();
-  // Register Hive adapters
-  Hive.registerAdapter(SurahModelAdapter());
-  Hive.registerAdapter(ReciterModelAdapter());
-  Hive.registerAdapter(MoshafModelAdapter());
+Future<void> _initializeCoreServices() async {
+  try {
+    tz.initializeTimeZones();
 
-  // Initialize media kit
-  MediaKit.ensureInitialized();
+    // Register Hive adapters
+    Hive.registerAdapter(SurahModelAdapter());
+    Hive.registerAdapter(ReciterModelAdapter());
+    Hive.registerAdapter(MoshafModelAdapter());
+
+    // Initialize media kit
+    MediaKit.ensureInitialized();
+  } catch (e, stackTrace) {
+    developer.log('Core services initialization error', error: e, stackTrace: stackTrace);
+  }
+}
+
+// Safe initialization of background services
+Future<void> _safelyInitializeBackgroundServices() async {
+  try {
+    // Only initialize if app is in foreground
+    if (!_isAppInForeground) {
+      developer.log('Skipping background service initialization - app not in foreground');
+      return;
+    }
+
+    developer.log('Starting background services initialization');
+
+    // Initialize permissions using the PermissionsManager
+    try {
+      await PermissionsManager.initializePermissions();
+      developer.log('Permissions initialized successfully');
+    } catch (e) {
+      developer.log('Permissions initialization error', error: e);
+    }
+
+    try {
+      await WorkManagerService.initialize();
+      developer.log('WorkManagerService initialized successfully');
+    } catch (e) {
+      developer.log('WorkManagerService initialization error', error: e);
+    }
+
+    try {
+      await UnifiedBackgroundService.initializeService();
+      developer.log('UnifiedBackgroundService initialized successfully');
+
+      UnifiedBackgroundService.setNotificationVisibility(false);
+    } catch (e) {
+      developer.log('UnifiedBackgroundService initialization error', error: e);
+    }
+
+    developer.log('Background services initialization completed');
+  } catch (e, stackTrace) {
+    developer.log('Background services initialization error', error: e, stackTrace: stackTrace);
+  }
 }
 
 class MyApp extends riverpod.ConsumerStatefulWidget {
@@ -173,18 +166,38 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    UnifiedBackgroundService.setNotificationVisibility(false);
+
+    // Initialize background services when app is fully started
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeBackgroundServicesWhenReady();
+    });
+  }
+
+  Future<void> _initializeBackgroundServicesWhenReady() async {
+    // Wait to ensure app is in foreground
+    await Future.delayed(const Duration(seconds: 3));
+
+    _isAppInForeground = true;
+    await _safelyInitializeBackgroundServices();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _isAppInForeground = false;
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    UnifiedBackgroundService().didChangeAppLifecycleState(state);
+    _isAppInForeground = state == AppLifecycleState.resumed;
+
+    // Only call this if service is initialized
+    try {
+      UnifiedBackgroundService().didChangeAppLifecycleState(state);
+    } catch (e) {
+      // Ignore errors if service not initialized
+    }
   }
 
   @override
