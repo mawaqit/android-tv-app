@@ -101,7 +101,7 @@
       android:value="2" />
 
     <service android:name="id.flutter.flutter_background_service.BackgroundService"
-      android:foregroundServiceType="mediaPlayback|dataSync"
+      android:foregroundServiceType="mediaPlayback"
       android:exported="false"
       tools:replace="android:exported"/>
   </application>
