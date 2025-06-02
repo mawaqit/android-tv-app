@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:hive_flutter/adapters.dart';
@@ -38,7 +39,6 @@ import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
-import 'package:notification_overlay/notification_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
