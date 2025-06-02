@@ -231,7 +231,8 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                     title: kAppName,
                     themeMode: theme.mode,
                     localeResolutionCallback: (locale, supportedLocales) {
-                      if (locale?.languageCode.toLowerCase() == 'ba' || locale?.languageCode.toLowerCase() == 'ff') return Locale('en');
+                      if (locale?.languageCode.toLowerCase() == 'ba' || locale?.languageCode.toLowerCase() == 'ff')
+                        return Locale('en');
 
                       return locale;
                     },
@@ -246,12 +247,10 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                       MontenegrinMaterialLocalizations.delegate,
                       MontenegrinWidgetsLocalizations.delegate,
                       MontenegrinCupertinoLocalizations.delegate,
-
                       S.delegate,
                       GlobalCupertinoLocalizations.delegate,
                       GlobalMaterialLocalizations.delegate,
                       GlobalWidgetsLocalizations.delegate,
-
                       KurdishMaterialLocalizations.delegate,
                       KurdishWidgetLocalizations.delegate,
                       KurdishCupertinoLocalizations.delegate,
