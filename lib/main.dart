@@ -8,11 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_kurdish_localization/kurdish_cupertino_localization_delegate.dart';
-import 'package:flutter_kurdish_localization/kurdish_material_localization_delegate.dart';
-import 'package:flutter_kurdish_localization/kurdish_widget_localization_delegate.dart';
 
-// import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:hive_flutter/adapters.dart';
@@ -39,7 +35,7 @@ import 'package:mawaqit/src/services/FeatureManager.dart';
 import 'package:mawaqit/src/services/background_services.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
-import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
+
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
 import 'package:montenegrin_localization/montenegrin_localization.dart';
@@ -52,6 +48,8 @@ import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
 // import 'package:montenegrin_localization/montenegrin_localization.dart';
+
+import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 
 final logger = Logger();
 
