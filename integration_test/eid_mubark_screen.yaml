@@ -26,3 +26,7 @@ appId: com.mawaqit.androidtv
 
 
 - tapOn: "Eid Mubarak"
+
+- assertVisible: ".*Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah.*"
+- assertVisible: ".*Allahu Akbar, Allahu Akbar, wa lillahi al-hamd.*"
+- assertVisible: ".*Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd.*"
