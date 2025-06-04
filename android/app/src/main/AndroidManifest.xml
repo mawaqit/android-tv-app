@@ -31,7 +31,7 @@
     android:banner="@mipmap/ic_banner"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
-    android:allowBackup="false"
+    android:name = "${applicationName}"
     android:usesCleartextTraffic="true">
 
     <service
@@ -101,8 +101,6 @@
       android:value="2" />
 
     <service android:name="id.flutter.flutter_background_service.BackgroundService"
-      android:foregroundServiceType="mediaPlayback"
-      android:exported="false"
-      tools:replace="android:exported"/>
+      android:foregroundServiceType="mediaPlayback"/>
   </application>
 </manifest>
