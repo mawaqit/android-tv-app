@@ -1,0 +1,51 @@
+appId: com.mawaqit.androidtv
+---
+- launchApp
+
+
+# Wait for onboarding to complete and app to be ready
+- extendedWaitUntil:
+    visible: "السلام عليكم و رحمة الله و بركاته ٫ حللتم أهلا ونزلتم سهلا" # or any other selector
+    timeout: 10000      # Timeout in milliseconds
+
+# === DEVELOPER MODE ACTIVATION FLOW ===
+# Open the drawer using arrow key (any arrow key opens the drawer)
+- pressKey: Remote Dpad Left
+- pressKey: Remote Dpad Left
+
+# Wait for drawer to open
+- waitForAnimationToEnd
+
+# Navigate to About section in the drawer
+- tapOn: "About"
+
+# Wait for About screen to load
+- waitForAnimationToEnd
+
+# Press down arrow 7 times to activate developer mode
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+
+# Wait for the snackbar message to appear
+- waitForAnimationToEnd
+
+# Go back to see the drawer with developer options
+- pressKey: Back
+
+# Open drawer again to verify developer mode is enabled
+- pressKey: Remote Dpad Down
+
+# Wait for drawer to open
+- waitForAnimationToEnd
+
+# Verify that developer options are now visible in the drawer
+- assertVisible: "Developer's home screen"
+
+# Optional: Tap on developer menu to verify it works
+- tapOn: "Developer's home screen"
+
