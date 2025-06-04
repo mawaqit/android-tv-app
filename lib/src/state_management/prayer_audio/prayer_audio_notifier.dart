@@ -140,7 +140,6 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
           _playerStateSubscription = null;
         }
       });
-
     } catch (e) {
       log('PrayerAudioNotifier: Error in _playFromUrl: $e');
       state = const PrayerAudioState(processingState: ProcessingState.idle);
@@ -184,7 +183,6 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
           _playerStateSubscription = null;
         }
       });
-
     } catch (e) {
       log('PrayerAudioNotifier: Error in _playAsset: $e');
       state = const PrayerAudioState(processingState: ProcessingState.idle);
@@ -210,10 +208,12 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
   }
 
   String? _getAdhanLink(MosqueConfig mosqueConfig, {bool useFajrAdhan = false}) {
-    String adhanLink = "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${PrayerAudioConstant.kDefaultAdhanFileName}"; // Default
+    String adhanLink =
+        "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${PrayerAudioConstant.kDefaultAdhanFileName}"; // Default
 
     if (mosqueConfig.adhanVoice?.isNotEmpty ?? false) {
-      adhanLink = "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${mosqueConfig.adhanVoice!}${PrayerAudioConstant.kMp3Extension}";
+      adhanLink =
+          "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${mosqueConfig.adhanVoice!}${PrayerAudioConstant.kMp3Extension}";
     }
 
     if (useFajrAdhan && !adhanLink.contains('bip')) {
@@ -223,7 +223,8 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
     return adhanLink;
   }
 
-  String get _duaAfterAdhanLink => "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${PrayerAudioConstant.kDuaAfterAdhanFileName}";
+  String get _duaAfterAdhanLink =>
+      "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${PrayerAudioConstant.kDuaAfterAdhanFileName}";
 
   @override
   void dispose() {
