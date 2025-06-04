@@ -31,11 +31,13 @@ class MoshafSelector extends ConsumerWidget {
       data: (state) {
         return state.selectedMoshaf.fold(
           () => Container(),
-          (selectedMoshaf) {
+          (MoshafType selectedMoshaf) {
             final moshafName = switch (selectedMoshaf) {
               MoshafType.warsh => S.of(context).hafs,
               MoshafType.hafs => S.of(context).warsh,
+              _ => throw Exception('Unexpected MoshafType: $selectedMoshaf'),
             };
+
             return Material(
               color: Colors.transparent,
               child: InkWell(

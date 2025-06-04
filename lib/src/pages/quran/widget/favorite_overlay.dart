@@ -40,176 +40,184 @@ class _OverlayPageState extends ConsumerState<OverlayPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => {Navigator.pushReplacementNamed(context, Routes.quranReciter)},
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          Navigator.pushReplacementNamed(context, Routes.quranReciter);
+        }
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => {Navigator.pushReplacementNamed(context, Routes.quranReciter)},
+          ),
         ),
-      ),
-      backgroundColor: Colors.black,
-      body: KeyboardVisibilityBuilder(
-        controller: KeyboardVisibilityController(),
-        builder: (context, isKeyboardVisible) {
-          if (isKeyboardVisible) {
-            FocusScope.of(context).unfocus();
-          }
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              return Row(
-                children: [
-                  // Left column with text and buttons
-                  SizedBox(
-                    width: constraints.maxWidth * 0.4, // Limit width to 40% of screen
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.2,
-                        left: 30,
-                        right: 30,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              widget.reciter.name,
-                              style: TextStyle(
-                                fontSize: 22.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+        backgroundColor: Colors.black,
+        body: KeyboardVisibilityBuilder(
+          controller: KeyboardVisibilityController(),
+          builder: (context, isKeyboardVisible) {
+            if (isKeyboardVisible) {
+              FocusScope.of(context).unfocus();
+            }
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                return Row(
+                  children: [
+                    // Left column with text and buttons
+                    SizedBox(
+                      width: constraints.maxWidth * 0.4, // Limit width to 40% of screen
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.2,
+                          left: 30,
+                          right: 30,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                widget.reciter.name,
+                                style: TextStyle(
+                                  fontSize: 22.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 5.h),
-                          Consumer(
-                            builder: (context, ref, child) {
-                              final isReciterFavorite = ref.watch(reciteNotifierProvider).maybeWhen(
-                                    data: (reciterState) => reciterState.favoriteReciters.contains(widget.reciter),
-                                    orElse: () => false,
-                                  );
-                              return SizedBox(
-                                height: 5.h,
-                                child: ElevatedButton.icon(
-                                  autofocus: true,
-                                  style: commonButtonStyle,
-                                  onPressed: () {
-                                    if (isReciterFavorite) {
-                                      ref.read(reciteNotifierProvider.notifier).removeFavoriteReciter(
-                                            widget.reciter,
-                                          );
-                                    } else {
-                                      ref.read(reciteNotifierProvider.notifier).addFavoriteReciter(
-                                            widget.reciter,
-                                          );
-                                    }
-                                  },
-                                  icon: Icon(
-                                    isReciterFavorite ? Icons.favorite : Icons.favorite_border,
-                                    color: isReciterFavorite ? Colors.red : Colors.black,
-                                    size: 3.h, // Make icon size consistent
-                                  ),
-                                  label: Text(
-                                    S.of(context).favorites,
-                                    style: TextStyle(
-                                      fontSize: 11.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                            SizedBox(height: 5.h),
+                            Consumer(
+                              builder: (context, ref, child) {
+                                final isReciterFavorite = ref.watch(reciteNotifierProvider).maybeWhen(
+                                      data: (reciterState) => reciterState.favoriteReciters.contains(widget.reciter),
+                                      orElse: () => false,
+                                    );
+                                return SizedBox(
+                                  height: 5.h,
+                                  child: ElevatedButton.icon(
+                                    autofocus: true,
+                                    style: commonButtonStyle,
+                                    onPressed: () {
+                                      if (isReciterFavorite) {
+                                        ref.read(reciteNotifierProvider.notifier).removeFavoriteReciter(
+                                              widget.reciter,
+                                            );
+                                      } else {
+                                        ref.read(reciteNotifierProvider.notifier).addFavoriteReciter(
+                                              widget.reciter,
+                                            );
+                                      }
+                                    },
+                                    icon: Icon(
+                                      isReciterFavorite ? Icons.favorite : Icons.favorite_border,
+                                      color: isReciterFavorite ? Colors.red : Colors.black,
+                                      size: 3.h, // Make icon size consistent
                                     ),
-                                    overflow: TextOverflow.ellipsis,
+                                    label: Text(
+                                      S.of(context).favorites,
+                                      style: TextStyle(
+                                        fontSize: 11.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: 3.h),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: widget.reciter.moshaf
+                                      .map((e) => _buildElevatedOption(e, widget.reciter.moshaf.indexOf(e)))
+                                      .toList(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Right side for the image and gradient effects
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          // Background Image
+                          Builder(
+                            builder: (context) {
+                              final isRTL = Directionality.of(context) == TextDirection.rtl;
+                              return Align(
+                                alignment: isRTL ? Alignment.centerLeft : Alignment.centerRight,
+                                child: Container(
+                                  child: FastCachedImage(
+                                    url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
+                                    fit: BoxFit.contain,
+                                    alignment: Alignment.topRight,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return _buildOfflineImage();
+                                    },
+                                    loadingBuilder: (context, progress) {
+                                      return Container(
+                                        color: Colors.black,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            value: progress.progressPercentage.value,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    fadeInDuration: const Duration(milliseconds: 500),
                                   ),
                                 ),
                               );
                             },
                           ),
-                          SizedBox(height: 3.h),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: widget.reciter.moshaf
-                                    .map((e) => _buildElevatedOption(e, widget.reciter.moshaf.indexOf(e)))
-                                    .toList(),
+                          // Left Gradient Effect
+                          Container(
+                            width: 60.w,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: AlignmentDirectional.centerStart,
+                                end: AlignmentDirectional.centerEnd,
+                                colors: [
+                                  Colors.black,
+                                  Colors.transparent,
+                                ],
+                                stops: [0.2, 1.0],
+                              ),
+                            ),
+                          ),
+                          // Bottom Gradient Effect
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.black,
+                                  Colors.transparent,
+                                ],
+                                stops: [0.1, 0.9],
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  // Right side for the image and gradient effects
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        // Background Image
-                        Builder(
-                          builder: (context) {
-                            final isRTL = Directionality.of(context) == TextDirection.rtl;
-                            return Align(
-                              alignment: isRTL ? Alignment.centerLeft : Alignment.centerRight,
-                              child: Container(
-                                child: FastCachedImage(
-                                  url: '${QuranConstant.kQuranReciterImagesBaseUrl}${widget.reciter.id}.jpg',
-                                  fit: BoxFit.contain,
-                                  alignment: Alignment.topRight,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return _buildOfflineImage();
-                                  },
-                                  loadingBuilder: (context, progress) {
-                                    return Container(
-                                      color: Colors.black,
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          value: progress.progressPercentage.value,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  fadeInDuration: const Duration(milliseconds: 500),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        // Left Gradient Effect
-                        Container(
-                          width: 60.w,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: AlignmentDirectional.centerStart,
-                              end: AlignmentDirectional.centerEnd,
-                              colors: [
-                                Colors.black,
-                                Colors.transparent,
-                              ],
-                              stops: [0.2, 1.0],
-                            ),
-                          ),
-                        ),
-                        // Bottom Gradient Effect
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                              colors: [
-                                Colors.black,
-                                Colors.transparent,
-                              ],
-                              stops: [0.1, 0.9],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
-        },
+                  ],
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

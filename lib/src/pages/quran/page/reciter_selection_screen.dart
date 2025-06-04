@@ -74,6 +74,7 @@ class AudioControlWidget extends ConsumerWidget {
                   width: buttonSize,
                   height: buttonSize,
                   child: FloatingActionButton(
+                    focusNode: focusNode,
                     focusColor: Theme.of(context).primaryColor,
                     backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
                     child: Icon(
@@ -523,6 +524,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                           autofocus: changeReadingModeFocusNode
                               .hasFocus, // it is used here because at change_reading_mode it will break due to up keybind when no result in the search
                           heroTag: 'schedule',
+                          focusColor: Theme.of(context).focusColor,
                           backgroundColor: Colors.black.withOpacity(.5),
                           child: Icon(
                             Icons.schedule,

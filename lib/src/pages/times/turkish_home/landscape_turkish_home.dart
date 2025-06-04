@@ -55,6 +55,7 @@ class _LandScapeTurkishHomeState extends riverpod.ConsumerState<LandScapeTurkish
       ref.read(appUpdateProvider.notifier).startUpdateScheduler(
             mosque,
             context.read<AppLanguage>().appLocal.languageCode,
+            context,
           );
     });
     super.initState();

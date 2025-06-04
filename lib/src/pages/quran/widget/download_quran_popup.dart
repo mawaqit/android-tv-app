@@ -121,7 +121,11 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            LinearProgressIndicator(value: state.progress / 100),
+            LinearProgressIndicator(
+              value: state.progress / 100,
+              color: Colors.white,
+              backgroundColor: Colors.black,
+            ),
             SizedBox(height: 16),
             Text('${state.progress.toStringAsFixed(2)}%'),
           ],
@@ -169,7 +173,11 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            LinearProgressIndicator(value: state.progress / 100),
+            LinearProgressIndicator(
+              value: state.progress / 100,
+              color: Colors.white,
+              backgroundColor: Colors.black,
+            ),
             SizedBox(height: 16),
             Text('${state.progress.toStringAsFixed(2)}%'),
           ],
