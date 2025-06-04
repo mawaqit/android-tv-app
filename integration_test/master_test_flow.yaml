@@ -4,9 +4,10 @@ appId: com.mawaqit.androidtv
 # Runs all tests in sequence: onboarding -> developer_mode -> other tests
 
 # ===============================
-# STEP 1: ONBOARDING FLOW
+# STEP 1: CONDITIONAL ONBOARDING FLOW
 # ===============================
-- runFlow: onboarding.yaml
+# Uses conditional logic to handle both rooted and normal devices
+- runFlow: onboarding_conditional.yaml
 
 # Wait between flows to ensure clean state
 - waitForAnimationToEnd
