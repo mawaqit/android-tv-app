@@ -138,13 +138,12 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
       // Create new focus nodes
       _focusNodes = List.generate(
         _sortedLocales.length,
-            (index) => FocusNode(),
+        (index) => FocusNode(),
       );
 
       // Find the selected language index
-      int selectedIndex = _sortedLocales.indexWhere(
-              (locale) => appLanguage.appLocal.languageCode == locale.languageCode
-      );
+      int selectedIndex =
+          _sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
 
       if (selectedIndex != -1) {
         _focusedIndex = selectedIndex;
@@ -167,19 +166,19 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
           Text(
             S.of(context).appLang,
             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w700,
-              color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-            ),
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+                ),
           ).animate().slideY().fade(),
           SizedBox(height: 1.5.h),
           Text(
             S.of(context).descLang,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-              fontSize: 14.sp,
-              color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-            ),
+                  fontSize: 14.sp,
+                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
+                ),
           ).animate().slideX(begin: .5).fade(),
           SizedBox(height: 3.h),
           Expanded(
@@ -199,7 +198,7 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
                     index: index,
                     child: LanguageTile(
                       onSelect: widget.onSelect ??
-                              () {
+                          () {
                             if (widget.nextButtonFocusNode != null) {
                               Future.delayed(Duration(milliseconds: 300), () {
                                 widget.nextButtonFocusNode!.requestFocus();
@@ -291,8 +290,8 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
             color: widget.isFocused
                 ? Theme.of(context).focusColor
                 : widget.isSelected
-                ? Theme.of(context).focusColor
-                : null,
+                    ? Theme.of(context).focusColor
+                    : null,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Focus(
@@ -306,8 +305,7 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
               }
 
               if (event is RawKeyDownEvent) {
-                if (event.logicalKey == LogicalKeyboardKey.select ||
-                    event.logicalKey == LogicalKeyboardKey.enter) {
+                if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
                   handleSelection();
                   return KeyEventResult.handled;
                 }

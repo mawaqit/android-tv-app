@@ -67,9 +67,7 @@ class LanguageSelector extends StatelessWidget {
             color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ).animate().slideY().fade(),
-
         SizedBox(height: 1.h),
-
         Text(
           description.isEmpty ? S.of(context).descLang : description,
           textAlign: TextAlign.center,
@@ -158,9 +156,7 @@ class _LanguageTileState extends State<LanguageTile> {
                 vertical: 0.5.h,
               ),
               textColor: widget.isSelected ? Colors.white : null,
-              leading: widget.isIconActivated
-                  ? flagIcon(widget.locale.languageCode, size: 10.w)
-                  : null,
+              leading: widget.isIconActivated ? flagIcon(widget.locale.languageCode, size: 10.w) : null,
               title: Text(
                 appLanguage.combinedLanguageName(widget.locale.languageCode),
                 style: TextStyle(
@@ -170,10 +166,10 @@ class _LanguageTileState extends State<LanguageTile> {
               ),
               trailing: widget.isSelected
                   ? Icon(
-                MawaqitIcons.icon_checked,
-                color: Colors.white,
-                size: 5.w, // Responsive icon size
-              )
+                      MawaqitIcons.icon_checked,
+                      color: Colors.white,
+                      size: 5.w, // Responsive icon size
+                    )
                   : null,
             ),
           ),

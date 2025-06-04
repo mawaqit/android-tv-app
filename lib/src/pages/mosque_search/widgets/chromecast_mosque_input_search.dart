@@ -131,65 +131,63 @@ class _ChromeCastMosqueInputSearchState extends ConsumerState<ChromeCastMosqueIn
     });
 
     final mosqueManager = Provider.Provider.of<MosqueManager>(context, listen: false);
-    await mosqueManager
-        .searchMosques(mosque, page: page)
-        .then((value) {
-          if (!mounted) return; // Check if widget is still mounted before updating state
+    await mosqueManager.searchMosques(mosque, page: page).then((value) {
+      if (!mounted) return; // Check if widget is still mounted before updating state
 
-          setState(() {
-            loading = false;
+      setState(() {
+        loading = false;
 
-            if (page == 1) {
-              results = [];
-              _currentFocusIndex = -1;
-            }
+        if (page == 1) {
+          results = [];
+          _currentFocusIndex = -1;
+        }
 
-            // Check if the current batch of results is empty
-            noMore = value.isEmpty;
+        // Check if the current batch of results is empty
+        noMore = value.isEmpty;
 
-            // Save current results length before adding new results
-            final oldResultsLength = results.length;
+        // Save current results length before adding new results
+        final oldResultsLength = results.length;
 
-            results = [...results, ...value];
+        results = [...results, ...value];
 
-            // Update focus nodes for the new result list
-            _updateFocusNodes();
+        // Update focus nodes for the new result list
+        _updateFocusNodes();
 
-            // If we load more and were on the last item,
-            // update to focus on the first new item
-            if (page > 1 && _currentFocusIndex == oldResultsLength - 1 && value.isNotEmpty) {
-              _currentFocusIndex = oldResultsLength;
+        // If we load more and were on the last item,
+        // update to focus on the first new item
+        if (page > 1 && _currentFocusIndex == oldResultsLength - 1 && value.isNotEmpty) {
+          _currentFocusIndex = oldResultsLength;
 
-              // Use a timeout to prevent indefinite focus issues
-              final timeout = Future.delayed(Duration(seconds: 2), () {
-                // No focus was requested within timeout, reset to search field as fallback
-                if (mounted && _searchFocusNode.canRequestFocus) {
-                  _searchFocusNode.requestFocus();
-                }
-              });
-
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                timeout.ignore(); // Cancel timeout since we're handling it
-
-                if (mounted && _resultFocusNodes.isNotEmpty &&
-                    _currentFocusIndex < _resultFocusNodes.length &&
-                    _resultFocusNodes[_currentFocusIndex].canRequestFocus) {
-                  _resultFocusNodes[_currentFocusIndex].requestFocus();
-                  _ensureItemVisible(_currentFocusIndex);
-                }
-              });
+          // Use a timeout to prevent indefinite focus issues
+          final timeout = Future.delayed(Duration(seconds: 2), () {
+            // No focus was requested within timeout, reset to search field as fallback
+            if (mounted && _searchFocusNode.canRequestFocus) {
+              _searchFocusNode.requestFocus();
             }
           });
-        })
-        .catchError((e, stack) {
-          if (!mounted) return; // Check if widget is still mounted
 
-          setState(() {
-            logger.w(e.toString(), stackTrace: stack);
-            loading = false;
-            error = S.of(context).backendError;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            timeout.ignore(); // Cancel timeout since we're handling it
+
+            if (mounted &&
+                _resultFocusNodes.isNotEmpty &&
+                _currentFocusIndex < _resultFocusNodes.length &&
+                _resultFocusNodes[_currentFocusIndex].canRequestFocus) {
+              _resultFocusNodes[_currentFocusIndex].requestFocus();
+              _ensureItemVisible(_currentFocusIndex);
+            }
           });
-        });
+        }
+      });
+    }).catchError((e, stack) {
+      if (!mounted) return; // Check if widget is still mounted
+
+      setState(() {
+        logger.w(e.toString(), stackTrace: stack);
+        loading = false;
+        error = S.of(context).backendError;
+      });
+    });
   }
 
   /// handle on mosque tile clicked
@@ -327,8 +325,7 @@ class _ChromeCastMosqueInputSearchState extends ConsumerState<ChromeCastMosqueIn
     double itemPosition = index * itemHeight;
 
     // Ensure item is visible
-    if (itemPosition < scrollController.offset ||
-        itemPosition > scrollController.offset + listViewHeight) {
+    if (itemPosition < scrollController.offset || itemPosition > scrollController.offset + listViewHeight) {
       scrollController.animateTo(
         itemPosition - (listViewHeight / 2) + (itemHeight / 2),
         duration: Duration(milliseconds: 200),

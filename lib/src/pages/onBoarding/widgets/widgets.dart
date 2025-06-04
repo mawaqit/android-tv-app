@@ -18,4 +18,4 @@ export 'onboarding_wifi_password_screen.dart';
 export 'onboarding_wifi_selector_widget.dart';
 
 // Utility widgets
-export 'toggle_button_widget.dart'; 
+export 'toggle_button_widget.dart';

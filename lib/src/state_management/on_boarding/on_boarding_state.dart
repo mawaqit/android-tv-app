@@ -16,7 +16,7 @@ class OnboardingState extends Equatable {
   bool termsAccepted;
   final bool isRootedDevice;
   final Country? selectedCountry;
-  
+
   OnboardingState({
     required this.language,
     required this.orientation,

@@ -348,12 +348,12 @@ class _OnBoardingScreenState extends riverpod.ConsumerState<OnBoardingScreen> {
                   },
                 ),
                 bottomNavigationBar: FocusScope(
-                  onKeyEvent: (FocusNode node, KeyEvent event){
-                    if(event is KeyDownEvent) {
-                      if(event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                  onKeyEvent: (FocusNode node, KeyEvent event) {
+                    if (event is KeyDownEvent) {
+                      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
                         final screenType = data.screenFlow[currentScreen];
 
-                        if(screenType == OnboardingScreenType.about){
+                        if (screenType == OnboardingScreenType.about) {
                           return KeyEventResult.ignored;
                         }
 

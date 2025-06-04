@@ -86,8 +86,7 @@ class FocusManager {
     }
 
     // Handle navigation keys
-    if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
-        event.logicalKey == LogicalKeyboardKey.tab) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowDown || event.logicalKey == LogicalKeyboardKey.tab) {
       if (currentIndex == orderedNodes.length - 1) {
         // At last node
         if (onDownFromLast != null) {
@@ -102,7 +101,7 @@ class FocusManager {
         return KeyEventResult.handled;
       }
     } else if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
-              (event.logicalKey == LogicalKeyboardKey.tab && event.isShiftPressed)) {
+        (event.logicalKey == LogicalKeyboardKey.tab && event.isShiftPressed)) {
       if (currentIndex == 0) {
         // At first node
         if (onUpFromFirst != null) {

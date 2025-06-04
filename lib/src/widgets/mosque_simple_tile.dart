@@ -55,7 +55,8 @@ class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           autofocus: widget.autoFocus ?? false,
-          focusColor: widget.selectedNode.fold(() => null, (focus)=> focus.hasFocus ? Theme.of(context).focusColor : null),
+          focusColor:
+              widget.selectedNode.fold(() => null, (focus) => focus.hasFocus ? Theme.of(context).focusColor : null),
           onTap: () async {
             if (loading || widget.onTap == null || !mounted) return;
             try {
@@ -78,10 +79,10 @@ class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
                   if (mounted && node.canRequestFocus) {
                     // Use the FocusManager with proper error handling
                     await ref.read(focusManagerProvider).requestFocus(
-                      node,
-                      context: context,
-                      timeout: const Duration(seconds: 2),
-                    );
+                          node,
+                          context: context,
+                          timeout: const Duration(seconds: 2),
+                        );
                   }
                 },
               );

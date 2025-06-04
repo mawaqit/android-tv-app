@@ -106,7 +106,8 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
         _focusedIndex = -1; // Explicitly set no list item as focused
       });
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) { // Ensure the widget is still in the tree
+        if (mounted) {
+          // Ensure the widget is still in the tree
           _scanAgainButtonFocusNode.requestFocus();
         }
       });
@@ -184,7 +185,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
                         widget.focusNode!.requestFocus();
                       }
                     } else if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
-                               event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+                        event.logicalKey == LogicalKeyboardKey.arrowLeft) {
                       // Navigate to next/previous buttons in onboarding flow
                       if (widget.focusNode != null && widget.focusNode!.canRequestFocus) {
                         widget.focusNode!.requestFocus();
@@ -305,7 +306,8 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
         if (_focusedIndex >= 0 && _focusedIndex < _focusNodes.length) {
           _scrollToIndex(_focusedIndex);
           // Also request focus for the initial selection
-          if (_focusNodes.isNotEmpty) { // _focusNodes.isNotEmpty is redundant if _focusedIndex < _focusNodes.length and _focusedIndex >=0
+          if (_focusNodes.isNotEmpty) {
+            // _focusNodes.isNotEmpty is redundant if _focusedIndex < _focusNodes.length and _focusedIndex >=0
             _focusNodes[_focusedIndex].requestFocus();
           }
         }
@@ -318,8 +320,7 @@ class _OnBoardingWifiSelectorState extends ConsumerState<OnBoardingWifiSelector>
         controller: _scrollController,
         padding: EdgeInsets.symmetric(vertical: 0.5.h),
         itemCount: _filteredAccessPoints.length,
-        separatorBuilder: (BuildContext context, int index) =>
-            Divider(height: 0.1.h).animate().fade(delay: .7.seconds),
+        separatorBuilder: (BuildContext context, int index) => Divider(height: 0.1.h).animate().fade(delay: .7.seconds),
         itemBuilder: (context, i) => AutoScrollTag(
           key: ValueKey(i),
           controller: _scrollController,
@@ -497,8 +498,7 @@ class _AccessPointTileState extends ConsumerState<_AccessPointTile> {
 
               // Then handle select/enter locally
               if (event is RawKeyDownEvent) {
-                if (event.logicalKey == LogicalKeyboardKey.select ||
-                    event.logicalKey == LogicalKeyboardKey.enter) {
+                if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
                   handleSelection();
                   return KeyEventResult.handled;
                 }

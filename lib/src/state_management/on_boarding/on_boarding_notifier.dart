@@ -51,7 +51,7 @@ class OnBoardingNotifier extends AsyncNotifier<OnboardingState> {
         'timezones': country.timezones,
       });
       await prefs.setString(SettingsConstant.kSelectedCountry, countryJson);
-      
+
       // Update the state
       update((p0) => p0.copyWith(selectedCountry: country));
     } catch (e, stackTrace) {
@@ -64,11 +64,11 @@ class OnBoardingNotifier extends AsyncNotifier<OnboardingState> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final countryJson = prefs.getString(SettingsConstant.kSelectedCountry);
-      
+
       if (countryJson != null) {
         final countryMap = json.decode(countryJson);
         final country = Country.from(countryMap);
-        
+
         // Update the state
         update((p0) => p0.copyWith(selectedCountry: country));
         return country;

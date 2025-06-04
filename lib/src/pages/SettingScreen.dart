@@ -111,7 +111,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     title: S.of(context).changeMosque,
                     subtitle: S.of(context).searchMosque,
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
-                    onTap: () => AppRouter.push(MosqueSearchScreen(nextButtonFocusNode: None(),)),
+                    onTap: () => AppRouter.push(MosqueSearchScreen(
+                      nextButtonFocusNode: None(),
+                    )),
                   ),
                   _SettingItem(
                     title: S.of(context).hijriAdjustments,

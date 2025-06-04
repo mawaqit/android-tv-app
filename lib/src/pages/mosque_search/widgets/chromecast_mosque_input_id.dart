@@ -161,11 +161,13 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
                     final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
                     ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
                     !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
-                    if(searchOutput != null){
+                    if (searchOutput != null) {
                       if (searchOutput?.type == "MOSQUE") {
-                        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.mosque);
+                        ref.read(mosqueManagerProvider.notifier).state =
+                            fp.Option.fromNullable(SearchSelectionType.mosque);
                       } else {
-                        ref.read(mosqueManagerProvider.notifier).state = fp.Option.fromNullable(SearchSelectionType.home);
+                        ref.read(mosqueManagerProvider.notifier).state =
+                            fp.Option.fromNullable(SearchSelectionType.home);
                       }
                     }
                   }).catchError((e, stack) {

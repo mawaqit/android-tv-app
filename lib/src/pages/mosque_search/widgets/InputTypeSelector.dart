@@ -52,7 +52,7 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
     final isChromeCast = deviceModel.contains('chromecast');
 
     widget.nextButtonFocusNode.fold(
-          () {
+      () {
         if (isChromeCast) {
           Navigator.push(
             context,
@@ -77,7 +77,7 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
           );
         }
       },
-          (focus) {
+      (focus) {
         Future.delayed(Duration(milliseconds: 300), () {
           if (focus.canRequestFocus) {
             focus.requestFocus();
@@ -98,7 +98,7 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
     final isChromeCast = deviceModel.contains('chromecast');
 
     widget.nextButtonFocusNode.fold(
-          () {
+      () {
         if (isChromeCast) {
           Navigator.push(
             context,
@@ -123,7 +123,7 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
           );
         }
       },
-          (focus) {
+      (focus) {
         Future.delayed(Duration(milliseconds: 300), () {
           if (focus.canRequestFocus) {
             focus.requestFocus();
@@ -174,10 +174,10 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
   }
 
   Widget _buildHeader(
-      ThemeData theme,
-      double headerFontSize,
-      double subtitleFontSize,
-      ) {
+    ThemeData theme,
+    double headerFontSize,
+    double subtitleFontSize,
+  ) {
     return Column(
       children: [
         Text(
