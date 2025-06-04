@@ -61,7 +61,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         (builder: (context) => AdhanSubScreen(), name: S.current.alAdhan),
         (builder: (context) => AfterAdhanSubScreen(), name: S.current.afterAdhanHadith),
         (builder: (context) => DuaaBetweenAdhanAndIqamaaScreen(), name: S.current.duaaRemainder),
-        (builder: (context) => IqamaaCountDownSubScreen(), name: S.current.iqamaaCountDown),
+        (builder: (context) => IqamaaCountDownSubScreen(isDebug: true), name: S.current.iqamaaCountDown),
         (builder: (context) => IqamaSubScreen(), name: S.current.iqama),
         (builder: (context) => AfterSalahAzkar(), name: S.current.afterSalahAzkar),
         (builder: (context) => JumuaHadithSubScreen(), name: S.current.jumua),
@@ -87,8 +87,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
   void walkThrowScreens() {
     walkThrowScreensSubscription?.cancel();
-    walkThrowScreensSubscription = generateStream(10.seconds).listen((event) {
-      if (event > screens.length) walkThrowScreensSubscription?.cancel();
+    walkThrowScreensSubscription = generateStream(15.seconds).listen((event) {
       setState(() {
         forcedScreen = screens[event % screens.length];
       });
@@ -155,7 +154,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               onSelect: () => AppRouter.push(LanguageScreen()),
             ),
             SelectorOption(
-              title: "Walk through screens",
+              title: "Walkthrough screens",
               onSelect: walkThrowScreens,
             ),
             SelectorOption(

@@ -7,8 +7,8 @@ const kDeviceInfo = 'device_info';
 
 const kBaseUrl = 'https://mawaqit.net/api';
 const kStagingUrl = 'https://staging.mawaqit.net/api';
-const kStaticFilesUrl = 'https://mawaqit.net/static';
-const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
+const kStaticFilesUrl = 'https://cdn.mawaqit.net';
+const kStagingStaticFilesUrl = 'https://cdn.mawaqit.net';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
@@ -149,4 +149,15 @@ abstract class RtspCameraStreamConstant {
 abstract class ScheduleListeningConstant {
   static const startTime = '08:00';
   static const endTime = '20:00';
+}
+
+abstract class PrayerAudioConstant {
+  static const String kDefaultAdhanFileName = 'adhan-afassy.mp3';
+  static const String kFajrAdhanSuffix = '-fajr.mp3';
+  static const String kDuaAfterAdhanFileName = 'duaa-after-adhan.mp3';
+  static const String kMp3Directory = '/audio/';
+  static const String kMp3Extension = '.mp3';
+  static const String kHttpProtocol = 'http://';
+  static const String kHttpsProtocol = 'https://';
+  static const String kHttpsPrefix = 'https:';
 }
