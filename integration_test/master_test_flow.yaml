@@ -50,3 +50,6 @@ appId: com.mawaqit.androidtv
 
 - runFlow: random_hadith_screen.yaml
 - waitForAnimationToEnd
+
+- runFlow: supplication_screen.yaml
+- waitForAnimationToEnd
