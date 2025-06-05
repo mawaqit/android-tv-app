@@ -28,7 +28,7 @@ appId: com.mawaqit.androidtv
 - runFlow: announcement_screen.yaml
 - waitForAnimationToEnd
 
-# Duaa El Eftar Screen Test  
+# Duaa El Eftar Screen Test
 - runFlow: duaa_el_eftar_screen.yaml
 - waitForAnimationToEnd
 
@@ -48,5 +48,5 @@ appId: com.mawaqit.androidtv
 - runFlow: jumua_screen.yaml
 - waitForAnimationToEnd
 
-# Random Hadith Screen Test
-- runFlow: random_hadith_screen.yaml 
+- runFlow: random_hadith_screen.yaml
+- waitForAnimationToEnd
