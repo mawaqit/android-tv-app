@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/onBoarding/widgets/toggle_button_widget.dart';
@@ -87,33 +88,36 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     final double descriptionFontSize = isPortrait ? 8.sp : 10.sp;
 
     return Material(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: isPortrait ? 5.w : 12.5.w,
-        ),
-        child: Flex(
-          direction: Axis.vertical,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Header section - takes only what it needs
-            _buildHeader(theme, tr, headerFontSize, subtitleFontSize),
-
-            // Adaptive spacing between header and options
-            SizedBox(height: isPortrait ? 1.h : 2.h),
-
-            // Orientation options - expands to fill remaining space
-            Expanded(
-              child: _buildOrientationOptions(
-                theme: theme,
-                tr: tr,
-                userPrefs: userPrefs,
-                buttonFontSize: buttonFontSize,
-                descriptionFontSize: descriptionFontSize,
-                isPortrait: isPortrait,
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: isPortrait ? 4.w : 8.w,
+            vertical: isPortrait ? 2.h : 3.h,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Header section - flexible
+              Flexible(
+                flex: 2,
+                child: _buildHeader(theme, tr, headerFontSize, subtitleFontSize),
               ),
-            ),
-          ],
+
+              // Orientation options - takes most space
+              Flexible(
+                flex: 6,
+                child: _buildOrientationOptions(
+                  theme: theme,
+                  tr: tr,
+                  userPrefs: userPrefs,
+                  buttonFontSize: buttonFontSize,
+                  descriptionFontSize: descriptionFontSize,
+                  isPortrait: isPortrait,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -140,16 +144,19 @@ class OnBoardingOrientationWidget extends StatelessWidget {
           maxLines: 2,
         ),
         SizedBox(height: 1.5.h), // Reduced spacing
-        Text(
-          tr.selectYourMawaqitTvAppOrientation,
-          style: theme.textTheme.bodyLarge?.copyWith(
-            color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
-            fontSize: subtitleFontSize,
-            height: 1.3, // Better line height for Arabic text
+        Expanded(
+          flex: 2,
+          child: AutoSizeText(
+            tr.selectYourMawaqitTvAppOrientation,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.textTheme.bodyLarge?.color?.withOpacity(0.8),
+              fontSize: subtitleFontSize,
+              height: 1.3, // Better line height for Arabic text
+            ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.visible, // Changed to visible to prevent cutting off text
+            maxLines: 4, // Increased max lines for Arabic text
           ),
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.visible, // Changed to visible to prevent cutting off text
-          maxLines: 4, // Increased max lines for Arabic text
         ),
       ],
     );
@@ -164,13 +171,10 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     required double descriptionFontSize,
     required bool isPortrait,
   }) {
-    return Flex(
-      direction: Axis.vertical,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Column(
       children: [
         // Landscape option - takes equal space
         Expanded(
-          flex: 2,
           child: _buildOrientationOption(
             theme: theme,
             isSelected: userPrefs.orientationLandscape,
@@ -183,12 +187,11 @@ class OnBoardingOrientationWidget extends StatelessWidget {
           ),
         ),
 
-        // Minimal spacer between options
-        SizedBox(height: isPortrait ? 1.h : 1.5.h),
+        // Spacer between options
+        SizedBox(height: isPortrait ? 2.h : 3.h),
 
         // Portrait option - takes equal space
         Expanded(
-          flex: 2,
           child: _buildOrientationOption(
             theme: theme,
             isSelected: !userPrefs.orientationLandscape,
@@ -215,12 +218,11 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     required double descriptionFontSize,
     required bool isPortrait,
   }) {
-    return Flex(
-      direction: Axis.vertical,
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Toggle button - fixed space at the top
+        // Toggle button - centered
         ToggleButtonWidget(
           isSelected: isSelected,
           onPressed: _wrapWithOnNext(onToggle),
@@ -228,33 +230,32 @@ class OnBoardingOrientationWidget extends StatelessWidget {
           textStyle: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: buttonFontSize,
-            height: 1.2, // Better line height for Arabic text
+            height: 1.2,
           ),
           isPortrait: isPortrait,
         ),
 
-        // Minimal spacer between button and description
-        SizedBox(height: isPortrait ? 0.5.h : 1.h),
+        // Spacer
+        SizedBox(height: isPortrait ? 1.h : 1.5.h),
 
-        // Description text - flexible to fit available space
+        // Description text - flexible
         Expanded(
           child: Container(
-            constraints: BoxConstraints(
-              minHeight: isPortrait ? 3.h : 4.h,
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              horizontal: isPortrait ? 1.w : 2.w,
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: isPortrait ? 2.w : 4.w),
-              child: Text(
-                description,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
-                  fontSize: descriptionFontSize,
-                  height: 1.2, // Tighter line height to save space
-                ),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3, // Reduced from 4 to 3 to save space
+            child: AutoSizeText(
+              description,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+                fontSize: descriptionFontSize,
+                height: 1.3,
               ),
+              maxLines: 3,
+              softWrap: true,
+              textAlign: TextAlign.center,
+              // overflow: TextOverflow.visible,
             ),
           ),
         ),
