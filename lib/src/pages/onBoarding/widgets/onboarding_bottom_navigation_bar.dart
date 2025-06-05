@@ -29,24 +29,36 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
       data: (data) {
         final screenType = data.screenFlow[data.currentScreen];
         final isMosqueSearch = switch (screenType) {
-          OnboardingScreenType.mosqueId || OnboardingScreenType.mosqueName => true,
-          OnboardingScreenType.chromecastMosqueId || OnboardingScreenType.chromecastMosqueName => true,
+          OnboardingScreenType.mosqueId ||
+          OnboardingScreenType.mosqueName =>
+            true,
+          OnboardingScreenType.chromecastMosqueId ||
+          OnboardingScreenType.chromecastMosqueName =>
+            true,
           _ => false
         };
-        final isMosqueSearchSelected = ref.watch(mosqueManagerProvider).fold(() => false, (t) => true);
+        final isMosqueSearchSelected = ref
+            .watch(mosqueManagerProvider)
+            .fold(() => false, (t) => true);
 
         // Check if current screen is country or timezone selection
         final isCountryOrTimezoneScreen =
-            screenType == OnboardingScreenType.countrySelection || screenType == OnboardingScreenType.timezoneSelection;
+            screenType == OnboardingScreenType.countrySelection ||
+                screenType == OnboardingScreenType.timezoneSelection;
         return Container(
-          padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+          padding:
+              const EdgeInsets.only(left: 30, right: 30, bottom: 20),
           child: Row(
             children: [
               Expanded(
                 flex: 4,
                 child: VersionWidget(
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(.5),
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.color
+                        ?.withOpacity(.5),
                   ),
                 ),
               ),
@@ -57,7 +69,8 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                 decorator: DotsDecorator(
                   size: const Size.square(9.0),
                   activeSize: const Size(21.0, 9.0),
-                  activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                  activeShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0)),
                   spacing: const EdgeInsets.all(3),
                 ),
               ),
@@ -66,8 +79,7 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                 flex: 4,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment:
-                      Directionality.of(context) == TextDirection.ltr ? MainAxisAlignment.end : MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Visibility(
                       visible: data.enablePreviousButton,
@@ -85,26 +97,35 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                         onPressed: onPreviousPressed,
                       ),
                     ),
-                    if (data.enablePreviousButton) const SizedBox(width: 5),
+                    if (data.enablePreviousButton)
+                      const SizedBox(width: 5),
 
                     // Fixed conditional widget section
                     if (data.enableNextButton)
                       // Only show the button when it's either:
                       // 1. Not a mosque search screen, OR
                       // 2. A mosque search screen WITH a mosque selected
-                      if (isCountryOrTimezoneScreen && onSkipPressed != null)
+                      if (isCountryOrTimezoneScreen &&
+                          onSkipPressed != null)
                         MawaqitIconButton(
-                          focusNode: nextButtonFocusNode ?? FocusNode(),
+                          focusNode:
+                              nextButtonFocusNode ?? FocusNode(),
                           icon: Icons.navigate_next,
                           label: S.of(context).skip,
                           onPressed: onSkipPressed,
                           isAutoFocus: true,
                         )
-                      else if (!isMosqueSearch || (isMosqueSearch && isMosqueSearchSelected))
+                      else if (!isMosqueSearch ||
+                          (isMosqueSearch && isMosqueSearchSelected))
                         MawaqitIconButton(
-                          focusNode: nextButtonFocusNode ?? FocusNode(),
-                          icon: data.isLastItem ? Icons.check : Icons.arrow_forward_rounded,
-                          label: data.isLastItem ? S.of(context).finish : S.of(context).next,
+                          focusNode:
+                              nextButtonFocusNode ?? FocusNode(),
+                          icon: data.isLastItem
+                              ? Icons.check
+                              : Icons.arrow_forward_rounded,
+                          label: data.isLastItem
+                              ? S.of(context).finish
+                              : S.of(context).next,
                           onPressed: onNextPressed,
                         )
                       else
@@ -112,7 +133,8 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                         Opacity(
                           opacity: 0.5,
                           child: MawaqitIconButton(
-                            focusNode: nextButtonFocusNode ?? FocusNode(),
+                            focusNode:
+                                nextButtonFocusNode ?? FocusNode(),
                             icon: Icons.arrow_forward_rounded,
                             label: S.of(context).next,
                             onPressed: null, // Disabled button
