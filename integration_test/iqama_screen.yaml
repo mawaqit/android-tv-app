@@ -30,3 +30,5 @@ appId: com.mawaqit.androidtv
 
 
 - tapOn: "Iqama"
+
+- assertVisible: ".*Please put your phones into Silent Mode.*"
