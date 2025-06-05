@@ -2,7 +2,7 @@ appId: com.mawaqit.androidtv
 ---
 - launchApp
 
-# Wait for app to be ready
+      # Wait for app to be ready
 - extendedWaitUntil:
     visible: "السلام عليكم و رحمة الله و بركاته ٫ حللتم أهلا ونزلتم سهلا"
     timeout: 15000
@@ -26,3 +26,5 @@ appId: com.mawaqit.androidtv
 
 
 - tapOn: "Al Adan"
+
+- assertVisible: ".*Al Adan.*"
