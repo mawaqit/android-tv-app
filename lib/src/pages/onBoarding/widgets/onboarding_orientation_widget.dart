@@ -86,26 +86,32 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     final double buttonFontSize = isPortrait ? 10.sp : 12.sp;
     final double descriptionFontSize = isPortrait ? 8.sp : 10.sp;
 
-    // Adjust width factor based on orientation
-    final double widthFactor = isPortrait ? 0.9 : 0.75;
-
     return Material(
-      child: FractionallySizedBox(
-        widthFactor: widthFactor,
-        child: Column(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: isPortrait ? 5.w : 12.5.w,
+        ),
+        child: Flex(
+          direction: Axis.vertical,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
           children: [
+            // Header section - takes only what it needs
             _buildHeader(theme, tr, headerFontSize, subtitleFontSize),
-            SizedBox(height: isPortrait ? 0.5.h : 1.h),
-            _buildOrientationOptions(
-              theme: theme,
-              tr: tr,
-              userPrefs: userPrefs,
-              buttonFontSize: buttonFontSize,
-              descriptionFontSize: descriptionFontSize,
-              isPortrait: isPortrait,
+
+            // Adaptive spacing between header and options
+            SizedBox(height: isPortrait ? 1.h : 2.h),
+
+            // Orientation options - expands to fill remaining space
+            Expanded(
+              child: _buildOrientationOptions(
+                theme: theme,
+                tr: tr,
+                userPrefs: userPrefs,
+                buttonFontSize: buttonFontSize,
+                descriptionFontSize: descriptionFontSize,
+                isPortrait: isPortrait,
+              ),
             ),
           ],
         ),
@@ -158,32 +164,41 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     required double descriptionFontSize,
     required bool isPortrait,
   }) {
-    return Column(
+    return Flex(
+      direction: Axis.vertical,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // Landscape option
-        _buildOrientationOption(
-          theme: theme,
-          isSelected: userPrefs.orientationLandscape,
-          onToggle: () => userPrefs.orientationLandscape = true,
-          label: tr.landscape,
-          description: tr.landscapeBTNDescription,
-          buttonFontSize: buttonFontSize,
-          descriptionFontSize: descriptionFontSize,
-          isPortrait: isPortrait,
+        // Landscape option - takes equal space
+        Expanded(
+          flex: 2,
+          child: _buildOrientationOption(
+            theme: theme,
+            isSelected: userPrefs.orientationLandscape,
+            onToggle: () => userPrefs.orientationLandscape = true,
+            label: tr.landscape,
+            description: tr.landscapeBTNDescription,
+            buttonFontSize: buttonFontSize,
+            descriptionFontSize: descriptionFontSize,
+            isPortrait: isPortrait,
+          ),
         ),
 
-        SizedBox(height: isPortrait ? 1.5.h : 2.h),
+        // Minimal spacer between options
+        SizedBox(height: isPortrait ? 1.h : 1.5.h),
 
-        // Portrait option
-        _buildOrientationOption(
-          theme: theme,
-          isSelected: !userPrefs.orientationLandscape,
-          onToggle: () => userPrefs.orientationLandscape = false,
-          label: tr.portrait,
-          description: tr.portraitBTNDescription,
-          buttonFontSize: buttonFontSize,
-          descriptionFontSize: descriptionFontSize,
-          isPortrait: isPortrait,
+        // Portrait option - takes equal space
+        Expanded(
+          flex: 2,
+          child: _buildOrientationOption(
+            theme: theme,
+            isSelected: !userPrefs.orientationLandscape,
+            onToggle: () => userPrefs.orientationLandscape = false,
+            label: tr.portrait,
+            description: tr.portraitBTNDescription,
+            buttonFontSize: buttonFontSize,
+            descriptionFontSize: descriptionFontSize,
+            isPortrait: isPortrait,
+          ),
         ),
       ],
     );
@@ -200,8 +215,12 @@ class OnBoardingOrientationWidget extends StatelessWidget {
     required double descriptionFontSize,
     required bool isPortrait,
   }) {
-    return Column(
+    return Flex(
+      direction: Axis.vertical,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        // Toggle button - fixed space at the top
         ToggleButtonWidget(
           isSelected: isSelected,
           onPressed: _wrapWithOnNext(onToggle),
@@ -213,19 +232,30 @@ class OnBoardingOrientationWidget extends StatelessWidget {
           ),
           isPortrait: isPortrait,
         ),
-        SizedBox(height: isPortrait ? 0.8.h : 1.5.h),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: isPortrait ? 1.w : 2.w),
-          child: Text(
-            description,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
-              fontSize: descriptionFontSize,
-              height: 1.3, // Better line height for Arabic text
+
+        // Minimal spacer between button and description
+        SizedBox(height: isPortrait ? 0.5.h : 1.h),
+
+        // Description text - flexible to fit available space
+        Expanded(
+          child: Container(
+            constraints: BoxConstraints(
+              minHeight: isPortrait ? 3.h : 4.h,
             ),
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.visible,
-            maxLines: 4,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: isPortrait ? 2.w : 4.w),
+              child: Text(
+                description,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.7),
+                  fontSize: descriptionFontSize,
+                  height: 1.2, // Tighter line height to save space
+                ),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3, // Reduced from 4 to 3 to save space
+              ),
+            ),
           ),
         ),
       ],
