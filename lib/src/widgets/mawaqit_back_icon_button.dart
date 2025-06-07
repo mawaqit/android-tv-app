@@ -35,14 +35,13 @@ class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
           onFocusChange: (value) => setState(() => focused = value),
           focusColor: theme.focusColor,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
             child: Row(
               children: [
-                Align(
-                  alignment: Alignment(.5, 0),
-                  child: Icon(widget.icon, color: focused ? Colors.white : color, size: 16),
-                  widthFactor: .5,
-                  heightFactor: 1,
+                Icon(
+                  widget.icon,
+                  color: focused ? Colors.white : color,
+                  size: 10.sp,
                 ),
                 SizedBox(width: 10),
                 Text(
