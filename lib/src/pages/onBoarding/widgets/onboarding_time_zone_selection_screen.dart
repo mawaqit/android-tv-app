@@ -249,11 +249,15 @@ class _TimezoneSelectionScreenState extends State<TimezoneSelectionScreen> {
                     child: ListTile(
                       tileColor: selectedTimezoneIndex == index ? const Color(0xFF490094) : null,
                       contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.3.h),
-                      title: Text(
-                        '${_convertToGMTOffset(timeZoneOffset)} $timezone',
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          color: selectedTimezoneIndex == index ? Colors.white : null,
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${_convertToGMTOffset(timeZoneOffset)} $timezone',
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: selectedTimezoneIndex == index ? Colors.white : null,
+                          ),
+                          textAlign: TextAlign.start,
                         ),
                       ),
                       onTap: () {
