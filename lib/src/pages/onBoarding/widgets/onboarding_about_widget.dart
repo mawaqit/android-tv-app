@@ -49,6 +49,7 @@ class _OnBoardingMawaqitAboutWidgetState extends State<OnBoardingMawaqitAboutWid
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final isTablet = MediaQuery.of(context).size.width > 600;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Focus(
       autofocus: true,
@@ -59,38 +60,43 @@ class _OnBoardingMawaqitAboutWidgetState extends State<OnBoardingMawaqitAboutWid
         }
         return KeyEventResult.ignored;
       },
-      child: Align(
-        alignment: const Alignment(0, -.3),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                S.of(context).mawaqitWelcome,
-                style: TextStyle(
-                  fontSize: isTablet ? 16.sp : 20.sp,
-                  fontWeight: FontWeight.w700,
-                  color: themeData.brightness == Brightness.dark ? Colors.white70 : themeData.primaryColor,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 2.h),
-              Flexible(
-                fit: FlexFit.tight,
-                child: AutoSizeText(
-                  S.of(context).mawaqitDesc,
-                  stepGranularity: 1,
-                  textAlign: TextAlign.justify,
-                  style: TextStyle(
-                    fontSize: isTablet ? 10.sp : 12.sp,
-                    color: themeData.brightness == Brightness.dark ? Colors.white60 : themeData.primaryColor,
-                  ),
-                ),
-              ),
-            ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Title section - flexible
+          Text(
+            S.of(context).mawaqitWelcome,
+            style: TextStyle(
+              fontSize: isTablet ? 16.sp : 20.sp,
+              fontWeight: FontWeight.w700,
+              color: themeData.brightness == Brightness.dark ? Colors.white70 : themeData.primaryColor,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
           ),
-        ),
+
+          // Spacer
+          SizedBox(height: isPortrait ? 1.h : 2.h),
+
+          // Description section - expandable
+          Expanded(
+            child: AutoSizeText(
+              S.of(context).mawaqitDesc,
+              textAlign: TextAlign.justify,
+              minFontSize: 8,
+              maxLines: 20,           // or leave null if you never want scrolling
+              style: TextStyle(
+                fontSize: isTablet ? 10.sp : 12.sp,
+                height: 1.4,
+                color: themeData.brightness == Brightness.dark
+                    ? Colors.white60
+                    : themeData.primaryColor,
+              ),
+            ),
+          ),
+          SizedBox(height: isPortrait ? 1.h : 2.h),
+        ],
       ),
     );
   }
