@@ -81,17 +81,19 @@ class _OnBoardingMawaqitAboutWidgetState extends State<OnBoardingMawaqitAboutWid
 
           // Description section - expandable
           Expanded(
-            child: AutoSizeText(
-              S.of(context).mawaqitDesc,
-              textAlign: TextAlign.justify,
-              minFontSize: 8,
-              maxLines: 20,           // or leave null if you never want scrolling
-              style: TextStyle(
-                fontSize: isTablet ? 10.sp : 12.sp,
-                height: 1.4,
-                color: themeData.brightness == Brightness.dark
-                    ? Colors.white60
-                    : themeData.primaryColor,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 1.w),
+              child: AutoSizeText(
+                S.of(context).mawaqitDesc,
+                textAlign: TextAlign.justify,
+                minFontSize: 10,
+                style: TextStyle(
+                  fontSize: isTablet ? 12.sp : 14.sp,
+                  height: 1.4,
+                  color: themeData.brightness == Brightness.dark
+                      ? Colors.white60
+                      : themeData.primaryColor,
+                ),
               ),
             ),
           ),
