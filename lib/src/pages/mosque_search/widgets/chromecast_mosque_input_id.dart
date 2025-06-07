@@ -19,6 +19,7 @@ import '../../../helpers/SharedPref.dart';
 import '../../../helpers/keyboard_custom.dart';
 import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
+import 'package:sizer/sizer.dart';
 
 class ChromeCastMosqueInputId extends ConsumerStatefulWidget {
   const ChromeCastMosqueInputId({
@@ -133,7 +134,7 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
             Text(
               S.of(context).selectMosqueId,
               style: TextStyle(
-                fontSize: 25.0,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w700,
                 color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
               ),
@@ -220,6 +221,7 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
             controller: inputController,
             style: GoogleFonts.inter(
               color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+              fontSize: 8.sp,
             ),
             onFieldSubmitted: _setMosqueId,
             cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,

@@ -12,6 +12,7 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart' as Provider;
+import 'package:sizer/sizer.dart';
 
 import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/AppRouter.dart';
@@ -374,7 +375,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
                 S.of(context).searchMosque,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 25.0,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
                   color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
                 ),
@@ -444,6 +445,7 @@ class _MosqueInputSearchState extends ConsumerState<MosqueInputSearch> {
       controller: inputController,
       style: GoogleFonts.inter(
         color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+        fontSize: 8.sp,
       ),
       onFieldSubmitted: (val) => _searchMosque(val, 1),
       cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,

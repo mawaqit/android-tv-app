@@ -18,6 +18,7 @@ import '../../../helpers/keyboard_custom.dart';
 import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 import 'package:fpdart/fpdart.dart' as fp;
+import 'package:sizer/sizer.dart';
 
 class ChromeCastMosqueInputSearch extends ConsumerStatefulWidget {
   const ChromeCastMosqueInputSearch({
@@ -369,7 +370,7 @@ class _ChromeCastMosqueInputSearchState extends ConsumerState<ChromeCastMosqueIn
                 S.of(context).searchMosque,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 25.0,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
                   color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
                 ),
@@ -439,6 +440,7 @@ class _ChromeCastMosqueInputSearchState extends ConsumerState<ChromeCastMosqueIn
       controller: inputController,
       style: GoogleFonts.inter(
         color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+        fontSize: 8.sp,
       ),
       onFieldSubmitted: (val) => _searchMosque(val, 1),
       cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
