@@ -90,9 +90,7 @@ class _OnBoardingMawaqitAboutWidgetState extends State<OnBoardingMawaqitAboutWid
                 style: TextStyle(
                   fontSize: isTablet ? 12.sp : 14.sp,
                   height: 1.4,
-                  color: themeData.brightness == Brightness.dark
-                      ? Colors.white60
-                      : themeData.primaryColor,
+                  color: themeData.brightness == Brightness.dark ? Colors.white60 : themeData.primaryColor,
                 ),
               ),
             ),
