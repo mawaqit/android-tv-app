@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart' as fp;
@@ -180,7 +181,7 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
   ) {
     return Column(
       children: [
-        Text(
+        AutoSizeText(
           S.of(context).doYouKnowMosqueId,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontSize: headerFontSize,
