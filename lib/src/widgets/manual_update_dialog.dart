@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/state_management/app_update/app_update_notifier.dart';
 import 'package:mawaqit/src/state_management/manual_app_update/manual_update_notifier.dart';
-import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 
 import '../state_management/manual_app_update/manual_update_state.dart';
 

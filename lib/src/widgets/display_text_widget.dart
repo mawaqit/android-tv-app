@@ -7,6 +7,7 @@ import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
+import 'package:sizer/sizer.dart';
 
 class DisplayTextWidget extends ConsumerWidget {
   const DisplayTextWidget({
@@ -156,35 +157,66 @@ class DisplayTextWidget extends ConsumerWidget {
     TextDirection? textDirection,
     Duration? delay,
   }) {
-    return Flexible(
-      fit: FlexFit.loose,
-      child: Container(
-        constraints: BoxConstraints(maxHeight: maxHeight.vh),
-        child: Padding(
-          key: ValueKey(text),
-          padding: EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: isHadith ? 16.0 : 0.0,
-          ),
-          child: AutoSizeText(
-            text,
-            style: isHadith
-                ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
-                      color: Colors.white,
-                      shadows: kIqamaCountDownTextShadow,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 600,
-                    )
-                : TextStyle(
-                    fontSize: 600,
-                    color: Colors.white,
-                    shadows: kIqamaCountDownTextShadow,
-                  ),
-            textAlign: TextAlign.center,
-            textDirection: textDirection,
-          ).animate().fadeIn(delay: delay).addRepaintBoundary(),
-        ),
-      ),
-    );
+    return isHadith
+        ? Expanded(
+            child: Container(
+              width: double.infinity,
+              child: Padding(
+                key: ValueKey(text),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: isHadith ? 16.0 : 0.0,
+                ),
+                child: AutoSizeText(
+                  text,
+                  style: isHadith
+                      ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
+                            color: Colors.white,
+                            shadows: kIqamaCountDownTextShadow,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 32.sp,
+                          )
+                      : TextStyle(
+                          fontSize: 32.sp,
+                          color: Colors.white,
+                          shadows: kIqamaCountDownTextShadow,
+                        ),
+                  textAlign: TextAlign.center,
+                  textDirection: textDirection,
+                  maxLines: isHadith ? null : 1,
+                ).animate().fadeIn(delay: delay).addRepaintBoundary(),
+              ),
+            ),
+          )
+        : Flexible(
+            fit: FlexFit.loose,
+            child: Container(
+              constraints: BoxConstraints(maxHeight: maxHeight.vh),
+              child: Padding(
+                key: ValueKey(text),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: isHadith ? 16.0 : 0.0,
+                ),
+                child: AutoSizeText(
+                  text,
+                  style: isHadith
+                      ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
+                            color: Colors.white,
+                            shadows: kIqamaCountDownTextShadow,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 600,
+                          )
+                      : TextStyle(
+                          fontSize: 600,
+                          color: Colors.white,
+                          shadows: kIqamaCountDownTextShadow,
+                        ),
+                  textAlign: TextAlign.center,
+                  textDirection: textDirection,
+                ).animate().fadeIn(delay: delay).addRepaintBoundary(),
+              ),
+            ),
+          );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/const/resource.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/wifi_selector_widget.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/onboarding_timezone_selector.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/widgets.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 
 import '../helpers/AppRouter.dart';

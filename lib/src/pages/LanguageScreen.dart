@@ -1,40 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
-
 import '../helpers/AppRouter.dart';
-import 'onBoarding/widgets/onboarding_language_selector.dart';
-import 'onBoarding/widgets/language_selector_widget.dart';
+import 'onBoarding/widgets/widgets.dart';
 
 class LanguageScreen extends StatelessWidget {
-  final void Function(String)? onSelect;
-  final List<String>? languages; // List of language codes
-  final bool? isIconActivated;
-  final String? title;
-  final String? description;
-  String selectedLanguage = "";
-
-  final bool Function(String)? isSelected;
-
-  LanguageScreen({
+  // Private constructor with all attributes
+  const LanguageScreen._({
     Key? key,
+    required this.isOnboarding,
     this.onSelect,
-    this.languages, // List of languages
+    this.languages,
     this.title = "",
-    this.description = "", // Description of the screen
+    this.description = "",
     this.isIconActivated = true,
     this.isSelected,
   }) : super(key: key);
+
+  final void Function(String)? onSelect;
+  final List<String>? languages;
+  final bool? isIconActivated;
+  final String? title;
+  final String? description;
+  final bool isOnboarding;
+  final bool Function(String)? isSelected;
+
+  // Factory for normal mode
+  factory LanguageScreen({
+    Key? key,
+    void Function(String)? onSelect,
+    List<String>? languages,
+    String title = "",
+    String description = "",
+    bool isIconActivated = true,
+    bool Function(String)? isSelected,
+  }) {
+    return LanguageScreen._(
+      key: key,
+      isOnboarding: false,
+      onSelect: onSelect,
+      languages: languages,
+      title: title,
+      description: description,
+      isIconActivated: isIconActivated,
+      isSelected: isSelected,
+    );
+  }
+
+  // Factory for onboarding mode
+  factory LanguageScreen.onboarding({
+    Key? key,
+    void Function(String)? onSelect,
+    List<String>? languages,
+    String title = "",
+    String description = "",
+    bool isIconActivated = true,
+    bool Function(String)? isSelected,
+  }) {
+    return LanguageScreen._(
+      key: key,
+      isOnboarding: true,
+      onSelect: onSelect,
+      languages: languages,
+      title: title,
+      description: description,
+      isIconActivated: isIconActivated,
+      isSelected: isSelected,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScreenWithAnimationWidget(
       animation: R.ASSETS_ANIMATIONS_LOTTIE_LANGUAGE_JSON,
-      // child:  OnBoardingLanguageSelector(onSelect: AppRouter.pop)
       child: title!.isNotEmpty
           ? LanguageSelector(
               onSelect: (selectedLang) {
-                onSelect?.call(selectedLang); // Call the passed onSelect with the selected language
+                onSelect?.call(selectedLang);
               },
               isSelected: isSelected!,
               languages: languages!,
@@ -42,33 +84,11 @@ class LanguageScreen extends StatelessWidget {
               description: description!,
               isIconActivated: isIconActivated!,
             )
-          : OnBoardingLanguageSelector(onSelect: AppRouter.pop),
+          : isOnboarding
+              ? OnBoardingLanguageSelector.onboarding()
+              : OnBoardingLanguageSelector.normal(
+                  onNext: AppRouter.pop,
+                ),
     );
   }
-// AppBar _renderAppBar(context) {
-//   final settingsManager = Provider.of<SettingsManager>(context);
-//   final settings = settingsManager.settings;
-//
-//   return AppBar(
-//       title: Text(
-//         S.of(context).languages,
-//         style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
-//       ),
-//       flexibleSpace: Container(
-//         decoration: BoxDecoration(
-//           gradient: LinearGradient(
-//             begin: Alignment.centerLeft,
-//             end: Alignment.centerRight,
-//             colors: <Color>[
-//               Theme.of(context).brightness == Brightness.light
-//                   ? HexColor(settings.firstColor)
-//                   : Theme.of(context).primaryColor,
-//               Theme.of(context).brightness == Brightness.light
-//                   ? HexColor(settings.secondColor)
-//                   : Theme.of(context).primaryColor,
-//             ],
-//           ),
-//         ),
-//       ));
-// }
 }
