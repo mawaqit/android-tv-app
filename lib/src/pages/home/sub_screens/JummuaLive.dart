@@ -6,8 +6,8 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
-import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_notifier.dart';
-import 'package:mawaqit/src/state_management/rtsp_camera_stream/rtsp_camera_stream_state.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_notifier.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:media_kit/media_kit.dart';
@@ -55,7 +55,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     final mosqueManager = context.read<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
     final connectivity = ref.watch(connectivityProvider);
-    final streamStateAsync = ref.watch(rtspCameraSettingsProvider);
+    final streamStateAsync = ref.watch(liveStreamProvider);
 
     final jumuaaDisableInMosque = !userPrefs.isSecondaryScreen && mosqueManager.typeIsMosque;
 
@@ -78,7 +78,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
           value,
           mosqueManager,
           jumuaaDisableInMosque,
-          RTSPCameraSettingsState(),
+          LiveStreamViewerState(),
         ),
       ),
       loading: () => const CircularProgressIndicator(
@@ -88,7 +88,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
         ConnectivityStatus.disconnected,
         mosqueManager,
         jumuaaDisableInMosque,
-        RTSPCameraSettingsState(),
+        LiveStreamViewerState(),
       ),
     );
   }
@@ -97,7 +97,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     ConnectivityStatus connectivityStatus,
     MosqueManager mosqueManager,
     bool jumuaaDisableInMosque,
-    RTSPCameraSettingsState streamState,
+    LiveStreamViewerState streamState,
   ) {
     // First check if we should show Hadith screen or black screen
     if (jumuaaDisableInMosque || connectivityStatus == ConnectivityStatus.disconnected) {
@@ -108,15 +108,15 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     }
 
     // Check if RTSP is enabled and properly configured
-    final isRTSPWorking = streamState.isRTSPEnabled &&
-        streamState.streamType == StreamType.rtsp &&
+    final isRTSPWorking = streamState.isEnabled &&
+        streamState.streamType == LiveStreamType.rtsp &&
         streamState.videoController != null &&
         streamState.streamUrl != null &&
         connectivityStatus != ConnectivityStatus.disconnected;
 
     // Check if YouTube stream is configured
-    final isYouTubeWorking = streamState.isRTSPEnabled &&
-        streamState.streamType == StreamType.youtubeLive &&
+    final isYouTubeWorking = streamState.isEnabled &&
+        streamState.streamType == LiveStreamType.youtubeLive &&
         streamState.youtubeController != null &&
         streamState.streamUrl != null &&
         connectivityStatus != ConnectivityStatus.disconnected;

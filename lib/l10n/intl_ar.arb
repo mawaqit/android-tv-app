@@ -434,5 +434,9 @@
   "selectReciter": "اختر قارئًا",
   "selectMoshaf": "اختر مصحفًا",
   "randomSurahSelection": "اختيار سورة عشوائيًا",
-  "selectSurah": "اختر سورة"
+  "selectSurah": "اختر سورة",
+  "processingRequest": "جاري معالجة الطلب...",
+  "replaceWorkflowWithStream": "استبدال سير عمل الصلاة بالبث المباشر",
+  "replaceAppWorkflowWithCameraStream": "استبدال سير عمل الصلاة ببث الكاميرا",
+  "streamError": "حدث خطأ أثناء البث"
 }
