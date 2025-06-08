@@ -101,7 +101,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
     if (oldWidget.path != widget.path) {
       webViewController!.loadUrl(
         urlRequest: URLRequest(
-          url: Uri.parse(widget.path!),
+          url: WebUri.uri(Uri.parse(widget.path!)),
         ),
       );
     }
@@ -142,7 +142,7 @@ class MawaqitWebViewWidgetState extends State<MawaqitWebViewWidget>
           else
             InAppWebView(
               key: ValueKey(widget.path),
-              initialUrlRequest: URLRequest(url: Uri.parse(widget.path!)),
+              initialUrlRequest: URLRequest(url: WebUri.uri((Uri.parse(widget.path!)))),
               gestureRecognizers: _gSet,
               initialOptions: InAppWebViewGroupOptions(
                   crossPlatform: InAppWebViewOptions(

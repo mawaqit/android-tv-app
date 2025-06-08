@@ -7,8 +7,8 @@ const kDeviceInfo = 'device_info';
 
 const kBaseUrl = 'https://mawaqit.net/api';
 const kStagingUrl = 'https://staging.mawaqit.net/api';
-const kStaticFilesUrl = 'https://mawaqit.net/static';
-const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
+const kStaticFilesUrl = 'https://cdn.mawaqit.net';
+const kStagingStaticFilesUrl = 'https://cdn.mawaqit.net';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
@@ -41,21 +41,19 @@ abstract class RandomHadithConstant {
 }
 
 class TurnOnOffTvConstant {
-  static const String kLastEventDate = "lastEventDate";
-  static const String kIsEventsSet = "isEventsSet";
-  static const String kActivateToggleFeature = "activateToggleFeature";
-  static const String kScheduledTimersKey = "scheduledTimers";
+  static const String kActivateToggleFeature = 'activate_toggle_feature';
+  static const String kisFajrIshaOnly = 'is_fajr_isha_only';
+  static const String kScheduledTimersKey = 'scheduled_timers_key';
+  static const String kLastEventDate = 'last_event_date';
+  static const String kMinuteBeforeKey = 'minute_before_key';
+  static const String kMinuteAfterKey = 'minute_after_key';
+  static const String kIsEventsSet = 'is_events_set';
+  static const String kScheduleParamsKey = 'schedule_params_key';
+  static const String kLastExecutedEventDate = 'last_executed_event_date';
 
   /// native methods calls
   static const String kNativeMethodsChannel = "nativeMethodsChannel";
   static const String kCheckRoot = "checkRoot";
-  static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
-  static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
-  static const String kToggleTabletScreenOn = "toggleTabletScreenOn";
-  static const String kToggleTabletScreenOff = "toggleTabletScreenOff";
-  static const String kisFajrIshaOnly = "isIshaFajrOnly";
-  static const String kMinuteBeforeKey = 'selectedMinuteBefore';
-  static const String kMinuteAfterKey = 'selectedMinuteAfter';
 }
 
 abstract class AnnouncementConstant {
@@ -81,8 +79,10 @@ abstract class QuranConstant {
   static const String quranMoshafConfigJsonUrl = 'https://cdn.mawaqit.net/quran/tv_config.json';
   static const String kIsFirstTime = 'is_first_time_quran';
   static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
-  static const int kCacheWidth = 50;
-  static const int kCacheHeight = 50;
+  static const String kQuranCacheBoxName = 'timestamp_box';
+  static const String kQuranReciterRetentionTime = 'quran_reciter_retention_time';
+  static const int kCacheWidth = 300;
+  static const int kCacheHeight = 300;
 }
 
 abstract class AzkarConstant {
@@ -137,6 +137,17 @@ abstract class ManualUpdateConstant {
 abstract class ScheduleListeningConstant {
   static const startTime = '08:00';
   static const endTime = '20:00';
+}
+
+abstract class PrayerAudioConstant {
+  static const String kDefaultAdhanFileName = 'adhan-afassy.mp3';
+  static const String kFajrAdhanSuffix = '-fajr.mp3';
+  static const String kDuaAfterAdhanFileName = 'duaa-after-adhan.mp3';
+  static const String kMp3Directory = '/audio/';
+  static const String kMp3Extension = '.mp3';
+  static const String kHttpProtocol = 'http://';
+  static const String kHttpsProtocol = 'https://';
+  static const String kHttpsPrefix = 'https:';
 }
 
 abstract class LiveStreamConstants {

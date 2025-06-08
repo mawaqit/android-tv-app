@@ -4,7 +4,7 @@ import 'dart:math' hide log;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
-import 'package:disk_space/disk_space.dart';
+import 'package:disk_space_2/disk_space_2.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/main.dart';
@@ -19,7 +19,7 @@ import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unique_identifier/unique_identifier.dart';
-import 'package:xml_parser/xml_parser.dart';
+import 'package:xml/xml.dart';
 
 import '../data/data_source/cache_local_data_source.dart';
 import '../domain/model/failure/mosque/mosque_failure.dart';
@@ -204,7 +204,7 @@ class Api {
 
   /// prepare the data to be cached
   static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
-      Future.wait(language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
+      Future.wait(language.split('-').map((e) => dioStatic.get('/ahadith/$e.xml')));
 
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file
@@ -214,17 +214,17 @@ class Api {
 
     /// this should be called only on offline mode so it should hit the cache
 
-    final response = await dioStatic.get('/xml/ahadith/$language.xml');
+    final response = await dioStatic.get('/ahadith/$language.xml');
 
-    final document = XmlDocument.from(response.data)!;
+    final document = XmlDocument.parse(response.data);
 
-    final hadiths = document.getElements('hadith');
+    final hadiths = document.findAllElements('hadith');
 
-    if (hadiths == null) return null;
+    if (hadiths.isEmpty) return null;
 
     final random = Random().nextInt(hadiths.length);
 
-    return hadiths[random].text;
+    return hadiths.elementAt(random).innerText;
   }
 
   /// get the hadith from the server directly
@@ -257,27 +257,25 @@ class Api {
 
   static Future<(String, Map<String, dynamic>)?> prepareUserData() async {
     try {
+      double? freeSpace = await DiskSpace.getFreeDiskSpace;
+      double? totalSpace = await DiskSpace.getTotalDiskSpace;
+
       final userPreferencesManager = UserPreferencesManager();
       await userPreferencesManager.init();
 
       var hardwareFuture = DeviceInfoPlugin().androidInfo;
       var softwareFuture = PackageInfo.fromPlatform();
       var languageFuture = AppLanguage.getCountryCode();
-      var freeSpaceFuture = DiskSpace.getFreeDiskSpace;
-      var totalSpaceFuture = DiskSpace.getTotalDiskSpace;
       var deviceIdFuture = UniqueIdentifier.serial;
 
       // Wait for all futures to complete in a parallel way
-      var results = await Future.wait(
-          [hardwareFuture, softwareFuture, languageFuture, freeSpaceFuture, totalSpaceFuture, deviceIdFuture]);
+      var results = await Future.wait([hardwareFuture, softwareFuture, languageFuture, deviceIdFuture]);
 
       // Extract results
       var hardware = results[0] as AndroidDeviceInfo;
       var software = results[1] as PackageInfo;
       var language = results[2] as String;
-      var freeSpace = results[3] as double;
-      var totalSpace = results[4] as double;
-      var deviceId = results[5] as String;
+      var deviceId = results[3] as String;
 
       final commonDeviceData = {
         'device-id': deviceId,

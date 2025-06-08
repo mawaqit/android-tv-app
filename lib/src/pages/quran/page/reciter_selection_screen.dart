@@ -7,7 +7,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mawaqit/const/resource.dart';
+import 'package:mawaqit/src/helpers/connectivity_provider.dart';
+import 'package:mawaqit/src/models/address_model.dart';
 import 'package:mawaqit/src/pages/quran/page/schedule_screen.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
@@ -27,11 +31,13 @@ import 'package:mawaqit/src/routes/routes_constant.dart';
 class AudioControlWidget extends ConsumerWidget {
   final double buttonSize;
   final double iconSize;
+  final FocusNode focusNode;
 
   const AudioControlWidget({
     Key? key,
     required this.buttonSize,
     required this.iconSize,
+    required this.focusNode,
   }) : super(key: key);
 
   bool _isWithinScheduledTime(TimeOfDay startTime, TimeOfDay endTime) {
@@ -48,6 +54,8 @@ class AudioControlWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final connectivityStatus = ref.watch(connectivityProvider);
+
     return ref.watch(audioControlProvider).when(
           data: (state) {
             final scheduleState = ref.watch(scheduleProvider);
@@ -55,7 +63,10 @@ class AudioControlWidget extends ConsumerWidget {
             return scheduleState.when(
               data: (schedule) {
                 final isWithinTime = _isWithinScheduledTime(schedule.startTime, schedule.endTime);
-                final shouldShow = schedule.isScheduleEnabled && isWithinTime;
+                final hasInternetConnection =
+                    connectivityStatus.hasValue && connectivityStatus.value == ConnectivityStatus.connected;
+
+                final shouldShow = schedule.isScheduleEnabled && isWithinTime && hasInternetConnection;
 
                 if (!shouldShow) return const SizedBox.shrink();
 
@@ -63,6 +74,7 @@ class AudioControlWidget extends ConsumerWidget {
                   width: buttonSize,
                   height: buttonSize,
                   child: FloatingActionButton(
+                    focusNode: focusNode,
                     focusColor: Theme.of(context).primaryColor,
                     backgroundColor: state.status == AudioStatus.playing ? Colors.red : Colors.black.withOpacity(.5),
                     child: Icon(
@@ -111,6 +123,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   late FocusScopeNode searchListFocusNode;
   late FocusNode searchFocusScopeNode;
   late FocusNode changeIntoReadingMode;
+  late FocusNode playPauseSchedule;
 
   late StreamSubscription<bool> keyboardSubscription;
 
@@ -139,6 +152,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     changeReadingModeFocusNode = FocusScopeNode(debugLabel: 'change_reading_mode_focus_scope_node');
 
     changeIntoReadingMode = FocusNode(debugLabel: 'change_into_reading_mode_focus_node');
+    playPauseSchedule = FocusNode(debugLabel: 'pla_pause_schedule');
     searchListFocusNode = FocusScopeNode(debugLabel: 'search_list_focus_scope_node');
     var keyboardVisibilityController = KeyboardVisibilityController();
 
@@ -148,7 +162,9 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(reciteNotifierProvider.notifier);
+      if (mounted) {
+        ref.read(reciteNotifierProvider.notifier);
+      }
       _setInitialFocus();
     });
   }
@@ -212,6 +228,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     favoritesListFocusNode.onKey = _handleFavoritesListKeyEvent;
     allRecitersListFocusNode.onKey = _handleAllRecitersListKeyEvent;
     changeReadingModeFocusNode.onKey = _handleChangeReadingModeKeyEvent;
+    playPauseSchedule.onKey = _handlePlayPauseScheduleKeyEvent;
     searchListFocusNode.onKey = _handleSearchListKeyEvent;
   }
 
@@ -270,6 +287,16 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     return KeyEventResult.ignored;
   }
 
+  KeyEventResult _handlePlayPauseScheduleKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        changeIntoReadingMode.requestFocus();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
   KeyEventResult _handleSearchListKeyEvent(FocusNode node, RawKeyEvent event) {
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
@@ -285,27 +312,32 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   AppBar _buildAppBar() {
     return AppBar(
-      toolbarHeight: 40,
+      toolbarHeight: 5.h,
       backgroundColor: Color(0xFF28262F),
-      elevation: 0,
-      title: AutoSizeText(
-        S.of(context).chooseReciter,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.bold,
+      title: SizedBox(
+        height: 4.h,
+        child: FittedBox(
+          fit: BoxFit.scaleDown, // shrink/grow to fit the box
+          child: Text(
+            S.of(context).chooseReciter,
+            maxLines: 1,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.bold,
+              height: 1.0, // make line-height = fontSize
+            ),
+          ),
         ),
-        maxLines: 1,
-        minFontSize: 6.sp.roundToDouble(),
-        maxFontSize: 20.sp.roundToDouble(),
-        stepGranularity: 1,
       ),
       centerTitle: true,
-      leading: IconButton(
-        splashRadius: 14.sp,
-        icon: Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
+      // leading: IconButton(
+      //   icon: Icon(
+      //     Icons.arrow_back,
+      //     color: Colors.white,
+      //   ),
+      //   onPressed: () => Navigator.pop(context),
+      // ),
     );
   }
 
@@ -322,10 +354,15 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       ),
       child: Column(
         children: [
-          SizedBox(height: 8.h, child: _buildSearchField()),
+          SizedBox(height: 0.5.h),
+          Expanded(
+            flex: 2,
+            child: _buildSearchField(),
+          ),
           isKeyboardVisible
               ? const SizedBox.shrink()
               : Expanded(
+                  flex: 10,
                   child: ref.watch(reciteNotifierProvider).when(
                         data: (reciterState) => _buildReciterList(reciterState),
                         loading: () => Column(
@@ -431,12 +468,16 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
   List<Widget> _buildFavoriteSection(ReciteState reciterState) {
     return [
       SizedBox(height: 1.h),
-      _buildFavoritesHeader(),
+      Expanded(
+        flex: 1,
+        child: _buildFavoritesHeader(),
+      ),
       SizedBox(height: 1.h),
       if (reciterState.favoriteReciters.isEmpty)
         _buildEmptyFavorites()
       else
         Expanded(
+          flex: 5,
           child: FocusScope(
             node: favoritesListFocusNode,
             autofocus: _hasFavorites(),
@@ -452,10 +493,14 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   List<Widget> _buildAllRecitersSection(ReciteState reciterState) {
     return [
-      SizedBox(height: 1.h),
-      _buildAllRecitersHeader(),
-      SizedBox(height: 1.h),
+      SizedBox(height: 0.8.h),
       Expanded(
+        flex: 1,
+        child: _buildAllRecitersHeader(),
+      ),
+      SizedBox(height: 0.8.h),
+      Expanded(
+        flex: 5,
         child: FocusScope(
           node: allRecitersListFocusNode,
           autofocus: _hasFavorites(),
@@ -466,6 +511,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
         ),
       ),
     ];
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black87,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 
   Widget _buildFloatingColumn(double spacerWidth, double buttonSize, double iconSize, BuildContext context) {
@@ -482,9 +539,10 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                         width: buttonSize,
                         height: buttonSize,
                         child: FloatingActionButton(
-                          autofocus: changeReadingModeFocusNode
-                              .hasFocus, // it is used here because at change_reading_mode it will break due to up keybind when no result in the search
+                          autofocus: changeReadingModeFocusNode.hasFocus,
+                          // it is used here because at change_reading_mode it will break due to up keybind when no result in the search
                           heroTag: 'schedule',
+                          focusColor: Theme.of(context).focusColor,
                           backgroundColor: Colors.black.withOpacity(.5),
                           child: Icon(
                             Icons.schedule,
@@ -492,10 +550,22 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
                             size: iconSize,
                           ),
                           onPressed: () async {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
-                            );
+                            // Check internet connection before showing dialog
+                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
+
+                            // Get the latest connectivity status after checking
+                            final updatedConnectivity = ref.read(connectivityProvider);
+                            final isConnected = updatedConnectivity.hasValue &&
+                                updatedConnectivity.value == ConnectivityStatus.connected;
+
+                            if (isConnected) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => ScheduleScreen(reciterList: reciter.reciters),
+                              );
+                            } else {
+                              showToast(S.of(context).scheduleInOnlineMode);
+                            }
                           },
                         ),
                       ),
@@ -526,6 +596,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
           AudioControlWidget(
             buttonSize: buttonSize,
             iconSize: iconSize,
+            focusNode: playPauseSchedule,
           ),
         ],
       ),
@@ -545,7 +616,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             size: 16.sp,
           ),
           SizedBox(width: 12),
-          Text(
+          AutoSizeText(
             S.of(context).favorites,
             style: TextStyle(
               color: Colors.white,
@@ -565,7 +636,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
       child: Row(
         children: [
           SizedBox(width: 8),
-          Text(
+          AutoSizeText(
             S.of(context).allReciters,
             style: TextStyle(
               color: Colors.white,
@@ -580,9 +651,8 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
 
   Widget _buildEmptyFavorites() {
     return Container(
-      height: 12.h,
       margin: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding, vertical: 10),
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(8.sp),
       decoration: BoxDecoration(
         color: Colors.black26,
         borderRadius: BorderRadius.circular(10),
@@ -596,15 +666,17 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             color: Colors.white54,
             size: 22.sp,
           ),
-          SizedBox(height: 12),
-          Text(
-            S.of(context).noFavoriteReciters,
-            style: TextStyle(
-              color: Colors.white70,
-              fontFamily: 'Roboto',
-              fontSize: 12.sp,
+          SizedBox(height: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              S.of(context).noFavoriteReciters,
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 12.sp,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -615,6 +687,7 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ReciterSelectionScreen.horizontalPadding, vertical: 10),
       child: TextField(
+        maxLines: 1,
         focusNode: searchFocusScopeNode,
         controller: _searchController,
         onChanged: (value) {
@@ -655,11 +728,18 @@ class _ReciterSelectionScreenState extends ConsumerState<ReciterSelectionScreen>
             },
           );
         },
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.white, fontSize: 10.sp),
         decoration: InputDecoration(
           hintText: S.of(context).searchForReciter,
           hintStyle: TextStyle(color: Colors.white70),
-          prefixIcon: Icon(Icons.search, color: Colors.white70),
+          prefixIcon: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 1.w),
+            child: Icon(
+              Icons.search,
+              color: Colors.white70,
+              size: 12.sp,
+            ),
+          ),
           filled: true,
           fillColor: Colors.white24,
           focusedBorder: OutlineInputBorder(
