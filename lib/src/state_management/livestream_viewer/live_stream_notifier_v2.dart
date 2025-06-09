@@ -158,6 +158,7 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
 
     if (result.isSuccess) {
       return state.value!.copyWith(
+        isEnabled: true,
         streamUrl: url,
         streamType: result.streamType,
         streamWidget: result.widget,
