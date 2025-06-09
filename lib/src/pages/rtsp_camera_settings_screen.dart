@@ -24,6 +24,10 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
   final FocusNode _saveButtonFocusNode = FocusNode();
   final FocusNode _replaceWorkflowWithStreamButtonFocusNode = FocusNode();
   late StreamSubscription<bool> keyboardSubscription;
+  
+  // Local state to track unsaved changes
+  bool? _localReplaceWorkflow;
+  bool _hasUnsavedChanges = false;
 
   @override
   void initState() {
@@ -53,6 +57,133 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
       dev.log('📝 [RTSP_SCREEN] Updating URL controller with: ${state.streamUrl}');
       _urlController.text = state.streamUrl!;
     }
+    
+    // Initialize local state from provider state
+    if (_localReplaceWorkflow == null) {
+      _localReplaceWorkflow = state.replaceWorkflow;
+      _hasUnsavedChanges = false;
+    }
+  }
+
+  /// Handle saving stream with proper user feedback
+  Future<void> _handleSaveStream(LiveStreamState state) async {
+    dev.log('💾 [RTSP_SCREEN] Save button pressed with URL: ${_urlController.text}');
+    
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final enteredUrl = _urlController.text.trim();
+    
+    // Clear any existing snackbars
+    scaffoldMessenger.clearSnackBars();
+    
+    // Validate input
+    if (enteredUrl.isEmpty) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text(S.of(context).enterRtspUrl),
+          backgroundColor: Colors.orange,
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+      return;
+    }
+    
+    // Show processing indicator
+    scaffoldMessenger.showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+            ),
+            const SizedBox(width: 12),
+            Text(S.of(context).validatingStream),
+          ],
+        ),
+        duration: const Duration(seconds: 30), // Long duration, will be cleared when done
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.blue,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+
+    try {
+      // Check if URL actually changed
+      final hasUrlChanged = enteredUrl != state.streamUrl;
+      final hasWorkflowChanged = _localReplaceWorkflow != null && 
+                                 _localReplaceWorkflow != state.replaceWorkflow;
+      
+      if (hasUrlChanged) {
+        dev.log('🔄 [RTSP_SCREEN] URL changed, updating stream');
+        
+        // Update the stream
+        await ref.read(liveStreamProviderV2.notifier).updateStream(enteredUrl);
+        
+        // Wait a bit for the state to settle
+        await Future.delayed(const Duration(milliseconds: 500));
+        
+        // Check the final state to show appropriate feedback
+        final newState = ref.read(liveStreamProviderV2).value;
+        scaffoldMessenger.clearSnackBars();
+        
+        if (newState != null && newState.isReadyToPlay) {
+          scaffoldMessenger.showSnackBar(
+            SnackBar(
+              content: Text(S.of(context).validRtspUrl),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          );
+        }
+      }
+      
+      // Save workflow replacement setting if changed
+      if (hasWorkflowChanged) {
+        dev.log('🔄 [RTSP_SCREEN] Workflow replacement setting changed, saving: $_localReplaceWorkflow');
+        await ref.read(liveStreamProviderV2.notifier).toggleReplaceWorkflow(_localReplaceWorkflow!);
+      }
+      
+      // If nothing changed but user pressed save, still show feedback
+      if (!hasUrlChanged && !hasWorkflowChanged) {
+        scaffoldMessenger.clearSnackBars();
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: const Text('Settings saved'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      }
+      
+      // Clear unsaved changes flag
+      setState(() {
+        _hasUnsavedChanges = false;
+      });
+    } catch (e) {
+      dev.log('🚨 [RTSP_SCREEN] Error saving stream: $e');
+      scaffoldMessenger.clearSnackBars();
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text('Error saving stream: ${e.toString()}'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 4),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+    }
   }
 
   @override
@@ -62,54 +193,20 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
       if (next.hasValue) {
         _updateUrlController(next.value!);
       }
+      // Only show error messages, not success messages on every state change
       if (previous != next && next.hasValue && next.value!.hasError) {
-        dev.log('🚨 [RTSP_SCREEN] Stream error detected');
-        final errorMessage = next.value!.errorMessage ?? S.of(context).streamError;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              errorMessage,
-              style: TextStyle(fontSize: 16.sp),
-            ),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
-      if (previous != next && !next.isLoading && next.hasValue && !next.hasError && next.value!.isEnabled) {
         final state = next.value!;
-
-        // Only show snackbar when URL validation status changes
+        dev.log('❌ [RTSP_SCREEN] Stream error detected: ${state.errorMessage}');
+        
         ScaffoldMessenger.of(context).clearSnackBars();
-
-        String message;
-        Color backgroundColor;
-
-        if (state.streamUrl != null && state.isReadyToPlay) {
-          dev.log('✅ [RTSP_SCREEN] Valid stream ready: ${state.streamUrl}');
-          message = S.of(context).validRtspUrl;
-          backgroundColor = Colors.green;
-        } else if (state.hasError) {
-          dev.log('❌ [RTSP_SCREEN] Invalid stream URL detected: ${state.streamUrl}');
-          message = state.errorMessage ?? S.of(context).invalidRtspUrl;
-          backgroundColor = Colors.red;
-        } else {
-          return;
-        }
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              message,
+              state.errorMessage ?? S.of(context).invalidRtspUrl,
               style: const TextStyle(fontSize: 16),
             ),
-            backgroundColor: backgroundColor,
-            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
             behavior: SnackBarBehavior.floating,
             margin: const EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
@@ -259,12 +356,115 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
   Widget _buildVideoPreview(LiveStreamState state) {
     dev.log('🎥 [RTSP_SCREEN] Building video preview for type: ${state.streamType}');
     
-    // Use the new streamWidget from the refactored state
-    if (state.streamWidget != null) {
-      return state.streamWidget!;
+    // Don't render widget if stream is connecting (prevents disposed controller issues)
+    if (state.isConnecting) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.black12,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text(
+                'Connecting to stream...',
+                style: TextStyle(color: Colors.white70),
+              ),
+            ],
+          ),
+        ),
+      );
     }
     
-    return const SizedBox.shrink();
+    // Only use streamWidget if it exists and state is ready
+    if (state.streamWidget != null && state.isReadyToPlay) {
+      // Wrap in a key to force widget rebuilding when stream changes
+      return KeyedSubtree(
+        key: ValueKey('${state.streamType}_${state.streamUrl}'),
+        child: state.streamWidget!,
+      );
+    }
+    
+    // Fallback placeholder
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black12,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Center(
+        child: Icon(
+          Icons.videocam_off,
+          size: 48,
+          color: Colors.white54,
+        ),
+      ),
+    );
+  }
+
+  /// Build stream status indicator widget
+  Widget _buildStreamStatusIndicator(LiveStreamState state) {
+    IconData icon;
+    Color color;
+    String text;
+
+    if (state.isConnecting) {
+      icon = Icons.sync;
+      color = Colors.orange;
+      text = 'Connecting...';
+    } else if (state.isReadyToPlay) {
+      icon = Icons.check_circle;
+      color = Colors.green;
+      text = 'Stream Ready';
+    } else if (state.hasError) {
+      icon = Icons.error;
+      color = Colors.red;
+      text = state.errorMessage ?? 'Error';
+    } else if (state.streamUrl != null && state.streamUrl!.isNotEmpty) {
+      icon = Icons.info;
+      color = Colors.blue;
+      text = 'Stream Configured';
+    } else {
+      icon = Icons.help_outline;
+      color = Colors.grey;
+      text = 'No URL Configured';
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          if (state.isConnecting)
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: color,
+              ),
+            )
+          else
+            Icon(icon, color: color, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSettingsContent(LiveStreamState state) {
@@ -303,11 +503,15 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           focusNode: _replaceWorkflowWithStreamButtonFocusNode,
           title: Text(S.of(context).replaceWorkflowWithStream),
           subtitle: Text(S.of(context).replaceAppWorkflowWithCameraStream),
-          value: state.replaceWorkflow,
+          value: _localReplaceWorkflow ?? state.replaceWorkflow,
           onChanged: state.isEnabled
               ? (value) {
-                  dev.log('🔄 [RTSP_SCREEN] Toggling workflow replacement: $value');
-                  ref.read(liveStreamProviderV2.notifier).toggleReplaceWorkflow(value);
+                  dev.log('🔄 [RTSP_SCREEN] Local workflow replacement changed: $value');
+                  setState(() {
+                    _localReplaceWorkflow = value;
+                    _hasUnsavedChanges = (_localReplaceWorkflow != state.replaceWorkflow) || 
+                                        (_urlController.text != state.streamUrl);
+                  });
                 }
               : null,
           shape: RoundedRectangleBorder(
@@ -326,10 +530,16 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           const SizedBox(height: 20),
           TextField(
             controller: _urlController,
+            onChanged: (value) {
+              setState(() {
+                _hasUnsavedChanges = (value.trim() != state.streamUrl) || 
+                                    (_localReplaceWorkflow != state.replaceWorkflow);
+              });
+            },
             onSubmitted: (_) {
               dev.log('📤 [RTSP_SCREEN] URL submitted: ${_urlController.text}');
-              // ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
-              ref.read(liveStreamProviderV2.notifier).updateStream(_urlController.text);
+              // Don't immediately update - wait for save button
+              _handleSaveStream(state);
             },
             decoration: InputDecoration(
               labelText: S.of(context).enterRtspUrl,
@@ -339,48 +549,16 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               ),
             ),
           ),
+          const SizedBox(height: 12),
+          _buildStreamStatusIndicator(state),
           const SizedBox(height: 20),
           ElevatedButton.icon(
             focusNode: _saveButtonFocusNode,
             onPressed: () async {
-              dev.log('💾 [RTSP_SCREEN] Save button pressed with URL: ${_urlController.text}');
-              // First, show a loading indicator to prevent interactions
-              final scaffoldMessenger = ScaffoldMessenger.of(context);
-              scaffoldMessenger.showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(S.of(context).processingRequest),
-                    ],
-                  ),
-                  duration: const Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-
-              // Wait a moment to ensure UI updates
-              await Future.delayed(const Duration(milliseconds: 100));
-
-              // Only update the stream if the URL has actually changed
-              if (_urlController.text != state.streamUrl) {
-                dev.log('🔄 [RTSP_SCREEN] URL changed, updating stream');
-                await Future.delayed(const Duration(milliseconds: 500));
-
-                ref.read(liveStreamProviderV2.notifier).updateStream(_urlController.text);
-              } else if (state.streamUrl != null && state.streamUrl!.isNotEmpty) {
-                dev.log('📝 [RTSP_SCREEN] URL unchanged, only updating workflow flag');
-                // URL hasn't changed, just update the workflow flag if needed
-                ref.read(liveStreamProviderV2.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
-              }
+              await _handleSaveStream(state);
             },
-            icon: const Icon(Icons.save),
-            label: Text(S.of(context).save),
+            icon: Icon(_hasUnsavedChanges ? Icons.save : Icons.check),
+            label: Text(_hasUnsavedChanges ? S.of(context).save : S.of(context).save),
             style: ButtonStyle(
               padding: MaterialStateProperty.all(
                 const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -393,6 +571,9 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                 if (states.contains(MaterialState.focused)) {
                   return Theme.of(context).primaryColor;
+                }
+                if (_hasUnsavedChanges) {
+                  return Colors.orange; // Highlight when there are unsaved changes
                 }
                 return Colors.white;
               }),

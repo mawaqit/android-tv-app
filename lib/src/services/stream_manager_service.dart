@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'dart:async';
 import 'dart:developer' as dev;
 
+import '../domain/stream/stream_provider_interface.dart';
 import '../helpers/live_stream/youtube_stream_helper.dart';
 import '../helpers/live_stream/rtsp_stream_helper.dart';
 import '../domain/error/live_stream_exceptions.dart';
@@ -12,9 +13,13 @@ import 'package:media_kit_video/media_kit_video.dart';
 
 /// Service for managing different stream providers
 class StreamManagerService {
-  final YouTubeStreamHelper _youtubeHelper = YouTubeStreamHelper();
-  final RTSPStreamHelper _rtspHelper = RTSPStreamHelper();
+  // List of available stream providers
+  final List<StreamProviderInterface> _providers = [
+    YouTubeStreamHelper(),
+    RTSPStreamHelper(),
+  ];
 
+  StreamProviderInterface? _currentProvider;
   LiveStreamType? _currentStreamType;
   Timer? _statusCheckTimer;
 
@@ -29,58 +34,48 @@ class StreamManagerService {
       // Dispose current stream
       await dispose();
 
-      Widget streamWidget;
-      LiveStreamType streamType;
-
-      // Determine stream type and initialize accordingly
-      if (LiveStreamConstants.youtubeUrlRegex.hasMatch(url)) {
-        dev.log('🎥 [STREAM_MANAGER] Detected YouTube URL');
-        
-        // Setup listeners
-        _youtubeHelper.controller?.addListener(() {
-          final playerState = _youtubeHelper.controller!.value.playerState;
-          if (playerState == PlayerState.ended) {
-            _onCompleted?.call();
-          } else if (playerState == PlayerState.unknown) {
-            _onError?.call('YouTube player in unknown state');
-          }
-        });
-        
-        final videoId = await _youtubeHelper.processYouTubeUrl(url);
-        final controller = _youtubeHelper.initializeController(videoId);
-        
-        streamWidget = YoutubePlayer(
-          controller: controller,
-          onEnded: (_) => _onCompleted?.call(),
-        );
-        streamType = LiveStreamType.youtubeLive;
-        
-      } else if (url.startsWith('rtsp://')) {
-        dev.log('🎬 [STREAM_MANAGER] Detected RTSP URL');
-        
-        final videoController = await _rtspHelper.initializePlayer(url);
-        _rtspHelper.setupListeners(
-          onError: (error) => _onError?.call(error),
-          onCompleted: () => _onCompleted?.call(),
-        );
-        
-        streamWidget = Video(
-          controller: videoController,
-          controls: null,
-        );
-        streamType = LiveStreamType.rtsp;
-        
-      } else {
-        throw InvalidStreamUrlException('Unsupported URL format: $url');
+      // Find a provider that can handle this URL
+      StreamProviderInterface? provider;
+      for (final p in _providers) {
+        if (p.canHandle(url)) {
+          provider = p;
+          break;
+        }
       }
 
+      if (provider == null) {
+        throw InvalidStreamUrlException('No provider found for URL: $url');
+      }
+
+      // Setup listeners for the provider
+      provider.setupListeners(
+        onError: (error) => _onError?.call(error),
+        onCompleted: () => _onCompleted?.call(),
+      );
+
+      // Initialize the stream
+      final widget = await provider.initializeStream(url);
+
+      // Determine stream type based on provider
+      LiveStreamType streamType;
+      if (provider is YouTubeStreamHelper) {
+        streamType = LiveStreamType.youtubeLive;
+        dev.log('🎥 [STREAM_MANAGER] Detected YouTube URL');
+      } else if (provider is RTSPStreamHelper) {
+        streamType = LiveStreamType.rtsp;
+        dev.log('🎬 [STREAM_MANAGER] Detected RTSP URL');
+      } else {
+        streamType = LiveStreamType.youtubeLive; // Default fallback
+      }
+
+      _currentProvider = provider;
       _currentStreamType = streamType;
       _startStatusMonitoring();
 
       dev.log('✅ [STREAM_MANAGER] Stream initialized successfully');
 
       return StreamResult(
-        widget: streamWidget,
+        widget: widget,
         streamType: streamType,
         isSuccess: true,
       );
@@ -97,20 +92,10 @@ class StreamManagerService {
 
   /// Check if stream is currently active
   Future<bool> isStreamActive() async {
-    if (_currentStreamType == null) return false;
+    if (_currentProvider == null) return false;
     
     try {
-      if (_currentStreamType == LiveStreamType.youtubeLive) {
-        final controller = _youtubeHelper.controller;
-        if (controller == null) return false;
-        final playerState = controller.value.playerState;
-        return playerState == PlayerState.playing || 
-               playerState == PlayerState.buffering ||
-               playerState == PlayerState.paused;
-      } else if (_currentStreamType == LiveStreamType.rtsp) {
-        return await _rtspHelper.checkStreamActive();
-      }
-      return false;
+      return await _currentProvider!.isActive();
     } catch (e) {
       dev.log('⚠️ [STREAM_MANAGER] Error checking stream status: $e');
       return false;
@@ -119,14 +104,10 @@ class StreamManagerService {
 
   /// Pause current stream
   Future<void> pauseStream() async {
-    if (_currentStreamType == null) return;
+    if (_currentProvider == null) return;
     
     try {
-      if (_currentStreamType == LiveStreamType.youtubeLive) {
-        _youtubeHelper.controller?.pause();
-      } else if (_currentStreamType == LiveStreamType.rtsp) {
-        await _rtspHelper.pause();
-      }
+      await _currentProvider!.pause();
       dev.log('⏸️ [STREAM_MANAGER] Stream paused');
     } catch (e) {
       dev.log('⚠️ [STREAM_MANAGER] Error pausing stream: $e');
@@ -135,14 +116,10 @@ class StreamManagerService {
 
   /// Resume current stream
   Future<void> resumeStream() async {
-    if (_currentStreamType == null) return;
+    if (_currentProvider == null) return;
     
     try {
-      if (_currentStreamType == LiveStreamType.youtubeLive) {
-        _youtubeHelper.controller?.play();
-      } else if (_currentStreamType == LiveStreamType.rtsp) {
-        await _rtspHelper.play();
-      }
+      await _currentProvider!.play();
       dev.log('▶️ [STREAM_MANAGER] Stream resumed');
     } catch (e) {
       dev.log('⚠️ [STREAM_MANAGER] Error resuming stream: $e');
@@ -162,8 +139,12 @@ class StreamManagerService {
   Future<void> dispose() async {
     dev.log('🧹 [STREAM_MANAGER] Disposing stream manager');
     _stopStatusMonitoring();
-    await _youtubeHelper.dispose();
-    await _rtspHelper.dispose();
+    
+    if (_currentProvider != null) {
+      await _currentProvider!.dispose();
+      _currentProvider = null;
+    }
+    
     _currentStreamType = null;
     dev.log('🧹 [STREAM_MANAGER] Stream helpers disposed');
   }
@@ -193,6 +174,9 @@ class StreamManagerService {
 
   /// Get current stream type
   LiveStreamType? get currentStreamType => _currentStreamType;
+
+  /// Get current provider
+  StreamProviderInterface? get currentProvider => _currentProvider;
 }
 
 /// Result of stream initialization

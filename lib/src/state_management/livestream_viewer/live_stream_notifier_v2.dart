@@ -104,8 +104,10 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
 
   /// Toggle replace workflow
   Future<void> toggleReplaceWorkflow(bool isEnabled) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
+    // Don't set loading state as it interferes with the settings UI
+    // state = const AsyncValue.loading();
+    
+    try {
       dev.log('🔄 [LIVE_STREAM_V2] Toggling replace workflow: $isEnabled');
 
       await _settingsService.setReplaceWorkflowEnabled(isEnabled);
@@ -114,8 +116,23 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
         _stopReconnectTimer();
       }
 
-      return state.value!.copyWith(replaceWorkflow: isEnabled);
-    });
+      // Update state directly without loading intermediate
+      if (state.hasValue) {
+        state = AsyncValue.data(
+          state.value!.copyWith(replaceWorkflow: isEnabled),
+        );
+      }
+    } catch (e) {
+      dev.log('🚨 [LIVE_STREAM_V2] Error toggling replace workflow: $e');
+      // If we have a current state, keep it and just log the error
+      if (state.hasValue) {
+        state = AsyncValue.data(
+          state.value!.copyWith(errorMessage: e.toString()),
+        );
+      } else {
+        state = AsyncValue.error(e, StackTrace.current);
+      }
+    }
   }
 
   /// Update stream with new URL
@@ -137,41 +154,57 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
   Future<LiveStreamState> _initializeStream(String url) async {
     dev.log('🎯 [LIVE_STREAM_V2] Initializing stream with URL: $url');
 
-    // Update state to connecting
+    // Update state to connecting - clear widget to prevent disposed controller usage
     if (state.hasValue) {
       state = AsyncValue.data(
         state.value!.copyWith(
           streamStatus: LiveStreamStatus.connecting,
           streamWidget: null,
+          errorMessage: null,
+          isInvalidUrl: false,
         ),
       );
     }
 
-    // Setup listeners
-    _streamManager.setupListeners(
-      onError: _handleStreamError,
-      onCompleted: _handleStreamEnded,
-    );
-
-    // Initialize stream
-    final result = await _streamManager.initializeStream(url);
-
-    if (result.isSuccess) {
-      return state.value!.copyWith(
-        isEnabled: true,
-        streamUrl: url,
-        streamType: result.streamType,
-        streamWidget: result.widget,
-        streamStatus: LiveStreamStatus.active,
-        isInvalidUrl: false,
-        errorMessage: null,
+    try {
+      // Setup listeners
+      _streamManager.setupListeners(
+        onError: _handleStreamError,
+        onCompleted: _handleStreamEnded,
       );
-    } else {
+
+      // Initialize stream
+      final result = await _streamManager.initializeStream(url);
+
+      if (result.isSuccess) {
+        // Wait a bit to ensure old widgets are properly disposed
+        await Future.delayed(const Duration(milliseconds: 200));
+        
+        return state.value!.copyWith(
+          isEnabled: true,
+          streamUrl: url,
+          streamType: result.streamType,
+          streamWidget: result.widget,
+          streamStatus: LiveStreamStatus.active,
+          isInvalidUrl: false,
+          errorMessage: null,
+        );
+      } else {
+        return state.value!.copyWith(
+          streamUrl: url,
+          streamStatus: LiveStreamStatus.error,
+          isInvalidUrl: true,
+          errorMessage: result.error,
+          streamWidget: null,
+        );
+      }
+    } catch (e) {
+      dev.log('🚨 [LIVE_STREAM_V2] Error in _initializeStream: $e');
       return state.value!.copyWith(
         streamUrl: url,
         streamStatus: LiveStreamStatus.error,
         isInvalidUrl: true,
-        errorMessage: result.error,
+        errorMessage: e.toString(),
         streamWidget: null,
       );
     }

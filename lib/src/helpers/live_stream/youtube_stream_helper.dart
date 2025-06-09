@@ -1,30 +1,112 @@
 import 'dart:async';
 import 'dart:developer' as dev;
 
+import 'package:flutter/material.dart';
 import 'package:mawaqit/src/domain/error/live_stream_exceptions.dart';
+import 'package:mawaqit/src/domain/stream/stream_provider_interface.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 /// Helper class to handle YouTube stream operations
-class YouTubeStreamHelper {
+class YouTubeStreamHelper implements StreamProviderInterface {
   YoutubePlayerController? _controller;
+  
+  Function(String)? _onError;
+  Function()? _onCompleted;
 
   /// Get the current active controller
   YoutubePlayerController? get controller => _controller;
 
-  /// Clean up resources
+  @override
+  bool canHandle(String url) {
+    return url.contains('youtube.com') || url.contains('youtu.be');
+  }
+
+  @override
+  Future<Widget> initializeStream(String url) async {
+    try {
+      final videoId = await processYouTubeUrl(url);
+      final controller = initializeController(videoId);
+      
+      // Setup controller listeners for error/completion events - with safety check
+      void controllerListener() {
+        try {
+          if (controller.value.hasError) {
+            _onError?.call('YouTube player error occurred');
+          }
+        } catch (e) {
+          // Controller might be disposed, ignore the error
+          dev.log('⚠️ [YOUTUBE_HELPER] Controller listener error (likely disposed): $e');
+        }
+      }
+      
+      controller.addListener(controllerListener);
+      
+      return YoutubePlayer(
+        controller: controller,
+        showVideoProgressIndicator: false,
+        progressIndicatorColor: Colors.transparent,
+        onReady: () {
+          dev.log('🎥 [YOUTUBE_HELPER] YouTube player ready');
+        },
+        onEnded: (metadata) {
+          dev.log('🎥 [YOUTUBE_HELPER] YouTube stream ended');
+          _onCompleted?.call();
+        },
+        // Add error handling for JavaScript bridge issues
+        aspectRatio: 16 / 9,  // Fixed aspect ratio for live streams
+      );
+    } catch (e) {
+      dev.log('🚨 [YOUTUBE_HELPER] Error initializing stream: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> isActive() async {
+    if (_controller == null) return false;
+    return _controller!.value.isPlaying || _controller!.value.isReady;
+  }
+
+  @override
+  Future<void> pause() async {
+    dev.log('⏸️ [YOUTUBE_HELPER] Pausing stream');
+    _controller?.pause();
+  }
+
+  @override
+  Future<void> play() async {
+    dev.log('▶️ [YOUTUBE_HELPER] Playing stream');
+    _controller?.play();
+  }
+
+  @override
   Future<void> dispose() async {
     if (_controller != null) {
       try {
-        // First remove all listeners to prevent callbacks during disposal
-        _controller!.removeListener(() {});
+        dev.log('🧹 [YOUTUBE_HELPER] Starting YouTube controller disposal');
+        
+        // Wait a bit to ensure any pending UI operations complete
+        await Future.delayed(const Duration(milliseconds: 100));
+        
+        // Dispose the controller
         _controller!.dispose();
         dev.log('🎥 [YOUTUBE_HELPER] Disposed YouTube controller');
       } catch (e) {
         dev.log('⚠️ [YOUTUBE_HELPER] Error disposing YouTube controller: $e');
+      } finally {
+        _controller = null;
       }
-      _controller = null;
     }
+  }
+
+  @override
+  void setupListeners({
+    required Function(String) onError,
+    required Function() onCompleted,
+  }) {
+    _onError = onError;
+    _onCompleted = onCompleted;
   }
 
   /// Extract YouTube video ID from URL
@@ -125,8 +207,9 @@ class YouTubeStreamHelper {
         enableCaption: false,
         hideControls: true,
         isLive: true,
-        useHybridComposition: false,
+        useHybridComposition: true,  // Changed to true to avoid JavaScript bridge issues
         forceHD: false,
+        disableDragSeek: true,  // Disable seeking for live streams
       ),
     );
 

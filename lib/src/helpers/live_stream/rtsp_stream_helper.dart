@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:developer' as dev;
 
+import 'package:flutter/widgets.dart';
 import 'package:mawaqit/src/domain/error/live_stream_exceptions.dart';
+import 'package:mawaqit/src/domain/stream/stream_provider_interface.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
 /// Helper class to handle RTSP stream operations
-class RTSPStreamHelper {
+class RTSPStreamHelper implements StreamProviderInterface {
   Player? _player;
   VideoController? _videoController;
   Timer? _playbackCheckTimer;
@@ -22,6 +24,55 @@ class RTSPStreamHelper {
 
   /// Get the current active player
   Player? get player => _player;
+
+  @override
+  bool canHandle(String url) {
+    return url.trim().startsWith('rtsp://');
+  }
+
+  @override
+  Future<Widget> initializeStream(String url) async {
+    final controller = await initializePlayer(url);
+    return Video(controller: controller);
+  }
+
+  @override
+  Future<bool> isActive() async {
+    return await checkStreamActive();
+  }
+
+  @override
+  Future<void> pause() async {
+    dev.log('⏸️ [RTSP_HELPER] Pausing stream');
+    await _player?.pause();
+  }
+
+  @override
+  Future<void> play() async {
+    dev.log('▶️ [RTSP_HELPER] Playing stream');
+    await _player?.play();
+  }
+
+  @override
+  Future<void> dispose() async {
+    dev.log('🧹 [RTSP_HELPER] Disposing resources');
+    _playbackCheckTimer?.cancel();
+    _playbackCheckTimer = null;
+    await _player?.dispose();
+    _player = null;
+    _videoController = null;
+    _isPlaying = false;
+    _isCompleted = false;
+  }
+
+  @override
+  void setupListeners({
+    required Function(String) onError,
+    required Function() onCompleted,
+  }) {
+    _onError = onError;
+    _onCompleted = onCompleted;
+  }
 
   /// Initialize the RTSP player with the given URL
   Future<VideoController> initializePlayer(String url) async {
@@ -66,43 +117,10 @@ class RTSPStreamHelper {
     }
   }
 
-  /// Setup error and completion listeners
-  void setupListeners({
-    required Function(String) onError,
-    required Function() onCompleted,
-  }) {
-    _onError = onError;
-    _onCompleted = onCompleted;
-  }
-
   /// Check if the stream is currently active
   Future<bool> checkStreamActive() async {
     if (_player == null) return false;
     return _isPlaying || (!_isCompleted);
-  }
-
-  /// Pause the stream
-  Future<void> pause() async {
-    dev.log('⏸️ [RTSP_HELPER] Pausing stream');
-    await _player?.pause();
-  }
-
-  /// Resume/play the stream
-  Future<void> play() async {
-    dev.log('▶️ [RTSP_HELPER] Playing stream');
-    await _player?.play();
-  }
-
-  /// Dispose of all resources
-  Future<void> dispose() async {
-    dev.log('🧹 [RTSP_HELPER] Disposing resources');
-    _playbackCheckTimer?.cancel();
-    _playbackCheckTimer = null;
-    await _player?.dispose();
-    _player = null;
-    _videoController = null;
-    _isPlaying = false;
-    _isCompleted = false;
   }
 
   /// Validate RTSP URL format

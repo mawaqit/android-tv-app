@@ -84,7 +84,8 @@ class OfflineHomeScreen extends ConsumerWidget {
       );
 
     final shouldShowStream = streamState.valueOrNull?.isEnabled == true &&
-        streamState.valueOrNull?.replaceWorkflow == true;
+        streamState.valueOrNull?.replaceWorkflow == true &&
+        streamState.valueOrNull?.isReadyToPlay == true;
 
     return WillPopScope(
       onWillPop: () async {

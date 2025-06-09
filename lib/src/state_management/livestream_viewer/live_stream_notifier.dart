@@ -210,25 +210,36 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
 
   /// toggle replace workflow
   Future<void> toggleReplaceWorkflow(bool isEnabled) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(
-      () async {
-        dev.log('🔌 [LIVE_STREAM] Toggling livestream enabled state: $isEnabled');
+    // Don't set loading state as it interferes with the settings UI
+    // state = const AsyncValue.loading();
+    
+    try {
+      dev.log('🔄 [LIVE_STREAM] Toggling replace workflow: $isEnabled');
 
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool(LiveStreamConstants.prefKeyReplaceWorkflow, isEnabled);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(LiveStreamConstants.prefKeyReplaceWorkflow, isEnabled);
 
-        if (!isEnabled) {
-          _stopReconnectTimer();
-        }
+      if (!isEnabled) {
+        _stopReconnectTimer();
+      }
 
-        await Future.delayed(const Duration(milliseconds: LiveStreamConstants.streamInitDelayMs));
+      await Future.delayed(const Duration(milliseconds: LiveStreamConstants.streamInitDelayMs));
 
-        return state.value!.copyWith(
-          replaceWorkflow: isEnabled,
+      // Update state directly without loading intermediate
+      if (state.hasValue) {
+        state = AsyncValue.data(
+          state.value!.copyWith(replaceWorkflow: isEnabled),
         );
-      },
-    );
+      }
+    } catch (e) {
+      dev.log('🚨 [LIVE_STREAM] Error toggling replace workflow: $e');
+      // If we have a current state, keep it and just log the error
+      if (state.hasValue) {
+        state = AsyncValue.data(state.value!);
+      } else {
+        state = AsyncValue.error(e, StackTrace.current);
+      }
+    }
   }
 
   /// Update stream with new URL and settings
