@@ -9,7 +9,7 @@ import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/pages/ErrorScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/AnnouncementScreen.dart';
-import 'package:mawaqit/src/pages/home/sub_screens/StreamReplacementScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/StreamReplacementScreenV2.dart';
 import 'package:mawaqit/src/pages/home/widgets/mosque_background_screen.dart';
 import 'package:mawaqit/src/pages/home/widgets/workflows/repeating_workflow_widget.dart';
 import 'package:mawaqit/src/pages/home/workflow/app_workflow_screen.dart';
@@ -18,8 +18,8 @@ import 'package:mawaqit/src/pages/home/workflow/normal_workflow.dart';
 import 'package:mawaqit/src/pages/home/workflow/salah_workflow.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
-import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_notifier.dart';
-import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_notifier_v2.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state_v2.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
@@ -72,7 +72,7 @@ class OfflineHomeScreen extends ConsumerWidget {
     RelativeSizes.instance.size = MediaQuery.of(context).size;
     final mosqueProvider = context.watch<MosqueManager>();
     final userPrefs = context.watch<UserPreferencesManager>();
-    final streamState = ref.watch(liveStreamProvider);
+    final streamState = ref.watch(liveStreamProviderV2);
 
     if (!mosqueProvider.loaded)
       return ErrorScreen(
@@ -84,9 +84,7 @@ class OfflineHomeScreen extends ConsumerWidget {
       );
 
     final shouldShowStream = streamState.valueOrNull?.isEnabled == true &&
-        streamState.valueOrNull?.replaceWorkflow == true &&
-        streamState.valueOrNull?.streamStatus == LiveStreamStatus.active &&
-        !streamState.valueOrNull!.isInvalidUrl;
+        streamState.valueOrNull?.replaceWorkflow == true;
 
     return WillPopScope(
       onWillPop: () async {
@@ -100,7 +98,7 @@ class OfflineHomeScreen extends ConsumerWidget {
       // If stream is active and replacing workflow, show only the stream
       // Otherwise show the normal app workflow
       child: shouldShowStream
-          ? const StreamReplacementScreen()
+          ? const StreamReplacementScreenV2()
           : MosqueBackgroundScreen(
               key: ValueKey(mosqueProvider.mosque?.uuid),
               child: SafeArea(

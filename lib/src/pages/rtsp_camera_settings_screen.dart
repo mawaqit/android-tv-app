@@ -5,8 +5,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/domain/error/rtsp_expceptions.dart';
-import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_notifier.dart';
-import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_notifier_v2.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state_v2.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:sizer/sizer.dart';
@@ -48,7 +48,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     super.dispose();
   }
 
-  void _updateUrlController(LiveStreamViewerState state) {
+  void _updateUrlController(LiveStreamState state) {
     if (state.streamUrl != null && _urlController.text != state.streamUrl) {
       dev.log('📝 [RTSP_SCREEN] Updating URL controller with: ${state.streamUrl}');
       _urlController.text = state.streamUrl!;
@@ -57,17 +57,18 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
 
   @override
   Widget build(BuildContext context) {
-    final asyncState = ref.watch(liveStreamProvider);
-    ref.listen(liveStreamProvider, (previous, next) {
+    final asyncState = ref.watch(liveStreamProviderV2);
+    ref.listen(liveStreamProviderV2, (previous, next) {
       if (next.hasValue) {
         _updateUrlController(next.value!);
       }
-      if (previous != next && next.hasValue && next.value!.streamStatus == LiveStreamStatus.error) {
+      if (previous != next && next.hasValue && next.value!.hasError) {
         dev.log('🚨 [RTSP_SCREEN] Stream error detected');
+        final errorMessage = next.value!.errorMessage ?? S.of(context).streamError;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              S.of(context).streamError,
+              errorMessage,
               style: TextStyle(fontSize: 16.sp),
             ),
             backgroundColor: Colors.red,
@@ -89,13 +90,13 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         String message;
         Color backgroundColor;
 
-        if (state.streamUrl != null && !state.isInvalidUrl) {
-          dev.log('✅ [RTSP_SCREEN] Valid RTSP URL detected: ${state.streamUrl}');
+        if (state.streamUrl != null && state.isReadyToPlay) {
+          dev.log('✅ [RTSP_SCREEN] Valid stream ready: ${state.streamUrl}');
           message = S.of(context).validRtspUrl;
           backgroundColor = Colors.green;
-        } else if (state.isInvalidUrl) {
-          dev.log('❌ [RTSP_SCREEN] Invalid RTSP URL detected: ${state.streamUrl}');
-          message = S.of(context).invalidRtspUrl;
+        } else if (state.hasError) {
+          dev.log('❌ [RTSP_SCREEN] Invalid stream URL detected: ${state.streamUrl}');
+          message = state.errorMessage ?? S.of(context).invalidRtspUrl;
           backgroundColor = Colors.red;
         } else {
           return;
@@ -245,7 +246,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(liveStreamProvider);
+                ref.invalidate(liveStreamProviderV2);
               },
               child: Text(S.of(context).tryAgain),
             ),
@@ -255,29 +256,18 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     );
   }
 
-  Widget _buildVideoPreview(LiveStreamViewerState state) {
+  Widget _buildVideoPreview(LiveStreamState state) {
     dev.log('🎥 [RTSP_SCREEN] Building video preview for type: ${state.streamType}');
-    if (state.streamType == LiveStreamType.youtubeLive && state.youtubeController != null) {
-      return SafeYoutubePlayer(
-        controller: state.youtubeController!,
-        placeholder: Center(
-          child: Text(
-            'Loading stream...',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-        onError: (error) {
-          dev.log('⚠️ [RTSP_SCREEN] YouTube player error: $error');
-        },
-      );
+    
+    // Use the new streamWidget from the refactored state
+    if (state.streamWidget != null) {
+      return state.streamWidget!;
     }
-    if (state.videoController != null) {
-      return Video(controller: state.videoController!);
-    }
+    
     return const SizedBox.shrink();
   }
 
-  Widget _buildSettingsContent(LiveStreamViewerState state) {
+  Widget _buildSettingsContent(LiveStreamState state) {
     dev.log('⚙️ [RTSP_SCREEN] Building settings content');
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -301,7 +291,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           autofocus: true,
           onChanged: (value) {
             dev.log('🔌 [RTSP_SCREEN] Toggling RTSP enabled state: $value');
-            ref.read(liveStreamProvider.notifier).toggleEnabled(value);
+            ref.read(liveStreamProviderV2.notifier).toggleEnabled(value);
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -317,7 +307,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           onChanged: state.isEnabled
               ? (value) {
                   dev.log('🔄 [RTSP_SCREEN] Toggling workflow replacement: $value');
-                  ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(value);
+                  ref.read(liveStreamProviderV2.notifier).toggleReplaceWorkflow(value);
                 }
               : null,
           shape: RoundedRectangleBorder(
@@ -339,9 +329,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
             onSubmitted: (_) {
               dev.log('📤 [RTSP_SCREEN] URL submitted: ${_urlController.text}');
               // ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
-              ref.read(liveStreamProvider.notifier).updateStream(
-                    url: _urlController.text,
-                  );
+              ref.read(liveStreamProviderV2.notifier).updateStream(_urlController.text);
             },
             decoration: InputDecoration(
               labelText: S.of(context).enterRtspUrl,
@@ -384,13 +372,11 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                 dev.log('🔄 [RTSP_SCREEN] URL changed, updating stream');
                 await Future.delayed(const Duration(milliseconds: 500));
 
-                ref.read(liveStreamProvider.notifier).updateStream(
-                      url: _urlController.text,
-                    );
+                ref.read(liveStreamProviderV2.notifier).updateStream(_urlController.text);
               } else if (state.streamUrl != null && state.streamUrl!.isNotEmpty) {
                 dev.log('📝 [RTSP_SCREEN] URL unchanged, only updating workflow flag');
                 // URL hasn't changed, just update the workflow flag if needed
-                ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
+                ref.read(liveStreamProviderV2.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
               }
             },
             icon: const Icon(Icons.save),
