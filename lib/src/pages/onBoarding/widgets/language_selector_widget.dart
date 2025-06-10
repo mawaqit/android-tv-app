@@ -71,11 +71,12 @@ class LanguageSelector extends StatelessWidget {
               separatorBuilder: (BuildContext context, int index) =>
                   Divider(height: 1).animate().fade(delay: .7.seconds),
               itemBuilder: (BuildContext context, int index) {
-                final Locale locale = Locale(languages[index]);
+                final String languageCode = languages[index];
+                final Locale locale = Locale(languageCode);
                 return LanguageTile(
-                  onTap: () => onSelect(locale.languageCode),
+                  onTap: () => onSelect(languageCode),
                   locale: locale,
-                  isSelected: isSelected(locale.languageCode),
+                  isSelected: isSelected(languageCode),
                   isIconActivated: isIconActivated,
                 );
               },

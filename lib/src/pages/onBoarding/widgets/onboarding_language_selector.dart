@@ -39,8 +39,11 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
     final appLanguage = Provider.of<AppLanguage>(context);
     final themeData = Theme.of(context);
 
-    /// if the [langCode] is current used language
-    bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
+    bool isSelected(Locale locale) {
+      final currentLocaleString = LocaleHelper.transformLocaleToString(appLanguage.appLocal);
+      final localeString = LocaleHelper.transformLocaleToString(locale);
+      return currentLocaleString == localeString;
+    }
 
     final sortedLocales = [
       Locale('ar'),
@@ -55,8 +58,9 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         final appLanguage = Provider.of<AppLanguage>(context, listen: false);
-        int selectedIndex =
-            sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
+        final currentLocaleString = LocaleHelper.transformLocaleToString(appLanguage.appLocal);
+        int selectedIndex = sortedLocales.indexWhere((locale) =>
+          LocaleHelper.transformLocaleToString(locale) == currentLocaleString);
         if (selectedIndex != -1) {
           double position = selectedIndex * 51; // Estimate the height per item. Adjust this based on your item height.
           _scrollController.animateTo(
@@ -106,7 +110,7 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
                 return LanguageTile(
                   onSelect: widget.onSelect,
                   locale: locale,
-                  isSelected: isSelected(locale.languageCode),
+                  isSelected: isSelected(locale),
                 );
                 // .animate(delay: 110.milliseconds * index)
                 // .moveX(begin: 200)
