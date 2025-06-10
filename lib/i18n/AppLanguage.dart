@@ -106,8 +106,6 @@ class AppLanguage extends ChangeNotifier {
     'de': (context) => S.of(context).de,
     'es': (context) => S.of(context).es,
     'pt': (context) => S.of(context).pt,
-    'pt_BR': (context) => S.of(context).pt,
-    'pt_PT': (context) => S.of(context).pt,
     'nl': (context) => S.of(context).nl,
     'fr_ar': (context) => S.of(context).fr_ar,
     'en_ar': (context) => S.of(context).en_ar,
@@ -116,10 +114,9 @@ class AppLanguage extends ChangeNotifier {
     'tr_ar': (context) => S.of(context).tr_ar,
     'es_ar': (context) => S.of(context).es_ar,
     'pt_ar': (context) => S.of(context).pt_ar,
-    'pt_BR_ar': (context) => S.of(context).pt_ar,
-    'pt_PT_ar': (context) => S.of(context).pt_ar,
     'nl_ar': (context) => S.of(context).nl_ar,
   };
+
 
   /// set the language of the hadith in shared preference
   Future<void> setHadithLanguage(String language) async {
