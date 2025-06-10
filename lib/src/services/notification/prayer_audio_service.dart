@@ -10,10 +10,14 @@ class PrayerAudioService {
     _audioPlayer = AudioPlayer();
     final session = await _configureAudioSession();
     await session.setActive(true);
+    await _audioPlayer?.setVolume(1);
 
     try {
       if (adhanFromAssets) {
         await _audioPlayer?.setAsset(adhanAsset);
+        Future.delayed(const Duration(minutes: 1), () {
+          NotificationService.dismissNotification();
+        });
       } else {
         await _audioPlayer?.setUrl(adhanAsset);
       }

@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.19.4+1
+version: 1.21.3+0
 
 
 environment:
@@ -103,13 +103,11 @@ dependencies:
   rive_splash_screen: ^0.1.1
   lottie: ^2.3.2
   flutter_svg: ^2.0.5
-  dots_indicator: ^3.0.0
+  dots_indicator: 3.0.0
   sizer: ^2.0.15
-
   timeago_flutter: ^3.4.0
   timezone:
   wifi_scan: ^0.4.1
-
   #  media
   youtube_player_flutter: ^8.1.2
   youtube_explode_dart: ^1.12.4
@@ -146,7 +144,11 @@ dependencies:
   notification_overlay:
     git:
       url: https://github.com/mawaqit/android-tv-notification
-      ref: main
+      ref: v0.1.1
+  android_alarm_manager:
+    git:
+      url: https://github.com/ghassenbenzahra123/android_alarm_manager
+      ref: master
 
   percent_indicator: ^4.2.3
 
@@ -159,7 +161,8 @@ dependencies:
 
   montenegrin_localization: ^0.1.0+1
   synchronized: ^3.1.0+1
-  workmanager: ^0.5.2
+  audio_session: ^0.1.21
+  permission_handler: ^11.0.1
 
 
 

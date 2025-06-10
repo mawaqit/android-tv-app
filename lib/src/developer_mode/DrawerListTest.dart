@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
 import 'package:mawaqit/src/pages/developer/DeveloperScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/DuaaBetweenAdhanAndIqama.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/DuaaEftarScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/takberat_aleid_screen.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -64,8 +67,41 @@ class DrawerListDeveloper extends StatelessWidget {
           },
         ),
         DrawerListTitle(
+          icon: Icons.timer_rounded,
+          text: S.of(context).eidMubarak,
+          onTap: () {
+            AppRouter.popAndPush(
+              MosqueBackgroundScreen(
+                child: TakberatAleidScreen(),
+              ),
+            );
+          },
+        ),
+        DrawerListTitle(
+          icon: Icons.timer_rounded,
+          text: S.of(context).duaaElEftar,
+          onTap: () {
+            AppRouter.popAndPush(
+              MosqueBackgroundScreen(
+                child: DuaaEftarScreen(),
+              ),
+            );
+          },
+        ),
+        DrawerListTitle(
+          icon: Icons.timer_rounded,
+          text: S.of(context).duaBetweenAdhanIqamah,
+          onTap: () {
+            AppRouter.popAndPush(
+              MosqueBackgroundScreen(
+                child: DuaaBetweenAdhanAndIqamaaScreen(),
+              ),
+            );
+          },
+        ),
+        DrawerListTitle(
           icon: Icons.notifications,
-          text: S.of(context).alerts,
+          text: S.of(context).alAdhan,
           onTap: () {
             AppRouter.popAndPush(MosqueBackgroundScreen(
               child: AdhanSubScreen(),
