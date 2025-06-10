@@ -382,8 +382,9 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     // Only use streamWidget if it exists and state is ready
     if (state.streamWidget != null && state.isReadyToPlay) {
       // Wrap in a key to force widget rebuilding when stream changes
+      // Include stream status to force rebuild when connecting/active states change
       return KeyedSubtree(
-        key: ValueKey('${state.streamType}_${state.streamUrl}'),
+        key: ValueKey('${state.streamType}_${state.streamUrl}_${state.streamStatus}'),
         child: state.streamWidget!,
       );
     }
@@ -486,13 +487,30 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         ),
         const SizedBox(height: 20),
         SwitchListTile(
-          title: Text(S.of(context).enableRtspCamera),
+          title: Row(
+            children: [
+              Text(S.of(context).enableRtspCamera),
+              if (state.isConnecting) ...[
+                const SizedBox(width: 12),
+                const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                  ),
+                ),
+              ],
+            ],
+          ),
           value: state.isEnabled,
           autofocus: true,
-          onChanged: (value) {
-            dev.log('🔌 [RTSP_SCREEN] Toggling RTSP enabled state: $value');
-            ref.read(liveStreamProviderV2.notifier).toggleEnabled(value);
-          },
+          onChanged: state.isConnecting 
+            ? null // Disable during connection
+            : (value) {
+                dev.log('🔌 [RTSP_SCREEN] Toggling RTSP enabled state: $value');
+                ref.read(liveStreamProviderV2.notifier).toggleEnabled(value);
+              },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
             side: BorderSide(color: Theme.of(context).dividerColor),
@@ -504,7 +522,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           title: Text(S.of(context).replaceWorkflowWithStream),
           subtitle: Text(S.of(context).replaceAppWorkflowWithCameraStream),
           value: _localReplaceWorkflow ?? state.replaceWorkflow,
-          onChanged: state.isEnabled
+          onChanged: (state.isEnabled && !state.isConnecting)
               ? (value) {
                   dev.log('🔄 [RTSP_SCREEN] Local workflow replacement changed: $value');
                   setState(() {
@@ -530,6 +548,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           const SizedBox(height: 20),
           TextField(
             controller: _urlController,
+            enabled: !state.isConnecting, // Disable during connection
             onChanged: (value) {
               setState(() {
                 _hasUnsavedChanges = (value.trim() != state.streamUrl) || 
@@ -537,9 +556,11 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               });
             },
             onSubmitted: (_) {
-              dev.log('📤 [RTSP_SCREEN] URL submitted: ${_urlController.text}');
-              // Don't immediately update - wait for save button
-              _handleSaveStream(state);
+              if (!state.isConnecting) {
+                dev.log('📤 [RTSP_SCREEN] URL submitted: ${_urlController.text}');
+                // Don't immediately update - wait for save button
+                _handleSaveStream(state);
+              }
             },
             decoration: InputDecoration(
               labelText: S.of(context).enterRtspUrl,
@@ -547,6 +568,19 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
+              suffixIcon: state.isConnecting 
+                ? const Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                      ),
+                    ),
+                  )
+                : null,
             ),
           ),
           const SizedBox(height: 12),
@@ -554,11 +588,26 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           const SizedBox(height: 20),
           ElevatedButton.icon(
             focusNode: _saveButtonFocusNode,
-            onPressed: () async {
-              await _handleSaveStream(state);
-            },
-            icon: Icon(_hasUnsavedChanges ? Icons.save : Icons.check),
-            label: Text(_hasUnsavedChanges ? S.of(context).save : S.of(context).save),
+            onPressed: state.isConnecting 
+              ? null // Disable during connection
+              : () async {
+                  await _handleSaveStream(state);
+                },
+            icon: state.isConnecting 
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+              : Icon(_hasUnsavedChanges ? Icons.save : Icons.check),
+            label: Text(
+              state.isConnecting 
+                ? 'Initializing...' 
+                : (_hasUnsavedChanges ? S.of(context).save : S.of(context).save)
+            ),
             style: ButtonStyle(
               padding: MaterialStateProperty.all(
                 const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

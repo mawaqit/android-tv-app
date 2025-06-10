@@ -4,13 +4,14 @@ import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/domain/error/live_stream_exceptions.dart';
 import 'package:mawaqit/src/domain/stream/stream_provider_interface.dart';
+import 'package:mawaqit/src/widgets/safe_youtube_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 /// Helper class to handle YouTube stream operations
 class YouTubeStreamHelper implements StreamProviderInterface {
   YoutubePlayerController? _controller;
-  
+
   Function(String)? _onError;
   Function()? _onCompleted;
 
@@ -27,7 +28,7 @@ class YouTubeStreamHelper implements StreamProviderInterface {
     try {
       final videoId = await processYouTubeUrl(url);
       final controller = initializeController(videoId);
-      
+
       // Setup controller listeners for error/completion events - with safety check
       void controllerListener() {
         try {
@@ -39,22 +40,36 @@ class YouTubeStreamHelper implements StreamProviderInterface {
           dev.log('⚠️ [YOUTUBE_HELPER] Controller listener error (likely disposed): $e');
         }
       }
-      
-      controller.addListener(controllerListener);
-      
-      return YoutubePlayer(
+
+      // Try to add listener - if it fails, controller is disposed
+      try {
+        controller.addListener(controllerListener);
+      } catch (e) {
+        dev.log('⚠️ [YOUTUBE_HELPER] Failed to add listener - controller may be disposed: $e');
+      }
+
+      return SafeYoutubePlayer(
         controller: controller,
-        showVideoProgressIndicator: false,
-        progressIndicatorColor: Colors.transparent,
         onReady: () {
           dev.log('🎥 [YOUTUBE_HELPER] YouTube player ready');
         },
-        onEnded: (metadata) {
+        onEnded: () {
           dev.log('🎥 [YOUTUBE_HELPER] YouTube stream ended');
           _onCompleted?.call();
         },
-        // Add error handling for JavaScript bridge issues
-        aspectRatio: 16 / 9,  // Fixed aspect ratio for live streams
+        onError: (error) {
+          dev.log('🚨 [YOUTUBE_HELPER] YouTube player error: $error');
+          _onError?.call('YouTube player error: $error');
+        },
+        placeholder: Container(
+          color: Colors.black,
+          child: const Center(
+            child: Text(
+              'Loading stream...',
+              style: TextStyle(color: Colors.white70),
+            ),
+          ),
+        ),
       );
     } catch (e) {
       dev.log('🚨 [YOUTUBE_HELPER] Error initializing stream: $e');
@@ -85,10 +100,10 @@ class YouTubeStreamHelper implements StreamProviderInterface {
     if (_controller != null) {
       try {
         dev.log('🧹 [YOUTUBE_HELPER] Starting YouTube controller disposal');
-        
+
         // Wait a bit to ensure any pending UI operations complete
         await Future.delayed(const Duration(milliseconds: 100));
-        
+
         // Dispose the controller
         _controller!.dispose();
         dev.log('🎥 [YOUTUBE_HELPER] Disposed YouTube controller');

@@ -31,8 +31,11 @@ class StreamManagerService {
     try {
       dev.log('🎯 [STREAM_MANAGER] Initializing stream with URL: $url');
 
-      // Dispose current stream
+      // Dispose current stream and wait for cleanup
       await dispose();
+      
+      // Additional delay to ensure complete disposal
+      await Future.delayed(const Duration(milliseconds: 100));
 
       // Find a provider that can handle this URL
       StreamProviderInterface? provider;
@@ -55,6 +58,11 @@ class StreamManagerService {
 
       // Initialize the stream
       final widget = await provider.initializeStream(url);
+
+      // Verify widget was created successfully
+      if (widget == null) {
+        throw LiveStreamInitializationException('Failed to create stream widget');
+      }
 
       // Determine stream type based on provider
       LiveStreamType streamType;

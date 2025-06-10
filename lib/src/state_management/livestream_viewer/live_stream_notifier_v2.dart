@@ -88,17 +88,42 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
       await _settingsService.setStreamEnabled(isEnabled);
 
       if (isEnabled) {
+        // Set connecting state immediately for UI feedback
+        if (state.hasValue) {
+          state = AsyncValue.data(
+            state.value!.copyWith(
+              isEnabled: true,
+              streamStatus: LiveStreamStatus.connecting,
+              streamWidget: null,
+              errorMessage: null,
+            ),
+          );
+        }
+
         // Try to initialize stream if URL exists
         final url = await _settingsService.getStreamUrl();
         if (url != null && url.isNotEmpty) {
           return await _initializeStream(url);
+        } else {
+          // No URL configured, return idle state
+          return state.value!.copyWith(
+            isEnabled: true,
+            streamStatus: LiveStreamStatus.idle,
+            streamWidget: null,
+            errorMessage: null,
+          );
         }
       } else {
         await _dispose();
         await _settingsService.setReplaceWorkflowEnabled(false);
+        
+        return state.value!.copyWith(
+          isEnabled: false,
+          streamStatus: LiveStreamStatus.idle,
+          streamWidget: null,
+          errorMessage: null,
+        );
       }
-
-      return state.value!.copyWith(isEnabled: isEnabled);
     });
   }
 
@@ -135,15 +160,53 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
     }
   }
 
+  /// Safely stop current stream before starting a new one
+  Future<void> _safelyStopCurrentStream() async {
+    dev.log('🛑 [LIVE_STREAM_V2] Safely stopping current stream');
+    
+    // Update state to connecting immediately to prevent UI issues
+    if (state.hasValue) {
+      state = AsyncValue.data(
+        state.value!.copyWith(
+          streamStatus: LiveStreamStatus.connecting,
+          streamWidget: null,
+          errorMessage: null,
+        ),
+      );
+    }
+    
+    // Allow UI to update
+    await Future.delayed(const Duration(milliseconds: 100));
+    
+    // Dispose resources
+    await _streamManager.dispose();
+    
+    // Additional delay for cleanup
+    await Future.delayed(const Duration(milliseconds: 200));
+  }
+
   /// Update stream with new URL
   Future<void> updateStream(String url) async {
-    state = const AsyncValue.loading();
+    // Set connecting state immediately for UI feedback
+    if (state.hasValue) {
+      state = AsyncValue.data(
+        state.value!.copyWith(
+          streamStatus: LiveStreamStatus.connecting,
+          streamWidget: null,
+          errorMessage: null,
+        ),
+      );
+    }
+
     state = await AsyncValue.guard(() async {
       dev.log('🔄 [LIVE_STREAM_V2] Updating stream: $url');
 
       if (url.isEmpty) {
         throw StreamUrlNotProvidedException();
       }
+
+      // Safely stop current stream first
+      await _safelyStopCurrentStream();
 
       await _settingsService.setStreamUrl(url.trim());
       return await _initializeStream(url.trim());
@@ -153,18 +216,6 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
   /// Initialize stream with URL
   Future<LiveStreamState> _initializeStream(String url) async {
     dev.log('🎯 [LIVE_STREAM_V2] Initializing stream with URL: $url');
-
-    // Update state to connecting - clear widget to prevent disposed controller usage
-    if (state.hasValue) {
-      state = AsyncValue.data(
-        state.value!.copyWith(
-          streamStatus: LiveStreamStatus.connecting,
-          streamWidget: null,
-          errorMessage: null,
-          isInvalidUrl: false,
-        ),
-      );
-    }
 
     try {
       // Setup listeners
@@ -176,10 +227,8 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
       // Initialize stream
       final result = await _streamManager.initializeStream(url);
 
-      if (result.isSuccess) {
-        // Wait a bit to ensure old widgets are properly disposed
-        await Future.delayed(const Duration(milliseconds: 200));
-        
+      if (result.isSuccess && result.widget != null) {
+        // Return new state with stream widget
         return state.value!.copyWith(
           isEnabled: true,
           streamUrl: url,
@@ -194,12 +243,12 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
           streamUrl: url,
           streamStatus: LiveStreamStatus.error,
           isInvalidUrl: true,
-          errorMessage: result.error,
+          errorMessage: result.error ?? 'Failed to initialize stream',
           streamWidget: null,
         );
       }
     } catch (e) {
-      dev.log('🚨 [LIVE_STREAM_V2] Error in _initializeStream: $e');
+      dev.log('🚨 [LIVE_STREAM_V2] Error initializing stream: $e');
       return state.value!.copyWith(
         streamUrl: url,
         streamStatus: LiveStreamStatus.error,
@@ -346,6 +395,17 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamState> {
   /// Dispose all resources
   Future<void> _dispose() async {
     dev.log('🧹 [LIVE_STREAM_V2] Disposing resources');
+    
+    // Immediately clear state to prevent UI from using disposed resources
+    if (state.hasValue) {
+      state = AsyncValue.data(
+        state.value!.copyWith(
+          streamWidget: null,
+          streamStatus: LiveStreamStatus.idle,
+        ),
+      );
+    }
+    
     _stopReconnectTimer();
     await _streamManager.dispose();
   }
