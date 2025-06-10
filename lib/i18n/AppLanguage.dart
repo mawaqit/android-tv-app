@@ -117,7 +117,6 @@ class AppLanguage extends ChangeNotifier {
     'nl_ar': (context) => S.of(context).nl_ar,
   };
 
-
   /// set the language of the hadith in shared preference
   Future<void> setHadithLanguage(String language) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

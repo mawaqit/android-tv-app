@@ -59,8 +59,8 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
       if (_scrollController.hasClients) {
         final appLanguage = Provider.of<AppLanguage>(context, listen: false);
         final currentLocaleString = LocaleHelper.transformLocaleToString(appLanguage.appLocal);
-        int selectedIndex = sortedLocales.indexWhere((locale) =>
-          LocaleHelper.transformLocaleToString(locale) == currentLocaleString);
+        int selectedIndex =
+            sortedLocales.indexWhere((locale) => LocaleHelper.transformLocaleToString(locale) == currentLocaleString);
         if (selectedIndex != -1) {
           double position = selectedIndex * 51; // Estimate the height per item. Adjust this based on your item height.
           _scrollController.animateTo(
