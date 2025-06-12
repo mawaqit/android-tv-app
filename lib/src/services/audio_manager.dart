@@ -28,6 +28,7 @@ class AudioManager extends ChangeNotifier {
     store: HiveCacheStore(null),
     priority: CachePriority.high,
     policy: CachePolicy.request,
+    maxStale: const Duration(days: 7),
   );
 
   late final dio = Dio()..interceptors.add(DioCacheInterceptor(options: option));
