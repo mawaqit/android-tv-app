@@ -29,6 +29,7 @@ class AudioManager extends ChangeNotifier {
     priority: CachePriority.high,
     policy: CachePolicy.request,
     maxStale: const Duration(days: 7),
+    hitCacheOnErrorExcept: [], // Always use cache when network fails
   );
 
   late final dio = Dio()..interceptors.add(DioCacheInterceptor(options: option));
@@ -166,12 +167,54 @@ class AudioManager extends ChangeNotifier {
   }
 
   Future<ByteData> getFile(String url, {bool enableCache = true}) async {
-    final file = await dio.get<List<int>>(
-      url,
-      options: Options(responseType: ResponseType.bytes),
-    );
+    if (!enableCache) {
+      // If cache is disabled, try direct network request
+      final file = await dio.get<List<int>>(
+        url,
+        options: Options(responseType: ResponseType.bytes),
+      );
+      return Uint8List.fromList(file.data!).buffer.asByteData();
+    }
 
-    return Uint8List.fromList(file.data!).buffer.asByteData();
+    try {
+      // First attempt: Try with cache enabled
+      log('audio: AudioManager: getFile: Attempting to load audio from cache/network for URL: $url');
+      final file = await dio.get<List<int>>(
+        url,
+        options: Options(responseType: ResponseType.bytes),
+      );
+      
+      if (file.data != null) {
+        log('audio: AudioManager: getFile: Successfully loaded audio file');
+        return Uint8List.fromList(file.data!).buffer.asByteData();
+      }
+    } catch (e) {
+      log('audio: AudioManager: getFile: Failed to load from cache/network: $e');
+      
+      // Second attempt: Try with forceCache policy for offline mode
+      try {
+        log('audio: AudioManager: getFile: Attempting forceCache fallback');
+        final cacheOptions = option.copyWith(policy: CachePolicy.forceCache);
+        final tempDio = Dio()..interceptors.add(DioCacheInterceptor(options: cacheOptions));
+        
+        final file = await tempDio.get<List<int>>(
+          url,
+          options: Options(responseType: ResponseType.bytes),
+        );
+        
+        if (file.data != null) {
+          log('audio: AudioManager: getFile: Successfully loaded from forceCache fallback');
+          return Uint8List.fromList(file.data!).buffer.asByteData();
+        }
+      } catch (cacheError) {
+        log('audio: AudioManager: getFile: ForceCache fallback also failed: $cacheError');
+      }
+      
+      // If all attempts fail, rethrow the original error
+      throw Exception('Failed to load audio file from both network and cache: $e');
+    }
+    
+    throw Exception('Failed to retrieve audio data');
   }
 
   @override
