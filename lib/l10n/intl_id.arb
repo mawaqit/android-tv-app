@@ -98,7 +98,7 @@
   },
   "azkarList9": "",
   "@azkarList9": {
-    "description": ".| اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "",
   "@azkarList10": {
@@ -142,7 +142,7 @@
   "dhuAlhijjah": "Dzulhijjah",
   "duaaBetweenSalahAndAdhan": "Anas bin Malik berkata, rasulullah saw bersabda\nDo'a tidak akan tertolak di antara azan dan berdiri untuk sholat",
   "salatKhayrMinaNawm": "Assalatu khayrun mina nawm",
-  "salatElEid": "Salat Idul Fitri",
+  "salatElEid": "Shalat Ied",
   "webView": "Mengaktifkan Mode Lama",
   "developersHomeScreen": "Layar beranda pengembang",
   "onlineHome": "Beranda Online",
