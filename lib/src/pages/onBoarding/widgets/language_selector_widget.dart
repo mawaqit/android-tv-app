@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/helpers/LocaleHelper.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -70,11 +71,12 @@ class LanguageSelector extends StatelessWidget {
               separatorBuilder: (BuildContext context, int index) =>
                   Divider(height: 1).animate().fade(delay: .7.seconds),
               itemBuilder: (BuildContext context, int index) {
-                final Locale locale = Locale(languages[index]);
+                final String languageCode = languages[index];
+                final Locale locale = Locale(languageCode);
                 return LanguageTile(
-                  onTap: () => onSelect(locale.languageCode),
+                  onTap: () => onSelect(languageCode),
                   locale: locale,
-                  isSelected: isSelected(locale.languageCode),
+                  isSelected: isSelected(languageCode),
                   isIconActivated: isIconActivated,
                 );
               },
@@ -128,9 +130,9 @@ class _LanguageTileState extends State<LanguageTile> {
           child: ListTile(
             dense: true,
             textColor: widget.isSelected ? Colors.white : null,
-            leading: widget.isIconActivated ? flagIcon(widget.locale.languageCode) : null,
+            leading: widget.isIconActivated ? flagIcon(LocaleHelper.transformLocaleToString(widget.locale)) : null,
             title: Text(
-              appLanguage.combinedLanguageName(widget.locale.languageCode),
+              appLanguage.combinedLanguageName(LocaleHelper.transformLocaleToString(widget.locale)),
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
