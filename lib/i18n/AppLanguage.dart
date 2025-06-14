@@ -32,6 +32,11 @@ class AppLanguage extends ChangeNotifier {
   /// return the language name of the combined language
   /// Example: 'en-ar' will be 'English & Arabic'
   String combinedLanguageName(String languageCode) {
+    // Handle special cases for Portuguese variants and other single locale codes with underscores
+    if (Config.isoLang.containsKey(languageCode)) {
+      return Config.isoLang[languageCode]?['nativeName'] ?? languageCode;
+    }
+
     List<String> codes = languageCode.split('_');
     // Check if we have a combined language code
     if (codes.length == 2) {
