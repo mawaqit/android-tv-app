@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:android_alarm_manager/android_alarm_manager.dart';
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mawaqit/main.dart';
@@ -146,7 +146,7 @@ class WorkManagerService {
       logger.i('Scheduling prayer alarm for: ${scheduledTime.toString()}');
       logger.i('Prayer data: $inputData');
 
-      // Schedule alarm with exact timing
+      // Schedule alarm with exact timing and better reliability
       final bool success = await AndroidAlarmManager.oneShotAt(
         scheduledTime,
         alarmId,
@@ -154,6 +154,8 @@ class WorkManagerService {
         wakeup: true,
         alarmClock: true,
         rescheduleOnReboot: true,
+        allowWhileIdle: true,
+        exact: true,
       );
 
       if (!success) {
