@@ -35,6 +35,7 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
   static bool _shouldShowNotification = false;
   static AudioPlayer? _audioPlayer;
   static Duration? _savedPosition;
+  static Timer? _scheduleCheckTimer;
 
   factory UnifiedBackgroundService() => _instance;
 
@@ -274,7 +275,10 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
       }
     });
     // Notification-related listeners
-    service.on('stopService').listen((_) => service.stopSelf());
+    service.on('stopService').listen((_) {
+      cleanup();
+      service.stopSelf();
+    });
     service.on('updateNotificationVisibility').listen((event) {
       if (event?['shouldShow'] != null) {
         shouldShowNotification = event!['shouldShow'] as bool;
@@ -328,10 +332,18 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
   }
 
   static void _setupPeriodicScheduleCheck(ServiceInstance service) {
-    Timer.periodic(Duration(minutes: 1), (timer) async {
+    _scheduleCheckTimer?.cancel();
+    _scheduleCheckTimer = Timer.periodic(Duration(minutes: 1), (timer) async {
       print("Checking schedule: ${DateTime.now()}");
       await ScheduleManager.checkSchedule();
     });
+  }
+
+  static void cleanup() {
+    _scheduleCheckTimer?.cancel();
+    _scheduleCheckTimer = null;
+    _audioPlayer?.dispose();
+    _audioPlayer = null;
   }
 
   static Future<void> _handlePrayerTime(Map<dynamic, dynamic> event) async {
