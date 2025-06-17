@@ -340,18 +340,6 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     });
   }
 
-  static void cleanup() {
-    _scheduleCheckTimer?.cancel();
-    _scheduleCheckTimer = null;
-    _audioPlayer?.dispose();
-    _audioPlayer = null;
-  }
-
-  /// Cleanup method specifically for complete service shutdown
-  static void completeCleanup() {
-    cleanup();
-  }
-
   static Future<void> _handlePrayerTime(Map<dynamic, dynamic> event) async {
     final prayerName = event['prayer'] as String;
     final shouldPlayAdhan = event['shouldPlayAdhan'] as bool;
