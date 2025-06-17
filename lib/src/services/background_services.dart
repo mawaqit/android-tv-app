@@ -276,7 +276,8 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     });
     // Notification-related listeners
     service.on('stopService').listen((_) {
-      cleanup();
+      _scheduleCheckTimer?.cancel();
+      _scheduleCheckTimer = null;
       service.stopSelf();
     });
     service.on('updateNotificationVisibility').listen((event) {
@@ -344,6 +345,11 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     _scheduleCheckTimer = null;
     _audioPlayer?.dispose();
     _audioPlayer = null;
+  }
+
+  /// Cleanup method specifically for complete service shutdown
+  static void completeCleanup() {
+    cleanup();
   }
 
   static Future<void> _handlePrayerTime(Map<dynamic, dynamic> event) async {
