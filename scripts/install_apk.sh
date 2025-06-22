@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# NOTE: This script is designed for Unix-based environments (Linux, macOS, WSL)
+# Windows users should use WSL or Git Bash to run this script
+
 # Script to install APK specifically for user 0 (primary user) on Android device
 # Usage: ./scripts/install_apk.sh /path/to/your-app.apk
 

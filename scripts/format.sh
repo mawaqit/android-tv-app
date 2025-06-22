@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# NOTE: This script is designed for Unix-based environments (Linux, macOS, WSL)
+# Windows users should use WSL or Git Bash to run this script
+
 # Script to format code according to project standards
 # This script is typically run after commits or during CI
 

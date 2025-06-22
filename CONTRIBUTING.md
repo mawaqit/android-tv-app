@@ -9,6 +9,8 @@ Before you begin, ensure you have the following installed:
 - Git
 - Android Studio or VS Code (recommended)
 
+**Note**: The scripts in this project (`build.sh`, `format.sh`, `install_apk.sh`, `setup.sh`) are designed for Unix-based environments (Linux, macOS, WSL). Windows users should use WSL (Windows Subsystem for Linux) or Git Bash to run these scripts.
+
 ## Development Setup
 
 1. Fork and clone the repository:

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# NOTE: This script is designed for Unix-based environments (Linux, macOS, WSL)
+# Windows users should use WSL or Git Bash to run this script
+
 # Navigate to project root directory (where the script is located)
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"

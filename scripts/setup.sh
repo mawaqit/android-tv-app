@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# NOTE: This script is designed for Unix-based environments (Linux, macOS, WSL)
+# Windows users should use WSL or Git Bash to run this script
+
 # Create git hooks directory if it doesn't exist
 mkdir -p .git/hooks
 
