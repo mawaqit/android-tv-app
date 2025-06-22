@@ -51,8 +51,8 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
       var currentIqamaTime = mosqueManager.actualIqamaTimes()[widget.currentSalahIndex];
       final now = mosqueManager.mosqueDate();
 
-    /// if the iqama is comming the next day then add one day to the iqama time
-    if (currentIqamaTime.isBefore(currentSalahTime)) currentIqamaTime = currentIqamaTime.add(Duration(days: 1));
+      /// if the iqama is comming the next day then add one day to the iqama time
+      if (currentIqamaTime.isBefore(currentSalahTime)) currentIqamaTime = currentIqamaTime.add(Duration(days: 1));
 
       _remainingTime = currentIqamaTime.difference(now);
 
