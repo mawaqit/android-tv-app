@@ -21,7 +21,7 @@ import 'package:mawaqit/src/pages/home/widgets/footer.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
-import 'package:mawaqit/src/services/notification/prayer_schedule_service.dart';
+
 import 'package:mawaqit/src/services/permissions_manager.dart';
 import 'package:mawaqit/src/services/storage_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
@@ -219,20 +219,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription = timesStream.listen(
       (e) async {
         times = e;
-        // Obtain an instance of the background service.
-        final service = FlutterBackgroundService();
-        final permissionsGranted = await PermissionsManager.arePermissionsGranted();
-
-        // Delegate prayer scheduling to PrayerScheduleService.
-        if (permissionsGranted) {
-          await PrayerScheduleService.schedulePrayerTasks(
-            e,
-            mosqueConfig,
-            isAdhanVoiceEnabled,
-            salahIndex,
-            service,
-          );
-        }
         notifyListeners();
       },
       onError: onItemError,

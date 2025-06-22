@@ -144,8 +144,6 @@ Future<void> _safelyInitializeBackgroundServices() async {
     try {
       await UnifiedBackgroundService.initializeService();
       developer.log('UnifiedBackgroundService initialized successfully');
-
-      UnifiedBackgroundService.setNotificationVisibility(false);
     } catch (e) {
       developer.log('UnifiedBackgroundService initialization error', error: e);
     }

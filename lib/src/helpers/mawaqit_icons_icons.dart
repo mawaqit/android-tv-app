@@ -44,15 +44,7 @@ class MawaqitIcons {
   static const IconData icon_search_inactive = IconData(0xe993, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_settings = IconData(0xe994, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_settings_inactive = IconData(0xe995, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_notification_bip = IconData(0xe996, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_notification_silent = IconData(0xe997, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_notification_adhan = IconData(0xe998, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_adhan = IconData(0xe999, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_pre_notification = IconData(0xe9a6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_pre_notification_clock = IconData(0xe99a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_pre_notification_bell = IconData(0xe9ab, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_pre_notification_2 = IconData(0xe9a7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_pre_notification_3 = IconData(0xe99b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_flag_uk = IconData(0xe9b7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_flag_sa = IconData(0xe9bf, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_flag_fr = IconData(0xe9db, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -101,7 +93,7 @@ class MawaqitIcons {
   static const IconData icon_mail_disabled = IconData(0xea39, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_info = IconData(0xea3a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_megaphone = IconData(0xea3b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_notification = IconData(0xea3c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
   static const IconData icon_delete = IconData(0xea3d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_trash = IconData(0xea3e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_close = IconData(0xea3f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -115,8 +107,7 @@ class MawaqitIcons {
   static const IconData icon_check = IconData(0xea47, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_check_disabled = IconData(0xea48, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_checked = IconData(0xea54, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_notification_bullet_red = IconData(0xea4a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icon_notification_bullet_grey = IconData(0xea49, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
   static const IconData icon_calendar = IconData(0xea4b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_calendar_empty = IconData(0xea55, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icon_calendar_download = IconData(0xe9b2, fontFamily: _kFontFam, fontPackage: _kFontPkg);
