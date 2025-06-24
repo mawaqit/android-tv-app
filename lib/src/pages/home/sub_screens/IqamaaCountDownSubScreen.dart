@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
@@ -12,6 +13,7 @@ import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/themes/UIShadows.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../helpers/time_utils.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
@@ -106,6 +108,37 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
               ),
             )
           ],
+        ),
+        SizedBox(height: 2.vh),
+        // Date and Time Display
+        StreamBuilder(
+          stream: Stream.periodic(Duration(seconds: 1)),
+          builder: (context, snapshot) {
+            final now = mosqueManager.mosqueDate();
+            final mosqueConfig = mosqueManager.mosqueConfig;
+            final is12hourFormat = mosqueConfig?.timeDisplayFormat == "12";
+
+            final timeFormat = is12hourFormat ? "hh:mm" : "HH:mm";
+            final dateFormat = "dd MM yyyy";
+
+            final timeString = DateFormat(timeFormat).format(now);
+            final dateString = DateFormat(dateFormat).format(now);
+            final fullDateTime = "$timeString | $dateString";
+
+            return Directionality(
+              textDirection: TextDirection.ltr,
+              child: Text(
+                fullDateTime,
+                style: TextStyle(
+                  fontSize: 26.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  shadows: kIqamaCountDownTextShadow,
+                  height: 1,
+                ),
+              ).animate().fadeIn(delay: .6.seconds, duration: 1.5.seconds).addRepaintBoundary(),
+            );
+          },
         ),
         Spacer(),
         Text(
