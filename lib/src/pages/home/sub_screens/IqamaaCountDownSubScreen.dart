@@ -190,11 +190,12 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
                             child: Text(
                               formattedTime,
                               style: TextStyle(
-                                  fontSize: 30.vw,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  shadows: kIqamaCountDownTextShadow,
-                                  height: 1.2),
+                                fontSize: 30.vw,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                shadows: kIqamaCountDownTextShadow,
+                                height: 1,
+                              ),
                             ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary(),
                           );
                         }),
