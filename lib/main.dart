@@ -217,11 +217,7 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                   child: MaterialApp(
                     title: kAppName,
                     themeMode: theme.mode,
-                    localeResolutionCallback: (locale, supportedLocales) {
-                      if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
-
-                      return locale;
-                    },
+                    localeResolutionCallback: MawaqitTvExtendedLocalizations.localeResolutionCallback,
                     theme: theme.lightTheme,
                     darkTheme: theme.darkTheme,
                     locale: model.appLocal,
