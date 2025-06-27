@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mawaqit_tv_l10n/mawaqit_tv_l10n.dart';
 
 class S {
   S();
 
-  static AppLocalizations? _current;
+  static MawaqitTvLocalizations? _current;
 
-  static AppLocalizations get current {
+  static MawaqitTvLocalizations get current {
     assert(
         _current != null, 'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
     return _current!;
   }
 
-  static AppLocalizations of(BuildContext context) {
-    _current = AppLocalizations.of(context);
+  static MawaqitTvLocalizations of(BuildContext context) {
+    _current = MawaqitTvLocalizations.of(context);
 
     assert(_current != null,
         'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
     return _current!;
   }
 
-  static AppLocalizations? maybeOf(BuildContext context) => AppLocalizations.of(context);
+  static MawaqitTvLocalizations? maybeOf(BuildContext context) => MawaqitTvLocalizations.of(context);
 
-  static LocalizationsDelegate<AppLocalizations> get delegate => AppLocalizations.delegate;
+  static LocalizationsDelegate<MawaqitTvLocalizations> get delegate => MawaqitTvLocalizations.delegate;
 
-  static List<Locale> get supportedLocales => AppLocalizations.supportedLocales;
+  static List<Locale> get supportedLocales => MawaqitTvLocalizations.supportedLocales;
 
   // Add this method to manually set the current localization.
-  static void setCurrent(AppLocalizations localizations) {
+  static void setCurrent(MawaqitTvLocalizations localizations) {
     _current = localizations;
   }
 }

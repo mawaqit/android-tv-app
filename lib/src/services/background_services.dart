@@ -7,7 +7,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mawaqit_tv_l10n/mawaqit_tv_l10n.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:notification_overlay/notification_overlay.dart';
@@ -23,7 +23,6 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/services/notification/notification_service.dart';
@@ -248,7 +247,7 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     final langCode = prefs.getString('language_code') ?? 'en';
     final locale = Locale(langCode);
 
-    final localizations = await AppLocalizations.delegate.load(locale);
+    final localizations = await MawaqitTvLocalizations.delegate.load(locale);
 
     S.setCurrent(localizations);
 
@@ -269,7 +268,7 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
         final langCode = event['language_code'];
         final locale = Locale(langCode);
 
-        final localizations = await AppLocalizations.delegate.load(locale);
+        final localizations = await MawaqitTvLocalizations.delegate.load(locale);
         S.setCurrent(localizations);
       }
     });

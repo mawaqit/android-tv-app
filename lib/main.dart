@@ -48,7 +48,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
-// import 'package:montenegrin_localization/montenegrin_localization.dart';
+import 'package:mawaqit_tv_l10n/mawaqit_tv_l10n.dart';
+import 'package:mawaqit_tv_l10n/src/extended_localizations.dart';
 
 final logger = Logger();
 
@@ -228,20 +229,8 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                     navigatorObservers: [
                       AnalyticsWrapper.observer(),
                     ],
-                    localizationsDelegates: [
-                      MontenegrinMaterialLocalizations.delegate,
-                      MontenegrinWidgetsLocalizations.delegate,
-                      MontenegrinCupertinoLocalizations.delegate,
-
-                      S.delegate,
-                      GlobalCupertinoLocalizations.delegate,
-                      GlobalMaterialLocalizations.delegate,
-                      GlobalWidgetsLocalizations.delegate,
-                      // KurdishMaterialLocalizations.delegate,
-                      // KurdishWidgetLocalizations.delegate,
-                      // KurdishCupertinoLocalizations.delegate
-                    ],
-                    supportedLocales: S.supportedLocales,
+                    localizationsDelegates: MawaqitTvExtendedLocalizations.localizationsDelegates,
+                    supportedLocales: MawaqitTvExtendedLocalizations.supportedLocales,
                     debugShowCheckedModeBanner: false,
                     onGenerateRoute: RouteGenerator.generateRoute,
                     home: Splash(),
