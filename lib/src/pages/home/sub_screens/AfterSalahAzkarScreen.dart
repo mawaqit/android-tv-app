@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
@@ -10,12 +8,13 @@ import 'package:mawaqit/src/widgets/display_text_widget.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:mawaqit_tv_l10n/mawaqit_tv_l10n.dart';
 
 import '../../../const/constants.dart';
 import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 
 class AzkarLists {
-  static List<String> getAfterAsrList(AppLocalizations tr) => [
+  static List<String> getAfterAsrList(MawaqitTvLocalizations tr) => [
         tr.azkarList7,
         tr.azkarList10,
         tr.azkarList11,
@@ -24,7 +23,7 @@ class AzkarLists {
         tr.azkarList14,
       ];
 
-  static List<String> getAfterFajrList(AppLocalizations tr) => [
+  static List<String> getAfterFajrList(MawaqitTvLocalizations tr) => [
         tr.azkarList7,
         tr.azkarList8,
         tr.azkarList9,
@@ -34,7 +33,7 @@ class AzkarLists {
         tr.azkarList13,
       ];
 
-  static List<String> getRegularList(AppLocalizations tr) => [
+  static List<String> getRegularList(MawaqitTvLocalizations tr) => [
         tr.azkarList0, // أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله
         tr.azkarList1, // سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33
         tr.azkarList4, // قُلۡ هُوَ ٱللَّهُ أَحَدٌ
@@ -58,6 +57,7 @@ class AfterSalahAzkar extends StatefulWidget {
   final String azkarTitle;
   final bool isAfterAsrOrFajr;
   final bool isAfterAsr;
+
   @override
   State<AfterSalahAzkar> createState() => _AfterSalahAzkarState();
 }
@@ -65,9 +65,9 @@ class AfterSalahAzkar extends StatefulWidget {
 class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
   int activeHadith = 0;
 
-  final arabicLocal = AppLocalizationsAr();
+  MawaqitTvLocalizations get arabicLocal => MawaqitTvLocalizations.of(context);
 
-  String getItem(AppLocalizations tr, int index) {
+  String getItem(MawaqitTvLocalizations tr, int index) {
     if (!widget.isAfterAsrOrFajr) {
       return AzkarLists.getRegularList(tr)[index % 7];
     }

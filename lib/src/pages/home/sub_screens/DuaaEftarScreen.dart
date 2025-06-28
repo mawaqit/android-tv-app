@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations_ar.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/widgets/display_text_widget.dart';
@@ -7,6 +6,7 @@ import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah
 import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:mawaqit_tv_l10n/mawaqit_tv_l10n.dart';
 
 import '../widgets/salah_items/responsive_mini_salah_bar_turkish_widget.dart';
 
@@ -37,7 +37,7 @@ class _DuaaEftarScreenState extends State<DuaaEftarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final arabic = AppLocalizationsAr();
+    final arabic = MawaqitTvLocalizations.of(context);
     final mosqueProvider = context.read<MosqueManager>();
 
     return Column(
