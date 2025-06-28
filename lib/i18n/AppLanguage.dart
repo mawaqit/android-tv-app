@@ -9,7 +9,6 @@ import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mawaqit_tv_l10n/mawaqit_tv_l10n.dart';
-import 'package:mawaqit_tv_l10n/src/extended_localizations.dart';
 
 import '../src/services/mosque_manager.dart';
 

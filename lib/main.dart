@@ -49,7 +49,6 @@ import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
 import 'package:mawaqit_tv_l10n/mawaqit_tv_l10n.dart';
-import 'package:mawaqit_tv_l10n/src/extended_localizations.dart';
 
 final logger = Logger();
 
