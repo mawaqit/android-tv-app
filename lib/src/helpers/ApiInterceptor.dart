@@ -99,6 +99,7 @@ class ApiCacheInterceptor extends Interceptor {
     return err.type == DioExceptionType.connectionTimeout ||
         err.type == DioExceptionType.receiveTimeout ||
         err.type == DioExceptionType.sendTimeout ||
+        err.type == DioExceptionType.unknown ||
         err.type == DioExceptionType.connectionError;
   }
 }

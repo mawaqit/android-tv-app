@@ -31,6 +31,8 @@ class Api {
   static final dio = Dio(
     BaseOptions(
       baseUrl: kBaseUrl,
+      connectTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 10),
       validateStatus: (int? status) {
         return status! >= 200 && status < 300 || status == 304;
       },

@@ -185,7 +185,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
         mosque = null;
         notifyListeners();
       }
-      throw e;
     }
 
     /// cache date before complete the [completer]
