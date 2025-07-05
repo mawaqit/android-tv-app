@@ -221,8 +221,8 @@ class ToggleScreenFeature {
         final uniqueId = '${actionType}_${prayerName}_${dayOffset}_${DateTime.now().millisecondsSinceEpoch}';
         final isBox = TimeShiftManager().isLauncherInstalled;
 
-        // Schedule the task
-        await WorkManagerService.registerScreenTask(uniqueId, actionType, scheduledTime.difference(now), isBox);
+        // DISABLED: Schedule the task
+        // await WorkManagerService.registerScreenTask(uniqueId, actionType, scheduledTime.difference(now), isBox);
 
         // Create and return the scheduled info (without saving it yet)
         return TimerScheduleInfo(

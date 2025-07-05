@@ -76,11 +76,12 @@ class AppLanguage extends ChangeNotifier {
       language: languageName(type.languageCode),
       mosqueId: mosqueId,
     );
-    final service = FlutterBackgroundService();
-    service.invoke(
-      'updateLocalization',
-      {'language_code': type.languageCode},
-    );
+    // DISABLED: Background service localization update
+    // final service = FlutterBackgroundService();
+    // service.invoke(
+    //   'updateLocalization',
+    //   {'language_code': type.languageCode},
+    // );
     if (S.supportedLocales.indexOf(type) != -1) {
       _appLocale = type;
       await prefs.setString('language_code', type.languageCode);

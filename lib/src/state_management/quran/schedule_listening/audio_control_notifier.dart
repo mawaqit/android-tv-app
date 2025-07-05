@@ -128,8 +128,8 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
     try {
       await _updateLoadingState(true);
 
-      // Request current playback state from service
-      _service.invoke('kGetPlaybackState');
+      // DISABLED: Request current playback state from service
+      // _service.invoke('kGetPlaybackState');
 
       // Also check schedule state
       final prefs = await SharedPreferences.getInstance();
@@ -182,12 +182,12 @@ class AudioControlNotifier extends AsyncNotifier<AudioControlState> {
         isLoading: true,
       ));
 
-      // Invoke service method
-      if (newStatus == AudioStatus.paused) {
-        _service.invoke('kStopAudio');
-      } else {
-        _service.invoke('kResumeAudio');
-      }
+      // DISABLED: Invoke service method
+      // if (newStatus == AudioStatus.paused) {
+      //   _service.invoke('kStopAudio');
+      // } else {
+      //   _service.invoke('kResumeAudio');
+      // }
 
       // Add a small delay before checking the actual state
       await Future.delayed(const Duration(milliseconds: 500));

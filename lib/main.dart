@@ -115,7 +115,7 @@ Future<void> _initializeCoreServices() async {
   }
 }
 
-// Safe initialization of background services
+// Safe initialization of background services - DISABLED
 Future<void> _safelyInitializeBackgroundServices() async {
   try {
     // Only initialize if app is in foreground
@@ -124,7 +124,7 @@ Future<void> _safelyInitializeBackgroundServices() async {
       return;
     }
 
-    developer.log('Starting background services initialization');
+    developer.log('Starting background services initialization - DISABLED');
 
     // Initialize permissions using the PermissionsManager
     try {
@@ -134,21 +134,23 @@ Future<void> _safelyInitializeBackgroundServices() async {
       developer.log('Permissions initialization error', error: e);
     }
 
-    try {
-      await WorkManagerService.initialize();
-      developer.log('WorkManagerService initialized successfully');
-    } catch (e) {
-      developer.log('WorkManagerService initialization error', error: e);
-    }
+    // DISABLED: WorkManagerService initialization
+    // try {
+    //   await WorkManagerService.initialize();
+    //   developer.log('WorkManagerService initialized successfully');
+    // } catch (e) {
+    //   developer.log('WorkManagerService initialization error', error: e);
+    // }
 
-    try {
-      await UnifiedBackgroundService.initializeService();
-      developer.log('UnifiedBackgroundService initialized successfully');
-    } catch (e) {
-      developer.log('UnifiedBackgroundService initialization error', error: e);
-    }
+    // DISABLED: UnifiedBackgroundService initialization
+    // try {
+    //   await UnifiedBackgroundService.initializeService();
+    //   developer.log('UnifiedBackgroundService initialized successfully');
+    // } catch (e) {
+    //   developer.log('UnifiedBackgroundService initialization error', error: e);
+    // }
 
-    developer.log('Background services initialization completed');
+    developer.log('Background services initialization completed - SERVICES DISABLED');
   } catch (e, stackTrace) {
     developer.log('Background services initialization error', error: e, stackTrace: stackTrace);
   }
@@ -176,7 +178,8 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
     await Future.delayed(const Duration(seconds: 3));
 
     _isAppInForeground = true;
-    await _safelyInitializeBackgroundServices();
+    // DISABLED: Background services initialization
+    // await _safelyInitializeBackgroundServices();
   }
 
   @override
@@ -190,12 +193,13 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _isAppInForeground = state == AppLifecycleState.resumed;
 
+    // DISABLED: Background service lifecycle management
     // Only call this if service is initialized
-    try {
-      UnifiedBackgroundService().didChangeAppLifecycleState(state);
-    } catch (e) {
-      // Ignore errors if service not initialized
-    }
+    // try {
+    //   UnifiedBackgroundService().didChangeAppLifecycleState(state);
+    // } catch (e) {
+    //   // Ignore errors if service not initialized
+    // }
   }
 
   @override

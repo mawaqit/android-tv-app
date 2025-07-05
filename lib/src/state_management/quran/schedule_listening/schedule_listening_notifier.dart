@@ -21,7 +21,8 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
   @override
   Future<ScheduleState> build() async {
     _prefs = await SharedPreferences.getInstance();
-    await UnifiedBackgroundService.initializeService();
+    // DISABLED: Background service initialization
+    // await UnifiedBackgroundService.initializeService();
     return _loadSavedSchedule();
   }
 
@@ -224,8 +225,8 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
 
     await _prefs.reload();
 
-    // Force a complete restart of the schedule
-    _service.invoke('restart_schedule');
+    // DISABLED: Force a complete restart of the schedule
+    // _service.invoke('restart_schedule');
 
     if (isInRange) {
       // Remove manual pause flag to allow immediate playback with new settings
@@ -329,9 +330,10 @@ class ScheduleNotifier extends AsyncNotifier<ScheduleState> {
       _prefs.remove(BackgroundScheduleAudioServiceConstant.kRandomUrls),
     ]);
 
-    _service.invoke('kStopAudio');
+    // DISABLED: Background service calls
+    // _service.invoke('kStopAudio');
     await _prefs.reload();
-    _service.invoke('update_schedule');
+    // _service.invoke('update_schedule');
   }
 
   Future<void> updateReciterList(List<ReciterModel> reciterList) async {
