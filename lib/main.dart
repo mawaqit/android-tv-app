@@ -5,6 +5,7 @@ import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -65,6 +66,7 @@ Future<void> main() async {
     () async {
       try {
         WidgetsFlutterBinding.ensureInitialized();
+
 
         final firebaseOptions = FirebaseOptions(
           apiKey: const String.fromEnvironment('mawaqit.firebase.api_key'),
