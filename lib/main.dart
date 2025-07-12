@@ -63,10 +63,10 @@ void _setupGlobalErrorHandlers() {
       error: details.exception,
       stackTrace: details.stack,
     );
-    
+
     // Send to crash reporting
     CrashlyticsWrapper.sendException(details.exception, details.stack ?? StackTrace.current);
-    
+
     // In debug mode, still show the red screen for development
     if (kDebugMode) {
       FlutterError.dumpErrorToConsole(details);
@@ -81,10 +81,10 @@ void _setupGlobalErrorHandlers() {
       error: error,
       stackTrace: stack,
     );
-    
+
     // Send to crash reporting
     CrashlyticsWrapper.sendException(error, stack);
-    
+
     // Return true to indicate the error was handled
     return true;
   };
