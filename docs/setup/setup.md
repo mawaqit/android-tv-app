@@ -13,7 +13,7 @@
 
 Before you begin, ensure you have the following installed:
 
-- Flutter SDK (version 3.13.9)
+- Flutter SDK (version 3.27.1)
 - Git
 - Dart
 
@@ -107,7 +107,8 @@ If you encounter any issues during installation:
 Use FVM to install the required Flutter version:
 
 ```sh  
-fvm install 3.13.9fvm use 3.13.9
+fvm install 3.27.1
+fvm use 3.27.1
 ```
 
 ## Project Setup

@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/mawaqit_image/mawaqit_cache.dart';
+import 'package:mawaqit/main.dart';
 
 class MawaqitNetworkImageProvider extends ImageProvider<NetworkImage> implements NetworkImage {
   /// Creates an object that fetches the image at the given URL.
@@ -60,6 +61,13 @@ class MawaqitNetworkImageProvider extends ImageProvider<NetworkImage> implements
 
       return decode(buffer);
     } catch (e, stack) {
+      // Log the specific error for debugging
+      if (e.toString().contains("No internet connection and image not cached")) {
+        logger.w('Image not available offline: ${key.url}');
+      } else {
+        logger.e('Error loading image: ${key.url}', error: e, stackTrace: stack);
+      }
+
       onError?.call();
       scheduleMicrotask(() {
         PaintingBinding.instance.imageCache.evict(key);
