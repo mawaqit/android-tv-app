@@ -10,7 +10,7 @@ import 'dart:developer';
 
 class PrayerAudioService {
   static AudioPlayer? _audioPlayer;
-  
+
   // Add cache configuration for offline support
   static final _cacheOptions = CacheOptions(
     store: HiveCacheStore(null),
@@ -18,7 +18,7 @@ class PrayerAudioService {
     policy: CachePolicy.request, // Use request policy for cache/network handling
     maxStale: const Duration(days: 7),
   );
-  
+
   static final _dio = Dio()..interceptors.add(DioCacheInterceptor(options: _cacheOptions));
 
   static Future<void> playPrayer(String adhanAsset, bool adhanFromAssets) async {
@@ -53,7 +53,7 @@ class PrayerAudioService {
       await session.setActive(false);
     }
   }
-  
+
   /// Load audio from cache first, fallback to URL if cache fails
   static Future<void> _loadAudioFromCacheOrUrl(String url) async {
     try {
@@ -62,7 +62,7 @@ class PrayerAudioService {
         url,
         options: Options(responseType: ResponseType.bytes),
       );
-      
+
       if (response.data != null) {
         final audioData = Uint8List.fromList(response.data!).buffer.asByteData();
         await _audioPlayer?.setAudioSource(JustAudioBytesSource(audioData));
@@ -72,7 +72,7 @@ class PrayerAudioService {
     } catch (e) {
       log('Failed to load audio from cache/network: $e');
     }
-    
+
     // If cache fails, try direct URL as fallback
     try {
       await _audioPlayer?.setUrl(url);
