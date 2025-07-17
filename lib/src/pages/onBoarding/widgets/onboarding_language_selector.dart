@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/helpers/LocaleHelper.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart';
@@ -38,8 +39,11 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
     final appLanguage = Provider.of<AppLanguage>(context);
     final themeData = Theme.of(context);
 
-    /// if the [langCode] is current used language
-    bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
+    bool isSelected(Locale locale) {
+      final currentLocaleString = LocaleHelper.transformLocaleToString(appLanguage.appLocal);
+      final localeString = LocaleHelper.transformLocaleToString(locale);
+      return currentLocaleString == localeString;
+    }
 
     final sortedLocales = [
       Locale('ar'),
@@ -54,8 +58,9 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         final appLanguage = Provider.of<AppLanguage>(context, listen: false);
+        final currentLocaleString = LocaleHelper.transformLocaleToString(appLanguage.appLocal);
         int selectedIndex =
-            sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
+            sortedLocales.indexWhere((locale) => LocaleHelper.transformLocaleToString(locale) == currentLocaleString);
         if (selectedIndex != -1) {
           double position = selectedIndex * 51; // Estimate the height per item. Adjust this based on your item height.
           _scrollController.animateTo(
@@ -105,7 +110,7 @@ class _OnBoardingLanguageSelectorState extends State<OnBoardingLanguageSelector>
                 return LanguageTile(
                   onSelect: widget.onSelect,
                   locale: locale,
-                  isSelected: isSelected(locale.languageCode),
+                  isSelected: isSelected(locale),
                 );
                 // .animate(delay: 110.milliseconds * index)
                 // .moveX(begin: 200)
@@ -144,7 +149,6 @@ class _LanguageTileState extends State<LanguageTile> {
     final themeData = Theme.of(context);
     final appLanguage = Provider.of<AppLanguage>(context);
     final mosqueManager = Provider.of<MosqueManager>(context);
-
     return Material(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
@@ -168,9 +172,9 @@ class _LanguageTileState extends State<LanguageTile> {
             child: ListTile(
               dense: true,
               textColor: isFocused || widget.isSelected ? Colors.white : null,
-              leading: flagIcon(widget.locale.languageCode),
+              leading: flagIcon(LocaleHelper.transformLocaleToString(widget.locale)),
               title: Text(
-                appLanguage.languageName(widget.locale.languageCode),
+                appLanguage.languageName(LocaleHelper.transformLocaleToString(widget.locale)),
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
@@ -189,7 +193,7 @@ class _LanguageTileState extends State<LanguageTile> {
       ),
       clipBehavior: Clip.antiAlias,
       child: Image.asset(
-        'assets/img/flag/${widget.locale.languageCode}.png',
+        'assets/img/flag/${languageCode}.png',
         fit: BoxFit.fill,
         width: size,
         height: size,

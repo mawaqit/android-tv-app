@@ -58,6 +58,10 @@ class LanguageHelper {
         return 'pl';
       case 'pt':
         return 'pt';
+      case 'pt_BR':
+        return 'pt';
+      case 'pt_PT':
+        return 'pt';
       case 'ro':
         return 'ro';
       case 'ru':
