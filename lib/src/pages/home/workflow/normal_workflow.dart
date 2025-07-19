@@ -29,7 +29,8 @@ class _NormalWorkflowScreenState extends ConsumerState<NormalWorkflowScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(randomHadithNotifierProvider.notifier).ensureHadithLanguage();
+      final mosqueManager = context.read<MosqueManager>();
+      ref.read(randomHadithNotifierProvider.notifier).ensureHadithLanguage(mosqueManager);
     });
   }
 
