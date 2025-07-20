@@ -172,6 +172,10 @@ dependencies:
 
   android_alarm_manager_plus: ^4.0.7
   flutter_cache_manager: ^3.4.1
+  flutter_kurdish_localization:
+    git:
+      url: https://github.com/os01ri/flutter_kurdish_localization.git
+      ref: patch-2
 
 
 dev_dependencies:

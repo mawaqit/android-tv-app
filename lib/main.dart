@@ -8,6 +8,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_kurdish_localization/kurdish_cupertino_localization_delegate.dart';
+import 'package:flutter_kurdish_localization/kurdish_material_localization_delegate.dart';
+import 'package:flutter_kurdish_localization/kurdish_widget_localization_delegate.dart';
 
 // import 'package:flutter_kurdish_localization/flutter_kurdish_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -217,7 +220,8 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                     title: kAppName,
                     themeMode: theme.mode,
                     localeResolutionCallback: (locale, supportedLocales) {
-                      if (locale?.languageCode.toLowerCase() == 'ba') return Locale('en');
+                      if (locale?.languageCode.toLowerCase() == 'ba' || locale?.languageCode.toLowerCase() == 'ff')
+                        return Locale('en');
 
                       return locale;
                     },
@@ -232,14 +236,13 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                       MontenegrinMaterialLocalizations.delegate,
                       MontenegrinWidgetsLocalizations.delegate,
                       MontenegrinCupertinoLocalizations.delegate,
-
                       S.delegate,
                       GlobalCupertinoLocalizations.delegate,
                       GlobalMaterialLocalizations.delegate,
                       GlobalWidgetsLocalizations.delegate,
-                      // KurdishMaterialLocalizations.delegate,
-                      // KurdishWidgetLocalizations.delegate,
-                      // KurdishCupertinoLocalizations.delegate
+                      KurdishMaterialLocalizations.delegate,
+                      KurdishWidgetLocalizations.delegate,
+                      KurdishCupertinoLocalizations.delegate,
                     ],
                     supportedLocales: S.supportedLocales,
                     debugShowCheckedModeBanner: false,
