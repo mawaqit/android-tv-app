@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:mawaqit/src/pages/mosque_search/widgets/InputTypeSelector.dart';
 import 'package:mawaqit/src/pages/mosque_search/widgets/MosqueInputSearch.dart';
 
 class MosqueSearch extends StatefulWidget {
-  MosqueSearch({Key? key, this.onDone}) : super(key: key);
-
+  MosqueSearch({Key? key, required this.nextButtonFocusNode, this.onDone}) : super(key: key);
   final void Function()? onDone;
+  final fp.Option<FocusNode> nextButtonFocusNode;
 
   @override
   State<MosqueSearch> createState() => _MosqueSearchState();
@@ -27,7 +28,10 @@ class _MosqueSearchState extends State<MosqueSearch> {
       child: Navigator(
         key: navKey,
         onGenerateRoute: (settings) => MaterialPageRoute(
-          builder: (context) => InputTypeSelector(onDone: widget.onDone),
+          builder: (context) => InputTypeSelector(
+            onDone: widget.onDone,
+            nextButtonFocusNode: widget.nextButtonFocusNode,
+          ),
         ),
       ),
     );
