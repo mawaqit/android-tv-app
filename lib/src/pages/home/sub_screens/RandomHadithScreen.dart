@@ -58,12 +58,6 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
             child: AboveSalahBar(),
           ),
           Expanded(
-            // child: HadithWidget(
-            //   translatedText: context.watch<MosqueManager>().hadith,
-            //   textDirection: StringManager.getTextDirectionOfLocal(
-            //     Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
-            //   ),
-            // ),
             child: hadithState.when(
               data: (hadith) {
                 return DisplayTextWidget.hadith(

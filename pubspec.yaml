@@ -124,7 +124,6 @@ dependencies:
   equatable: ^2.0.5
   just_audio: ^0.9.37
 
-
   # alert
   flash: ^3.0.5+2
 
@@ -172,6 +171,10 @@ dependencies:
 
   android_alarm_manager_plus: ^4.0.7
   flutter_cache_manager: ^3.4.1
+  flutter_kurdish_localization:
+    git:
+      url: https://github.com/os01ri/flutter_kurdish_localization.git
+      ref: patch-2
 
 
 dev_dependencies:
