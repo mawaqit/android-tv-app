@@ -8,6 +8,7 @@ import 'package:mawaqit/src/state_management/random_hadith/random_hadith_state.d
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mawaqit/src/data/repository/random_hadith_impl.dart';
+import '../../services/mosque_manager.dart';
 
 class RandomHadithNotifier extends AsyncNotifier<RandomHadithState> {
   @override
@@ -29,7 +30,7 @@ class RandomHadithNotifier extends AsyncNotifier<RandomHadithState> {
   Future<void> setHadithLanguage(String language) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(RandomHadithConstant.kHadithLanguage, language);
-    await getRandomHadith();
+    await getRandomHadith(language: language);
   }
 
   Future<void> fetchAndCacheHadith({
@@ -43,9 +44,9 @@ class RandomHadithNotifier extends AsyncNotifier<RandomHadithState> {
     });
   }
 
-  Future<void> ensureHadithLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final language = prefs.getString(RandomHadithConstant.kHadithLanguage) ?? AppLanguage().hadithLanguage;
+  Future<void> ensureHadithLanguage(MosqueManager mosqueManager) async {
+    // Use proper fallback logic that considers both local settings and API configuration
+    final language = await AppLanguage().getHadithLanguage(mosqueManager);
     // Ensure hadiths are cached during initialization
     final randomHadithRepository = await ref.read(randomHadithRepositoryProvider.future);
     await randomHadithRepository.ensureHadithsAreCached(language);
