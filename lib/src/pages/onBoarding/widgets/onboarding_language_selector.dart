@@ -326,7 +326,6 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
                 ),
                 trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white, size: 14.sp) : null,
               ),
-              trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white) : null,
             ),
           ),
         ),
