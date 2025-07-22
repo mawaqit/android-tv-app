@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
+import 'package:fpdart/fpdart.dart';
 
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
@@ -15,12 +16,12 @@ import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/TimezoneScreen.dart';
 import 'package:mawaqit/src/pages/WifiSelectorScreen.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/widgets.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/manual_app_update/manual_update_notifier.dart';
-import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:mawaqit/src/widgets/manual_update_dialog.dart';
@@ -110,7 +111,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     title: S.of(context).changeMosque,
                     subtitle: S.of(context).searchMosque,
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
-                    onTap: () => AppRouter.push(MosqueSearchScreen()),
+                    onTap: () => AppRouter.push(MosqueSearchScreen(
+                      nextButtonFocusNode: None(),
+                    )),
                   ),
                   _SettingItem(
                     title: S.of(context).hijriAdjustments,
@@ -248,7 +251,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     onTap: () => AppRouter.push(ScreenWithAnimationWidget(
                       animation: 'welcome',
                       child: OnBoardingOrientationWidget(
-                        onSelect: () => Navigator.pop(context),
+                        onNext: AppRouter.pop,
                       ),
                     )),
                   ),

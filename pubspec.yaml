@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.21.4+0
+version: 1.22
 
 
 environment:
@@ -165,15 +165,15 @@ dependencies:
   flutter_screen_controller: ^0.0.6
 
   montenegrin_localization: ^0.1.1
-  flutter_kurdish_localization:
-    git:
-      url: https://github.com/os01ri/flutter_kurdish_localization.git
-      ref: patch-2
 
   synchronized: ^3.1.0+1
   audio_session: ^0.1.21
 
   android_alarm_manager_plus: ^4.0.7
+  flutter_kurdish_localization:
+    git:
+      url: https://github.com/os01ri/flutter_kurdish_localization.git
+      ref: patch-2
 
 
 dev_dependencies:
