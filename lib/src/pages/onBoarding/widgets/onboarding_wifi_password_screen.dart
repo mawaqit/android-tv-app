@@ -306,7 +306,8 @@ class _TvWifiPasswordScreenState extends ConsumerState<TvWifiPasswordScreen> {
                                   onEditingComplete: () {
                                     FocusScope.of(context).requestFocus(_toggleVisibilityFocusNode);
                                   },
-                                  onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_toggleVisibilityFocusNode),
+                                  onFieldSubmitted: (_) =>
+                                      FocusScope.of(context).requestFocus(_toggleVisibilityFocusNode),
                                 ),
                               ),
 
