@@ -200,7 +200,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
   void changeSpeed(double newSpeed) {
-    state = state.copyWith(autoScrollSpeed: newSpeed.clamp(0.1, 5.0));
+    state = state.copyWith(autoScrollSpeed: newSpeed.clamp(1.0, 16.0));
   }
 
   void showControls() {
@@ -222,8 +222,18 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
   void increaseSpeed(int currentPage, double pageHeight) {
-    double newSpeed = state.autoScrollSpeed + 0.1;
-    if (newSpeed > 5.0) newSpeed = 5.0;
+    double newSpeed;
+    if (state.autoScrollSpeed >= 16.0) {
+      newSpeed = 16.0; // Stay at max
+    } else if (state.autoScrollSpeed >= 8.0) {
+      newSpeed = 16.0;
+    } else if (state.autoScrollSpeed >= 4.0) {
+      newSpeed = 8.0;
+    } else if (state.autoScrollSpeed >= 2.0) {
+      newSpeed = 4.0;
+    } else {
+      newSpeed = 2.0;
+    }
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {
       _startScrolling(); // Only restart the scrolling timer
@@ -231,8 +241,19 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
   void decreaseSpeed(int currentPage, double pageHeight) {
-    double newSpeed = state.autoScrollSpeed - 0.1;
-    if (newSpeed < 0.1) newSpeed = 0.1;
+    double newSpeed;
+    // Jump to previous level in sequence: 16.0 -> 8.0 -> 4.0 -> 2.0 -> 1.0
+    if (state.autoScrollSpeed > 16.0) {
+      newSpeed = 16.0;
+    } else if (state.autoScrollSpeed > 8.0) {
+      newSpeed = 8.0;
+    } else if (state.autoScrollSpeed > 4.0) {
+      newSpeed = 4.0;
+    } else if (state.autoScrollSpeed > 2.0) {
+      newSpeed = 2.0;
+    } else {
+      newSpeed = 1.0; // Stay at min
+    }
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {
       _startScrolling(); // Only restart the scrolling timer
@@ -261,10 +282,16 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
   void cycleSpeed(int currentPage, double pageHeight) {
     double newSpeed;
-    if (state.autoScrollSpeed >= 0.5) {
-      newSpeed = 0.1;
+    if (state.autoScrollSpeed >= 16.0) {
+      newSpeed = 1.0;
+    } else if (state.autoScrollSpeed >= 8.0) {
+      newSpeed = 16.0;
+    } else if (state.autoScrollSpeed >= 4.0) {
+      newSpeed = 8.0;
+    } else if (state.autoScrollSpeed >= 2.0) {
+      newSpeed = 4.0;
     } else {
-      newSpeed = state.autoScrollSpeed + 0.1;
+      newSpeed = 2.0;
     }
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {
