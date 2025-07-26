@@ -27,17 +27,8 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
 
     return state.when(
       data: (data) {
-        final screenType = data.screenFlow[data.currentScreen];
-        final isMosqueSearch = switch (screenType) {
-          OnboardingScreenType.mosqueId || OnboardingScreenType.mosqueName => true,
-          OnboardingScreenType.chromecastMosqueId || OnboardingScreenType.chromecastMosqueName => true,
-          _ => false
-        };
         final isMosqueSearchSelected = ref.watch(mosqueManagerProvider).fold(() => false, (t) => true);
-
-        // Check if current screen is country or timezone selection
-        final isCountryOrTimezoneScreen =
-            screenType == OnboardingScreenType.countrySelection || screenType == OnboardingScreenType.timezoneSelection;
+        final shouldShowFinish = data.shouldShowFinishButton(isMosqueSearchSelected);
         return Container(
           padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
           child: Row(
@@ -91,7 +82,7 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                       // Only show the button when it's either:
                       // 1. Not a mosque search screen, OR
                       // 2. A mosque search screen WITH a mosque selected
-                      if (isCountryOrTimezoneScreen && onSkipPressed != null)
+                      if (data.canSkipCurrentScreen && onSkipPressed != null)
                         MawaqitIconButton(
                           focusNode: nextButtonFocusNode ?? FocusNode(),
                           icon: Icons.navigate_next,
@@ -99,11 +90,11 @@ class OnboardingBottomNavigationBar extends ConsumerWidget {
                           onPressed: onSkipPressed,
                           isAutoFocus: true,
                         )
-                      else if (!isMosqueSearch || (isMosqueSearch && isMosqueSearchSelected))
+                      else if (!data.isMosqueSearchScreen || (data.isMosqueSearchScreen && isMosqueSearchSelected))
                         MawaqitIconButton(
                           focusNode: nextButtonFocusNode ?? FocusNode(),
                           icon: data.isLastItem ? Icons.check : Icons.arrow_forward_rounded,
-                          label: data.isLastItem ? S.of(context).finish : S.of(context).next,
+                          label: shouldShowFinish ? S.of(context).finish : S.of(context).next,
                           onPressed: onNextPressed,
                         )
                       else
