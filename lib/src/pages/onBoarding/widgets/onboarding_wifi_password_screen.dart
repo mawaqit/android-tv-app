@@ -360,10 +360,10 @@ class _TvWifiPasswordScreenState extends ConsumerState<TvWifiPasswordScreen> {
                   ),
                 ),
               ),
-            ), // Close inner GestureDetector
+            ),
           ),
         ),
-      ), // Close outer GestureDetector
+      ),
     );
   }
 }
