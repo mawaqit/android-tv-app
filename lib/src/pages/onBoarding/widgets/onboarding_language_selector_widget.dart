@@ -43,11 +43,11 @@ class LanguageSelector extends StatelessWidget {
 
     return Column(
       children: [
-        SizedBox(height: 2.h),
+        SizedBox(height: 1.h),
 
         // Title section
         _buildTitleSection(context, themeData),
-        SizedBox(height: 3.h),
+        SizedBox(height: 1.5.h),
 
         // Language list section
         _buildLanguageListSection(context),
@@ -67,7 +67,7 @@ class LanguageSelector extends StatelessWidget {
             color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
           ),
         ).animate().slideY().fade(),
-        SizedBox(height: 1.h),
+        SizedBox(height: 0.5.h),
         Text(
           description.isEmpty ? S.of(context).descLang : description,
           textAlign: TextAlign.center,
@@ -85,14 +85,12 @@ class LanguageSelector extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: EdgeInsets.only(top: 1.h),
-        child: ListView.separated(
+        child: ListView.builder(
           padding: EdgeInsets.symmetric(
             vertical: 0.5.h,
             horizontal: 2.w,
           ),
           itemCount: languages.length,
-          separatorBuilder: (BuildContext context, int index) =>
-              Divider(height: 0.2.h).animate().fade(delay: .7.seconds),
           itemBuilder: (BuildContext context, int index) {
             final Locale locale = Locale(languages[index]);
             return LanguageTile(
@@ -136,7 +134,7 @@ class _LanguageTileState extends State<LanguageTile> {
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 1.w,
-          vertical: 0.3.h,
+          vertical: 0.5.h,
         ),
         child: Ink(
           decoration: BoxDecoration(
@@ -160,8 +158,8 @@ class _LanguageTileState extends State<LanguageTile> {
               title: Text(
                 appLanguage.combinedLanguageName(widget.locale.languageCode),
                 style: TextStyle(
-                  fontSize: 11.sp, // Responsive font size
-                  fontWeight: FontWeight.w600,
+                  fontSize: 13.sp, // Responsive font size
+                  fontWeight: FontWeight.normal,
                 ),
               ),
               trailing: widget.isSelected
@@ -179,41 +177,16 @@ class _LanguageTileState extends State<LanguageTile> {
   }
 
   Widget flagIcon(String languageCode, {double? size}) {
-    final flagSize = size ?? 15.w; // Default to 10% of screen width if not specified
-
-    List<String> codes = languageCode.split('_');
-    if (codes.length == 2) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildSingleFlag(codes[0], size: flagSize), // First language flag
-          SizedBox(width: 2.w), // Space between flags
-          _buildSingleFlag(codes[1], size: flagSize), // Second language flag
-        ],
-      );
-    } else {
-      return _buildSingleFlag(languageCode, size: flagSize);
-    }
+    final s = size ?? 16.0.sp;
+    return SizedBox(
+      width: s,
+      height: s,
+      child: CircleAvatar(
+        foregroundImage: AssetImage(
+          'assets/img/flag/$languageCode.png',
+        ),
+        backgroundColor: Colors.white,
+      ),
+    );
   }
-}
-
-Widget _buildSingleFlag(String code, {double? size}) {
-  final flagSize = size ?? 6.w; // Responsive size if not provided
-
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(300),
-    ),
-    clipBehavior: Clip.antiAlias,
-    child: Image.asset(
-      'assets/img/flag/$code.png',
-      fit: BoxFit.fill,
-      width: flagSize,
-      height: flagSize,
-      errorBuilder: (context, error, stackTrace) {
-        FirebaseCrashlytics.instance.recordError(error, stackTrace);
-        return SizedBox();
-      },
-    ),
-  );
 }
