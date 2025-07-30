@@ -38,6 +38,32 @@ class OnboardingNavigationState {
 
   int get totalScreens => screenFlow.length;
 
+  OnboardingScreenType get currentScreenType => screenFlow[currentScreen];
+
+  /// Computed properties for UI logic
+  bool get isMosqueSearchScreen => switch (currentScreenType) {
+        OnboardingScreenType.mosqueId || OnboardingScreenType.mosqueName => true,
+        OnboardingScreenType.chromecastMosqueId || OnboardingScreenType.chromecastMosqueName => true,
+        _ => false
+      };
+
+  bool get canSkipCurrentScreen => switch (currentScreenType) {
+        OnboardingScreenType.countrySelection || OnboardingScreenType.timezoneSelection => true,
+        _ => false
+      };
+
+  bool shouldShowFinishButton(bool isMosqueSelected) {
+    final isAtLastScreen = currentScreen == screenFlow.length - 1;
+
+    return switch (currentScreenType) {
+      OnboardingScreenType.announcement when isAtLastScreen => true,
+      OnboardingScreenType.mosqueId ||
+      OnboardingScreenType.chromecastMosqueId when isMosqueSelected && isAtLastScreen =>
+        true,
+      _ => false,
+    };
+  }
+
   OnboardingNavigationState copyWith({
     int? currentScreen,
     bool? enablePreviousButton,
