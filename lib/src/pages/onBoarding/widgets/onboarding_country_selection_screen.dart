@@ -274,34 +274,31 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
               ),
             ),
             SizedBox(height: 1.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: TextField(
-                // Removed autofocus
-                focusNode: searchfocusNode,
-                onSubmitted: (_) {
-                  if (countriesList.isEmpty) {
-                    // Focus next button if the filtered list is empty
-                    if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus && mounted) {
-                      widget.nextButtonFocusNode!.requestFocus();
-                    }
-                  } else if (countryListFocusNode.canRequestFocus && mounted) {
-                    FocusScope.of(context).requestFocus(countryListFocusNode);
-                    _selectFirstVisibleItem();
+            TextField(
+              // Removed autofocus
+              focusNode: searchfocusNode,
+              onSubmitted: (_) {
+                if (countriesList.isEmpty) {
+                  // Focus next button if the filtered list is empty
+                  if (widget.nextButtonFocusNode != null && widget.nextButtonFocusNode!.canRequestFocus && mounted) {
+                    widget.nextButtonFocusNode!.requestFocus();
                   }
-                },
-                controller: searchController,
-                onChanged: _filterItems,
-                style: TextStyle(fontSize: 10.sp),
-                decoration: InputDecoration(
-                  hintText: S.of(context).searchCountries,
-                  hintStyle: TextStyle(fontSize: 10.sp),
-                  prefixIcon: Icon(Icons.search, size: 5.w),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 1.5.h),
+                } else if (countryListFocusNode.canRequestFocus && mounted) {
+                  FocusScope.of(context).requestFocus(countryListFocusNode);
+                  _selectFirstVisibleItem();
+                }
+              },
+              controller: searchController,
+              onChanged: _filterItems,
+              style: TextStyle(fontSize: 10.sp),
+              decoration: InputDecoration(
+                hintText: S.of(context).searchCountries,
+                hintStyle: TextStyle(fontSize: 10.sp),
+                prefixIcon: Icon(Icons.search, size: 5.w),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
+                contentPadding: EdgeInsets.symmetric(vertical: 1.5.h),
               ),
             ),
             SizedBox(height: 1.h),
