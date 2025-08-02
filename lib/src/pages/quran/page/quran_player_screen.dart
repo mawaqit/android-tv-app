@@ -81,24 +81,13 @@ class _QuranPlayerScreenState extends ConsumerState<QuranPlayerScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          leading: Container(
-            height: 32.sp,
-            width: 32.sp,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20.sp),
-              child: IconButton(
-                iconSize: 14.sp,
-                icon: FaIcon(FontAwesomeIcons.arrowLeft),
-                onPressed: () {
-                  ref.read(quranPlayerNotifierProvider.notifier).stop();
-                  Navigator.of(context).pop();
-                },
-              ),
-              onTap: () {
-                ref.read(quranPlayerNotifierProvider.notifier).stop();
-                Navigator.of(context).pop();
-              },
-            ),
+          leading: InkWell(
+            borderRadius: BorderRadius.circular(20.sp),
+            child: Icon(Icons.arrow_back),
+            onTap: () {
+              ref.read(quranPlayerNotifierProvider.notifier).stop();
+              Navigator.of(context).pop();
+            },
           ),
         ),
         screen: quranPlayerState.maybeWhen(
@@ -369,8 +358,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           shape: BoxShape.circle,
                         ),
                         child: Container(
-                          height: 32.sp,
-                          width: 32.sp,
+                          height: 30.sp,
+                          width: 30.sp,
                           child: IconButton(
                             iconSize: 14.sp,
                             icon: FaIcon(
@@ -409,8 +398,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           shape: BoxShape.circle,
                         ),
                         child: Container(
-                          height: 32.sp,
-                          width: 32.sp,
+                          height: 30.sp,
+                          width: 30.sp,
                           child: IconButton(
                             iconSize: 14.sp,
                             icon: FaIcon(
@@ -431,8 +420,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
             ),
           ),
           Container(
-            height: 32.sp,
-            width: 32.sp,
+            height: 30.sp,
+            width: 30.sp,
             child: InkWell(
               child: Builder(
                 builder: (context) {
@@ -459,8 +448,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
             ),
           ),
           Container(
-            height: 32.sp,
-            width: 32.sp,
+            height: 30.sp,
+            width: 30.sp,
             child: InkWell(
               child: Builder(
                 builder: (context) {
@@ -491,8 +480,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
             ),
           ),
           Container(
-            height: 32.sp,
-            width: 32.sp,
+            height: 30.sp,
+            width: 30.sp,
             child: InkWell(
               child: Builder(
                 builder: (context) {
@@ -620,8 +609,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             );
                           } else {
                             return Container(
-                              height: 32.sp,
-                              width: 32.sp,
+                              height: 30.sp,
+                              width: 30.sp,
                               decoration: BoxDecoration(
                                 color: volumeFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                                 shape: BoxShape.circle,
@@ -731,8 +720,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
           builder: (context) {
             final isFocused = Focus.of(context).hasFocus;
             return Container(
-              height: 32.sp,
-              width: 32.sp,
+              height: 30.sp,
+              width: 30.sp,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: isFocused ? Color(0xFF490094) : Colors.transparent,
