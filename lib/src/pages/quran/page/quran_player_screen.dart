@@ -81,13 +81,24 @@ class _QuranPlayerScreenState extends ConsumerState<QuranPlayerScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          leading: InkWell(
-            borderRadius: BorderRadius.circular(20.sp),
-            child: Icon(Icons.arrow_back),
-            onTap: () {
-              ref.read(quranPlayerNotifierProvider.notifier).stop();
-              Navigator.of(context).pop();
-            },
+          leading: Container(
+            height: 32.sp,
+            width: 32.sp,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20.sp),
+              child: IconButton(
+                iconSize: 14.sp,
+                icon: FaIcon(FontAwesomeIcons.arrowLeft),
+                onPressed: () {
+                  ref.read(quranPlayerNotifierProvider.notifier).stop();
+                  Navigator.of(context).pop();
+                },
+              ),
+              onTap: () {
+                ref.read(quranPlayerNotifierProvider.notifier).stop();
+                Navigator.of(context).pop();
+              },
+            ),
           ),
         ),
         screen: quranPlayerState.maybeWhen(
@@ -357,15 +368,20 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           color: repeatFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                           shape: BoxShape.circle,
                         ),
-                        child: IconButton(
-                          icon: FaIcon(
-                            FontAwesomeIcons.repeat,
-                            color: data.isRepeating || repeatFocusNode.hasFocus ? Colors.white : Colors.grey[800],
+                        child: Container(
+                          height: 32.sp,
+                          width: 32.sp,
+                          child: IconButton(
+                            iconSize: 14.sp,
+                            icon: FaIcon(
+                              FontAwesomeIcons.repeat,
+                              color: data.isRepeating || repeatFocusNode.hasFocus ? Colors.white : Colors.grey[800],
+                            ),
+                            onPressed: () {
+                              ref.read(quranPlayerNotifierProvider.notifier).repeat();
+                              repeatFocusNode.requestFocus();
+                            },
                           ),
-                          onPressed: () {
-                            ref.read(quranPlayerNotifierProvider.notifier).repeat();
-                            repeatFocusNode.requestFocus();
-                          },
                         ),
                       ),
                     );
@@ -392,15 +408,20 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                           color: shuffleFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                           shape: BoxShape.circle,
                         ),
-                        child: IconButton(
-                          icon: FaIcon(
-                            FontAwesomeIcons.shuffle,
-                            color: data.isShuffled || shuffleFocusNode.hasFocus ? Colors.white : Colors.grey[800],
+                        child: Container(
+                          height: 32.sp,
+                          width: 32.sp,
+                          child: IconButton(
+                            iconSize: 14.sp,
+                            icon: FaIcon(
+                              FontAwesomeIcons.shuffle,
+                              color: data.isShuffled || shuffleFocusNode.hasFocus ? Colors.white : Colors.grey[800],
+                            ),
+                            onPressed: () {
+                              ref.read(quranPlayerNotifierProvider.notifier).shuffle();
+                              shuffleFocusNode.requestFocus();
+                            },
                           ),
-                          onPressed: () {
-                            ref.read(quranPlayerNotifierProvider.notifier).shuffle();
-                            shuffleFocusNode.requestFocus();
-                          },
                         ),
                       ),
                     );
@@ -409,77 +430,92 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
               ],
             ),
           ),
-          InkWell(
-            child: Builder(
-              builder: (context) {
-                final isFocused = Focus.of(context).hasFocus;
-                return Container(
-                  decoration: BoxDecoration(
-                    color: isFocused ? theme.primaryColor : Colors.transparent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: FaIcon(
-                      directionality != TextDirection.ltr ? FontAwesomeIcons.forward : FontAwesomeIcons.backward,
-                      color: Colors.white,
+          Container(
+            height: 32.sp,
+            width: 32.sp,
+            child: InkWell(
+              child: Builder(
+                builder: (context) {
+                  final isFocused = Focus.of(context).hasFocus;
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: isFocused ? theme.primaryColor : Colors.transparent,
+                      shape: BoxShape.circle,
                     ),
-                    onPressed: () {
-                      final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                      notifier.seekToPrevious();
-                    },
-                  ),
-                );
-              },
+                    child: IconButton(
+                      iconSize: 14.sp,
+                      icon: FaIcon(
+                        directionality != TextDirection.ltr ? FontAwesomeIcons.forward : FontAwesomeIcons.backward,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                        notifier.seekToPrevious();
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-          InkWell(
-            child: Builder(
-              builder: (context) {
-                final isFocused = Focus.of(context).hasFocus;
-                return Container(
-                  decoration: BoxDecoration(
-                    color: isFocused ? theme.primaryColor : Colors.transparent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: FaIcon(
-                      widget.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
-                      color: Colors.white,
+          Container(
+            height: 32.sp,
+            width: 32.sp,
+            child: InkWell(
+              child: Builder(
+                builder: (context) {
+                  final isFocused = Focus.of(context).hasFocus;
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: isFocused ? theme.primaryColor : Colors.transparent,
+                      shape: BoxShape.circle,
                     ),
-                    onPressed: () {
-                      final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                      if (widget.isPlaying) {
-                        notifier.pause();
-                      } else {
-                        notifier.play();
-                      }
-                    },
-                  ),
-                );
-              },
+                    child: IconButton(
+                      iconSize: 14.sp,
+                      icon: FaIcon(
+                        widget.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                        if (widget.isPlaying) {
+                          notifier.pause();
+                        } else {
+                          notifier.play();
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-          InkWell(
-            child: Builder(
-              builder: (context) {
-                final isFocused = Focus.of(context).hasFocus;
-                return Container(
-                  decoration: BoxDecoration(
-                    color: isFocused ? theme.primaryColor : Colors.transparent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: FaIcon(
-                      directionality == TextDirection.ltr ? FontAwesomeIcons.forward : FontAwesomeIcons.backward,
-                      color: Colors.white,
+          Container(
+            height: 32.sp,
+            width: 32.sp,
+            child: InkWell(
+              child: Builder(
+                builder: (context) {
+                  final isFocused = Focus.of(context).hasFocus;
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: isFocused ? theme.primaryColor : Colors.transparent,
+                      shape: BoxShape.circle,
                     ),
-                    onPressed: () {
-                      final notifier = ref.read(quranPlayerNotifierProvider.notifier);
-                      notifier.seekToNext();
-                    },
-                  ),
-                );
-              },
+                    child: IconButton(
+                      iconSize: 14.sp,
+                      icon: FaIcon(
+                        directionality == TextDirection.ltr ? FontAwesomeIcons.forward : FontAwesomeIcons.backward,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        final notifier = ref.read(quranPlayerNotifierProvider.notifier);
+                        notifier.seekToNext();
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           Expanded(
@@ -584,11 +620,14 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             );
                           } else {
                             return Container(
+                              height: 32.sp,
+                              width: 32.sp,
                               decoration: BoxDecoration(
                                 color: volumeFocusNode.hasFocus ? theme.primaryColor : Colors.transparent,
                                 shape: BoxShape.circle,
                               ),
                               child: IconButton(
+                                iconSize: 14.sp,
                                 icon: FaIcon(
                                   FontAwesomeIcons.volumeDown,
                                   color: _volumeSliderThumbColor,
@@ -692,11 +731,14 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
           builder: (context) {
             final isFocused = Focus.of(context).hasFocus;
             return Container(
+              height: 32.sp,
+              width: 32.sp,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: isFocused ? Color(0xFF490094) : Colors.transparent,
               ),
               child: IconButton(
+                iconSize: 14.sp,
                 icon: FaIcon(
                   isDownloaded ? FontAwesomeIcons.check : FontAwesomeIcons.download,
                   color: Colors.white,
