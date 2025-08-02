@@ -112,9 +112,7 @@ class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
                   children: [
                     Text(
                       widget.mosque.label ?? widget.mosque.name,
-                      style: TextStyle(
-                        fontSize: 12.sp
-                      ),
+                      style: TextStyle(fontSize: 12.sp),
                     ),
                     SizedBox(height: 2),
                     SizedBox(
@@ -122,9 +120,8 @@ class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
                       child: Text(
                         overflow: TextOverflow.ellipsis,
                         widget.mosque.localisation ?? '',
-                        style: TextStyle(
-                            fontSize: 8.sp
-                        ),                      ),
+                        style: TextStyle(fontSize: 8.sp),
+                      ),
                     ),
                   ],
                 ),
