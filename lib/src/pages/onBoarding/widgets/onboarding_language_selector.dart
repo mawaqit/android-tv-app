@@ -162,7 +162,7 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
     return FocusScope(
       child: Column(
         children: [
-          SizedBox(height: 2.h),
+          SizedBox(height: 1.h),
           Text(
             S.of(context).appLang,
             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
@@ -171,7 +171,7 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
                   color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
                 ),
           ).animate().slideY().fade(),
-          SizedBox(height: 1.5.h),
+          SizedBox(height: 1.h),
           Text(
             S.of(context).descLang,
             textAlign: TextAlign.center,
@@ -180,16 +180,14 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
                   color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
                 ),
           ).animate().slideX(begin: .5).fade(),
-          SizedBox(height: 3.h),
+          SizedBox(height: 1.5.h),
           Expanded(
             child: Container(
               padding: EdgeInsets.only(top: 0.5.h),
-              child: ListView.separated(
+              child: ListView.builder(
                 controller: _scrollController,
                 padding: EdgeInsets.symmetric(vertical: 0.5.h),
                 itemCount: _sortedLocales.length,
-                separatorBuilder: (BuildContext context, int index) =>
-                    Divider(height: 0.1.h).animate().fade(delay: .7.seconds),
                 itemBuilder: (BuildContext context, int index) {
                   var locale = _sortedLocales[index];
                   return AutoScrollTag(
@@ -204,7 +202,7 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
                                 widget.nextButtonFocusNode!.requestFocus();
                               });
                             }
-                          }, // Pass the onSelect callback
+                          },
                       locale: locale,
                       isSelected: isSelected(locale.languageCode),
                       focusNode: _focusNodes[index],
@@ -273,7 +271,6 @@ class LanguageTile extends ConsumerStatefulWidget {
 class _LanguageTileState extends ConsumerState<LanguageTile> {
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final appLanguage = provider.Provider.of<AppLanguage>(context); // Use prefixed Provider
     final mosqueManager = provider.Provider.of<MosqueManager>(context); // Use prefixed Provider
 
@@ -284,7 +281,7 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
 
     return Material(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.2.h),
+        padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.4.h),
         child: Ink(
           decoration: BoxDecoration(
             color: widget.isFocused
@@ -316,15 +313,23 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
               onTap: handleSelection,
               borderRadius: BorderRadius.circular(10),
               child: ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+                contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
+                horizontalTitleGap: 3.w,
+                minLeadingWidth: 10.w,
+                visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
                 textColor: widget.isFocused || widget.isSelected ? Colors.white : null,
-                leading: flagIcon(widget.locale.languageCode),
+                leading: flagIcon(widget.locale.languageCode, size: 5.h),
                 title: Text(
                   appLanguage.languageName(widget.locale.languageCode),
                   style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600),
                 ),
-                trailing: widget.isSelected ? Icon(MawaqitIcons.icon_checked, color: Colors.white, size: 14.sp) : null,
+                trailing: widget.isSelected
+                    ? Icon(
+                        MawaqitIcons.icon_checked,
+                        color: Colors.white,
+                        size: 14.sp,
+                      )
+                    : null,
               ),
             ),
           ),
@@ -334,26 +339,15 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
   }
 
   Widget flagIcon(String languageCode, {double? size}) {
-    final flagSize = size ?? 6.w; // Responsive size if not provided
-    return Container(
-      width: flagSize,
-      height: flagSize,
-      // Add height equal to width for a perfect circle
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(flagSize / 2), // Use half of size for perfect circle
-        // color: Colors.white,
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: ClipOval(
-        child: Image.asset(
-          'assets/img/flag/${widget.locale.languageCode}.png',
-          fit: BoxFit.cover,
-          width: flagSize,
-          errorBuilder: (context, error, stackTrace) {
-            FirebaseCrashlytics.instance.recordError(error, stackTrace);
-            return SizedBox();
-          },
+    final s = size ?? 16.0.sp;
+    return SizedBox(
+      width: s,
+      height: s,
+      child: CircleAvatar(
+        foregroundImage: AssetImage(
+          'assets/img/flag/$languageCode.png',
         ),
+        backgroundColor: Colors.white,
       ),
     );
   }
