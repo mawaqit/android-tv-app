@@ -50,7 +50,8 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
         children: [
           if (turkishImask != null)
             Flexible(
-              child: SalahItemWidget(removeBackground: true, time: turkishImask, isIqamaMoreImportant: isIqamaMoreImportant)
+              child: SalahItemWidget(
+                      removeBackground: true, time: turkishImask, isIqamaMoreImportant: isIqamaMoreImportant)
                   .animate()
                   .fadeIn(duration: _duration)
                   .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
