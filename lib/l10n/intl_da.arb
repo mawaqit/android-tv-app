@@ -6,6 +6,7 @@
   "languages": "Sprog",
   "appLang": "App Sprog",
   "descLang": "Vælg dit foretrukne sprog",
+  "hadithLangDesc": "Dette tilsidesætter dit valg i admin-konsollen, kan du vælge et andet sprog ved skærmen",
   "whoops": "Ups!",
   "noInternet": "Ingen internetforbindelse",
   "tryAgain": "Prøv igen",
@@ -97,7 +98,7 @@
   },
   "azkarList9": "",
   "@azkarList9": {
-    "description": ".| اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "",
   "@azkarList10": {
@@ -179,9 +180,270 @@
   "mainScreenExplanation": "I moskéens hovedrum viser denne skærm ikke jumua-live-streaming",
   "normalModeExplanation": "Viser den normale skærm med bedetider og meddelelser.",
   "announcementOnlyModeExplanation": "Vil vise meddelelser hele tiden",
+  "orientation": "Retning",
+  "selectYourMawaqitTvAppOrientation": "Vælg din mawaqit tv-app orientering",
+  "deviceDefault": "Enheds Standard",
+  "deviceDefaultBTNDescription": "Mawaqit vil automatisk vælge standardretningen baseret på skærmens orientering",
+  "portrait": "Portræt",
+  "portraitBTNDescription": "Til lodret orientering anbefales for moské med lille plads",
+  "landscape": "Liggende",
+  "landscapeBTNDescription": "For horisontal orientering. Det vigtigste layout for mawaqit tv app og anbefalede en for de fleste moskeer",
   "eidMubarak": "Eid Mubarak",
   "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
   "settings": "Indstillinger",
   "applicationModes": "Anvendelsesmetoder",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Hvis du støder på et problem med appen, skal du aktivere denne mulighed"
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Hvis du støder på et problem med appen, skal du aktivere denne mulighed",
+  "hijriAdjustments": "Lokale Hijri justeringer",
+  "hijriAdjustmentsDescription": "Juster hijri-datoen lokalt på din enhed. Dette vil ikke påvirke onlinemoskeindstillingerne",
+  "backoffice_default": "Standard For Backoffice",
+  "recommended": "Anbefalet",
+  "sabah": "Sabah",
+  "randomHadithLanguage": "Tilfældig hadith sprog",
+  "en": "Engelsk",
+  "fr": "Fransk",
+  "ar": "Arabisk",
+  "tr": "Tyrkisk",
+  "de": "Tysk",
+  "es": "Spansk",
+  "pt": "Portugisisk",
+  "nl": "Hollandsk",
+  "fr_ar": "Fransk & Arabisk",
+  "en_ar": "Engelsk & Arabisk",
+  "de_ar": "Tysk & Arabisk",
+  "ta_ar": "Tamil & Arabic",
+  "tr_ar": "Tyrkisk & Arabisk",
+  "es_ar": "Spansk & Arabisk",
+  "pt_ar": "Portugisisk & Arabisk",
+  "nl_ar": "Hollandsk & Arabisk",
+  "connectToChangeHadith": "Opret forbindelse til internettet for at ændre hadith sprog.",
+  "retry": "Genoptag",
+  "timeSetting": "Indstil tid",
+  "timeSettingDesc": "Angiv et brugerdefineret navn",
+  "selectedTime": "Den valgte tid",
+  "confirmation": "Bekræftelse",
+  "confirmationMessage": "Er du sikker på, at du vil bruge enhedstiden?",
+  "useDeviceTime": "Brug enhedens tid",
+  "selectTime": "Vælg Tid",
+  "previous": "Forrige",
+  "appTimezone": "App Timezone",
+  "descTimezone": "Vælg din tidszone for at få præcise bønnetider.",
+  "appWifi": "Opret forbindelse til wifi",
+  "descWifi": "Opret forbindelse til dit foretrukne wifi",
+  "searchCountries": "Søg lande",
+  "scanAgain": "Scan Igen",
+  "noScannedResultsFound": "Ingen nærliggende adgangspunkter fundet",
+  "connect": "Forbind",
+  "wifiPassword": "Adgangskode",
+  "skip": "Overspring",
+  "noSSID": "**Hidden SSID**",
+  "close": "Luk",
+  "search": "Søg på",
+  "wifiSuccess": "Forbindelse succesfuldt til Wifi.",
+  "wifiFailure": "Kunne ikke forbinde til Wifi.",
+  "timezoneSuccess": "Tidszone sat med succes.",
+  "timezoneFailure": "Kunne ikke indstille tidszone.",
+  "screenLock": "Skærm til/fra",
+  "screenLockConfig": "Konfigurér skærm til/fra",
+  "screenLockMode": "Skærm til/fra tilstand",
+  "screenLockDesc": "Slå til / fra TV før og efter hver bøn for at spare energi",
+  "screenLockDesc2": "Denne funktion tænder/slukker enheden før og efter hver bøn adhan",
+  "before": "minutter før hver bøn-tid",
+  "after": "minutter efter hver bøn-tid",
+  "updateAvailable": "Opdatering tilgængelig",
+  "seeMore": "Se mere",
+  "whatIsNew": "Hvad er nyt",
+  "update": "Opdatering",
+  "automaticUpdate": "Underret opdatering",
+  "automaticUpdateDescription": "Aktiver notifikationsopdatering for at modtage de nyeste funktioner og forbedringer",
+  "checkInternetLegacyMode": "Du skal oprette forbindelse til internettet for at bruge den tidligere tilstand",
+  "powerOnScreen": "Strøm på skærmen",
+  "powerOffScreen": "Slå skærmen fra",
+  "deviceSettings": "Indstillinger For Enhed",
+  "later": "Senere",
+  "downloadQuran": "Download Koranen",
+  "quran": "Koranen",
+  "askDownloadQuran": "Vil du downloade Koranen?",
+  "download": "Hent",
+  "downloadingQuran": "Downloader Koranen",
+  "extractingQuran": "Udpakker Koranen",
+  "updatedQuran": "Koranen opdateret",
+  "quranLatestVersion": "Koranen er opdateret",
+  "quranUpdatedVersion": "Koranen opdateret version er: {version}",
+  "quranIsUpdated": "Koranen er opdateret",
+  "quranDownloaded": "Koranen blev downloadet",
+  "quranIsAlreadyDownloaded": "Koranen er allerede downloadet",
+  "chooseReciter": "Vælg Modtager",
+  "reciteType": "Recite Type",
+  "readingMode": "Jeg ønsker at læse",
+  "listeningMode": "Jeg ønsker at lytte",
+  "quranReadingPage": "Side {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "quranReadingPagePortrait": "Side {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Vælg siden",
+  "checkingForUpdates": "Søger efter opdateringer...",
+  "chooseQuranType": "Vælg quran",
+  "hafs": "Vaner",
+  "warsh": "Warsh",
+  "favorites": "Favoritter",
+  "allReciters": "Alle Reciters",
+  "reciterAddedToFavorites": "Reciter {name} føjet til favoritter",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Reciter {name} fjernet fra favoritter",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "Ingen foretrukne reciters. Prøv at tilføje en til listen",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+  "noReciterSearchResult": "Ingen resultater fundet for din søgning",
+  "searchForReciter": "Søg efter en reciter",
+  "downloadAllSuwarSuccessfully": "Hele quranen er hentet",
+  "noSuwarDownload": "Ingen nye suwars at downloade",
+  "connectDownloadQuran": "Opret forbindelse til internettet for at downloade",
+  "playInOnlineModeQuran": "Opret forbindelse til internettet for at spille",
+  "downloaded": "Downloadet",
+  "switchQuranType": "Gå til {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Select Surah",
+  "checkForUpdates": "Søg efter opdateringer",
+  "checkForNewVersion": "Kontroller, om en ny version er tilgængelig",
+  "wouldYouLikeToUpdate": "Vil du opdatere appen?",
+  "updateCompleted": "Opdatering fuldført!",
+  "noUpdates": "Ingen Opdateringer",
+  "usingLatestVersion": "Du bruger den nyeste version.",
+  "updateCancelled": "Opdatering annulleret",
+  "checkingUpdates": "Tjekker opdateringer...",
+  "downloadingUpdate": "Downloader opdatering...",
+  "installingUpdate": "Installerer opdatering...",
+  "updateCompletedSuccessfully": "Opdatering fuldført",
+  "updateFailed": "Opdatering mislykkedes",
+  "save": "Gem",
+  "enterRtspUrl": "Indtast RTSP eller Youtube Live URL",
+  "addRtspUrl": "Tilføj din kamera stream URL nedenfor",
+  "enableRtspCamera": "Aktiver Kamera-Streaming",
+  "rtspCameraSettings": "Indstillinger For Kamera",
+  "invalidRtspUrl": "Ugyldig URL. Tjek venligst URL'en, og prøv igen.",
+  "validRtspUrl": "URL valideret og gemt med succes.",
+  "rtspCameraSettingTitle": "Live kamera forbindelse",
+  "rtspCameraSettingDesc": "Tilslut til dit lokale kamera og vis jumua bøn stream på tv-skærmen.",
+  "rtspCameraSettingScreenDesc": "Hvis du indtaster en URL her, vil din skærm automatisk skifte til videostreaming når Jumua tid ankommer",
+  "validatingStream": "Validerer Stream...",
+  "checkInternetLiveCamera": "Du skal oprette forbindelse til internettet for at opsætte live kamera",
+  "somethingWentWrong": "Noget gik galt! Prøv venligst igen",
+  "somethingWrong": "Noget gik galt",
+  "tryAgainLater": "Prøv igen senere",
+  "hintTextRtspUrl": "rtsp://... eller https://youtube.com/live/...",
+  "checkInternetUpdate": "Du skal oprette forbindelse til internettet for at søge efter nye opdateringer",
+  "appUpdateAvailable": "Din app kører version {currentVersion}. En ny opdatering (version {updatedVersion}) er tilgængelig med de nyeste funktioner og forbedringer.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "En ny opdatering til {moshafName} Koranen (version {version}) er tilgængelig.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr og Isha bønner kun",
+  "minutesBeforeFajrPrayer": "minutter før fajr bøn tid",
+  "minutesAfterIshaPrayer": "minutter efter isha bøn tid",
+  "scheduleSaved": "Din tidsplan er blevet gemt.",
+  "completeAllFields": "Udfyld venligst alle felter, før du gemmer.",
+  "endTimeAfter": "Sluttidspunktet skal være efter starttidspunktet.",
+  "scheduleListening": "Planlagt Lytning",
+  "enableScheduling": "Aktiver Skemalægning",
+  "scheduleDesc": "Aktivér denne funktion for automatisk at afspille en Surah på planlagte tidspunkter.",
+  "startTime": "Start Tid",
+  "endTime": "Slut Tid",
+  "selectReciter": "Vælg en modtager",
+  "selectMoshaf": "Vælg en mushaf",
+  "randomSurahSelection": "Tilfældig Surah Valg",
+  "selectSurah": "Vælg en Surah",
+  "initializingAutoReading": "Initialiserer i gang...",
+  "prayerTimeNotification": "{salahName} tid ({prayerTime}) notifikation",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Opret forbindelse til internettet for at planlægge Koranlytning",
+  "duaBetweenAdhanIqamah": "Supplication (Du'a) er ikke afvist mellem Adhan og Iqamah."
 }
