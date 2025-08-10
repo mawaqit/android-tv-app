@@ -60,11 +60,11 @@
   "turnOfPhones": "براہ کرم اپنے فونز کو سائلنٹ موڈ میں رکھیں",
   "iqamaIn": "اقامہ میں",
   "alAthkar": "الازکار",
-  "azkarList0": "",
+  "azkarList0": "استغفیر اللہ، استغفی اللہ، استغفی اللہ اللہ تعالٰی انت السلام و منکا السلام، تبرکتہ یا ذل جلالی ول اکرام اللہم الذین علی ذکرک و شکرک و حسنی عبادت",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "سبحان اللہ والحمدو للہ واللہ اکبر (33مرتبہ) لا الہ الا اللہ، وحدہ لاچاری لہ، لہو المؤلکو و لہو الہامدو، وھو الہٰی کُلّی ان قدیر۔",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -84,7 +84,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "لا الہ الا اللہ، وحدۃ لاچارک لہ، لاہو الملک و لہو الہامدو، وھوا علیٰ کُلّی چھائِین قدیر، اللّٰہُمَّا لاَ منیٰ لِما اَطَیْطَ، وَلا مُعَطَہَ لِمَا عَتِی، وَلا یَنْفَعُوْ ذَلَجَدِی منیکا الجاد",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -139,7 +139,7 @@
   "ramadan": "رمضان",
   "shawwal": "شوال",
   "dhuAlqidah": "ذی القعدہ",
-  "dhuAlhijjah": "ذوالحجہ",
+  "dhuAlhijjah": "Dhu al-Qi'dah",
   "duaaBetweenSalahAndAdhan": "Anas bin Malik said: The Messenger of Allah (ﷺ) said: The supplication does not return between the call to prayer and the standing for prayer.",
   "salatKhayrMinaNawm": "الصَّلَاۃُ خَیْر مِنَ النَّوْمِ",
   "salatElEid": "صلوۃ العید",
@@ -172,7 +172,7 @@
   "announcementOnlyMode": "اعلانات کا موڈ",
   "normalMode": "نارمل موڈ ",
   "announcementOnlyModeEXPLINATION": "منتخب کریں کہ آیا آپ کی سکرین ہر وقت اعلانات دکھائے گی، اگر آپ مثال کے طور پر داخلی دروازے پر اسکرین انسٹال کرتے ہیں تو یہ کارآمد ہو سکتا ہے۔.",
-  "duaaElEftarText": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله",
+  "duaaElEftarText": "",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
@@ -216,7 +216,7 @@
   "pt_ar": "پرتگالی اور عربی",
   "nl_ar": "ڈچ اور عربی",
   "connectToChangeHadith": "حدیث کی زبان کو تبدیل کرنے کے لیے براہ کرم انٹرنیٹ سے جڑیں۔.",
-  "retry": "دوبارہ کوشش کریں",
+  "retry": "دوبارہ کوشش کریں۔",
   "timeSetting": "وقت کی ترتیب",
   "timeSettingDesc": "حسب ضرورت نام سیٹ کریں۔",
   "selectedTime": "موجودہ منتخب وقت",
@@ -294,6 +294,20 @@
       }
     }
   },
+  "quranReadingPagePortrait": "Page {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "صفحہ منتخب کریں۔",
   "checkingForUpdates": "اپ ڈیٹس کی جانچ ہو رہی ہے...",
   "chooseQuranType": "قرآن کا انتخاب کریں۔",
@@ -324,5 +338,112 @@
   "noFavoriteReciters": "کوئی پسندیدہ تلاوت کرنے والا نہیں۔ فہرست میں ایک شامل کرنے کی کوشش کریں۔",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
+  },
+  "noReciterSearchResult": "No results found for your search",
+  "searchForReciter": "Search for a reciter",
+  "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
+  "noSuwarDownload": "No new suwars to download",
+  "connectDownloadQuran": "Please connect to Internet to download",
+  "playInOnlineModeQuran": "Please connect to internet to play",
+  "downloaded": "ڈاؤن لوڈ کیا گیا",
+  "switchQuranType": "Go to {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Select Surah",
+  "checkForUpdates": "Check for Updates",
+  "checkForNewVersion": "Check if a new version is available",
+  "wouldYouLikeToUpdate": "Would you like to update the app?",
+  "updateCompleted": "Update completed successfully!",
+  "noUpdates": "No Updates",
+  "usingLatestVersion": "You are using the latest version.",
+  "updateCancelled": "Update cancelled",
+  "checkingUpdates": "Checking updates...",
+  "downloadingUpdate": "Downloading update...",
+  "installingUpdate": "Installing update...",
+  "updateCompletedSuccessfully": "Update completed successfully",
+  "updateFailed": "Update failed",
+  "save": "محفوظ",
+  "enterRtspUrl": "Enter RTSP or Youtube Live URL",
+  "addRtspUrl": "Add your camera stream URL below",
+  "enableRtspCamera": "Enable Camera Streaming",
+  "rtspCameraSettings": "Camera Settings",
+  "invalidRtspUrl": "Invalid URL. Please check the URL and try again.",
+  "validRtspUrl": "URL validated and saved successfully.",
+  "rtspCameraSettingTitle": "Live camera connection",
+  "rtspCameraSettingDesc": "Connect to your local camera and display jumua prayer stream on the TV screen.",
+  "rtspCameraSettingScreenDesc": "If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+  "validatingStream": "Validating Stream...",
+  "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
+  "somethingWentWrong": "Something went wrong! please try again",
+  "somethingWrong": "کچھ غلط ہو گیا",
+  "tryAgainLater": "Please try again later",
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/...",
+  "checkInternetUpdate": "You must connect to internet to check for new updates",
+  "appUpdateAvailable": "Your app is running version {currentVersion}. A new update (version {updatedVersion}) is available with the latest features and improvements.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "A new update for the {moshafName} Quran (version {version}) is available.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr and Isha prayers only",
+  "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time",
+  "scheduleSaved": "Your schedule has been saved.",
+  "completeAllFields": "Please complete all fields before saving.",
+  "endTimeAfter": "The end time must be after the start time.",
+  "scheduleListening": "Scheduled Listening",
+  "enableScheduling": "Enable Scheduling",
+  "scheduleDesc": "Enable this feature to automatically play a Surah at scheduled times.",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "selectReciter": "Select a Reciter",
+  "selectMoshaf": "Select a Mushaf",
+  "randomSurahSelection": "Random Surah Selection",
+  "selectSurah": "Select a Surah",
+  "initializingAutoReading": "Initializing in progress...",
+  "prayerTimeNotification": "{salahName} time ({prayerTime}) notification",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Please connect to the internet to schedule Quran listening",
+  "duaBetweenAdhanIqamah": "Supplication (Du'a) is not rejected between the Adhan and Iqamah."
 }
