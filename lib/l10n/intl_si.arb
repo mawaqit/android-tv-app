@@ -1,0 +1,449 @@
+{
+  "home": "Home",
+  "share": "Share",
+  "about": "About",
+  "rate": "Rate Us",
+  "languages": "Languages",
+  "appLang": "යෙදුම් භාෂාව",
+  "descLang": "Please select your preferred language",
+  "hadithLangDesc": "This override  your choice in the admin console, you can chose a different language by screen",
+  "whoops": "අපොයි!",
+  "noInternet": "අන්තර්ජාල සම්බන්ධතාවයක් නොමැත",
+  "tryAgain": "Try Again",
+  "closeApp": "",
+  "quit": "Quit",
+  "forceStaging": "Switch to staging",
+  "disableStaging": "",
+  "sureCloseApp": "Are you sure you want to quit the application?",
+  "ok": "හරි",
+  "cancel": "අවලංගු කරන්න",
+  "darkMode": "",
+  "lightMode": "ආලෝක මාදිලිය",
+  "changeMosque": "Change Mosque",
+  "in1": "in",
+  "sec": "තත්",
+  "online": "ඔන්ලයින්",
+  "missingMosqueId": "Missing MAWAQIT #ID or MOSQUE #ID",
+  "mosqueIdIsNotValid": "සමාවෙන්න,{mosqueId} වලංගු නොවේ ID",
+  "selectMosqueId": "Please enter your Mosque ID",
+  "mawaqitWelcome": "මාවකිට් වෙත සාදරයෙන් පිළිගනිමු",
+  "mawaqitDesc": "Assalamu Alaikom, and Baraka'Allah fikom 2016 සිට ලොව පුරා රටවල් 85+ ක් පුරා මිලියන සංඛ්‍යාත මුස්ලිම්වරුන් විසින් භාවිතා කරන ලොව ප්‍රථම සහ #1 ස්මාර්ට් මුස්ලිම් පල්ලිය වන Mawaqit තෝරා ගැනීම සඳහා.\n\nඔබගේ පුද්ගලික දත්ත රැස් කිරීම හෝ බෙදා ගැනීමකින් තොරව බහු උපාංග (ජංගම, ස්මාර්ට් ඔරලෝසු, රූපවාහිනී තිර) වලින් ලබා ගත හැකි වඩාත්ම දියුණු ස්මාර්ට් මුස්ලිම් පල්ලියේ සංදර්ශකය අපි ඔබට සපයන්නෙමු.\n\nකරුණාකර මෙම ආශිර්වාද ලත් ව්‍යාපෘතියට මෙහි සහාය වන්න: https://donate.mawaqit.net\n\nඅපි ලාභ නොලබන සංවිධානයක් වන අතර, මෙම ව්‍යාපෘතිය “වක්ෆ් ෆි'සබිලි අල්ලා” (කැපවූ දායාදය) වේ.\n\nඔබගේ පරිත්‍යාග මඟින් මෙම ව්‍යාපෘතිය ඕනෑම කෙනෙකුට, ඕනෑම තැනක, කිසිදු ගාස්තුවකින් තොරව සම්පූර්ණයෙන්ම නොමිලේ, කිසිදු වෙළඳ දැන්වීමකින් තොරව තබා ගත හැකි අතර, මාසික දායකත්වයක් නොමැත.\n\nඔබට හැකි හොඳම සේවාවක් සහ 24/7 ලබා දීමට දිවා රෑ වැඩ කරන දක්ෂ හා උද්‍යෝගිමත් ස්වේච්ඡා සේවකයින්ගෙන් සමන්විත උද්‍යෝගිමත් ප්‍රජාවක් එක් කළ අල්ලාහ්ගේ උපකාරය නොමැතිව මෙම ව්‍යාපෘතිය කළ නොහැකි වනු ඇත.\n\nමෙම ආශිර්වාද ලත් ව්‍යාපෘතිය දිගටම කරගෙන යාම සඳහා පරිත්‍යාග කිරීම ගැන සලකා බලන්න. Baraka'Allah fikum ඔබගේ අඛණ්ඩ විශ්වාසය සහ සහයෝගය සඳහා.\n",
+  "privacyPolicy": "Privacy policy",
+  "termsOfService": "Terms of Service",
+  "installationGuide": "Installation Guide",
+  "drawerTitle": "මාවකිට්",
+  "drawerDesc": "මුස්ලිම්වරුන් මුස්ලිම් පල්ලිවලට සම්බන්ධ කිරීම",
+  "backendError": "සමාවෙන්න,  අපට සේවාදායකයට සම්බන්ධ වීමට නොහැකි විය.\nකරුණාකර අන්තර්ජාල සම්බන්ධතාවය සත්‍යාපනය කරන්න හෝ පසුව නැවත උත්සාහ කරන්න.",
+  "selectWithMosqueId": "Try: 256, It's the ID of 'Grande Mosquée de Paris'",
+  "searchForMosque": "Which Mosque are you looking for ? (ID, Name, City, Postal code...)",
+  "searchMosque": "Search for a Mosque",
+  "mosqueNameError": "Enter the Mosque name",
+  "slugError": "වලංගු මුස්ලිම් පල්ලියේ හම්බෙල්ලන් කෙනෙක් නේද?",
+  "doYouKnowMosqueId": "Do you know your installation ID or your Mosque ID?",
+  "yes": "ඔව්",
+  "no": "No",
+  "networkStatus": "Network Status",
+  "mosqueNoMore": "No more results",
+  "mosqueNoResults": "ප්‍රතිඵල නැත",
+  "offline": "Offline",
+  "imsak": "Imsak",
+  "jumua": "ජුමුවා",
+  "duhr": "ඩුහර්",
+  "fajr": "Fajr",
+  "asr": "Asr",
+  "maghrib": "මැග්රිබ්",
+  "isha": "Isha",
+  "afterAdhanHadithTitle": "අදාන් දුආවෙන් පසු",
+  "afterSalahHadith": "අල්ලාහුම්ම රබ්බ හාධිහිද්-දා'වාතිත්-තාම්මති, වස්-සලාතිල්-කාඉමාති, ආති මුහම්මදානිල්-වසීලාත වල්-ෆධීලාත, වබ්'අත්තු මකාමන් මහ්මූදානිල්ලාධි වා 'අද්තාහු",
+  "alIqama": "අල් ඉකාමා",
+  "alAdhan": "Al Adan",
+  "turnOfPhones": "Please put your phones into Silent Mode",
+  "iqamaIn": "Iqama in",
+  "alAthkar": "Al-Athkar",
+  "azkarList0": "අස්තග්ෆිරු අල්ලාහ්, අස්තග්ෆිරු අල්ලාහ්, අස්තග්ෆිරු අල්ලාහ් අල්ලාහුම්මා අන්ත එස්සලාම් වා මිනෙකා එසලාම්, තබරක්තා යා දල් දජලාලි වෙල් ඉක්‍රම් අල්ලාහුම්මා ආඉන්නි`අලා දික්‍රිකා වා චුක්‍රිකා වා හුස්නි`ඉබාදතික්",
+  "@azkarList0": {
+    "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
+  },
+  "azkarList1": "සුභාන් අල්ලාහ් වල් හම්දු ලිල්ලාහ් වල්ලාහු අක්බර් (33 වරක්) ලා ඉලාහ ඉල්ලල්ලාහ්, වහ්දාහු ලා චාරිකා ලා, ලාහු එල්මූල්කු වා ලාහු එල්හම්දු, වා හුවා `අලා කුල්ලි චේ ඉන් කදිර්",
+  "@azkarList1": {
+    "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
+  },
+  "azkarList2": "",
+  "@azkarList2": {
+    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ ، مَلِكِ ٱلنَّاسِ ، إِلَٰهِ ٱلنَّاسِ ، مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ ، ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ ، مِنَ ٱلۡجِنَّةِ وَٱلنَّاس"
+  },
+  "azkarList3": "",
+  "@azkarList3": {
+    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِقُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ ، مِن شَرِّ مَا خَلَقَ ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ، وَمِن شَرِ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
+  },
+  "azkarList4": "",
+  "@azkarList4": {
+    "description": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ قُلۡ هُوَ ٱللَّهُ أَحَدٌ ، ٱللَّهُ ٱلصَّمَدُ ، لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ ، وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ"
+  },
+  "azkarList5": "",
+  "@azkarList5": {
+    "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
+  },
+  "azkarList6": "La ilaha illa Allah, wahdahu la charika lah, lahu elmulku wa lahu elhamdu, wa hua `ala koulli chayin kadir, Allahumma la mani`a lima a`atayte, wa la mu`atia lima `ate, wa la yanefa`u dhal djaddi mineka eldjad",
+  "@azkarList6": {
+    "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
+  },
+  "azkarList7": "",
+  "@azkarList7": {
+    "description": "اللهم أنت ربي، لا إله إلا أنت، خلقتني وأنا عبدُك, وأنا على عهدِك ووعدِك ما استطعتُ، أعوذ بك من شر ما صنعتُ، أبوءُ لَكَ بنعمتكَ عَلَيَّ، وأبوء بذنبي، فاغفر لي، فإنه لا يغفرُ الذنوب إلا أنت"
+  },
+  "azkarList8": "",
+  "@azkarList8": {
+    "description": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر"
+  },
+  "azkarList9": "",
+  "@azkarList9": {
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
+  },
+  "azkarList10": "",
+  "@azkarList10": {
+    "description": "|اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ |ثلاثَ مرَّاتٍ"
+  },
+  "azkarList11": "",
+  "@azkarList11": {
+    "description": "|حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ |سَبْعَ مَرّاتٍ"
+  },
+  "azkarList12": "",
+  "@azkarList12": {
+    "description": "|رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً |ثلاثَ مرَّاتٍ"
+  },
+  "azkarList13": "",
+  "@azkarList13": {
+    "description": "|لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ |عشرَ مرَّات"
+  },
+  "azkarList14": "",
+  "@azkarList14": {
+    "description": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر"
+  },
+  "jumuaaScreenTitle": "ජුමුආ වේලාව",
+  "jumuaaHadith": "\"යමෙක් දෝවනය පරිපූර්ණ ලෙස ඉටු කර ජුමුආවට ගොස් සවන් දී නිහඬව සිටින්නේ නම්, එම කාලය සහ ඊළඟ සිකුරාදා සහ තවත් දින තුනක් අතර කාලය ඔහුට සමාව දෙනු ලැබේ. ගල් ස්පර්ශ කරන තැනැත්තා නිසැකවම නිෂ්ඵල ක්‍රියාවක් කර ඇත\" යනුවෙන් නබි (සල්ලල්ලාහු අලෙයිහි වසල්ලම්) තුමාණෝ පැවසූහ.",
+  "shuruk": "සූර්යෝදය",
+  "reset": "Reset",
+  "mosqueNotFoundMessage": "Sorry, your mosque wasn't found, or it might be missing or temporarily disabled.",
+  "noInternetMessage": "අන්තර්ජාල ප්‍රවේශය නොමැත. කරුණාකර ඔබේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කර නැවත උත්සාහ කරන්න. ඔබේ Wi-Fi හෝ ඊතර්නෙට් සම්බන්ධ වී තිබේද?",
+  "error": "දෝෂයකි",
+  "mosqueErrorMessage": "Mosque error if you are mosque admin contact our support to fix this issue",
+  "muharram": "Muharram",
+  "safar": "සෆර්",
+  "rabiAlawwal": "Rabi' al-Awwal",
+  "rabiAlthani": "රබි' අල්-තානි",
+  "jumadaAlula": "ජුමාඩා අල්-උලා",
+  "jumadaAlakhirah": "Jumada al-Akhirah",
+  "rajab": "Rajab",
+  "shaban": "Sha`ban",
+  "ramadan": "Ramadan",
+  "shawwal": "Shawwal",
+  "dhuAlqidah": "Dhu al-Qi'dah",
+  "dhuAlhijjah": "ධු අල්-හිජ්ජා",
+  "duaaBetweenSalahAndAdhan": "Anas bin Malik said: The Messenger of Allah ﷺ said: The supplication does not return between the call to prayer and the standing for prayer.",
+  "salatKhayrMinaNawm": "අස්සලාතු කයිරුන් මිනා නවම්",
+  "salatElEid": "Eid Salah",
+  "webView": "Enable Legacy Mode",
+  "developersHomeScreen": "සංවර්ධකයාගේ මුල් තිරය",
+  "onlineHome": "Online Home",
+  "prayerTimes": "යාඥා වේලාවන්",
+  "alerts": "Alert",
+  "iqamaaCountDown": "Iqamaa Count Down",
+  "afterAdhanHadith": "අසානින් පසු හදීස්",
+  "afterSalahAzkar": "After Salah Azkar",
+  "iqama": "Iqama",
+  "randomHadith": "Random Hadith",
+  "announcement": "Announcements",
+  "jumuaaLive": "ජුමුආ [සජීවී විකාශය]",
+  "showSecondaryScreen": "ද්විතීය තිරයක් ලෙස භාවිතා කරන්න (ප්‍රකාශන සඳහා)",
+  "normalScreen": "Use as Main Screen",
+  "duaaRemainder": "දූවා ඉතිරිය",
+  "fajrWakeUp": "Fajr Wake Up",
+  "changeLanguage": "Change language",
+  "forceScreen": "Force screen",
+  "clear": "Clear",
+  "changeTheme": "Change Theme",
+  "next": "Next",
+  "mainScreenOrSecondaryScreen": "තිර ස්ථානය",
+  "mainScreenOrSecondaryScreenEXPLINATION": "ඔබට මෙම තිරය ප්‍රධාන යාඥා කාමරයේ (පිරිමි යාඥා කාමරය) ස්ථාපනය කිරීමට අවශ්‍යද?",
+  "mainScreen": "Main screen",
+  "secondaryScreen": "ද්විතියික තිරය",
+  "duaaElEftar": "දුආ අල් ඉෆ්තාර්",
+  "announcementOnlyMode": "Announcements mode",
+  "normalMode": "සාමාන්ය මාදිලිය",
+  "announcementOnlyModeEXPLINATION": "ඔබේ තිරය සියලු වේලාවන්හිදී ප්‍රකාශන පෙන්වන්නේදැයි තෝරන්න. මෙය ප්‍රයෝජනවත් වනු ඇත, උදාහරණයක් ලෙස ඔබ තිරය පිවිසුම් ද්වාරය අසල ස්ථාපනය කර ඇත්නම්.",
+  "duaaElEftarText": "අල්ලාහ්, මම ඔබ වෙනුවෙන් උපවාස කළෙමි, ඔබේ පෝෂණය මත මම මගේ උපවාසය අත්හරිමි, ඔබ වෙත මම හැරෙමි, ඔබ කෙරෙහි මම විශ්වාසය තබමි. පිපාසය පහව ගොස් ඇත, නහර තෙතමනය වී ඇත, දෙවියන් වහන්සේගේ කැමැත්ත පරිදි විපාකය සහතිකයි.",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "For a secondary prayer room (women room or an other floor for example), this screen will show jumua live-streaming",
+  "mainScreenExplanation": "For the main mosque room, this screen will not show the jumua live-streaming",
+  "normalModeExplanation": "Will show the normal screen with the prayer times and the announcements.",
+  "announcementOnlyModeExplanation": "Will show announcements all time",
+  "orientation": "Orientation",
+  "selectYourMawaqitTvAppOrientation": "ඔබේ mawaqit tv යෙදුම් දිශානතිය තෝරන්න.",
+  "deviceDefault": "උපාංගයේ පෙරනිමි සැකසුම",
+  "deviceDefaultBTNDescription": "Mawaqit will auto select the default orientation based on the screen orientation",
+  "portrait": "Portrait",
+  "portraitBTNDescription": "For vertical orientation recommended for mosque with small space",
+  "landscape": "Landscape",
+  "landscapeBTNDescription": "For Horizontal orientation. The main layout for mawaqit tv app and recommended one for most mosques",
+  "eidMubarak": "ඊද් මුබාරක්",
+  "takbeerAleidText": "අල්ලාහු අක්බර්, අල්ලාහු අක්බර්, අල්ලාහු අක්බර්, ලා ඉලාහ ඉල්ලල්ලාහ්, අල්ලාහු අක්බර්, අල්ලාහු අක්බර්, ව ලිල්ලාහිල්-හම්ද්",
+  "settings": "Settings",
+  "applicationModes": "යෙදුම් මාදිලිය",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "If you are facing issues with the app, try to enable this option",
+  "hijriAdjustments": "Local Hijri adjustments",
+  "hijriAdjustmentsDescription": "ඔබගේ උපාංගයේ දේශීයව හිජ්රි දිනය සකසන්න. මෙය මාර්ගගත මුස්ලිම් පල්ලියේ සැකසුම් වලට බලපාන්නේ නැත.",
+  "backoffice_default": "පසුපස කාර්යාල පෙරනිමි සැකසුම්",
+  "recommended": "නිර්දේශ කර ඇත",
+  "sabah": "සබා",
+  "randomHadithLanguage": "Random hadith language",
+  "en": "English",
+  "fr": "ප්රංශ",
+  "ar": "අරාබි",
+  "tr": "Turkish",
+  "de": "German",
+  "es": "ස්පාඤ්ඤ",
+  "pt": "පෘතුගීසි",
+  "nl": "Dutch",
+  "fr_ar": "French & Arabic",
+  "en_ar": "English & Arabic",
+  "de_ar": "German & Arabic",
+  "ta_ar": "Tamil & Arabic",
+  "tr_ar": "තුර්කි සහ අරාබි",
+  "es_ar": "තුර්කි සහ අරාබි",
+  "pt_ar": "පෘතුගීසි හා අරාබි",
+  "nl_ar": "ලන්දේසි හා අරාබි",
+  "connectToChangeHadith": "හදීස් භාෂාව වෙනස් කිරීමට කරුණාකර අන්තර්ජාලයට සම්බන්ධ වන්න.",
+  "retry": "Retry",
+  "timeSetting": "Configuring the time",
+  "timeSettingDesc": "Set a custom name",
+  "selectedTime": "The current selected time",
+  "confirmation": "Confirmation",
+  "confirmationMessage": "Are you sure you want to use device time?",
+  "useDeviceTime": "Use device time",
+  "selectTime": "Select Time",
+  "previous": "පෙර",
+  "appTimezone": "App Timezone",
+  "descTimezone": "Select your timezone to get accurate prayer times.",
+  "appWifi": "Connect to wifi",
+  "descWifi": "Please connect to your preferred wifi",
+  "searchCountries": "රටවල් සොයන්න",
+  "scanAgain": "නැවත ස්කෑන් කරන්න",
+  "noScannedResultsFound": "ආසන්න ප්‍රවේශ ස්ථාන කිසිවක් හමු නොවීය.",
+  "connect": "සම්බන්ධ කරන්න",
+  "wifiPassword": "මුරපදය",
+  "skip": "අතහරින්න",
+  "noSSID": "**සැඟවුණු SSID**",
+  "close": "වසන්න",
+  "search": "සොයන්න",
+  "wifiSuccess": "Successfully connected to Wifi.",
+  "wifiFailure": "Wifi වෙත සම්බන්ධ වීමට අසමත් විය.",
+  "timezoneSuccess": "Timezone set successfully.",
+  "timezoneFailure": "Failed to set timezone.",
+  "screenLock": "Screen on/off",
+  "screenLockConfig": "තිරය ​​සක්‍රිය/අක්‍රිය වින්‍යාස කරන්න",
+  "screenLockMode": "තිරය සක්‍රිය/අක්‍රිය ප්‍රකාරය",
+  "screenLockDesc": "Turn on/off TV before and after each prayer to save energy",
+  "screenLockDesc2": "This feature turn on/off the device before and after each prayer adhan",
+  "before": "minutes before each prayer time",
+  "after": "minutes after each prayer time",
+  "updateAvailable": "Update available",
+  "seeMore": "තව බලන්න",
+  "whatIsNew": "මොනවාද අළුත්",
+  "update": "Update",
+  "automaticUpdate": "යාවත්කාලීන දැනුම් දෙන්න",
+  "automaticUpdateDescription": "නවතම විශේෂාංග සහ වැඩිදියුණු කිරීම් ලබා ගැනීමට දැනුම්දීම් යාවත්කාලීන කිරීම සක්‍රීය කරන්න.",
+  "checkInternetLegacyMode": "You must connect to internet to use the legacy mode",
+  "powerOnScreen": "Power on the screen",
+  "powerOffScreen": "Power off the screen",
+  "deviceSettings": "Device Settings",
+  "later": "Later",
+  "downloadQuran": "Download Quran",
+  "quran": "Quran",
+  "askDownloadQuran": "Do you want to download the Quran?",
+  "download": "Download",
+  "downloadingQuran": "Downloading Quran",
+  "extractingQuran": "Extracting Quran",
+  "updatedQuran": "Quran updated",
+  "quranLatestVersion": "කුර්ආනය යාවත්කාලීනයි",
+  "quranUpdatedVersion": "Quran updated version is: {version}",
+  "quranIsUpdated": "කුර්ආනය යාවත්කාලීන කර ඇත",
+  "quranDownloaded": "Quran downloaded",
+  "quranIsAlreadyDownloaded": "Quran is already downloaded",
+  "chooseReciter": "Choose Reciter",
+  "reciteType": "පාඨන වර්ගය",
+  "readingMode": "මට කියවන්න ඕනෙ",
+  "listeningMode": "මට අහන්න ඕනෙ",
+  "quranReadingPage": "Page {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "quranReadingPagePortrait": "Page {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Choose the page",
+  "checkingForUpdates": "Checking for updates...",
+  "chooseQuranType": "කුරානය තෝරන්න",
+  "hafs": "හෆ්ස්",
+  "warsh": "වර්ශ්",
+  "favorites": "Favorites",
+  "allReciters": "සියලුම කියවන්නන්",
+  "reciterAddedToFavorites": "Reciter {name} added to favorites",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "කියවන්නා {name} ප්‍රියතමයන් වෙතින් ඉවත් කරන ලදී",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "ප්‍රියතම කියවන්නන් නැත. ලැයිස්තුවට එක් කිරීමට උත්සාහ කරන්න",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+  "noReciterSearchResult": "ඔබේ සෙවුමට ගැලපෙන ප්‍රතිඵල හමු නොවීය",
+  "searchForReciter": "Search for a reciter",
+  "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
+  "noSuwarDownload": "බාගත කිරීමට නව සුවාර් නැත.",
+  "connectDownloadQuran": "Please connect to Internet to download",
+  "playInOnlineModeQuran": "Please connect to internet to play",
+  "downloaded": "Downloaded",
+  "switchQuranType": "Go to {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "සූරාව තෝරන්න",
+  "checkForUpdates": "Check for Updates",
+  "checkForNewVersion": "Check if a new version is available",
+  "wouldYouLikeToUpdate": "Would you like to update the app?",
+  "updateCompleted": "Update completed successfully!",
+  "noUpdates": "No Updates",
+  "usingLatestVersion": "ඔබ නවතම අනුවාදය භාවිතා කරමින් සිටී.",
+  "updateCancelled": "යාවත්කාලීනය අවලංගු කරන ලදී",
+  "checkingUpdates": "Checking updates...",
+  "downloadingUpdate": "Downloading update...",
+  "installingUpdate": "Installing update...",
+  "updateCompletedSuccessfully": "Update completed successfully",
+  "updateFailed": "Update failed",
+  "save": "සුරකින්න",
+  "enterRtspUrl": "RTSP හෝ Youtube සජීවී URL එක ඇතුළත් කරන්න",
+  "addRtspUrl": "Add your camera stream URL below",
+  "enableRtspCamera": "කැමරා ප්‍රවාහය සබල කරන්න",
+  "rtspCameraSettings": "Camera Settings",
+  "invalidRtspUrl": "Invalid URL. Please check the URL and try again.",
+  "validRtspUrl": "URL validated and saved successfully.",
+  "rtspCameraSettingTitle": "Live camera connection",
+  "rtspCameraSettingDesc": "Connect to your local camera and display jumua prayer stream on the TV screen.",
+  "rtspCameraSettingScreenDesc": "If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+  "validatingStream": "Validating Stream...",
+  "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
+  "somethingWentWrong": "යමක් වැරදී ගොස් ඇත! නැවත උත්සාහ කරන්න.",
+  "somethingWrong": "යමක් වැරදී ගියා",
+  "tryAgainLater": "Please try again later",
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/...",
+  "checkInternetUpdate": "You must connect to internet to check for new updates",
+  "appUpdateAvailable": "Your app is running version {currentVersion}. A new update (version {updatedVersion}) is available with the latest features and improvements.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "{moshafName} කුර්ආනයේ (අනුවාදය {version}) නව යාවත්කාලීන කිරීමක් තිබේ.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr and Isha prayers only",
+  "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time",
+  "scheduleSaved": "Your schedule has been saved.",
+  "completeAllFields": "Please complete all fields before saving.",
+  "endTimeAfter": "The end time must be after the start time.",
+  "scheduleListening": "උපලේඛනගත සවන්දීම",
+  "enableScheduling": "උපලේඛනගත කිරීම සබල කරන්න",
+  "scheduleDesc": "Enable this feature to automatically play a Surah at scheduled times.",
+  "startTime": "Start Time",
+  "endTime": "අවසන් කාලය",
+  "selectReciter": "කියවන්නෙකු තෝරන්න",
+  "selectMoshaf": "මුෂාෆ් එකක් තෝරන්න",
+  "randomSurahSelection": "අහඹු සූරා තේරීම",
+  "selectSurah": "Select a Surah",
+  "initializingAutoReading": "Initializing in progress...",
+  "prayerTimeNotification": "{salahName} වේලාව({prayerTime}) දැනුම්දීම",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "කුර්ආන් සවන් දීමට කාලසටහන් කිරීම සඳහා අන්තර්ජාලයට සම්බන්ධ වන්න",
+  "duaBetweenAdhanIqamah": "අදාන් සහ ඉකාමා අතර කන්නලව්ව (දුආ) ප්‍රතික්ෂේප නොකෙරේ."
+}
