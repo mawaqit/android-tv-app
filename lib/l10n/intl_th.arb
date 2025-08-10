@@ -5,7 +5,7 @@
   "rate": "Rate Us",
   "languages": "ภาษา",
   "appLang": "ภาษาของแอป",
-  "descLang": "โปรดเลือกภาษาที่คุณต้องการ",
+  "descLang": "Please select your preferred language",
   "hadithLangDesc": "ตัวเลือกของคุณในโซลผู้ดูแลระบบ คุณสามารถเลือกภาษาอื่นตามหน้าจอได้",
   "whoops": "Whoops!",
   "noInternet": "ไม่มีการเชื่อมต่ออินเทอร์เน็ต",
@@ -31,7 +31,7 @@
   "privacyPolicy": "นโยบายความเป็นส่วนตัว",
   "termsOfService": "ข้อกำหนดในการให้บริการ",
   "installationGuide": "คู่มือการติดตั้ง",
-  "drawerTitle": "MAWAQIT",
+  "drawerTitle": "มาวากีต",
   "drawerDesc": "การเชื่อมโยงชาวมุสลิมเข้ากับมัสยิด",
   "backendError": "ขออภัย เราไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตหรือลองอีกครั้งในภายหลัง",
   "selectWithMosqueId": "ลอง: 256 เป็นรหัสของ 'Grande Mosquée de Paris'",
@@ -161,16 +161,16 @@
   "fajrWakeUp": "ตื่นละหมาดฟัจญรฺ",
   "changeLanguage": "เปลี่ยนภาษา",
   "forceScreen": "หน้าจอบังคับ",
-  "clear": "Clear",
+  "clear": "ชัดเจน",
   "changeTheme": "เปลี่ยนธีม",
-  "next": "Next",
+  "next": "ต่อไป",
   "mainScreenOrSecondaryScreen": "ตำแหน่งหน้าจอ",
   "mainScreenOrSecondaryScreenEXPLINATION": "คุณต้องการติดตั้งหน้าจอนี้ในห้องละหมาดหลัก (ห้องละหมาดชาย) หรือไม่?",
   "mainScreen": "หน้าจอหลัก",
-  "secondaryScreen": "Secondary screen",
+  "secondaryScreen": "หน้าจอรอง",
   "duaaElEftar": "ดูอาเปิดบวช",
   "announcementOnlyMode": "โหมดประกาศ",
-  "normalMode": "Normal mode ",
+  "normalMode": "โหมดปกติ ",
   "announcementOnlyModeEXPLINATION": "เลือกว่าหน้าจอของคุณจะแสดงประกาศตลอดเวลาหรือไม่ ซึ่งจะมีประโยชน์หากคุณติดตั้งหน้าจอที่ทางเข้า เป็นต้น",
   "duaaElEftarText": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله",
   "@duaaElEftarText": {
@@ -254,7 +254,7 @@
   "whatIsNew": "มีอะไรใหม่",
   "update": "อัปเดต",
   "automaticUpdate": "แจ้งเตื่อนการอัพเดต",
-  "automaticUpdateDescription": "",
+  "automaticUpdateDescription": "เปิดใช้งานการแจ้งเตือนการอัปเดตเพื่อรับคุณสมบัติและการปรับปรุงล่าสุด",
   "checkInternetLegacyMode": "คุณต้องเชื่อมต่ออินเทอร์เน็ตเพื่อใช้โหมดเดิม",
   "powerOnScreen": "เปิดเครื่องบนหน้าจอ",
   "powerOffScreen": "ปิดเครื่องบนหน้าจอ",
@@ -265,7 +265,7 @@
   "askDownloadQuran": "คุณต้องการดาวน์โหลดอัลกุรอาน?",
   "download": "ดาวน์โหลด",
   "downloadingQuran": "กำลังดาวน์โหลดอัลกุรอาน",
-  "extractingQuran": "Extracting Quran",
+  "extractingQuran": "ซูเราะห์อัลกุรอาน",
   "updatedQuran": "อัลกุรอานอัปเดต",
   "quranLatestVersion": "อัลกุรอานข้อมูลล่าสุด",
   "quranUpdatedVersion": "เวอร์ชันที่อัปเดตของอัลกุรอานคือ: {version}",
@@ -287,6 +287,20 @@
       "rightPage": {
         "type": "int",
         "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "quranReadingPagePortrait": "หน้า{currentPage}{totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
       },
       "totalPages": {
         "type": "int",
@@ -324,5 +338,112 @@
   "noFavoriteReciters": "ไม่มีผู้อ่านที่ชื่นชอบ ลองเพิ่มรายการหนึ่งรายการ",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
+  },
+  "noReciterSearchResult": "ไม่พบผลลัพธ์สำหรับการค้นหาของคุณ",
+  "searchForReciter": "ค้นหากอรี",
+  "downloadAllSuwarSuccessfully": "ดาวน์โหลดอัลกุรอานทั้งหมดแล้ว",
+  "noSuwarDownload": "No new suwars to download",
+  "connectDownloadQuran": "กรุณาเชื่อมต่ออินเทอร์เน็ตเพื่อดาวน์โหลด",
+  "playInOnlineModeQuran": "กรุณาเชื่อมต่ออินเทอร์เน็ต",
+  "downloaded": "ดาวน์โหลดแล้ว",
+  "switchQuranType": "ไปที่ {ชื่อ}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "เลือกซูเราะห์",
+  "checkForUpdates": "Check for Updates",
+  "checkForNewVersion": "Check if a new version is available",
+  "wouldYouLikeToUpdate": "Would you like to update the app?",
+  "updateCompleted": "Update completed successfully!",
+  "noUpdates": "No Updates",
+  "usingLatestVersion": "You are using the latest version.",
+  "updateCancelled": "Update cancelled",
+  "checkingUpdates": "Checking updates...",
+  "downloadingUpdate": "Downloading update...",
+  "installingUpdate": "Installing update...",
+  "updateCompletedSuccessfully": "Update completed successfully",
+  "updateFailed": "Update failed",
+  "save": "Save",
+  "enterRtspUrl": "Enter RTSP or Youtube Live URL",
+  "addRtspUrl": "Add your camera stream URL below",
+  "enableRtspCamera": "Enable Camera Streaming",
+  "rtspCameraSettings": "Camera Settings",
+  "invalidRtspUrl": "Invalid URL. Please check the URL and try again.",
+  "validRtspUrl": "URL validated and saved successfully.",
+  "rtspCameraSettingTitle": "Live camera connection",
+  "rtspCameraSettingDesc": "Connect to your local camera and display jumua prayer stream on the TV screen.",
+  "rtspCameraSettingScreenDesc": "If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+  "validatingStream": "Validating Stream...",
+  "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
+  "somethingWentWrong": "Something went wrong! please try again",
+  "somethingWrong": "Something went wrong",
+  "tryAgainLater": "Please try again later",
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/...",
+  "checkInternetUpdate": "You must connect to internet to check for new updates",
+  "appUpdateAvailable": "Your app is running version {currentVersion}. A new update (version {updatedVersion}) is available with the latest features and improvements.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "A new update for the {moshafName} Quran (version {version}) is available.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr and Isha prayers only",
+  "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time",
+  "scheduleSaved": "Your schedule has been saved.",
+  "completeAllFields": "Please complete all fields before saving.",
+  "endTimeAfter": "The end time must be after the start time.",
+  "scheduleListening": "Scheduled Listening",
+  "enableScheduling": "Enable Scheduling",
+  "scheduleDesc": "Enable this feature to automatically play a Surah at scheduled times.",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "selectReciter": "Select a Reciter",
+  "selectMoshaf": "Select a Mushaf",
+  "randomSurahSelection": "Random Surah Selection",
+  "selectSurah": "Select a Surah",
+  "initializingAutoReading": "Initializing in progress...",
+  "prayerTimeNotification": "{salahName} time ({prayerTime}) notification",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Please connect to the internet to schedule Quran listening",
+  "duaBetweenAdhanIqamah": "Supplication (Du'a) is not rejected between the Adhan and Iqamah."
 }
