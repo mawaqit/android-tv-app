@@ -108,7 +108,6 @@ class StreamReplacementScreen extends ConsumerWidget {
           orElse: () => false,
         );
 
-
     return RawKeyboardListener(
       focusNode: FocusNode(),
       autofocus: true,
