@@ -454,6 +454,8 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
               child: Builder(
                 builder: (context) {
                   final isFocused = Focus.of(context).hasFocus;
+                  final isRTL = Directionality.of(context) == TextDirection.rtl;
+
                   return Container(
                     decoration: BoxDecoration(
                       color: isFocused ? theme.primaryColor : Colors.transparent,
@@ -461,9 +463,12 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                     ),
                     child: IconButton(
                       iconSize: 14.sp,
-                      icon: FaIcon(
-                        widget.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
-                        color: Colors.white,
+                      icon: Transform.rotate(
+                        angle: isRTL && !widget.isPlaying ? math.pi : 0,
+                        child: FaIcon(
+                          widget.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
+                          color: Colors.white,
+                        ),
                       ),
                       onPressed: () {
                         final notifier = ref.read(quranPlayerNotifierProvider.notifier);
@@ -617,9 +622,12 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                               ),
                               child: IconButton(
                                 iconSize: 14.sp,
-                                icon: FaIcon(
-                                  FontAwesomeIcons.volumeDown,
-                                  color: _volumeSliderThumbColor,
+                                icon: Transform.scale(
+                                  scaleX: isRTL ? -1 : 1,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.volumeDown,
+                                    color: volumeFocusNode.hasFocus ? Colors.white : _volumeSliderThumbColor,
+                                  ),
                                 ),
                                 onPressed: () {
                                   volumeFocusNode.requestFocus();
