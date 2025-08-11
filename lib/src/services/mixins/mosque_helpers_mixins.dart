@@ -142,7 +142,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     date ??= mosqueDate();
 
     final times = actualTimes(date);
-    print("times $times");
     return iqamasOfDay(date).mapIndexed((i, e) => e.toTimeOfDay(tryOffset: times[i])!.toDate(date)).toList();
   }
 
@@ -283,7 +282,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return duration;
   }
 
-  /// the duration until the next salah
   /// the duration until the next iqama
   Duration nextIqamaaAfter() {
     final now = mosqueDate();
