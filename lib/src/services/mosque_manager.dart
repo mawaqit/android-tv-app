@@ -222,9 +222,10 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
         // Obtain an instance of the background service.
         final service = FlutterBackgroundService();
         final permissionsGranted = await PermissionsManager.arePermissionsGranted();
+        bool isBoxOrAndroidTV = await DeviceInfoDataSource().isBoxOrAndroidTV();
 
         // Delegate prayer scheduling to PrayerScheduleService.
-        if (permissionsGranted) {
+        if (permissionsGranted && isBoxOrAndroidTV) {
           await PrayerScheduleService.schedulePrayerTasks(
             e,
             mosqueConfig,
