@@ -49,22 +49,27 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (turkishImask != null)
-            SalahItemWidget(removeBackground: true, time: turkishImask, isIqamaMoreImportant: isIqamaMoreImportant)
-                .animate()
-                .fadeIn(duration: _duration)
-                .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
-                .addRepaintBoundary(),
+            Flexible(
+              child: SalahItemWidget(
+                      removeBackground: true, time: turkishImask, isIqamaMoreImportant: isIqamaMoreImportant)
+                  .animate()
+                  .fadeIn(duration: _duration)
+                  .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
+                  .addRepaintBoundary(),
+            ),
           for (var i = 0; i < 5; i++)
-            SalahItemWidget(
-                    withDivider: false,
-                    iqama: isIqamaMoreImportant ? iqamas[i] : null,
-                    time: todayTimes[i],
-                    active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
-                    isIqamaMoreImportant: isIqamaMoreImportant)
-                .animate(delay: _step * (i + 1))
-                .fadeIn(duration: _duration)
-                .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
-                .addRepaintBoundary(),
+            Flexible(
+              child: SalahItemWidget(
+                      withDivider: false,
+                      iqama: isIqamaMoreImportant ? iqamas[i] : null,
+                      time: todayTimes[i],
+                      active: i == 1 ? nextActiveIqama == i && !duhrHighlightDisable : nextActiveIqama == i,
+                      isIqamaMoreImportant: isIqamaMoreImportant)
+                  .animate(delay: _step * (i + 1))
+                  .fadeIn(duration: _duration)
+                  .slideY(begin: 1, duration: _duration, curve: Curves.easeOut)
+                  .addRepaintBoundary(),
+            ),
         ],
       ),
     );
