@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/services/permissions_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'package:mawaqit/src/state_management/screen_lock/screen_lock_notifier.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../i18n/l10n.dart';
@@ -191,7 +193,10 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
   Widget _buildSaveButton(BuildContext context, List<String> times) {
     return OutlinedButton(
       onPressed: () async {
-        await ref.read(screenLockNotifierProvider.notifier).saveSettings(times, isIshaFajrOnly);
+        final permissionsGranted = await PermissionsManager.arePermissionsGranted();
+        if (permissionsGranted) {
+          await ref.read(screenLockNotifierProvider.notifier).saveSettings(times, isIshaFajrOnly);
+        }
         Navigator.pop(context);
       },
       child: Text(S.current.ok),

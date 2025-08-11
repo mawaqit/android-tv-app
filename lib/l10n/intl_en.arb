@@ -452,5 +452,6 @@
   "rtspUrlHint": "Enter RTSP URL or YouTube link",
   "replaceWorkflowWithStream": "Replace Prayer Workflow with Stream",
   "replaceAppWorkflowWithCameraStream": "Replace the prayer flow with camera stream",
-  "streamError": "An error occurred while streaming"
+  "streamError": "An error occurred while streaming",
+  "finish": "Finish"
 }

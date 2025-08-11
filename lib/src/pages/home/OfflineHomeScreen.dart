@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/domain/model/home_active_screen.dart';
@@ -79,7 +80,9 @@ class OfflineHomeScreen extends ConsumerWidget {
         title: S.of(context).reset,
         description: S.of(context).mosqueNotFoundMessage,
         image: R.ASSETS_IMG_ICON_EXIT_PNG,
-        onTryAgain: () => AppRouter.push(MosqueSearchScreen()),
+        onTryAgain: () => AppRouter.push(MosqueSearchScreen(
+          nextButtonFocusNode: None(),
+        )),
         tryAgainText: S.of(context).changeMosque,
       );
 
