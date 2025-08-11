@@ -440,7 +440,8 @@ class _ChromeCastMosqueInputSearchState extends ConsumerState<ChromeCastMosqueIn
       controller: inputController,
       style: GoogleFonts.inter(
         color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
-        fontSize: 8.sp,
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w500,
       ),
       onFieldSubmitted: (val) => _searchMosque(val, 1),
       cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
@@ -457,6 +458,7 @@ class _ChromeCastMosqueInputSearchState extends ConsumerState<ChromeCastMosqueIn
         ),
         hintText: S.of(context).searchForMosque,
         hintStyle: TextStyle(
+          fontSize: 8.sp,
           fontWeight: FontWeight.normal,
           color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
         ),
