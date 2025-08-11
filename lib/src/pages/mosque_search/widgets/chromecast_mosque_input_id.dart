@@ -221,7 +221,8 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
             controller: inputController,
             style: GoogleFonts.inter(
               color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
-              fontSize: 8.sp,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w500,
             ),
             onFieldSubmitted: _setMosqueId,
             cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
@@ -239,6 +240,7 @@ class _MosqueInputIdState extends ConsumerState<ChromeCastMosqueInputId> {
               ),
               hintText: S.of(context).selectWithMosqueId,
               hintStyle: TextStyle(
+                fontSize: 8.sp,
                 fontWeight: FontWeight.normal,
                 color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
               ),

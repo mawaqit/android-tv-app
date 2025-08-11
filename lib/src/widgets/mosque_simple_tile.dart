@@ -9,6 +9,7 @@ import 'package:mawaqit/src/services/focus_manager.dart';
 
 import 'package:mawaqit/src/helpers/CrashlyticsWrapper.dart';
 import 'package:mawaqit/src/pages/home/OfflineHomeScreen.dart';
+import 'package:sizer/sizer.dart';
 
 class MosqueSimpleTile extends ConsumerStatefulWidget {
   const MosqueSimpleTile({
@@ -53,6 +54,7 @@ class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000)),
         color: widget.hasFocus ? Theme.of(context).focusColor : null,
         clipBehavior: Clip.antiAlias,
+        margin: EdgeInsets.symmetric(vertical: 2.h),
         child: InkWell(
           autofocus: widget.autoFocus ?? false,
           focusColor:
@@ -100,17 +102,17 @@ class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
                   backgroundImage: MawaqitNetworkImageProvider(
                     widget.mosque.image ?? '',
                   ),
-                  radius: 32,
+                  radius: 16.sp,
                 ),
               ),
-              SizedBox(width: 8),
+              SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       widget.mosque.label ?? widget.mosque.name,
-                      style: theme.textTheme.titleMedium,
+                      style: TextStyle(fontSize: 12.sp),
                     ),
                     SizedBox(height: 2),
                     SizedBox(
@@ -118,7 +120,7 @@ class _MosqueSimpleTileState extends ConsumerState<MosqueSimpleTile> {
                       child: Text(
                         overflow: TextOverflow.ellipsis,
                         widget.mosque.localisation ?? '',
-                        style: theme.textTheme.bodySmall,
+                        style: TextStyle(fontSize: 8.sp),
                       ),
                     ),
                   ],
