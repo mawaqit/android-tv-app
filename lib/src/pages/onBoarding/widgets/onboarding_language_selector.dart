@@ -1,10 +1,10 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/helpers/LocaleHelper.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:provider/provider.dart' as provider;
@@ -117,11 +117,16 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
     final themeData = Theme.of(context);
 
     /// Check if the [langCode] is the currently used language
-    bool isSelected(String langCode) => appLanguage.appLocal.languageCode == langCode;
+    bool isSelected(String langCode) => LocaleHelper.transformLocaleToString(appLanguage.appLocal) == langCode;
 
     _sortedLocales = [
       Locale('ar'),
-      ...locales.where((element) => element.languageCode != 'ar' && element.languageCode != 'ba').toList()
+      ...locales
+          .where((element) =>
+              element.languageCode != 'ar' &&
+              element.languageCode != 'ba' &&
+              LocaleHelper.transformLocaleToString(element) != 'pt')
+          .toList()
         ..sort((a, b) => appLanguage
             .languageName(a.languageCode)
             .toLowerCase()
@@ -142,8 +147,8 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
       );
 
       // Find the selected language index
-      int selectedIndex =
-          _sortedLocales.indexWhere((locale) => appLanguage.appLocal.languageCode == locale.languageCode);
+      int selectedIndex = _sortedLocales.indexWhere((locale) =>
+          LocaleHelper.transformLocaleToString(appLanguage.appLocal) == LocaleHelper.transformLocaleToString(locale));
 
       if (selectedIndex != -1) {
         _focusedIndex = selectedIndex;
@@ -204,7 +209,7 @@ class _OnBoardingLanguageSelectorState extends ConsumerState<OnBoardingLanguageS
                             }
                           },
                       locale: locale,
-                      isSelected: isSelected(locale.languageCode),
+                      isSelected: isSelected(LocaleHelper.transformLocaleToString(locale)),
                       focusNode: _focusNodes[index],
                       isFocused: _focusedIndex == index,
                       index: index,
@@ -318,9 +323,9 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
                 minLeadingWidth: 10.w,
                 visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
                 textColor: widget.isFocused || widget.isSelected ? Colors.white : null,
-                leading: flagIcon(widget.locale.languageCode, size: 5.h),
+                leading: flagIcon(LocaleHelper.transformLocaleToString(widget.locale), size: 5.h),
                 title: Text(
-                  appLanguage.languageName(widget.locale.languageCode),
+                  appLanguage.combinedLanguageName(LocaleHelper.transformLocaleToString(widget.locale)),
                   style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600),
                 ),
                 trailing: widget.isSelected
