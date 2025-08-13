@@ -154,7 +154,9 @@ class _LanguageTileState extends State<LanguageTile> {
                 vertical: 0.5.h,
               ),
               textColor: widget.isSelected ? Colors.white : null,
-              leading: widget.isIconActivated ? flagIcon(LocaleHelper.transformLocaleToString(widget.locale), size: 10.w) : null,
+              leading: widget.isIconActivated
+                  ? flagIcon(LocaleHelper.transformLocaleToString(widget.locale), size: 10.w)
+                  : null,
               title: Text(
                 appLanguage.combinedLanguageName(LocaleHelper.transformLocaleToString(widget.locale)),
                 style: TextStyle(
