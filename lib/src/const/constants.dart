@@ -5,7 +5,7 @@ const kAppId = 'com.mawaqit.androidtv';
 
 const kDeviceInfo = 'device_info';
 
-const kBaseUrl = 'https://mawaqit.net/api';
+const kBaseUrl = 'https://prd.mawaqit.net/api';
 const kStagingUrl = 'https://staging.mawaqit.net/api';
 const kStaticFilesUrl = 'https://cdn.mawaqit.net';
 const kStagingStaticFilesUrl = 'https://cdn.mawaqit.net';
