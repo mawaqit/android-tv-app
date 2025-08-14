@@ -1,9 +1,9 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/helpers/LocaleHelper.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -92,11 +92,11 @@ class LanguageSelector extends StatelessWidget {
           ),
           itemCount: languages.length,
           itemBuilder: (BuildContext context, int index) {
-            final Locale locale = Locale(languages[index]);
+            final Locale locale = LocaleHelper.splitLocaleCode(languages[index]);
             return LanguageTile(
-              onTap: () => onSelect(locale.languageCode),
+              onTap: () => onSelect(LocaleHelper.transformLocaleToString(locale)),
               locale: locale,
-              isSelected: isSelected(locale.languageCode),
+              isSelected: isSelected(LocaleHelper.transformLocaleToString(locale)),
               isIconActivated: isIconActivated,
             );
           },
@@ -154,9 +154,11 @@ class _LanguageTileState extends State<LanguageTile> {
                 vertical: 0.5.h,
               ),
               textColor: widget.isSelected ? Colors.white : null,
-              leading: widget.isIconActivated ? flagIcon(widget.locale.languageCode, size: 10.w) : null,
+              leading: widget.isIconActivated
+                  ? flagIcon(LocaleHelper.transformLocaleToString(widget.locale), size: 10.w)
+                  : null,
               title: Text(
-                appLanguage.combinedLanguageName(widget.locale.languageCode),
+                appLanguage.combinedLanguageName(LocaleHelper.transformLocaleToString(widget.locale)),
                 style: TextStyle(
                   fontSize: 13.sp, // Responsive font size
                   fontWeight: FontWeight.normal,
