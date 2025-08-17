@@ -213,8 +213,8 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       state.value!.pageController.dispose();
 
       // Calculate correct initial page based on orientation change
-      final newInitialPage = isCurrentlyRotated 
-          ? currentPage  // Going from portrait to landscape - keep same page
+      final newInitialPage = isCurrentlyRotated
+          ? currentPage // Going from portrait to landscape - keep same page
           : (currentPage / 2).floor(); // Going from landscape to portrait - divide by 2
 
       return state.value!.copyWith(
