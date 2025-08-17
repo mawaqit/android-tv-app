@@ -8,8 +8,7 @@ import 'package:mawaqit/src/domain/model/quran/surah_model.dart';
 import 'package:mawaqit/src/domain/repository/quran/quran_reading_repository.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mawaqit/src/module/shared_preference_module.dart';
-import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_notifier.dart';
-import 'package:mawaqit/src/state_management/quran/download_quran/download_quran_state.dart';
+
 import 'package:mawaqit/src/state_management/quran/quran/quran_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/moshaf_type_notifier.dart';
 import 'package:mawaqit/src/state_management/quran/reading/quran_reading_state.dart';
@@ -210,12 +209,17 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
   Future<void> toggleRotation() async {
     state = await AsyncValue.guard(() async {
       final currentPage = state.value!.currentPage;
+      final isCurrentlyRotated = state.value!.isRotated;
       state.value!.pageController.dispose();
 
+      // Calculate correct initial page based on orientation change
+      final newInitialPage = isCurrentlyRotated 
+          ? currentPage  // Going from portrait to landscape - keep same page
+          : (currentPage / 2).floor(); // Going from landscape to portrait - divide by 2
+
       return state.value!.copyWith(
-        isRotated: !state.value!.isRotated,
-        pageController:
-            PageController(initialPage: !state.value!.isRotated ? currentPage : currentPage ~/ 2, keepPage: true),
+        isRotated: !isCurrentlyRotated,
+        pageController: PageController(initialPage: newInitialPage, keepPage: true),
         currentPage: currentPage,
       );
     });
