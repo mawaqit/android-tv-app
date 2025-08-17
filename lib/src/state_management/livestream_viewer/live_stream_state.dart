@@ -51,7 +51,7 @@ class LiveStreamViewerState extends Equatable {
     if (!isEnabled || streamStatus != LiveStreamStatus.active || isInvalidUrl) {
       return false;
     }
-    
+
     // In both auto and manual modes, respect the replaceWorkflow setting
     // This ensures that if user explicitly disables it, it stays disabled
     return replaceWorkflow;
