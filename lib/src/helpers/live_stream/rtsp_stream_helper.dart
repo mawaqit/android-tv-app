@@ -78,30 +78,29 @@ class RTSPStreamHelper {
   /// Check if the stream is currently active and healthy
   Future<bool> checkStreamActive() async {
     if (_player == null) return false;
-    
+
     try {
       // Basic checks first
       if (_isCompleted) {
         dev.log('🎬 [RTSP_HELPER] Stream marked as completed');
         return false;
       }
-      
+
       // For live streams, we must be actively playing
       if (!_isPlaying) {
         dev.log('❌ [RTSP_HELPER] Stream not playing');
         return false;
       }
-      
+
       // Check if player is buffering for too long
       final buffering = _player!.state.buffering;
       if (buffering) {
         dev.log('⚠️ [RTSP_HELPER] Stream is buffering');
         return false;
       }
-      
+
       dev.log('✅ [RTSP_HELPER] Stream health check passed');
       return true;
-      
     } catch (e) {
       dev.log('🚨 [RTSP_HELPER] Error during stream health check: $e');
       return false;
@@ -123,7 +122,7 @@ class RTSPStreamHelper {
   /// Dispose of all resources
   Future<void> dispose() async {
     dev.log('🧹 [RTSP_HELPER] Disposing resources');
-    
+
     try {
       // Cancel timer first
       _playbackCheckTimer?.cancel();
@@ -133,16 +132,16 @@ class RTSPStreamHelper {
       _videoController = null;
       _isPlaying = false;
       _isCompleted = false;
-      
+
       // Small delay to allow any pending operations to complete
       await Future.delayed(const Duration(milliseconds: 50));
-      
+
       // Dispose player last
       if (_player != null) {
         await _player!.dispose();
         _player = null;
       }
-      
+
       dev.log('🧹 [RTSP_HELPER] Resources disposed successfully');
     } catch (e) {
       dev.log('🚨 [RTSP_HELPER] Error during disposal: $e');
@@ -165,7 +164,7 @@ class RTSPStreamHelper {
   Future<bool> checkRtspServerAvailability(String url) async {
     try {
       dev.log('🔍 [RTSP_HELPER] Checking server availability for: $url');
-      
+
       if (!isValidRtspUrl(url)) {
         dev.log('❌ [RTSP_HELPER] Invalid RTSP URL format');
         return false;
@@ -182,11 +181,11 @@ class RTSPStreamHelper {
       Socket? socket;
       try {
         socket = await Socket.connect(
-          host, 
+          host,
           port,
           timeout: const Duration(seconds: 5),
         );
-        
+
         dev.log('✅ [RTSP_HELPER] Server is reachable at $host:$port');
         await socket.close();
         return true;

@@ -26,7 +26,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
   final FocusNode _saveButtonFocusNode = FocusNode();
   final FocusNode _replaceWorkflowWithStreamButtonFocusNode = FocusNode();
   late StreamSubscription<bool> keyboardSubscription;
-  
+
   Timer? _saveUrlTimer;
 
   @override
@@ -40,11 +40,11 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         FocusScope.of(context).requestFocus(_replaceWorkflowWithStreamButtonFocusNode);
       }
     });
-    
+
     // Load the saved URL immediately when screen opens
     _loadSavedUrl();
   }
-  
+
   Future<void> _loadSavedUrl() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -57,7 +57,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
       dev.log('⚠️ [RTSP_SCREEN] Error loading saved URL: $e');
     }
   }
-  
+
   void _saveDebouncedUrl(String url) {
     _saveUrlTimer?.cancel();
     _saveUrlTimer = Timer(const Duration(milliseconds: 500), () async {
@@ -84,7 +84,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
 
   void _updateUrlController(LiveStreamViewerState state) {
     // Always update the controller if state has a URL and controller is empty or different
-    if (state.streamUrl != null && 
+    if (state.streamUrl != null &&
         (state.streamUrl!.isNotEmpty) &&
         (_urlController.text.isEmpty || _urlController.text != state.streamUrl)) {
       dev.log('📝 [RTSP_SCREEN] Updating URL controller with: ${state.streamUrl}');
@@ -426,11 +426,11 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               if (_urlController.text.isNotEmpty && _urlController.text.startsWith('rtsp://')) {
                 final notifier = ref.read(liveStreamProvider.notifier);
                 final isAvailable = await notifier.testRtspConnection(_urlController.text);
-                
+
                 if (!isAvailable) {
                   // Clear the loading snackbar
                   scaffoldMessenger.clearSnackBars();
-                  
+
                   // Show error message
                   scaffoldMessenger.showSnackBar(
                     SnackBar(
@@ -456,8 +456,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               }
 
               // Only update the stream if the URL has actually changed OR if we need to reconnect
-              if (_urlController.text != state.streamUrl || 
-                  state.streamStatus != LiveStreamStatus.active) {
+              if (_urlController.text != state.streamUrl || state.streamStatus != LiveStreamStatus.active) {
                 dev.log('🔄 [RTSP_SCREEN] Updating stream (URL changed or reconnecting)');
                 await Future.delayed(const Duration(milliseconds: 500));
 
@@ -468,7 +467,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                 dev.log('📝 [RTSP_SCREEN] URL unchanged and stream active, only updating workflow flag');
                 // URL hasn't changed and stream is active, just update the workflow flag if needed
                 ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
-                
+
                 // Show success message
                 scaffoldMessenger.clearSnackBars();
                 scaffoldMessenger.showSnackBar(

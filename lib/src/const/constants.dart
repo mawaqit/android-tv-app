@@ -179,7 +179,7 @@ abstract class LiveStreamConstants {
   /// Default status check interval in seconds (reduced for better responsiveness)
   static const int statusCheckIntervalSeconds = 15;
 
-  /// Default stream reconnect attempt interval in seconds  
+  /// Default stream reconnect attempt interval in seconds
   static const int streamReconnectIntervalSeconds = 20;
 
   /// Extended reconnect interval when server is unavailable (seconds)

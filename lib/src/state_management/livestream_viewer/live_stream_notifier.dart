@@ -100,7 +100,8 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
       final autoReplaceWorkflow = prefs.getBool(LiveStreamConstants.prefKeyAutoReplaceWorkflow) ?? true;
 
       dev.log(
-          '📊 [LIVE_STREAM] Loaded settings - Enabled: $isEnabled, URL: $savedUrl, ReplaceWorkflow: $replaceWorkflow, AutoReplace: $autoReplaceWorkflow',);
+        '📊 [LIVE_STREAM] Loaded settings - Enabled: $isEnabled, URL: $savedUrl, ReplaceWorkflow: $replaceWorkflow, AutoReplace: $autoReplaceWorkflow',
+      );
 
       if (!isEnabled || savedUrl == null || savedUrl.isEmpty) {
         dev.log('ℹ️ [LIVE_STREAM] No saved settings found, returning default state');
@@ -150,7 +151,8 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
           autoReplaceWorkflow: true,
         );
       } else if (url.startsWith('rtsp://')) {
-        dev.log('🎬 [LIVE_STREAM] Detected RTSP URL, handling RTSP stream (skipping server check during initialization)');
+        dev.log(
+            '🎬 [LIVE_STREAM] Detected RTSP URL, handling RTSP stream (skipping server check during initialization)');
         try {
           final controller = await _handleRtspStream(url, skipServerCheck: true);
           return LiveStreamViewerState(
@@ -218,14 +220,16 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
 
       // Get the current URL to preserve it
       final currentUrl = state.value?.streamUrl;
-      
+
       // Set final disabled state but preserve the URL
-      state = AsyncValue.data(LiveStreamViewerState(
-        isEnabled: false,
-        streamUrl: currentUrl, // Preserve the URL
-        streamStatus: LiveStreamStatus.idle,
-        autoReplaceWorkflow: true,
-      ),);
+      state = AsyncValue.data(
+        LiveStreamViewerState(
+          isEnabled: false,
+          streamUrl: currentUrl, // Preserve the URL
+          streamStatus: LiveStreamStatus.idle,
+          autoReplaceWorkflow: true,
+        ),
+      );
     } else {
       // Enabling: Initialize with loading state, then setup stream
       state = const AsyncValue.loading();
@@ -503,7 +507,6 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
         onCompleted: () => _handleStreamEnded(),
       );
 
-
       return videoController;
     } catch (e) {
       dev.log('🚨 [LIVE_STREAM] Error handling RTSP stream: $e');
@@ -514,7 +517,8 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
 
   /// Start timer for stream reconnection attempts
   void _startReconnectTimer() {
-    dev.log('⏱️ [LIVE_STREAM] Starting stream reconnection timer (${LiveStreamConstants.streamReconnectIntervalSeconds}s)');
+    dev.log(
+        '⏱️ [LIVE_STREAM] Starting stream reconnection timer (${LiveStreamConstants.streamReconnectIntervalSeconds}s)');
     _reconnectTimer?.cancel();
     _usingExtendedReconnectInterval = false;
     _reconnectTimer = Timer.periodic(
@@ -529,7 +533,8 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
 
   /// Start timer for reconnection when server is unavailable (longer interval)
   void _startServerUnavailableTimer() {
-    dev.log('⏱️ [LIVE_STREAM] Starting server unavailable timer (${LiveStreamConstants.serverUnavailableReconnectIntervalSeconds}s)');
+    dev.log(
+        '⏱️ [LIVE_STREAM] Starting server unavailable timer (${LiveStreamConstants.serverUnavailableReconnectIntervalSeconds}s)');
     _reconnectTimer?.cancel();
     _usingExtendedReconnectInterval = true;
     _reconnectTimer = Timer.periodic(
@@ -552,7 +557,8 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
 
   /// Start timer for periodic stream status monitoring
   void _startStatusCheckTimer() {
-    dev.log('⏱️ [LIVE_STREAM] Starting stream status check timer (every ${LiveStreamConstants.statusCheckIntervalSeconds}s)');
+    dev.log(
+        '⏱️ [LIVE_STREAM] Starting stream status check timer (every ${LiveStreamConstants.statusCheckIntervalSeconds}s)');
     _statusCheckTimer?.cancel();
     _statusCheckTimer = Timer.periodic(
       const Duration(seconds: LiveStreamConstants.statusCheckIntervalSeconds),
@@ -680,7 +686,8 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
     }
 
     final currentState = state.value!;
-    dev.log('🔍 [LIVE_STREAM] Checking stream status - Current status: ${currentState.streamStatus}, Type: ${currentState.streamType}');
+    dev.log(
+        '🔍 [LIVE_STREAM] Checking stream status - Current status: ${currentState.streamStatus}, Type: ${currentState.streamType}');
 
     // Check YouTube stream status
     if (currentState.streamType == LiveStreamType.youtubeLive && currentState.youtubeController != null) {
