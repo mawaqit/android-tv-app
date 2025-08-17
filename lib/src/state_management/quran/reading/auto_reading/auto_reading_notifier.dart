@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:mawaqit/src/state_management/quran/reading/auto_reading/auto_reading_state.dart';
@@ -32,7 +31,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
   Future<void> jumpToCurrentPage(int currentPage, double pageHeight) async {
     if (scrollController.hasClients) {
-      final offset = (currentPage - 1) * pageHeight;
+      final offset = currentPage * pageHeight;
       scrollController.jumpTo(offset);
     }
   }
@@ -87,7 +86,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       // Start scrolling with a slight delay
       await Future.delayed(Duration(milliseconds: 100));
       _startScrolling();
-    } catch (e, stackTrace) {
+    } catch (e) {
       // Fallback state reset
       state = state.copyWith(
         isLoading: false,
@@ -97,8 +96,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
   void _initializeScrollController(int currentPage, double pageHeight) {
-    final pageOffset = (currentPage - 1) * pageHeight;
-    // Set initial offset to correct position, account for rotation if necessary
+    final pageOffset = currentPage * pageHeight;
     scrollController.jumpTo(pageOffset);
   }
 
@@ -112,7 +110,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     }
 
     // Additional safety checks
-    if (scrollController == null) {
+    if (!scrollController.hasClients) {
       return;
     }
 
@@ -152,14 +150,8 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
   // Function to calculate current page during scrolling
   int _calculateCurrentPage(ScrollController scrollController, double pageHeight) {
-    final viewportOffset = scrollController.offset % pageHeight;
-    if (viewportOffset < (pageHeight / 2)) {
-      // Scrolled to the left, check if it's possible to navigate to the previous page
-      return (scrollController.offset / pageHeight).floor() + 1;
-    } else {
-      // Scrolled to the right, check if it's possible to navigate to the next page
-      return (scrollController.offset / pageHeight).ceil() + 1;
-    }
+    final calculatedPage = (scrollController.offset / pageHeight).round();
+    return calculatedPage;
   }
 
   void stopAutoScroll({QuranReadingState? quranReadingState, bool isPortairt = false}) async {
