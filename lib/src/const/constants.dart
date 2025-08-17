@@ -170,14 +170,20 @@ abstract class LiveStreamConstants {
   /// Key for storing the previous workflow replacement state for reconnection
   static const String prefKeyPreviousWorkflowReplacement = 'previous_workflow_replacement';
 
+  /// Key for the auto replace workflow preference in SharedPreferences
+  static const String prefKeyAutoReplaceWorkflow = 'livestream_auto_replace_workflow';
+
   /// Default buffer timeout in milliseconds
   static const int bufferTimeoutMs = 10000;
 
-  /// Default status check interval in seconds
-  static const int statusCheckIntervalSeconds = 40;
+  /// Default status check interval in seconds (reduced for better responsiveness)
+  static const int statusCheckIntervalSeconds = 15;
 
-  /// Default stream reconnect attempt interval in seconds
-  static const int streamReconnectIntervalSeconds = 30;
+  /// Default stream reconnect attempt interval in seconds  
+  static const int streamReconnectIntervalSeconds = 20;
+
+  /// Extended reconnect interval when server is unavailable (seconds)
+  static const int serverUnavailableReconnectIntervalSeconds = 60;
 
   /// Default stream initialization delay in milliseconds
   static const int streamInitDelayMs = 200;
