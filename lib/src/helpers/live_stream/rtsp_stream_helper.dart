@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as dev;
+import 'dart:io';
 
-import 'package:mawaqit/src/domain/error/live_stream_exceptions.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
@@ -48,9 +48,9 @@ class RTSPStreamHelper {
 
     // Start periodic playback check
     _playbackCheckTimer?.cancel();
-    _playbackCheckTimer = Timer.periodic(const Duration(minutes: 2), (timer) {
+    _playbackCheckTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
       if (!_isPlaying && !_isCompleted) {
-        dev.log('🎬 [RTSP_HELPER] Stream not playing, attempting reconnection');
+        dev.log('❌ [RTSP_HELPER] Stream not playing, calling error handler');
         _onError?.call('Stream playback stopped');
       }
     });
@@ -75,10 +75,37 @@ class RTSPStreamHelper {
     _onCompleted = onCompleted;
   }
 
-  /// Check if the stream is currently active
+  /// Check if the stream is currently active and healthy
   Future<bool> checkStreamActive() async {
     if (_player == null) return false;
-    return _isPlaying || (!_isCompleted);
+    
+    try {
+      // Basic checks first
+      if (_isCompleted) {
+        dev.log('🎬 [RTSP_HELPER] Stream marked as completed');
+        return false;
+      }
+      
+      // For live streams, we must be actively playing
+      if (!_isPlaying) {
+        dev.log('❌ [RTSP_HELPER] Stream not playing');
+        return false;
+      }
+      
+      // Check if player is buffering for too long
+      final buffering = _player!.state.buffering;
+      if (buffering) {
+        dev.log('⚠️ [RTSP_HELPER] Stream is buffering');
+        return false;
+      }
+      
+      dev.log('✅ [RTSP_HELPER] Stream health check passed');
+      return true;
+      
+    } catch (e) {
+      dev.log('🚨 [RTSP_HELPER] Error during stream health check: $e');
+      return false;
+    }
   }
 
   /// Pause the stream
@@ -96,17 +123,82 @@ class RTSPStreamHelper {
   /// Dispose of all resources
   Future<void> dispose() async {
     dev.log('🧹 [RTSP_HELPER] Disposing resources');
-    _playbackCheckTimer?.cancel();
-    _playbackCheckTimer = null;
-    await _player?.dispose();
-    _player = null;
-    _videoController = null;
-    _isPlaying = false;
-    _isCompleted = false;
+    
+    try {
+      // Cancel timer first
+      _playbackCheckTimer?.cancel();
+      _playbackCheckTimer = null;
+
+      // Clear controller reference before disposing player
+      _videoController = null;
+      _isPlaying = false;
+      _isCompleted = false;
+      
+      // Small delay to allow any pending operations to complete
+      await Future.delayed(const Duration(milliseconds: 50));
+      
+      // Dispose player last
+      if (_player != null) {
+        await _player!.dispose();
+        _player = null;
+      }
+      
+      dev.log('🧹 [RTSP_HELPER] Resources disposed successfully');
+    } catch (e) {
+      dev.log('🚨 [RTSP_HELPER] Error during disposal: $e');
+      // Force cleanup even if dispose fails
+      _playbackCheckTimer = null;
+      _videoController = null;
+      _player = null;
+      _isPlaying = false;
+      _isCompleted = false;
+    }
   }
 
   /// Validate RTSP URL format
   bool isValidRtspUrl(String url) {
     return url.trim().startsWith('rtsp://');
+  }
+
+  /// Check if RTSP server is reachable
+  /// Returns true if server responds, false otherwise
+  Future<bool> checkRtspServerAvailability(String url) async {
+    try {
+      dev.log('🔍 [RTSP_HELPER] Checking server availability for: $url');
+      
+      if (!isValidRtspUrl(url)) {
+        dev.log('❌ [RTSP_HELPER] Invalid RTSP URL format');
+        return false;
+      }
+
+      // Parse URL to get host and port
+      final uri = Uri.parse(url);
+      final host = uri.host;
+      final port = uri.port != 0 ? uri.port : 554; // Default RTSP port
+
+      dev.log('🔍 [RTSP_HELPER] Testing connection to $host:$port');
+
+      // Try to establish a basic TCP connection to the RTSP server
+      Socket? socket;
+      try {
+        socket = await Socket.connect(
+          host, 
+          port,
+          timeout: const Duration(seconds: 5),
+        );
+        
+        dev.log('✅ [RTSP_HELPER] Server is reachable at $host:$port');
+        await socket.close();
+        return true;
+      } catch (e) {
+        dev.log('❌ [RTSP_HELPER] Server unreachable at $host:$port - $e');
+        return false;
+      } finally {
+        socket?.destroy();
+      }
+    } catch (e) {
+      dev.log('🚨 [RTSP_HELPER] Error checking server availability: $e');
+      return false;
+    }
   }
 }

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/rtsp_expceptions.dart';
 import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_notifier.dart';
 import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mawaqit/src/widgets/safe_youtube_player.dart';
 
@@ -24,6 +26,8 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
   final FocusNode _saveButtonFocusNode = FocusNode();
   final FocusNode _replaceWorkflowWithStreamButtonFocusNode = FocusNode();
   late StreamSubscription<bool> keyboardSubscription;
+  
+  Timer? _saveUrlTimer;
 
   @override
   void initState() {
@@ -36,6 +40,35 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
         FocusScope.of(context).requestFocus(_replaceWorkflowWithStreamButtonFocusNode);
       }
     });
+    
+    // Load the saved URL immediately when screen opens
+    _loadSavedUrl();
+  }
+  
+  Future<void> _loadSavedUrl() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedUrl = prefs.getString(LiveStreamConstants.prefKeyUrl);
+      if (savedUrl != null && savedUrl.isNotEmpty && _urlController.text.isEmpty) {
+        dev.log('📝 [RTSP_SCREEN] Loading saved URL on init: $savedUrl');
+        _urlController.text = savedUrl;
+      }
+    } catch (e) {
+      dev.log('⚠️ [RTSP_SCREEN] Error loading saved URL: $e');
+    }
+  }
+  
+  void _saveDebouncedUrl(String url) {
+    _saveUrlTimer?.cancel();
+    _saveUrlTimer = Timer(const Duration(milliseconds: 500), () async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(LiveStreamConstants.prefKeyUrl, url);
+        dev.log('💾 [RTSP_SCREEN] Auto-saved URL: $url');
+      } catch (e) {
+        dev.log('⚠️ [RTSP_SCREEN] Error auto-saving URL: $e');
+      }
+    });
   }
 
   @override
@@ -44,12 +77,16 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
     _urlController.dispose();
     _saveButtonFocusNode.dispose();
     _replaceWorkflowWithStreamButtonFocusNode.dispose();
+    _saveUrlTimer?.cancel();
     keyboardSubscription.cancel();
     super.dispose();
   }
 
   void _updateUrlController(LiveStreamViewerState state) {
-    if (state.streamUrl != null && _urlController.text != state.streamUrl) {
+    // Always update the controller if state has a URL and controller is empty or different
+    if (state.streamUrl != null && 
+        (state.streamUrl!.isNotEmpty) &&
+        (_urlController.text.isEmpty || _urlController.text != state.streamUrl)) {
       dev.log('📝 [RTSP_SCREEN] Updating URL controller with: ${state.streamUrl}');
       _urlController.text = state.streamUrl!;
     }
@@ -244,8 +281,10 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                ref.invalidate(liveStreamProvider);
+              onPressed: () async {
+                // Instead of invalidating, just re-initialize the settings
+                final notifier = ref.read(liveStreamProvider.notifier);
+                await notifier.reinitialize();
               },
               child: Text(S.of(context).tryAgain),
             ),
@@ -336,6 +375,10 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
           const SizedBox(height: 20),
           TextField(
             controller: _urlController,
+            onChanged: (value) {
+              // Save URL as user types (debounced to avoid too many saves)
+              _saveDebouncedUrl(value);
+            },
             onSubmitted: (_) {
               dev.log('📤 [RTSP_SCREEN] URL submitted: ${_urlController.text}');
               // ref.read(rtspCameraSettingsProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
@@ -379,18 +422,69 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
               // Wait a moment to ensure UI updates
               await Future.delayed(const Duration(milliseconds: 100));
 
-              // Only update the stream if the URL has actually changed
-              if (_urlController.text != state.streamUrl) {
-                dev.log('🔄 [RTSP_SCREEN] URL changed, updating stream');
+              // Always test RTSP connection first when it's an RTSP URL
+              if (_urlController.text.isNotEmpty && _urlController.text.startsWith('rtsp://')) {
+                final notifier = ref.read(liveStreamProvider.notifier);
+                final isAvailable = await notifier.testRtspConnection(_urlController.text);
+                
+                if (!isAvailable) {
+                  // Clear the loading snackbar
+                  scaffoldMessenger.clearSnackBars();
+                  
+                  // Show error message
+                  scaffoldMessenger.showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        children: [
+                          const Icon(Icons.error, color: Colors.white),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'RTSP server is not available. Please check your connection.',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      backgroundColor: Colors.red,
+                      duration: const Duration(seconds: 3),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  return; // Don't proceed if connection fails
+                }
+              }
+
+              // Only update the stream if the URL has actually changed OR if we need to reconnect
+              if (_urlController.text != state.streamUrl || 
+                  state.streamStatus != LiveStreamStatus.active) {
+                dev.log('🔄 [RTSP_SCREEN] Updating stream (URL changed or reconnecting)');
                 await Future.delayed(const Duration(milliseconds: 500));
 
                 ref.read(liveStreamProvider.notifier).updateStream(
                       url: _urlController.text,
                     );
               } else if (state.streamUrl != null && state.streamUrl!.isNotEmpty) {
-                dev.log('📝 [RTSP_SCREEN] URL unchanged, only updating workflow flag');
-                // URL hasn't changed, just update the workflow flag if needed
+                dev.log('📝 [RTSP_SCREEN] URL unchanged and stream active, only updating workflow flag');
+                // URL hasn't changed and stream is active, just update the workflow flag if needed
                 ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(state.replaceWorkflow);
+                
+                // Show success message
+                scaffoldMessenger.clearSnackBars();
+                scaffoldMessenger.showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        const Icon(Icons.check_circle, color: Colors.white),
+                        const SizedBox(width: 12),
+                        Text('Settings saved successfully'),
+                      ],
+                    ),
+                    backgroundColor: Colors.green,
+                    duration: const Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
               }
             },
             icon: const Icon(Icons.save),
@@ -423,7 +517,7 @@ class _RTSPCameraSettingsScreenState extends ConsumerState<RTSPCameraSettingsScr
                 return Colors.black;
               }),
             ),
-          )
+          ),
         ],
       ],
     );

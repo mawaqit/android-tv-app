@@ -38,8 +38,24 @@ class LiveStreamViewerState extends Equatable {
   /// Whether to replace the main workflow with the stream
   final bool replaceWorkflow;
 
+  /// Whether workflow replacement should be automatic (based on stream status)
+  final bool autoReplaceWorkflow;
+
   /// Current status of the stream
   final LiveStreamStatus streamStatus;
+
+  /// Whether the workflow should currently be replaced (computed property)
+  /// This considers both manual and automatic replacement modes
+  bool get shouldReplaceWorkflow {
+    // Stream must be enabled, active, and URL must be valid for any replacement
+    if (!isEnabled || streamStatus != LiveStreamStatus.active || isInvalidUrl) {
+      return false;
+    }
+    
+    // In both auto and manual modes, respect the replaceWorkflow setting
+    // This ensures that if user explicitly disables it, it stays disabled
+    return replaceWorkflow;
+  }
 
   const LiveStreamViewerState({
     this.isEnabled = false,
@@ -49,6 +65,7 @@ class LiveStreamViewerState extends Equatable {
     this.youtubeController,
     this.isInvalidUrl = false,
     this.replaceWorkflow = false,
+    this.autoReplaceWorkflow = true,
     this.streamStatus = LiveStreamStatus.idle,
   });
 
@@ -61,6 +78,7 @@ class LiveStreamViewerState extends Equatable {
     YoutubePlayerController? youtubeController,
     bool? isInvalidUrl,
     bool? replaceWorkflow,
+    bool? autoReplaceWorkflow,
     LiveStreamStatus? streamStatus,
   }) {
     return LiveStreamViewerState(
@@ -71,6 +89,7 @@ class LiveStreamViewerState extends Equatable {
       youtubeController: youtubeController ?? this.youtubeController,
       isInvalidUrl: isInvalidUrl ?? this.isInvalidUrl,
       replaceWorkflow: replaceWorkflow ?? this.replaceWorkflow,
+      autoReplaceWorkflow: autoReplaceWorkflow ?? this.autoReplaceWorkflow,
       streamStatus: streamStatus ?? this.streamStatus,
     );
   }
@@ -82,11 +101,12 @@ class LiveStreamViewerState extends Equatable {
         streamType,
         isInvalidUrl,
         replaceWorkflow,
+        autoReplaceWorkflow,
         streamStatus,
       ];
 
   @override
   String toString() {
-    return 'LiveStreamViewerState{isEnabled: $isEnabled, streamUrl: $streamUrl, streamType: $streamType, videoController: $videoController, youtubeController: $youtubeController, isInvalidUrl: $isInvalidUrl, replaceWorkflow: $replaceWorkflow, streamStatus: $streamStatus} \n\n';
+    return 'LiveStreamViewerState{isEnabled: $isEnabled, streamUrl: $streamUrl, streamType: $streamType, videoController: $videoController, youtubeController: $youtubeController, isInvalidUrl: $isInvalidUrl, replaceWorkflow: $replaceWorkflow, autoReplaceWorkflow: $autoReplaceWorkflow, streamStatus: $streamStatus} \n\n';
   }
 }

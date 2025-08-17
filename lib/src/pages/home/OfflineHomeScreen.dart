@@ -86,10 +86,7 @@ class OfflineHomeScreen extends ConsumerWidget {
         tryAgainText: S.of(context).changeMosque,
       );
 
-    final shouldShowStream = streamState.valueOrNull?.isEnabled == true &&
-        streamState.valueOrNull?.replaceWorkflow == true &&
-        streamState.valueOrNull?.streamStatus == LiveStreamStatus.active &&
-        !streamState.valueOrNull!.isInvalidUrl;
+    final shouldShowStream = streamState.valueOrNull?.shouldReplaceWorkflow == true;
 
     return WillPopScope(
       onWillPop: () async {
