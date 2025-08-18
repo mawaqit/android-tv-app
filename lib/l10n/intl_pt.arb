@@ -6,7 +6,7 @@
   "languages": "Idiomas",
   "appLang": "Idioma da aplicação",
   "descLang": "Selecione o seu idioma preferido",
-  "hadithLangDesc": "Pode escolher um idioma diferente para este ecrã",
+  "hadithLangDesc": "Isto substitui a escolha feita no backoffice, pode escolher um idioma diferente para este ecrã",
   "whoops": "Ops!",
   "noInternet": "Sem ligação à internet",
   "tryAgain": "Tente novamente",
