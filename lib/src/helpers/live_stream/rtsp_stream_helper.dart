@@ -102,11 +102,11 @@ class RTSPStreamHelper {
       // Check player state
       final buffering = _player!.state.buffering;
       final position = _player!.state.position;
-      
+
       // Handle buffering state with timeout
       if (buffering) {
         final currentTime = DateTime.now().millisecondsSinceEpoch;
-        
+
         if (_bufferingStartTime == null) {
           _bufferingStartTime = currentTime;
           dev.log('⏳ [RTSP_HELPER] Stream started buffering');
@@ -140,7 +140,6 @@ class RTSPStreamHelper {
       // Live streams typically have very large position values or duration might be unknown
       dev.log('✅ [RTSP_HELPER] Stream is healthy - Playing: $_isPlaying, Position: $position, Buffering: $buffering');
       return true;
-      
     } catch (e) {
       dev.log('🚨 [RTSP_HELPER] Error during stream health check: $e');
       return false;
