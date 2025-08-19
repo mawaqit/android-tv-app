@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as dev;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/live_stream_exceptions.dart';
@@ -9,9 +8,9 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../helpers/live_stream/rtsp_stream_helper.dart';
-import '../../helpers/live_stream/youtube_stream_helper.dart';
-import 'live_stream_state.dart';
+import 'package:mawaqit/src/helpers/live_stream/rtsp_stream_helper.dart';
+import 'package:mawaqit/src/helpers/live_stream/youtube_stream_helper.dart';
+import 'package:mawaqit/src/state_management/livestream_viewer/live_stream_state.dart';
 
 /// Notifier for the livestream viewer feature
 class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
@@ -24,6 +23,12 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
   /// Timer for stream reconnection attempts
   Timer? _reconnectTimer;
 
+  /// Timer for periodic stream status monitoring
+  Timer? _statusCheckTimer;
+
+  /// Whether we're using extended interval for server unavailable
+  bool _usingExtendedReconnectInterval = false;
+
   /// Timestamp for buffering start time
   int? _bufferingStartTime;
 
@@ -35,10 +40,19 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
     ref.onDispose(() async {
       dev.log('🧹 [LIVE_STREAM] Provider disposed, cleaning up');
       _stopReconnectTimer();
+      _stopStatusCheckTimer();
       await _dispose();
     });
 
-    return await _initializeSettings();
+    final settings = await _initializeSettings();
+
+    // Start status monitoring if stream is active during initialization
+    if (settings.streamStatus == LiveStreamStatus.active) {
+      dev.log('🔄 [LIVE_STREAM] Starting status monitoring for active stream during build');
+      _startStatusCheckTimer();
+    }
+
+    return settings;
   }
 
   /// Dispose all resources
@@ -46,22 +60,30 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
     try {
       dev.log('🧹 [LIVE_STREAM] Starting disposal of controllers');
 
-      // Dispose YouTube helper
-      await _youtubeHelper.dispose();
+      // Stop all timers first
+      _stopReconnectTimer();
+      _stopStatusCheckTimer();
 
-      // Dispose RTSP helper
-      await _rtspHelper.dispose();
-
-      // Make sure to update state with null controllers
+      // Clear controllers from state BEFORE disposing to prevent widget access
       if (state.hasValue) {
         state = AsyncValue.data(
           state.value!.copyWith(
             youtubeController: null,
             videoController: null,
+            streamStatus: LiveStreamStatus.idle,
           ),
         );
-        dev.log('🔄 [LIVE_STREAM] Updated state with null controllers');
+        dev.log('🔄 [LIVE_STREAM] Cleared controllers from state');
+
+        // Give widgets time to rebuild with null controllers
+        await Future.delayed(const Duration(milliseconds: 100));
       }
+
+      // Now safely dispose helpers
+      await _youtubeHelper.dispose();
+      await _rtspHelper.dispose();
+
+      dev.log('🧹 [LIVE_STREAM] Controllers disposed successfully');
     } catch (e) {
       dev.log('🚨 [LIVE_STREAM] Error in controller disposal: $e');
     }
@@ -75,9 +97,11 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
       final isEnabled = prefs.getBool(LiveStreamConstants.prefKeyEnabled) ?? false;
       final savedUrl = prefs.getString(LiveStreamConstants.prefKeyUrl);
       final replaceWorkflow = prefs.getBool(LiveStreamConstants.prefKeyReplaceWorkflow) ?? false;
+      final autoReplaceWorkflow = prefs.getBool(LiveStreamConstants.prefKeyAutoReplaceWorkflow) ?? true;
 
       dev.log(
-          '📊 [LIVE_STREAM] Loaded settings - Enabled: $isEnabled, URL: $savedUrl, ReplaceWorkflow: $replaceWorkflow');
+        '📊 [LIVE_STREAM] Loaded settings - Enabled: $isEnabled, URL: $savedUrl, ReplaceWorkflow: $replaceWorkflow, AutoReplace: $autoReplaceWorkflow',
+      );
 
       if (!isEnabled || savedUrl == null || savedUrl.isEmpty) {
         dev.log('ℹ️ [LIVE_STREAM] No saved settings found, returning default state');
@@ -86,6 +110,7 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
           streamUrl: savedUrl,
           isInvalidUrl: false,
           replaceWorkflow: replaceWorkflow,
+          autoReplaceWorkflow: autoReplaceWorkflow,
         );
       }
 
@@ -108,13 +133,18 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
   }) async {
     try {
       dev.log('🔄 [LIVE_STREAM] Initializing from saved URL: $url');
+
+      // Clean up any existing resources first
+      _stopReconnectTimer();
+      _stopStatusCheckTimer();
       await _dispose();
+
       // Determine the stream type and initialize accordingly
       if (LiveStreamConstants.youtubeUrlRegex.hasMatch(url)) {
         dev.log('🎥 [LIVE_STREAM] Detected YouTube URL, handling YouTube stream');
         final videoWithString = await _handleYoutubeStream(url);
 
-        return LiveStreamViewerState(
+        final newState = LiveStreamViewerState(
           isEnabled: isEnabled,
           streamUrl: videoWithString.$2,
           streamStatus: LiveStreamStatus.active,
@@ -123,20 +153,53 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
           youtubeController: videoWithString.$1,
           isInvalidUrl: false,
           replaceWorkflow: replaceWorkflow ?? false,
+          autoReplaceWorkflow: true,
         );
+
+        // Start status monitoring for active stream
+        _startStatusCheckTimer();
+
+        return newState;
       } else if (url.startsWith('rtsp://')) {
         dev.log('🎬 [LIVE_STREAM] Detected RTSP URL, handling RTSP stream');
-        final controller = await _handleRtspStream(url);
-        return LiveStreamViewerState(
-          isEnabled: isEnabled,
-          streamUrl: url,
-          streamStatus: LiveStreamStatus.active,
-          streamType: LiveStreamType.rtsp,
-          videoController: controller,
-          youtubeController: null,
-          isInvalidUrl: false,
-          replaceWorkflow: replaceWorkflow ?? false,
-        );
+        try {
+          // Don't skip server check during manual initialization
+          final controller = await _handleRtspStream(url, skipServerCheck: false);
+
+          final newState = LiveStreamViewerState(
+            isEnabled: isEnabled,
+            streamUrl: url,
+            streamStatus: LiveStreamStatus.active,
+            streamType: LiveStreamType.rtsp,
+            videoController: controller,
+            youtubeController: null,
+            isInvalidUrl: false,
+            replaceWorkflow: replaceWorkflow ?? false,
+            autoReplaceWorkflow: true,
+          );
+
+          dev.log('✅ [LIVE_STREAM] RTSP stream initialized successfully with active status');
+
+          // Start status monitoring for active stream
+          _startStatusCheckTimer();
+
+          return newState;
+        } catch (e) {
+          dev.log('⚠️ [LIVE_STREAM] RTSP stream failed during initialization: $e');
+
+          // Return idle state instead of throwing, so user can try again
+          return LiveStreamViewerState(
+            isEnabled: isEnabled,
+            streamUrl: url,
+            streamStatus: LiveStreamStatus.idle,
+            streamType: LiveStreamType.rtsp,
+            videoController: null,
+            youtubeController: null,
+            isInvalidUrl: false,
+            replaceWorkflow: replaceWorkflow ?? false,
+            autoReplaceWorkflow: true,
+          );
+        }
       } else {
         dev.log('🚨 [LIVE_STREAM] Invalid URL format: $url');
         throw InvalidStreamUrlException('Invalid URL format: $url');
@@ -144,68 +207,91 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
     } catch (e) {
       dev.log('⚠️ [LIVE_STREAM] Error initializing from saved URL: $e');
       if (e is InvalidStreamUrlException) {
-        return state.value!.copyWith(
+        return LiveStreamViewerState(
           isEnabled: isEnabled,
           streamUrl: url,
           isInvalidUrl: true,
           replaceWorkflow: replaceWorkflow ?? false,
+          autoReplaceWorkflow: true,
+          streamStatus: LiveStreamStatus.idle,
         );
       }
-      return state.value!.copyWith(
+      return LiveStreamViewerState(
         isEnabled: isEnabled,
         streamUrl: url,
         replaceWorkflow: replaceWorkflow ?? false,
+        autoReplaceWorkflow: true,
+        streamStatus: LiveStreamStatus.idle,
       );
     }
   }
 
   /// Toggle livestream enabled state
   Future<void> toggleEnabled(bool isEnabled) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(
-      () async {
-        dev.log('🔌 [LIVE_STREAM] Toggling livestream enabled state: $isEnabled');
+    dev.log('🔌 [LIVE_STREAM] Toggling livestream enabled state: $isEnabled');
 
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool(LiveStreamConstants.prefKeyEnabled, isEnabled);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(LiveStreamConstants.prefKeyEnabled, isEnabled);
 
-        // get the value and check the replace if it is active
-        if (isEnabled) {
-          final replaceWorkflow = prefs.getBool(LiveStreamConstants.prefKeyReplaceWorkflow) ?? false;
-          if (replaceWorkflow) {
-            dev.log('🔄 [LIVE_STREAM] Replacing workflow due to enabled state');
-            await toggleReplaceWorkflow(true);
-          }
-        }
+    if (!isEnabled) {
+      // Disabling: First clear workflow, then dispose
+      await toggleReplaceWorkflow(false);
 
-        if (!isEnabled) {
+      // Stop all timers
+      _stopReconnectTimer();
+      _stopStatusCheckTimer();
+
+      await _dispose();
+
+      // Get the current URL to preserve it
+      final currentUrl = state.value?.streamUrl;
+
+      // Set final disabled state but preserve the URL
+      state = AsyncValue.data(
+        LiveStreamViewerState(
+          isEnabled: false,
+          streamUrl: currentUrl, // Preserve the URL
+          streamStatus: LiveStreamStatus.idle,
+          autoReplaceWorkflow: true,
+        ),
+      );
+    } else {
+      // Enabling: Initialize with loading state, then setup stream
+      state = const AsyncValue.loading();
+
+      state = await AsyncValue.guard(() async {
+        final savedUrl = prefs.getString(LiveStreamConstants.prefKeyUrl);
+        final replaceWorkflow = prefs.getBool(LiveStreamConstants.prefKeyReplaceWorkflow) ?? false;
+        final autoReplaceWorkflow = prefs.getBool(LiveStreamConstants.prefKeyAutoReplaceWorkflow) ?? true;
+
+        if (savedUrl != null && savedUrl.isNotEmpty) {
+          dev.log('🔄 [LIVE_STREAM] Re-enabling with saved URL: $savedUrl');
+
+          // Clean up any existing state first
           await _dispose();
-          await toggleReplaceWorkflow(false);
+
+          // Initialize fresh stream
+          final newState = await _initializeFromSavedUrl(
+            isEnabled: isEnabled,
+            url: savedUrl,
+            replaceWorkflow: replaceWorkflow,
+          );
+
+          dev.log('✅ [LIVE_STREAM] Successfully re-enabled stream with status: ${newState.streamStatus}');
+          return newState;
         } else {
-          // If the stream is enabled, we need to check if the URL is valid
-          final savedUrl = prefs.getString(LiveStreamConstants.prefKeyUrl);
-          if (savedUrl != null && savedUrl.isNotEmpty) {
-            await _initializeFromSavedUrl(
-              isEnabled: isEnabled,
-              url: savedUrl,
-            );
-          } else {
-            dev.log('ℹ️ [LIVE_STREAM] No saved URL found, returning default state');
-            return LiveStreamViewerState(
-              isEnabled: isEnabled,
-              streamUrl: savedUrl,
-              isInvalidUrl: false,
-            );
-          }
+          dev.log('ℹ️ [LIVE_STREAM] No saved URL found, returning default state');
+          return LiveStreamViewerState(
+            isEnabled: isEnabled,
+            streamUrl: savedUrl,
+            isInvalidUrl: false,
+            replaceWorkflow: replaceWorkflow,
+            autoReplaceWorkflow: autoReplaceWorkflow,
+            streamStatus: LiveStreamStatus.idle,
+          );
         }
-
-        await Future.delayed(const Duration(milliseconds: LiveStreamConstants.streamInitDelayMs));
-
-        return state.value!.copyWith(
-          isEnabled: isEnabled,
-        );
-      },
-    );
+      });
+    }
   }
 
   /// toggle replace workflow
@@ -213,7 +299,7 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(
       () async {
-        dev.log('🔌 [LIVE_STREAM] Toggling livestream enabled state: $isEnabled');
+        dev.log('🔌 [LIVE_STREAM] Toggling replace workflow: $isEnabled');
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool(LiveStreamConstants.prefKeyReplaceWorkflow, isEnabled);
@@ -229,6 +315,81 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
         );
       },
     );
+  }
+
+  /// Toggle automatic workflow replacement
+  Future<void> toggleAutoReplaceWorkflow(bool isEnabled) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () async {
+        dev.log('🔌 [LIVE_STREAM] Toggling auto replace workflow: $isEnabled');
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool(LiveStreamConstants.prefKeyAutoReplaceWorkflow, isEnabled);
+
+        await Future.delayed(const Duration(milliseconds: LiveStreamConstants.streamInitDelayMs));
+
+        return state.value!.copyWith(
+          autoReplaceWorkflow: isEnabled,
+        );
+      },
+    );
+  }
+
+  /// Reinitialize the provider (used for error recovery)
+  Future<void> reinitialize() async {
+    try {
+      dev.log('🔄 [LIVE_STREAM] Reinitializing LiveStream provider');
+
+      // Clean up current state
+      _stopReconnectTimer();
+      _stopStatusCheckTimer();
+      await _dispose();
+
+      // Reset to loading state
+      state = const AsyncValue.loading();
+
+      // Re-initialize from settings
+      final newState = await _initializeSettings();
+      state = AsyncValue.data(newState);
+
+      // Restart status monitoring if stream is active
+      if (newState.streamStatus == LiveStreamStatus.active) {
+        dev.log('🔄 [LIVE_STREAM] Restarting status monitoring for active stream');
+        _startStatusCheckTimer();
+      }
+
+      dev.log('✅ [LIVE_STREAM] Reinitialization completed successfully');
+    } catch (e) {
+      dev.log('🚨 [LIVE_STREAM] Error during reinitialization: $e');
+      state = AsyncValue.error(
+        LiveStreamInitializationException('Reinitialization failed: $e'),
+        StackTrace.current,
+      );
+    }
+  }
+
+  /// Test RTSP connection without updating the stream
+  Future<bool> testRtspConnection(String url) async {
+    try {
+      if (!url.startsWith('rtsp://')) {
+        return false;
+      }
+
+      dev.log('🔍 [LIVE_STREAM] Testing RTSP connection: $url');
+      final isAvailable = await _rtspHelper.checkRtspServerAvailability(url);
+
+      if (isAvailable) {
+        dev.log('✅ [LIVE_STREAM] RTSP server is reachable');
+      } else {
+        dev.log('❌ [LIVE_STREAM] RTSP server is not reachable');
+      }
+
+      return isAvailable;
+    } catch (e) {
+      dev.log('🚨 [LIVE_STREAM] Error testing RTSP connection: $e');
+      return false;
+    }
   }
 
   /// Update stream with new URL and settings
@@ -257,9 +418,13 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(LiveStreamConstants.prefKeyUrl, cleanUrl);
 
+      // Stop any existing timers when manually updating stream
+      _stopReconnectTimer();
+      _stopStatusCheckTimer();
+
       dev.log('🧹 [LIVE_STREAM] Disposed controllers before creating new ones');
 
-      // Explicitly set status to active while initializing to prevent false detections
+      // Explicitly set status to connecting while initializing
       if (state.hasValue) {
         state = AsyncValue.data(
           state.value!.copyWith(
@@ -277,7 +442,6 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
       // Handle YouTube URLs
       if (LiveStreamConstants.youtubeUrlRegex.hasMatch(cleanUrl)) {
         dev.log('🎥 [LIVE_STREAM] Initializing YouTube player');
-        _handleYoutubeStream(cleanUrl);
         final videoWithString = await _handleYoutubeStream(cleanUrl);
         state = AsyncValue.data(
           state.value!.copyWith(
@@ -285,8 +449,12 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
             youtubeController: videoWithString.$1,
             streamUrl: videoWithString.$2,
             streamType: LiveStreamType.youtubeLive,
+            isInvalidUrl: false, // Reset invalid URL flag
           ),
         );
+
+        // Start status monitoring for active stream
+        _startStatusCheckTimer();
       }
       // Handle RTSP URLs
       else if (cleanUrl.startsWith('rtsp://')) {
@@ -298,8 +466,14 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
             videoController: controller,
             streamUrl: cleanUrl,
             streamType: LiveStreamType.rtsp,
+            isInvalidUrl: false, // Reset invalid URL flag
           ),
         );
+
+        dev.log('✅ [LIVE_STREAM] RTSP stream successfully initialized and set to active');
+
+        // Start status monitoring for active stream
+        _startStatusCheckTimer();
       } else {
         throw InvalidStreamUrlException('Invalid URL format: $cleanUrl');
       }
@@ -351,9 +525,17 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
   }
 
   /// Handle RTSP stream initialization
-  Future<VideoController> _handleRtspStream(String url) async {
+  Future<VideoController> _handleRtspStream(String url, {bool skipServerCheck = false}) async {
     try {
       dev.log('🎬 [LIVE_STREAM] Handling RTSP stream for URL: $url');
+
+      // Only check server availability if not skipping (e.g., during user submission)
+      if (!skipServerCheck) {
+        final isServerAvailable = await _rtspHelper.checkRtspServerAvailability(url);
+        if (!isServerAvailable) {
+          throw LiveStreamUpdateException('RTSP server is not available at $url');
+        }
+      }
 
       // Initialize RTSP player
       final videoController = await _rtspHelper.initializePlayer(url);
@@ -374,10 +556,28 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
 
   /// Start timer for stream reconnection attempts
   void _startReconnectTimer() {
-    dev.log('⏱️ [LIVE_STREAM] Starting stream reconnection timer');
+    dev.log(
+        '⏱️ [LIVE_STREAM] Starting stream reconnection timer (${LiveStreamConstants.streamReconnectIntervalSeconds}s)');
     _reconnectTimer?.cancel();
+    _usingExtendedReconnectInterval = false;
     _reconnectTimer = Timer.periodic(
       const Duration(seconds: LiveStreamConstants.streamReconnectIntervalSeconds),
+      (timer) async {
+        if (state.hasValue && state.value!.isEnabled) {
+          await _attemptStreamReconnection();
+        }
+      },
+    );
+  }
+
+  /// Start timer for reconnection when server is unavailable (longer interval)
+  void _startServerUnavailableTimer() {
+    dev.log(
+        '⏱️ [LIVE_STREAM] Starting server unavailable timer (${LiveStreamConstants.serverUnavailableReconnectIntervalSeconds}s)');
+    _reconnectTimer?.cancel();
+    _usingExtendedReconnectInterval = true;
+    _reconnectTimer = Timer.periodic(
+      const Duration(seconds: LiveStreamConstants.serverUnavailableReconnectIntervalSeconds),
       (timer) async {
         if (state.hasValue && state.value!.isEnabled) {
           await _attemptStreamReconnection();
@@ -391,11 +591,38 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
     dev.log('⏱️ [LIVE_STREAM] Stopping reconnection timer');
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
+    _usingExtendedReconnectInterval = false;
+  }
+
+  /// Start timer for periodic stream status monitoring
+  void _startStatusCheckTimer() {
+    dev.log(
+        '⏱️ [LIVE_STREAM] Starting stream status check timer (every ${LiveStreamConstants.statusCheckIntervalSeconds}s)');
+    _statusCheckTimer?.cancel();
+    _statusCheckTimer = Timer.periodic(
+      const Duration(seconds: LiveStreamConstants.statusCheckIntervalSeconds),
+      (timer) async {
+        if (state.hasValue && state.value!.isEnabled) {
+          dev.log('🔍 [LIVE_STREAM] Running periodic status check');
+          await checkStreamStatus();
+        }
+      },
+    );
+  }
+
+  /// Stop timer for periodic stream status monitoring
+  void _stopStatusCheckTimer() {
+    dev.log('⏱️ [LIVE_STREAM] Stopping status check timer');
+    _statusCheckTimer?.cancel();
+    _statusCheckTimer = null;
   }
 
   /// Handle stream error
   Future<void> _handleStreamError(String error) async {
     dev.log('⚠️ [LIVE_STREAM] Stream error detected: $error');
+
+    // Stop status monitoring when error occurs
+    _stopStatusCheckTimer();
 
     // Update state to reflect error
     if (state.hasValue) {
@@ -430,6 +657,9 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
   Future<void> _handleStreamEnded() async {
     dev.log('🏁 [LIVE_STREAM] Stream ended detected');
 
+    // Stop status monitoring when stream ends
+    _stopStatusCheckTimer();
+
     // Update state to reflect ended stream
     if (state.hasValue) {
       final currentState = state.value!;
@@ -450,26 +680,31 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
       );
       dev.log('🔄 [LIVE_STREAM] Updated state for stream ended');
 
-      // Start reconnection attempts
-      _startReconnectTimer();
-
-      // If we're in workflow replacement mode, we should handle differently
-      if (currentState.replaceWorkflow) {
-        dev.log('🔄 [LIVE_STREAM] Disabling workflow replacement due to stream ended');
+      // Immediately disable workflow replacement to stop showing black screen
+      if (wasReplacingWorkflow) {
+        dev.log('🏠 [LIVE_STREAM] Immediately disabling workflow replacement to stop black screen');
         await toggleReplaceWorkflow(false);
       }
+
+      // Start reconnection attempts ONLY if stream actually ended
+      dev.log('🔄 [LIVE_STREAM] Starting reconnection timer for ended stream');
+      _startReconnectTimer();
     }
   }
 
-  /// Update stream status
+  /// Update stream status and handle reconnection timer logic
   void _updateStreamStatus(LiveStreamStatus status) {
     if (state.hasValue && state.value!.streamStatus != status) {
       dev.log('🔄 [LIVE_STREAM] Updating stream status to: $status');
-      state = AsyncValue.data(
-        state.value!.copyWith(
-          streamStatus: status,
-        ),
-      );
+
+      final currentState = state.value!;
+      state = AsyncValue.data(currentState.copyWith(streamStatus: status));
+
+      // Stop reconnection timer when stream becomes active
+      if (status == LiveStreamStatus.active) {
+        dev.log('✅ [LIVE_STREAM] Stream is active, stopping reconnection timer');
+        _stopReconnectTimer();
+      }
     }
   }
 
@@ -481,9 +716,14 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
 
   /// Check stream status and update if needed
   Future<void> checkStreamStatus() async {
-    if (!state.hasValue || !state.value!.isEnabled) return;
+    if (!state.hasValue || !state.value!.isEnabled) {
+      dev.log('🔍 [LIVE_STREAM] Skipping status check - no state or disabled');
+      return;
+    }
 
     final currentState = state.value!;
+    dev.log(
+        '🔍 [LIVE_STREAM] Checking stream status - Current status: ${currentState.streamStatus}, Type: ${currentState.streamType}');
 
     // Check YouTube stream status
     if (currentState.streamType == LiveStreamType.youtubeLive && currentState.youtubeController != null) {
@@ -523,16 +763,102 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
     // Check RTSP stream status
     else if (currentState.streamType == LiveStreamType.rtsp && currentState.videoController != null) {
       try {
+        // REMOVED: Server availability check that was causing disconnects
+        // DON'T DO THIS: final serverAvailable = await _rtspHelper.checkRtspServerAvailability(streamUrl);
+
+        // Only check if the current stream is still active
         final isActive = await _rtspHelper.checkStreamActive();
 
         if (!isActive && currentState.streamStatus == LiveStreamStatus.active) {
           dev.log('⚠️ [LIVE_STREAM] RTSP stream is no longer active');
           await _handleStreamEnded();
+        } else if (isActive && currentState.streamStatus != LiveStreamStatus.active) {
+          dev.log('✅ [LIVE_STREAM] RTSP stream is healthy');
+          // Optionally update status to active if it was in an error state
+          _updateStreamStatus(LiveStreamStatus.active);
         }
       } catch (e) {
         dev.log('⚠️ [LIVE_STREAM] Error checking RTSP stream status: $e');
         await _handleStreamError('RTSP status check error: $e');
       }
+    }
+  }
+
+  /// Attempt to reconnect to the stream - ONLY called when stream has actually failed
+  Future<void> _attemptStreamReconnection() async {
+    if (!state.hasValue || !state.value!.isEnabled) {
+      dev.log('🔄 [LIVE_STREAM] Skipping reconnection - no state or disabled');
+      return;
+    }
+
+    final currentState = state.value!;
+    final url = currentState.streamUrl;
+
+    if (url == null || url.isEmpty) {
+      dev.log('🔄 [LIVE_STREAM] Skipping reconnection - no URL');
+      return;
+    }
+
+    // IMPORTANT: Only attempt reconnection if stream is NOT active
+    if (currentState.streamStatus == LiveStreamStatus.active) {
+      dev.log('✅ [LIVE_STREAM] Stream is already active, skipping reconnection attempt');
+      return;
+    }
+
+    dev.log('🔄 [LIVE_STREAM] Attempting reconnection to: $url (status: ${currentState.streamStatus})');
+
+    try {
+      // For RTSP streams, check server availability first
+      if (currentState.streamType == LiveStreamType.rtsp) {
+        final isServerAvailable = await _rtspHelper.checkRtspServerAvailability(url);
+        if (!isServerAvailable) {
+          dev.log('⚠️ [LIVE_STREAM] RTSP server not available, switching to extended reconnection interval');
+          // Switch to longer interval timer for server unavailable
+          _startServerUnavailableTimer();
+          return;
+        } else {
+          dev.log('✅ [LIVE_STREAM] RTSP server is available, proceeding with reconnection');
+          // Server is available, use normal reconnection interval if we were using extended
+          if (_usingExtendedReconnectInterval) {
+            dev.log('🔄 [LIVE_STREAM] Switching back to normal reconnection interval');
+            _startReconnectTimer();
+          }
+        }
+      }
+
+      // Set status to connecting
+      state = AsyncValue.data(
+        currentState.copyWith(
+          streamStatus: LiveStreamStatus.connecting,
+        ),
+      );
+
+      // Reinitialize the stream
+      await updateStream(url: url);
+
+      // If successful, the updateStream method will set status to active
+      if (state.hasValue && state.value!.streamStatus == LiveStreamStatus.active) {
+        dev.log('✅ [LIVE_STREAM] Successfully reconnected to stream');
+
+        // Start status monitoring for reconnected stream
+        _startStatusCheckTimer();
+
+        // Stop reconnection timer since we're connected
+        _stopReconnectTimer();
+
+        // Restore workflow replacement if it was previously enabled
+        final prefs = await SharedPreferences.getInstance();
+        final shouldRestoreWorkflow = prefs.getBool(LiveStreamConstants.prefKeyPreviousWorkflowReplacement) ?? false;
+
+        if (shouldRestoreWorkflow) {
+          dev.log('🔄 [LIVE_STREAM] Restoring workflow replacement');
+          await prefs.setBool(LiveStreamConstants.prefKeyPreviousWorkflowReplacement, false);
+          await toggleReplaceWorkflow(true);
+        }
+      }
+    } catch (e) {
+      dev.log('⚠️ [LIVE_STREAM] Reconnection attempt failed: $e');
+      // Keep trying to reconnect (timer will call this method again)
     }
   }
 
@@ -556,50 +882,6 @@ class LiveStreamNotifier extends AsyncNotifier<LiveStreamViewerState> {
 
     // Resume RTSP stream
     await _rtspHelper.play();
-  }
-
-  /// Attempt to reconnect to the stream
-  Future<void> _attemptStreamReconnection() async {
-    if (!state.hasValue || !state.value!.isEnabled) return;
-
-    final currentState = state.value!;
-    final url = currentState.streamUrl;
-
-    if (url == null || url.isEmpty) return;
-
-    dev.log('🔄 [LIVE_STREAM] Attempting reconnection to: $url');
-
-    try {
-      // Set status to connecting
-      state = AsyncValue.data(
-        currentState.copyWith(
-          streamStatus: LiveStreamStatus.connecting,
-        ),
-      );
-
-      // Reinitialize the stream
-      await updateStream(
-        url: url,
-      );
-
-      // If successful, set status back to active
-      if (state.hasValue && state.value!.streamStatus == LiveStreamStatus.active) {
-        dev.log('✅ [LIVE_STREAM] Successfully reconnected to stream');
-
-        // Restore workflow replacement if it was previously enabled
-        final prefs = await SharedPreferences.getInstance();
-        final shouldRestoreWorkflow = prefs.getBool(LiveStreamConstants.prefKeyPreviousWorkflowReplacement) ?? false;
-
-        if (shouldRestoreWorkflow) {
-          dev.log('🔄 [LIVE_STREAM] Restoring workflow replacement');
-          await prefs.setBool(LiveStreamConstants.prefKeyPreviousWorkflowReplacement, false);
-          await toggleReplaceWorkflow(true);
-        }
-      }
-    } catch (e) {
-      dev.log('⚠️ [LIVE_STREAM] Reconnection attempt failed: $e');
-      // Keep trying to reconnect
-    }
   }
 }
 

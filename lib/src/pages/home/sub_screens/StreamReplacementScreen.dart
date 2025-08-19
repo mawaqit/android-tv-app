@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,20 +11,38 @@ import 'package:mawaqit/src/widgets/MawaqitDrawer.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:sizer/sizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'dart:developer' as dev;
 
 /// StreamReplacementScreen completely replaces the app workflow when the stream is active
 /// This ensures that prayer schedules and other workflow activities don't affect the stream
-class StreamReplacementScreen extends ConsumerWidget {
+class StreamReplacementScreen extends ConsumerStatefulWidget {
   const StreamReplacementScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StreamReplacementScreen> createState() => _StreamReplacementScreenState();
+}
+
+class _StreamReplacementScreenState extends ConsumerState<StreamReplacementScreen> {
+  late final FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final streamState = ref.watch(liveStreamProvider);
 
     return streamState.when(
       data: (state) {
-        if (!state.isEnabled || !state.replaceWorkflow) {
+        if (!state.shouldReplaceWorkflow) {
           return const SizedBox.shrink();
         }
 
@@ -60,31 +79,41 @@ class StreamReplacementScreen extends ConsumerWidget {
         if (state.streamType == LiveStreamType.youtubeLive &&
             state.youtubeController != null &&
             state.streamStatus == LiveStreamStatus.active) {
-          return _buildStreamUI(
-            context,
-            ref,
-            YoutubePlayer(
-              controller: state.youtubeController!,
-              onEnded: (_) {
-                ref.read(liveStreamProvider.notifier).updateStreamStatus(LiveStreamStatus.ended);
-                ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(false);
-              },
-            ),
-          );
+          try {
+            return _buildStreamUI(
+              context,
+              ref,
+              YoutubePlayer(
+                controller: state.youtubeController!,
+                onEnded: (_) {
+                  ref.read(liveStreamProvider.notifier).updateStreamStatus(LiveStreamStatus.ended);
+                  ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(false);
+                },
+              ),
+            );
+          } catch (e) {
+            // Controller might be disposed, return empty
+            return const SizedBox.shrink();
+          }
         }
 
         // Show RTSP stream if available
         if (state.streamType == LiveStreamType.rtsp &&
             state.videoController != null &&
             state.streamStatus == LiveStreamStatus.active) {
-          return _buildStreamUI(
-            context,
-            ref,
-            Video(
-              controller: state.videoController!,
-              controls: null,
-            ),
-          );
+          try {
+            return _buildStreamUI(
+              context,
+              ref,
+              Video(
+                controller: state.videoController!,
+                controls: null,
+              ),
+            );
+          } catch (e) {
+            // Controller might be disposed, return empty
+            return const SizedBox.shrink();
+          }
         }
 
         return const SizedBox.shrink();
@@ -108,15 +137,17 @@ class StreamReplacementScreen extends ConsumerWidget {
           orElse: () => false,
         );
 
-    return RawKeyboardListener(
-      focusNode: FocusNode(),
+    return Focus(
+      focusNode: _focusNode,
       autofocus: true,
-      onKey: (RawKeyEvent event) {
-        if (event is RawKeyDownEvent) {
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
           if (event.logicalKey == LogicalKeyboardKey.arrowLeft || event.logicalKey == LogicalKeyboardKey.arrowRight) {
             scaffoldKey.currentState?.openDrawer();
+            return KeyEventResult.handled;
           }
         }
+        return KeyEventResult.ignored;
       },
       child: Scaffold(
         key: scaffoldKey,
@@ -131,61 +162,58 @@ class StreamReplacementScreen extends ConsumerWidget {
                 child: streamWidget,
               ),
             ),
-            !isBoxOrAndroidTV
-                ?
-                // Add hamburger menu to open drawer
-                Align(
-                    alignment: AlignmentDirectional.topStart,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          scaffoldKey.currentState?.openDrawer();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 8.w,
-                            shadows: kHomeTextShadow,
-                          ),
-                        ),
+            // Only show touch controls on non-TV devices
+            if (!isBoxOrAndroidTV) ...[
+              // Add hamburger menu to open drawer
+              Align(
+                alignment: AlignmentDirectional.topStart,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      scaffoldKey.currentState?.openDrawer();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                        size: 8.w,
+                        shadows: kHomeTextShadow,
                       ),
                     ),
-                  )
-                : Container(),
-            !isBoxOrAndroidTV
-                ?
-                // For top-start (will be top-left in LTR, top-right in RTL)
-                Align(
-                    alignment: AlignmentDirectional.topEnd,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(false);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 8.w,
-                          ),
-                        ),
+                  ),
+                ),
+              ),
+              // Close button
+              Align(
+                alignment: AlignmentDirectional.topEnd,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      ref.read(liveStreamProvider.notifier).toggleReplaceWorkflow(false);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 8.w,
                       ),
                     ),
-                  )
-                : Container(),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

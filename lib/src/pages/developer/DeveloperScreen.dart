@@ -72,25 +72,35 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
   forceScreen(ForcedScreen e) {
     cancelWalkThrowScreens();
-    setState(() {
-      forcedScreen = e;
-    });
+    if (mounted) {
+      setState(() {
+        forcedScreen = e;
+      });
+    }
   }
 
   void cancelWalkThrowScreens() {
     walkThrowScreensSubscription?.cancel();
-    setState(() {
+    if (mounted) {
+      setState(() {
+        walkThrowScreensSubscription = null;
+        forcedScreen = null; // clear the forcedScreen when canceling the walkthrough
+      });
+    } else {
+      // If widget is not mounted, just clean up without setState
       walkThrowScreensSubscription = null;
-      forcedScreen = null; // clear the forcedScreen when canceling the walkthrough
-    });
+      forcedScreen = null;
+    }
   }
 
   void walkThrowScreens() {
     walkThrowScreensSubscription?.cancel();
     walkThrowScreensSubscription = generateStream(15.seconds).listen((event) {
-      setState(() {
-        forcedScreen = screens[event % screens.length];
-      });
+      if (mounted) {
+        setState(() {
+          forcedScreen = screens[event % screens.length];
+        });
+      }
     });
   }
 
@@ -107,7 +117,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
   @override
   void dispose() {
-    cancelWalkThrowScreens();
+    // Just cancel the subscription without updating UI state since widget is being destroyed
+    walkThrowScreensSubscription?.cancel();
     super.dispose();
   }
 

@@ -16,14 +16,14 @@ class YouTubeStreamHelper {
   Future<void> dispose() async {
     if (_controller != null) {
       try {
-        // First remove all listeners to prevent callbacks during disposal
-        _controller!.removeListener(() {});
-        _controller!.dispose();
+        final controllerToDispose = _controller!;
+        _controller = null;
+        controllerToDispose.dispose();
         dev.log('🎥 [YOUTUBE_HELPER] Disposed YouTube controller');
       } catch (e) {
         dev.log('⚠️ [YOUTUBE_HELPER] Error disposing YouTube controller: $e');
+        _controller = null;
       }
-      _controller = null;
     }
   }
 
