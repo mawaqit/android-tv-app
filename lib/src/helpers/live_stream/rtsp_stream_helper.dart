@@ -19,7 +19,8 @@ class RTSPStreamHelper {
 
   /// Get the current active video controller
   VideoController? get videoController => _videoController;
-
+  int? _bufferingStartTime;
+  static const int _maxBufferingTimeMs = 30000; // 30 seconds max buffering
   /// Get the current active player
   Player? get player => _player;
 
@@ -28,6 +29,9 @@ class RTSPStreamHelper {
     dev.log('🎬 [RTSP_HELPER] Initializing player with URL: $url');
 
     await dispose();
+
+    // Reset buffering tracking
+    _bufferingStartTime = null;
 
     _player = Player();
     _videoController = VideoController(_player!);
@@ -46,14 +50,20 @@ class RTSPStreamHelper {
       }
     });
 
-    // Start periodic playback check
-    _playbackCheckTimer?.cancel();
-    _playbackCheckTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
-      if (!_isPlaying && !_isCompleted) {
-        dev.log('❌ [RTSP_HELPER] Stream not playing, calling error handler');
-        _onError?.call('Stream playback stopped');
+    // Monitor buffering state changes
+    _player!.stream.buffering.listen((buffering) {
+      if (buffering && _bufferingStartTime == null) {
+        _bufferingStartTime = DateTime.now().millisecondsSinceEpoch;
+        dev.log('⏳ [RTSP_HELPER] Stream started buffering');
+      } else if (!buffering && _bufferingStartTime != null) {
+        dev.log('✅ [RTSP_HELPER] Stream stopped buffering');
+        _bufferingStartTime = null;
       }
     });
+
+    // Remove the periodic playback check timer - we'll rely on the main status checker
+    _playbackCheckTimer?.cancel();
+    _playbackCheckTimer = null;
 
     try {
       await _player!.open(Media(url));
@@ -77,7 +87,10 @@ class RTSPStreamHelper {
 
   /// Check if the stream is currently active and healthy
   Future<bool> checkStreamActive() async {
-    if (_player == null) return false;
+    if (_player == null) {
+      dev.log('❌ [RTSP_HELPER] No player instance');
+      return false;
+    }
 
     try {
       // Basic checks first
@@ -86,21 +99,48 @@ class RTSPStreamHelper {
         return false;
       }
 
-      // For live streams, we must be actively playing
+      // Check player state
+      final buffering = _player!.state.buffering;
+      final position = _player!.state.position;
+      
+      // Handle buffering state with timeout
+      if (buffering) {
+        final currentTime = DateTime.now().millisecondsSinceEpoch;
+        
+        if (_bufferingStartTime == null) {
+          _bufferingStartTime = currentTime;
+          dev.log('⏳ [RTSP_HELPER] Stream started buffering');
+          return true; // Allow some buffering time
+        } else {
+          final bufferingDuration = currentTime - _bufferingStartTime!;
+          if (bufferingDuration > _maxBufferingTimeMs) {
+            dev.log('❌ [RTSP_HELPER] Stream buffering too long (${bufferingDuration}ms), considering inactive');
+            _bufferingStartTime = null;
+            return false;
+          } else {
+            dev.log('⏳ [RTSP_HELPER] Stream buffering for ${bufferingDuration}ms, still within limits');
+            return true;
+          }
+        }
+      } else {
+        // Not buffering, reset the buffering timer
+        if (_bufferingStartTime != null) {
+          dev.log('✅ [RTSP_HELPER] Stream stopped buffering');
+          _bufferingStartTime = null;
+        }
+      }
+
+      // For live streams, we should be actively playing
       if (!_isPlaying) {
         dev.log('❌ [RTSP_HELPER] Stream not playing');
         return false;
       }
 
-      // Check if player is buffering for too long
-      final buffering = _player!.state.buffering;
-      if (buffering) {
-        dev.log('⚠️ [RTSP_HELPER] Stream is buffering');
-        return false;
-      }
-
-      dev.log('✅ [RTSP_HELPER] Stream health check passed');
+      // Additional check: For RTSP live streams, position should be reasonable
+      // Live streams typically have very large position values or duration might be unknown
+      dev.log('✅ [RTSP_HELPER] Stream is healthy - Playing: $_isPlaying, Position: $position, Buffering: $buffering');
       return true;
+      
     } catch (e) {
       dev.log('🚨 [RTSP_HELPER] Error during stream health check: $e');
       return false;
@@ -128,6 +168,9 @@ class RTSPStreamHelper {
       _playbackCheckTimer?.cancel();
       _playbackCheckTimer = null;
 
+      // Clear buffering tracking
+      _bufferingStartTime = null;
+
       // Clear controller reference before disposing player
       _videoController = null;
       _isPlaying = false;
@@ -151,6 +194,7 @@ class RTSPStreamHelper {
       _player = null;
       _isPlaying = false;
       _isCompleted = false;
+      _bufferingStartTime = null;
     }
   }
 
