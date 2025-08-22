@@ -133,13 +133,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
           // Safe scroll operation
           scrollController.jumpTo(min(currentScroll + delta, maxScroll));
 
-          // Page calculation
-          final pageHeight = scrollController.position.viewportDimension;
-          final newPage = _calculateCurrentPage(scrollController, pageHeight);
-
-          if (newPage != state.currentPage) {
-            state = state.copyWith(currentPage: newPage);
-          }
         } catch (e) {
           timer.cancel();
           state = state.copyWith(isPlaying: false);
@@ -158,38 +151,30 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     _autoScrollTimer?.cancel();
     _autoScrollTimer = null;
 
-    // Calculate current page before switching views
-    if (scrollController.hasClients) {
-      final pageHeight = scrollController.position.viewportDimension;
-      // Use floor instead of ceil and don't add 1 to stay on current page
-      // if scroll hasn't moved significantly
-      final currentPage = _calculateCurrentPage(scrollController, pageHeight);
-      // First update state to disable auto-scroll
-      state = state.copyWith(
-        isSinglePageView: false,
-        isPlaying: false,
-        currentPage: currentPage, // Update the current page in auto-scroll state
-      );
+    // Use the current page from state which was tracked during scrolling
+    // This maintains the correct page position when stopping auto-scroll
+    final currentPage = state.currentPage;
 
-      // Then update the page after a small delay to allow view transition
-      await Future.delayed(Duration(milliseconds: 100));
+    // First update state to disable auto-scroll
+    state = state.copyWith(
+      isSinglePageView: false,
+      isPlaying: false,
+      currentPage: currentPage, // Keep the same page
+    );
 
-      // Update QuranReadingState with current page
-      try {
-        // Always use the calculated current page from auto-scroll
-        await ref.read(quranReadingNotifierProvider.notifier).updatePage(
-              currentPage,
-              isPortairt: isPortairt,
-            );
-      } catch (e) {
-        // Handle error silently or show a user-friendly message
-        print('Error updating page: $e');
-      }
-    } else {
-      state = state.copyWith(
-        isSinglePageView: false,
-        isPlaying: false,
-      );
+    // Then update the page after a small delay to allow view transition
+    await Future.delayed(Duration(milliseconds: 100));
+
+    // Update QuranReadingState with current page
+    try {
+      // Use the tracked current page from auto-scroll state
+      await ref.read(quranReadingNotifierProvider.notifier).updatePage(
+            currentPage,
+            isPortairt: isPortairt,
+          );
+    } catch (e) {
+      // Handle error silently or show a user-friendly message
+      print('Error updating page: $e');
     }
   }
 
