@@ -135,13 +135,10 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
         await ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(moshafType);
       }
 
-      // Preserve the current page if we have an existing state (e.g., when switching Moshaf)
+      // Preserve the current page and rotation state if we have an existing state (e.g., when switching Moshaf)
       final preservedPage = state.valueOrNull?.currentPage;
-      
-      state = AsyncLoading();
+      final preservedRotation = state.valueOrNull?.isRotated ?? false;
 
-      // Clear any existing SVGs in memory
-      await _clearSvgCache();
 
       final svgs = await _loadSvgs(moshafType: moshafType);
 
@@ -151,16 +148,13 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
 
       // Use preserved page if available (when switching Moshaf), otherwise use last read page
       final currentPage = preservedPage ?? await repository.getLastReadPage();
-      
-      // Check if we're in rotated (portrait) mode
-      final isRotated = state.valueOrNull?.isRotated ?? false;
-      
+
       // Initialize page controller based on rotation state
       // In portrait mode (rotated): each page view shows 1 page
       // In landscape mode (not rotated): each page view shows 2 pages
-      final initialPageIndex = isRotated ? currentPage : (currentPage / 2).floor();
+      final initialPageIndex = preservedRotation ? currentPage : (currentPage / 2).floor();
       final pageController = PageController(initialPage: initialPageIndex);
-      
+
       final suwar = await getAllSuwar();
 
       return QuranReadingState(
@@ -171,22 +165,11 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
         svgs: svgs,
         pageController: pageController,
         currentSurahName: _getCurrentSurahName(currentPage, suwar),
-        isRotated: isRotated,  // Preserve rotation state
+        isRotated: preservedRotation,  // Preserve rotation state
       );
     } catch (e) {
       rethrow;
     }
-  }
-
-  Future<void> _clearSvgCache() async {
-    // Clear any existing state
-    state = AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      return state.value!.copyWith(
-        svgs: [],
-        pageController: PageController(),
-      );
-    });
   }
 
   Future<void> _saveLastReadPage(int index) async {
