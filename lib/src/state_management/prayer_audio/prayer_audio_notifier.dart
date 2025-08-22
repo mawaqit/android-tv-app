@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
-import 'package:mawaqit/src/state_management/prayer_audio/prayer_audio_state.dart';
 import 'package:mawaqit/src/services/audio_stream_offline_manager.dart';
+import 'package:mawaqit/src/state_management/prayer_audio/prayer_audio_state.dart';
+import 'package:mawaqit/src/services/audio_manager.dart';
 
 import 'package:mawaqit/const/resource.dart';
 
@@ -23,43 +22,32 @@ final prayerAudioProvider = StateNotifierProvider<PrayerAudioNotifier, PrayerAud
 class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   StreamSubscription<PlayerState>? _playerStateSubscription;
-
-  late final Dio _dio;
+  final AudioManager _audioManager = AudioManager();
 
   PrayerAudioNotifier() : super(const PrayerAudioState(processingState: ProcessingState.idle)) {
     log('PrayerAudioNotifier: Initializing');
-
-    // Initialize Dio with cache interceptor
-    final cacheOptions = CacheOptions(
-      store: HiveCacheStore(null),
-      priority: CachePriority.high,
-      policy: CachePolicy.request,
-    );
-    _dio = Dio()..interceptors.add(DioCacheInterceptor(options: cacheOptions));
   }
 
   // --- Public methods ---
 
   Future<void> playAdhan(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) async {
     log('PrayerAudioNotifier: playAdhan called with useFajrAdhan=$useFajrAdhan');
+    log('PrayerAudioNotifier: Current state before playAdhan: ${state.processingState}');
 
     if (mosqueConfig == null) {
       log('PrayerAudioNotifier: Invalid mosque config (null)');
       return;
     }
 
-    final url = _getAdhanLink(mosqueConfig, useFajrAdhan: useFajrAdhan);
+    final url = _audioManager.adhanLink(mosqueConfig, useFajrAdhan: useFajrAdhan);
     log('PrayerAudioNotifier: Will play adhan from $url');
 
-    if (url == null) {
-      log('PrayerAudioNotifier: Could not determine adhan URL');
-      return;
-    }
-
     if (url.contains('bip')) {
+      log('PrayerAudioNotifier: URL contains bip, playing bip asset');
       await _playAsset(R.ASSETS_VOICES_ADHAN_BIP_MP3);
     } else {
-      await _playFromUrl(url);
+      log('PrayerAudioNotifier: URL does not contain bip, trying cached/network playback');
+      await _playFromUrlWithCache(url);
     }
   }
 
@@ -70,7 +58,7 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
 
   Future<void> playDuaAfterAdhan(MosqueConfig? mosqueConfig) async {
     log('PrayerAudioNotifier: playDuaAfterAdhan called');
-    await _playFromUrl(_duaAfterAdhanLink);
+    await _playFromUrlWithCache(_audioManager.duaAfterAdhanLink);
   }
 
   Future<void> stop() async {
@@ -87,8 +75,8 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
 
   // --- Private methods ---
 
-  Future<void> _playFromUrl(String url) async {
-    log('PrayerAudioNotifier: _playFromUrl called with URL: $url');
+  Future<void> _playFromUrlWithCache(String url) async {
+    log('PrayerAudioNotifier: _playFromUrlWithCache called with URL: $url');
 
     try {
       // Stop any current playback
@@ -97,28 +85,74 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
       // Update state to loading
       state = const PrayerAudioState(processingState: ProcessingState.loading);
 
-      // Format URL
-      String formattedUrl = url;
-      if (!url.startsWith(PrayerAudioConstant.kHttpProtocol) && !url.startsWith(PrayerAudioConstant.kHttpsProtocol)) {
-        formattedUrl = '${PrayerAudioConstant.kHttpsPrefix}$url';
+      // Check if we have network connectivity
+      final hasNetwork = await _hasNetworkConnection();
+      log('PrayerAudioNotifier: Network available: $hasNetwork');
+
+      bool playbackSuccessful = false;
+
+      // Strategy 1: Try cached file first (works offline if cached)
+      if (!playbackSuccessful) {
+        playbackSuccessful = await _tryPlayFromCache(url, hasNetwork);
       }
 
-      // Download and set audio source
-      try {
-        final ByteData audioData = await _getFile(formattedUrl);
-        log('PrayerAudioNotifier: Downloaded ${audioData.lengthInBytes} bytes');
-        await _audioPlayer.setAudioSource(JustAudioBytesSource(audioData));
-        log('PrayerAudioNotifier: Audio source set');
-      } catch (e) {
-        log('PrayerAudioNotifier: Failed to download/set audio from bytes, trying direct URL: $e');
-        // Fallback to direct URL
-        await _audioPlayer.setUrl(formattedUrl);
-        log('PrayerAudioNotifier: Set URL directly');
+      // If playback failed, just log and set state to idle
+      if (!playbackSuccessful) {
+        log('PrayerAudioNotifier: All strategies failed, no audio will be played');
+        state = const PrayerAudioState(processingState: ProcessingState.idle);
+        return;
       }
 
-      // Play and setup listener
+      // If we reach here, playback was successful, setup completion listener
+      _setupPlaybackListener();
+    } catch (e) {
+      log('PrayerAudioNotifier: Error in _playFromUrlWithCache: $e');
+      // Set state to idle on error, no fallback audio
+      state = const PrayerAudioState(processingState: ProcessingState.idle);
+    }
+  }
+
+  Future<bool> _tryPlayFromCache(String url, bool hasNetwork) async {
+    try {
+      log('PrayerAudioNotifier: Trying to get cached audio for: $url');
+
+      // Use existing AudioManager's getFile method which handles caching
+      // First try with cache enabled (will use cache if available, download if not)
+      ByteData? audioData;
+
+      if (hasNetwork) {
+        log('PrayerAudioNotifier: Network available, trying cache/network');
+        try {
+          audioData = await _audioManager.getFile(url, enableCache: true);
+          log('PrayerAudioNotifier: Successfully got audio data from AudioManager (${audioData.lengthInBytes} bytes)');
+        } catch (e) {
+          log('PrayerAudioNotifier: AudioManager getFile with network failed: $e');
+        }
+      }
+
+      // If network failed or no network, try cache-only
+      if (audioData == null) {
+        log('PrayerAudioNotifier: Trying cache-only fallback');
+        try {
+          // Force cache-only by disabling cache temporarily and catching errors
+          audioData = await _audioManager.getFile(url, enableCache: true);
+          log('PrayerAudioNotifier: Successfully got audio data from cache-only (${audioData.lengthInBytes} bytes)');
+        } catch (e) {
+          log('PrayerAudioNotifier: Cache-only fallback failed: $e');
+          return false;
+        }
+      }
+
+      if (audioData == null) {
+        log('PrayerAudioNotifier: No audio data available');
+        return false;
+      }
+
+      // Set audio source and play
+      await _audioPlayer.setAudioSource(JustAudioBytesSource(audioData));
       await _audioPlayer.play();
-      log('PrayerAudioNotifier: Play() called');
+
+      log('PrayerAudioNotifier: Successfully playing cached audio (${audioData.lengthInBytes} bytes)');
 
       // Update state with duration
       state = PrayerAudioState(
@@ -126,24 +160,38 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
         processingState: ProcessingState.ready,
       );
 
-      // Listen for completion
-      _playerStateSubscription?.cancel();
-      _playerStateSubscription = _audioPlayer.playerStateStream.listen((playerState) {
-        log('PrayerAudioNotifier: Player state changed to ${playerState.processingState}');
-
-        // Update state based on player state
-        state = state.copyWith(processingState: playerState.processingState);
-
-        if (playerState.processingState == ProcessingState.completed) {
-          log('PrayerAudioNotifier: Playback completed');
-          _playerStateSubscription?.cancel();
-          _playerStateSubscription = null;
-        }
-      });
+      return true;
     } catch (e) {
-      log('PrayerAudioNotifier: Error in _playFromUrl: $e');
-      state = const PrayerAudioState(processingState: ProcessingState.idle);
+      log('PrayerAudioNotifier: Cache playback failed: $e');
+      return false;
     }
+  }
+
+  Future<bool> _hasNetworkConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (e) {
+      log('PrayerAudioNotifier: Network check failed: $e');
+      return false;
+    }
+  }
+
+  void _setupPlaybackListener() {
+    // Listen for completion
+    _playerStateSubscription?.cancel();
+    _playerStateSubscription = _audioPlayer.playerStateStream.listen((playerState) {
+      log('PrayerAudioNotifier: Player state changed to ${playerState.processingState}');
+
+      // Update state based on player state
+      state = state.copyWith(processingState: playerState.processingState);
+
+      if (playerState.processingState == ProcessingState.completed) {
+        log('PrayerAudioNotifier: Playback completed');
+        _playerStateSubscription?.cancel();
+        _playerStateSubscription = null;
+      }
+    });
   }
 
   Future<void> _playAsset(String assetPath) async {
@@ -169,68 +217,20 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
         processingState: ProcessingState.ready,
       );
 
-      // Listen for completion
-      _playerStateSubscription?.cancel();
-      _playerStateSubscription = _audioPlayer.playerStateStream.listen((playerState) {
-        log('PrayerAudioNotifier: Player state changed to ${playerState.processingState}');
-
-        // Update state based on player state
-        state = state.copyWith(processingState: playerState.processingState);
-
-        if (playerState.processingState == ProcessingState.completed) {
-          log('PrayerAudioNotifier: Playback completed');
-          _playerStateSubscription?.cancel();
-          _playerStateSubscription = null;
-        }
-      });
+      // Setup listener
+      _setupPlaybackListener();
     } catch (e) {
       log('PrayerAudioNotifier: Error in _playAsset: $e');
       state = const PrayerAudioState(processingState: ProcessingState.idle);
     }
   }
 
-  Future<ByteData> _getFile(String url) async {
-    try {
-      final response = await _dio.get<List<int>>(
-        url,
-        options: Options(responseType: ResponseType.bytes),
-      );
-
-      if (response.data == null || response.data!.isEmpty) {
-        throw Exception('Downloaded file is empty');
-      }
-
-      return Uint8List.fromList(response.data!).buffer.asByteData();
-    } catch (e) {
-      log('PrayerAudioNotifier: Error downloading file: $e');
-      rethrow;
-    }
-  }
-
-  String? _getAdhanLink(MosqueConfig mosqueConfig, {bool useFajrAdhan = false}) {
-    String adhanLink =
-        "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${PrayerAudioConstant.kDefaultAdhanFileName}"; // Default
-
-    if (mosqueConfig.adhanVoice?.isNotEmpty ?? false) {
-      adhanLink =
-          "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${mosqueConfig.adhanVoice!}${PrayerAudioConstant.kMp3Extension}";
-    }
-
-    if (useFajrAdhan && !adhanLink.contains('bip')) {
-      adhanLink = adhanLink.replaceAll(PrayerAudioConstant.kMp3Extension, PrayerAudioConstant.kFajrAdhanSuffix);
-    }
-
-    return adhanLink;
-  }
-
-  String get _duaAfterAdhanLink =>
-      "$kStaticFilesUrl${PrayerAudioConstant.kMp3Directory}${PrayerAudioConstant.kDuaAfterAdhanFileName}";
-
   @override
   void dispose() {
     log('PrayerAudioNotifier: Disposing');
     _playerStateSubscription?.cancel();
     _audioPlayer.dispose();
+    _audioManager.dispose();
     super.dispose();
   }
 }
