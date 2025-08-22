@@ -510,12 +510,36 @@ class NormalViewStrategy implements QuranViewStrategy {
   Widget buildView(QuranReadingState state, WidgetRef ref, BuildContext context) {
     bool shouldShowVertical = (MediaQuery.of(context).orientation == Orientation.portrait && !isPortrait) ||
         MediaQuery.of(context).orientation == Orientation.landscape && isPortrait;
+
+    final autoScrollState = ref.watch(autoScrollNotifierProvider);
+
+    if (state.pageController.hasClients && !autoScrollState.isSinglePageView) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final currentAutoScrollState = ref.read(autoScrollNotifierProvider);
+        if (!currentAutoScrollState.isSinglePageView) {
+          if (shouldShowVertical) {
+            final targetPage = state.currentPage;
+            if (state.pageController.page?.round() != targetPage) {
+              state.pageController.jumpToPage(targetPage);
+            }
+          } else {
+            final targetPage = (state.currentPage / 2).floor();
+            if (state.pageController.page?.round() != targetPage) {
+              state.pageController.jumpToPage(targetPage);
+            }
+          }
+        }
+      });
+    }
+
     return shouldShowVertical
         ? VerticalPageViewWidget(
             quranReadingState: state,
+            key: ValueKey('vertical_${state.currentPage}'),
           )
         : HorizontalPageViewWidget(
             quranReadingState: state,
+            key: ValueKey('horizontal_${state.currentPage}'),
           );
   }
 
