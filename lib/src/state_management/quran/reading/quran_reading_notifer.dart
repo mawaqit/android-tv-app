@@ -135,6 +135,9 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
         await ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(moshafType);
       }
 
+      // Preserve the current page if we have an existing state (e.g., when switching Moshaf)
+      final preservedPage = state.valueOrNull?.currentPage;
+      
       state = AsyncLoading();
 
       // Clear any existing SVGs in memory
@@ -146,18 +149,29 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
         throw Exception('No SVGs found for moshaf type: ${moshafType.name}');
       }
 
-      final lastReadPage = await repository.getLastReadPage();
-      final pageController = PageController(initialPage: (lastReadPage / 2).floor());
+      // Use preserved page if available (when switching Moshaf), otherwise use last read page
+      final currentPage = preservedPage ?? await repository.getLastReadPage();
+      
+      // Check if we're in rotated (portrait) mode
+      final isRotated = state.valueOrNull?.isRotated ?? false;
+      
+      // Initialize page controller based on rotation state
+      // In portrait mode (rotated): each page view shows 1 page
+      // In landscape mode (not rotated): each page view shows 2 pages
+      final initialPageIndex = isRotated ? currentPage : (currentPage / 2).floor();
+      final pageController = PageController(initialPage: initialPageIndex);
+      
       final suwar = await getAllSuwar();
 
       return QuranReadingState(
         currentJuz: 1,
         currentSurah: 1,
         suwar: suwar,
-        currentPage: lastReadPage,
+        currentPage: currentPage,
         svgs: svgs,
         pageController: pageController,
-        currentSurahName: _getCurrentSurahName(lastReadPage, suwar),
+        currentSurahName: _getCurrentSurahName(currentPage, suwar),
+        isRotated: isRotated,  // Preserve rotation state
       );
     } catch (e) {
       rethrow;
@@ -212,15 +226,17 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       final isCurrentlyRotated = state.value!.isRotated;
       state.value!.pageController.dispose();
 
-      // Calculate correct initial page based on orientation change
-      final newInitialPage = isCurrentlyRotated
-          ? currentPage // Going from portrait to landscape - keep same page
-          : (currentPage / 2).floor(); // Going from landscape to portrait - divide by 2
+      // Calculate correct initial page for PageController based on orientation
+      // In portrait mode: each page view shows 1 page
+      // In landscape mode: each page view shows 2 pages
+      final newInitialPage = !isCurrentlyRotated
+          ? currentPage // Going from landscape to portrait - page controller index = actual page
+          : (currentPage / 2).floor(); // Going from portrait to landscape - page controller index = actual page / 2
 
       return state.value!.copyWith(
         isRotated: !isCurrentlyRotated,
         pageController: PageController(initialPage: newInitialPage, keepPage: true),
-        currentPage: currentPage,
+        currentPage: currentPage, // Keep the actual page number consistent
       );
     });
   }

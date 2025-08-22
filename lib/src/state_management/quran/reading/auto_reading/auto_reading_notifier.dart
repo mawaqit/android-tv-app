@@ -168,6 +168,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
       state = state.copyWith(
         isSinglePageView: false,
         isPlaying: false,
+        currentPage: currentPage, // Update the current page in auto-scroll state
       );
 
       // Then update the page after a small delay to allow view transition
@@ -175,8 +176,9 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
       // Update QuranReadingState with current page
       try {
+        // Always use the calculated current page from auto-scroll
         await ref.read(quranReadingNotifierProvider.notifier).updatePage(
-              !isPortairt ? currentPage : quranReadingState!.currentPage,
+              currentPage,
               isPortairt: isPortairt,
             );
       } catch (e) {

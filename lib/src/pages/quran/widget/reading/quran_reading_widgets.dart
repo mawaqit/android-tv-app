@@ -211,6 +211,13 @@ class PageNumberIndicatorWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Get the actual orientation from MediaQuery for accurate page display
+    final isActuallyPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    
+    // Calculate the correct page numbers based on actual orientation
+    final currentPageDisplay = quranReadingState.currentPage + 1;
+    final nextPageDisplay = quranReadingState.currentPage + 2;
+    
     return Positioned(
       left: 15.w,
       right: 15.w,
@@ -235,14 +242,18 @@ class PageNumberIndicatorWidget extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                isPortrait
+                // Show single page in portrait (whether rotated or not)
+                // Show two pages in landscape (whether rotated or not)
+                (isActuallyPortrait || isPortrait)
                     ? S.of(context).quranReadingPagePortrait(
-                          quranReadingState.currentPage + 1,
+                          currentPageDisplay,
                           quranReadingState.totalPages,
                         )
                     : S.of(context).quranReadingPage(
-                          quranReadingState.currentPage + 1,
-                          quranReadingState.currentPage + 2,
+                          currentPageDisplay,
+                          nextPageDisplay <= quranReadingState.totalPages 
+                              ? nextPageDisplay 
+                              : quranReadingState.totalPages,
                           quranReadingState.totalPages,
                         ),
                 style: TextStyle(
