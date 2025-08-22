@@ -132,7 +132,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
           // Safe scroll operation
           scrollController.jumpTo(min(currentScroll + delta, maxScroll));
-
         } catch (e) {
           timer.cancel();
           state = state.copyWith(isPlaying: false);

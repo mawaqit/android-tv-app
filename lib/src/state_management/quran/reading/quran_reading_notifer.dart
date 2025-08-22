@@ -139,7 +139,6 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
       final preservedPage = state.valueOrNull?.currentPage;
       final preservedRotation = state.valueOrNull?.isRotated ?? false;
 
-
       final svgs = await _loadSvgs(moshafType: moshafType);
 
       if (svgs.isEmpty) {
@@ -165,7 +164,7 @@ class QuranReadingNotifier extends AutoDisposeAsyncNotifier<QuranReadingState> {
         svgs: svgs,
         pageController: pageController,
         currentSurahName: _getCurrentSurahName(currentPage, suwar),
-        isRotated: preservedRotation,  // Preserve rotation state
+        isRotated: preservedRotation, // Preserve rotation state
       );
     } catch (e) {
       rethrow;
