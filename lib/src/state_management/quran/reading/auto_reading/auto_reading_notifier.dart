@@ -97,7 +97,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
   void _initializeScrollController(int currentPage, double pageHeight) {
-    final pageOffset = (currentPage - 1) * pageHeight;
+    final pageOffset = currentPage * pageHeight;
     // Set initial offset to correct position, account for rotation if necessary
     scrollController.jumpTo(pageOffset);
   }
@@ -167,35 +167,30 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     _autoScrollTimer = null;
 
     // Calculate current page before switching views
+    int finalPage = state.currentPage;
     if (scrollController.hasClients) {
       final pageHeight = scrollController.position.viewportDimension;
-      // Use floor instead of ceil and don't add 1 to stay on current page
-      // if scroll hasn't moved significantly
-      final currentPage = _calculateCurrentPage(scrollController, pageHeight);
-      // First update state to disable auto-scroll
-      state = state.copyWith(
-        isSinglePageView: false,
-        isPlaying: false,
-      );
+      finalPage = _calculateCurrentPage(scrollController, pageHeight);
+    }
 
-      // Then update the page after a small delay to allow view transition
-      await Future.delayed(Duration(milliseconds: 100));
+    // First update state to disable auto-scroll
+    state = state.copyWith(
+      isSinglePageView: false,
+      isPlaying: false,
+    );
 
-      // Update QuranReadingState with current page
-      try {
-        await ref.read(quranReadingNotifierProvider.notifier).updatePage(
-              !isPortairt ? currentPage : quranReadingState!.currentPage,
-              isPortairt: isPortairt,
-            );
-      } catch (e) {
-        // Handle error silently or show a user-friendly message
-        print('Error updating page: $e');
-      }
-    } else {
-      state = state.copyWith(
-        isSinglePageView: false,
-        isPlaying: false,
-      );
+    // Then update the page after a small delay to allow view transition
+    await Future.delayed(Duration(milliseconds: 100));
+
+    // Update QuranReadingState with current page
+    try {
+      await ref.read(quranReadingNotifierProvider.notifier).updatePage(
+            !isPortairt ? finalPage : quranReadingState!.currentPage,
+            isPortairt: isPortairt,
+          );
+    } catch (e) {
+      // Handle error silently or show a user-friendly message
+      print('Error updating page: $e');
     }
   }
 
