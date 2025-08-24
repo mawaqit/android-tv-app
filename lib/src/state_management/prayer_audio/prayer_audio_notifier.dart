@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -11,21 +10,24 @@ import 'package:mawaqit/src/models/mosqueConfig.dart';
 import 'package:mawaqit/src/services/audio_stream_offline_manager.dart';
 import 'package:mawaqit/src/state_management/prayer_audio/prayer_audio_state.dart';
 import 'package:mawaqit/src/services/audio_manager.dart';
+import 'package:mawaqit/src/helpers/connectivity_provider.dart';
+import 'package:mawaqit/src/models/address_model.dart';
 
 import 'package:mawaqit/const/resource.dart';
 
 // Simple provider without auto-dispose
 final prayerAudioProvider = StateNotifierProvider<PrayerAudioNotifier, PrayerAudioState>(
-  (ref) => PrayerAudioNotifier(),
+  (ref) => PrayerAudioNotifier(ref),
 );
 
 class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   StreamSubscription<PlayerState>? _playerStateSubscription;
   final AudioManager _audioManager = AudioManager();
+  final Ref _ref;
 
-  PrayerAudioNotifier() : super(const PrayerAudioState(processingState: ProcessingState.idle)) {
-    log('PrayerAudioNotifier: Initializing');
+  PrayerAudioNotifier(this._ref) : super(const PrayerAudioState(processingState: ProcessingState.idle)) {
+    log('PrayerAudioNotifier: Initializing with connectivity provider access');
   }
 
   // --- Public methods ---
@@ -143,11 +145,6 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
         }
       }
 
-      if (audioData == null) {
-        log('PrayerAudioNotifier: No audio data available');
-        return false;
-      }
-
       // Set audio source and play
       await _audioPlayer.setAudioSource(JustAudioBytesSource(audioData));
       await _audioPlayer.play();
@@ -169,8 +166,24 @@ class PrayerAudioNotifier extends StateNotifier<PrayerAudioState> {
 
   Future<bool> _hasNetworkConnection() async {
     try {
-      final result = await InternetAddress.lookup('google.com');
-      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+      await _ref.read(connectivityProvider.notifier).checkInternetConnection();
+
+      final connectivityState = _ref.read(connectivityProvider);
+      return connectivityState.when(
+        data: (status) {
+          final isConnected = status == ConnectivityStatus.connected;
+          log('PrayerAudioNotifier: Network status from provider: $isConnected');
+          return isConnected;
+        },
+        loading: () {
+          log('PrayerAudioNotifier: Connectivity loading, assuming offline');
+          return false;
+        },
+        error: (error, stack) {
+          log('PrayerAudioNotifier: Connectivity error, assuming offline: $error');
+          return false;
+        },
+      );
     } catch (e) {
       log('PrayerAudioNotifier: Network check failed: $e');
       return false;
