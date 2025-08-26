@@ -326,7 +326,7 @@ class _TextAnnouncement extends StatelessWidget {
       ];
 }
 
-class _ImageAnnouncement extends StatefulWidget {
+class _ImageAnnouncement extends StatelessWidget {
   const _ImageAnnouncement({
     Key? key,
     required this.image,
@@ -338,65 +338,30 @@ class _ImageAnnouncement extends StatefulWidget {
   /// used to skip to the next announcement if the image failed to load
   final VoidCallback? onError;
 
-  @override
-  State<_ImageAnnouncement> createState() => _ImageAnnouncementState();
-}
-
-class _ImageAnnouncementState extends State<_ImageAnnouncement> {
-  bool? _isImagePortrait;
-
-  @override
-  void initState() {
-    super.initState();
-    _detectImageOrientation();
-  }
-
-  void _detectImageOrientation() {
-    final imageProvider = MawaqitNetworkImageProvider(widget.image, onError: widget.onError);
-    final ImageStream stream = imageProvider.resolve(ImageConfiguration.empty);
-
-    stream.addListener(ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
-      final image = imageInfo.image;
-      final isPortrait = image.height > image.width;
-
-      if (mounted) {
-        setState(() {
-          _isImagePortrait = isPortrait;
-        });
-      }
-    }));
-  }
-
-  BoxFit _getImageFit(bool isScreenPortrait, bool? isImagePortrait) {
-    if (isImagePortrait == null) {
-      // Fallback to original behavior while loading
-      return isScreenPortrait ? BoxFit.fitWidth : BoxFit.fill;
-    }
-
+  BoxFit _getSmartImageFit(bool isScreenPortrait) {
     if (isScreenPortrait) {
-      // Portrait screen
-      return isImagePortrait ? BoxFit.cover : BoxFit.fitWidth;
+      // Portrait screen - let portrait images fill better, landscape images fit width
+      return BoxFit.cover;
     } else {
-      // Landscape screen
-      return isImagePortrait ? BoxFit.fitHeight : BoxFit.fill;
+      // Landscape screen - original behavior
+      return BoxFit.fill;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final isScreenPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final imageFit = _getImageFit(isScreenPortrait, _isImagePortrait);
-    final imageProvider = MawaqitNetworkImageProvider(widget.image, onError: widget.onError);
+    final imageProvider = MawaqitNetworkImageProvider(image, onError: onError);
 
     return isScreenPortrait
         ? Image(
             image: imageProvider,
-            fit: imageFit,
+            fit: _getSmartImageFit(isScreenPortrait),
             width: double.infinity,
           ).animate().slideX().addRepaintBoundary()
         : Image(
             image: imageProvider,
-            fit: imageFit,
+            fit: _getSmartImageFit(isScreenPortrait),
             width: double.infinity,
             height: double.infinity,
           ).animate().slideX().addRepaintBoundary();
