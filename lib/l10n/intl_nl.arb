@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Maak verbinding met het internet om te plannen voor de Koran luisteren",
-  "duaBetweenAdhanIqamah": "Supplicatie (Du'a) wordt niet afgewezen tussen de Adhan en Iqamah."
+  "duaaBetweenAdhanAndIqamaaTitle": "Supplicatie (Du'a) wordt niet afgewezen tussen de Adhan en Iqamah",
+  "duaBetweenAdhanIqamah": "Supplicatie (Du'a) wordt niet afgewezen tussen de Adhan en Iqamah.",
+  "processingRequest": "Verzoek wordt verwerkt...",
+  "loadingStream": "Stream wordt geladen...",
+  "rtspUrlHint": "Voer RTSP URL of YouTube link in",
+  "replaceWorkflowWithStream": "Automatisch de camera stream weergeven",
+  "replaceAppWorkflowWithCameraStream": "Het scherm geeft de camera stream automatisch weer zodra de camera opneemt; als het stopt, keert het scherm terug naar de gebedstijden",
+  "streamError": "Er is een fout opgetreden tijdens het streamen",
+  "finish": "Beëindigen"
 }
