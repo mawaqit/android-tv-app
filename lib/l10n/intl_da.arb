@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Opret forbindelse til internettet for at planlægge Koranlytning",
-  "duaBetweenAdhanIqamah": "Supplication (Du'a) er ikke afvist mellem Adhan og Iqamah."
+  "duaaBetweenAdhanAndIqamaaTitle": "Supplication (Du'a) er ikke afvist mellem Adhan og Iqamah",
+  "duaBetweenAdhanIqamah": "Supplication (Du'a) er ikke afvist mellem Adhan og Iqamah.",
+  "processingRequest": "Behandler anmodning...",
+  "loadingStream": "Indlæser stream...",
+  "rtspUrlHint": "Indtast RTSP URL eller YouTube link",
+  "replaceWorkflowWithStream": "Vis automatisk kamerastrømmen",
+  "replaceAppWorkflowWithCameraStream": "Skærmen vil automatisk vise kameraet, så snart kameraet begynder at optage hvis det stopper, skærmen vender tilbage til bønnen gange display",
+  "streamError": "Der opstod en fejl under streaming",
+  "finish": "Afslut"
 }
