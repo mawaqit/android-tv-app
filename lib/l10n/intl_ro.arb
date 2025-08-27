@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Vă rugăm să vă conectați la internet pentru a programa ascultarea Quran",
-  "duaBetweenAdhanIqamah": "Suplicarea (Du'a) nu este respinsă între Adhan și Iqamah."
+  "duaaBetweenAdhanAndIqamaaTitle": "Suplicarea (Du'a) nu este respinsă între Adhan și Iqamah",
+  "duaBetweenAdhanIqamah": "Suplicarea (Du'a) nu este respinsă între Adhan și Iqamah.",
+  "processingRequest": "Se procesează cererea...",
+  "loadingStream": "Se încarcă streamul...",
+  "rtspUrlHint": "Introduceți URL-ul RTSP sau link-ul YouTube",
+  "replaceWorkflowWithStream": "Afișare automată a fluxului camerei",
+  "replaceAppWorkflowWithCameraStream": "Ecranul va afișa automat stream-ul camerei de îndată ce camera va începe înregistrarea; dacă se oprește, ecranul se întoarce la afișajul de rugăciune",
+  "streamError": "A aparut o eroare la streaming",
+  "finish": "Terminare"
 }
