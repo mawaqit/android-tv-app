@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Połącz się z Internetem, aby zaplanować wysłuchanie Qurana",
-  "duaBetweenAdhanIqamah": "Pomijanie (Du'a) nie jest odrzucane pomiędzy Adhanem i Iqamahem."
+  "duaaBetweenAdhanAndIqamaaTitle": "Pomijanie (Du'a) nie jest odrzucane pomiędzy Adhanem i Iqamah",
+  "duaBetweenAdhanIqamah": "Pomijanie (Du'a) nie jest odrzucane pomiędzy Adhanem i Iqamahem.",
+  "processingRequest": "Przetwarzanie żądania...",
+  "loadingStream": "Ładowanie strumienia...",
+  "rtspUrlHint": "Wprowadź adres URL RTSP lub link YouTube",
+  "replaceWorkflowWithStream": "Automatycznie wyświetlaj strumień aparatu",
+  "replaceAppWorkflowWithCameraStream": "Ekran wyświetli automatycznie strumień aparatu po rozpoczęciu nagrywania kamery; jeśli się zatrzyma, ekran powraca do wyświetlania czasów modlitwy",
+  "streamError": "Wystąpił błąd podczas przesyłania strumieniowego",
+  "finish": "Zakończ"
 }
