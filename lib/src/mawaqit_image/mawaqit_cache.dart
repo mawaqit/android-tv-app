@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:mawaqit/main.dart';
 import 'package:uuid/uuid.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class MawaqitImageCache {
   static String? cacheDirectory;
@@ -80,7 +81,20 @@ class MawaqitImageCache {
   static Future<void> cacheImage(String url) async {
     if (await isImageCached(url)) return;
 
-    await _getUrlImage(url);
+    // Check connectivity before attempting to fetch
+    final internetConnection = InternetConnection();
+    final hasInternet = await internetConnection.hasInternetAccess;
+
+    if (!hasInternet) {
+      logger.w('Cannot cache image: No internet connection - $url');
+      return;
+    }
+
+    try {
+      await _getUrlImage(url);
+    } catch (e, stack) {
+      logger.e('Failed to cache image: $url', error: e, stackTrace: stack);
+    }
   }
 
   /// get image from cache if exist or from the network
@@ -89,6 +103,14 @@ class MawaqitImageCache {
     final localeImage = await _getLocaleImage(url);
 
     if (localeImage != null) return localeImage;
+
+    // Check connectivity before attempting to fetch from network
+    final internetConnection = InternetConnection();
+    final hasInternet = await internetConnection.hasInternetAccess;
+
+    if (!hasInternet) {
+      throw Exception("No internet connection and image not cached: $url");
+    }
 
     return _getUrlImage(url);
   }

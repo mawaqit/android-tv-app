@@ -154,6 +154,12 @@ class R {
   /// ![preview](file:///Users/ds/mawaqit/assets/img/flag/pt.png)
   static const String ASSETS_IMG_FLAG_PT_PNG = 'assets/img/flag/pt.png';
 
+  /// ![preview](file:///Users/ds/mawaqit/assets/img/flag/pt_BR.png)
+  static const String ASSETS_IMG_FLAG_PT_BR_PNG = 'assets/img/flag/pt_BR.png';
+
+  /// ![preview](file:///Users/ds/mawaqit/assets/img/flag/pt_PT.png)
+  static const String ASSETS_IMG_FLAG_PT_PT_PNG = 'assets/img/flag/pt_PT.png';
+
   /// ![preview](file:///Users/ds/mawaqit/assets/img/flag/ro.png)
   static const String ASSETS_IMG_FLAG_RO_PNG = 'assets/img/flag/ro.png';
 

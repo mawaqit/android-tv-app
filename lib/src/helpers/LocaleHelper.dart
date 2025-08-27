@@ -26,8 +26,22 @@ class LocaleHelper {
   static Locale splitLocaleCode(String localeCode) {
     var parts = localeCode.split('_');
     var languageCode = parts[0];
+    var countryCode = parts.length > 1 ? parts[1] : null;
 
-    return Locale(languageCode);
+    return Locale(languageCode, countryCode);
+  }
+
+  /// [transformLocaleToString] Transforms a [Locale] to its standard string representation.
+  ///
+  /// Returns format: 'languageCode' or 'languageCode_COUNTRYCODE'
+  /// Examples:
+  /// - Locale('en') -> 'en'
+  /// - Locale('en', 'US') -> 'en_US'
+  /// - Locale('pt', 'BR') -> 'pt_BR'
+  ///
+  /// This is a better-named version of the original _transformLocale function.
+  static String transformLocaleToString(Locale locale) {
+    return '${locale.languageCode}${locale.countryCode != null ? '_${locale.countryCode!.toUpperCase()}' : ''}';
   }
 
   /// [getSortedLocales] Public static method to get a sorted list of locales according to the defined rules.

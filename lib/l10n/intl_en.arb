@@ -446,5 +446,12 @@
   },
   "scheduleInOnlineMode": "Please connect to the internet to schedule Quran listening",
   "duaaBetweenAdhanAndIqamaaTitle": "Supplication (Du'a) is not rejected between the Adhan and Iqamah",
-  "duaBetweenAdhanIqamah": "Supplication (Du'a) is not rejected between the Adhan and Iqamah."
+  "duaBetweenAdhanIqamah": "Supplication (Du'a) is not rejected between the Adhan and Iqamah.",
+  "processingRequest": "Processing request...",
+  "loadingStream": "Loading stream...",
+  "rtspUrlHint": "Enter RTSP URL or YouTube link",
+  "replaceWorkflowWithStream": "Automatically display the camera stream",
+  "replaceAppWorkflowWithCameraStream": "The screen will automatically display the camera stream as soon as the camera starts recording; if it stops, the screen returns to the prayer times display",
+  "streamError": "An error occurred while streaming",
+  "finish": "Finish"
 }
