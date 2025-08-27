@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Připojte se k internetu a naplánujte poslech Quran",
-  "duaBetweenAdhanIqamah": "Zvyšování (Du'a) není odmítnuto mezi Adhanem a Iqamahem."
+  "duaaBetweenAdhanAndIqamaaTitle": "Zvyšování (Du'a) není odmítnuto mezi Adhanem a Iqamahem",
+  "duaBetweenAdhanIqamah": "Zvyšování (Du'a) není odmítnuto mezi Adhanem a Iqamahem.",
+  "processingRequest": "Zpracovávání požadavku...",
+  "loadingStream": "Načítání streamu...",
+  "rtspUrlHint": "Zadejte RTSP URL nebo odkaz na YouTube",
+  "replaceWorkflowWithStream": "Automaticky zobrazit stream kamery",
+  "replaceAppWorkflowWithCameraStream": "Obrazovka automaticky zobrazí proud kamery jakmile kamera začne nahrávat, pokud se zastaví, obrazovka se vrátí do režimu modlitby",
+  "streamError": "Při vysílání došlo k chybě",
+  "finish": "Dokončit"
 }
