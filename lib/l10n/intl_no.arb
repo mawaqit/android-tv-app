@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Vennligst koble deg til internett for å planlegge Quran lytting",
-  "duaBetweenAdhanIqamah": "Bekreftelse (Du'a) er ikke avvist mellom Adhan og Iqama."
+  "duaaBetweenAdhanAndIqamaaTitle": "Bekreftelse (Du'a) avvises ikke mellom Adhan og Iqamah",
+  "duaBetweenAdhanIqamah": "Bekreftelse (Du'a) er ikke avvist mellom Adhan og Iqama.",
+  "processingRequest": "Behandler forespørsel...",
+  "loadingStream": "Laster strøm...",
+  "rtspUrlHint": "Angi RTSP URL eller YouTube-lenke",
+  "replaceWorkflowWithStream": "Automatisk vis kamerastrømmen",
+  "replaceAppWorkflowWithCameraStream": "Skjermen viser kameraet automatisk når kameraet starter opptak; Hvis det stopper, vil skjermen gå tilbake til bønn tiden vises",
+  "streamError": "Det oppstod en feil under strømmingen",
+  "finish": "Fullfør"
 }
