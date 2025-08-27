@@ -1,0 +1,34 @@
+appId: com.mawaqit.androidtv
+---
+- launchApp
+
+# Wait for app to be ready
+- extendedWaitUntil:
+    visible: "السلام عليكم و رحمة الله و بركاته ٫ حللتم أهلا ونزلتم سهلا"
+    timeout: 15000
+
+# === ACTIVATE DEVELOPER MODE TO ACCESS AFTER SALAH HADITH ===
+# Open the drawer
+- pressKey: Remote Dpad Left
+- waitForAnimationToEnd
+
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+
+
+- tapOn: "Random Hadith"

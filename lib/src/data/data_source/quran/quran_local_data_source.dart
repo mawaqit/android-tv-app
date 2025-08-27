@@ -30,7 +30,6 @@ class QuranLocalDataSource {
   Future<List<SurahModel>> getSuwarByLanguage(String languageCode) async {
     try {
       final suwar = _surahBox.get(languageCode);
-      log('quran: getSuwarByLanguage: ${suwar[0]}');
       if (suwar != null) {
         return List<SurahModel>.from(suwar);
       } else {
@@ -73,10 +72,11 @@ class QuranLocalDataSource {
     }
   }
 
-  Future<Option<DateTime>> getLastUpdateTimestamp(String languageCode) async {
+  Option<DateTime> getLastUpdateTimestamp(String languageCode) {
     try {
-      final timestamp = _prefs.getInt('${languageCode}_last_fetch');
-      return Option.fromNullable(timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null);
+      final timestamp = _surahBox.get('${languageCode}_last_fetch') as int?;
+      final option = Option.fromNullable(timestamp).map((e) => DateTime.fromMillisecondsSinceEpoch(e));
+      return option;
     } catch (e) {
       log('quran: getLastUpdateTimestamp: ${e.toString()}');
       return None();
@@ -85,7 +85,7 @@ class QuranLocalDataSource {
 
   Future<void> saveLastUpdateTimestamp(String languageCode, DateTime timestamp) async {
     try {
-      await _prefs.setInt('${languageCode}_last_fetch', timestamp.millisecondsSinceEpoch);
+      await _surahBox.put('${languageCode}_last_fetch', timestamp.millisecondsSinceEpoch);
     } catch (e) {
       throw SaveLastUpdateTimestampException(e.toString());
     }

@@ -132,6 +132,8 @@ class Config {
     "pl": {"name": "Polish", "nativeName": "Polski"},
     "ps": {"name": "Pashto, Pushto", "nativeName": "پښتو"},
     "pt": {"name": "Portuguese", "nativeName": "Português"},
+    "pt_BR": {"name": "Portuguese (Brazil)", "nativeName": "Português (Brasil)"},
+    "pt_PT": {"name": "Portuguese (Portugal)", "nativeName": "Português (Portugal)"},
     "qu": {"name": "Quechua", "nativeName": "Runa Simi, Kichwa"},
     "rm": {"name": "Romansh", "nativeName": "Rumantsch grischun"},
     "rn": {"name": "Kirundi", "nativeName": "KiRundi"},

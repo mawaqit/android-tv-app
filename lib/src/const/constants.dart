@@ -7,8 +7,8 @@ const kDeviceInfo = 'device_info';
 
 const kBaseUrl = 'https://mawaqit.net/api';
 const kStagingUrl = 'https://staging.mawaqit.net/api';
-const kStaticFilesUrl = 'https://mawaqit.net/static';
-const kStagingStaticFilesUrl = 'https://staging.mawaqit.net/static';
+const kStaticFilesUrl = 'https://cdn.mawaqit.net';
+const kStagingStaticFilesUrl = 'https://cdn.mawaqit.net';
 
 const kApiToken = String.fromEnvironment('mawaqit.api.key');
 const kSentryDns = String.fromEnvironment('mawaqit.sentry.dns');
@@ -41,21 +41,19 @@ abstract class RandomHadithConstant {
 }
 
 class TurnOnOffTvConstant {
-  static const String kLastEventDate = "lastEventDate";
-  static const String kIsEventsSet = "isEventsSet";
-  static const String kActivateToggleFeature = "activateToggleFeature";
-  static const String kScheduledTimersKey = "scheduledTimers";
+  static const String kActivateToggleFeature = 'activate_toggle_feature';
+  static const String kisFajrIshaOnly = 'is_fajr_isha_only';
+  static const String kScheduledTimersKey = 'scheduled_timers_key';
+  static const String kLastEventDate = 'last_event_date';
+  static const String kMinuteBeforeKey = 'minute_before_key';
+  static const String kMinuteAfterKey = 'minute_after_key';
+  static const String kIsEventsSet = 'is_events_set';
+  static const String kScheduleParamsKey = 'schedule_params_key';
+  static const String kLastExecutedEventDate = 'last_executed_event_date';
 
   /// native methods calls
   static const String kNativeMethodsChannel = "nativeMethodsChannel";
   static const String kCheckRoot = "checkRoot";
-  static const String kToggleBoxScreenOff = "toggleBoxScreenOff";
-  static const String kToggleBoxScreenOn = "toggleBoxScreenOn";
-  static const String kToggleTabletScreenOn = "toggleTabletScreenOn";
-  static const String kToggleTabletScreenOff = "toggleTabletScreenOff";
-  static const String kisFajrIshaOnly = "isIshaFajrOnly";
-  static const String kMinuteBeforeKey = 'selectedMinuteBefore';
-  static const String kMinuteAfterKey = 'selectedMinuteAfter';
 }
 
 abstract class AnnouncementConstant {
@@ -73,7 +71,7 @@ abstract class QuranConstant {
   static const String kWarshQuranLocalVersion = 'warsh_quran_local_version';
   static const String kSelectedMoshafType = 'selected_moshaf_type';
   static const String kQuranBaseUrl = 'https://mp3quran.net/api/v3/';
-  static const String kSurahBox = 'surah_box';
+  static const String kSurahBox = 'surah_box_v2';
   static const String kReciterBox = 'reciter_box_v2';
   static const String kQuranModePref = 'quran_mode';
   static const String kSavedCurrentPage = 'saved_current_page';
@@ -83,8 +81,8 @@ abstract class QuranConstant {
   static const String kQuranReciterImagesBaseUrl = 'https://cdn.mawaqit.net/quran/reciters-pictures/';
   static const String kQuranCacheBoxName = 'timestamp_box';
   static const String kQuranReciterRetentionTime = 'quran_reciter_retention_time';
-  static const int kCacheWidth = 50;
-  static const int kCacheHeight = 50;
+  static const int kCacheWidth = 300;
+  static const int kCacheHeight = 300;
 }
 
 abstract class AzkarConstant {
@@ -95,6 +93,7 @@ abstract class AzkarConstant {
 
 abstract class SettingsConstant {
   static const String kLanguageCode = 'language_code';
+  static const String kSelectedCountry = 'selected_country';
 }
 
 abstract class SystemFeaturesConstant {
@@ -136,18 +135,62 @@ abstract class ManualUpdateConstant {
   static const String githubAcceptHeader = 'application/vnd.github.v3+json';
 }
 
-abstract class RtspCameraStreamConstant {
-  static const maxRetries = 3;
-  static const retryDelay = Duration(seconds: 2);
-  static const prefKeyEnabled = 'rtsp_enabled';
-  static const prefKeyUrl = 'rtsp_url';
-  static const String youtubeUrlPattern =
-      r'http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?';
-
-  static final RegExp youtubeUrlRegex = RegExp(youtubeUrlPattern);
-}
-
 abstract class ScheduleListeningConstant {
   static const startTime = '08:00';
   static const endTime = '20:00';
+}
+
+abstract class PrayerAudioConstant {
+  static const String kDefaultAdhanFileName = 'adhan-afassy.mp3';
+  static const String kFajrAdhanSuffix = '-fajr.mp3';
+  static const String kDuaAfterAdhanFileName = 'duaa-after-adhan.mp3';
+  static const String kMp3Directory = '/audio/';
+  static const String kMp3Extension = '.mp3';
+  static const String kHttpProtocol = 'http://';
+  static const String kHttpsProtocol = 'https://';
+  static const String kHttpsPrefix = 'https:';
+}
+
+abstract class LiveStreamConstants {
+  /// Regular expression to match YouTube URLs
+  static final RegExp youtubeUrlRegex = RegExp(
+    r'^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.*',
+    caseSensitive: false,
+  );
+
+  /// Key for the enabled preference in SharedPreferences
+  static const String prefKeyEnabled = 'livestream_enabled';
+
+  /// Key for the URL preference in SharedPreferences
+  static const String prefKeyUrl = 'livestream_url';
+
+  /// Key for the replace workflow preference in SharedPreferences
+  static const String prefKeyReplaceWorkflow = 'livestream_replace_workflow';
+
+  /// Key for storing the previous workflow replacement state for reconnection
+  static const String prefKeyPreviousWorkflowReplacement = 'previous_workflow_replacement';
+
+  /// Key for the auto replace workflow preference in SharedPreferences
+  static const String prefKeyAutoReplaceWorkflow = 'livestream_auto_replace_workflow';
+
+  /// Default buffer timeout in milliseconds
+  static const int bufferTimeoutMs = 10000;
+
+  /// Default status check interval in seconds (reduced for better responsiveness)
+  static const int statusCheckIntervalSeconds = 15;
+
+  /// Default stream reconnect attempt interval in seconds
+  static const int streamReconnectIntervalSeconds = 20;
+
+  /// Extended reconnect interval when server is unavailable (seconds)
+  static const int serverUnavailableReconnectIntervalSeconds = 60;
+
+  /// Default stream initialization delay in milliseconds
+  static const int streamInitDelayMs = 200;
+
+  /// Timeout for reconnection attempts in minutes
+  static const int reconnectionTimeoutMinutes = 1;
+
+  /// Timeout for auto-detection of live camera in minutes
+  static const int autoDetectionTimeoutMinutes = 3;
 }

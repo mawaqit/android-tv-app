@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class MawaqitBackIconButton extends StatefulWidget {
   const MawaqitBackIconButton({
@@ -10,12 +11,14 @@ class MawaqitBackIconButton extends StatefulWidget {
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
+
   @override
   State<MawaqitBackIconButton> createState() => _MawaqitIconButtonState();
 }
 
 class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
   bool focused = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -30,21 +33,24 @@ class _MawaqitIconButtonState extends State<MawaqitBackIconButton> {
         child: InkWell(
           onTap: widget.onPressed,
           onFocusChange: (value) => setState(() => focused = value),
-          focusColor: Color(0xFF490094),
+          focusColor: theme.focusColor,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
             child: Row(
               children: [
-                Align(
-                  alignment: Alignment(.5, 0),
-                  child: Icon(widget.icon, color: focused ? Colors.white : color, size: 16),
-                  widthFactor: .5,
-                  heightFactor: 1,
+                Icon(
+                  widget.icon,
+                  color: focused ? Colors.white : color,
+                  size: 10.sp,
                 ),
                 SizedBox(width: 10),
                 Text(
                   widget.label,
-                  style: theme.textTheme.bodySmall!.copyWith(color: focused ? Colors.white : color),
+                  style: theme.textTheme.bodySmall!.copyWith(
+                    color: focused ? Colors.white : color,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 10.sp,
+                  ),
                 ),
               ],
             ),

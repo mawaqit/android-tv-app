@@ -4,8 +4,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
+import 'package:fpdart/fpdart.dart';
 
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/data/data_source/device_info_data_source.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
@@ -15,12 +17,12 @@ import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/TimezoneScreen.dart';
 import 'package:mawaqit/src/pages/WifiSelectorScreen.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/widgets.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/manual_app_update/manual_update_notifier.dart';
-import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:mawaqit/src/widgets/manual_update_dialog.dart';
@@ -51,12 +53,18 @@ class SettingScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingScreenState extends ConsumerState<SettingScreen> {
+  bool isBoxOrAndroidTV = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await TimeShiftManager().initializeTimes();
       await ref.read(onBoardingProvider.notifier).isDeviceRooted();
+      final bool deviceIsBoxOrAndroidTV = await DeviceInfoDataSource().isBoxOrAndroidTV();
+      setState(() {
+        isBoxOrAndroidTV = deviceIsBoxOrAndroidTV;
+      });
 
       final appLanguage = Provider.of<AppLanguage>(context, listen: false);
       final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
@@ -78,6 +86,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     final String checkInternetLegacyMode = S.of(context).checkInternetLegacyMode;
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
+
     final featureManager = Provider.of<FeatureManager>(context);
     ref.listen(manualUpdateNotifierProvider, (previous, next) {
       switch (next.value?.status) {
@@ -110,7 +119,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     title: S.of(context).changeMosque,
                     subtitle: S.of(context).searchMosque,
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
-                    onTap: () => AppRouter.push(MosqueSearchScreen()),
+                    onTap: () => AppRouter.push(MosqueSearchScreen(
+                      nextButtonFocusNode: None(),
+                    )),
                   ),
                   _SettingItem(
                     title: S.of(context).hijriAdjustments,
@@ -248,7 +259,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     onTap: () => AppRouter.push(ScreenWithAnimationWidget(
                       animation: 'welcome',
                       child: OnBoardingOrientationWidget(
-                        onSelect: () => Navigator.pop(context),
+                        onNext: AppRouter.pop,
                       ),
                     )),
                   ),
@@ -405,7 +416,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
           orElse: () => false,
           data: (value) => value.isRootedDevice,
         );
-    log('isDeviceRooted: ${isDeviceRooted} - isLauncherInstalled: ${timeShiftManager.isLauncherInstalled}');
+
+    log('isDeviceRooted: ${isDeviceRooted} - isBoxOrAndroidTV: ${isBoxOrAndroidTV} - isLauncherInstalled: ${timeShiftManager.isLauncherInstalled}');
     return isDeviceRooted
         ? Column(
             children: [
@@ -416,17 +428,19 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 style: theme.textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
-              _SettingItem(
-                title: S.of(context).screenLock,
-                subtitle: S.of(context).screenLockDesc,
-                icon: Icon(Icons.power_settings_new, size: 35),
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => ScreenLockModal(
-                    timeShiftManager: timeShiftManager,
-                  ),
-                ),
-              ),
+              isBoxOrAndroidTV
+                  ? _SettingItem(
+                      title: S.of(context).screenLock,
+                      subtitle: S.of(context).screenLockDesc,
+                      icon: Icon(Icons.power_settings_new, size: 35),
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (context) => ScreenLockModal(
+                          timeShiftManager: timeShiftManager,
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
               _SettingItem(
                 title: S.of(context).appTimezone,
                 subtitle: S.of(context).descTimezone,

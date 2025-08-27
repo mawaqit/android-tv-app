@@ -1,11 +1,11 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/const/config.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/AnalyticsWrapper.dart';
-import 'package:provider/provider.dart';
+import 'package:mawaqit/src/helpers/LocaleHelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../src/services/mosque_manager.dart';
@@ -30,6 +30,11 @@ class AppLanguage extends ChangeNotifier {
   /// return the language name of the combined language
   /// Example: 'en-ar' will be 'English & Arabic'
   String combinedLanguageName(String languageCode) {
+    // Handle special cases for Portuguese variants and other single locale codes with underscores
+    if (Config.isoLang.containsKey(languageCode)) {
+      return Config.isoLang[languageCode]?['nativeName'] ?? languageCode;
+    }
+
     List<String> codes = languageCode.split('_');
     // Check if we have a combined language code
     if (codes.length == 2) {
@@ -59,7 +64,7 @@ class AppLanguage extends ChangeNotifier {
       notifyListeners();
       return null;
     }
-    _appLocale = Locale(prefs.getString('language_code')!);
+    _appLocale = LocaleHelper.splitLocaleCode(prefs.getString('language_code')!);
     notifyListeners();
   }
 
@@ -74,10 +79,14 @@ class AppLanguage extends ChangeNotifier {
       language: languageName(type.languageCode),
       mosqueId: mosqueId,
     );
-
+    final service = FlutterBackgroundService();
+    service.invoke(
+      'updateLocalization',
+      {'language_code': LocaleHelper.transformLocaleToString(type)},
+    );
     if (S.supportedLocales.indexOf(type) != -1) {
       _appLocale = type;
-      await prefs.setString('language_code', type.languageCode);
+      await prefs.setString('language_code', LocaleHelper.transformLocaleToString(type));
       await prefs.setString('countryCode', type.countryCode ?? '');
     }
     notifyListeners();
@@ -119,13 +128,17 @@ class AppLanguage extends ChangeNotifier {
   Future<String> getHadithLanguage(MosqueManager mosqueManager) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? hadithLanguage = prefs.getString(RandomHadithConstant.kHadithLanguage);
-    if (hadithLanguage != null) {
+    if (hadithLanguage != null && hadithLanguage.isNotEmpty) {
       _hadithLanguage = hadithLanguage;
       notifyListeners();
       return hadithLanguage;
     } else {
-      _hadithLanguage = mosqueManager.mosqueConfig!.hadithLang ?? "ar";
-      return mosqueManager.mosqueConfig!.hadithLang ?? "ar";
+      final fallbackLang = mosqueManager.mosqueConfig?.hadithLang ?? "ar";
+      _hadithLanguage = fallbackLang;
+      // Save the fallback language to shared preferences so it persists
+      await prefs.setString(RandomHadithConstant.kHadithLanguage, fallbackLang);
+      notifyListeners();
+      return fallbackLang;
     }
   }
 

@@ -280,6 +280,7 @@ class _SurahSelectionScreenState extends ConsumerState<SurahSelectionScreen> {
                                 }
                               : null,
                           surahName: data.suwar[index].name,
+                          surahNameArabic: data.suwar[index].arabicName,
                           surahNumber: data.suwar[index].id,
                           onTap: () async {
                             await ref.read(connectivityProvider.notifier).checkInternetConnection();

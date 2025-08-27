@@ -154,6 +154,12 @@ class R {
   /// ![preview](file:///Users/ds/mawaqit/assets/img/flag/pt.png)
   static const String ASSETS_IMG_FLAG_PT_PNG = 'assets/img/flag/pt.png';
 
+  /// ![preview](file:///Users/ds/mawaqit/assets/img/flag/pt_BR.png)
+  static const String ASSETS_IMG_FLAG_PT_BR_PNG = 'assets/img/flag/pt_BR.png';
+
+  /// ![preview](file:///Users/ds/mawaqit/assets/img/flag/pt_PT.png)
+  static const String ASSETS_IMG_FLAG_PT_PT_PNG = 'assets/img/flag/pt_PT.png';
+
   /// ![preview](file:///Users/ds/mawaqit/assets/img/flag/ro.png)
   static const String ASSETS_IMG_FLAG_RO_PNG = 'assets/img/flag/ro.png';
 
@@ -214,8 +220,8 @@ class R {
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/adhan-madina.mp3)
   static const String ASSETS_VOICES_ADHAN_ADHAN_MADINA_MP3 = 'assets/voices/adhan/adhan-madina.mp3';
 
-  /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/bip.mp3)
-  static const String ASSETS_VOICES_ADHAN_BIP_MP3 = 'assets/voices/adhan/bip.mp3';
+  /// ![preview](file:///Users/ds/mawaqit/assets/voices/adhan/bip_extended.mp3)
+  static const String ASSETS_VOICES_ADHAN_BIP_MP3 = 'assets/voices/adhan/bip_extended.mp3';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/voices/duaa_iftar.mp3)
   static const String ASSETS_VOICES_DUAA_IFTAR_MP3 = 'assets/voices/duaa_iftar.mp3';

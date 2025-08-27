@@ -100,20 +100,20 @@ class HorizontalPageViewWidget extends ConsumerWidget {
                   children: [
                     if (rightPageIndex < quranReadingState.svgs.length)
                       Positioned(
-                        left: 12.w,
+                        left: 8.w,
                         top: 0,
                         bottom: bottomPadding,
-                        width: pageWidth * 0.9,
+                        width: pageWidth * 0.85,
                         child: SvgPictureWidget(
                           svgPicture: quranReadingState.svgs[rightPageIndex % quranReadingState.svgs.length],
                         ),
                       ),
                     if (leftPageIndex < quranReadingState.svgs.length)
                       Positioned(
-                        right: 12.w,
+                        right: 8.w,
                         top: 0,
                         bottom: bottomPadding,
-                        width: pageWidth * 0.9,
+                        width: pageWidth * 0.85,
                         child: SvgPictureWidget(
                           svgPicture: quranReadingState.svgs[leftPageIndex % quranReadingState.svgs.length],
                         ),
@@ -147,12 +147,15 @@ class RightSwitchButtonWidget extends ConsumerWidget {
         right: 10,
         top: 0,
         bottom: 0,
-        child: SwitchButton(
-          focusNode: focusNode,
-          opacity: 0.7,
-          iconSize: 14.sp,
-          icon: Directionality.of(context) == TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-          onPressed: onPressed,
+        child: Material(
+          color: Colors.transparent,
+          child: SwitchButton(
+            focusNode: focusNode,
+            opacity: 0.7,
+            iconSize: 14.sp,
+            icon: Directionality.of(context) == TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+            onPressed: onPressed,
+          ),
         ),
       ),
     );
@@ -177,12 +180,15 @@ class LeftSwitchButtonWidget extends ConsumerWidget {
         left: 10,
         top: 0,
         bottom: 0,
-        child: SwitchButton(
-          focusNode: focusNode,
-          opacity: 0.7,
-          iconSize: 14.sp,
-          icon: Directionality.of(context) != TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-          onPressed: onPressed,
+        child: Material(
+          color: Colors.transparent,
+          child: SwitchButton(
+            focusNode: focusNode,
+            opacity: 0.7,
+            iconSize: 14.sp,
+            icon: Directionality.of(context) != TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+            onPressed: onPressed,
+          ),
         ),
       ),
     );
@@ -352,9 +358,19 @@ class SvgPictureWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    final topPadding = isLandscape
+        ? screenHeight * 0.08 // 6% of screen height in landscape
+        : screenHeight * 0.04; // 4% of screen height in portrait
+
+    // Side padding is also proportional to screen width
+    final sidePadding = MediaQuery.of(context).size.width * 0.02; // 4% of screen width
+
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.all(32.0),
+      padding: EdgeInsets.fromLTRB(sidePadding, topPadding, sidePadding, sidePadding),
       child: SvgPicture(
         svgPicture.bytesLoader,
         fit: BoxFit.contain,

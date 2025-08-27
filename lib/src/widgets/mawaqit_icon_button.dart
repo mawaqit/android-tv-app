@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class MawaqitIconButton extends StatefulWidget {
   const MawaqitIconButton({
@@ -6,12 +7,14 @@ class MawaqitIconButton extends StatefulWidget {
     required this.icon,
     required this.label,
     required this.focusNode,
+    this.isAutoFocus = false,
     this.onPressed,
   }) : super(key: key);
   final IconData icon;
   final FocusNode focusNode;
   final String label;
   final VoidCallback? onPressed;
+  final bool isAutoFocus;
   @override
   State<MawaqitIconButton> createState() => _MawaqitIconButtonState();
 }
@@ -38,24 +41,28 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
         child: Focus(
           onFocusChange: (value) => setState(() => focused = value),
           child: Material(
-            color: focused ? Color(0xFF490094) : theme.colorScheme.primary,
+            color: focused ? theme.focusColor : theme.colorScheme.primary,
             child: InkWell(
               focusNode: widget.focusNode,
               onTap: widget.onPressed,
+              autofocus: widget.isAutoFocus,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
                 child: Row(
                   children: [
                     Text(
                       widget.label,
-                      style: theme.textTheme.bodySmall!.copyWith(color: focused ? Colors.white : color),
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        color: focused ? Colors.white : color,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10.sp,
+                      ),
                     ),
-                    SizedBox(width: 10),
-                    Align(
-                      alignment: Alignment(.5, 0),
-                      child: Icon(widget.icon, color: focused ? Colors.white : color, size: 16),
-                      widthFactor: .5,
-                      heightFactor: 1,
+                    SizedBox(width: 12),
+                    Icon(
+                      widget.icon,
+                      color: focused ? Colors.white : color,
+                      size: 10.sp,
                     ),
                   ],
                 ),

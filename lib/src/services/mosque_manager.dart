@@ -22,8 +22,10 @@ import 'package:mawaqit/src/services/audio_manager.dart';
 import 'package:mawaqit/src/services/mixins/mosque_helpers_mixins.dart';
 import 'package:mawaqit/src/services/mixins/weather_mixin.dart';
 import 'package:mawaqit/src/services/notification/prayer_schedule_service.dart';
+import 'package:mawaqit/src/services/permissions_manager.dart';
 import 'package:mawaqit/src/services/storage_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/data_source/device_info_data_source.dart';
@@ -98,6 +100,12 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     return prefs.getBool(TurnOnOffTvConstant.kisFajrIshaOnly) ?? false;
   }
 
+  /// Returns ordered Jumua times for display
+  /// This method handles both jumuaAsDuhr case and normal case with multiple jumua times
+  List<String> getOrderedJumuaTimes() {
+    return super.getOrderedJumuaTimes();
+  }
+
   static Future<bool> checkRoot() async {
     try {
       final result = await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod(
@@ -124,7 +132,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     await Api.init();
     await loadFromLocale();
     listenToConnectivity();
-    isDeviceRooted = await checkRoot();
     isToggleScreenActivated = await ToggleScreenFeature.getToggleFeatureState();
     isEventsSet = await ToggleScreenFeature.checkEventsScheduled();
     isIshaFajrOnly = await getisIshaFajr();
@@ -135,7 +142,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   Future<void> setMosqueUUid(String uuid) async {
     try {
       await fetchMosque(uuid);
-      await ToggleScreenFeature.saveScheduledEventsToLocale();
 
       _saveToLocale();
     } catch (e, stack) {
@@ -213,31 +219,21 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription = timesStream.listen(
       (e) async {
         times = e;
-        final today = useTomorrowTimes ? AppDateTime.tomorrow() : AppDateTime.now();
-
-        if (isDeviceRooted && isToggleScreenActivated) {
-          final newMinuteBefore = await ToggleScreenFeature.getBeforeDelayMinutes();
-          final newMinuteAfter = await ToggleScreenFeature.getAfterDelayMinutes();
-
-          ToggleScreenFeature.handleDailyRescheduling(
-            isIshaFajrOnly: isIshaFajrOnly,
-            timeStrings: e.dayTimesStrings(today, salahOnly: false),
-            minuteBefore: newMinuteBefore,
-            minuteAfter: newMinuteAfter,
-          );
-        }
         // Obtain an instance of the background service.
         final service = FlutterBackgroundService();
+        final permissionsGranted = await PermissionsManager.arePermissionsGranted();
+        bool isBoxOrAndroidTV = await DeviceInfoDataSource().isBoxOrAndroidTV();
 
         // Delegate prayer scheduling to PrayerScheduleService.
-        await PrayerScheduleService.schedulePrayerTasks(
-          e,
-          mosqueConfig,
-          isAdhanVoiceEnabled,
-          salahIndex,
-          service,
-        );
-
+        if (permissionsGranted && isBoxOrAndroidTV) {
+          await PrayerScheduleService.schedulePrayerTasks(
+            e,
+            mosqueConfig,
+            isAdhanVoiceEnabled,
+            salahIndex,
+            service,
+          );
+        }
         notifyListeners();
       },
       onError: onItemError,

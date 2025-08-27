@@ -54,12 +54,12 @@ class ThemeNotifier with ChangeNotifier {
         focusColor: Color(0xff490094),
         dialogBackgroundColor: Color(0xff121212),
         canvasColor: Color(0xff121212),
-        backgroundColor: Color(0xff121212),
         scaffoldBackgroundColor: Color(0xff121212),
-        selectedRowColor: Color(0xff490094),
+        // selectedRowColor: Color(0xff490094),
         colorScheme: ColorScheme.dark(
           brightness: Brightness.dark,
           primary: Colors.white,
+          background: Color(0xff121212),
         ),
       );
 

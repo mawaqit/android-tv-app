@@ -227,71 +227,69 @@ class _OnBoardingTimeZoneSelectorState extends State<OnBoardingTimeZoneSelector>
       shortcuts: <LogicalKeySet, Intent>{
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
-      child: Scaffold(
-        body: FocusScope(
-          node: FocusScopeNode(),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Text(
-                S.of(context).appTimezone,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.w700,
-                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-                ),
+      child: FocusScope(
+        node: FocusScopeNode(),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            Text(
+              S.of(context).appTimezone,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.w700,
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
               ),
-              const SizedBox(height: 10),
-              Divider(
-                thickness: 1,
-                color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
+            ),
+            const SizedBox(height: 10),
+            Divider(
+              thickness: 1,
+              color: themeData.brightness == Brightness.dark ? Colors.white : Colors.black,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              S.of(context).descTimezone,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 15,
+                color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
               ),
-              const SizedBox(height: 10),
-              Text(
-                S.of(context).descTimezone,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: themeData.brightness == Brightness.dark ? null : themeData.primaryColor,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: TextField(
-                  autofocus: true,
-                  focusNode: searchfocusNode,
-                  onSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(countryListFocusNode);
-                    _selectFirstVisibleItem();
-                  },
-                  controller: searchController,
-                  onChanged: _filterItems,
-                  decoration: InputDecoration(
-                    hintText: S.of(context).searchCountries,
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: TextField(
+                autofocus: false,
+                focusNode: searchfocusNode,
+                onSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(countryListFocusNode);
+                  _selectFirstVisibleItem();
+                },
+                controller: searchController,
+                onChanged: _filterItems,
+                decoration: InputDecoration(
+                  hintText: S.of(context).searchCountries,
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: Focus(
-                  focusNode: isViewingTimezones ? timezoneListFocusNode : countryListFocusNode,
-                  onFocusChange: (hasFocus) {
-                    if (hasFocus) {
-                      _selectFirstVisibleItem();
-                    }
-                  },
-                  onKey: (node, event) => _handleKeyEvent(node, event),
-                  child: isViewingTimezones ? _buildTimezoneList(context) : _buildCountryList(context),
-                ),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: Focus(
+                focusNode: isViewingTimezones ? timezoneListFocusNode : countryListFocusNode,
+                onFocusChange: (hasFocus) {
+                  if (hasFocus) {
+                    _selectFirstVisibleItem();
+                  }
+                },
+                onKey: (node, event) => _handleKeyEvent(node, event),
+                child: isViewingTimezones ? _buildTimezoneList(context) : _buildCountryList(context),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

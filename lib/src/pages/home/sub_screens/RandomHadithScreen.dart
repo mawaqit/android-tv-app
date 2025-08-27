@@ -29,11 +29,13 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
 
   @override
   void initState() {
-    log('random_hadith: RandomHadithScreen initState');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final hadith =
-          context.read<AppLanguage>().hadithLanguage == '' ? 'ar' : context.read<AppLanguage>().hadithLanguage;
-      ref.read(randomHadithNotifierProvider.notifier).getRandomHadith(language: hadith);
+    log('random_hadith: RandomHadithScreen initState -> ${context.read<AppLanguage>().hadithLanguage}');
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final mosqueManager = context.read<MosqueManager>();
+      // Use the proper method that checks both local settings and API configuration
+      final hadithLanguage = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
+      log('random_hadith: RandomHadithScreen resolved hadithLanguage: $hadithLanguage');
+      ref.read(randomHadithNotifierProvider.notifier).getRandomHadith(language: hadithLanguage);
     });
     super.initState();
   }
@@ -56,12 +58,6 @@ class _RandomHadithScreenState extends ConsumerState<RandomHadithScreen> {
             child: AboveSalahBar(),
           ),
           Expanded(
-            // child: HadithWidget(
-            //   translatedText: context.watch<MosqueManager>().hadith,
-            //   textDirection: StringManager.getTextDirectionOfLocal(
-            //     Locale(mosqueManager.mosqueConfig!.hadithLang ?? 'en'),
-            //   ),
-            // ),
             child: hadithState.when(
               data: (hadith) {
                 return DisplayTextWidget.hadith(

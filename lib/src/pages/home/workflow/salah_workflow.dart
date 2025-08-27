@@ -82,8 +82,6 @@ class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> {
     final currentIqamaTime = mosqueManger.actualIqamaTimes()[currentSalah];
     final isFajrPray = mosqueManger.salahIndex == 0;
     final isAsrPray = mosqueManger.salahIndex == 2;
-    final adhanEndTime = currentSalahTime.add(mosqueManger.getAdhanDuration(isFajrPray));
-    final adhanDuaaEndTime = adhanEndTime.add(Duration(seconds: 35));
     final iqamaEndTime = currentIqamaTime.add(Duration(minutes: 1));
     final salahTime = mosqueManger.mosqueConfig!.duaAfterPrayerShowTimes[currentSalah];
     final salahEndTime = iqamaEndTime.add(
@@ -101,11 +99,9 @@ class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> {
         ),
         WorkFlowItem(
           builder: (context, next) => AdhanSubScreen(onDone: next),
-          skip: now.isAfter(adhanEndTime),
         ),
         WorkFlowItem(
           builder: (context, next) => AfterAdhanSubScreen(onDone: next),
-          skip: now.isAfter(adhanDuaaEndTime),
           disabled: mosqueConfig.duaAfterAzanEnabled == false,
         ),
         WorkFlowItem(
@@ -143,7 +139,10 @@ class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> {
         WorkFlowItem(
             duration: kAzkarDuration,
             builder: (context, next) => AfterSalahAzkar(
+
+                /// this is a redundant parameter as it is always should be (isFajrPray | isAsrPray)
                 isAfterAsrOrFajr: true,
+                isAfterAsr: isAsrPray,
                 azkarTitle: isFajrPray ? AzkarConstant.kAzkarSabahAfterPrayer : AzkarConstant.kAzkarAsrAfterPrayer),
             disabled: mosqueConfig.iqamaEnabled == false || (!isFajrPray && !isAsrPray)),
       ],

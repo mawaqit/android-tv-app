@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/AppRouter.dart';
@@ -17,9 +21,14 @@ import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 
 class MosqueInputId extends ConsumerStatefulWidget {
-  const MosqueInputId({Key? key, this.onDone}) : super(key: key);
+  const MosqueInputId({
+    super.key,
+    this.onDone,
+    this.selectedNode = const fp.None(),
+  });
 
   final void Function()? onDone;
+  final fp.Option<FocusNode> selectedNode;
 
   @override
   ConsumerState<MosqueInputId> createState() => _MosqueInputIdState();
@@ -29,9 +38,37 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
   final inputController = TextEditingController();
   Mosque? searchOutput;
   SharedPref sharedPref = SharedPref();
+  final FocusNode _focusNode = FocusNode(debugLabel: 'mosque_search_node');
 
   bool loading = false;
   String? error;
+  bool isKeyboardVisible = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(mosqueManagerProvider.notifier).state = fp.None();
+      _focusNode.requestFocus();
+      isKeyboardVisible = true;
+    });
+
+    // Add listener to focus node to detect keyboard close
+    _focusNode.addListener(_onFocusChange);
+
+    super.initState();
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus && isKeyboardVisible) {
+      // The focus was lost, which might indicate keyboard was closed
+      isKeyboardVisible = false;
+
+      FocusScope.of(context).focusInDirection(TraversalDirection.up);
+    } else if (_focusNode.hasFocus && !isKeyboardVisible) {
+      // Focus gained, keyboard likely opened
+      isKeyboardVisible = true;
+    }
+  }
 
   void _setMosqueId(String mosqueId) async {
     if (mosqueId.isEmpty) {
@@ -68,9 +105,11 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
     });
   }
 
-  onboardingWorkflowDone() {
-    sharedPref.save('boarding', 'true');
-    AppRouter.pushReplacement(OfflineHomeScreen());
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,7 +125,7 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
             Text(
               S.of(context).selectMosqueId,
               style: TextStyle(
-                fontSize: 25.0,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w700,
                 color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
               ),
@@ -98,13 +137,22 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
                 key: ValueKey(searchOutput!.uuid),
                 autoFocus: true,
                 mosque: searchOutput!,
+                selectedNode: widget.selectedNode,
                 onTap: () {
                   return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) async {
                     final mosqueManager = context.read<MosqueManager>();
                     final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
                     ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
-
-                    !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
+                    if (searchOutput != null) {
+                      if (searchOutput?.type == "MOSQUE") {
+                        ref.read(mosqueManagerProvider.notifier).state =
+                            fp.Option.fromNullable(SearchSelectionType.mosque);
+                      } else {
+                        ref.read(mosqueManagerProvider.notifier).state =
+                            fp.Option.fromNullable(SearchSelectionType.home);
+                      }
+                    }
+                    // !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
                   }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {
                       setState(() {
@@ -132,9 +180,12 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         child: TextFormField(
+          focusNode: _focusNode,
           controller: inputController,
           style: GoogleFonts.inter(
             color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w500,
           ),
           onFieldSubmitted: _setMosqueId,
           cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
@@ -147,9 +198,13 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
           decoration: InputDecoration(
             filled: true,
             errorText: error,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: theme.primaryColor, width: 2),
+            ),
             hintText: S.of(context).selectWithMosqueId,
             hintStyle: TextStyle(
+              fontSize: 8.sp,
               fontWeight: FontWeight.normal,
               color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
             ),
@@ -161,11 +216,11 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(width: 0),
+              borderSide: BorderSide(color: theme.primaryColor, width: 2),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(width: 0),
+              borderSide: BorderSide(color: theme.primaryColor, width: 1),
             ),
             contentPadding: EdgeInsets.symmetric(
               vertical: 2,

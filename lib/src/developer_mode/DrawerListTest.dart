@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/HomeScreen.dart';
 import 'package:mawaqit/src/pages/developer/DeveloperScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/DuaaBetweenAdhanAndIqama.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/DuaaEftarScreen.dart';
+import 'package:mawaqit/src/pages/home/sub_screens/takberat_aleid_screen.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +13,7 @@ import '../helpers/AppRouter.dart';
 import '../pages/home/sub_screens/AdhanSubScreen.dart';
 import '../pages/home/sub_screens/AfterAdhanHadithSubScreen.dart';
 import '../pages/home/sub_screens/AfterSalahAzkarScreen.dart';
+import '../pages/home/sub_screens/DuaaBetweenAdhanAndIqama.dart';
 import '../pages/home/sub_screens/IqamaSubScreen.dart';
 import '../pages/home/sub_screens/IqamaaCountDownSubScreen.dart';
 import '../pages/home/sub_screens/JummuaLive.dart';
@@ -53,6 +57,17 @@ class DrawerListDeveloper extends StatelessWidget {
                     builder: (context) => MosqueBackgroundScreen(child: HomeScreen()),
                   ));
             }),
+        DrawerListTitle(
+          icon: Icons.timer_rounded,
+          text: S.of(context).duaaBetweenAdhanAndIqamaaTitle,
+          onTap: () {
+            AppRouter.popAndPush(
+              MosqueBackgroundScreen(
+                child: DuaaBetweenAdhanAndIqamaaScreen(),
+              ),
+            );
+          },
+        ),
         /////////////// drawer test////////////////
         DrawerListTitle(
           icon: Icons.timer_rounded,
@@ -64,8 +79,41 @@ class DrawerListDeveloper extends StatelessWidget {
           },
         ),
         DrawerListTitle(
+          icon: Icons.timer_rounded,
+          text: S.of(context).eidMubarak,
+          onTap: () {
+            AppRouter.popAndPush(
+              MosqueBackgroundScreen(
+                child: TakberatAleidScreen(),
+              ),
+            );
+          },
+        ),
+        DrawerListTitle(
+          icon: Icons.timer_rounded,
+          text: S.of(context).duaaElEftar,
+          onTap: () {
+            AppRouter.popAndPush(
+              MosqueBackgroundScreen(
+                child: DuaaEftarScreen(),
+              ),
+            );
+          },
+        ),
+        DrawerListTitle(
+          icon: Icons.timer_rounded,
+          text: S.of(context).duaBetweenAdhanIqamah,
+          onTap: () {
+            AppRouter.popAndPush(
+              MosqueBackgroundScreen(
+                child: DuaaBetweenAdhanAndIqamaaScreen(),
+              ),
+            );
+          },
+        ),
+        DrawerListTitle(
           icon: Icons.notifications,
-          text: S.of(context).alerts,
+          text: S.of(context).alAdhan,
           onTap: () {
             AppRouter.popAndPush(MosqueBackgroundScreen(
               child: AdhanSubScreen(),
