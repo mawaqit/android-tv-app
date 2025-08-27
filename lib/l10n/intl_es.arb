@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Por favor, conéctate a Internet para programar la escucha del Corán",
-  "duaBetweenAdhanIqamah": "La suplicación (Du'a) no se rechaza entre el Adán y el Iqamah."
+  "duaaBetweenAdhanAndIqamaaTitle": "La suplicación (Du'a) no es rechazada entre Adhan e Iqamah",
+  "duaBetweenAdhanIqamah": "La suplicación (Du'a) no se rechaza entre el Adán y el Iqamah.",
+  "processingRequest": "Procesando solicitud...",
+  "loadingStream": "Cargando stream...",
+  "rtspUrlHint": "Introducir URL RTSP o enlace de YouTube",
+  "replaceWorkflowWithStream": "Mostrar automáticamente el flujo de la cámara",
+  "replaceAppWorkflowWithCameraStream": "La pantalla mostrará automáticamente la corriente de la cámara tan pronto como la cámara comience a grabar; si se detiene, la pantalla vuelve a la hora de oración",
+  "streamError": "Se ha producido un error al transmitir",
+  "finish": "Finalizar"
 }
