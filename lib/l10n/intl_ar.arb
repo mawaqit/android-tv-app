@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "يرجى الاتصال بالإنترنت لجدولة الاستماع للقرآن",
-  "duaBetweenAdhanIqamah": "ولا يرفض الدعم (الدعأ) بين عدهان وإيكاما."
+  "duaaBetweenAdhanAndIqamaaTitle": "الدعم (Du'a) غير مرفوض بين عدهان وإكاما",
+  "duaBetweenAdhanIqamah": "ولا يرفض الدعم (الدعأ) بين عدهان وإيكاما.",
+  "processingRequest": "جارٍ معالجة الطلب...",
+  "loadingStream": "جاري تحميل البث...",
+  "rtspUrlHint": "أدخل رابط RTSP أو رابط يوتيوب",
+  "replaceWorkflowWithStream": "عرض تدفق الكاميرا تلقائياً",
+  "replaceAppWorkflowWithCameraStream": "ستعرض الشاشة تلقائياً تدفق الكاميرا بمجرد بدء تسجيل الكاميرا؛ إذا توقفت، ترجع الشاشة إلى عرض أوقات الصلاة",
+  "streamError": "حدث خطأ أثناء البث",
+  "finish": "إنهاء"
 }
