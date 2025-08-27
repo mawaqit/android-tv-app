@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "インターネットに接続してクルアーンのリスニングをスケジュールしてください",
-  "duaBetweenAdhanIqamah": "仮定(デュ'a)は、アダンとイカマの間で拒否されていません。"
+  "duaaBetweenAdhanAndIqamaaTitle": "仮定(DU'a)は、AdhanとIqamahの間で拒否されません",
+  "duaBetweenAdhanIqamah": "仮定(デュ'a)は、アダンとイカマの間で拒否されていません。",
+  "processingRequest": "リクエストを処理しています...",
+  "loadingStream": "ストリームを読み込んでいます...",
+  "rtspUrlHint": "RTSP URLまたはYouTubeリンクを入力",
+  "replaceWorkflowWithStream": "カメラストリームを自動的に表示",
+  "replaceAppWorkflowWithCameraStream": "カメラが録画を開始すると、画面が自動的にカメラストリームを表示します。 止まればスクリーンは祈祷時間に戻ります",
+  "streamError": "ストリーミング中にエラーが発生しました",
+  "finish": "完了"
 }
