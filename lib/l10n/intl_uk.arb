@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Будь ласка, підключіться до інтернету для запланування Корану, прослуховування Корану",
-  "duaBetweenAdhanIqamah": "Підтримка (Du'a) не відхилено між Аджаном та Ікамою."
+  "duaaBetweenAdhanAndIqamaaTitle": "Підтримка (Du'a) не відхилено між Adhan and Iqamah",
+  "duaBetweenAdhanIqamah": "Підтримка (Du'a) не відхилено між Аджаном та Ікамою.",
+  "processingRequest": "Обробка запиту...",
+  "loadingStream": "Завантаження трансляції...",
+  "rtspUrlHint": "Введіть посилання RTSP або YouTube",
+  "replaceWorkflowWithStream": "Автоматично відображати потік камери",
+  "replaceAppWorkflowWithCameraStream": "Екран автоматично буде відображати потік камери, як тільки камера почне записуватися; якщо воно зупиняється, екран повертається до показу молитви",
+  "streamError": "Сталася помилка під час потокового передавання",
+  "finish": "Закінчити"
 }
