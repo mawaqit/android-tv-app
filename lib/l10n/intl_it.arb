@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Connettiti a internet per pianificare l'ascolto del Corano",
-  "duaBetweenAdhanIqamah": "La supplica (Du'a) non è respinta tra Adhan e Iqamah."
+  "duaaBetweenAdhanAndIqamaaTitle": "La supplica (Du'a) non è respinta tra Adhan e Iqamah",
+  "duaBetweenAdhanIqamah": "La supplica (Du'a) non è respinta tra Adhan e Iqamah.",
+  "processingRequest": "Elaborazione richiesta...",
+  "loadingStream": "Caricamento stream...",
+  "rtspUrlHint": "Inserisci URL RTSP o link YouTube",
+  "replaceWorkflowWithStream": "Mostra automaticamente il flusso della fotocamera",
+  "replaceAppWorkflowWithCameraStream": "Lo schermo visualizzerà automaticamente il flusso di telecamere non appena la telecamera inizierà la registrazione; se si interrompe, lo schermo ritorna alla visualizzazione dei tempi di preghiera",
+  "streamError": "Si è verificato un errore nello streaming",
+  "finish": "Termina"
 }
