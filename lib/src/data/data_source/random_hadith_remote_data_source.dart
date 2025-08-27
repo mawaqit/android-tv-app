@@ -47,7 +47,7 @@ class RandomHadithRemoteDataSource {
   }) async {
     log('random_hadith: RandomHadithRemoteDataSource: Fetching random hadith XML', time: DateTime.now());
     try {
-      final response = await staticDio.get('/xml/ahadith/$language.xml');
+      final response = await staticDio.get('/ahadith/$language.xml');
       final List<XmlElement>? hadithXML = await Isolate.run(
         () async {
           log('random_hadith: RandomHadithRemoteDataSource: start xml fetch', time: DateTime.now());

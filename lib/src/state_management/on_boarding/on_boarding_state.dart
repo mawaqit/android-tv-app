@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:mawaqit/src/models/mosque.dart';
+import 'package:mawaqit/src/data/countries.dart';
 
 enum MosqueMode {
   normal,
@@ -14,6 +15,7 @@ class OnboardingState extends Equatable {
   MosqueMode mosqueMode;
   bool termsAccepted;
   final bool isRootedDevice;
+  final Country? selectedCountry;
 
   OnboardingState({
     required this.language,
@@ -22,6 +24,7 @@ class OnboardingState extends Equatable {
     required this.termsAccepted,
     required this.mosqueMode,
     this.isRootedDevice = false,
+    this.selectedCountry,
   });
 
   factory OnboardingState.initial() {
@@ -32,6 +35,7 @@ class OnboardingState extends Equatable {
       mosqueId: '',
       termsAccepted: false,
       isRootedDevice: false,
+      selectedCountry: null,
     );
   }
 
@@ -42,6 +46,7 @@ class OnboardingState extends Equatable {
     bool? termsAccepted,
     MosqueMode? mosqueMode,
     bool? isRootedDevice,
+    Country? selectedCountry,
   }) {
     return OnboardingState(
       language: language ?? this.language,
@@ -50,16 +55,18 @@ class OnboardingState extends Equatable {
       mosqueMode: mosqueMode ?? this.mosqueMode,
       isRootedDevice: isRootedDevice ?? this.isRootedDevice,
       termsAccepted: termsAccepted ?? this.termsAccepted,
+      selectedCountry: selectedCountry ?? this.selectedCountry,
     );
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         language,
         orientation,
         mosqueId,
         termsAccepted,
         mosqueMode,
         isRootedDevice,
+        selectedCountry,
       ];
 }

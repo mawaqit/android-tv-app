@@ -10,7 +10,7 @@ import 'package:mawaqit/src/pages/home/widgets/FlashWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/HomeLogoVersion.dart';
 import 'package:mawaqit/src/pages/home/widgets/MosqueInformationWidget.dart';
 
-const kFooterQrLink = 'https://mawaqit.net/static/images/store-qrcode.png?4.89.2';
+const kFooterQrLink = 'https://cdn.mawaqit.net/images/store-qrcode.png?4.89.2';
 
 class Footer extends StatelessWidget {
   const Footer({Key? key}) : super(key: key);
@@ -32,7 +32,9 @@ class Footer extends StatelessWidget {
       flex: showMosqueInfo ? 2 : 1,
       child: Row(
         children: [
-          _buildQrCodeSection(mosque, textDirection),
+          Flexible(
+            child: _buildQrCodeSection(mosque, textDirection),
+          ),
         ],
       ),
     );

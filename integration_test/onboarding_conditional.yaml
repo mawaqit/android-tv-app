@@ -1,0 +1,83 @@
+appId: com.mawaqit.androidtv
+---
+- launchApp
+
+# Wait for app to fully load
+- waitForAnimationToEnd
+
+# ===============================
+# STEP 1: LANGUAGE SELECTION
+# ===============================
+# This step is common for both rooted and normal devices
+- assertVisible: "English"
+- tapOn: "English"
+- waitForAnimationToEnd
+
+# ===============================
+# CONDITIONAL ROOTED DEVICE STEPS
+# ===============================
+# These steps only appear on rooted devices
+
+# Handle timezone selection (rooted devices only)
+- runFlow:
+    when:
+      visible: "App Timezone"
+    commands:
+      - back
+      - tapOn: "Skip"
+      - tapOn: "Skip"
+
+      - waitForAnimationToEnd
+
+# ===============================
+# STEP 2: ORIENTATION SELECTION
+# ===============================
+# Common step for both flows
+- assertVisible: "Landscape"
+- tapOn: "Landscape"
+- waitForAnimationToEnd
+
+# ===============================
+# STEP 3: ABOUT MAWAQIT
+# ===============================
+- tapOn: "Next"
+- waitForAnimationToEnd
+
+# ===============================
+# STEP 4: MOSQUE SEARCH
+# ===============================
+# Handle the mosque selection flow
+- tapOn: "Yes" # User knows the mosque ID
+- inputText: "3"
+- tapOn:
+    point: "94%,47%"
+- pressKey: Back
+- tapOn:
+    index: 0  # Select first item in list
+- waitForAnimationToEnd
+
+# ===============================
+# CONDITIONAL MOSQUE MODE STEPS
+# ===============================
+# These steps only appear if mosque is selected
+
+# Handle screen type selection (mosque mode only)
+- runFlow:
+    when:
+      visible: "Main screen"
+    commands:
+      - tapOn: "Main screen"
+      - waitForAnimationToEnd
+
+# Handle announcement mode selection (mosque mode only)
+- runFlow:
+    when:
+      visible: "Regular mode"
+    commands:
+      - tapOn: "Regular mode"
+      - waitForAnimationToEnd
+
+# Verify onboarding completion
+- extendedWaitUntil:
+    visible: "السلام عليكم و رحمة الله و بركاته ٫ حللتم أهلا ونزلتم سهلا"
+    timeout: 10000

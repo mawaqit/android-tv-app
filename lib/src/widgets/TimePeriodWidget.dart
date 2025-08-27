@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
-import 'package:mawaqit/i18n/AppLanguage.dart';
-import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class TimePeriodWidget extends StatelessWidget {
   const TimePeriodWidget({
@@ -15,19 +14,27 @@ class TimePeriodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLanguage = context.read<AppLanguage>();
-    final isArabic = appLanguage.isArabic();
     final value = DateFormat(
       "a",
       Localizations.localeOf(context).languageCode,
-    ).format(dateTime).trim().split('').join('\n');
+    ).format(dateTime);
 
     final defaultStyle = DefaultTextStyle.of(context).style;
+    final textStyle = (style ?? defaultStyle).copyWith(
+      height: 1,
+    );
 
-    return Text(
-      maxLines: 2,
-      value,
-      style: (style ?? defaultStyle).apply(fontSizeFactor: isArabic ? 1.2 : 1),
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 4.3.w),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          value,
+          maxLines: 1,
+          textAlign: TextAlign.center,
+          style: textStyle,
+        ),
+      ),
     );
   }
 }

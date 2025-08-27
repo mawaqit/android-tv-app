@@ -204,7 +204,7 @@ class Api {
 
   /// prepare the data to be cached
   static Future<void> cacheHadithXMLFiles({String language = 'ar'}) =>
-      Future.wait(language.split('-').map((e) => dioStatic.get('/xml/ahadith/$e.xml')));
+      Future.wait(language.split('-').map((e) => dioStatic.get('/ahadith/$e.xml')));
 
   /// get the hadith file from the static server and cache it
   /// return random hadith from the file
@@ -214,7 +214,7 @@ class Api {
 
     /// this should be called only on offline mode so it should hit the cache
 
-    final response = await dioStatic.get('/xml/ahadith/$language.xml');
+    final response = await dioStatic.get('/ahadith/$language.xml');
 
     final document = XmlDocument.parse(response.data);
 

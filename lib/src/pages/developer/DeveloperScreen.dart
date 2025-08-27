@@ -61,7 +61,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         (builder: (context) => AdhanSubScreen(), name: S.current.alAdhan),
         (builder: (context) => AfterAdhanSubScreen(), name: S.current.afterAdhanHadith),
         (builder: (context) => DuaaBetweenAdhanAndIqamaaScreen(), name: S.current.duaaRemainder),
-        (builder: (context) => IqamaaCountDownSubScreen(), name: S.current.iqamaaCountDown),
+        (builder: (context) => IqamaaCountDownSubScreen(isDebug: true), name: S.current.iqamaaCountDown),
         (builder: (context) => IqamaSubScreen(), name: S.current.iqama),
         (builder: (context) => AfterSalahAzkar(), name: S.current.afterSalahAzkar),
         (builder: (context) => JumuaHadithSubScreen(), name: S.current.jumua),
@@ -72,26 +72,35 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
   forceScreen(ForcedScreen e) {
     cancelWalkThrowScreens();
-    setState(() {
-      forcedScreen = e;
-    });
+    if (mounted) {
+      setState(() {
+        forcedScreen = e;
+      });
+    }
   }
 
   void cancelWalkThrowScreens() {
     walkThrowScreensSubscription?.cancel();
-    setState(() {
+    if (mounted) {
+      setState(() {
+        walkThrowScreensSubscription = null;
+        forcedScreen = null; // clear the forcedScreen when canceling the walkthrough
+      });
+    } else {
+      // If widget is not mounted, just clean up without setState
       walkThrowScreensSubscription = null;
-      forcedScreen = null; // clear the forcedScreen when canceling the walkthrough
-    });
+      forcedScreen = null;
+    }
   }
 
   void walkThrowScreens() {
     walkThrowScreensSubscription?.cancel();
-    walkThrowScreensSubscription = generateStream(10.seconds).listen((event) {
-      if (event > screens.length) walkThrowScreensSubscription?.cancel();
-      setState(() {
-        forcedScreen = screens[event % screens.length];
-      });
+    walkThrowScreensSubscription = generateStream(15.seconds).listen((event) {
+      if (mounted) {
+        setState(() {
+          forcedScreen = screens[event % screens.length];
+        });
+      }
     });
   }
 
@@ -108,7 +117,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
   @override
   void dispose() {
-    cancelWalkThrowScreens();
+    // Just cancel the subscription without updating UI state since widget is being destroyed
+    walkThrowScreensSubscription?.cancel();
     super.dispose();
   }
 
@@ -155,7 +165,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               onSelect: () => AppRouter.push(LanguageScreen()),
             ),
             SelectorOption(
-              title: "Walk through screens",
+              title: "Walkthrough screens",
               onSelect: walkThrowScreens,
             ),
             SelectorOption(

@@ -416,5 +416,11 @@
   "ishaAndFajrOnly": "Seulement les prières Fajr et d'Isha",
   "minutesBeforeFajrPrayer": "minutes avant l'heure de la prière de Fajr",
   "minutesAfterIshaPrayer": "minutes après l'heure de la prière d'Isha",
-  "scheduleInOnlineMode":"Veuillez vous connecter à Internet pour planifier l'écoute du Coran."
+  "scheduleInOnlineMode":"Veuillez vous connecter à Internet pour planifier l'écoute du Coran.",
+  "duaaBetweenAdhanAndIqamaaTitle": "L'invocation n'est pas rejetée entre l'adhan et l'iqama",
+  "initializingAutoReading": "Initialisation en cours...",
+  "processingRequest": "Traitement de votre demande...",
+  "replaceWorkflowWithStream": "Afficher le flux caméra automatiquement",
+  "replaceAppWorkflowWithCameraStream": "L'écran va automatiquement afficher le flux de la caméra dès que la caméra commence à enregistrer, si elle s'arrête  l'écran revient à l'affichage des heures de prières",
+  "streamError": "Une erreur est survenue lors du streaming"
 }

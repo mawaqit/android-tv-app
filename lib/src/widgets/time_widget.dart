@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mawaqit/i18n/AppLanguage.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/time_utils.dart';
 import 'package:mawaqit/src/widgets/TimePeriodWidget.dart';
-import 'package:provider/provider.dart';
 
 /// this widget should be used the show times in the app
 class TimeWidget extends StatelessWidget {
@@ -47,7 +45,6 @@ class TimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArabicLang = context.read<AppLanguage>().isArabic();
     if (time == null) return Text(fallbackString ?? '', style: style);
 
     if (show24hFormat) {
@@ -59,16 +56,17 @@ class TimeWidget extends StatelessWidget {
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           "${time!.hourOfPeriod.toString().padLeft(2, '0')}:${time!.minute.toString().padLeft(2, '0')}",
           style: style,
+          maxLines: 1,
         ),
-        SizedBox(width: 1.vw),
+        SizedBox(width: 0.3.vw),
         TimePeriodWidget(
           dateTime: time!.toDate(),
-          style: amPmStyle ?? style?.apply(color: Colors.grey.shade300, fontSizeFactor: 0.5),
+          style: amPmStyle ?? style,
         ),
       ],
     );

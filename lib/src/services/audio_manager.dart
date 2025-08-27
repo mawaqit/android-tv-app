@@ -14,9 +14,9 @@ import '../../main.dart';
 import 'audio_stream_offline_manager.dart';
 
 class AudioManager extends ChangeNotifier {
-  String bipLink = "$kStaticFilesUrl/mp3/bip.mp3";
+  String bipLink = "$kStaticFilesUrl/audio/bip.mp3";
 
-  String duaAfterAdhanLink = "$kStaticFilesUrl/mp3/duaa-after-adhan.mp3";
+  String duaAfterAdhanLink = "$kStaticFilesUrl/audio/duaa-after-adhan.mp3";
 
   late AudioPlayer player;
 
@@ -35,9 +35,9 @@ class AudioManager extends ChangeNotifier {
   late final dio = Dio()..interceptors.add(DioCacheInterceptor(options: option));
 
   String adhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
-    String adhanLink = "$kStaticFilesUrl/mp3/adhan-afassy.mp3";
+    String adhanLink = "$kStaticFilesUrl/audio/adhan-afassy.mp3";
     if (mosqueConfig!.adhanVoice?.isNotEmpty ?? false) {
-      adhanLink = "$kStaticFilesUrl/mp3/${mosqueConfig.adhanVoice!}.mp3";
+      adhanLink = "$kStaticFilesUrl/audio/${mosqueConfig.adhanVoice!}.mp3";
     }
 
     if (useFajrAdhan && !adhanLink.contains('bip')) {
@@ -47,44 +47,44 @@ class AudioManager extends ChangeNotifier {
     return adhanLink;
   }
 
-  void loadAndPlayAdhanVoice(
+  Future<Duration?> loadAndPlayAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
     bool useFajrAdhan = false,
-  }) {
+  }) async {
     final url = adhanLink(mosqueConfig, useFajrAdhan: useFajrAdhan);
     if (url.contains('bip')) {
-      loadAndPlayIqamaBipVoice(mosqueConfig, onDone: onDone);
+      return loadAndPlayIqamaBipVoice(mosqueConfig, onDone: onDone);
     } else {
-      loadAndPlay(
+      return loadAndPlay(
         url: url,
         onDone: onDone,
       );
     }
   }
 
-  void loadAndPlayIqamaBipVoice(
+  Future<Duration?> loadAndPlayIqamaBipVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
-  }) {
-    loadAssetsAndPlay(R.ASSETS_VOICES_ADHAN_BIP_MP3, onDone: onDone);
+  }) async {
+    return loadAssetsAndPlay(R.ASSETS_VOICES_ADHAN_BIP_MP3, onDone: onDone);
   }
 
-  void loadAndPlayDuaAfterAdhanVoice(
+  Future<Duration?> loadAndPlayDuaAfterAdhanVoice(
     MosqueConfig? mosqueConfig, {
     VoidCallback? onDone,
-  }) {
-    loadAndPlay(url: duaAfterAdhanLink, onDone: onDone);
+  }) async {
+    return loadAndPlay(url: duaAfterAdhanLink, onDone: onDone);
   }
 
-  Future<void> loadAssetsAndPlay(String assets, {VoidCallback? onDone}) async {
+  Future<Duration?> loadAssetsAndPlay(String assets, {VoidCallback? onDone}) async {
+    Duration? duration;
     try {
-      await player.setAsset(assets);
+      duration = await player.setAsset(assets);
       player.play();
-      log('audio: AudioManager: loadAssetsAndPlay: playing audio file');
+      log('audio: AudioManager: loadAssetsAndPlay: playing audio file, duration: $duration');
       player.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
-          log('audio: AudioManager: loadAssetsAndPlay: done playing audio file');
           onDone?.call();
         }
       });
@@ -110,20 +110,23 @@ class AudioManager extends ChangeNotifier {
       );
       onDone?.call();
     }
+    return duration;
   }
 
-  Future<void> loadAndPlay({
+  Future<Duration?> loadAndPlay({
     required String url,
     bool enableCache = true,
     VoidCallback? onDone,
   }) async {
+    Duration? duration;
     try {
       final file = await getFile(url, enableCache: enableCache);
-      await player.setAudioSource(JustAudioBytesSource(file));
+      final source = JustAudioBytesSource(file);
+      duration = await player.setAudioSource(source);
       player.play();
+      log('audio: AudioManager: loadAndPlay: playing audio file, duration: $duration');
       player.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
-          log('audio: AudioManager: loadAndPlay: done playing audio file');
           onDone?.call();
         }
       });
@@ -149,6 +152,7 @@ class AudioManager extends ChangeNotifier {
       );
       onDone?.call();
     }
+    return duration;
   }
 
   /// this method will precache all the audio files for this mosque

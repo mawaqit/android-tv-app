@@ -26,8 +26,9 @@ class LocaleHelper {
   static Locale splitLocaleCode(String localeCode) {
     var parts = localeCode.split('_');
     var languageCode = parts[0];
+    var countryCode = parts.length > 1 ? parts[1] : null;
 
-    return Locale(languageCode);
+    return Locale(languageCode, countryCode);
   }
 
   /// [transformLocaleToString] Transforms a [Locale] to its standard string representation.
