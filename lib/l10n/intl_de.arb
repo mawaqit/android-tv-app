@@ -1,11 +1,12 @@
 {
   "home": "zuhause",
-  "share": "Teilen",
+  "share": "Aktie",
   "about": "Über",
   "rate": "Bewerte uns",
   "languages": "Sprachen",
   "appLang": "App. - Sprache",
   "descLang": "Bevorzugte Sprache auswählen",
+  "hadithLangDesc": "Dies überschreibt Ihre Auswahl in der Administrator-Konsole. Sie können pro Bildschirm eine andere Sprache auswählen",
   "whoops": "Hoppla!",
   "noInternet": "Keine Internetverbindung",
   "tryAgain": "nochmal versuchen",
@@ -97,7 +98,7 @@
   },
   "azkarList9": "",
   "@azkarList9": {
-    "description": ".| اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "",
   "@azkarList10": {
@@ -179,9 +180,270 @@
   "mainScreenExplanation": "Dieser Bildschirm zeigt nicht das Jumua-Live-Streaming für den Hauptraum der Moschee",
   "normalModeExplanation": "zeigt den Normal-Bildschirm mit den Gebetszeiten und den Ankündigungen.",
   "announcementOnlyModeExplanation": "Ankündigungen werden ständig angezeigt",
+  "orientation": "Orientierung",
+  "selectYourMawaqitTvAppOrientation": "Wählen Sie die Ausrichtung Ihrer mawaqit tv App",
+  "deviceDefault": "Gerät im Standardmodus",
+  "deviceDefaultBTNDescription": "Mawaqit wählt automatisch die Standardausrichtung basierend auf der Bildschirmausrichtung",
+  "portrait": "Hochformat",
+  "portraitBTNDescription": "Für vertikale Ausrichtung empfohlen für Moschee mit kleinem Raum",
+  "landscape": "Querformat",
+  "landscapeBTNDescription": "Für die horizontale Orientierung. Das Hauptlayout für mawaqit TV App und empfohlen für die meisten Moscheen",
   "eidMubarak": "Eid Mubarak",
   "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
   "settings": "Einstellungen",
   "applicationModes": "Anwendungsmodi",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Wenn Sie ein Problem mit der App haben, aktivieren Sie diese Option"
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Wenn Sie ein Problem mit der App haben, aktivieren Sie diese Option",
+  "hijriAdjustments": "Lokale Hijri Einstellungen",
+  "hijriAdjustmentsDescription": "Passen Sie das hijri Datum lokal auf Ihrem Gerät an. Dies wirkt sich nicht auf die Online-Moschee Einstellungen aus",
+  "backoffice_default": "Backoffice-Standard",
+  "recommended": "Empfohlen",
+  "sabah": "Sabah",
+  "randomHadithLanguage": "Zufällige Hadith Sprache",
+  "en": "Englisch",
+  "fr": "Französisch",
+  "ar": "Arabisch",
+  "tr": "Türkisch",
+  "de": "Deutsch",
+  "es": "Spanisch",
+  "pt": "Portugiesisch",
+  "nl": "Niederländisch",
+  "fr_ar": "Französisch & Arabisch",
+  "en_ar": "Englisch & Arabisch",
+  "de_ar": "Deutsch & Arabisch",
+  "ta_ar": "Tamil & Arabic",
+  "tr_ar": "Türkisch & Arabisch",
+  "es_ar": "Spanisch & Arabisch",
+  "pt_ar": "Portugiesisch & Arabisch",
+  "nl_ar": "Niederländisch & Arabisch",
+  "connectToChangeHadith": "Bitte verbinden Sie sich mit dem Internet, um die Hadith Sprache zu ändern.",
+  "retry": "Wiederholen",
+  "timeSetting": "Zeit konfigurieren",
+  "timeSettingDesc": "Eigenen Namen festlegen",
+  "selectedTime": "Die aktuelle Uhrzeit",
+  "confirmation": "Bestätigung",
+  "confirmationMessage": "Sind Sie sicher, dass Sie die Gerätezeit verwenden möchten?",
+  "useDeviceTime": "Gerätezeit verwenden",
+  "selectTime": "Zeit auswählen",
+  "previous": "Vorherige",
+  "appTimezone": "App Timezone",
+  "descTimezone": "Wählen Sie Ihre Zeitzone, um genaue Gebetszeiten zu erhalten.",
+  "appWifi": "Mit Wlan verbinden",
+  "descWifi": "Bitte verbinden Sie sich mit Ihrem bevorzugten Wlan",
+  "searchCountries": "Länder suchen",
+  "scanAgain": "Erneut Scannen",
+  "noScannedResultsFound": "Keine Zugangspunkte gefunden",
+  "connect": "Verbinden",
+  "wifiPassword": "Passwort",
+  "skip": "Überspringen",
+  "noSSID": "**Hidden SSID**",
+  "close": "Schließen",
+  "search": "Suche",
+  "wifiSuccess": "Erfolgreich mit WLAN verbunden.",
+  "wifiFailure": "Verbindung mit WLAN fehlgeschlagen.",
+  "timezoneSuccess": "Zeitzone erfolgreich gesetzt.",
+  "timezoneFailure": "Zeitzone konnte nicht gesetzt werden.",
+  "screenLock": "Bildschirm an/aus",
+  "screenLockConfig": "Bildschirm an/aus konfigurieren",
+  "screenLockMode": "Bildschirm an/aus Modus",
+  "screenLockDesc": "TV vor und nach jedem Gebet ein-/ausschalten, um Energie zu sparen",
+  "screenLockDesc2": "Diese Funktion schaltet das Gerät vor und nach jedem Gebetsadhan ein",
+  "before": "Minuten vor jeder Gebetszeit",
+  "after": "Minuten nach jeder Gebetszeit",
+  "updateAvailable": "Update verfügbar",
+  "seeMore": "Mehr ansehen",
+  "whatIsNew": "Neuheiten",
+  "update": "Aktualisieren",
+  "automaticUpdate": "Update benachrichtigen",
+  "automaticUpdateDescription": "Benachrichtigungsupdate aktivieren, um die neuesten Funktionen und Verbesserungen zu erhalten",
+  "checkInternetLegacyMode": "Sie müssen sich mit dem Internet verbinden, um den Legacy-Modus zu nutzen",
+  "powerOnScreen": "Bildschirm einschalten",
+  "powerOffScreen": "Bildschirm ausschalten",
+  "deviceSettings": "Geräteeinstellungen",
+  "later": "Später",
+  "downloadQuran": "Koran herunterladen",
+  "quran": "Koran",
+  "askDownloadQuran": "Möchten Sie den Koran herunterladen?",
+  "download": "Herunterladen",
+  "downloadingQuran": "Der Koran wird heruntergeladen",
+  "extractingQuran": "Koran extrahieren",
+  "updatedQuran": "Koran aktualisiert",
+  "quranLatestVersion": "Koran ist aktuell",
+  "quranUpdatedVersion": "Koran aktualisierte Version ist: {version}",
+  "quranIsUpdated": "Koran wurde aktualisiert",
+  "quranDownloaded": "Koran heruntergeladen",
+  "quranIsAlreadyDownloaded": "Koran wurde bereits heruntergeladen",
+  "chooseReciter": "Reziter auswählen",
+  "reciteType": "Recite Type",
+  "readingMode": "Ich möchte lesen",
+  "listeningMode": "Ich möchte zuhören",
+  "quranReadingPage": "Seite {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "quranReadingPagePortrait": "Seite {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Seite auswählen",
+  "checkingForUpdates": "Suche nach Updates...",
+  "chooseQuranType": "Koran auswählen",
+  "hafs": "Haft",
+  "warsh": "Warsch",
+  "favorites": "Favoriten",
+  "allReciters": "Alle Leser",
+  "reciterAddedToFavorites": "Reziter {name} zu den Favoriten hinzugefügt",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Reziter {name} aus den Favoriten entfernt",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "Keine Lieblings-Reziter. Versuche einen zur Liste hinzuzufügen",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+  "noReciterSearchResult": "Keine Ergebnisse für Ihre Suche gefunden",
+  "searchForReciter": "Suche nach einem Reziter",
+  "downloadAllSuwarSuccessfully": "Der gesamte Quran wird heruntergeladen",
+  "noSuwarDownload": "Keine neuen Suwars zum Herunterladen",
+  "connectDownloadQuran": "Zum Herunterladen bitte mit Internet verbinden",
+  "playInOnlineModeQuran": "Zum Spielen bitte mit dem Internet verbinden",
+  "downloaded": "Heruntergeladen",
+  "switchQuranType": "Gehe zu {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Select Surah",
+  "checkForUpdates": "Nach Updates suchen",
+  "checkForNewVersion": "Überprüfen Sie, ob eine neue Version verfügbar ist",
+  "wouldYouLikeToUpdate": "Möchten Sie die App aktualisieren?",
+  "updateCompleted": "Update erfolgreich abgeschlossen!",
+  "noUpdates": "Keine Updates",
+  "usingLatestVersion": "Sie verwenden die neueste Version.",
+  "updateCancelled": "Update abgebrochen",
+  "checkingUpdates": "Überprüfe Updates...",
+  "downloadingUpdate": "Update wird heruntergeladen...",
+  "installingUpdate": "Update wird installiert...",
+  "updateCompletedSuccessfully": "Update erfolgreich abgeschlossen",
+  "updateFailed": "Update fehlgeschlagen",
+  "save": "Speichern",
+  "enterRtspUrl": "RTSP oder Youtube Live URL eingeben",
+  "addRtspUrl": "Füge deine Kamera-Stream-URL unten hinzu",
+  "enableRtspCamera": "Kamera-Streaming aktivieren",
+  "rtspCameraSettings": "Kameraeinstellungen",
+  "invalidRtspUrl": "Ungültige URL. Bitte überprüfen Sie die URL und versuchen Sie es erneut.",
+  "validRtspUrl": "URL erfolgreich validiert und gespeichert.",
+  "rtspCameraSettingTitle": "Live-Kamera-Verbindung",
+  "rtspCameraSettingDesc": "Verbinde dich mit deiner lokalen Kamera und zeige Jumua-Gebetsstreams auf dem Fernseher an.",
+  "rtspCameraSettingScreenDesc": "Wenn Sie hier eine URL eingeben, wird Ihr Bildschirm automatisch zum Video-Streaming wechseln, wenn Jumua-Zeit eintrifft",
+  "validatingStream": "Stream wird überprüft...",
+  "checkInternetLiveCamera": "Zum Einrichten der Live-Kamera muss eine Internetverbindung hergestellt werden",
+  "somethingWentWrong": "Etwas ist schiefgelaufen! Bitte versuche es erneut",
+  "somethingWrong": "Etwas ist schief gelaufen",
+  "tryAgainLater": "Bitte später erneut versuchen",
+  "hintTextRtspUrl": "rtsp://... oder https://youtube.com/live/...",
+  "checkInternetUpdate": "Sie müssen sich mit dem Internet verbinden, um nach neuen Updates zu suchen",
+  "appUpdateAvailable": "Ihre App verwendet die Version {currentVersion}. Ein neues Update (Version {updatedVersion}) ist verfügbar mit den neuesten Funktionen und Verbesserungen.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "Ein neues Update für den {moshafName} Koran (Version {version}) ist verfügbar.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Nur Fajr und Isha Gebete",
+  "minutesBeforeFajrPrayer": "Minuten vor Fajr Gebetszeit",
+  "minutesAfterIshaPrayer": "Minuten Afer isha Gebetszeit",
+  "scheduleSaved": "Ihr Zeitplan wurde gespeichert.",
+  "completeAllFields": "Bitte füllen Sie vor dem Speichern alle Felder aus.",
+  "endTimeAfter": "Die Endzeit muss nach der Startzeit liegen.",
+  "scheduleListening": "Geplantes Zuhören",
+  "enableScheduling": "Zeitplanung aktivieren",
+  "scheduleDesc": "Aktivieren Sie diese Funktion, um automatisch einen Surah zu geplanten Zeiten abzuspielen.",
+  "startTime": "Startzeit",
+  "endTime": "Endzeit",
+  "selectReciter": "Reziter auswählen",
+  "selectMoshaf": "Wähle einen Mushaf",
+  "randomSurahSelection": "Zufällige Surah Auswahl",
+  "selectSurah": "Surah auswählen",
+  "initializingAutoReading": "Initialisiere läuft...",
+  "prayerTimeNotification": "{salahName} Zeit ({prayerTime}) Benachrichtigung",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Bitte verbinden Sie sich mit dem Internet, um das Hören von Koran zu planen",
+  "duaBetweenAdhanIqamah": "Die Lieferung (Du'a) wird zwischen Adhan und Iqamah nicht abgelehnt."
 }

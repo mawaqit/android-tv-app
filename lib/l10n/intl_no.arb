@@ -6,6 +6,7 @@
   "languages": "Språk",
   "appLang": "App språk",
   "descLang": "Velg ditt foretrukne språk",
+  "hadithLangDesc": "Dette overstyrer valget i admin-konsollen, du kan velge et annet språk ved å bruke skjermen",
   "whoops": "Uff!",
   "noInternet": "Ingen internettforbindelse",
   "tryAgain": "Prøv igjen",
@@ -97,7 +98,7 @@
   },
   "azkarList9": "",
   "@azkarList9": {
-    "description": ".| اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "",
   "@azkarList10": {
@@ -179,9 +180,270 @@
   "mainScreenExplanation": "For hovedmoskerommet vil ikke denne skjermen vise jumua live-streaming",
   "normalModeExplanation": "Vil vise skjermen med bønn tid og kunngjøringer.",
   "announcementOnlyModeExplanation": "Vil vise kunngjøringer hele tiden",
+  "orientation": "Retning",
+  "selectYourMawaqitTvAppOrientation": "Velg din mawaqit tv app orientering",
+  "deviceDefault": "Standard enhet",
+  "deviceDefaultBTNDescription": "Mawaqit vil automatisk velge standard orientering basert på skjermretning",
+  "portrait": "Stående",
+  "portraitBTNDescription": "For vertikal retning anbefalt for moské med lite areal",
+  "landscape": "Landskap",
+  "landscapeBTNDescription": "For horisontal orientering. Hovedoppsettet for mawaqit tv app og anbefalt en for de fleste mosques",
   "eidMubarak": "Eid Mubarak",
   "takbeerAleidText": "Allahu Akbar, Allahu Akbar, Allahu Akbar, la ilaha illa Allah, Allahu Akbar, Allahu Akbar, wa lillahi al-hamd",
   "settings": "Innstillinger",
   "applicationModes": "Applikasjons moduser",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Dersom du møter et problem med appen aktiv dette alternativet"
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Dersom du møter et problem med appen aktiv dette alternativet",
+  "hijriAdjustments": "Lokale justeringer i Hijri",
+  "hijriAdjustmentsDescription": "Juster hijri-datoen lokalt på enheten din. Dette påvirker ikke innstillingene for online-moskeen",
+  "backoffice_default": "Standardverdier for administrasjonssidene",
+  "recommended": "Anbefalt",
+  "sabah": "Sabah",
+  "randomHadithLanguage": "Random hadith språk",
+  "en": "Engelsk",
+  "fr": "Fransk",
+  "ar": "Arabisk",
+  "tr": "Tyrkisk",
+  "de": "Tysk",
+  "es": "Spansk",
+  "pt": "Portugisisk",
+  "nl": "Nederlandsk",
+  "fr_ar": "Fransk og arabisk",
+  "en_ar": "Engelsk og arabisk",
+  "de_ar": "Tysk og arabisk",
+  "ta_ar": "Tamil & Arabic",
+  "tr_ar": "Tyrkisk og arabisk",
+  "es_ar": "Spansk og arabisk",
+  "pt_ar": "Portugisisk og arabisk",
+  "nl_ar": "Nederlandsk og arabisk",
+  "connectToChangeHadith": "Vennligst koble til internett for å endre språket til hyse.",
+  "retry": "Prøv igjen",
+  "timeSetting": "Konfigurere tid",
+  "timeSettingDesc": "Angi et egendefinert navn",
+  "selectedTime": "Valgt tid",
+  "confirmation": "Bekreftelse",
+  "confirmationMessage": "Er du sikker på at du vil bruke enhetens tid?",
+  "useDeviceTime": "Bruk enhetens tid",
+  "selectTime": "Velg tid",
+  "previous": "Forrige",
+  "appTimezone": "App Timezone",
+  "descTimezone": "Velg tidssone for å få nøyaktig bønn ganger.",
+  "appWifi": "Koble til wifi",
+  "descWifi": "Vennligst koble til din foretrukne Wi-Fi",
+  "searchCountries": "Søk land",
+  "scanAgain": "Skann igjen",
+  "noScannedResultsFound": "Ingen nære tilgangspunkter funnet",
+  "connect": "Nettverk",
+  "wifiPassword": "Passord",
+  "skip": "Hopp",
+  "noSSID": "**Hidden SSID**",
+  "close": "Lukk",
+  "search": "Søk",
+  "wifiSuccess": "Koblet til Wifi.",
+  "wifiFailure": "Kan ikke koble til Wifi.",
+  "timezoneSuccess": "Tidssone vellykket.",
+  "timezoneFailure": "Kan ikke angi tidssone.",
+  "screenLock": "Skjerm på/av",
+  "screenLockConfig": "Konfigurer skjermen på/av",
+  "screenLockMode": "Skjerm på/av modus",
+  "screenLockDesc": "Slå på/av TV før og etter hver bønn for å spare strøm",
+  "screenLockDesc2": "Denne funksjonen slår på/av enheten før og etter hver bønn adhan",
+  "before": "minutter før hver bønn tid",
+  "after": "minutter etter hver bønn tid",
+  "updateAvailable": "Oppdatering tilgjengelig",
+  "seeMore": "Se mer",
+  "whatIsNew": "Hva er nytt",
+  "update": "Oppdater",
+  "automaticUpdate": "Varsle oppdatering",
+  "automaticUpdateDescription": "Aktiver varslinger for å motta de nyeste funksjonene og forbedringene",
+  "checkInternetLegacyMode": "Du må koble til internett for å bruke eldre modus",
+  "powerOnScreen": "Slå på skjermen",
+  "powerOffScreen": "Slå av skjermen",
+  "deviceSettings": "Enhets innstillinger",
+  "later": "Senere",
+  "downloadQuran": "Last ned Quran",
+  "quran": "Korsikansk",
+  "askDownloadQuran": "Vil du laste ned Quranen?",
+  "download": "Nedlasting",
+  "downloadingQuran": "Laster ned Quran",
+  "extractingQuran": "Ekstraksjon Quran",
+  "updatedQuran": "Korte oppdatert",
+  "quranLatestVersion": "Quran er oppdatert",
+  "quranUpdatedVersion": "Ansvarlig oppdatert versjon er: {version}",
+  "quranIsUpdated": "Koranen er oppdatert",
+  "quranDownloaded": "Quran lastet ned",
+  "quranIsAlreadyDownloaded": "Quran er allerede lastet ned",
+  "chooseReciter": "Velg opptaker",
+  "reciteType": "Recite Type",
+  "readingMode": "Jeg vil lese",
+  "listeningMode": "Jeg vil lytte",
+  "quranReadingPage": "Side {leftPage} – {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "quranReadingPagePortrait": "Side {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Velg side",
+  "checkingForUpdates": "Ser etter oppdateringer...",
+  "chooseQuranType": "Velg quran",
+  "hafs": "Hemos",
+  "warsh": "Warsh",
+  "favorites": "Favoritter",
+  "allReciters": "Alle oppskriftsmenn",
+  "reciterAddedToFavorites": "Spilleren {name} lagt til i favoritter",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Spilleren {name} fjernet fra favoritter",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "Ingen favorittoppskrifter. Prøv å legge til en i listen",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+  "noReciterSearchResult": "Ingen treff på ditt søk",
+  "searchForReciter": "Søk etter rapportør",
+  "downloadAllSuwarSuccessfully": "Hele quran lastes ned",
+  "noSuwarDownload": "Ingen nye suwars å laste ned",
+  "connectDownloadQuran": "Vennligst koble til internett for å laste ned",
+  "playInOnlineModeQuran": "Vennligst koble til Internett for å spille",
+  "downloaded": "Nedlastet",
+  "switchQuranType": "Gå til {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Select Surah",
+  "checkForUpdates": "Se etter oppdateringer",
+  "checkForNewVersion": "Sjekk om en ny versjon er tilgjengelig",
+  "wouldYouLikeToUpdate": "Ønsker du å oppdatere appen?",
+  "updateCompleted": "Oppdateringen var vellykket!",
+  "noUpdates": "Ingen oppdateringer",
+  "usingLatestVersion": "Du bruker den nyeste versjonen.",
+  "updateCancelled": "Oppdatering avbrutt",
+  "checkingUpdates": "Sjekker oppdateringer...",
+  "downloadingUpdate": "Laster ned oppdatering...",
+  "installingUpdate": "Installerer oppdatering...",
+  "updateCompletedSuccessfully": "Oppdatering fullført",
+  "updateFailed": "Oppdatering feilet",
+  "save": "Lagre",
+  "enterRtspUrl": "Angi RTSP eller Youtube Live URL",
+  "addRtspUrl": "Legg til din kamerastrøm URL nedenfor",
+  "enableRtspCamera": "Aktiver kamerastrømming",
+  "rtspCameraSettings": "Kamera innstillinger",
+  "invalidRtspUrl": "Ugyldig URL. Kontroller URL-en og prøv på nytt.",
+  "validRtspUrl": "URL validert og lagret.",
+  "rtspCameraSettingTitle": "Direkte kameratilkobling",
+  "rtspCameraSettingDesc": "Koble til ditt lokale kamera og vis jumua bønn strøm på TV-skjermen.",
+  "rtspCameraSettingScreenDesc": "Dersom du skriver inn en nettadresse her, vil skjermen automatisk bytte til videostrømming når Jumua ankommer tiden",
+  "validatingStream": "Validerer strøm...",
+  "checkInternetLiveCamera": "Du må koble til Internett for å sette opp live kamera",
+  "somethingWentWrong": "Noe gikk galt! Vennligst prøv igjen",
+  "somethingWrong": "Noe gikk galt",
+  "tryAgainLater": "Prøv igjen senere",
+  "hintTextRtspUrl": "rtsp://... eller https://youtube.com/live/...",
+  "checkInternetUpdate": "Du må koble til Internett for å se etter nye oppdateringer",
+  "appUpdateAvailable": "Appen kjører versjon {currentVersion}. En ny oppdatering (versjon {updatedVersion}) er tilgjengelig med de nyeste funksjonene og forbedringene.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "En ny oppdatering for {moshafName} Quran (versjon {version}) er tilgjengelig.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Kun Fajr og Isha bønn",
+  "minutesBeforeFajrPrayer": "minutter før fajr bønn tid",
+  "minutesAfterIshaPrayer": "minutter etter bønn",
+  "scheduleSaved": "Din plan har blitt lagret.",
+  "completeAllFields": "Fyll ut alle feltene før du lagrer.",
+  "endTimeAfter": "Sluttiden må være etter starttiden.",
+  "scheduleListening": "Planlagt Lytter",
+  "enableScheduling": "Aktiver planlegging",
+  "scheduleDesc": "Aktiver denne funksjonen for å spille surfe automatisk til planlagte tider.",
+  "startTime": "Start tid",
+  "endTime": "Slutt tid",
+  "selectReciter": "Velg en oppfører",
+  "selectMoshaf": "Velg en mushaf",
+  "randomSurahSelection": "Tilfeldig Surah Valg",
+  "selectSurah": "Velg surfe",
+  "initializingAutoReading": "Initialiserer pågår...",
+  "prayerTimeNotification": "{salahName} tid ({prayerTime}) varsel",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Vennligst koble deg til internett for å planlegge Quran lytting",
+  "duaBetweenAdhanIqamah": "Bekreftelse (Du'a) er ikke avvist mellom Adhan og Iqama."
 }

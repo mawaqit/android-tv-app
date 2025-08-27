@@ -98,7 +98,7 @@
   },
   "azkarList9": "",
   "@azkarList9": {
-    "description": ".| اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "",
   "@azkarList10": {
@@ -369,6 +369,22 @@
   "installingUpdate": "Asennetaan päivitystä...",
   "updateCompletedSuccessfully": "Päivitys suoritettu onnistuneesti",
   "updateFailed": "Päivitys epäonnistui",
+  "save": "Tallenna",
+  "enterRtspUrl": "Syötä RTSP tai Youtube Live URL",
+  "addRtspUrl": "Lisää kameran streamin URL alapuolelle",
+  "enableRtspCamera": "Ota Kameran Suoratoistaminen Käyttöön",
+  "rtspCameraSettings": "Kameran Asetukset",
+  "invalidRtspUrl": "Virheellinen URL. Tarkista URL-osoite ja yritä uudelleen.",
+  "validRtspUrl": "URL vahvistettu ja tallennettu onnistuneesti.",
+  "rtspCameraSettingTitle": "Live-kamerayhteys",
+  "rtspCameraSettingDesc": "Yhdistä paikalliseen kameraan ja näytä jumua rukous streami TV-näytöllä.",
+  "rtspCameraSettingScreenDesc": "Jos syötät URL-osoitteen tähän, näyttösi siirtyy automaattisesti videon suoratoistoon, kun Jumua saapuu",
+  "validatingStream": "Tarkistetaan Lähetystä...",
+  "checkInternetLiveCamera": "Sinun täytyy muodostaa yhteys internetiin määrittääksesi live-kameran",
+  "somethingWentWrong": "Jokin meni pieleen! Yritä uudelleen",
+  "somethingWrong": "Jokin meni pieleen",
+  "tryAgainLater": "Yritä myöhemmin uudelleen",
+  "hintTextRtspUrl": "rtsp://... tai https://youtube.com/live/...",
   "checkInternetUpdate": "Sinun täytyy muodostaa yhteys internetiin, jotta voit tarkistaa uusia päivityksiä",
   "appUpdateAvailable": "Sovelluksesi on käynnissä versio {currentVersion}. Uusi päivitys (versio {updatedVersion}) on saatavilla uusimmilla ominaisuuksilla ja parannuksilla.",
   "@appUpdateAvailable": {
@@ -383,5 +399,51 @@
         "example": "604"
       }
     }
-  }
+  },
+  "quranUpdateDialogContent": "A new update for the {moshafName} Quran (version {version}) is available.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Vain Fajr ja Isha rukoukset",
+  "minutesBeforeFajrPrayer": "minuuttia ennen fajrin rukousaikaa",
+  "minutesAfterIshaPrayer": "minuuttia jälkeen isha rukousaika",
+  "scheduleSaved": "Aikataulu on tallennettu.",
+  "completeAllFields": "Täytä kaikki kentät ennen tallentamista.",
+  "endTimeAfter": "Päättymisajan on oltava alkamisajan jälkeen.",
+  "scheduleListening": "Ajoitettu Kuuntelu",
+  "enableScheduling": "Ota Ajoitus Käyttöön",
+  "scheduleDesc": "Ota tämä ominaisuus käyttöön toistaaksesi automaattisesti Surah ajoitettuina aikoina.",
+  "startTime": "Aloitus Aika",
+  "endTime": "Loppu Aika",
+  "selectReciter": "Valitse Reciter",
+  "selectMoshaf": "Valitse myshaf",
+  "randomSurahSelection": "Satunnainen Surah Valinta",
+  "selectSurah": "Valitse Surah",
+  "initializingAutoReading": "Alustetaan käynnissä...",
+  "prayerTimeNotification": "{salahName} time ({prayerTime}) notification",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Ota yhteys internetiin aikatauluun Quranin kuuntelemiseksi",
+  "duaBetweenAdhanIqamah": "Adhanin ja Iqaman välillä ei hylätä täyttöä (Du'a)."
 }

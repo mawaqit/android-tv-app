@@ -3,46 +3,26 @@
   "share": "Бүленеү",
   "about": "Тураһында",
   "rate": "Беҙҙе Баһалағыҙ",
-  "update": "Ҡушымтаның Яңыртыуы",
-  "notification": "Белдереүҙәр",
   "languages": "Njoftim",
   "appLang": "Ҡушымтаның Теле",
   "descLang": "Зинһар, кәрәкле телде һайлап алығыҙ",
+  "hadithLangDesc": "This override  your choice in the admin console, you can chose a different language by screen",
   "whoops": "Упс!",
   "noInternet": "Интернет бәйләнеше юҡ",
   "tryAgain": "Яңынан Ҡабатлағыҙ",
   "closeApp": "Ҡушымтаны ябығыҙ",
   "quit": "Сығырға",
+  "forceStaging": "Switch to staging",
+  "disableStaging": "Switch to production mode",
   "sureCloseApp": "Һеҙ ысынлап та сыҡҡыһы килә ме?",
   "ok": "ЯРАЙ",
   "cancel": "КИРЕ ҠАЙТАРЫУ",
-  "changeTheme": "Теманы Алмаштырырға",
-  "customizeYourOwnWay": "Үҙ опцияғыҙҙы көйләгеҙ",
-  "navigationBarStyle": "Навигация панельдарҙың стиле",
-  "headerType": "Атаманың төрө",
-  "leftButtonOption": "Борғостарҙың Опциялары (һулдан)",
-  "rightButtonOption": "Борғостарҙың Опциялары (уңдан)",
-  "colorGradient": "Төҫлө Градиент",
-  "colorSolid": "Тотош Төҫлө",
-  "loadingAnimation": "Анимацияны йөкләү",
-  "backToHomePage": "Төпбиткә Ҡайтырға",
   "darkMode": "Ҡара режим",
   "lightMode": "Яҡты режим",
-  "facebook": "Facebook",
-  "instagram": "Instagram",
-  "youtube": "Youtube",
-  "skype": "Skype",
-  "twitter": "Twitter",
-  "whatsApp": "WhatsApp",
-  "messenger": "messenger",
-  "snapchat": "Snapchat",
   "changeMosque": "Мәситте Алмаштырырға",
-  "mosque": "Мәсит",
   "in1": "һуң",
   "sec": "Уст",
   "online": "Онлайн",
-  "enterMosqueId": "Зинһар, Мәситтең ID индерегеҙ :",
-  "mosqueId": "Мәситтең ID",
   "missingMosqueId": "Юғалтылған Мәситтең ID",
   "mosqueIdIsNotValid": "Кисерегеҙ, {mosqueId} мәситтең ысын ID түгел",
   "selectMosqueId": "Зинһар, үҙ Мәситтең ID индерегеҙ",
@@ -54,11 +34,9 @@
   "drawerTitle": "MAWAQIT",
   "drawerDesc": "Мәситкә Мөсөлмәндәр ҡушылыуы",
   "backendError": "Кисерегеҙ, беҙ серверға бәйләнеп алманыҡ. Зинһар, Интернет бәйләнеште тикшерегеҙ йәки аҙағыраҡ яңынан ҡабатлағыҙ.",
-  "mosqueInput": "Мәситкә Кереү",
   "selectWithMosqueId": "Һынап ҡарағыҙ: 256, 'Парижтың Мәсите' ID-һы",
   "searchForMosque": "Ниндәй Мәситте эҙләйһегеҙ? (ID, Исеме, Ҡала, Индекс...)",
   "searchMosque": "Мәситте Эҙләү",
-  "gpsError": "Cannot access current device location, please check that your device GPS is enabled\n",
   "mosqueNameError": "Мәситтең исемең индерегеҙ",
   "slugError": "Isn't a valid mosque slug",
   "doYouKnowMosqueId": "Do you know your installation ID or your Mosque ID?\n",
@@ -75,19 +53,18 @@
   "asr": "Asr",
   "maghrib": "Maghrib",
   "isha": "Isha",
-  "afterSalahHadithTitle": "Намаҙдан һуң Доға",
   "afterAdhanHadithTitle": "Намаҙдан һуң Доға",
   "afterSalahHadith": "Allahumma Rabba hadhihid-da'wati-ttammati, was-salatil-qa'imati, ati Muhammadanil-wasilata wal-fadhilata, wab'athu maqaman mahmuda nilladhi wa 'adtahu [O Allah, Rubb of this perfect call (Da'wah) and of the established prayer (As-Salat), grant Muhammad the Wasilah and superiority, and raise him up to a praiseworthy position which You have promised him]\n",
   "alIqama": "Al Iqama\n",
-  "alAdhan": "Al Adan",
+  "alAdhan": "Аҙан",
   "turnOfPhones": "Please turn of your mobile phones!",
-  "iqamaIn": "Iqama in",
+  "iqamaIn": "Агамат дараа",
   "alAthkar": "Al-Athkar",
-  "azkarList0": "",
+  "azkarList0": "Key: AlAthkar_0\n-> AlAthkar_0\nأَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله \\nاللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": "Key: AlAthkar_0\n-> AlAthkar_0\nأَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله \\nاللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -107,7 +84,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "Key: AlAthkar_0\n-> AlAthkar_0\nأَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله \\nاللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -121,7 +98,7 @@
   },
   "azkarList9": "",
   "@azkarList9": {
-    "description": ".| اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "",
   "@azkarList10": {
@@ -146,8 +123,6 @@
   "jumuaaScreenTitle": "Jumuaa Time",
   "jumuaaHadith": "The Prophet (peace and blessings of Allah be upon him) said \"Whoever does the ablutions perfectly then goes to jumua and then listens and is silent, he is forgiven what is between that time and the following Friday and three more days and the one who touches stones has certainly made a futility\"",
   "shuruk": "Shuruk",
-  "thisFeatureIsNotSupportedRightNow": "Sorry, this feature (search by Mosque ID) is no longer supported by MAWAQIT.\n",
-  "searchByGps": "Search by GPS",
   "reset": "Ташлау",
   "mosqueNotFoundMessage": "Таны сүм олдсонгүй. Энэ нь байхгүй эсвэл серверээс хасагдсан байж магадгүй",
   "noInternetMessage": "та интернетэд холбогдоогүй бололтой. интернетээ шалгаад дахин оролдоно уу",
@@ -167,5 +142,308 @@
   "dhuAlhijjah": "Ҙу әл-Хижжаһ",
   "duaaBetweenSalahAndAdhan": "Anas bin Malik said: The Messenger of Allah (ﷺ) said: The supplication does not return between the call to prayer and the standing for prayer.",
   "salatKhayrMinaNawm": "Әссәләтү Хәйрүм Минән Нәүм",
-  "salatElEid": "Salat El Eid"
+  "salatElEid": "Salat El Eid",
+  "webView": "Enable Legacy Mode",
+  "developersHomeScreen": "Developer's home screen",
+  "onlineHome": "Онлайн Өй",
+  "prayerTimes": "Намаҙ Ваҡыты",
+  "alerts": "Белдереү",
+  "iqamaaCountDown": "Iqamaa Count Down",
+  "afterAdhanHadith": "After Adhan Hadith",
+  "afterSalahAzkar": "After Salah Azkar",
+  "iqama": "Iqama",
+  "randomHadith": "Random Hadith",
+  "announcement": "Announcements",
+  "jumuaaLive": "Jumuaa [Live Streaming]",
+  "showSecondaryScreen": "Use as a secondary screen (For Announcements)",
+  "normalScreen": "Use as Main Screen",
+  "duaaRemainder": "Duaa Remainder",
+  "fajrWakeUp": "Fajr Wake Up",
+  "changeLanguage": "Change language",
+  "forceScreen": "Force screen",
+  "clear": "Таҙартыу",
+  "changeTheme": "Теманы Алмаштырырға",
+  "next": "Киләһе",
+  "mainScreenOrSecondaryScreen": "Экрандың урынлашыуы",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Do you want to install this screen in the main prayer room (men prayer room) ?",
+  "mainScreen": "Төп экран",
+  "secondaryScreen": "Икенсе экран",
+  "duaaElEftar": "Ифтар доғаһы",
+  "announcementOnlyMode": "Иғлан режимы",
+  "normalMode": "Нормаль режимы ",
+  "announcementOnlyModeEXPLINATION": "Choose if your screen will display announcements all time, this can be useful if you install the screen at the entrance for example.",
+  "duaaElEftarText": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله",
+  "@duaaElEftarText": {
+    "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
+  },
+  "secondaryScreenExplanation": "For a secondary prayer room (women room or an other floor for example), this screen will show jumua live-streaming",
+  "mainScreenExplanation": "For the main mosque room, this screen will not show the jumua live-streaming",
+  "normalModeExplanation": "Will show the normal screen with the prayer times and the announcements.",
+  "announcementOnlyModeExplanation": "Will show announcements all time",
+  "orientation": "Ориентация",
+  "selectYourMawaqitTvAppOrientation": "Select your mawaqit tv app orientation",
+  "deviceDefault": "Device Default",
+  "deviceDefaultBTNDescription": "Mawaqit will auto select the default orientation based on the screen orientation",
+  "portrait": "Портрет",
+  "portraitBTNDescription": "For vertical orientation recommended for mosque with small space",
+  "landscape": "Пейзаж",
+  "landscapeBTNDescription": "For Horizontal orientation. The main layout for mawaqit tv app and recommended one for most mosques",
+  "eidMubarak": "Ғәйет мөбәрәк",
+  "takbeerAleidText": "Аллаһу Әкбәр, Аллаһу Әкбәр, Аллаһу Әкбәр, лә иләһә иллә Аллаһ, Аллаһу Әкбәр, Аллаһу Әкбәр, вә лилләәһи әл-һәм",
+  "settings": "Көйләүҙәр",
+  "applicationModes": "Application Mode",
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "If you are facing issues with the app, try to enable this option",
+  "hijriAdjustments": "Local Hijri adjustments",
+  "hijriAdjustmentsDescription": "Adjust the hijri date locally in your device. This will not affect the online mosque settings",
+  "backoffice_default": "Backoffice Defaults",
+  "recommended": "Recommended",
+  "sabah": "Sabah",
+  "randomHadithLanguage": "Random hadith language",
+  "en": "English",
+  "fr": "French",
+  "ar": "Arabic",
+  "tr": "Turkish",
+  "de": "German",
+  "es": "Spanish",
+  "pt": "Portuguese",
+  "nl": "Dutch",
+  "fr_ar": "French & Arabic",
+  "en_ar": "English & Arabic",
+  "de_ar": "German & Arabic",
+  "ta_ar": "Tamil & Arabic",
+  "tr_ar": "Turkish & Arabic",
+  "es_ar": "Spanish & Arabic",
+  "pt_ar": "Portuguese & Arabic",
+  "nl_ar": "Dutch & Arabic",
+  "connectToChangeHadith": "Please connect to the internet to change the hadith language.",
+  "retry": "Retry",
+  "timeSetting": "Configuring the time",
+  "timeSettingDesc": "Set a custom name",
+  "selectedTime": "The current selected time",
+  "confirmation": "Confirmation",
+  "confirmationMessage": "Are you sure you want to use device time?",
+  "useDeviceTime": "Use device time",
+  "selectTime": "Select Time",
+  "previous": "Previous",
+  "appTimezone": "App Timezone",
+  "descTimezone": "Select your timezone to get accurate prayer times.",
+  "appWifi": "Connect to wifi",
+  "descWifi": "Please connect to your preferred wifi",
+  "searchCountries": "Search countries",
+  "scanAgain": "Scan Again",
+  "noScannedResultsFound": "No near access points found",
+  "connect": "Connect",
+  "wifiPassword": "Password",
+  "skip": "Skip",
+  "noSSID": "**Hidden SSID**",
+  "close": "Close",
+  "search": "Search",
+  "wifiSuccess": "Successfully connected to Wifi.",
+  "wifiFailure": "Failed to connect to Wifi.",
+  "timezoneSuccess": "Timezone set successfully.",
+  "timezoneFailure": "Failed to set timezone.",
+  "screenLock": "Screen on/off",
+  "screenLockConfig": "Configure screen on/off",
+  "screenLockMode": "Screen on/off mode",
+  "screenLockDesc": "Turn on/off TV before and after each prayer to save energy",
+  "screenLockDesc2": "This feature turn on/off the device before and after each prayer adhan",
+  "before": "minutes before each prayer time",
+  "after": "minutes after each prayer time",
+  "updateAvailable": "Update available",
+  "seeMore": "See more",
+  "whatIsNew": "What's new",
+  "update": "Ҡушымтаның Яңыртыуы",
+  "automaticUpdate": "Notify update",
+  "automaticUpdateDescription": "Enable notify update to receive the latest features and improvements",
+  "checkInternetLegacyMode": "You must connect to internet to use the legacy mode",
+  "powerOnScreen": "Power on the screen",
+  "powerOffScreen": "Power off the screen",
+  "deviceSettings": "Device Settings",
+  "later": "Later",
+  "downloadQuran": "Download Quran",
+  "quran": "Quran",
+  "askDownloadQuran": "Do you want to download the Quran?",
+  "download": "Download",
+  "downloadingQuran": "Downloading Quran",
+  "extractingQuran": "Extracting Quran",
+  "updatedQuran": "Quran updated",
+  "quranLatestVersion": "Quran is up to date",
+  "quranUpdatedVersion": "Quran updated version is: {version}",
+  "quranIsUpdated": "Quran is updated",
+  "quranDownloaded": "Quran downloaded",
+  "quranIsAlreadyDownloaded": "Quran is already downloaded",
+  "chooseReciter": "Choose Reciter",
+  "reciteType": "Recite Type",
+  "readingMode": "I want to read",
+  "listeningMode": "I want to listen",
+  "quranReadingPage": "Page {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "quranReadingPagePortrait": "Page {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Choose the page",
+  "checkingForUpdates": "Checking for updates...",
+  "chooseQuranType": "Choose quran",
+  "hafs": "Hafs",
+  "warsh": "Warsh",
+  "favorites": "Favorites",
+  "allReciters": "All Reciters",
+  "reciterAddedToFavorites": "Reciter {name} added to favorites",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Reciter {name} removed from favorites",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "No favorite reciters. Try adding one to the list",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+  "noReciterSearchResult": "No results found for your search",
+  "searchForReciter": "Search for a reciter",
+  "downloadAllSuwarSuccessfully": "The whole quran is downloaded",
+  "noSuwarDownload": "No new suwars to download",
+  "connectDownloadQuran": "Please connect to Internet to download",
+  "playInOnlineModeQuran": "Please connect to internet to play",
+  "downloaded": "Downloaded",
+  "switchQuranType": "Go to {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Select Surah",
+  "checkForUpdates": "Check for Updates",
+  "checkForNewVersion": "Check if a new version is available",
+  "wouldYouLikeToUpdate": "Would you like to update the app?",
+  "updateCompleted": "Update completed successfully!",
+  "noUpdates": "No Updates",
+  "usingLatestVersion": "You are using the latest version.",
+  "updateCancelled": "Update cancelled",
+  "checkingUpdates": "Checking updates...",
+  "downloadingUpdate": "Downloading update...",
+  "installingUpdate": "Installing update...",
+  "updateCompletedSuccessfully": "Update completed successfully",
+  "updateFailed": "Update failed",
+  "save": "Save",
+  "enterRtspUrl": "Enter RTSP or Youtube Live URL",
+  "addRtspUrl": "Add your camera stream URL below",
+  "enableRtspCamera": "Enable Camera Streaming",
+  "rtspCameraSettings": "Camera Settings",
+  "invalidRtspUrl": "Invalid URL. Please check the URL and try again.",
+  "validRtspUrl": "URL validated and saved successfully.",
+  "rtspCameraSettingTitle": "Live camera connection",
+  "rtspCameraSettingDesc": "Connect to your local camera and display jumua prayer stream on the TV screen.",
+  "rtspCameraSettingScreenDesc": "If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+  "validatingStream": "Validating Stream...",
+  "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
+  "somethingWentWrong": "Something went wrong! please try again",
+  "somethingWrong": "Something went wrong",
+  "tryAgainLater": "Please try again later",
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/...",
+  "checkInternetUpdate": "You must connect to internet to check for new updates",
+  "appUpdateAvailable": "Your app is running version {currentVersion}. A new update (version {updatedVersion}) is available with the latest features and improvements.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "A new update for the {moshafName} Quran (version {version}) is available.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr and Isha prayers only",
+  "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time",
+  "scheduleSaved": "Your schedule has been saved.",
+  "completeAllFields": "Please complete all fields before saving.",
+  "endTimeAfter": "The end time must be after the start time.",
+  "scheduleListening": "Scheduled Listening",
+  "enableScheduling": "Enable Scheduling",
+  "scheduleDesc": "Enable this feature to automatically play a Surah at scheduled times.",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "selectReciter": "Select a Reciter",
+  "selectMoshaf": "Select a Mushaf",
+  "randomSurahSelection": "Random Surah Selection",
+  "selectSurah": "Select a Surah",
+  "initializingAutoReading": "Initializing in progress...",
+  "prayerTimeNotification": "{salahName} time ({prayerTime}) notification",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Please connect to the internet to schedule Quran listening",
+  "duaBetweenAdhanIqamah": "Supplication (Du'a) is not rejected between the Adhan and Iqamah."
 }

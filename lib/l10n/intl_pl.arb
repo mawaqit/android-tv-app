@@ -98,7 +98,7 @@
   },
   "azkarList9": "",
   "@azkarList9": {
-    "description": ".| اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "",
   "@azkarList10": {
@@ -216,7 +216,7 @@
   "pt_ar": "Portugalski i arabski",
   "nl_ar": "Holenderski i arabski",
   "connectToChangeHadith": "Połącz się z Internetem, aby zmienić język haditów.",
-  "retry": "Retry",
+  "retry": "Spróbować ponownie",
   "timeSetting": "Konfigurowanie czasu",
   "timeSettingDesc": "Ustaw niestandardową nazwę",
   "selectedTime": "Bieżący wybrany czas",
@@ -356,5 +356,94 @@
       }
     }
   },
-  "surahSelector": "Select Surah"
+  "surahSelector": "Select Surah",
+  "checkForUpdates": "Sprawdź aktualizacje",
+  "checkForNewVersion": "Sprawdź, czy nowa wersja jest dostępna",
+  "wouldYouLikeToUpdate": "Czy chcesz zaktualizować aplikację?",
+  "updateCompleted": "Aktualizacja zakończona pomyślnie!",
+  "noUpdates": "Brak aktualizacji",
+  "usingLatestVersion": "Używasz najnowszej wersji.",
+  "updateCancelled": "Aktualizacja anulowana",
+  "checkingUpdates": "Sprawdzanie aktualizacji...",
+  "downloadingUpdate": "Pobieranie aktualizacji...",
+  "installingUpdate": "Instalowanie aktualizacji...",
+  "updateCompletedSuccessfully": "Aktualizacja zakończona pomyślnie",
+  "updateFailed": "Aktualizacja nieudana",
+  "save": "zapisz",
+  "enterRtspUrl": "Wprowadź RTSP lub YouTube Live URL",
+  "addRtspUrl": "Dodaj adres URL strumienia kamery poniżej",
+  "enableRtspCamera": "Włącz streamowanie kamery",
+  "rtspCameraSettings": "Ustawienia kamery",
+  "invalidRtspUrl": "Nieprawidłowy adres URL. Sprawdź adres URL i spróbuj ponownie.",
+  "validRtspUrl": "Adres URL został zweryfikowany i zapisany.",
+  "rtspCameraSettingTitle": "Połączenie z kamerą na żywo",
+  "rtspCameraSettingDesc": "Połącz się z lokalną kamerą i wyświetl strumień modlitwy jumua na ekranie telewizora.",
+  "rtspCameraSettingScreenDesc": "Jeśli wprowadzisz tutaj adres URL, ekran automatycznie przełączy się na streaming wideo po nadejściu czasu Jumua",
+  "validatingStream": "Weryfikowanie strumienia...",
+  "checkInternetLiveCamera": "Musisz połączyć się z Internetem, aby skonfigurować kamerę na żywo",
+  "somethingWentWrong": "Coś poszło nie tak! Spróbuj ponownie",
+  "somethingWrong": "Coś poszło nie tak",
+  "tryAgainLater": "Spróbuj ponownie później",
+  "hintTextRtspUrl": "rtsp://... lub https://youtube.com/live/...",
+  "checkInternetUpdate": "Musisz połączyć się z Internetem, aby sprawdzić dostępność nowych aktualizacji",
+  "appUpdateAvailable": "Twoja aplikacja działa w wersji {currentVersion}. Nowa aktualizacja (wersja {updatedVersion}) jest dostępna z najnowszymi funkcjami i ulepszeniami.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "Dostępna jest nowa aktualizacja dla {moshafName} Quran (wersja {version}).",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Tylko modlitwy Fajr i Isha",
+  "minutesBeforeFajrPrayer": "minut przed czasem modlitwy fajr",
+  "minutesAfterIshaPrayer": "minut po czasie modlitwy isha",
+  "scheduleSaved": "Twój harmonogram został zapisany.",
+  "completeAllFields": "Proszę wypełnić wszystkie pola przed zapisaniem.",
+  "endTimeAfter": "Czas zakończenia musi być po godzinie rozpoczęcia.",
+  "scheduleListening": "Zaplanowane słuchanie",
+  "enableScheduling": "Włącz planowanie",
+  "scheduleDesc": "Włącz tę funkcję, aby automatycznie odtwarzać Surah w zaplanowanych czasach.",
+  "startTime": "Czas rozpoczęcia",
+  "endTime": "Czas zakończenia",
+  "selectReciter": "Wybierz motyw",
+  "selectMoshaf": "Wybierz Mushaf",
+  "randomSurahSelection": "Losowy wybór Surah",
+  "selectSurah": "Wybierz Surah",
+  "initializingAutoReading": "Inicjowanie w toku...",
+  "prayerTimeNotification": "Powiadomienie {salahName} time ({prayerTime})",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Połącz się z Internetem, aby zaplanować wysłuchanie Qurana",
+  "duaBetweenAdhanIqamah": "Pomijanie (Du'a) nie jest odrzucane pomiędzy Adhanem i Iqamahem."
 }

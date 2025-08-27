@@ -3,13 +3,14 @@
   "share": "Поделиться",
   "about": "О сайте",
   "rate": "Оцените нас",
-  "languages": "Языки",
+  "languages": "Язык",
   "appLang": "Язык приложения",
-  "descLang": "Пожалуйста, выберите предпочтительный язык",
+  "descLang": "Пожалуйста, выберите предпочитаемый язык",
+  "hadithLangDesc": "Вы можете выбрать язык MawaqitTV на этом устройстве независимо от настроек языковых предпочтений в консоли администратора на сайте mawaqit.net",
   "whoops": "Упс!",
-  "noInternet": "Отсутствие подключения к Интернету",
+  "noInternet": "Нет подключения к Интернет",
   "tryAgain": "Попробуйте еще раз",
-  "closeApp": "Закрыть приложение",
+  "closeApp": "Закрыть MawaqitTV",
   "quit": "Увольнение",
   "forceStaging": "Переход к постановке",
   "disableStaging": "Переход к производству",
@@ -44,10 +45,10 @@
   "networkStatus": "Состояние сети",
   "mosqueNoMore": "Больше никаких результатов",
   "mosqueNoResults": "Нет результатов",
-  "offline": "Offline",
+  "offline": "Оффлайн",
   "imsak": "Имсак",
   "jumua": "Джумуа",
-  "duhr": "Duhr",
+  "duhr": "Зухр",
   "fajr": "Фаджр",
   "asr": "Аср",
   "maghrib": "Магриб",
@@ -97,7 +98,7 @@
   },
   "azkarList9": "",
   "@azkarList9": {
-    "description": ".| اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "",
   "@azkarList10": {
@@ -119,19 +120,19 @@
   "@azkarList14": {
     "description": "أصبحنا وأصبح الملك لله، والحمد لله ولا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، أسألك خير ما في هذا اليوم، وخير ما بعده، وأعوذ بك من شر هذا اليوم، وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب النار وعذاب القبر"
   },
-  "jumuaaScreenTitle": "Время джумуа",
+  "jumuaaScreenTitle": "Время Джума-намаза",
   "jumuaaHadith": "Пророк ﷺ (да благословит его Аллах и приветствует) сказал: \"Кто совершит омовение в совершенстве, затем отправится на джумуа, а потом будет слушать и молчать, тому прощается то, что находится между этим временем и следующей пятницей и еще три дня, а тот, кто прикоснется к камням, непременно совершит тщету\"",
-  "shuruk": "Шурук",
+  "shuruk": "Восход",
   "reset": "Сброс",
   "mosqueNotFoundMessage": "К сожалению, Ваша мечеть не найдена, возможно, она отсутствует или временно отключена.",
   "noInternetMessage": "Нет доступа к интернету. Пожалуйста, проверьте подключение к Интернету и повторите попытку. Подключен ли Ваш Wi-Fi или Ethernet?",
   "error": "Ошибка",
-  "mosqueErrorMessage": "Ошибка мечети, если Вы являетесь администратором мечети, свяжитесь с нашей службой поддержки, чтобы исправить эту проблему",
+  "mosqueErrorMessage": "Ошибка Мечети. Если Вы являетесь техническим сотрудником мечети, свяжитесь с нашей службой поддержки, чтобы исправить эту проблему",
   "muharram": "Мухаррам",
   "safar": "Сафар",
-  "rabiAlawwal": "Раби' аль-Авваль",
-  "rabiAlthani": "Раби' аль-Тани",
-  "jumadaAlula": "Джумада аль-Ула",
+  "rabiAlawwal": "Раби аль-Авваль",
+  "rabiAlthani": "Раби ас-Сани",
+  "jumadaAlula": "Джумада аль-Уля",
   "jumadaAlakhirah": "Джумада аль-Ахира",
   "rajab": "Раджаб",
   "shaban": "Ша`бан",
@@ -179,9 +180,270 @@
   "mainScreenExplanation": "Для главного зала мечети этот экран не будет показывать прямую трансляцию джумуа",
   "normalModeExplanation": "Отобразит обычный экран с временем молитвы и объявлениями.",
   "announcementOnlyModeExplanation": "Будет показывать объявления все время",
+  "orientation": "Ориентация экрана",
+  "selectYourMawaqitTvAppOrientation": "Выберите ориентацию экрана MawaqitTV",
+  "deviceDefault": "Настройки устройства по умолчанию",
+  "deviceDefaultBTNDescription": "MawaqitTV выберет ориентацию экрана приложения по умолчанию исходя из ориентации экрана устройства",
+  "portrait": "Портретный режим",
+  "portraitBTNDescription": "Вертикальная ориентация экрана MawaqitTV. Рекомендуется для мечетей с небольшим пространством",
+  "landscape": "Альбомный режим",
+  "landscapeBTNDescription": "Горизонтальная ориентация экрана MawaqitTV. Рекомендуется для большинства мечетей",
   "eidMubarak": "Ид Мубарак",
   "takbeerAleidText": "Аллаху Акбар, Аллаху Акбар, Аллаху Акбар, Аллаху Акбар, ла илаха илла Аллах, Аллаху Акбар, Аллаху Акбар, Аллаху Акбар, ва лиллахи аль-хамд",
   "settings": "Настройки",
   "applicationModes": "Режимы применения",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Если у Вас возникли проблемы с приложением, активируйте эту опцию"
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Если у Вас возникли проблемы с приложением, активируйте эту опцию",
+  "hijriAdjustments": "Корректировка даты по Хиджре на устройстве",
+  "hijriAdjustmentsDescription": "Корректировка даты по Хиджре на вашем устройстве. Это не повлияет на глобальные настройки мечети в личном кабинете mawaqit.net",
+  "backoffice_default": "Бэк-офис по умолчанию",
+  "recommended": "Рекомендуется",
+  "sabah": "утро",
+  "randomHadithLanguage": "Случайный язык хадисов",
+  "en": "Английский",
+  "fr": "Французский",
+  "ar": "Арабский",
+  "tr": "Турецкий",
+  "de": "Немецкий",
+  "es": "Испанский",
+  "pt": "Португальский",
+  "nl": "Голландский",
+  "fr_ar": "Французский и Арабский",
+  "en_ar": "Английский и Арабский",
+  "de_ar": "Немецкий и Арабский",
+  "ta_ar": "Тамильский и Арабский",
+  "tr_ar": "Турецкий и Арабский",
+  "es_ar": "Испанский и Арабский",
+  "pt_ar": "Португальский и Арабский",
+  "nl_ar": "Голландский и Арабский",
+  "connectToChangeHadith": "Пожалуйста, подключитесь к сети Интернет, чтобы изменить язык хадисов",
+  "retry": "Повторить попытку",
+  "timeSetting": "Настройка времени",
+  "timeSettingDesc": "Задать имя пользователя",
+  "selectedTime": "Текущее выбранное время",
+  "confirmation": "Подтверждение",
+  "confirmationMessage": "Вы уверены, что хотите использовать время устройства?",
+  "useDeviceTime": "Использовать время устройства",
+  "selectTime": "Выберите время",
+  "previous": "Предыдущий",
+  "appTimezone": "App Timezone",
+  "descTimezone": "Выберите свой часовой пояс для получения корректного времени молитвы.",
+  "appWifi": "Подключиться к Wi-Fi",
+  "descWifi": "Пожалуйста, подключитесь к предпочитаемой wifi",
+  "searchCountries": "Поиск стран",
+  "scanAgain": "Повторить сканирование",
+  "noScannedResultsFound": "Рядом с точками доступа не найдено",
+  "connect": "Подключиться",
+  "wifiPassword": "Пароль",
+  "skip": "Пропускать",
+  "noSSID": "**Hidden SSID**",
+  "close": "Закрыть",
+  "search": "Поиск",
+  "wifiSuccess": "Успешно подключено к Wifi.",
+  "wifiFailure": "Не удалось подключиться к Wifi.",
+  "timezoneSuccess": "Часовой пояс успешно установлен.",
+  "timezoneFailure": "Не удалось установить часовой пояс.",
+  "screenLock": "Вкл/выкл экран",
+  "screenLockConfig": "Настройка вкл/выкл экрана",
+  "screenLockMode": "Вкл/выкл экран",
+  "screenLockDesc": "Включить/выключить телевизор до и после каждой молитвы, чтобы сэкономить энергию",
+  "screenLockDesc2": "Эта функция включить/выключить устройство до и после каждой молитвы adhan",
+  "before": "минут до каждого времени молитвы",
+  "after": "минут после каждого времени молитвы",
+  "updateAvailable": "Доступно обновление",
+  "seeMore": "Подробнее",
+  "whatIsNew": "Что нового",
+  "update": "Обновить",
+  "automaticUpdate": "Уведомлять об обновлении",
+  "automaticUpdateDescription": "Включить уведомления об обновлении, чтобы получать последние функции и улучшения",
+  "checkInternetLegacyMode": "Для использования старого режима необходимо подключиться к Интернету",
+  "powerOnScreen": "Включить экран",
+  "powerOffScreen": "Выключить экран",
+  "deviceSettings": "Настройки устройства",
+  "later": "Позже",
+  "downloadQuran": "Скачать Коран",
+  "quran": "Коран",
+  "askDownloadQuran": "Вы хотите загрузить Коран?",
+  "download": "Загрузить",
+  "downloadingQuran": "Скачивание Корана",
+  "extractingQuran": "Извлечение Корана",
+  "updatedQuran": "Коран обновлен",
+  "quranLatestVersion": "Коран актуальный",
+  "quranUpdatedVersion": "Обновленная версия Корана: {version}",
+  "quranIsUpdated": "Коран обновлен",
+  "quranDownloaded": "Коран загружен",
+  "quranIsAlreadyDownloaded": "Коран уже загружен",
+  "chooseReciter": "Выберите получателя",
+  "reciteType": "Recite Type",
+  "readingMode": "Я хочу прочитать",
+  "listeningMode": "Я хочу слушать",
+  "quranReadingPage": "Страница {leftPage} - {rightPage} / {totalPages}",
+  "@quranReadingPage": {
+    "description": "Placeholder text for displaying Quran reading page numbers",
+    "placeholders": {
+      "leftPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "rightPage": {
+        "type": "int",
+        "example": "2"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "quranReadingPagePortrait": "Страница {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
+  "chooseQuranPage": "Выберите страницу",
+  "checkingForUpdates": "Проверка обновлений...",
+  "chooseQuranType": "Выберите quran",
+  "hafs": "Хафс",
+  "warsh": "Уорш",
+  "favorites": "Избранное",
+  "allReciters": "Все получатели",
+  "reciterAddedToFavorites": "Рецепт {name} добавлен в избранное",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Рецепт {name} удален из избранного",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "Нет любимых редакторов. Попробуйте добавить один в список",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+  "noReciterSearchResult": "По вашему запросу ничего не найдено",
+  "searchForReciter": "Искать чтеца",
+  "downloadAllSuwarSuccessfully": "Весь Куран загружен",
+  "noSuwarDownload": "Нет новых саваров для загрузки",
+  "connectDownloadQuran": "Пожалуйста, подключитесь к Интернету для загрузки",
+  "playInOnlineModeQuran": "Пожалуйста, подключитесь к интернету для воспроизведения",
+  "downloaded": "Скачано",
+  "switchQuranType": "Перейти к {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Select Surah",
+  "checkForUpdates": "Проверить обновления",
+  "checkForNewVersion": "Проверить наличие новой версии",
+  "wouldYouLikeToUpdate": "Вы хотите обновить приложение?",
+  "updateCompleted": "Обновление успешно завершено!",
+  "noUpdates": "Нет обновлений",
+  "usingLatestVersion": "Вы используете последнюю версию.",
+  "updateCancelled": "Обновление отменено",
+  "checkingUpdates": "Проверка обновлений...",
+  "downloadingUpdate": "Загрузка обновления...",
+  "installingUpdate": "Установка обновления...",
+  "updateCompletedSuccessfully": "Обновление успешно завершено",
+  "updateFailed": "Не удалось обновить",
+  "save": "безопасный",
+  "enterRtspUrl": "Введите RTSP или Youtube Live URL",
+  "addRtspUrl": "Добавьте URL-адрес потока камеры ниже",
+  "enableRtspCamera": "Включить потоковое вещание камеры",
+  "rtspCameraSettings": "Настройки камеры",
+  "invalidRtspUrl": "Неверный URL. Проверьте URL и повторите попытку.",
+  "validRtspUrl": "URL проверен и успешно сохранен.",
+  "rtspCameraSettingTitle": "Подключение к камере",
+  "rtspCameraSettingDesc": "Подключитесь к вашей локальной камере и отобразите молитвенный поток на экране телевизора.",
+  "rtspCameraSettingScreenDesc": "Если вы введете URL здесь, экран автоматически переключится на видео потоковое время по прибытии Jumua",
+  "validatingStream": "Проверка потока...",
+  "checkInternetLiveCamera": "Для настройки живой камеры необходимо подключиться к Интернету",
+  "somethingWentWrong": "Что-то пошло не так! Пожалуйста, попробуйте еще раз",
+  "somethingWrong": "Что-то пошло не так",
+  "tryAgainLater": "Повторите попытку позже",
+  "hintTextRtspUrl": "rtsp://... или https://youtube.com/live/...",
+  "checkInternetUpdate": "Вы должны подключиться к Интернету, чтобы проверить наличие новых обновлений",
+  "appUpdateAvailable": "Ваше приложение использует версию {currentVersion}. Новое обновление (версия {updatedVersion}) доступно с последними возможностями и улучшениями.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "Доступно новое обновление для {moshafName} Корана (версия {version}).",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Только молитвы Фаджр и Иша",
+  "minutesBeforeFajrPrayer": "минуты до времени молитвы fajr",
+  "minutesAfterIshaPrayer": "минут после времени молитвы",
+  "scheduleSaved": "Ваше расписание сохранено.",
+  "completeAllFields": "Пожалуйста, заполните все поля перед сохранением.",
+  "endTimeAfter": "Время окончания должно быть после времени начала.",
+  "scheduleListening": "Запланированное слушание",
+  "enableScheduling": "Включить планировку",
+  "scheduleDesc": "Включите эту функцию для автоматического воспроизведения Суры в назначенное время.",
+  "startTime": "Время начала",
+  "endTime": "Конец времени",
+  "selectReciter": "Выберите Рецепт",
+  "selectMoshaf": "Выберите мушаф",
+  "randomSurahSelection": "Случайный выбор суры",
+  "selectSurah": "Выберите Суру",
+  "initializingAutoReading": "Идет инициализация...",
+  "prayerTimeNotification": "Уведомление о {salahName} времени ({prayerTime})",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Пожалуйста, подключитесь к интернету, чтобы запланировать прослушивание Корана",
+  "duaBetweenAdhanIqamah": "Супликация (Du'a) не отвергается между Аханом и Икамахом."
 }

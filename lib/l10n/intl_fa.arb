@@ -54,17 +54,17 @@
   "maghrib": "مغرب",
   "isha": "عشا",
   "afterAdhanHadithTitle": "دعای بعد از اذان",
-  "afterSalahHadith": "اللهم رب هذه الدعوة التامة والصلاة القائمة آت محمداً الوسيلة والفضيلة وابعثه مقاماً محموداً الذي وعدته",
+  "afterSalahHadith": "اللهم رب هذه الدعوة التامة، والصلاة القائمة، آتِ محمدًا الوسيلة والفضيلة، وابعثه مقامًا محمودًا الذي وعدته.»\n\n[خدایا، پروردگار این (دعوت کامل) و نماز برپا شده، به محمد (صلی‌الله‌علیه‌وآله) مقام شفاعت و برتری عطا فرما، و او را به مقام محمودی که به او وعده داده‌ای، برسان]",
   "alIqama": "اقامه",
   "alAdhan": "اذان",
   "turnOfPhones": "لطفا موبایل خود را خاموش کنید",
   "iqamaIn": "اقامه پس از",
   "alAthkar": "اذکار",
-  "azkarList0": "",
+  "azkarList0": "استغفر الله استغفر الله استغفر الله اللهم أنت السلام و منک السلام تبارکت یا ذا الجلال و الإکرام، اللَّهُمَّ أَعِنِّي عَلَی ذِكْرِكَ، وَشُكْرِكَ، وَحُسْنِ عِبَادَتِكَ",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "",
+  "azkarList1": " سبحان الله و الحمد الله و الله اکبر(33 بار)  لااله إِلَا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ كُلِ شَيْءٍ قَدِيرٌ",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -84,7 +84,7 @@
   "@azkarList5": {
     "description": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَ‍ُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ"
   },
-  "azkarList6": "",
+  "azkarList6": "لَا اله إِلَا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ  علی كُلِ شَيْءٍ قَدِيرٌ اللهُمَ لَا مَانِعَ لِمَا أَعْطَيْتَ، وَلَا مُعْطِيَ لِمَا مَنَعْتَ، وَلَا يَنْفَعُ \nذا الْجَدِ منک الْجَدُ",
   "@azkarList6": {
     "description": "لا إِلَٰهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ، لهُ المُـلْكُ ولهُ الحَمْد، وهوَ على كلّ شَيءٍ قَدير، اللّهُـمَّ لا مانِعَ لِما أَعْطَـيْت، وَلا مُعْطِـيَ لِما مَنَـعْت، وَلا يَنْفَـعُ ذا الجَـدِّ مِنْـكَ الجَـد"
   },
@@ -172,7 +172,7 @@
   "announcementOnlyMode": "روش اطلاع رسانی",
   "normalMode": "حالت معمولی",
   "announcementOnlyModeEXPLINATION": "انتخاب کنید که آیا نمایشگر شما همیشه اعلان‌ها را نمایش بدهد یا خیر،   اگر نمایشگر در ورودی نصب شده باشد ، تایید این قسمت می‌تواند مفید باشد.",
-  "duaaElEftarText": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله",
+  "duaaElEftarText": "خدایا، من برای تو روزه گرفته‌ام، و با روزی تو افطار کردم، و به سوی تو روی آوردم و بر تو توکل کردم. تشنگی رفت، رگ‌ها خشک شد و ان‌شاءالله پاداش آن ثابت باشد",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
@@ -294,14 +294,28 @@
       }
     }
   },
+  "quranReadingPagePortrait": "صفحه{currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "صفحه را انتخاب کنید",
-  "checkingForUpdates": "Checking for updates...",
-  "chooseQuranType": "Choose quran",
-  "hafs": "Hafs",
-  "warsh": "Warsh",
-  "favorites": "Favorites",
-  "allReciters": "All Reciters",
-  "reciterAddedToFavorites": "Reciter {name} added to favorites",
+  "checkingForUpdates": "در حال بررسی بروزرسانی...",
+  "chooseQuranType": "نوع قرائت قران را انتخاب نمایید",
+  "hafs": "قرائت حفص",
+  "warsh": "قرائت ورش",
+  "favorites": "لیست علاقه مندی ها",
+  "allReciters": "قاریان قران",
+  "reciterAddedToFavorites": "قاری {name} به لیست علاقه مندی ها اضافه شد",
   "@reciterAddedToFavorites": {
     "description": "Message shown when a reciter is added to favorites",
     "placeholders": {
@@ -311,7 +325,7 @@
       }
     }
   },
-  "reciterRemovedFromFavorites": "Reciter {name} removed from favorites",
+  "reciterRemovedFromFavorites": "قاری {name} از لیست علاقه مندی ها حذف شده است",
   "@reciterRemovedFromFavorites": {
     "description": "Message shown when a reciter is removed from favorites",
     "placeholders": {
@@ -321,8 +335,115 @@
       }
     }
   },
-  "noFavoriteReciters": "No favorite reciters. Try adding one to the list",
+  "noFavoriteReciters": "قاری مورد علاقه ی شما وجود ندارد شخص دیگری را به لیست اضافه نمایید",
   "@noFavoriteReciters": {
     "description": "Message shown when there are no favorite reciters"
-  }
+  },
+  "noReciterSearchResult": "برای جستجوی شما نتیجه ای یافت نشد",
+  "searchForReciter": "قاری قران را جستجو کنید",
+  "downloadAllSuwarSuccessfully": "تمام قران دانلود شده است",
+  "noSuwarDownload": "سوره ی جدیدی برای دانلود وجود ندارد",
+  "connectDownloadQuran": "برای دریافت فایل به اینترنت متصل شوید",
+  "playInOnlineModeQuran": "برای پخش صدا به اینترنت متصل شوید",
+  "downloaded": "دانلود شده",
+  "switchQuranType": "برو به {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "سوره را انتخاب کن",
+  "checkForUpdates": "بروز رساني ها رو برسي کن",
+  "checkForNewVersion": "وجود نسخه‌‌‌‌‌‌های جدیدتر را بررسی کن",
+  "wouldYouLikeToUpdate": "دوست دارید اپلیکیشن را به‌روزرسانی کنید؟",
+  "updateCompleted": "به‌‌روزرسانی با موفقیت به پایان رسید!",
+  "noUpdates": "هیچ به روز رسانی ای موجود نیست",
+  "usingLatestVersion": "شما در حال استفاده از آخرین نسخه هستید.",
+  "updateCancelled": "به‌روزرسانی لغو شد",
+  "checkingUpdates": "چک کردن آپدیت ها...",
+  "downloadingUpdate": "در حال بارگیری به روز رسانی...",
+  "installingUpdate": "در حال نصب به‌روزرسانی...",
+  "updateCompletedSuccessfully": "به‌‌روزرسانی با موفقیت به پایان رسید",
+  "updateFailed": "به‌روز رسانی موفق نبود",
+  "save": "ذخیره",
+  "enterRtspUrl": "آدرس RTSP یا لینک پخش زنده یوتیوب را وارد کنید",
+  "addRtspUrl": "لینک پخش دوربین خود را در پایین وارد کنید",
+  "enableRtspCamera": "پخش دوربین را فعال کنید",
+  "rtspCameraSettings": "تنظیمات دوربین",
+  "invalidRtspUrl": "آدرس وارد شده نامعتبر است. لطفاً آدرس را بررسی کرده و دوباره تلاش کنید.",
+  "validRtspUrl": "آدرس با موفقیت تأیید و ذخیره شد.",
+  "rtspCameraSettingTitle": "اتصال دوربین به‌صورت زنده",
+  "rtspCameraSettingDesc": "به دوربین محلی خود متصل شوید و پخش زنده نماز جمعه را روی صفحه تلویزیون نمایش دهید.",
+  "rtspCameraSettingScreenDesc": "اگر در اینجا یک آدرس وارد کنید، صفحه‌ نمایش شما به‌صورت خودکار در زمان نماز جمعه به پخش ویدیو تغییر خواهد کرد",
+  "validatingStream": "در حال بررسی صحت پخش...",
+  "checkInternetLiveCamera": "برای راه‌اندازی دوربین زنده باید به اینترنت متصل باشید",
+  "somethingWentWrong": "مشکلی پیش آمد. لطفا دوباره تلاش کنید",
+  "somethingWrong": "خطایی رخ داده است",
+  "tryAgainLater": "لطفا بعدا دوباره تلاش کنید",
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/...",
+  "checkInternetUpdate": "برای بررسی به‌روزرسانی‌های جدید باید به اینترنت متصل باشید",
+  "appUpdateAvailable": "اپلیکیشن شما در حال اجرا با نسخه {currentVersion} است. به‌روزرسانی جدیدی با (نسخه {updatedVersion}) و شامل آخرین قابلیت‌ها و بهبودها در دسترس است.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "به‌روزرسانی جدیدی برای قرآن {moshafName} (نسخه {version}) در دسترس است.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "فقط نمازهای صبح و عشاء",
+  "minutesBeforeFajrPrayer": "دقایقی قبل از وقت نماز فجر",
+  "minutesAfterIshaPrayer": "دقایقی پس از وقت نماز عشاء",
+  "scheduleSaved": "زمان‌بندی شما ذخیره شد.",
+  "completeAllFields": "لطفاً قبل از ذخیره، همه فیلدها را تکمیل کنید.",
+  "endTimeAfter": "زمان پایان باید بعد از زمان شروع باشد.",
+  "scheduleListening": "پخش زمان‌بندی‌شده",
+  "enableScheduling": "فعال‌سازی زمان‌بندی",
+  "scheduleDesc": "این ویژگی را فعال کنید تا سوره به‌صورت خودکار در زمان‌های برنامه‌ریزی‌شده پخش شود.",
+  "startTime": "زمان شروع",
+  "endTime": "زمان پایان",
+  "selectReciter": "یک قاری انتخاب کنید",
+  "selectMoshaf": "یک مصحف انتخاب کنید",
+  "randomSurahSelection": "انتخاب تصادفی سوره",
+  "selectSurah": "سوره را انتخاب کن",
+  "initializingAutoReading": "فرآیند راه‌اندازی در جریان است...",
+  "prayerTimeNotification": "اعلان وقت نماز {salahName} ({prayerTime})",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "لطفاً برای برنامه‌ریزی شنیدن قرآن به اینترنت متصل شوید",
+  "duaBetweenAdhanIqamah": "(دعا) بین اذان و اقامه رد نمی‌شود."
 }

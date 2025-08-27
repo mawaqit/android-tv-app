@@ -13,7 +13,7 @@
   "closeApp": "Tutup aplikasi",
   "quit": "Keluar",
   "forceStaging": "Beralih ke pementasan",
-  "disableStaging": "Beralih ke produksi",
+  "disableStaging": "Beralih ke mode produksi",
   "sureCloseApp": "Apakah anda yakin ingin keluar dari aplikasi?",
   "ok": "OK",
   "cancel": "Batal",
@@ -22,7 +22,7 @@
   "changeMosque": "Ubah Masjid",
   "in1": "dalam",
   "sec": "Detik",
-  "online": "Online",
+  "online": "Online/Aktif",
   "missingMosqueId": "Hilang MAWAQIT #ID atau MOSQUE #ID",
   "mosqueIdIsNotValid": "Maaf, {mosqueId} bukan ID Masjid yang benar",
   "selectMosqueId": "Silahkan masukkan ID Masjid Anda",
@@ -30,10 +30,10 @@
   "mawaqitDesc": "Assalamualaikum, dan Baraka'Allah fikom telah memilih MAWAQIT, Jaringan Masjid Pintar pertama dan #1 di dunia, yang digunakan oleh jutaan umat Islam di seluruh dunia di lebih dari 85 negara sejak tahun 2016.\n\nKami menyediakan Anda dengan Tampilan Masjid Pintar yang paling canggih, tersedia di berbagai Perangkat (Ponsel, Smartwatch, Layar TV), tanpa mengumpulkan atau membagikan data pribadi Anda.\n\nDukunglah proyek yang penuh berkah ini di sini: https://donate.mawaqit.net\n\nKami adalah organisasi nirlaba, dan proyek ini adalah \"Wakaf fi'sabili Allah\" (wakaf khusus).\n\nDonasi Anda membuat proyek ini tetap tersedia bagi siapa saja, di mana saja, benar-benar GRATIS tanpa biaya apa pun, tanpa IKLAN, dan TANPA LANGGANAN BULANAN.\n\nProyek ini tidak akan terwujud tanpa bantuan Allah yang menyatukan komunitas sukarelawan yang penuh semangat dan berbakat, yang bekerja siang dan malam untuk memberikan layanan terbaik kepada Anda, dan sistem yang selalu siap sedia selama 24 jam.\n\nMohon pertimbangkan untuk berdonasi agar proyek yang penuh berkah ini terus berjalan. Baraka'Allah fikom atas kepercayaan dan dukungan Anda yang berkelanjutan.",
   "privacyPolicy": "Kebijakan privasi",
   "termsOfService": "Ketentuan Layanan",
-  "installationGuide": "Panduan Pemasangan",
+  "installationGuide": "Panduan Instalsi/Pemasangan",
   "drawerTitle": "MAWAQIT",
   "drawerDesc": "Menghubungkan Jamaah dengan Masjid",
-  "backendError": "Maaf, kami tidak bisa terhubung ke server. Tolong pastikan anda terhubung ke internet atau silahkan coba ulang.",
+  "backendError": "Maaf, kami tidak bisa terhubung ke server. Tolong pastikan anda terhubung ke internet atau silahkan coba kembali.",
   "selectWithMosqueId": "Coba: 256, Ini adalah ID dari 'Grande Mosquée de Paris'",
   "searchForMosque": "Masjid mana yang Anda cari? (ID, Nama, Kota, Kode Pos...)",
   "searchMosque": "Cari Masjid",
@@ -53,18 +53,18 @@
   "asr": "Ashar",
   "maghrib": "Maghrib",
   "isha": "Isya'",
-  "afterAdhanHadithTitle": "Setelah adzan Du`aa",
+  "afterAdhanHadithTitle": "Doa Setelah Adzan",
   "afterSalahHadith": "Allahumma Rabba haadzihid-da’watit-taammah, wash-sholaatil-qaa’imah, aati sayyidanaa Muhammadanil-washiilata wal-fadhilah wash-syarafa wad-darajatal-‘aliyatar-rafii’ah, wab’atshu maqaamam-mahmudanil-ladzi wa’adtah, innaka laa tukhliful-mii’aad, yaa Arhamar-Raahimiin. (\"Ya Allah, Tuhan yang mempunyai seruan yang sempurna, dan sholat yang akan didirikan, karuniakanlah junjungan kami nabi Muhammad tempat yang luhur, kelebihan, kemuliaan, dan derajat yang tinggi. Dan tempatkanlah ia pada kedudukan yang terpuji seperti yang telah Engkau janjikan. Sesungguhnya Engkau tiada menyalahi janji. Wahai dzat yang Maha Penyayang”)",
   "alIqama": "Iqomah",
-  "alAdhan": "Azan",
+  "alAdhan": "Adzan",
   "turnOfPhones": "Harap setel ponsel Anda ke Mode Senyap",
   "iqamaIn": "Iqomah dalam",
   "alAthkar": "Zikir",
-  "azkarList0": "Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah, Astaghfiru Allah Allahumma anta Essalam wa mineka Essalam, tabarakta ya dhal djalali wel ikram Allahumma A`inni `ala dzikrika wa chukrika wa husni `ibadatik",
+  "azkarList0": "Astaghfirullah, Astaghfirullah, Astaghfirullah, Astaghfirullah Allahumma anta assalam wa minkassalam tabarakta ya dzal jalali wal ikram, Allahumma a'inni 'ala dzikrika wa chukrika wa husni 'ibadatik",
   "@azkarList0": {
     "description": "أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله، أَسْـتَغْفِرُ الله اللّهُـمَّ أَنْـتَ السَّلامُ ، وَمِـنْكَ السَّلام ، تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
   },
-  "azkarList1": "Subhanallah wal hamdu lillah wallahu akbar (33 kali) La ilaha illa Allah, wahdahu la charika lah, lahu elmoulku wa lahu elhamdu, wa hua `ala kulli chay in kadir",
+  "azkarList1": "Subhanallah wal hamdu lillah wallahu akbar (33 kali) La ilaha illa Allah, wahdahu la syarika lah, lahul mulku wa lahul hamdu, wa huwa 'ala kulli syai'in qadir",
   "@azkarList1": {
     "description": "سُـبْحانَ اللهِ، والحَمْـدُ لله، واللهُ أكْـبَر 33 مرة لا إِلَٰهَ إلاّ اللّهُ وَحْـدَهُ لا شريكَ لهُ، لهُ الملكُ ولهُ الحَمْد، وهُوَ على كُلّ شَيءٍ قَـدير"
   },
@@ -98,7 +98,7 @@
   },
   "azkarList9": "",
   "@azkarList9": {
-    "description": ".| اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات"
+    "description": "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتِكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ |أربعَ مَرَّات|. [ وإذا أمسى قال: اللَّهم إني أمسيت...]"
   },
   "azkarList10": "",
   "@azkarList10": {
@@ -112,7 +112,7 @@
   "@azkarList12": {
     "description": "|رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً |ثلاثَ مرَّاتٍ"
   },
-  "azkarList13": "",
+  "azkarList13": "Lailahaillallah wahdahula syarikalah lahul mulku walahul hamdu yuhyi wayumitu wahuwa ala kulli syai-in qadir\n\nartinya\n“Tidak ada Tuhan selain Allah, tidak ada sekutu bagi-Nya, milik-Nya segala kekuasaan dan bagi-Nya segala pujian. Dia Mahakuasa atas segala sesuatu.”",
   "@azkarList13": {
     "description": "|لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ |عشرَ مرَّات"
   },
@@ -140,24 +140,24 @@
   "shawwal": "Syawal",
   "dhuAlqidah": "Dzulqo'dah",
   "dhuAlhijjah": "Dzulhijjah",
-  "duaaBetweenSalahAndAdhan": "Dari sahabat Anas bin Malik (رضي الله عنه), Rasulullah ﷺ bersabda,\nSesungguhnya doa yang tidak tertolak adalah doa (yang dipanjatkan) di antara adzan dan iqamah, maka berdoalah (di waktu itu).” (HR. Ahmad no. 12584).",
+  "duaaBetweenSalahAndAdhan": "Anas bin Malik berkata, rasulullah saw bersabda\nDo'a tidak akan tertolak di antara azan dan berdiri untuk sholat",
   "salatKhayrMinaNawm": "Assalatu khayrun mina nawm",
-  "salatElEid": "Salat Idul Fitri",
+  "salatElEid": "Shalat Ied",
   "webView": "Mengaktifkan Mode Lama",
   "developersHomeScreen": "Layar beranda pengembang",
   "onlineHome": "Beranda Online",
   "prayerTimes": "Waktu Sholat",
   "alerts": "Waspada",
   "iqamaaCountDown": "Iqamaa Hitung Mundur",
-  "afterAdhanHadith": "Setelah Adzan Hadis",
-  "afterSalahAzkar": "Setelah Salah Azkar",
+  "afterAdhanHadith": "Hadist Setelah Adzan",
+  "afterSalahAzkar": "Dzikir Setelah Sholat",
   "iqama": "Iqama",
-  "randomHadith": "Hadis Acak",
+  "randomHadith": "Hadits Acak",
   "announcement": "Pengumuman",
   "jumuaaLive": "Jum'at [Live Streaming]",
   "showSecondaryScreen": "Gunakan sebagai layar sekunder (Untuk Pengumuman)",
   "normalScreen": "Gunakan sebagai Layar Utama",
-  "duaaRemainder": "Sisa Duaa",
+  "duaaRemainder": "Doa Pengingat",
   "fajrWakeUp": "Bangun Subuh",
   "changeLanguage": "Mengubah bahasa",
   "forceScreen": "Layar paksa",
@@ -165,14 +165,14 @@
   "changeTheme": "Ubah Tema",
   "next": "Berikutnya",
   "mainScreenOrSecondaryScreen": "Lokasi layar",
-  "mainScreenOrSecondaryScreenEXPLINATION": "Apakah Anda ingin memasang layar ini di ruang salat utama (ruang salat pria)?",
+  "mainScreenOrSecondaryScreenEXPLINATION": "Apakah Anda ingin memasang layar ini di ruang sholat utama (ruang sholat pria)?",
   "mainScreen": "Layar utama",
-  "secondaryScreen": "Layar sekunder",
+  "secondaryScreen": "Layar sekunder/kedua",
   "duaaElEftar": "Duaa El Eftar",
   "announcementOnlyMode": "Mode pengumuman",
   "normalMode": "Mode normal ",
   "announcementOnlyModeEXPLINATION": "Pilih apakah layar Anda akan menampilkan pengumuman sepanjang waktu, ini dapat berguna jika Anda memasang layar di pintu masuk misalnya.",
-  "duaaElEftarText": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله",
+  "duaaElEftarText": "Artinya: \"Ya Allah, untuk-Mu aku berpuasa, kepadamu-Mu aku beriman, dan atas rezeki-Mu aku berbuka (puasa), dengan rahmat-Mu Ya Allah Tuhan Maha Pengasih.\"",
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
@@ -182,7 +182,7 @@
   "announcementOnlyModeExplanation": "Akan menampilkan pengumuman sepanjang waktu",
   "orientation": "Orientasi",
   "selectYourMawaqitTvAppOrientation": "Pilih orientasi aplikasi mawaqit TV Anda",
-  "deviceDefault": "Default Perangkat",
+  "deviceDefault": "Perangkat Standard",
   "deviceDefaultBTNDescription": "Mawaqit akan secara otomatis memilih orientasi default berdasarkan orientasi layar",
   "portrait": "Tegak",
   "portraitBTNDescription": "Untuk orientasi vertikal direkomendasikan untuk masjid dengan ruang kecil",
@@ -194,11 +194,11 @@
   "applicationModes": "Mode Aplikasi",
   "ifYouAreFacingAnIssueWithTheAppActivateThis": "Jika Anda menghadapi masalah dengan aplikasi, coba aktifkan opsi ini",
   "hijriAdjustments": "Penyesuaian tanggal Hijriah",
-  "hijriAdjustmentsDescription": "Sesuaikan tanggal hijriah secara lokal di perangkat Anda. Ini tidak akan memengaruhi pengaturan masjid online",
-  "backoffice_default": "Default Backoffice",
+  "hijriAdjustmentsDescription": "Sesuaikan tanggal hijriah secara lokal di perangkat Anda. Ini tidak akan mempengaruhi pengaturan masjid online",
+  "backoffice_default": "Backoffice Standard",
   "recommended": "Direkomendasikan",
   "sabah": "Sabah",
-  "randomHadithLanguage": "Bahasa hadis random/acak",
+  "randomHadithLanguage": "Bahasa hadits random/acak",
   "en": "Bahasa Inggris",
   "fr": "Bahasa Prancis",
   "ar": "Bahasa Arab",
@@ -215,10 +215,10 @@
   "es_ar": "Bahasa Spanyol & Arab",
   "pt_ar": "Bahasa Portugis & Arab",
   "nl_ar": "Bahasa Belanda & Arab",
-  "connectToChangeHadith": "Harap hubungkan ke internet untuk mengubah bahasa hadis.",
-  "retry": "Coba lagi.",
+  "connectToChangeHadith": "Harap hubungkan ke internet untuk mengubah bahasa hadist.",
+  "retry": "Mencoba kembali",
   "timeSetting": "Konfigurasi waktu",
-  "timeSettingDesc": "Setel waktu sesuai keinginan (custom)",
+  "timeSettingDesc": "Setel nama sesuai keinginan (custom)",
   "selectedTime": "Waktu yang dipilih saat ini",
   "confirmation": "Konfirmasi",
   "confirmationMessage": "Apa Anda yakin ingin menggunakan waktu pada perangkat?",
@@ -231,13 +231,13 @@
   "descWifi": "Silakan sambungkan ke wifi pilihan Anda",
   "searchCountries": "Cari negara",
   "scanAgain": "Pindai lagi",
-  "noScannedResultsFound": "Tidak ditemukan titik akses dekat",
+  "noScannedResultsFound": "Tidak ditemukan titik akses terdekat",
   "connect": "Terhubung",
   "wifiPassword": "KATA SANDI",
-  "skip": "Melewati",
+  "skip": "Lewati",
   "noSSID": "SSID Tersembunyi ** SSID Tersembunyi**",
   "close": "Keluar",
-  "search": "Pencarian",
+  "search": "Cari",
   "wifiSuccess": "Berhasil tersambung ke Wifi.",
   "wifiFailure": "Gagal tersambung ke Wifi.",
   "timezoneSuccess": "Zona waktu berhasil ditetapkan.",
@@ -273,7 +273,7 @@
   "quranDownloaded": "Al-Quran yang diunduh",
   "quranIsAlreadyDownloaded": "Al-Quran sudah diunduh",
   "chooseReciter": "Pilih Pembaca",
-  "reciteType": "Jenis Baca",
+  "reciteType": "Jenis Bacaan",
   "readingMode": "Saya ingin membaca",
   "listeningMode": "Saya ingin mendengarkan",
   "quranReadingPage": "Halaman {leftPage} - {rightPage} / {totalPages}",
@@ -294,6 +294,156 @@
       }
     }
   },
+  "quranReadingPagePortrait": "Halaman {currentPage} / {totalPages}",
+  "@quranReadingPagePortrait": {
+    "description": "Placeholder text for displaying Quran reading page portrait numbers",
+    "placeholders": {
+      "currentPage": {
+        "type": "int",
+        "example": "1"
+      },
+      "totalPages": {
+        "type": "int",
+        "example": "604"
+      }
+    }
+  },
   "chooseQuranPage": "Pilih halaman",
-  "checkingForUpdates": "Memeriksa pembaruan"
+  "checkingForUpdates": "Memeriksa pembaruan/update...",
+  "chooseQuranType": "Pilih Jenis quran",
+  "hafs": "Hafis",
+  "warsh": "Warsh",
+  "favorites": "Favorit",
+  "allReciters": "Semua qori",
+  "reciterAddedToFavorites": "Qori di hapus dari favorite",
+  "@reciterAddedToFavorites": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "reciterRemovedFromFavorites": "Qori {name} dihapus dari daftar favorit",
+  "@reciterRemovedFromFavorites": {
+    "description": "Message shown when a reciter is removed from favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Abdul Basit"
+      }
+    }
+  },
+  "noFavoriteReciters": "Belum ada favorit qori. Silahkan ditambahkan ke dalam daftar",
+  "@noFavoriteReciters": {
+    "description": "Message shown when there are no favorite reciters"
+  },
+  "noReciterSearchResult": "Tidak ada hasil ditemukan dari pencarian anda",
+  "searchForReciter": "Cari berdasarnakan nama Qori",
+  "downloadAllSuwarSuccessfully": "Seluruh Al Quran telah berhasil di download",
+  "noSuwarDownload": "Tidak ada surah baru untuk diunduh",
+  "connectDownloadQuran": "Silahkan terhubung ke internet untuk melakukan download",
+  "playInOnlineModeQuran": "Silahkan terhubung ke internet untuk memulai",
+  "downloaded": "Diunduh",
+  "switchQuranType": "Buka {name}",
+  "@switchQuranType": {
+    "description": "Message shown when a reciter is added to favorites",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Warsh"
+      }
+    }
+  },
+  "surahSelector": "Pilih Surat",
+  "checkForUpdates": "Periksa pembaruan/update",
+  "checkForNewVersion": "Cek jika versi terbaru telah tersedia",
+  "wouldYouLikeToUpdate": "Apakah anda ingin melakukan pembaharuan/update pada aplikasi?",
+  "updateCompleted": "Update/pembaharuan berhasil!",
+  "noUpdates": "Tidak ada update/pembaharuan",
+  "usingLatestVersion": "Kamu telah menggunakan versi terbaru.",
+  "updateCancelled": "Update dibatalkan",
+  "checkingUpdates": "Memeriksa update/pembaruan...",
+  "downloadingUpdate": "Mengunduh update/pembaruan...",
+  "installingUpdate": "Menginstal update/pembaruan...",
+  "updateCompletedSuccessfully": "Update/pembaharuan berhasil",
+  "updateFailed": "Update/pembaharuan gagal",
+  "save": "simpan",
+  "enterRtspUrl": "Masukan RSTP atau link Youtube Live",
+  "addRtspUrl": "Tambahkan link kamera stream anda dibawah ini",
+  "enableRtspCamera": "Aktifkan kamera streaming",
+  "rtspCameraSettings": "Pengaturan kamera",
+  "invalidRtspUrl": "URL/Link tidak valid. Harap periksa URL/Link dan coba lagi.",
+  "validRtspUrl": "URL/Link tervalidasi dan berhasil disimpan.",
+  "rtspCameraSettingTitle": "Koneksi Live kamera",
+  "rtspCameraSettingDesc": "Hubungkan ke kamera lokal Anda dan tampilkan siaran shalat Jumat di layar TV.",
+  "rtspCameraSettingScreenDesc": "Jika Anda memasukkan URL/Link di sini, layar Anda akan secara otomatis beralih ke streaming video saat waktu Jumat tiba",
+  "validatingStream": "Memvalidasi stream...",
+  "checkInternetLiveCamera": "Anda harus terhubung ke internet untuk mengatur live kamera",
+  "somethingWentWrong": "Terjadi kesalahan, silakan coba lagi",
+  "somethingWrong": "Ada yang tidak beres",
+  "tryAgainLater": "Silakan coba lagi nanti",
+  "hintTextRtspUrl": "rtsp://... atau https://youtube.com/live/...",
+  "checkInternetUpdate": "Anda harus terhubung ke internet untuk memeriksa pembaruan baru",
+  "appUpdateAvailable": "Aplikasi Anda menjalankan versi {currentVersion}. Pembaruan baru (versi {updatedVersion}) tersedia dengan fitur dan penyempurnaan terkini.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "Pembaruan baru untuk Al-Quran {moshafName} (versi {version}) telah tersedia.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Hanya sholat Subuh dan Isya",
+  "minutesBeforeFajrPrayer": "menit sebelum waktu sholat subuh",
+  "minutesAfterIshaPrayer": "menit setelah waktu sholat isya",
+  "scheduleSaved": "Jadwal Anda telah disimpan.",
+  "completeAllFields": "Harap lengkapi semua kolom sebelum menyimpan.",
+  "endTimeAfter": "Waktu akhir harus setelah waktu mulai.",
+  "scheduleListening": "Jadwal mendengarkan",
+  "enableScheduling": "Aktifkan Penjadwalan",
+  "scheduleDesc": "Aktifkan fitur ini untuk memutar Surah secara otomatis pada waktu yang dijadwalkan.",
+  "startTime": "Waktu Mulai",
+  "endTime": "Waktu berakhir",
+  "selectReciter": "Pilih Qori",
+  "selectMoshaf": "Pilih Mushaf",
+  "randomSurahSelection": "Pemilihan surah secara acak",
+  "selectSurah": "Pilih surah",
+  "initializingAutoReading": "Inisialisasi sedang berlangsung...",
+  "prayerTimeNotification": "Pemberitahuan waktu {salahName} ({prayerTime})",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Silakan terhubung ke internet untuk menjadwalkan mendengarkan Al-Quran",
+  "duaBetweenAdhanIqamah": "Doa tidak tertolak antara adzan dan iqamah."
 }
