@@ -445,5 +445,13 @@
     }
   },
   "scheduleInOnlineMode": "Vänligen anslut till internet för att schemalägga Quran lyssnande",
-  "duaBetweenAdhanIqamah": "Åkallelse (Du'a) avvisas inte mellan Adhan och Iqamah."
+  "duaaBetweenAdhanAndIqamaaTitle": "Åkallelse (Du'a) avvisas inte mellan Adhan och Iqamah",
+  "duaBetweenAdhanIqamah": "Åkallelse (Du'a) avvisas inte mellan Adhan och Iqamah.",
+  "processingRequest": "Bearbetar förfrågan...",
+  "loadingStream": "Laddar stream...",
+  "rtspUrlHint": "Ange RTSP-URL eller YouTube-länk",
+  "replaceWorkflowWithStream": "Visa kameraströmmen automatiskt",
+  "replaceAppWorkflowWithCameraStream": "Skärmen kommer automatiskt att visa kameraströmmen så snart kameran startar inspelningen; om det stannar, skärmen återgår till bönen gånger visas",
+  "streamError": "Ett fel inträffade vid streaming",
+  "finish": "Avsluta"
 }
