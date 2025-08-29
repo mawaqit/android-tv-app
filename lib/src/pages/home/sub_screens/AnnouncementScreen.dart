@@ -338,18 +338,30 @@ class _ImageAnnouncement extends StatelessWidget {
   /// used to skip to the next announcement if the image failed to load
   final VoidCallback? onError;
 
+  BoxFit _getSmartImageFit(bool isScreenPortrait) {
+    if (isScreenPortrait) {
+      // Portrait screen - let portrait images fill better, landscape images fit width
+      return BoxFit.cover;
+    } else {
+      // Landscape screen - original behavior
+      return BoxFit.fill;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    return isPortrait
+    final isScreenPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final imageProvider = MawaqitNetworkImageProvider(image, onError: onError);
+
+    return isScreenPortrait
         ? Image(
-            image: MawaqitNetworkImageProvider(image, onError: onError),
-            fit: BoxFit.fitWidth,
+            image: imageProvider,
+            fit: _getSmartImageFit(isScreenPortrait),
             width: double.infinity,
           ).animate().slideX().addRepaintBoundary()
         : Image(
-            image: MawaqitNetworkImageProvider(image, onError: onError),
-            fit: BoxFit.fill,
+            image: imageProvider,
+            fit: _getSmartImageFit(isScreenPortrait),
             width: double.infinity,
             height: double.infinity,
           ).animate().slideX().addRepaintBoundary();
