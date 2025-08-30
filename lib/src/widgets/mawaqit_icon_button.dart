@@ -21,6 +21,7 @@ class MawaqitIconButton extends StatefulWidget {
 
 class _MawaqitIconButtonState extends State<MawaqitIconButton> {
   bool focused = false;
+
   @override
   void initState() {
     super.initState();
@@ -36,16 +37,17 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
       child: Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
-        color: theme.colorScheme.primary,
+        color: focused ? theme.focusColor : theme.colorScheme.primary,
         elevation: 0,
         child: Focus(
           onFocusChange: (value) => setState(() => focused = value),
           child: Material(
-            color: focused ? theme.focusColor : theme.colorScheme.primary,
+            color: Colors.transparent,
             child: InkWell(
               focusNode: widget.focusNode,
               onTap: widget.onPressed,
               autofocus: widget.isAutoFocus,
+              borderRadius: BorderRadius.circular(200),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
                 child: Row(
