@@ -447,11 +447,11 @@
   "scheduleInOnlineMode": "Por favor, ligue-se à internet para agendar a audição do Alcorão",
   "duaaBetweenAdhanAndIqamaaTitle": "A súplica (duá) não é rejeitada entre o Azán e o Iqamah",
   "duaBetweenAdhanIqamah": "A súplica (duá) não é rejeitada entre o Azán e o Iqamah.",
-  "processingRequest": "Processando o pedido...",
-  "loadingStream": "Carregando transmissão...",
-  "rtspUrlHint": "Digite a URL RTSP ou o link do YouTube",
-  "replaceWorkflowWithStream": "Mostrar automaticamente o fluxo da câmera",
-  "replaceAppWorkflowWithCameraStream": "A tela exibirá automaticamente o fluxo da câmera assim que a câmera começar a gravar; se ele parar, a tela retorna aos tempos de oração",
-  "streamError": "Ocorreu um erro ao transmitir",
-  "finish": "Acabamento"
+  "processingRequest": "A processar o pedido...",
+  "loadingStream": "A carregar a transmissão...",
+  "rtspUrlHint": "Introduza o URL RTSP ou o link do YouTube",
+  "replaceWorkflowWithStream": "Apresentar automaticamente a transmissão da câmara",
+  "replaceAppWorkflowWithCameraStream": "O ecrã exibirá automaticamente a transmissão da câmara assim que esta iniciar a emissão; se esta for interrompida, o ecrã regressa à visualização dos horários das orações",
+  "streamError": "Ocorreu um erro durante a transmissão",
+  "finish": "Terminar"
 }
