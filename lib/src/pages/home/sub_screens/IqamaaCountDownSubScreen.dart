@@ -152,38 +152,39 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
                   Flexible(
                     flex: 2,
                     child: StreamBuilder(
-                        stream: Stream.periodic(Duration(seconds: 1)),
-                        builder: (context, snapshot) {
-                          // For normal mode, we need to update the remaining time on each tick
-                          if (!widget.isDebug) {
-                            _remainingTime = mosqueManager.nextIqamaaAfter();
-                            if (_remainingTime <= Duration.zero) {
-                              Future.delayed(Duration(milliseconds: 80), widget.onDone);
-                            }
+                      stream: Stream.periodic(Duration(seconds: 1)),
+                      builder: (context, snapshot) {
+                        // For normal mode, we need to update the remaining time on each tick
+                        if (!widget.isDebug) {
+                          _remainingTime = mosqueManager.nextIqamaaAfter();
+                          if (_remainingTime <= Duration.zero) {
+                            Future.delayed(Duration(milliseconds: 80), widget.onDone);
                           }
+                        }
 
-                          // Format the remaining time into a string
-                          final minutes = _remainingTime.inMinutes;
-                          final seconds = _remainingTime.inSeconds % 60;
-                          final formattedTime = timeTwoDigit(
-                            seconds: seconds,
-                            minutes: minutes,
-                          );
+                        // Format the remaining time into a string
+                        final minutes = _remainingTime.inMinutes;
+                        final seconds = _remainingTime.inSeconds % 60;
+                        final formattedTime = timeTwoDigit(
+                          seconds: seconds,
+                          minutes: minutes,
+                        );
 
-                          return FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              formattedTime,
-                              style: TextStyle(
-                                fontSize: 35.vw, // Increased from 30.vw for better prominence
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600, // Slightly bolder
-                                shadows: kIqamaCountDownTextShadow,
-                                height: 1,
-                              ),
-                            ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary(),
-                          );
-                        },),
+                        return FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            formattedTime,
+                            style: TextStyle(
+                              fontSize: 35.vw, // Increased from 30.vw for better prominence
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600, // Slightly bolder
+                              shadows: kIqamaCountDownTextShadow,
+                              height: 1,
+                            ),
+                          ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary(),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
