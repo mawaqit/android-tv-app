@@ -7,6 +7,7 @@ import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/helpers/RelativeSizes.dart';
 import 'package:mawaqit/src/helpers/repaint_boundaries.dart';
 import 'package:mawaqit/src/pages/home/sub_screens/normal_home.dart';
+import 'package:mawaqit/src/pages/home/widgets/TimeWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/WeatherWidget.dart';
 import 'package:mawaqit/src/pages/home/widgets/offline_widget.dart';
 import 'package:mawaqit/src/pages/home/widgets/salah_items/responsive_mini_salah_bar_widget.dart';
@@ -113,37 +114,21 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
                 )
               ],
             ),
-            SizedBox(height: 1.vh),
 
-            // Date and Time Display
-            StreamBuilder(
-              stream: Stream.periodic(Duration(seconds: 1)),
-              builder: (context, snapshot) {
-                final now = mosqueManager.mosqueDate();
-                final mosqueConfig = mosqueManager.mosqueConfig;
-                final is12hourFormat = mosqueConfig?.timeDisplayFormat == "12";
-
-                final timeFormat = is12hourFormat ? "hh:mm" : "HH:mm";
-                final dateFormat = "dd MM yyyy";
-
-                final timeString = DateFormat(timeFormat).format(now);
-                final dateString = DateFormat(dateFormat).format(now);
-                final fullDateTime = "$timeString | $dateString";
-
-                return Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Text(
-                    fullDateTime,
-                    style: TextStyle(
-                      fontSize: 22.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      shadows: kIqamaCountDownTextShadow,
-                      height: 1,
-                    ),
-                  ).animate().fadeIn(delay: .6.seconds, duration: 1.5.seconds).addRepaintBoundary(),
-                );
-              },
+            // Clock Widget from Main Screen (compact version)
+            Container(
+              height: 25.vh, // Slightly increased to prevent overflow
+              alignment: Alignment.center,
+              child: ClipRect(
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    width: 60.vw, // Give explicit width to child
+                    height: 35.vh, // Increased height to prevent internal overflow
+                    child: HomeTimeWidget(showSalahIn: false, showOuterBackground: false),
+                  ),
+                ),
+              ),
             ),
 
             // Main countdown section - takes up available space
@@ -190,15 +175,15 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
                             child: Text(
                               formattedTime,
                               style: TextStyle(
-                                fontSize: 30.vw,
+                                fontSize: 35.vw, // Increased from 30.vw for better prominence
                                 color: Colors.white,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600, // Slightly bolder
                                 shadows: kIqamaCountDownTextShadow,
                                 height: 1,
                               ),
                             ).animate().fadeIn(delay: .7.seconds, duration: 2.seconds).addRepaintBoundary(),
                           );
-                        }),
+                        },),
                   ),
                 ],
               ),
