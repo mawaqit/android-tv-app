@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
+import 'package:mawaqit/src/services/battery_optimization_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TimerScheduleInfo {
@@ -50,15 +52,32 @@ class ToggleScreenFeature {
   ToggleScreenFeature._internal();
 
   static const String _scheduledInfoKey = 'scheduled_info_key';
-  static const int DEFAULT_DAYS_TO_SCHEDULE = 2; // Default: Schedule for current day + 2 more days
-  static const int FAJR_ISHA_DAYS_TO_SCHEDULE = 6; // For Fajr/Isha mode: current day + 6 more days
-  static const int BACKGROUND_CHECK_ALARM_ID = 999888777; // Unique ID for background check
-  static const Duration BACKGROUND_CHECK_INTERVAL = Duration(hours: 12); // Check twice daily
+  static const int DEFAULT_DAYS_TO_SCHEDULE = 2;
+  static const int FAJR_ISHA_DAYS_TO_SCHEDULE = 6;
+  static const int BACKGROUND_CHECK_ALARM_ID = 999888777;
+  static const Duration BACKGROUND_CHECK_INTERVAL = Duration(hours: 6); // Check more frequently
 
-  /// Schedule screen toggle timers for multiple days
+  /// Schedule screen toggle timers for multiple days with battery optimization check
   static Future<void> scheduleToggleScreen(
-      bool isFajrIshaOnly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes) async {
+      bool isFajrIshaOnly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes,
+      [BuildContext? context]) async {
     try {
+      // Check battery optimization first
+      final bool isBatteryOptimizationDisabled = await BatteryOptimizationHelper.isBatteryOptimizationDisabled();
+
+      if (!isBatteryOptimizationDisabled) {
+        logger.w('Battery optimization is enabled - alarms may not work reliably');
+
+        if (context != null) {
+          // Show warning dialog and optionally open settings
+          await BatteryOptimizationHelper.showBatteryOptimizationDialog(context);
+        } else {
+          logger.w('No context provided - cannot show battery optimization dialog');
+        }
+      } else {
+        logger.i('Battery optimization is disabled - alarms should work reliably');
+      }
+
       // Cancel any existing timers before scheduling new ones
       await cancelAllScheduledTimers();
 
@@ -77,7 +96,6 @@ class ToggleScreenFeature {
       await _scheduleBackgroundCheck();
 
       // Update feature state and last scheduled date
-      // Use a single transaction to update multiple SharedPreferences values
       final prefs = await SharedPreferences.getInstance();
       await Future.wait([
         prefs.setBool(TurnOnOffTvConstant.kActivateToggleFeature, true),
@@ -85,10 +103,13 @@ class ToggleScreenFeature {
         prefs.setInt(TurnOnOffTvConstant.kMinuteBeforeKey, beforeDelayMinutes),
         prefs.setInt(TurnOnOffTvConstant.kMinuteAfterKey, afterDelayMinutes),
         prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, true),
+        prefs.setBool('battery_optimization_disabled_at_schedule', isBatteryOptimizationDisabled),
       ]);
 
       logger.i(
           'Screen toggle scheduled successfully for ${daysToSchedule + 1} days in ${isFajrIshaOnly ? "Fajr/Isha only" : "all prayers"} mode');
+      logger.i(
+          'Battery optimization status: ${isBatteryOptimizationDisabled ? "DISABLED (good)" : "ENABLED (may cause issues)"}');
     } catch (e) {
       logger.e('Failed to schedule toggle screen: $e');
       throw ScheduleToggleScreenException(e.toString());
@@ -105,7 +126,6 @@ class ToggleScreenFeature {
       final targetDate = now.add(Duration(days: dayOffset));
       final prayerNames = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
-      // Create a list to collect all TimerScheduleInfo objects
       final List<TimerScheduleInfo> schedulesToSave = [];
 
       if (isFajrIshaOnly) {
@@ -203,10 +223,8 @@ class ToggleScreenFeature {
       final hour = int.parse(parts[0]);
       final minute = int.parse(parts[1]);
 
-      // Create target prayer time
       DateTime prayerDateTime = DateTime(targetDate.year, targetDate.month, targetDate.day, hour, minute);
 
-      // Apply the delay (before or after)
       DateTime scheduledTime;
       if (actionType == 'screenOn') {
         scheduledTime = prayerDateTime.subtract(Duration(minutes: delayMinutes));
@@ -216,15 +234,12 @@ class ToggleScreenFeature {
 
       final now = AppDateTime.now();
 
-      // Only schedule if the time is in the future
       if (scheduledTime.isAfter(now)) {
         final uniqueId = '${actionType}_${prayerName}_${dayOffset}_${DateTime.now().millisecondsSinceEpoch}';
         final isBox = TimeShiftManager().isLauncherInstalled;
 
-        // Schedule the task
         await WorkManagerService.registerScreenTask(uniqueId, actionType, scheduledTime.difference(now), isBox);
 
-        // Create and return the scheduled info (without saving it yet)
         return TimerScheduleInfo(
           scheduledTime: scheduledTime,
           actionType: actionType,
@@ -245,18 +260,14 @@ class ToggleScreenFeature {
       final prefs = await SharedPreferences.getInstance();
       List<TimerScheduleInfo> existingInfoList = await _getScheduledInfoList();
 
-      // Add new infos
       existingInfoList.addAll(newInfoList);
 
-      // Remove expired entries to keep the list manageable
       final now = AppDateTime.now();
       existingInfoList = existingInfoList.where((item) => item.scheduledTime.isAfter(now)).toList();
 
-      // Save back to preferences in a single operation
       final jsonList = existingInfoList.map((item) => item.toJson()).toList();
       await prefs.setString(_scheduledInfoKey, jsonEncode(jsonList));
 
-      // Log the number of timers saved
       logger.i('Saved ${newInfoList.length} new timer schedules (total: ${existingInfoList.length})');
     } catch (e) {
       logger.e('Failed to save scheduled info batch: $e');
@@ -266,10 +277,8 @@ class ToggleScreenFeature {
   /// Schedule a background check to ensure all timers are still active
   static Future<void> _scheduleBackgroundCheck() async {
     try {
-      // Cancel any existing background check
       await AndroidAlarmManager.cancel(BACKGROUND_CHECK_ALARM_ID);
 
-      // Schedule a new background check
       await AndroidAlarmManager.periodic(
         BACKGROUND_CHECK_INTERVAL,
         BACKGROUND_CHECK_ALARM_ID,
@@ -288,13 +297,11 @@ class ToggleScreenFeature {
   @pragma('vm:entry-point')
   static Future<void> backgroundCheckCallback() async {
     try {
-      // Check if feature is active
       if (!(await getToggleFeatureState())) {
         logger.i('Toggle feature is inactive, skipping background check');
         return;
       }
 
-      // Check if rescheduling is needed using shouldReschedule
       bool needsReschedule = await shouldReschedule();
       if (needsReschedule) {
         logger.i('Background check: Rescheduling needed based on shouldReschedule() criteria');
@@ -302,17 +309,14 @@ class ToggleScreenFeature {
         return;
       }
 
-      // Additional checks if needed (existing logic)
       final scheduledTimers = await _getScheduledInfoList();
 
-      // Check if any scheduled timers exist
       if (scheduledTimers.isEmpty) {
         logger.w('No scheduled timers found during background check');
         await _rescheduleAllTimers();
         return;
       }
 
-      // Check if we have any future scheduled timers
       final now = AppDateTime.now();
       final futureTimers = scheduledTimers.where((timer) => timer.scheduledTime.isAfter(now)).toList();
 
@@ -324,7 +328,6 @@ class ToggleScreenFeature {
       }
     } catch (e) {
       logger.e('Background check error: $e');
-      // Try to reschedule even if there was an error
       await _rescheduleAllTimers();
     }
   }
@@ -334,14 +337,11 @@ class ToggleScreenFeature {
     try {
       logger.i('Attempting to reschedule all timers');
 
-      // Get saved scheduling parameters
       final params = await _getSchedulingParameters();
 
       if (params != null) {
-        // Cancel existing timers first
         await cancelAllScheduledTimers();
 
-        // Reschedule with saved parameters
         await scheduleToggleScreen(
           params['isFajrIshaOnly'],
           List<String>.from(params['timeStrings']),
@@ -444,24 +444,15 @@ class ToggleScreenFeature {
     final isEventsSet = await checkEventsScheduled();
     final isFajrIshaOnly = await getToggleFeatureishaFajrState();
 
-    // Determine the appropriate scheduling window based on the mode
     final daysToSchedule = isFajrIshaOnly ? FAJR_ISHA_DAYS_TO_SCHEDULE : DEFAULT_DAYS_TO_SCHEDULE;
 
-    // Reschedule if:
-    // 1. Feature is active but no events are scheduled
     if (isFeatureActive && !isEventsSet) {
       logger.i('Rescheduling needed: Feature active but no events scheduled');
       return true;
     }
 
     if (lastEventDate != null && isFeatureActive) {
-      // 2. If we're approaching the end of our scheduling window
-      // Calculate days since last schedule
       final daysSinceLastSchedule = today.difference(lastEventDate).inDays;
-
-      // Set appropriate reschedule threshold based on the mode
-      // For normal mode (2 days total): reschedule after 1 day
-      // For Fajr/Isha mode (6 days total): reschedule after 4-5 days
       final rescheduleThreshold = isFajrIshaOnly ? (daysToSchedule - 2) : 1;
 
       if (daysSinceLastSchedule >= rescheduleThreshold) {
@@ -470,20 +461,15 @@ class ToggleScreenFeature {
         return true;
       }
 
-      // 3. Detect potential failures in scheduling system
-      // If it's been more than 24 hours since we scheduled events and
-      // we haven't detected any executed events, this could indicate a failure
       final lastExecutedEvent = await getLastExecutedEventDate();
 
       if (lastExecutedEvent == null) {
-        // If no events have ever been executed but feature is active for more than a day
         final hoursSinceLastSchedule = today.difference(lastEventDate).inHours;
         if (hoursSinceLastSchedule > 24) {
           logger.w('Rescheduling needed: No events have ever executed');
           return true;
         }
       } else {
-        // If no events executed in the last 24 hours
         final hoursSinceLastExecution = today.difference(lastExecutedEvent).inHours;
         if (hoursSinceLastExecution > 24) {
           logger.w('Rescheduling needed: No events executed in the last 24 hours');
@@ -531,26 +517,18 @@ class ToggleScreenFeature {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      // First set the flag to false
       await _setEventsScheduled(false);
 
-      // Get a copy of all keys to avoid concurrent modification
       final allKeys = prefs.getKeys().toList();
-
-      // Filter keys that start with 'screen_task_id_mapping_'
       final mappingKeys = allKeys.where((key) => key.startsWith('screen_task_id_mapping_')).toList();
 
-      // Cancel each alarm and clean up SharedPreferences
       for (String mappingKey in mappingKeys) {
-        // Extract uniqueId from the key
         final uniqueId = mappingKey.substring('screen_task_id_mapping_'.length);
-        // Get the alarm ID
         final alarmIdString = prefs.getString(mappingKey);
 
         if (alarmIdString != null) {
           final int alarmId = int.parse(alarmIdString);
 
-          // Cancel the alarm
           final bool success = await AndroidAlarmManager.cancel(alarmId);
 
           if (success) {
@@ -559,16 +537,12 @@ class ToggleScreenFeature {
             logger.w('Failed to cancel alarm: $alarmId');
           }
 
-          // Clean up SharedPreferences
           await prefs.remove('alarm_data_$alarmId');
           await prefs.remove(mappingKey);
         }
       }
 
-      // Also cancel the background check alarm
       await AndroidAlarmManager.cancel(BACKGROUND_CHECK_ALARM_ID);
-
-      // Clear the scheduled info list
       await prefs.remove(_scheduledInfoKey);
 
       logger.i('All scheduled timers cancelled');

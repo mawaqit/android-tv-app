@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
+import 'package:mawaqit/src/services/battery_optimization_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'screen_lock_state.dart';
@@ -18,6 +21,8 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
     final prefs = await SharedPreferences.getInstance();
     final isActive = await ToggleScreenFeature.getToggleFeatureState();
 
+    // Check battery optimization status
+    final isBatteryOptimizationDisabled = await BatteryOptimizationHelper.isBatteryOptimizationDisabled();
     return ScreenLockState(
       selectedTime:
           DateTime.now().add(Duration(hours: timeShiftManager.shift, minutes: timeShiftManager.shiftInMinutes)),
@@ -31,7 +36,8 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
   void toggleActive(bool newValue) async {
     final currentState = state.value!;
     state = AsyncValue.loading();
-    ToggleScreenFeature.toggleFeatureState(newValue);
+
+    await ToggleScreenFeature.toggleFeatureState(newValue);
 
     if (!newValue) {
       await ToggleScreenFeature.cancelAllScheduledTimers();
@@ -64,18 +70,46 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
     state = AsyncValue.data(state.value!.copyWith(selectedMinuteAfter: newMinute < 10 ? 59 : newMinute));
   }
 
-  Future<void> saveSettings(List<String> times, bool isIshaFajrOnly) async {
-    await ToggleScreenFeature.cancelAllScheduledTimers();
-    ToggleScreenFeature.scheduleToggleScreen(
-      isIshaFajrOnly,
-      times,
-      state.value!.selectedMinuteBefore,
-      state.value!.selectedMinuteAfter,
-    );
-    ToggleScreenFeature.toggleFeatureState(true);
+  Future<void> saveSettings(List<String> times, bool isIshaFajrOnly, BuildContext context) async {
+    try {
+      state = AsyncValue.loading();
 
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setBool(TurnOnOffTvConstant.kisFajrIshaOnly, isIshaFajrOnly);
+      await ToggleScreenFeature.cancelAllScheduledTimers();
+
+      await ToggleScreenFeature.scheduleToggleScreen(
+        isIshaFajrOnly,
+        times,
+        state.value!.selectedMinuteBefore,
+        state.value!.selectedMinuteAfter,
+        context,
+      );
+
+      // Enable the feature
+      await ToggleScreenFeature.toggleFeatureState(true);
+
+      // Save preferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(TurnOnOffTvConstant.kisFajrIshaOnly, isIshaFajrOnly);
+
+      final currentState = state.value!;
+      state = AsyncValue.data(currentState.copyWith(
+        isActive: true,
+        isfajrIshaonly: isIshaFajrOnly,
+      ));
+    } catch (e) {
+      logger.e('Failed to save settings: $e');
+      state = AsyncValue.error(e, StackTrace.current);
+      rethrow;
+    }
+  }
+
+  Future<void> checkBatteryOptimizationStatus() async {
+    final isBatteryOptimizationDisabled = await BatteryOptimizationHelper.isBatteryOptimizationDisabled();
+    logger.i('Battery optimization disabled: $isBatteryOptimizationDisabled');
+
+    if (!isBatteryOptimizationDisabled && state.value?.isActive == true) {
+      logger.w('Feature is active but battery optimization is enabled - alarms may fail');
+    }
   }
 }
 
