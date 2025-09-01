@@ -345,7 +345,13 @@ class UnifiedBackgroundService with WidgetsBindingObserver {
     await NotificationService.showPrayerNotification(salahName, prayerName, shouldPlayAdhan);
 
     if (shouldPlayAdhan) {
-      await PrayerAudioService.playPrayer(adhanAsset, adhanFromAssets);
+      try {
+        await PrayerAudioService.playPrayer(adhanAsset, adhanFromAssets);
+        print("Prayer audio played successfully for $salahName");
+      } catch (e) {
+        print("Failed to play prayer audio for $salahName: $e");
+        // If audio fails, still show notification
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class MawaqitIconButton extends StatefulWidget {
   const MawaqitIconButton({
@@ -6,18 +7,21 @@ class MawaqitIconButton extends StatefulWidget {
     required this.icon,
     required this.label,
     required this.focusNode,
+    this.isAutoFocus = false,
     this.onPressed,
   }) : super(key: key);
   final IconData icon;
   final FocusNode focusNode;
   final String label;
   final VoidCallback? onPressed;
+  final bool isAutoFocus;
   @override
   State<MawaqitIconButton> createState() => _MawaqitIconButtonState();
 }
 
 class _MawaqitIconButtonState extends State<MawaqitIconButton> {
   bool focused = false;
+
   @override
   void initState() {
     super.initState();
@@ -33,29 +37,34 @@ class _MawaqitIconButtonState extends State<MawaqitIconButton> {
       child: Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
-        color: theme.colorScheme.primary,
+        color: focused ? theme.focusColor : theme.colorScheme.primary,
         elevation: 0,
         child: Focus(
           onFocusChange: (value) => setState(() => focused = value),
           child: Material(
-            color: focused ? theme.focusColor : theme.colorScheme.primary,
+            color: Colors.transparent,
             child: InkWell(
               focusNode: widget.focusNode,
               onTap: widget.onPressed,
+              autofocus: widget.isAutoFocus,
+              borderRadius: BorderRadius.circular(200),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
                 child: Row(
                   children: [
                     Text(
                       widget.label,
-                      style: theme.textTheme.bodySmall!.copyWith(color: focused ? Colors.white : color),
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        color: focused ? Colors.white : color,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10.sp,
+                      ),
                     ),
-                    SizedBox(width: 10),
-                    Align(
-                      alignment: Alignment(.5, 0),
-                      child: Icon(widget.icon, color: focused ? Colors.white : color, size: 16),
-                      widthFactor: .5,
-                      heightFactor: 1,
+                    SizedBox(width: 12),
+                    Icon(
+                      widget.icon,
+                      color: focused ? Colors.white : color,
+                      size: 10.sp,
                     ),
                   ],
                 ),

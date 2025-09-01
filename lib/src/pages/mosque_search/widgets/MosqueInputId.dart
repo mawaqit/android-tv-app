@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/models/mosque.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'package:mawaqit/src/widgets/mosque_simple_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../../i18n/AppLanguage.dart';
 import '../../../helpers/AppRouter.dart';
@@ -17,9 +21,14 @@ import '../../../state_management/random_hadith/random_hadith_notifier.dart';
 import '../../home/OfflineHomeScreen.dart';
 
 class MosqueInputId extends ConsumerStatefulWidget {
-  const MosqueInputId({Key? key, this.onDone}) : super(key: key);
+  const MosqueInputId({
+    super.key,
+    this.onDone,
+    this.selectedNode = const fp.None(),
+  });
 
   final void Function()? onDone;
+  final fp.Option<FocusNode> selectedNode;
 
   @override
   ConsumerState<MosqueInputId> createState() => _MosqueInputIdState();
@@ -29,9 +38,37 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
   final inputController = TextEditingController();
   Mosque? searchOutput;
   SharedPref sharedPref = SharedPref();
+  final FocusNode _focusNode = FocusNode(debugLabel: 'mosque_search_node');
 
   bool loading = false;
   String? error;
+  bool isKeyboardVisible = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(mosqueManagerProvider.notifier).state = fp.None();
+      _focusNode.requestFocus();
+      isKeyboardVisible = true;
+    });
+
+    // Add listener to focus node to detect keyboard close
+    _focusNode.addListener(_onFocusChange);
+
+    super.initState();
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus && isKeyboardVisible) {
+      // The focus was lost, which might indicate keyboard was closed
+      isKeyboardVisible = false;
+
+      FocusScope.of(context).focusInDirection(TraversalDirection.up);
+    } else if (_focusNode.hasFocus && !isKeyboardVisible) {
+      // Focus gained, keyboard likely opened
+      isKeyboardVisible = true;
+    }
+  }
 
   void _setMosqueId(String mosqueId) async {
     if (mosqueId.isEmpty) {
@@ -68,9 +105,11 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
     });
   }
 
-  onboardingWorkflowDone() {
-    sharedPref.save('boarding', 'true');
-    AppRouter.pushReplacement(OfflineHomeScreen());
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,7 +125,7 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
             Text(
               S.of(context).selectMosqueId,
               style: TextStyle(
-                fontSize: 25.0,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w700,
                 color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
               ),
@@ -98,13 +137,22 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
                 key: ValueKey(searchOutput!.uuid),
                 autoFocus: true,
                 mosque: searchOutput!,
+                selectedNode: widget.selectedNode,
                 onTap: () {
                   return context.read<MosqueManager>().setMosqueUUid(searchOutput!.uuid.toString()).then((value) async {
                     final mosqueManager = context.read<MosqueManager>();
                     final hadithLangCode = await context.read<AppLanguage>().getHadithLanguage(mosqueManager);
                     ref.read(randomHadithNotifierProvider.notifier).fetchAndCacheHadith(language: hadithLangCode);
-
-                    !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
+                    if (searchOutput != null) {
+                      if (searchOutput?.type == "MOSQUE") {
+                        ref.read(mosqueManagerProvider.notifier).state =
+                            fp.Option.fromNullable(SearchSelectionType.mosque);
+                      } else {
+                        ref.read(mosqueManagerProvider.notifier).state =
+                            fp.Option.fromNullable(SearchSelectionType.home);
+                      }
+                    }
+                    // !context.read<MosqueManager>().typeIsMosque ? onboardingWorkflowDone() : widget.onDone?.call();
                   }).catchError((e, stack) {
                     if (e is InvalidMosqueId) {
                       setState(() {
@@ -127,75 +175,56 @@ class _MosqueInputIdState extends ConsumerState<MosqueInputId> {
   }
 
   Padding buildInputWidget(BuildContext context, ThemeData theme) {
-    final bool dark = theme.brightness == Brightness.dark;
-
     return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Material(
-        elevation: 4,
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(40),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.85,
-          decoration: BoxDecoration(
-            color: dark ? const Color(0xFF262626) : const Color(0xFFF1F1F3),
-            borderRadius: BorderRadius.circular(40),
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: TextFormField(
+          focusNode: _focusNode,
+          controller: inputController,
+          style: GoogleFonts.inter(
+            color: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w500,
           ),
-          child: TextFormField(
-            controller: inputController,
-            autofocus: true,
-            keyboardType: TextInputType.number,
-            textInputAction: TextInputAction.search,
-            cursorColor: Colors.white70,
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              color: Colors.white,
+          onFieldSubmitted: _setMosqueId,
+          cursorColor: theme.brightness == Brightness.dark ? null : theme.primaryColor,
+          keyboardType: TextInputType.number,
+          autofocus: true,
+          textInputAction: TextInputAction.search,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+          ],
+          decoration: InputDecoration(
+            filled: true,
+            errorText: error,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: theme.primaryColor, width: 2),
             ),
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            onFieldSubmitted: _setMosqueId,
-            decoration: InputDecoration(
-              // ------- visual bits -------
-              hintText: S.of(context).selectWithMosqueId,
-              hintStyle: GoogleFonts.inter(
-                color: Colors.white.withOpacity(.55),
-                fontWeight: FontWeight.w400,
-              ),
-              filled: true,
-              fillColor: Colors.transparent, // we use the BoxDecoration color
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              // ------- icon on the right -------
-              suffixIcon: IconButton(
-                tooltip: 'Search by ID',
-                iconSize: 24,
-                splashRadius: 24,
-                icon: loading
-                    ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                    : const Icon(Icons.search_rounded),
-                color: Colors.white70,
-                onPressed: () => _setMosqueId(inputController.text),
-              ),
-              // ------- invisible borders -------
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(40),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(40),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(40),
-                borderSide: BorderSide.none,
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(40),
-                borderSide: BorderSide(color: theme.colorScheme.error),
-              ),
-              errorStyle: const TextStyle(height: 0), // hide text gap
-              errorText: error,
+            hintText: S.of(context).selectWithMosqueId,
+            hintStyle: TextStyle(
+              fontSize: 8.sp,
+              fontWeight: FontWeight.normal,
+              color: theme.brightness == Brightness.dark ? null : theme.primaryColor.withOpacity(0.4),
+            ),
+            suffixIcon: IconButton(
+              tooltip: "Search by Id",
+              icon: loading ? CircularProgressIndicator() : Icon(Icons.search),
+              color: theme.brightness == Brightness.dark ? Colors.white70 : theme.primaryColor,
+              onPressed: () => _setMosqueId(inputController.text),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: theme.primaryColor, width: 2),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: theme.primaryColor, width: 1),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              vertical: 2,
+              horizontal: 20,
             ),
           ),
         ),

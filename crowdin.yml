@@ -1,3 +1,7 @@
 files:
   - source: /lib/l10n/intl_en.arb
     translation: /lib/l10n/intl_%two_letters_code%.arb
+    languages_mapping:
+      two_letters_code:
+        pt_BR: pt_BR
+        pt_PT: pt_PT

@@ -40,8 +40,8 @@ class _FlashWidgetState extends State<FlashWidget> {
         key: ValueKey(flash!.content),
         textDirection: getTextDirection(),
         text: flash.content ?? '',
-        velocity: 90,
-        blankSpace: 400,
+        velocity: 50,
+        blankSpace: 50.0,
         style: TextStyle(
           fontFamily:
               flash.orientation == 'rtl' ? GoogleFonts.notoKufiArabic().fontFamily : GoogleFonts.roboto().fontFamily,
@@ -52,6 +52,13 @@ class _FlashWidgetState extends State<FlashWidget> {
           shadows: kHomeTextShadow,
           color: HexColor(flash.color ?? "#FFFFFF"),
         ),
+        accelerationDuration: Duration(seconds: 1),
+        accelerationCurve: Curves.easeInOut,
+        decelerationDuration: Duration(seconds: 1),
+        decelerationCurve: Curves.easeInOut,
+        showFadingOnlyWhenScrolling: true,
+        fadingEdgeStartFraction: 0.1,
+        fadingEdgeEndFraction: 0.1,
       ),
     );
   }

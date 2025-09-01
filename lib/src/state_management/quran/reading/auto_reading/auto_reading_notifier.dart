@@ -97,7 +97,7 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
   }
 
   void _initializeScrollController(int currentPage, double pageHeight) {
-    final pageOffset = (currentPage - 1) * pageHeight;
+    final pageOffset = currentPage * pageHeight;
     // Set initial offset to correct position, account for rotation if necessary
     scrollController.jumpTo(pageOffset);
   }
@@ -167,40 +167,35 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     _autoScrollTimer = null;
 
     // Calculate current page before switching views
+    int finalPage = state.currentPage;
     if (scrollController.hasClients) {
       final pageHeight = scrollController.position.viewportDimension;
-      // Use floor instead of ceil and don't add 1 to stay on current page
-      // if scroll hasn't moved significantly
-      final currentPage = _calculateCurrentPage(scrollController, pageHeight);
-      // First update state to disable auto-scroll
-      state = state.copyWith(
-        isSinglePageView: false,
-        isPlaying: false,
-      );
+      finalPage = _calculateCurrentPage(scrollController, pageHeight);
+    }
 
-      // Then update the page after a small delay to allow view transition
-      await Future.delayed(Duration(milliseconds: 100));
+    // First update state to disable auto-scroll
+    state = state.copyWith(
+      isSinglePageView: false,
+      isPlaying: false,
+    );
 
-      // Update QuranReadingState with current page
-      try {
-        await ref.read(quranReadingNotifierProvider.notifier).updatePage(
-              !isPortairt ? currentPage : quranReadingState!.currentPage,
-              isPortairt: isPortairt,
-            );
-      } catch (e) {
-        // Handle error silently or show a user-friendly message
-        print('Error updating page: $e');
-      }
-    } else {
-      state = state.copyWith(
-        isSinglePageView: false,
-        isPlaying: false,
-      );
+    // Then update the page after a small delay to allow view transition
+    await Future.delayed(Duration(milliseconds: 100));
+
+    // Update QuranReadingState with current page
+    try {
+      await ref.read(quranReadingNotifierProvider.notifier).updatePage(
+            !isPortairt ? finalPage : quranReadingState!.currentPage,
+            isPortairt: isPortairt,
+          );
+    } catch (e) {
+      // Handle error silently or show a user-friendly message
+      print('Error updating page: $e');
     }
   }
 
   void changeSpeed(double newSpeed) {
-    state = state.copyWith(autoScrollSpeed: newSpeed.clamp(0.1, 5.0));
+    state = state.copyWith(autoScrollSpeed: newSpeed.clamp(0.5, 4.0));
   }
 
   void showControls() {
@@ -219,24 +214,6 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
     double newFontSize = state.fontSize + 0.2;
     if (newFontSize > state.maxFontSize) newFontSize = 1.0;
     state = state.copyWith(fontSize: newFontSize);
-  }
-
-  void increaseSpeed(int currentPage, double pageHeight) {
-    double newSpeed = state.autoScrollSpeed + 0.1;
-    if (newSpeed > 5.0) newSpeed = 5.0;
-    state = state.copyWith(autoScrollSpeed: newSpeed);
-    if (state.isAutoScrolling) {
-      _startScrolling(); // Only restart the scrolling timer
-    }
-  }
-
-  void decreaseSpeed(int currentPage, double pageHeight) {
-    double newSpeed = state.autoScrollSpeed - 0.1;
-    if (newSpeed < 0.1) newSpeed = 0.1;
-    state = state.copyWith(autoScrollSpeed: newSpeed);
-    if (state.isAutoScrolling) {
-      _startScrolling(); // Only restart the scrolling timer
-    }
   }
 
   void increaseFontSize() {
@@ -261,10 +238,14 @@ class AutoScrollNotifier extends AutoDisposeNotifier<AutoScrollState> {
 
   void cycleSpeed(int currentPage, double pageHeight) {
     double newSpeed;
-    if (state.autoScrollSpeed >= 0.5) {
-      newSpeed = 0.1;
+    if (state.autoScrollSpeed >= 2.0) {
+      newSpeed = 0.5;
+    } else if (state.autoScrollSpeed >= 1.5) {
+      newSpeed = 2.0;
+    } else if (state.autoScrollSpeed >= 1.0) {
+      newSpeed = 1.5;
     } else {
-      newSpeed = state.autoScrollSpeed + 0.1;
+      newSpeed = 1.0;
     }
     state = state.copyWith(autoScrollSpeed: newSpeed);
     if (state.isAutoScrolling) {

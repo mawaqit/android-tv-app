@@ -142,7 +142,6 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     date ??= mosqueDate();
 
     final times = actualTimes(date);
-
     return iqamasOfDay(date).mapIndexed((i, e) => e.toTimeOfDay(tryOffset: times[i])!.toDate(date)).toList();
   }
 
@@ -283,7 +282,7 @@ mixin MosqueHelpersMixin on ChangeNotifier {
     return duration;
   }
 
-  /// the duration until the next salah
+  /// the duration until the next iqama
   Duration nextIqamaaAfter() {
     final now = mosqueDate();
     final nextIndex = nextIqamaIndex();
@@ -300,20 +299,32 @@ mixin MosqueHelpersMixin on ChangeNotifier {
       }
 
       // For before midnight case (e.g. current time is 23:50)
-      final iqamaTime = DateTime(now.year, now.month, now.day + 1, nextTime.hour, nextTime.minute, 0 // Set seconds to 0
-          );
+      final iqamaTime = DateTime(now.year, now.month, now.day + 1, nextTime.hour, nextTime.minute, 0);
       return iqamaTime.difference(now);
     }
 
     // For all other cases, use normal difference
-    final duration = DateTime(now.year, now.month, now.day, nextTime.hour, nextTime.minute, 0 // Set seconds to 0
-            )
-        .difference(now);
+    final duration = DateTime(now.year, now.month, now.day, nextTime.hour, nextTime.minute, 0).difference(now);
 
     if (duration < Duration.zero) {
-      final tomorrowFajr = DateTime(now.year, now.month, now.day + 1, actualIqamaTimes()[0].hour,
-          actualIqamaTimes()[0].minute, 0 // Set seconds to 0
-          );
+      // Check if the iqama is set to 0 (no delay)
+      final todayIqamas = iqamasOfDay(mosqueDate());
+      final currentSalahIndex = salahIndex;
+      final currentIqamaString = todayIqamas[currentSalahIndex];
+      final currentIqamaMinutes = int.tryParse(currentIqamaString) ?? 0;
+
+      // If iqama is 0, show 3-minute countdown from prayer time
+      if (currentIqamaMinutes == 0) {
+        final currentPrayerTime = actualTimes()[currentSalahIndex];
+        final timeSincePrayer = now.difference(currentPrayerTime);
+        final remainingTime = Duration(minutes: 3) - timeSincePrayer;
+
+        // Always return the remaining time, even if it goes below zero
+        return remainingTime > Duration.zero ? remainingTime : Duration.zero;
+      }
+
+      final tomorrowFajr =
+          DateTime(now.year, now.month, now.day + 1, actualIqamaTimes()[0].hour, actualIqamaTimes()[0].minute, 0);
       return tomorrowFajr.difference(now);
     }
     return duration;
