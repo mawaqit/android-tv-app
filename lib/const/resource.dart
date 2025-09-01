@@ -27,8 +27,8 @@ class R {
   static const String ASSETS_BACKGROUNDS_BACKGROUND_ADHKAR_JPG = 'assets/backgrounds/background-adhkar.jpg';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/islamic_content_background.png)
-  static const String ASSETS_BACKGROUNDS_ISLAMIC_CONTENT_BACKGROUND_PNG =
-      'assets/backgrounds/islamic_content_background.png';
+  static const String ASSETS_BACKGROUNDS_ISLAMIC_CONTENT_BACKGROUND_WEBP =
+      'assets/backgrounds/islamic_content_background.webp';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/quran_background.png)
   static const String ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG = 'assets/backgrounds/quran_background.png';
