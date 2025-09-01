@@ -23,9 +23,14 @@ class R {
   static const String ASSETS_ANIMATIONS_RIVE_MAWAQIT_LOGO_ANIMATION1_RIV =
       'assets/animations/rive/mawaqit_logo_animation1.riv';
 
-  /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/quran_background.png)
+  /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/background-adhkar.jpg)
   static const String ASSETS_BACKGROUNDS_BACKGROUND_ADHKAR_JPG = 'assets/backgrounds/background-adhkar.jpg';
 
+  /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/islamic_content_background.png)
+  static const String ASSETS_BACKGROUNDS_ISLAMIC_CONTENT_BACKGROUND_PNG =
+      'assets/backgrounds/islamic_content_background.png';
+
+  /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/quran_background.png)
   static const String ASSETS_BACKGROUNDS_QURAN_BACKGROUND_PNG = 'assets/backgrounds/quran_background.png';
 
   /// ![preview](file:///Users/ds/mawaqit/assets/backgrounds/splash_screen_5.png)
