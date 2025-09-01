@@ -57,7 +57,7 @@
   "afterSalahHadith": "Allahumme rabbe hazihid-da’vetit-tammeti vessalatil-kaimeti ati muhammedenil-vessilete velfadilete veb-ashu mekamen mahmudenil-lezi ve’at tehu.\n\n(Moj Allahu, Gospodaru ovog potpunog poziva i namaza koji se upravo uspostavlja podari Muhammedu, (sallallahu alejhi ve sellem), Vesilet i svako dobro i proživi ga na pohvalnom mjestu koje si mu obećao.)",
   "alIqama": "Ikamet",
   "alAdhan": "Ezan",
-  "turnOfPhones": "Molimo vas da svoje telefone prebacite u NEČUJNI način rada",
+  "turnOfPhones": "Molimo vas, utišajte ili isključite svoje telefone!",
   "iqamaIn": "Ikamet za",
   "alAthkar": "Dhikr",
   "azkarList0": "Estagfirullah, Estagfirullah, Estagfirullah. \n\nAllahumme entes-selamu ve minkes-selam, tebarekte ja zel-dželali vel-ikram!\n\n''Gospodaru naš, Ti si izvor spasa i od Tebe je spas. Uzvišen si Ti, o Gospodaru veličine i plemenitosti''\n(Muslim, Ebu Davud, Tirmizi, Nesa’i, Ibn Madže, Taberani, Darimi)",
@@ -176,7 +176,7 @@
   "@duaaElEftarText": {
     "description": "اللهم اني لگ صمت وعلى رزقك افطرت واليك انبت وعليگ توكلت ذهب الظما وابتلت العروق وثبت الاجر انشاء الله"
   },
-  "secondaryScreenExplanation": "Za sekundarnu prostoriju za namaz (ženska prostorija ili neki drugi sprat), ovaj ekran će prikazati Džumu-namaz uživo",
+  "secondaryScreenExplanation": "Za sekundarnu prostoriju (ženska prostorija za namaz ili neki drugi sprat), ovaj ekran će prikazati Džumu-namaz uživo",
   "mainScreenExplanation": "Za glavnu prostoriju džamije, ovaj ekran neće prikazivati ​​direktan prijenos Džume namaza",
   "normalModeExplanation": "Prikazaće normalan ekran sa vremenima namaza i najavama(obavještenja).",
   "announcementOnlyModeExplanation": "Stalno će prikazivati ​​obavještenja",
@@ -356,5 +356,95 @@
       }
     }
   },
-  "surahSelector": "Odaberi suru"
+  "surahSelector": "Odaberi suru",
+  "checkForUpdates": "Provjeri ažuriranja",
+  "checkForNewVersion": "Provjeri da li je dostupna nova verzija",
+  "wouldYouLikeToUpdate": "Želite li ažurirati aplikaciju?",
+  "updateCompleted": "Ažuriranje je uspješno završeno!",
+  "noUpdates": "Nema ažuriranja",
+  "usingLatestVersion": "Koristite najnoviju verziju.",
+  "updateCancelled": "Update cancelled",
+  "checkingUpdates": "Provjeravam ažuriranja...",
+  "downloadingUpdate": "Downloading update...",
+  "installingUpdate": "Instaliram ažuriranje...",
+  "updateCompletedSuccessfully": "Ažuriranje je uspješno završeno.",
+  "updateFailed": "Ažuriranje nije uspjelo",
+  "save": "Sačuvaj",
+  "enterRtspUrl": "Enter RTSP or Youtube Live URL",
+  "addRtspUrl": "Add your camera stream URL below",
+  "enableRtspCamera": "Enable Camera Streaming",
+  "rtspCameraSettings": "Camera Settings",
+  "invalidRtspUrl": "Invalid URL. Please check the URL and try again.",
+  "validRtspUrl": "URL validated and saved successfully.",
+  "rtspCameraSettingTitle": "Live camera connection",
+  "rtspCameraSettingDesc": "Connect to your local camera and display jumua prayer stream on the TV screen.",
+  "rtspCameraSettingScreenDesc": "If you enter a URL here, your screen will automatically switch to video streaming when Jumua time arrives",
+  "validatingStream": "Validating Stream...",
+  "checkInternetLiveCamera": "You must connect to internet to setup the live camera",
+  "somethingWentWrong": "Something went wrong! please try again",
+  "somethingWrong": "Nešto nije u redu",
+  "tryAgainLater": "Please try again later",
+  "hintTextRtspUrl": "rtsp://... or https://youtube.com/live/...",
+  "checkInternetUpdate": "Morate se povezati na internet kako biste provjerili nova ažuriranja",
+  "appUpdateAvailable": "Vaša aplikacija koristi verziju {currentVersion}. Dostupno je novo ažuriranje (verzija {updatedVersion}) sa najnovijim funkcijama i poboljšanjima.",
+  "@appUpdateAvailable": {
+    "description": "Placeholder text for displaying update available message",
+    "placeholders": {
+      "currentVersion": {
+        "type": "String",
+        "example": "1"
+      },
+      "updatedVersion": {
+        "type": "String",
+        "example": "604"
+      }
+    }
+  },
+  "quranUpdateDialogContent": "A new update for the {moshafName} Quran (version {version}) is available.",
+  "@quranUpdateDialogContent": {
+    "description": "Message to display in the update available dialog with Quran name and version.",
+    "placeholders": {
+      "moshafName": {
+        "type": "String",
+        "example": "Hafs"
+      },
+      "version": {
+        "type": "String",
+        "example": "2.0"
+      }
+    }
+  },
+  "ishaAndFajrOnly": "Fajr and Isha prayers only",
+  "minutesBeforeFajrPrayer": "minutes before fajr prayer time",
+  "minutesAfterIshaPrayer": "minutes afer isha prayer time",
+  "scheduleSaved": "Your schedule has been saved.",
+  "completeAllFields": "Please complete all fields before saving.",
+  "endTimeAfter": "The end time must be after the start time.",
+  "scheduleListening": "Scheduled Listening",
+  "enableScheduling": "Enable Scheduling",
+  "scheduleDesc": "Enable this feature to automatically play a Surah at scheduled times.",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "selectReciter": "Select a Reciter",
+  "selectMoshaf": "Select a Mushaf",
+  "randomSurahSelection": "Random Surah Selection",
+  "selectSurah": "Select a Surah",
+  "initializingAutoReading": "Initializing in progress...",
+  "prayerTimeNotification": "{salahName} time ({prayerTime}) notification",
+  "@prayerTimeNotification": {
+    "description": "Notifcation that will be displayed when app is backgrounded.",
+    "placeholders": {
+      "salahName": {
+        "type": "String",
+        "example": "Fajr"
+      },
+      "prayerTime": {
+        "type": "String",
+        "example": "16:00"
+      }
+    }
+  },
+  "scheduleInOnlineMode": "Please connect to the internet to schedule Quran listening",
+  "duaaBetweenAdhanAndIqamaaTitle": "Supplication (Du'a) is not rejected between the Adhan and Iqamah",
+  "duaBetweenAdhanIqamah": "Supplication (Du'a) is not rejected between the Adhan and Iqamah."
 }
