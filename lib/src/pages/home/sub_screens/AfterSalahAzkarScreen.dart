@@ -106,7 +106,7 @@ class _AfterSalahAzkarState extends State<AfterSalahAzkar> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(R.ASSETS_BACKGROUNDS_BACKGROUND_ADHKAR_JPG),
+          image: AssetImage(R.ASSETS_BACKGROUNDS_ISLAMIC_CONTENT_BACKGROUND_WEBP),
           fit: BoxFit.cover,
         ),
       ),
