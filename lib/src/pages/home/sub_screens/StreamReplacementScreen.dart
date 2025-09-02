@@ -163,7 +163,7 @@ class _StreamReplacementScreenState extends ConsumerState<StreamReplacementScree
               ),
             ),
             // Only show touch controls on non-TV devices
-            if (!isBoxOrAndroidTV) ...[
+/*             if (!isBoxOrAndroidTV) ...[
               // Add hamburger menu to open drawer
               Align(
                 alignment: AlignmentDirectional.topStart,
@@ -213,7 +213,7 @@ class _StreamReplacementScreenState extends ConsumerState<StreamReplacementScree
                   ),
                 ),
               ),
-            ],
+            ], */
           ],
         ),
       ),

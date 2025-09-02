@@ -450,8 +450,16 @@
   "processingRequest": "Processing request...",
   "loadingStream": "Loading stream...",
   "rtspUrlHint": "Enter RTSP URL or YouTube link",
-  "replaceWorkflowWithStream": "Replace Prayer Workflow with Stream",
-  "replaceAppWorkflowWithCameraStream": "Replace the prayer flow with camera stream",
+  "replaceWorkflowWithStream": "Automatically display the camera stream",
+  "replaceAppWorkflowWithCameraStream": "The screen will automatically display the camera stream as soon as the camera starts recording; if it stops, the screen returns to the prayer times display",
   "streamError": "An error occurred while streaming",
-  "finish": "Finish"
+  "finish": "Finish",
+  "batteryOptimization":"Battery Optimization",
+  "batteryOptimizationDesc":"For prayer time alarms to work reliably, please disable battery optimization for this app.",
+  "openSettings":"Open Settings",
+  "batteryOptimizationWarning":"Battery optimization may prevent alarms from working reliably",
+  "schedulingAlarms":"Scheduling alarms...",
+  "permissionRequired":"Permissions required for alarm scheduling",
+  "alarmsSucessSchedule":"Prayer alarms scheduled successfully",
+  "alarmsScheduleFailure":"alarmsSucessSchedule"
 }

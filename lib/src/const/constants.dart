@@ -50,6 +50,7 @@ class TurnOnOffTvConstant {
   static const String kIsEventsSet = 'is_events_set';
   static const String kScheduleParamsKey = 'schedule_params_key';
   static const String kLastExecutedEventDate = 'last_executed_event_date';
+  static const String kBatteryOptimizationDisabledAtSchedule = 'battery_optimization_disabled_at_schedule';
 
   /// native methods calls
   static const String kNativeMethodsChannel = "nativeMethodsChannel";
