@@ -103,7 +103,7 @@ class ToggleScreenFeature {
         prefs.setInt(TurnOnOffTvConstant.kMinuteBeforeKey, beforeDelayMinutes),
         prefs.setInt(TurnOnOffTvConstant.kMinuteAfterKey, afterDelayMinutes),
         prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, true),
-        prefs.setBool('battery_optimization_disabled_at_schedule', isBatteryOptimizationDisabled),
+        prefs.setBool(TurnOnOffTvConstant.kBatteryOptimizationDisabledAtSchedule, isBatteryOptimizationDisabled),
       ]);
 
       logger.i(

@@ -20,9 +20,6 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
     final timeShiftManager = TimeShiftManager();
     final prefs = await SharedPreferences.getInstance();
     final isActive = await ToggleScreenFeature.getToggleFeatureState();
-
-    // Check battery optimization status
-    final isBatteryOptimizationDisabled = await BatteryOptimizationHelper.isBatteryOptimizationDisabled();
     return ScreenLockState(
       selectedTime:
           DateTime.now().add(Duration(hours: timeShiftManager.shift, minutes: timeShiftManager.shiftInMinutes)),
@@ -76,6 +73,12 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
 
       await ToggleScreenFeature.cancelAllScheduledTimers();
 
+      // Check if context is still mounted before using it
+      if (!context.mounted) {
+        logger.w('Context is no longer mounted, aborting saveSettings');
+        return;
+      }
+
       await ToggleScreenFeature.scheduleToggleScreen(
         isIshaFajrOnly,
         times,
@@ -91,6 +94,12 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(TurnOnOffTvConstant.kisFajrIshaOnly, isIshaFajrOnly);
 
+      // Check again before updating state, in case the async operations took time
+      if (!context.mounted) {
+        logger.w('Context is no longer mounted, skipping state update');
+        return;
+      }
+
       final currentState = state.value!;
       state = AsyncValue.data(currentState.copyWith(
         isActive: true,
@@ -98,7 +107,12 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
       ));
     } catch (e) {
       logger.e('Failed to save settings: $e');
-      state = AsyncValue.error(e, StackTrace.current);
+
+      // Check if context is mounted before setting error state
+      if (context.mounted) {
+        state = AsyncValue.error(e, StackTrace.current);
+      }
+
       rethrow;
     }
   }
