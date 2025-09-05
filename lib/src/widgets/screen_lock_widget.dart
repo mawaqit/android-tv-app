@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/services/permissions_manager.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
-import 'package:mawaqit/src/services/battery_optimization_helper.dart';
 import 'package:mawaqit/src/state_management/screen_lock/screen_lock_notifier.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -77,40 +78,48 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
       children: <Widget>[
         _buildToggleSwitch(context),
         if (value) _buildTimeConfiguration(context, times),
-        if (value) _buildBatteryOptimizationWarning(),
         SizedBox(height: 16),
         if (value) _buildSaveButton(context, times),
       ],
     );
   }
 
-  Widget _buildToggleSwitch(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      clipBehavior: Clip.antiAlias,
-      child: SwitchListTile(
-        autofocus: true,
-        secondary: const Icon(Icons.monitor, size: 35),
-        title: Text(S.of(context).screenLockMode),
-        value: value,
-        onChanged: (newValue) async {
-          setState(() {
-            value = newValue;
-          });
+Widget _buildToggleSwitch(BuildContext context) {
+  return Card(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    clipBehavior: Clip.antiAlias,
+    child: SwitchListTile(
+      autofocus: true,
+      secondary: const Icon(Icons.monitor, size: 35),
+      title: Text(S.of(context).screenLockMode),
+      value: value,
+      onChanged: (newValue) async {
+        setState(() {
+          value = newValue;
+        });
 
-          if (newValue) {
-            // When enabling, just update the state - don't schedule yet
-            await ToggleScreenFeature.toggleFeatureState(true);
-          } else {
-            // When disabling, cancel all existing timers
-            await ToggleScreenFeature.cancelAllScheduledTimers();
-            await ToggleScreenFeature.toggleFeatureState(false);
+        if (newValue) {
+          // When enabling, call battery optimization method
+          try {
+            await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
+                .invokeMethod('enableBatteryOptimization');
+            logger.i('Battery optimization enabled');
+          } catch (e) {
+            logger.e('Failed to enable battery optimization: $e');
           }
-        },
-      ),
-    );
-  }
+          
+          // Your existing code
+          await ToggleScreenFeature.toggleFeatureState(true);
+        } else {
+          // When disabling, just do your existing logic
+          await ToggleScreenFeature.cancelAllScheduledTimers();
+          await ToggleScreenFeature.toggleFeatureState(false);
+        }
+      },
+    ),
+  );
+}
 
   Widget _buildTimeConfiguration(BuildContext context, List<String> times) {
     int selectedMinuteBefore = ref.watch(screenLockNotifierProvider).maybeWhen(
@@ -163,41 +172,6 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBatteryOptimizationWarning() {
-    return FutureBuilder<bool>(
-      future: BatteryOptimizationHelper.isBatteryOptimizationDisabled(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && !snapshot.data!) {
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.orange.shade50,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.orange.shade200),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.warning_amber, color: Colors.orange),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    S.of(context).batteryOptimizationWarning,
-                    style: TextStyle(
-                      color: Colors.orange.shade800,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-        return SizedBox.shrink();
-      },
     );
   }
 
@@ -255,17 +229,6 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
                 setState(() {
                   _isSaving = true;
                 });
-
-                final permissionsGranted = await PermissionsManager.arePermissionsGranted();
-                if (!permissionsGranted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(S.of(context).permissionRequired),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
 
                 await ref.read(screenLockNotifierProvider.notifier).saveSettings(times, isIshaFajrOnly, context);
 

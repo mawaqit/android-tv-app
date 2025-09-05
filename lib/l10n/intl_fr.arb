@@ -423,12 +423,7 @@
   "replaceWorkflowWithStream": "Afficher le flux caméra automatiquement",
   "replaceAppWorkflowWithCameraStream": "L'écran va automatiquement afficher le flux de la caméra dès que la caméra commence à enregistrer, si elle s'arrête  l'écran revient à l'affichage des heures de prières",
   "streamError": "Une erreur est survenue lors du streaming",
-  "batteryOptimization": "Optimisation de la batterie",
-  "batteryOptimizationDesc": "Pour que les alarmes des horaires de prière fonctionnent de manière fiable, veuillez désactiver l’optimisation de la batterie pour cette application.",
-  "openSettings": "Ouvrir les paramètres",
-  "batteryOptimizationWarning": "L’optimisation de la batterie peut empêcher les alarmes de fonctionner de manière fiable",
-  "schedulingAlarms": "Planification des alarmes...",
-  "permissionRequired": "Autorisations requises pour la planification des alarmes",
+  "schedulingAlarms": "Programmation des heures d’activation/désactivation...",
   "alarmsSucessSchedule": "Alarmes de prière planifiées avec succès",
   "alarmsScheduleFailure": "Échec de la planification des alarmes"
 

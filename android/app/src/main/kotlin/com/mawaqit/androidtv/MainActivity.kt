@@ -64,6 +64,10 @@ class MainActivity : FlutterActivity() {
             val isSuccess = clearDataRestart()
             result.success(isSuccess)
           }
+          "enableBatteryOptimization" -> {
+            val isSuccess = enableBatteryOptimization()
+            result.success(isSuccess)
+          }
 
           "grantOnvoOverlayPermission" -> {
             val isSuccess = grantOnvoOverlayPermission()
@@ -263,6 +267,22 @@ class MainActivity : FlutterActivity() {
       processBuilder.command(
         "sh", "-c", """
                 pm clear com.mawaqit.androidtv
+            """.trimIndent()
+      )
+      val process = processBuilder.start()
+      val exitCode = process.waitFor()
+      exitCode == 0
+    } catch (e: Exception) {
+      e.printStackTrace()
+      false
+    }
+  }
+  private fun enableBatteryOptimization(): Boolean {
+    return try {
+      val processBuilder = ProcessBuilder()
+      processBuilder.command(
+        "sh", "-c", """
+                dumpsys deviceidle whitelist +com.mawaqit.androidtv
             """.trimIndent()
       )
       val process = processBuilder.start()

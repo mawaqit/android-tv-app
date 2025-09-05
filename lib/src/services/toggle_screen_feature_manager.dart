@@ -9,7 +9,6 @@ import 'package:mawaqit/src/domain/error/screen_on_off_exceptions.dart';
 import 'package:mawaqit/src/helpers/AppDate.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
 import 'package:mawaqit/src/services/background_work_managers/work_manager_services.dart';
-import 'package:mawaqit/src/services/battery_optimization_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TimerScheduleInfo {
@@ -62,22 +61,7 @@ class ToggleScreenFeature {
       bool isFajrIshaOnly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes,
       [BuildContext? context]) async {
     try {
-      // Check battery optimization first
-      final bool isBatteryOptimizationDisabled = await BatteryOptimizationHelper.isBatteryOptimizationDisabled();
-
-      if (!isBatteryOptimizationDisabled) {
-        logger.w('Battery optimization is enabled - alarms may not work reliably');
-
-        if (context != null) {
-          // Show warning dialog and optionally open settings
-          await BatteryOptimizationHelper.showBatteryOptimizationDialog(context);
-        } else {
-          logger.w('No context provided - cannot show battery optimization dialog');
-        }
-      } else {
-        logger.i('Battery optimization is disabled - alarms should work reliably');
-      }
-
+  
       // Cancel any existing timers before scheduling new ones
       await cancelAllScheduledTimers();
 
@@ -103,13 +87,11 @@ class ToggleScreenFeature {
         prefs.setInt(TurnOnOffTvConstant.kMinuteBeforeKey, beforeDelayMinutes),
         prefs.setInt(TurnOnOffTvConstant.kMinuteAfterKey, afterDelayMinutes),
         prefs.setBool(TurnOnOffTvConstant.kIsEventsSet, true),
-        prefs.setBool(TurnOnOffTvConstant.kBatteryOptimizationDisabledAtSchedule, isBatteryOptimizationDisabled),
       ]);
 
       logger.i(
           'Screen toggle scheduled successfully for ${daysToSchedule + 1} days in ${isFajrIshaOnly ? "Fajr/Isha only" : "all prayers"} mode');
-      logger.i(
-          'Battery optimization status: ${isBatteryOptimizationDisabled ? "DISABLED (good)" : "ENABLED (may cause issues)"}');
+
     } catch (e) {
       logger.e('Failed to schedule toggle screen: $e');
       throw ScheduleToggleScreenException(e.toString());
