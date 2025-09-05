@@ -31,7 +31,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
         child: Container(
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color:  Colors.black.withOpacity(.5) ,
+            color: Colors.black.withOpacity(.5),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -41,10 +41,10 @@ class HomeTimeWidget extends TimerRefreshWidget {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-                  color:  Color.lerp(Colors.black, mosqueManager.getColorTheme(), 0.9)!.withOpacity(.7),
+                  color: Color.lerp(Colors.black, mosqueManager.getColorTheme(), 0.9)!.withOpacity(.7),
                   backgroundBlendMode: BlendMode.screen,
                 ),
-                padding: EdgeInsets.symmetric(vertical: showOuterBackground ? 4.47.vw:2.5.vw, horizontal: 5.vw),
+                padding: EdgeInsets.symmetric(vertical: showOuterBackground ? 4.47.vw : 2.5.vw, horizontal: 5.vw),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,

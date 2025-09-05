@@ -115,7 +115,6 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
       rethrow;
     }
   }
-
 }
 
 final screenLockNotifierProvider = AsyncNotifierProvider<ScreenLockNotifier, ScreenLockState>(ScreenLockNotifier.new);

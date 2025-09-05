@@ -84,42 +84,41 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
     );
   }
 
-Widget _buildToggleSwitch(BuildContext context) {
-  return Card(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    clipBehavior: Clip.antiAlias,
-    child: SwitchListTile(
-      autofocus: true,
-      secondary: const Icon(Icons.monitor, size: 35),
-      title: Text(S.of(context).screenLockMode),
-      value: value,
-      onChanged: (newValue) async {
-        setState(() {
-          value = newValue;
-        });
+  Widget _buildToggleSwitch(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      clipBehavior: Clip.antiAlias,
+      child: SwitchListTile(
+        autofocus: true,
+        secondary: const Icon(Icons.monitor, size: 35),
+        title: Text(S.of(context).screenLockMode),
+        value: value,
+        onChanged: (newValue) async {
+          setState(() {
+            value = newValue;
+          });
 
-        if (newValue) {
-          // When enabling, call battery optimization method
-          try {
-            await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel)
-                .invokeMethod('enableBatteryOptimization');
-            logger.i('Battery optimization enabled');
-          } catch (e) {
-            logger.e('Failed to enable battery optimization: $e');
+          if (newValue) {
+            // When enabling, call battery optimization method
+            try {
+              await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod('enableBatteryOptimization');
+              logger.i('Battery optimization enabled');
+            } catch (e) {
+              logger.e('Failed to enable battery optimization: $e');
+            }
+
+            // Your existing code
+            await ToggleScreenFeature.toggleFeatureState(true);
+          } else {
+            // When disabling, just do your existing logic
+            await ToggleScreenFeature.cancelAllScheduledTimers();
+            await ToggleScreenFeature.toggleFeatureState(false);
           }
-          
-          // Your existing code
-          await ToggleScreenFeature.toggleFeatureState(true);
-        } else {
-          // When disabling, just do your existing logic
-          await ToggleScreenFeature.cancelAllScheduledTimers();
-          await ToggleScreenFeature.toggleFeatureState(false);
-        }
-      },
-    ),
-  );
-}
+        },
+      ),
+    );
+  }
 
   Widget _buildTimeConfiguration(BuildContext context, List<String> times) {
     int selectedMinuteBefore = ref.watch(screenLockNotifierProvider).maybeWhen(

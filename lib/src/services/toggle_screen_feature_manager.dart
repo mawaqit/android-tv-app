@@ -61,7 +61,6 @@ class ToggleScreenFeature {
       bool isFajrIshaOnly, List<String> timeStrings, int beforeDelayMinutes, int afterDelayMinutes,
       [BuildContext? context]) async {
     try {
-  
       // Cancel any existing timers before scheduling new ones
       await cancelAllScheduledTimers();
 
@@ -91,7 +90,6 @@ class ToggleScreenFeature {
 
       logger.i(
           'Screen toggle scheduled successfully for ${daysToSchedule + 1} days in ${isFajrIshaOnly ? "Fajr/Isha only" : "all prayers"} mode');
-
     } catch (e) {
       logger.e('Failed to schedule toggle screen: $e');
       throw ScheduleToggleScreenException(e.toString());
