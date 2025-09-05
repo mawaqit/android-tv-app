@@ -64,10 +64,7 @@ class MainActivity : FlutterActivity() {
             val isSuccess = clearDataRestart()
             result.success(isSuccess)
           }
-          "enableBatteryOptimization" -> {
-            val isSuccess = enableBatteryOptimization()
-            result.success(isSuccess)
-          }
+          "enableBatteryOptimization" -> enableBatteryOptimization(call, result)
 
           "grantOnvoOverlayPermission" -> {
             val isSuccess = grantOnvoOverlayPermission()
@@ -277,24 +274,20 @@ class MainActivity : FlutterActivity() {
       false
     }
   }
-  private fun enableBatteryOptimization(): Boolean {
-    return try {
-      val processBuilder = ProcessBuilder()
-      processBuilder.command(
-        "sh", "-c", """
-                dumpsys deviceidle whitelist +com.mawaqit.androidtv
-            """.trimIndent()
-      )
-      val process = processBuilder.start()
-      val exitCode = process.waitFor()
-      exitCode == 0
-    } catch (e: Exception) {
-      e.printStackTrace()
-      false
+
+  private fun enableBatteryOptimization(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+      try {
+        val commands = listOf(
+          "dumpsys deviceidle whitelist +com.mawaqit.androidtv",
+
+          )
+        executeCommand(commands, result) // Lock the device
+      } catch (e: Exception) {
+        handleCommandException(e, result)
+      }
     }
   }
-
-
   private fun grantFineLocationPermission(call: MethodCall, result: MethodChannel.Result) {
     AsyncTask.execute {
       try {
