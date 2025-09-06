@@ -255,31 +255,22 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
     required void Function(VoidCallback fn) setState,
     bool autofocus = false,
   }) {
-    return InkWell(
-      autofocus: autofocus,
-      onTap: () {
-        setState(() {
-          selectedMoshafType = value;
-        });
-        ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(value);
-      },
-      child: RadioListTile<MoshafType>(
-        title: Text(
-          title,
-          style: TextStyle(
-            color: selectedMoshafType == value ? Colors.white : null,
-          ),
+    return RadioListTile<MoshafType>(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: selectedMoshafType == value ? Colors.white : null,
         ),
-        value: value,
-        selected: selectedMoshafType == value,
-        groupValue: selectedMoshafType,
-        onChanged: (MoshafType? selected) {
-          setState(() {
-            selectedMoshafType = selected!;
-          });
-          ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(selectedMoshafType);
-        },
       ),
+      value: value,
+      selected: selectedMoshafType == value,
+      groupValue: selectedMoshafType,
+      onChanged: (MoshafType? selected) {
+        setState(() {
+          selectedMoshafType = selected!;
+        });
+        ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(selectedMoshafType);
+      },
     );
   }
 
