@@ -16,9 +16,11 @@ class MosqueInformationWidget extends StatelessWidget {
     String phoneNumber = "${mosque?.phone != null ? mosque!.phone : ""} ";
     String association = "${mosque?.association != null ? mosque?.association : ""} ";
     String website = "${mosque?.site != null && mosque!.site!.isNotEmpty ? mosque.site : ""} ";
+    String email = "${mosque?.email != null && mosque!.email!.isNotEmpty ? mosque.email : ""} ";
 
     log('Mosque phone: ${mosque?.phone}');
     log('Mosque website: ${mosque?.site}');
+    log('Mosque email: ${mosque?.email}');
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.5.vh, horizontal: 2.w),
@@ -60,6 +62,23 @@ class MosqueInformationWidget extends StatelessWidget {
             SizedBox(width: 1.w),
             Text(
               website,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+          if (mosque.email != null && mosque.email!.isNotEmpty) ...[
+            SizedBox(width: 2.w),
+            Icon(
+              Icons.email,
+              color: Colors.white,
+              size: 12.sp,
+            ),
+            SizedBox(width: 1.w),
+            Text(
+              email,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 10.sp,
