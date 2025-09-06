@@ -197,26 +197,24 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
   }
 
   Widget _buildChooseDownloadMoshaf(BuildContext context) {
-    return Focus(
-      focusNode: _dialogFocusNode,
-      child: AlertDialog(
+    return AlertDialog(
         title: Text(S.of(context).chooseQuranType),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildMoshafTypeRadio(
               context,
-              title: S.of(context).warsh,
-              value: MoshafType.warsh,
-              setState: setState,
-              autofocus: selectedMoshafType == MoshafType.warsh,
-            ),
-            _buildMoshafTypeRadio(
-              context,
               title: S.of(context).hafs,
               value: MoshafType.hafs,
               setState: setState,
               autofocus: selectedMoshafType == MoshafType.hafs,
+            ),
+            _buildMoshafTypeRadio(
+              context,
+              title: S.of(context).warsh,
+              value: MoshafType.warsh,
+              setState: setState,
+              autofocus: selectedMoshafType == MoshafType.warsh,
             ),
           ],
         ),
@@ -247,8 +245,7 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
             child: Text(S.of(context).download),
           ),
         ],
-      ),
-    );
+      );
   }
 
   Widget _buildMoshafTypeRadio(
@@ -258,17 +255,31 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
     required void Function(VoidCallback fn) setState,
     bool autofocus = false,
   }) {
-    return RadioListTile<MoshafType>(
-      title: Text(title),
-      value: value,
+    return InkWell(
       autofocus: autofocus,
-      groupValue: selectedMoshafType,
-      onChanged: (MoshafType? selected) {
+      onTap: () {
         setState(() {
-          selectedMoshafType = selected!;
+          selectedMoshafType = value;
         });
-        ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(selectedMoshafType);
+        ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(value);
       },
+      child: RadioListTile<MoshafType>(
+        title: Text(
+          title,
+          style: TextStyle(
+            color: selectedMoshafType == value ? Colors.white : null,
+          ),
+        ),
+        value: value,
+        selected: selectedMoshafType == value,
+        groupValue: selectedMoshafType,
+        onChanged: (MoshafType? selected) {
+          setState(() {
+            selectedMoshafType = selected!;
+          });
+          ref.read(moshafTypeNotifierProvider.notifier).selectMoshafType(selectedMoshafType);
+        },
+      ),
     );
   }
 
