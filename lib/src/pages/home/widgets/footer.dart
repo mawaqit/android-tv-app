@@ -109,7 +109,7 @@ class Footer extends StatelessWidget {
             "ID ${mosque.id}",
             textDirection: TextDirection.ltr,
             style: TextStyle(
-              fontSize: 4.5.sp,
+              fontSize: 5.5.sp,
               color: Colors.white,
               fontWeight: FontWeight.bold,
               shadows: kAfterAdhanTextShadow,
