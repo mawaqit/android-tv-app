@@ -368,7 +368,6 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             ),
                             onPressed: () {
                               ref.read(quranPlayerNotifierProvider.notifier).repeat();
-                              repeatFocusNode.requestFocus();
                             },
                           ),
                         ),
@@ -408,7 +407,6 @@ class _QuranPlayerState extends ConsumerState<_QuranPlayer> {
                             ),
                             onPressed: () {
                               ref.read(quranPlayerNotifierProvider.notifier).shuffle();
-                              shuffleFocusNode.requestFocus();
                             },
                           ),
                         ),
