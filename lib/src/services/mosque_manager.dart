@@ -87,6 +87,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   int minuteBefore = 0;
   int minuteAfter = 0;
   bool isIshaFajrOnly = false;
+  static DateTime? _lastPrayerScheduleTime;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -219,11 +220,22 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription = timesStream.listen(
       (e) async {
         times = e;
-        // Obtain an instance of the background service.
+
+        // Only reschedule prayers once every 6 hours
+        final now = DateTime.now();
+        if (_lastPrayerScheduleTime != null && now.difference(_lastPrayerScheduleTime!).inHours < 6) {
+          logger.i(
+              'Prayer scheduling & on-off skipped - scheduled ${now.difference(_lastPrayerScheduleTime!).inHours} hours ago');
+          notifyListeners();
+          return;
+        }
+
+        logger.i('Prayer times received - scheduling prayers');
+        _lastPrayerScheduleTime = now;
+
         final service = FlutterBackgroundService();
         final permissionsGranted = await PermissionsManager.arePermissionsGranted();
 
-        // Delegate prayer scheduling to PrayerScheduleService.
         if (permissionsGranted) {
           await PrayerScheduleService.schedulePrayerTasks(
             e,
@@ -233,6 +245,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
             service,
           );
         }
+        await ToggleScreenFeature.checkAndRescheduleIfNeeded();
+
         notifyListeners();
       },
       onError: onItemError,

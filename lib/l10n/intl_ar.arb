@@ -440,6 +440,6 @@
   "replaceAppWorkflowWithCameraStream": "سيعرض الشاشة بث الكاميرا تلقائيًا بمجرد أن تبدأ الكاميرا في التسجيل، وإذا توقفت يعود العرض إلى مواقيت الصلاة",
   "streamError": "حدث خطأ أثناء البث",
   "schedulingAlarms": "جدولة أوقات التشغيل/الإيقاف...",
-  "alarmsSucessSchedule": "تمت جدولة تنبيهات الصلاة بنجاح",
-  "alarmsScheduleFailure": "فشل في جدولة التنبيهات"
+  "alarmsSucessSchedule":"تمت جدولة مشغلات التشغيل/الإيقاف بنجاح",
+  "alarmsScheduleFailure":"فشل في جدولة مشغلات التشغيل/الإيقاف"
 }

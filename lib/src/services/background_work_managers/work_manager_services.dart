@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 @pragma('vm:entry-point')
 void prayerAlarmCallback(int id) async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   print('🔔 PRAYER ALARM CALLBACK STARTED - ID: $id at ${DateTime.now()}');
 
   try {
@@ -28,7 +28,7 @@ void prayerAlarmCallback(int id) async {
       print('📿 Prayer task triggered successfully - ID: $id');
       print('📿 Prayer data: $inputData');
       service.invoke('prayerTime', inputData);
-      
+
       // Record execution for debugging
       await _recordAlarmExecution('PRAYER', id);
     } else {
@@ -38,111 +38,111 @@ void prayerAlarmCallback(int id) async {
     print('💥 Prayer alarm callback FAILED - ID: $id, Error: $e');
     print('Stack trace: $stackTrace');
   }
-  
+
   print('✅ PRAYER ALARM CALLBACK COMPLETED - ID: $id');
 }
 
 @pragma('vm:entry-point')
 void screenOnCallback(int id) async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   print('🔔 SCREEN ON CALLBACK STARTED - ID: $id at ${DateTime.now()}');
 
   try {
     print('📱 Attempting to turn screen ON...');
     await ScreenControl.toggleBoxScreenOn();
     print('📱 Screen turned ON successfully');
-    
+
     ToggleScreenFeature.recordEventExecution();
     print('📊 Event execution recorded');
-    
+
     // Record execution for debugging
     await _recordAlarmExecution('SCREEN_ON_BOX', id);
-    
+
     print('✅ Screen ON completed successfully - ID: $id');
   } catch (e, stackTrace) {
     print('💥 Screen ON FAILED - ID: $id, Error: $e');
     print('Stack trace: $stackTrace');
   }
-  
+
   print('✅ SCREEN ON CALLBACK COMPLETED - ID: $id');
 }
 
 @pragma('vm:entry-point')
 void screenOnTabletCallback(int id) async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   print('🔔 SCREEN ON TABLET CALLBACK STARTED - ID: $id at ${DateTime.now()}');
 
   try {
     print('📱 Attempting to turn tablet screen ON...');
     await ScreenControl.toggleTabletScreenOn();
     print('📱 Tablet screen turned ON successfully');
-    
+
     ToggleScreenFeature.recordEventExecution();
     print('📊 Event execution recorded');
-    
+
     // Record execution for debugging
     await _recordAlarmExecution('SCREEN_ON_TABLET', id);
-    
+
     print('✅ Tablet screen ON completed successfully - ID: $id');
   } catch (e, stackTrace) {
     print('💥 Tablet screen ON FAILED - ID: $id, Error: $e');
     print('Stack trace: $stackTrace');
   }
-  
+
   print('✅ SCREEN ON TABLET CALLBACK COMPLETED - ID: $id');
 }
 
 @pragma('vm:entry-point')
 void screenOffCallback(int id) async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   print('🔔 SCREEN OFF CALLBACK STARTED - ID: $id at ${DateTime.now()}');
 
   try {
     print('📱 Attempting to turn screen OFF...');
     await ScreenControl.toggleBoxScreenOff();
     print('📱 Screen turned OFF successfully');
-    
+
     ToggleScreenFeature.recordEventExecution();
     print('📊 Event execution recorded');
-    
+
     // Record execution for debugging
     await _recordAlarmExecution('SCREEN_OFF_BOX', id);
-    
+
     print('✅ Screen OFF completed successfully - ID: $id');
   } catch (e, stackTrace) {
     print('💥 Screen OFF FAILED - ID: $id, Error: $e');
     print('Stack trace: $stackTrace');
   }
-  
+
   print('✅ SCREEN OFF CALLBACK COMPLETED - ID: $id');
 }
 
 @pragma('vm:entry-point')
 void screenOffTabletCallback(int id) async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   print('🔔 SCREEN OFF TABLET CALLBACK STARTED - ID: $id at ${DateTime.now()}');
 
   try {
     print('📱 Attempting to turn tablet screen OFF...');
     await ScreenControl.toggleTabletScreenOff();
     print('📱 Tablet screen turned OFF successfully');
-    
+
     ToggleScreenFeature.recordEventExecution();
     print('📊 Event execution recorded');
-    
+
     // Record execution for debugging
     await _recordAlarmExecution('SCREEN_OFF_TABLET', id);
-    
+
     print('✅ Tablet screen OFF completed successfully - ID: $id');
   } catch (e, stackTrace) {
     print('💥 Tablet screen OFF FAILED - ID: $id, Error: $e');
     print('Stack trace: $stackTrace');
   }
-  
+
   print('✅ SCREEN OFF TABLET CALLBACK COMPLETED - ID: $id');
 }
 
@@ -168,7 +168,7 @@ class WorkManagerService {
     if (_isInitialized) return;
 
     print('🚀 Initializing AlarmManager...');
-    
+
     try {
       _isInitialized = await AndroidAlarmManager.initialize();
 
@@ -184,7 +184,7 @@ class WorkManagerService {
   }
 
   static int _alarmCounter = 0;
-  
+
   static int _generateUniqueAlarmId() {
     final baseId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     final uniqueId = (baseId + (++_alarmCounter)) % 2147483647;
@@ -193,24 +193,9 @@ class WorkManagerService {
   }
 
   @pragma('vm:entry-point')
-  void backgroundCheckCallback(int id) async {
-    WidgetsFlutterBinding.ensureInitialized();
-
-    print('🔔 BACKGROUND CHECK CALLBACK STARTED - ID: $id at ${DateTime.now()}');
-    
-    try {
-      await ToggleScreenFeature.backgroundCheckCallback();
-      print('✅ Background check completed successfully - ID: $id');
-    } catch (e, stackTrace) {
-      print('💥 Background check FAILED - ID: $id, Error: $e');
-      print('Stack trace: $stackTrace');
-    }
-  }
-
-  @pragma('vm:entry-point')
   static Future<void> registerPrayerTask(String uniqueId, Map<String, dynamic> inputData, Duration initialDelay) async {
     print('📅 Starting to register prayer task - UniqueID: $uniqueId');
-    
+
     try {
       final int alarmId = _generateUniqueAlarmId();
       final scheduledTime = DateTime.now().add(initialDelay);
@@ -225,7 +210,7 @@ class WorkManagerService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('alarm_data_$alarmId', jsonEncode(inputData));
       await prefs.setString('id_mapping_$uniqueId', alarmId.toString());
-      
+
       // Store scheduling info for debugging
       await prefs.setString('alarm_scheduled_$alarmId', scheduledTime.toIso8601String());
 
@@ -256,7 +241,7 @@ class WorkManagerService {
   @pragma('vm:entry-point')
   static Future<void> registerScreenTask(String uniqueId, String taskName, Duration initialDelay, bool isBox) async {
     print('📱 Starting to register screen task - UniqueID: $uniqueId, Task: $taskName');
-    
+
     try {
       final int alarmId = _generateUniqueAlarmId();
       final scheduledTime = DateTime.now().add(initialDelay);
@@ -271,7 +256,7 @@ class WorkManagerService {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('screen_task_id_mapping_$uniqueId', alarmId.toString());
-      
+
       // Store scheduling info for debugging
       await prefs.setString('alarm_scheduled_$alarmId', scheduledTime.toIso8601String());
       await prefs.setString('alarm_task_$alarmId', taskName);
@@ -307,7 +292,7 @@ class WorkManagerService {
   @pragma('vm:entry-point')
   static Future<void> cancelTask(String uniqueId) async {
     print('🗑️ Starting to cancel task - UniqueID: $uniqueId');
-    
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final alarmIdString = prefs.getString('id_mapping_$uniqueId');
@@ -315,7 +300,7 @@ class WorkManagerService {
       if (alarmIdString != null) {
         final int alarmId = int.parse(alarmIdString);
         print('🎯 Found alarm ID: $alarmId for uniqueId: $uniqueId');
-        
+
         final bool success = await AndroidAlarmManager.cancel(alarmId);
 
         if (success) {
@@ -329,7 +314,7 @@ class WorkManagerService {
         await prefs.remove('id_mapping_$uniqueId');
         await prefs.remove('alarm_scheduled_$alarmId');
         await prefs.remove('alarm_task_$alarmId');
-        
+
         print('🧹 Cleaned up alarm data for ID: $alarmId');
       } else {
         print('⚠️ No alarm ID found for uniqueId: $uniqueId');
@@ -346,18 +331,18 @@ class WorkManagerService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final keys = prefs.getKeys();
-      
+
       print('📊 ALARM EXECUTION HISTORY:');
-      
+
       for (final key in keys) {
         if (key.startsWith('alarm_execution_')) {
           final value = prefs.getString(key);
           print('   $key: $value');
         }
       }
-      
+
       print('📋 ALARM SCHEDULING HISTORY:');
-      
+
       for (final key in keys) {
         if (key.startsWith('alarm_scheduled_')) {
           final value = prefs.getString(key);

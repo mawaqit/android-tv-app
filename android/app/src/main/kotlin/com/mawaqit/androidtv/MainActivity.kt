@@ -65,7 +65,7 @@ class MainActivity : FlutterActivity() {
             result.success(isSuccess)
           }
           "enableBatteryOptimization" -> enableBatteryOptimization(call, result)
-
+          "DisableDozeMode" -> disableDozeMode(call, result)
           "grantOnvoOverlayPermission" -> {
             val isSuccess = grantOnvoOverlayPermission()
             result.success(isSuccess)
@@ -281,6 +281,18 @@ class MainActivity : FlutterActivity() {
         val commands = listOf(
           "dumpsys deviceidle whitelist +com.mawaqit.androidtv",
 
+          )
+        executeCommand(commands, result) // Lock the device
+      } catch (e: Exception) {
+        handleCommandException(e, result)
+      }
+    }
+  }
+  private fun disableDozeMode(call: MethodCall, result: MethodChannel.Result) {
+    AsyncTask.execute {
+      try {
+        val commands = listOf(
+          "dumpsys deviceidle disable",
           )
         executeCommand(commands, result) // Lock the device
       } catch (e: Exception) {

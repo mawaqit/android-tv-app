@@ -80,7 +80,6 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
 
       await ToggleScreenFeature.scheduleToggleScreen(
         isIshaFajrOnly,
-        times,
         state.value!.selectedMinuteBefore,
         state.value!.selectedMinuteAfter,
         context,

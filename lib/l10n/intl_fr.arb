@@ -424,7 +424,7 @@
   "replaceAppWorkflowWithCameraStream": "L'écran va automatiquement afficher le flux de la caméra dès que la caméra commence à enregistrer, si elle s'arrête  l'écran revient à l'affichage des heures de prières",
   "streamError": "Une erreur est survenue lors du streaming",
   "schedulingAlarms": "Programmation des heures d’activation/désactivation...",
-  "alarmsSucessSchedule": "Alarmes de prière planifiées avec succès",
-  "alarmsScheduleFailure": "Échec de la planification des alarmes"
+  "alarmsSucessSchedule":"Déclencheurs marche/arrêt programmés avec succès",
+  "alarmsScheduleFailure":"Échec de la programmation des déclencheurs marche/arrêt"
 
 }

@@ -104,6 +104,9 @@ class __TimePickerState extends ConsumerState<_TimePicker> {
             try {
               await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod('enableBatteryOptimization');
               logger.i('Battery optimization enabled');
+
+              await MethodChannel(TurnOnOffTvConstant.kNativeMethodsChannel).invokeMethod('disableDozeMode');
+              logger.i('Doze mode disabled');
             } catch (e) {
               logger.e('Failed to enable battery optimization: $e');
             }

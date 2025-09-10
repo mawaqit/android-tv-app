@@ -455,6 +455,6 @@
   "streamError": "An error occurred while streaming",
   "finish": "Finish",
   "schedulingAlarms":"Scheduling on/off times...",
-  "alarmsSucessSchedule":"Prayer alarms scheduled successfully",
-  "alarmsScheduleFailure":"alarmsSucessSchedule"
+  "alarmsSucessSchedule":"On/Off triggers scheduled successfully",
+  "alarmsScheduleFailure":"Failed to schedule On/Off triggers"
 }
