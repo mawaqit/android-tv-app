@@ -5,7 +5,6 @@ import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -53,52 +52,12 @@ import 'package:mawaqit/src/routes/route_generator.dart';
 
 final logger = Logger();
 
-/// Set up global error handlers to prevent app crashes
-void _setupGlobalErrorHandlers() {
-  // Handle Flutter framework errors
-  FlutterError.onError = (FlutterErrorDetails details) {
-    // Log the error
-    developer.log(
-      'Flutter Error: ${details.exception}',
-      error: details.exception,
-      stackTrace: details.stack,
-    );
-
-    // Send to crash reporting
-    CrashlyticsWrapper.sendException(details.exception, details.stack ?? StackTrace.current);
-
-    // In debug mode, still show the red screen for development
-    if (kDebugMode) {
-      FlutterError.dumpErrorToConsole(details);
-    }
-  };
-
-  // Handle platform/Dart errors not caught by Flutter
-  PlatformDispatcher.instance.onError = (error, stack) {
-    // Log the error
-    developer.log(
-      'Platform Error: $error',
-      error: error,
-      stackTrace: stack,
-    );
-
-    // Send to crash reporting
-    CrashlyticsWrapper.sendException(error, stack);
-
-    // Return true to indicate the error was handled
-    return true;
-  };
-}
-
 @pragma("vm:entry-point")
 Future<void> main() async {
   await CrashlyticsWrapper.init(
     () async {
       try {
         WidgetsFlutterBinding.ensureInitialized();
-
-        // Set up global error handlers
-        _setupGlobalErrorHandlers();
 
         final firebaseOptions = FirebaseOptions(
           apiKey: const String.fromEnvironment('mawaqit.firebase.api_key'),
