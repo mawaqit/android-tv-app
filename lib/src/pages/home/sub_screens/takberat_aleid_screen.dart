@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mawaqit/const/resource.dart';
 import 'package:mawaqit/i18n/l10n.dart';
 import 'package:mawaqit/src/pages/home/widgets/AboveSalahBar.dart';
 import 'package:mawaqit/src/widgets/display_text_widget.dart';
@@ -43,20 +44,28 @@ class _TakberatAleidScreenState extends State<TakberatAleidScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        children: [
-          AboveSalahBar(),
-          Expanded(
-            child: DisplayTextWidget(
-              title: S.of(context).eidMubarak,
-              translatedText: S.of(context).takbeerAleidText,
-              mainAxisAlignment: MainAxisAlignment.start,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(R.ASSETS_BACKGROUNDS_ISLAMIC_CONTENT_BACKGROUND_WEBP),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          children: [
+            AboveSalahBar(),
+            Expanded(
+              child: DisplayTextWidget(
+                title: S.of(context).eidMubarak,
+                translatedText: S.of(context).takbeerAleidText,
+                mainAxisAlignment: MainAxisAlignment.start,
+              ),
             ),
-          ),
-          ResponsiveMiniSalahBarWidget(),
-        ],
+            ResponsiveMiniSalahBarWidget(),
+          ],
+        ),
       ),
     );
   }
