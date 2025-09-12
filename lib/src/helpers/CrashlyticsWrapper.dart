@@ -13,14 +13,14 @@ class CrashlyticsWrapper {
   static init(FutureOr<void>? Function() appRunner) async {
     await Sentry.init(
       (options) async {
-        options.dsn = kSentryDns;
+        options.dsn = "https://5cfba6c6f6374d4abcac5a22f8adff61@o1075739.ingest.us.sentry.io/4504947427901440";
 
         final info = await PackageInfo.fromPlatform();
         final prefs = UserPreferencesManager();
         await prefs.init();
 
         options.release = 'androidtv@${info.version}';
-        if (prefs.forceStaging) options.environment = 'staging';
+        options.environment = 'debug';
       },
       appRunner: appRunner,
     );

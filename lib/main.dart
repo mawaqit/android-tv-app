@@ -128,7 +128,7 @@ Future<void> _safelyInitializeBackgroundServices() async {
     }
 
     developer.log('Starting background services initialization');
-
+/* 
     // Initialize permissions using the PermissionsManager
     try {
       await PermissionsManager.initializePermissions();
@@ -136,7 +136,7 @@ Future<void> _safelyInitializeBackgroundServices() async {
     } catch (e) {
       developer.log('Permissions initialization error', error: e);
     }
-
+ */
     try {
       await WorkManagerService.initialize();
       developer.log('WorkManagerService initialized successfully');

@@ -30,6 +30,7 @@ import android.os.Looper
 import android.os.Handler
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
+import android.app.AlarmManager
 
 class MainActivity : FlutterActivity() {
   private lateinit var mAdminComponentName: ComponentName
@@ -70,7 +71,26 @@ class MainActivity : FlutterActivity() {
             val isSuccess = grantOnvoOverlayPermission()
             result.success(isSuccess)
           }
-
+          "requestExactAlarmPermission" -> {
+            if (VERSION.SDK_INT >= VERSION_CODES.S) {
+              val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                data = Uri.fromParts("package", "com.mawaqit.androidtv", null)
+              }
+              startActivity(intent)
+              result.success(true)
+            } else {
+              result.success(true)
+            }
+          }
+          "checkExactAlarmPermission" -> {
+              val canSchedule = if (VERSION.SDK_INT >= VERSION_CODES.S) {
+                val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                alarmManager.canScheduleExactAlarms()
+              } else {
+                true
+              }
+              result.success(canSchedule)
+            }
           "installApk" -> {
             val filePath = call.argument<String>("filePath")
             if (filePath != null) {
