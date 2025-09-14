@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Automatycznie wyświetlaj strumień aparatu",
   "replaceAppWorkflowWithCameraStream": "Ekran wyświetli automatycznie strumień aparatu po rozpoczęciu nagrywania kamery; jeśli się zatrzyma, ekran powraca do wyświetlania czasów modlitwy",
   "streamError": "Wystąpił błąd podczas przesyłania strumieniowego",
-  "finish": "Zakończ"
+  "finish": "Zakończ",
+  "schedulingAlarms": "Planowanie czasów włączenia/wyłączenia...",
+  "alarmsSucessSchedule": "Wyzwalacze Włączone/Wyłączone zaplanowane pomyślnie",
+  "alarmsScheduleFailure": "Nie udało się zaplanować wyzwalaczy wł./wyłącz"
 }
