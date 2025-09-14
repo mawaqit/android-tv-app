@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Automatisch de camera stream weergeven",
   "replaceAppWorkflowWithCameraStream": "Het scherm geeft de camera stream automatisch weer zodra de camera opneemt; als het stopt, keert het scherm terug naar de gebedstijden",
   "streamError": "Er is een fout opgetreden tijdens het streamen",
-  "finish": "Beëindigen"
+  "finish": "Beëindigen",
+  "schedulingAlarms": "Aan/uit plannen...",
+  "alarmsSucessSchedule": "Aan/Uit triggers succesvol gepland",
+  "alarmsScheduleFailure": "Het inplannen van triggers Aan/Uit mislukt"
 }
