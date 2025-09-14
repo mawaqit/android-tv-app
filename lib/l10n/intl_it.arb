@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Mostra automaticamente il flusso della fotocamera",
   "replaceAppWorkflowWithCameraStream": "Lo schermo visualizzerà automaticamente il flusso di telecamere non appena la telecamera inizierà la registrazione; se si interrompe, lo schermo ritorna alla visualizzazione dei tempi di preghiera",
   "streamError": "Si è verificato un errore nello streaming",
-  "finish": "Termina"
+  "finish": "Termina",
+  "schedulingAlarms": "Pianificazione dei tempi on/off...",
+  "alarmsSucessSchedule": "Attiva/disattivazione programmata con successo",
+  "alarmsScheduleFailure": "Impossibile pianificare i trigger On/Off"
 }
