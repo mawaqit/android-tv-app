@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Afficher automatiquement le flux de la caméra",
   "replaceAppWorkflowWithCameraStream": "L'écran affichera automatiquement le flux de la caméra dès que la caméra commencera à enregistrer ; si elle s'arrête, l'écran revient aux heures de prière affichées",
   "streamError": "Une erreur est survenue lors du streaming",
-  "finish": "Terminer"
+  "finish": "Terminer",
+  "schedulingAlarms": "Planification on/off times...",
+  "alarmsSucessSchedule": "triggers On/Off programmés avec succès",
+  "alarmsScheduleFailure": "Échec de la planification des déclencheurs On/Off"
 }
