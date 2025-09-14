@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Automatisk vis kamerastrømmen",
   "replaceAppWorkflowWithCameraStream": "Skjermen viser kameraet automatisk når kameraet starter opptak; Hvis det stopper, vil skjermen gå tilbake til bønn tiden vises",
   "streamError": "Det oppstod en feil under strømmingen",
-  "finish": "Fullfør"
+  "finish": "Fullfør",
+  "schedulingAlarms": "Planlegger av/på tip...",
+  "alarmsSucessSchedule": "På/Av utløsere planlagt",
+  "alarmsScheduleFailure": "Kan ikke planlegge On/Off triggere"
 }
