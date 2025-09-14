@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "عرض تدفق الكاميرا تلقائياً",
   "replaceAppWorkflowWithCameraStream": "ستعرض الشاشة تلقائياً تدفق الكاميرا بمجرد بدء تسجيل الكاميرا؛ إذا توقفت، ترجع الشاشة إلى عرض أوقات الصلاة",
   "streamError": "حدث خطأ أثناء البث",
-  "finish": "إنهاء"
+  "finish": "إنهاء",
+  "schedulingAlarms": "جدولة تشغيل/إيقاف تشغيل...",
+  "alarmsSucessSchedule": "تشغيل/إيقاف تشغيل المجدول بنجاح",
+  "alarmsScheduleFailure": "فشل في جدولة تشغيل/إيقاف تشغيل"
 }
