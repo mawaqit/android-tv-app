@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Mostrar automáticamente el flujo de la cámara",
   "replaceAppWorkflowWithCameraStream": "La pantalla mostrará automáticamente la corriente de la cámara tan pronto como la cámara comience a grabar; si se detiene, la pantalla vuelve a la hora de oración",
   "streamError": "Se ha producido un error al transmitir",
-  "finish": "Finalizar"
+  "finish": "Finalizar",
+  "schedulingAlarms": "Programando tiempos de encendido/apagado...",
+  "alarmsSucessSchedule": "Activadores de encendido/apagado programados correctamente",
+  "alarmsScheduleFailure": "No se pudo programar los desencendido/apagado"
 }
