@@ -350,56 +350,58 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       );
                     },
                   ),
-                  _SettingItem(
-                    title: S.of(context).checkForUpdates,
-                    subtitle: S.of(context).checkForNewVersion,
-                    icon: ref.watch(manualUpdateNotifierProvider).isLoading
-                        ? const SizedBox(
-                            width: 35,
-                            height: 35,
-                            child: CircularProgressIndicator(),
-                          )
-                        : const Icon(Icons.system_update, size: 35),
-                    onTap: ref.watch(manualUpdateNotifierProvider).isLoading
-                        ? null
-                        : () async {
-                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
-                            ref.watch(connectivityProvider).maybeWhen(
-                              orElse: () {
-                                showCheckInternetDialog(
-                                  context: context,
-                                  onRetry: () {
-                                    AppRouter.pop();
-                                  },
-                                  title: checkInternet,
-                                  content: S.of(context).checkInternetUpdate,
-                                );
-                              },
-                              data: (isConnectedToInternet) async {
-                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
-                                  showCheckInternetDialog(
-                                    context: context,
-                                    onRetry: () {
-                                      AppRouter.pop();
-                                    },
-                                    title: checkInternet,
-                                    content: S.of(context).checkInternetUpdate,
-                                  );
-                                } else {
-                                  var softwareFuture = await PackageInfo.fromPlatform();
-                                  final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
-                                        orElse: () => false,
-                                        data: (value) => value.isRootedDevice,
+                  timeShiftManager.deviceModel != "MAWABOX"
+                      ? _SettingItem(
+                          title: S.of(context).checkForUpdates,
+                          subtitle: S.of(context).checkForNewVersion,
+                          icon: ref.watch(manualUpdateNotifierProvider).isLoading
+                              ? const SizedBox(
+                                  width: 35,
+                                  height: 35,
+                                  child: CircularProgressIndicator(),
+                                )
+                              : const Icon(Icons.system_update, size: 35),
+                          onTap: ref.watch(manualUpdateNotifierProvider).isLoading
+                              ? null
+                              : () async {
+                                  await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                                  ref.watch(connectivityProvider).maybeWhen(
+                                    orElse: () {
+                                      showCheckInternetDialog(
+                                        context: context,
+                                        onRetry: () {
+                                          AppRouter.pop();
+                                        },
+                                        title: checkInternet,
+                                        content: S.of(context).checkInternetUpdate,
                                       );
-                                  ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(
-                                      softwareFuture.version,
-                                      context.read<AppLanguage>().appLocal.languageCode,
-                                      isDeviceRooted);
-                                }
-                              },
-                            );
-                          },
-                  ),
+                                    },
+                                    data: (isConnectedToInternet) async {
+                                      if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                        showCheckInternetDialog(
+                                          context: context,
+                                          onRetry: () {
+                                            AppRouter.pop();
+                                          },
+                                          title: checkInternet,
+                                          content: S.of(context).checkInternetUpdate,
+                                        );
+                                      } else {
+                                        var softwareFuture = await PackageInfo.fromPlatform();
+                                        final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
+                                              orElse: () => false,
+                                              data: (value) => value.isRootedDevice,
+                                            );
+                                        ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(
+                                            softwareFuture.version,
+                                            context.read<AppLanguage>().appLocal.languageCode,
+                                            isDeviceRooted);
+                                      }
+                                    },
+                                  );
+                                },
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),
@@ -428,19 +430,17 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 style: theme.textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
-              isBoxOrAndroidTV
-                  ? _SettingItem(
-                      title: S.of(context).screenLock,
-                      subtitle: S.of(context).screenLockDesc,
-                      icon: Icon(Icons.power_settings_new, size: 35),
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (context) => ScreenLockModal(
-                          timeShiftManager: timeShiftManager,
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
+              _SettingItem(
+                title: S.of(context).screenLock,
+                subtitle: S.of(context).screenLockDesc,
+                icon: Icon(Icons.power_settings_new, size: 35),
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (context) => ScreenLockModal(
+                    timeShiftManager: timeShiftManager,
+                  ),
+                ),
+              ),
               _SettingItem(
                 title: S.of(context).appTimezone,
                 subtitle: S.of(context).descTimezone,

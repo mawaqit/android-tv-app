@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Automatically display the camera stream",
   "replaceAppWorkflowWithCameraStream": "The screen will automatically display the camera stream as soon as the camera starts recording; if it stops, the screen returns to the prayer times display",
   "streamError": "An error occurred while streaming",
-  "finish": "Finish"
+  "finish": "Finish",
+  "schedulingAlarms":"Scheduling on/off times...",
+  "alarmsSucessSchedule":"On/Off triggers scheduled successfully",
+  "alarmsScheduleFailure":"Failed to schedule On/Off triggers"
 }

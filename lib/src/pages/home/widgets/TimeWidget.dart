@@ -12,8 +12,13 @@ import 'SalahInWidget.dart';
 class HomeTimeWidget extends TimerRefreshWidget {
   const HomeTimeWidget({
     Key? key,
+    this.showSalahIn = true,
+    this.showOuterBackground = false,
     super.refreshRate = const Duration(seconds: 1),
   }) : super(key: key);
+
+  final bool showSalahIn;
+  final bool showOuterBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +41,10 @@ class HomeTimeWidget extends TimerRefreshWidget {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-                  color: mosqueManager.getColorTheme().withOpacity(.7),
+                  color: Color.lerp(Colors.black, mosqueManager.getColorTheme(), 0.9)!.withOpacity(.7),
                   backgroundBlendMode: BlendMode.screen,
                 ),
-                padding: EdgeInsets.symmetric(vertical: 2.5.vw, horizontal: 5.vw),
+                padding: EdgeInsets.symmetric(vertical: showOuterBackground ? 4.47.vw : 2.5.vw, horizontal: 5.vw),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
@@ -52,7 +57,7 @@ class HomeTimeWidget extends TimerRefreshWidget {
                   ],
                 ),
               ),
-              Padding(padding: EdgeInsets.all(1.vwr), child: Center(child: SalahInWidget())),
+              if (showSalahIn) Padding(padding: EdgeInsets.all(1.vwr), child: Center(child: SalahInWidget())),
             ],
           ),
         ),
