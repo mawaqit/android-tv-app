@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Automaticky zobrazit stream kamery",
   "replaceAppWorkflowWithCameraStream": "Obrazovka automaticky zobrazí proud kamery jakmile kamera začne nahrávat, pokud se zastaví, obrazovka se vrátí do režimu modlitby",
   "streamError": "Při vysílání došlo k chybě",
-  "finish": "Dokončit"
+  "finish": "Dokončit",
+  "schedulingAlarms": "Plánování času zapnutí/vypnutí...",
+  "alarmsSucessSchedule": "Zapnout/vypnout spouštěče úspěšně naplánované",
+  "alarmsScheduleFailure": "Nepodařilo se naplánovat zapnout/vypnout spouštěče"
 }
