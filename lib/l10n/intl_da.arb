@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Vis automatisk kamerastrømmen",
   "replaceAppWorkflowWithCameraStream": "Skærmen vil automatisk vise kameraet, så snart kameraet begynder at optage hvis det stopper, skærmen vender tilbage til bønnen gange display",
   "streamError": "Der opstod en fejl under streaming",
-  "finish": "Afslut"
+  "finish": "Afslut",
+  "schedulingAlarms": "Planlægning til/fra tider...",
+  "alarmsSucessSchedule": "On/Off udløsere er skemalagt",
+  "alarmsScheduleFailure": "Kunne ikke planlægge On/Off udløsere"
 }
