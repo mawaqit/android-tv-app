@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Apresentar automaticamente a transmissão da câmara",
   "replaceAppWorkflowWithCameraStream": "O ecrã exibirá automaticamente a transmissão da câmara assim que esta iniciar a emissão; se esta for interrompida, o ecrã regressa à visualização dos horários das orações",
   "streamError": "Ocorreu um erro durante a transmissão",
-  "finish": "Terminar"
+  "finish": "Terminar",
+  "schedulingAlarms": "Agendando horário ligado/desligado...",
+  "alarmsSucessSchedule": "Ativar/Desativar gatilhos agendados com sucesso",
+  "alarmsScheduleFailure": "Falha ao agendar gatilhos ligados/desligados"
 }
