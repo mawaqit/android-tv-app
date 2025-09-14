@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Visa kameraströmmen automatiskt",
   "replaceAppWorkflowWithCameraStream": "Skärmen kommer automatiskt att visa kameraströmmen så snart kameran startar inspelningen; om det stannar, skärmen återgår till bönen gånger visas",
   "streamError": "Ett fel inträffade vid streaming",
-  "finish": "Avsluta"
+  "finish": "Avsluta",
+  "schedulingAlarms": "Schemalägger på/av tider...",
+  "alarmsSucessSchedule": "På/Av utlösare har schemalagts",
+  "alarmsScheduleFailure": "Det gick inte att schemalägga på / Av utlösare"
 }
