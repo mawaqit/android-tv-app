@@ -173,7 +173,6 @@ dependencies:
     git:
       url: https://github.com/os01ri/flutter_kurdish_localization.git
       ref: patch-2
-  disable_battery_optimization: ^1.1.2
 
 
 dev_dependencies:

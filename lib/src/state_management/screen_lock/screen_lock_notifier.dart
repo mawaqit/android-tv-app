@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mawaqit/main.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/helpers/TimeShiftManager.dart';
-import 'package:mawaqit/src/services/battery_optimization_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mawaqit/src/services/toggle_screen_feature_manager.dart';
 import 'screen_lock_state.dart';
@@ -81,7 +80,6 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
 
       await ToggleScreenFeature.scheduleToggleScreen(
         isIshaFajrOnly,
-        times,
         state.value!.selectedMinuteBefore,
         state.value!.selectedMinuteAfter,
         context,
@@ -114,15 +112,6 @@ class ScreenLockNotifier extends AsyncNotifier<ScreenLockState> {
       }
 
       rethrow;
-    }
-  }
-
-  Future<void> checkBatteryOptimizationStatus() async {
-    final isBatteryOptimizationDisabled = await BatteryOptimizationHelper.isBatteryOptimizationDisabled();
-    logger.i('Battery optimization disabled: $isBatteryOptimizationDisabled');
-
-    if (!isBatteryOptimizationDisabled && state.value?.isActive == true) {
-      logger.w('Feature is active but battery optimization is enabled - alarms may fail');
     }
   }
 }
