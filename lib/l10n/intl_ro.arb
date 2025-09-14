@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Afișare automată a fluxului camerei",
   "replaceAppWorkflowWithCameraStream": "Ecranul va afișa automat stream-ul camerei de îndată ce camera va începe înregistrarea; dacă se oprește, ecranul se întoarce la afișajul de rugăciune",
   "streamError": "A aparut o eroare la streaming",
-  "finish": "Terminare"
+  "finish": "Terminare",
+  "schedulingAlarms": "Programare pornit/oprit de ori...",
+  "alarmsSucessSchedule": "Declanșatoare pornire/oprit programate cu succes",
+  "alarmsScheduleFailure": "Nu s-a reușit programarea declanșatoarelor On/Off"
 }
