@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "Zeigt den Kamera-Stream automatisch an",
   "replaceAppWorkflowWithCameraStream": "Der Bildschirm zeigt den Kamera-Stream automatisch an, sobald die Kamera mit der Aufnahme beginnt; wenn es aufhört, kehrt der Bildschirm zur Gebetszeit zurück",
   "streamError": "Fehler beim Streaming",
-  "finish": "Beenden"
+  "finish": "Beenden",
+  "schedulingAlarms": "Zeitplanung ein/aus...",
+  "alarmsSucessSchedule": "Ein-/Ausschalten der Trigger erfolgreich geplant",
+  "alarmsScheduleFailure": "Konnte Auslöser nicht planen"
 }
