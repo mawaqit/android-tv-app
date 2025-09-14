@@ -453,5 +453,8 @@
   "replaceWorkflowWithStream": "カメラストリームを自動的に表示",
   "replaceAppWorkflowWithCameraStream": "カメラが録画を開始すると、画面が自動的にカメラストリームを表示します。 止まればスクリーンは祈祷時間に戻ります",
   "streamError": "ストリーミング中にエラーが発生しました",
-  "finish": "完了"
+  "finish": "完了",
+  "schedulingAlarms": "オン/オフをスケジュールしています...",
+  "alarmsSucessSchedule": "オン/オフトリガーが正常にスケジュールされました",
+  "alarmsScheduleFailure": "オン/オフトリガーのスケジュールに失敗しました"
 }
