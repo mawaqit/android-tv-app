@@ -11,10 +11,14 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 class CrashlyticsWrapper {
   static StreamSubscription? _subscription;
   static init(FutureOr<void>? Function() appRunner) async {
-    await Sentry.init(
+    await SentryFlutter.init(
       (options) async {
         options.dsn = kSentryDns;
 
+        options.replay.sessionSampleRate = 0.0;
+        options.replay.onErrorSampleRate = 1.0;
+        options.privacy.maskAllText = false;
+        options.privacy.maskAllImages = false;
         final info = await PackageInfo.fromPlatform();
         final prefs = UserPreferencesManager();
         await prefs.init();
@@ -48,7 +52,7 @@ class CrashlyticsWrapper {
 
       scopes.setTag('app-version', data['app-version']);
       scopes.setTag('android-version', data['android-version']);
-      scopes.setUser(SentryUser(segment: uuid, id: data['device-id']));
+      scopes.setUser(SentryUser(username: uuid, id: data['device-id']));
       scopes.setContexts("user-data", data);
     });
   }
