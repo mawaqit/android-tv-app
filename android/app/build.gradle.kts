@@ -34,7 +34,7 @@ android {
     defaultConfig {
         applicationId = "com.mawaqit.androidtv"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 34
         versionCode = appVersionCode
         versionName = flutter.versionName
         manifestPlaceholders["crashlyticsCollectionEnabled"] = false
