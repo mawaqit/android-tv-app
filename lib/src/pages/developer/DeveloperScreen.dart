@@ -28,7 +28,8 @@ import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/random_hadith/random_hadith_notifier.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as provider_pkg;
+import 'package:mawaqit/i18n/AppLanguage.dart';
 
 import '../../../main.dart';
 
@@ -36,7 +37,6 @@ typedef ForcedScreen = ({WidgetBuilder builder, String name});
 
 typedef TestMosque = ({String name, String uuid});
 
-const _HadithDuration = Duration(seconds: 90);
 const _HadithRepeatDuration = Duration(minutes: 4);
 
 /// Debug wrapper for RandomHadithScreen that includes the 4-minute timing mechanism
@@ -48,7 +48,7 @@ class DebugRandomHadithWrapper extends ConsumerStatefulWidget {
 }
 
 class _DebugRandomHadithWrapperState extends ConsumerState<DebugRandomHadithWrapper> {
-  Timer? _hadithTimer;
+  Timer? _hadithRefreshTimer;
   Widget _currentWidget = Container();
 
   @override
@@ -64,10 +64,10 @@ class _DebugRandomHadithWrapperState extends ConsumerState<DebugRandomHadithWrap
     // Show RandomHadithScreen immediately
     _showRandomHadith();
 
-    // Set up timer to refresh every 4 minutes
-    _hadithTimer = Timer.periodic(_HadithRepeatDuration, (timer) {
+    // Set up timer to refresh hadith content every 4 minutes (like in production RepeatingWorkflowItem)
+    _hadithRefreshTimer = Timer.periodic(_HadithRepeatDuration, (timer) {
       if (mounted) {
-        _showRandomHadith();
+        _refreshHadithContent();
       }
     });
   }
@@ -77,17 +77,24 @@ class _DebugRandomHadithWrapperState extends ConsumerState<DebugRandomHadithWrap
       setState(() {
         _currentWidget = RandomHadithScreen(
           onDone: () {
-            // onDone is called after 90 seconds, we can use this for additional logic if needed
-            // But we'll keep showing the same widget since we manage timing with the timer
+            // onDone callback - matches behavior in normal workflow
           },
         );
       });
     }
   }
 
+  void _refreshHadithContent() {
+    if (mounted) {
+      final hadith = provider_pkg.Provider.of<AppLanguage>(context, listen: false).hadithLanguage;
+      final language = hadith.isEmpty ? 'ar' : hadith;
+      ref.read(randomHadithNotifierProvider.notifier).getRandomHadith(language: language);
+    }
+  }
+
   @override
   void dispose() {
-    _hadithTimer?.cancel();
+    _hadithRefreshTimer?.cancel();
     super.dispose();
   }
 
