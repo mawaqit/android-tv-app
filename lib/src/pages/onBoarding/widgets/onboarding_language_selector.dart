@@ -348,11 +348,28 @@ class _LanguageTileState extends ConsumerState<LanguageTile> {
     return SizedBox(
       width: s,
       height: s,
-      child: CircleAvatar(
-        foregroundImage: AssetImage(
+      child: ClipOval(
+        child: Image.asset(
           'assets/img/flag/$languageCode.png',
+          width: s,
+          height: s,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              width: s,
+              height: s,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey.withOpacity(0.3),
+              ),
+              child: Icon(
+                Icons.language,
+                size: s,
+                color: Colors.grey,
+              ),
+            );
+          },
         ),
-        backgroundColor: Colors.white,
       ),
     );
   }
