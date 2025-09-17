@@ -18,8 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.21.1+0
-
+version: 1.23.0+0
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -124,7 +123,6 @@ dependencies:
   equatable: ^2.0.5
   just_audio: ^0.9.37
 
-
   # alert
   flash: ^3.0.5+2
 
@@ -134,7 +132,7 @@ dependencies:
 
   # internet connectivity checker
   internet_connection_checker_plus: ^2.7.1
-  #  flutter_kurdish_localization: ^1.0.8
+
   scrollview_observer: ^1.21.0
   # manage files and folders
   flutter_archive: ^6.0.3
@@ -171,7 +169,11 @@ dependencies:
   audio_session: ^0.1.21
 
   android_alarm_manager_plus: ^4.0.7
-  flutter_cache_manager: ^3.4.1
+  flutter_kurdish_localization:
+    git:
+      url: https://github.com/os01ri/flutter_kurdish_localization.git
+      ref: patch-2
+  disable_battery_optimization: ^1.1.2
 
 
 dev_dependencies:

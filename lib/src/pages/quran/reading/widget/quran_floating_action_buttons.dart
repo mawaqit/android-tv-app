@@ -280,7 +280,7 @@ class _SpeedControls extends ConsumerWidget {
               pageHeight,
             );
       },
-      tooltip: 'Speed: ${(speed * 100).toInt()}%',
+      tooltip: 'Speed: ${speed == speed.toInt() ? speed.toInt() : speed.toStringAsFixed(1)}x',
     );
   }
 }

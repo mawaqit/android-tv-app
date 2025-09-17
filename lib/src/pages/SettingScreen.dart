@@ -4,8 +4,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
+import 'package:fpdart/fpdart.dart';
 
 import 'package:mawaqit/i18n/l10n.dart';
+import 'package:mawaqit/src/data/data_source/device_info_data_source.dart';
 import 'package:mawaqit/src/helpers/AppRouter.dart';
 import 'package:mawaqit/src/helpers/connectivity_provider.dart';
 import 'package:mawaqit/src/helpers/mawaqit_icons_icons.dart';
@@ -15,12 +17,12 @@ import 'package:mawaqit/src/pages/LanguageScreen.dart';
 import 'package:mawaqit/src/pages/MosqueSearchScreen.dart';
 import 'package:mawaqit/src/pages/TimezoneScreen.dart';
 import 'package:mawaqit/src/pages/WifiSelectorScreen.dart';
-import 'package:mawaqit/src/pages/onBoarding/widgets/OrientationWidget.dart';
+import 'package:mawaqit/src/pages/onBoarding/widgets/widgets.dart';
 import 'package:mawaqit/src/services/mosque_manager.dart';
 import 'package:mawaqit/src/services/theme_manager.dart';
 import 'package:mawaqit/src/services/user_preferences_manager.dart';
 import 'package:mawaqit/src/state_management/manual_app_update/manual_update_notifier.dart';
-import 'package:mawaqit/src/state_management/on_boarding/on_boarding_notifier.dart';
+import 'package:mawaqit/src/state_management/on_boarding/on_boarding.dart';
 import 'package:mawaqit/src/state_management/quran/recite/recite_notifier.dart';
 import 'package:mawaqit/src/widgets/ScreenWithAnimation.dart';
 import 'package:mawaqit/src/widgets/manual_update_dialog.dart';
@@ -51,12 +53,18 @@ class SettingScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingScreenState extends ConsumerState<SettingScreen> {
+  bool isBoxOrAndroidTV = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await TimeShiftManager().initializeTimes();
       await ref.read(onBoardingProvider.notifier).isDeviceRooted();
+      final bool deviceIsBoxOrAndroidTV = await DeviceInfoDataSource().isBoxOrAndroidTV();
+      setState(() {
+        isBoxOrAndroidTV = deviceIsBoxOrAndroidTV;
+      });
 
       final appLanguage = Provider.of<AppLanguage>(context, listen: false);
       final mosqueManager = Provider.of<MosqueManager>(context, listen: false);
@@ -78,6 +86,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     final String checkInternetLegacyMode = S.of(context).checkInternetLegacyMode;
     final String hadithLanguage = S.of(context).connectToChangeHadith;
     TimeShiftManager timeShiftManager = TimeShiftManager();
+
     final featureManager = Provider.of<FeatureManager>(context);
     ref.listen(manualUpdateNotifierProvider, (previous, next) {
       switch (next.value?.status) {
@@ -110,7 +119,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     title: S.of(context).changeMosque,
                     subtitle: S.of(context).searchMosque,
                     icon: Icon(MawaqitIcons.icon_mosque, size: 35),
-                    onTap: () => AppRouter.push(MosqueSearchScreen()),
+                    onTap: () => AppRouter.push(MosqueSearchScreen(
+                      nextButtonFocusNode: None(),
+                    )),
                   ),
                   _SettingItem(
                     title: S.of(context).hijriAdjustments,
@@ -248,7 +259,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     onTap: () => AppRouter.push(ScreenWithAnimationWidget(
                       animation: 'welcome',
                       child: OnBoardingOrientationWidget(
-                        onSelect: () => Navigator.pop(context),
+                        onNext: AppRouter.pop,
                       ),
                     )),
                   ),
@@ -339,56 +350,58 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       );
                     },
                   ),
-                  _SettingItem(
-                    title: S.of(context).checkForUpdates,
-                    subtitle: S.of(context).checkForNewVersion,
-                    icon: ref.watch(manualUpdateNotifierProvider).isLoading
-                        ? const SizedBox(
-                            width: 35,
-                            height: 35,
-                            child: CircularProgressIndicator(),
-                          )
-                        : const Icon(Icons.system_update, size: 35),
-                    onTap: ref.watch(manualUpdateNotifierProvider).isLoading
-                        ? null
-                        : () async {
-                            await ref.read(connectivityProvider.notifier).checkInternetConnection();
-                            ref.watch(connectivityProvider).maybeWhen(
-                              orElse: () {
-                                showCheckInternetDialog(
-                                  context: context,
-                                  onRetry: () {
-                                    AppRouter.pop();
-                                  },
-                                  title: checkInternet,
-                                  content: S.of(context).checkInternetUpdate,
-                                );
-                              },
-                              data: (isConnectedToInternet) async {
-                                if (isConnectedToInternet == ConnectivityStatus.disconnected) {
-                                  showCheckInternetDialog(
-                                    context: context,
-                                    onRetry: () {
-                                      AppRouter.pop();
-                                    },
-                                    title: checkInternet,
-                                    content: S.of(context).checkInternetUpdate,
-                                  );
-                                } else {
-                                  var softwareFuture = await PackageInfo.fromPlatform();
-                                  final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
-                                        orElse: () => false,
-                                        data: (value) => value.isRootedDevice,
+                  timeShiftManager.deviceModel != "MAWABOX"
+                      ? _SettingItem(
+                          title: S.of(context).checkForUpdates,
+                          subtitle: S.of(context).checkForNewVersion,
+                          icon: ref.watch(manualUpdateNotifierProvider).isLoading
+                              ? const SizedBox(
+                                  width: 35,
+                                  height: 35,
+                                  child: CircularProgressIndicator(),
+                                )
+                              : const Icon(Icons.system_update, size: 35),
+                          onTap: ref.watch(manualUpdateNotifierProvider).isLoading
+                              ? null
+                              : () async {
+                                  await ref.read(connectivityProvider.notifier).checkInternetConnection();
+                                  ref.watch(connectivityProvider).maybeWhen(
+                                    orElse: () {
+                                      showCheckInternetDialog(
+                                        context: context,
+                                        onRetry: () {
+                                          AppRouter.pop();
+                                        },
+                                        title: checkInternet,
+                                        content: S.of(context).checkInternetUpdate,
                                       );
-                                  ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(
-                                      softwareFuture.version,
-                                      context.read<AppLanguage>().appLocal.languageCode,
-                                      isDeviceRooted);
-                                }
-                              },
-                            );
-                          },
-                  ),
+                                    },
+                                    data: (isConnectedToInternet) async {
+                                      if (isConnectedToInternet == ConnectivityStatus.disconnected) {
+                                        showCheckInternetDialog(
+                                          context: context,
+                                          onRetry: () {
+                                            AppRouter.pop();
+                                          },
+                                          title: checkInternet,
+                                          content: S.of(context).checkInternetUpdate,
+                                        );
+                                      } else {
+                                        var softwareFuture = await PackageInfo.fromPlatform();
+                                        final isDeviceRooted = ref.watch(onBoardingProvider).maybeWhen(
+                                              orElse: () => false,
+                                              data: (value) => value.isRootedDevice,
+                                            );
+                                        ref.read(manualUpdateNotifierProvider.notifier).checkForUpdates(
+                                            softwareFuture.version,
+                                            context.read<AppLanguage>().appLocal.languageCode,
+                                            isDeviceRooted);
+                                      }
+                                    },
+                                  );
+                                },
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),
@@ -405,7 +418,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
           orElse: () => false,
           data: (value) => value.isRootedDevice,
         );
-    log('isDeviceRooted: ${isDeviceRooted} - isLauncherInstalled: ${timeShiftManager.isLauncherInstalled}');
+
+    log('isDeviceRooted: ${isDeviceRooted} - isBoxOrAndroidTV: ${isBoxOrAndroidTV} - isLauncherInstalled: ${timeShiftManager.isLauncherInstalled}');
     return isDeviceRooted
         ? Column(
             children: [

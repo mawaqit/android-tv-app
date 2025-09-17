@@ -18,11 +18,26 @@ const _duration = Duration(milliseconds: 300);
 
 /// used on secondary screens to show salah bar in a smaller size
 class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
-  const ResponsiveMiniSalahBarTurkishWidget({super.key, this.activeItem});
+  const ResponsiveMiniSalahBarTurkishWidget({
+    super.key,
+    this.activeItem,
+    this.horizontalPadding,
+    this.itemPadding,
+    this.useCompactLayout = false,
+  });
 
   /// used to force salah item to be active
   /// if null, will be calculated based on next iqama
   final int? activeItem;
+
+  /// Custom horizontal padding for the entire bar
+  final double? horizontalPadding;
+
+  /// Custom padding between items
+  final double? itemPadding;
+
+  /// Use compact layout with reduced spacing
+  final bool useCompactLayout;
 
   @override
   Widget buildLandscape(BuildContext context) {
@@ -37,9 +52,9 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
 
     final nextActiveSalah = mosqueManager.nextSalahIndex();
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 3.vw),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? (useCompactLayout ? 1.5.vw : 3.vw)),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: useCompactLayout ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceBetween,
         children: [
           SalahItemWidget(
             time: times[0],
@@ -77,7 +92,7 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
         ]
             .mapIndexed((i, e) => Expanded(
                     child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 1.vw),
+                  padding: EdgeInsets.symmetric(horizontal: itemPadding ?? (useCompactLayout ? 0.5.vw : 1.vw)),
                   child: e.animate(delay: Duration(milliseconds: 100 * i)).slideY(begin: 1).fade(),
                 )))
             .toList(),
@@ -108,7 +123,7 @@ class ResponsiveMiniSalahBarTurkishWidget extends StatelessOrientationWidget {
       required bool active,
     }) {
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 1.vw),
+        padding: EdgeInsets.symmetric(horizontal: itemPadding ?? (useCompactLayout ? 0.5.vw : 1.vw)),
         child: SizedBox(
           width: 22.vw,
           height: 12.vh,

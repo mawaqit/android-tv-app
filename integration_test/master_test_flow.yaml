@@ -1,0 +1,55 @@
+appId: com.mawaqit.androidtv
+---
+# Master Integration Test Flow
+# Runs all tests in sequence: onboarding -> developer_mode -> other tests
+
+# ===============================
+# STEP 1: CONDITIONAL ONBOARDING FLOW
+# ===============================
+# Uses conditional logic to handle both rooted and normal devices
+- runFlow: onboarding_conditional.yaml
+
+# Wait between flows to ensure clean state
+- waitForAnimationToEnd
+
+# ===============================
+# STEP 2: DEVELOPER MODE ACTIVATION
+# ===============================
+- runFlow: developer_mode.yaml
+
+# Wait between flows
+- waitForAnimationToEnd
+
+# ===============================
+# STEP 3: OTHER TEST FLOWS (alphabetical order)
+# ===============================
+
+# Announcement Screen Test
+- runFlow: announcement_screen.yaml
+- waitForAnimationToEnd
+
+# Duaa El Eftar Screen Test
+- runFlow: duaa_el_eftar_screen.yaml
+- waitForAnimationToEnd
+
+# Eid Mubarak Screen Test
+- runFlow: eid_mubark_screen.yaml
+- waitForAnimationToEnd
+
+# El Adan Screen Test
+- runFlow: el_adan_screen.yaml
+- waitForAnimationToEnd
+
+# Iqama Screen Test
+- runFlow: iqama_screen.yaml
+- waitForAnimationToEnd
+
+# Jumua Screen Test
+- runFlow: jumua_screen.yaml
+- waitForAnimationToEnd
+
+- runFlow: random_hadith_screen.yaml
+- waitForAnimationToEnd
+
+- runFlow: supplication_screen.yaml
+- waitForAnimationToEnd

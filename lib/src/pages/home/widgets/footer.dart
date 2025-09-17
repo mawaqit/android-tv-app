@@ -32,7 +32,9 @@ class Footer extends StatelessWidget {
       flex: showMosqueInfo ? 2 : 1,
       child: Row(
         children: [
-          _buildQrCodeSection(mosque, textDirection),
+          Flexible(
+            child: _buildQrCodeSection(mosque, textDirection),
+          ),
         ],
       ),
     );

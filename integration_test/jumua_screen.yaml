@@ -1,0 +1,35 @@
+appId: com.mawaqit.androidtv
+---
+- launchApp
+
+# Wait for app to be ready
+- extendedWaitUntil:
+    visible: "السلام عليكم و رحمة الله و بركاته ٫ حللتم أهلا ونزلتم سهلا"
+    timeout: 15000
+
+# === ACTIVATE DEVELOPER MODE TO ACCESS AFTER SALAH HADITH ===
+# Open the drawer
+- pressKey: Remote Dpad Left
+- waitForAnimationToEnd
+
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+- pressKey: Remote Dpad Down
+
+
+- tapOn: "Jumua"
+
+- assertVisible: ".*Whoever does the ablutions perfectly then goes to jumua and then listens and is silent.*"
+- assertVisible: ".*مَنْ تَوَضَّأَ فَأَحْسَنَ الْوُضُوءَ ثُمَّ أَتَى الْجُمُعَةَ فَاسْتَمَعَ.*"
