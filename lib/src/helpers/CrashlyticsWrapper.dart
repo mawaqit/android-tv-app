@@ -21,9 +21,6 @@ class CrashlyticsWrapper {
         options.replay.onErrorSampleRate = 1.0;
         options.privacy.maskAllText = false;
         options.privacy.maskAllImages = false;
-        final info = await PackageInfo.fromPlatform();
-        final prefs = UserPreferencesManager();
-        await prefs.init();
 
         // Defer PackageInfo call to avoid binding initialization error
         try {
