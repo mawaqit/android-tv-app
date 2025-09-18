@@ -55,7 +55,6 @@ class _DebugRandomHadithWrapperState extends ConsumerState<DebugRandomHadithWrap
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(randomHadithNotifierProvider.notifier).ensureHadithLanguage();
       _startHadithFlow();
     });
   }
