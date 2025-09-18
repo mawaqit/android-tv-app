@@ -46,6 +46,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:mawaqit/src/routes/route_generator.dart';
@@ -230,38 +231,40 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
               builder: (context, theme, _) {
                 return Shortcuts(
                   shortcuts: {SingleActivator(LogicalKeyboardKey.select): ActivateIntent()},
-                  child: MaterialApp(
-                    title: kAppName,
-                    themeMode: theme.mode,
-                    localeResolutionCallback: (locale, supportedLocales) {
-                      if (locale?.languageCode.toLowerCase() == 'ba' || locale?.languageCode.toLowerCase() == 'ff')
-                        return Locale('en');
+                  child: SentryWidget(
+                    child: MaterialApp(
+                      title: kAppName,
+                      themeMode: theme.mode,
+                      localeResolutionCallback: (locale, supportedLocales) {
+                        if (locale?.languageCode.toLowerCase() == 'ba' || locale?.languageCode.toLowerCase() == 'ff')
+                          return Locale('en');
 
-                      return locale;
-                    },
-                    theme: theme.lightTheme,
-                    darkTheme: theme.darkTheme,
-                    locale: model.appLocal,
-                    navigatorKey: AppRouter.navigationKey,
-                    navigatorObservers: [
-                      AnalyticsWrapper.observer(),
-                    ],
-                    localizationsDelegates: [
-                      MontenegrinMaterialLocalizations.delegate,
-                      MontenegrinWidgetsLocalizations.delegate,
-                      MontenegrinCupertinoLocalizations.delegate,
-                      S.delegate,
-                      GlobalCupertinoLocalizations.delegate,
-                      GlobalMaterialLocalizations.delegate,
-                      GlobalWidgetsLocalizations.delegate,
-                      KurdishMaterialLocalizations.delegate,
-                      KurdishWidgetLocalizations.delegate,
-                      KurdishCupertinoLocalizations.delegate,
-                    ],
-                    supportedLocales: S.supportedLocales,
-                    debugShowCheckedModeBanner: false,
-                    onGenerateRoute: RouteGenerator.generateRoute,
-                    home: Splash(),
+                        return locale;
+                      },
+                      theme: theme.lightTheme,
+                      darkTheme: theme.darkTheme,
+                      locale: model.appLocal,
+                      navigatorKey: AppRouter.navigationKey,
+                      navigatorObservers: [
+                        AnalyticsWrapper.observer(),
+                      ],
+                      localizationsDelegates: [
+                        MontenegrinMaterialLocalizations.delegate,
+                        MontenegrinWidgetsLocalizations.delegate,
+                        MontenegrinCupertinoLocalizations.delegate,
+                        S.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        KurdishMaterialLocalizations.delegate,
+                        KurdishWidgetLocalizations.delegate,
+                        KurdishCupertinoLocalizations.delegate,
+                      ],
+                      supportedLocales: S.supportedLocales,
+                      debugShowCheckedModeBanner: false,
+                      onGenerateRoute: RouteGenerator.generateRoute,
+                      home: Splash(),
+                    ),
                   ),
                 );
               },

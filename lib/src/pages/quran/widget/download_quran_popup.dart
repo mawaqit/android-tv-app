@@ -197,57 +197,54 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
   }
 
   Widget _buildChooseDownloadMoshaf(BuildContext context) {
-    return Focus(
-      focusNode: _dialogFocusNode,
-      child: AlertDialog(
-        title: Text(S.of(context).chooseQuranType),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildMoshafTypeRadio(
-              context,
-              title: S.of(context).warsh,
-              value: MoshafType.warsh,
-              setState: setState,
-              autofocus: selectedMoshafType == MoshafType.warsh,
-            ),
-            _buildMoshafTypeRadio(
-              context,
-              title: S.of(context).hafs,
-              value: MoshafType.hafs,
-              setState: setState,
-              autofocus: selectedMoshafType == MoshafType.hafs,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              final moshafType = ref.watch(moshafTypeNotifierProvider);
-              moshafType.when(
-                data: (data) {
-                  if (data.isFirstTime) {
-                    Navigator.pushNamedAndRemoveUntil(context, Routes.quranModeSelection, (route) => route.isFirst);
-                  } else {
-                    Navigator.pop(context);
-                  }
-                },
-                error: (_, __) {},
-                loading: () {},
-              );
-            },
-            child: Text(S.of(context).cancel),
+    return AlertDialog(
+      title: Text(S.of(context).chooseQuranType),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildMoshafTypeRadio(
+            context,
+            title: S.of(context).hafs,
+            value: MoshafType.hafs,
+            setState: setState,
+            autofocus: selectedMoshafType == MoshafType.hafs,
           ),
-          TextButton(
-            autofocus: true,
-            onPressed: () async {
-              Navigator.pop(context);
-              await ref.read(downloadQuranNotifierProvider.notifier).downloadQuran(selectedMoshafType);
-            },
-            child: Text(S.of(context).download),
+          _buildMoshafTypeRadio(
+            context,
+            title: S.of(context).warsh,
+            value: MoshafType.warsh,
+            setState: setState,
+            autofocus: selectedMoshafType == MoshafType.warsh,
           ),
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            final moshafType = ref.watch(moshafTypeNotifierProvider);
+            moshafType.when(
+              data: (data) {
+                if (data.isFirstTime) {
+                  Navigator.pushNamedAndRemoveUntil(context, Routes.quranModeSelection, (route) => route.isFirst);
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+              error: (_, __) {},
+              loading: () {},
+            );
+          },
+          child: Text(S.of(context).cancel),
+        ),
+        TextButton(
+          autofocus: true,
+          onPressed: () async {
+            Navigator.pop(context);
+            await ref.read(downloadQuranNotifierProvider.notifier).downloadQuran(selectedMoshafType);
+          },
+          child: Text(S.of(context).download),
+        ),
+      ],
     );
   }
 
@@ -259,9 +256,14 @@ class _DownloadQuranDialogState extends ConsumerState<DownloadQuranDialog> {
     bool autofocus = false,
   }) {
     return RadioListTile<MoshafType>(
-      title: Text(title),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: selectedMoshafType == value ? Colors.white : null,
+        ),
+      ),
       value: value,
-      autofocus: autofocus,
+      selected: selectedMoshafType == value,
       groupValue: selectedMoshafType,
       onChanged: (MoshafType? selected) {
         setState(() {
