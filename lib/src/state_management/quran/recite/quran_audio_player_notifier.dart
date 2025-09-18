@@ -327,8 +327,15 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
     state = await AsyncValue.guard(() async {
       final bool isShuffled = !state.value!.isShuffled;
       await audioPlayer.setShuffleModeEnabled(isShuffled);
+
+      // Disable repeat when enabling shuffle
+      if (isShuffled) {
+        await audioPlayer.setLoopMode(LoopMode.off);
+      }
+
       return state.value!.copyWith(
         isShuffled: isShuffled,
+        isRepeating: isShuffled ? false : state.value!.isRepeating,
       );
     });
   }
@@ -336,13 +343,18 @@ class QuranAudioPlayer extends AsyncNotifier<QuranAudioPlayerState> {
   Future<void> repeat() async {
     state = await AsyncValue.guard(() async {
       final isRepeating = !state.value!.isRepeating;
+
+      // Disable shuffle when enabling repeat
       if (isRepeating) {
+        await audioPlayer.setShuffleModeEnabled(false);
         await audioPlayer.setLoopMode(LoopMode.one);
       } else {
         await audioPlayer.setLoopMode(LoopMode.off);
       }
+
       return state.value!.copyWith(
         isRepeating: isRepeating,
+        isShuffled: isRepeating ? false : state.value!.isShuffled,
       );
     });
   }
