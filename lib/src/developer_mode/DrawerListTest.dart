@@ -159,7 +159,7 @@ class DrawerListDeveloper extends StatelessWidget {
           icon: Icons.message_outlined,
           text: S.of(context).randomHadith,
           onTap: () => AppRouter.popAndPush(MosqueBackgroundScreen(
-            child: RandomHadithScreen(),
+            child: DebugRandomHadithWrapper(),
           )),
         ),
         DrawerListTitle(
