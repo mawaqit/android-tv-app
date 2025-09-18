@@ -170,12 +170,7 @@ class DisplayTextWidget extends ConsumerWidget {
                 child: AutoSizeText(
                   text,
                   style: isHadith
-                      ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
-                            color: Colors.white,
-                            shadows: kIqamaCountDownTextShadow,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 32.sp,
-                          )
+                      ? _getHadithTextStyle(context, hadithLanguage)
                       : TextStyle(
                           fontSize: 32.sp,
                           color: Colors.white,
@@ -201,12 +196,7 @@ class DisplayTextWidget extends ConsumerWidget {
                 child: AutoSizeText(
                   text,
                   style: isHadith
-                      ? context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
-                            color: Colors.white,
-                            shadows: kIqamaCountDownTextShadow,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 600,
-                          )
+                      ? _getHadithTextStyle(context, hadithLanguage)
                       : TextStyle(
                           fontSize: 600,
                           color: Colors.white,
@@ -218,5 +208,27 @@ class DisplayTextWidget extends ConsumerWidget {
               ),
             ),
           );
+  }
+
+  // Helper method to get hadith text style with Turkish font fix
+  TextStyle _getHadithTextStyle(BuildContext context, Locale hadithLanguage) {
+    // Get the base style from context (keeps all existing logic)
+    final baseStyle = context.getLocalizedTextStyle(locale: hadithLanguage).copyWith(
+          color: Colors.white,
+          shadows: kIqamaCountDownTextShadow,
+          fontWeight: FontWeight.bold,
+          fontSize: 32.sp,
+        );
+
+    // For Turkish, override only the font family to use system font
+    if (hadithLanguage.languageCode == 'tr') {
+      return baseStyle.copyWith(
+        fontFamily: null,
+        fontFamilyFallback: null,
+      );
+    }
+
+    // For all other languages, return the original style
+    return baseStyle;
   }
 }
