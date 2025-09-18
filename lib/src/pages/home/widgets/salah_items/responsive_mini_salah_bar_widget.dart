@@ -18,11 +18,26 @@ const _duration = Duration(milliseconds: 300);
 
 /// used on secondary screens to show salah bar in a smaller size
 class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
-  const ResponsiveMiniSalahBarWidget({super.key, this.activeItem});
+  const ResponsiveMiniSalahBarWidget({
+    super.key,
+    this.activeItem,
+    this.horizontalPadding,
+    this.itemSpacing,
+    this.useCompactLayout = false,
+  });
 
   /// used to force salah item to be active
   /// if null, will be calculated based on next iqama
   final int? activeItem;
+
+  /// Custom horizontal padding for the entire bar
+  final double? horizontalPadding;
+
+  /// Custom spacing between items (portrait mode)
+  final double? itemSpacing;
+
+  /// Use compact layout with reduced spacing
+  final bool useCompactLayout;
 
   @override
   Widget buildLandscape(BuildContext context) {
@@ -44,9 +59,9 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
     bool duhrHighlightDisable = mosqueProvider.mosqueDate().weekday == DateTime.friday && mosqueProvider.typeIsMosque;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 3.vw),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? (useCompactLayout ? 1.5.vw : 3.vw)),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: useCompactLayout ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceBetween,
         children: [
           if (turkishImask != null)
             Flexible(
@@ -118,9 +133,9 @@ class ResponsiveMiniSalahBarWidget extends StatelessOrientationWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 1.vw),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? (useCompactLayout ? 0.5.vw : 1.vw)),
       child: Wrap(
-        spacing: 2.vw,
+        spacing: itemSpacing ?? (useCompactLayout ? 1.vw : 2.vw),
         runSpacing: 2.vh,
         crossAxisAlignment: WrapCrossAlignment.center,
         alignment: WrapAlignment.center,
