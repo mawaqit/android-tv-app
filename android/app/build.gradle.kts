@@ -27,6 +27,7 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
+        languageVersion = "1.8"
     }
 
     val appVersionCode = (System.getenv()["NEW_BUILD_NUMBER"] ?: flutter.versionCode).toString().toInt()
