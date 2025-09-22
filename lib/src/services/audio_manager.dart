@@ -173,7 +173,6 @@ class AudioManager extends ChangeNotifier {
   }
 
   Future<ByteData> getFile(String url, {bool enableCache = true}) async {
-
     if (!enableCache) {
       // Direct download without cache
       final response = await dio.get<List<int>>(

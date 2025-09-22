@@ -238,7 +238,7 @@ class _MyAppState extends riverpod.ConsumerState<MyApp> with WidgetsBindingObser
                       localeResolutionCallback: (locale, supportedLocales) {
                         if (locale?.languageCode.toLowerCase() == 'ba' || locale?.languageCode.toLowerCase() == 'ff')
                           return Locale('en');
-                    
+
                         return locale;
                       },
                       theme: theme.lightTheme,

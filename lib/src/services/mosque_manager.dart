@@ -176,7 +176,6 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   /// - handle errors of response
   /// It will return a future that will be completed when all data is fetched and cached
   Future<void> fetchMosque(String uuid) async {
-
     _mosqueSubscription?.cancel();
     _timesSubscription?.cancel();
     _configSubscription?.cancel();
