@@ -183,5 +183,6 @@
   "takbeerAleidText": "Allâhü ekber Allâhü ekber lâ ilâhe illallâhü vallâhü ekber Allâhü ekber ve lillâhi'l-hamd",
   "settings": "Ayarlar",
   "applicationModes": "Uygulama modları",
-  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Uygulamayla ilgili bir sorunla karşılaşıyorsanız bu seçeneği etkinleştirin"
+  "ifYouAreFacingAnIssueWithTheAppActivateThis": "Uygulamayla ilgili bir sorunla karşılaşıyorsanız bu seçeneği etkinleştirin",
+  "duaaBetweenAdhanAndIqamaaTitle": "Ezânla kâmet arasında yapılan dua reddedilmez"
 }
