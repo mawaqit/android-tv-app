@@ -10,11 +10,64 @@ import '../const/constants.dart';
 import 'mosque_manager.dart';
 
 class FeatureManager extends ChangeNotifier {
+  static FeatureManager? _instance;
   Map<String, bool> _featureFlags = {};
   bool isConnectedToInternet = false;
   SharedPreferences? _prefs;
+  bool _isInitialized = false;
 
-  FeatureManager(BuildContext context) {
+  // Private constructor
+  FeatureManager._internal();
+
+  // Singleton instance getter
+  static FeatureManager get instance {
+    _instance ??= FeatureManager._internal();
+    return _instance!;
+  }
+
+  // Factory constructor for Provider compatibility
+  factory FeatureManager(BuildContext context) {
+    final instance = FeatureManager.instance;
+    if (!instance._isInitialized) {
+      instance._initializeWithContext(context);
+    }
+    return instance;
+  }
+
+  // Initialize with default flags for early access
+  void _initializeDefaults() {
+    if (_isInitialized) return;
+
+    // Set hardcoded defaults for early access (before Flutter bindings are ready)
+    _featureFlags = {"timezone_shift": true};
+    _isInitialized = true;
+  }
+
+  // Initialize with SharedPreferences when bindings are ready
+  Future<void> _initializeWithSharedPreferences() async {
+    try {
+      _prefs = await SharedPreferences.getInstance();
+      final savedFlags = _prefs!.getString('featureFlags');
+      if (savedFlags != null) {
+        final loadedFlags = Map<String, bool>.from(json.decode(savedFlags));
+        _featureFlags = loadedFlags;
+      }
+    } catch (error, stack) {
+      logger.e(error, stackTrace: stack);
+      // Keep existing defaults if SharedPreferences fails
+    }
+  }
+
+  void _initializeWithContext(BuildContext context) {
+    if (_isInitialized) {
+      // If we only have defaults, try to load from SharedPreferences now
+      if (_prefs == null) {
+        _initializeWithSharedPreferences();
+      }
+    } else {
+      _initializeDefaults();
+    }
+
     final mosqueProvider = Provider.of<MosqueManager>(context, listen: false);
     isConnectedToInternet = mosqueProvider.isOnline;
     mosqueProvider.addListener(() => _onMosqueManagerChanged(context));
@@ -44,7 +97,7 @@ class FeatureManager extends ChangeNotifier {
 
   Future<void> _initPrefs() async {
     try {
-      _prefs = await SharedPreferences.getInstance();
+      _prefs ??= await SharedPreferences.getInstance();
       final savedFlags = _prefs!.getString('featureFlags');
       if (savedFlags != null) {
         _featureFlags = Map<String, bool>.from(json.decode(savedFlags));
@@ -79,6 +132,10 @@ class FeatureManager extends ChangeNotifier {
   }
 
   bool isFeatureEnabled(String featureName) {
+    // Ensure we have defaults loaded for early access
+    if (!_isInitialized) {
+      _initializeDefaults();
+    }
     return _featureFlags[featureName] ?? false;
   }
 }

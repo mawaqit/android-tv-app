@@ -92,17 +92,8 @@ class PrayerScheduleService {
     FlutterBackgroundService service, {
     int numberOfDays = 7,
   }) async {
-    logger.i('🕒 Starting Prayer Tasks Scheduling Process');
-    logger.d({
-      'Scheduling Configuration:'
-          'Number of Days': numberOfDays,
-      'Salah Index': salahIndex,
-      'Adhan Voice Enabled': isAdhanVoiceEnabled,
-      'Mosque Config': mosqueConfig?.toString() ?? 'No Mosque Config',
-    });
-
     if (!await service.isRunning()) {
-      logger.w('⚠️ Background Service Not Running - Scheduling Aborted');
+      logger.w('Background Service Not Running - Scheduling Aborted');
       return;
     }
 
@@ -112,13 +103,6 @@ class PrayerScheduleService {
     Set<DateTime> scheduledTimes = await _loadScheduledTimes();
     Map<DateTime, String> previousAdhanLinks = await _loadAdhanLinks();
     Map<String, String> taskIds = await _loadTaskIds();
-
-    logger.d({
-      'Initial Persisted Data:'
-          'Previously Scheduled Times': scheduledTimes.length,
-      'Previous Adhan Links': previousAdhanLinks.length,
-      'Task IDs': taskIds.length,
-    });
 
     // First check if any prayers need rescheduling
     bool needsRescheduling = false;
@@ -153,7 +137,7 @@ class PrayerScheduleService {
 
     // If any prayer needs rescheduling, cancel all previous prayers at once
     if (needsRescheduling) {
-      logger.i('🔄 Detected configuration changes - rescheduling all prayers');
+      logger.i('Detected configuration changes - rescheduling all prayers');
       await _cancelAllPreviouslyScheduledPrayers();
       scheduledTimes.clear();
       previousAdhanLinks.clear();
@@ -170,8 +154,6 @@ class PrayerScheduleService {
       // Calculate the date for the current iteration
       final targetDate = now.add(Duration(days: dayOffset));
 
-      logger.v('Processing Day: ${targetDate.toIso8601String()} (Offset: $dayOffset)');
-
       // Get prayer times for the target date
       final prayerTimes = times.dayTimesStrings(targetDate, salahOnly: true);
 
@@ -181,7 +163,6 @@ class PrayerScheduleService {
 
         // Skip prayers that have already passed (for today)
         if (dayOffset == 0 && scheduleTime.isBefore(now)) {
-          logger.v('Skipping Past Prayer: $entry (${scheduleTime.toIso8601String()})');
           skippedPrayerTimes++;
           continue;
         }
@@ -189,25 +170,15 @@ class PrayerScheduleService {
         final bool isFajr = (i == 0); // Assuming index 0 is Fajr
         final String currentAdhanLink = getAdhanLink(mosqueConfig, useFajrAdhan: isFajr);
 
-        logger.v({
-          'Prayer Time': entry,
-          'Checking Prayer Scheduling Conditions:'
-              'Schedule Time': scheduleTime.toIso8601String(),
-          'Adhan Link': currentAdhanLink,
-          'Is Fajr': isFajr,
-        });
-
         final delay = scheduleTime.difference(now);
         // Skip if the time is in the past
         if (delay.isNegative) {
-          logger.v('Skipping Past Prayer: Time is in the past');
           skippedPrayerTimes++;
           continue;
         }
 
         // Skip if already scheduled
         if (scheduledTimes.contains(scheduleTime)) {
-          logger.v('Skipping Prayer: Already scheduled');
           skippedPrayerTimes++;
           continue;
         }
@@ -243,26 +214,13 @@ class PrayerScheduleService {
           previousAdhanLinks[scheduleTime] = currentAdhanLink;
           await _saveAdhanLinks(previousAdhanLinks);
         } catch (e, stackTrace) {
-          logger.e('❌ Failed to Schedule Prayer', error: e, stackTrace: stackTrace);
+          logger.e('Failed to Schedule Prayer', error: e, stackTrace: stackTrace);
         }
       }
     }
 
-    // Logging summary
-    logger.i({
-      '🎉 Prayer Scheduling Completed'
-          'Total Prayer Times Scheduled': totalPrayerTimesScheduled,
-      'Skipped Prayer Times': skippedPrayerTimes,
-      'Total Unique Scheduled Times': scheduledTimes.length,
-    });
-
-    // Optional: Log details of scheduled prayers if not too verbose
-    if (totalPrayerTimesScheduled > 0) {
-      logger.d({
-        'Scheduled Prayer Details:'
-            'Prayers': scheduledPrayerDetails,
-      });
-    }
+    // Summary logging only
+    logger.i('Prayer Scheduling Completed: $totalPrayerTimesScheduled scheduled, $skippedPrayerTimes skipped');
   }
 
   static Future<void> _cancelAllPreviouslyScheduledPrayers() async {
@@ -359,29 +317,36 @@ class PrayerScheduleService {
   }
 
   static String getSalahName(int index) {
-    final names = {
-      0: S.current.fajr,
-      1: S.current.duhr,
-      2: S.current.asr,
-      3: S.current.maghrib,
-      4: S.current.isha,
-    };
-    return names[index] ?? '';
+    try {
+      final names = {
+        0: S.current.fajr,
+        1: S.current.duhr,
+        2: S.current.asr,
+        3: S.current.maghrib,
+        4: S.current.isha,
+      };
+      return names[index] ?? '';
+    } catch (e) {
+      final fallbackNames = {
+        0: 'Fajr',
+        1: 'Dhuhr',
+        2: 'Asr',
+        3: 'Maghrib',
+        4: 'Isha',
+      };
+      return fallbackNames[index] ?? '';
+    }
   }
 
   static String getAdhanLink(MosqueConfig? mosqueConfig, {bool useFajrAdhan = false}) {
     String baseLink = "$kStaticFilesUrl/audio/adhan-afassy.mp3";
-    logger.d('[StaticFileURL] PrayerScheduleService: Base adhan link using static URL: $baseLink',
-        time: DateTime.now());
 
     if (mosqueConfig?.adhanVoice?.isNotEmpty ?? false) {
       baseLink = "$kStaticFilesUrl/audio/${mosqueConfig!.adhanVoice!}.mp3";
-      logger.d('[StaticFileURL] PrayerScheduleService: Using custom adhan voice: $baseLink', time: DateTime.now());
     }
 
     if (useFajrAdhan && !baseLink.contains('bip')) {
       baseLink = baseLink.replaceAll('.mp3', '-fajr.mp3');
-      logger.d('[StaticFileURL] PrayerScheduleService: Modified for Fajr: $baseLink', time: DateTime.now());
     }
 
     return baseLink;

@@ -195,8 +195,18 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     Future<void> completeFuture() async {
       try {
         await Future.wait([
-          AudioManager().precacheVoices(mosqueConfig!),
-          preCacheImages(),
+          AudioManager().precacheVoices(mosqueConfig!).timeout(
+            Duration(seconds: 60),
+            onTimeout: () {
+              return;
+            },
+          ),
+          preCacheImages().timeout(
+            Duration(seconds: 60),
+            onTimeout: () {
+              return;
+            },
+          ),
         ]);
       } catch (e, stack) {
         debugPrintStack(label: e.toString(), stackTrace: stack);
@@ -260,15 +270,40 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       onError: onItemError,
     );
 
-    /// wait for all streams to complete
-    await Future.wait([
-      mosqueStream.first.logPerformance('mosque'),
-      timesStream.first.logPerformance('times'),
-      configStream.first.logPerformance('config'),
-    ]).logPerformance('Mosque data loader');
+    /// wait for all streams to complete with timeout
+    try {
+      await Future.wait([
+        mosqueStream.first.logPerformance('mosque').timeout(
+          Duration(seconds: 20),
+          onTimeout: () {
+            throw TimeoutException('Mosque stream timeout', Duration(seconds: 10));
+          },
+        ),
+        timesStream.first.logPerformance('times').timeout(
+          Duration(seconds: 20),
+          onTimeout: () {
+            throw TimeoutException('Times stream timeout', Duration(seconds: 10));
+          },
+        ),
+        configStream.first.logPerformance('config').timeout(
+          Duration(seconds: 20),
+          onTimeout: () {
+            throw TimeoutException('Config stream timeout', Duration(seconds: 10));
+          },
+        ),
+      ]).logPerformance('Mosque data loader');
+    } catch (e) {
+      // Don't rethrow if it's just a timeout - let the app continue with cached data
+      if (e is! TimeoutException) {
+        rethrow;
+      }
+    }
+
     await completeFuture();
 
-    loadWeather(mosque!);
+    if (mosque != null) {
+      loadWeather(mosque!);
+    }
 
     mosqueUUID = uuid;
   }
