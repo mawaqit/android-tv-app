@@ -24,9 +24,11 @@ class MosqueInformationWidget extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.5.vh, horizontal: 2.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
           Text(
             association,
             style: TextStyle(
@@ -43,12 +45,15 @@ class MosqueInformationWidget extends StatelessWidget {
               size: 12.sp,
             ),
             SizedBox(width: 1.w),
-            Text(
-              phoneNumber,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w600,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                phoneNumber,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
@@ -60,12 +65,15 @@ class MosqueInformationWidget extends StatelessWidget {
               size: 12.sp,
             ),
             SizedBox(width: 1.w),
-            Text(
-              website,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w600,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                website,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
@@ -77,16 +85,20 @@ class MosqueInformationWidget extends StatelessWidget {
               size: 12.sp,
             ),
             SizedBox(width: 1.w),
-            Text(
-              email,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w600,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                email,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
         ],
+        ),
       ),
     );
   }
