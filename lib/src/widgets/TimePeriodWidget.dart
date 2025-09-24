@@ -14,11 +14,12 @@ class TimePeriodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentLocale = Localizations.localeOf(context).languageCode;
+
     final value = DateFormat(
       "a",
-      Localizations.localeOf(context).languageCode,
+      currentLocale == 'ta' ? 'en' : currentLocale, // Keep English for Tamil, translate others
     ).format(dateTime);
-
     final defaultStyle = DefaultTextStyle.of(context).style;
     final textStyle = (style ?? defaultStyle).copyWith(
       height: 1,
