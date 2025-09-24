@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart' as fp;
@@ -86,7 +87,8 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
         });
       },
     );
-    ref.read(mosqueInputTypeSelectorProvider.notifier).state = SelectionType.mosqueId;
+    ref.read(mosqueInputTypeSelectorProvider.notifier).state =
+        SelectionType.mosqueId;
   }
 
   void _handleNoSelection() async {
@@ -132,13 +134,15 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
         });
       },
     );
-    ref.read(mosqueInputTypeSelectorProvider.notifier).state = SelectionType.mosqueName;
+    ref.read(mosqueInputTypeSelectorProvider.notifier).state =
+        SelectionType.mosqueName;
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     // Adjust font sizes based on orientation
     final double headerFontSize = isPortrait ? 14.sp : 14.sp;
@@ -279,13 +283,10 @@ class _InputTypeSelectorState extends ConsumerState<InputTypeSelector> {
 
   Future<String?> _fetchDeviceModel() async {
     try {
-      final userData = await Api.prepareUserData();
-      if (userData != null) {
-        return userData.$2['model'];
-      }
-      return null;
+      final hardware = await DeviceInfoPlugin().androidInfo;
+      return hardware.model;
     } catch (e, stackTrace) {
-      logger.e('Error fetching user data: $e', stackTrace: stackTrace);
+      logger.e('Error fetching device model: $e', stackTrace: stackTrace);
       return null;
     }
   }

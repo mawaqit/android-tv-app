@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -158,13 +159,10 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
     final deviceModel = await _fetchDeviceModel() ?? '';
     final isChromeCast = deviceModel.contains('chromecast');
     final selectionType = ref.read(mosqueInputTypeSelectorProvider);
-
     // Determine the next screen based on device type and user selection
-    final screenType = switch ((isChromeCast, selectionType)) {
-      (true, SelectionType.mosqueId) => OnboardingScreenType.chromecastMosqueId,
-      (true, SelectionType.mosqueName) => OnboardingScreenType.chromecastMosqueName,
-      (false, SelectionType.mosqueId) => OnboardingScreenType.mosqueId,
-      (false, SelectionType.mosqueName) => OnboardingScreenType.mosqueName,
+    final screenType = switch (( selectionType)) {
+      (SelectionType.mosqueId) => OnboardingScreenType.chromecastMosqueId,
+      (SelectionType.mosqueName) => OnboardingScreenType.chromecastMosqueName,
     };
 
     final newFlow = [...currentState.screenFlow];
@@ -282,13 +280,11 @@ class OnboardingNavigationNotifier extends AsyncNotifier<OnboardingNavigationSta
 
   Future<String?> _fetchDeviceModel() async {
     try {
-      final userData = await Api.prepareUserData();
-      if (userData != null) {
-        return userData.$2['model'];
-      }
-      return null;
+      logger.d('Fetching device model for onboarding');
+      final hardware = await DeviceInfoPlugin().androidInfo;
+      return hardware.model;
     } catch (e, stackTrace) {
-      logger.e('Error fetching user data: $e', stackTrace: stackTrace);
+      logger.e('Error fetching device model: $e', stackTrace: stackTrace);
       return null;
     }
   }
