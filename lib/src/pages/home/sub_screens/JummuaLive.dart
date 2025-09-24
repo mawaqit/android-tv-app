@@ -99,14 +99,32 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
     bool jumuaaDisableInMosque,
     LiveStreamViewerState streamState,
   ) {
-    // First check if we should show Hadith screen or black screen
-    if (jumuaaDisableInMosque || connectivityStatus == ConnectivityStatus.disconnected) {
+    // If jumuaa is disabled in mosque, show only time screen (exit to prayer times)
+    if (jumuaaDisableInMosque) {
+      widget.onDone?.call();
+      return const SizedBox.shrink();
+    }
+
+    // If disconnected, go to priority hadith
+    if (connectivityStatus == ConnectivityStatus.disconnected) {
+      // Priority 2: Hadith reminder if enabled
       if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) {
         return JumuaHadithSubScreen(onDone: widget.onDone);
       }
-      return const Scaffold(backgroundColor: Colors.black);
+
+      // Priority 3: Black screen if enabled
+      if (mosqueManager.mosqueConfig!.jumuaBlackScreenEnabled == true) {
+        return const Scaffold(backgroundColor: Colors.black);
+      }
+
+      // Priority 4: Nothing - exit to prayer times screen
+      widget.onDone?.call();
+      return const Scaffold(backgroundColor: Colors.black); // temporary while transitioning
     }
 
+    // For connected state with jumuaa enabled, follow priority:
+
+    // Priority 1: Live stream if available
     // Check if RTSP is enabled and properly configured
     final isRTSPWorking = streamState.isEnabled &&
         streamState.streamType == LiveStreamType.rtsp &&
@@ -136,7 +154,7 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       );
     }
 
-    // Priority 2: YouTube Stream from RTSP settings if working
+    // Priority 1: YouTube Stream from RTSP settings if working
     if (isYouTubeWorking) {
       return Scaffold(
         backgroundColor: Colors.black,
@@ -151,8 +169,8 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       );
     }
 
-    // Priority 3: Mosque Manager's YouTube stream as fallback
-    if (mosqueManager.mosque?.streamUrl != null) {
+    // Priority 1: Mosque Manager's YouTube stream as fallback
+    if (mosqueManager.mosque?.streamUrl != null && !invalidStreamUrl) {
       return MawaqitYoutubePlayer(
         channelId: mosqueManager.mosque!.streamUrl!,
         onDone: widget.onDone,
@@ -161,7 +179,18 @@ class _JummuaLiveState extends ConsumerState<JummuaLive> {
       );
     }
 
-    // Fallback case
-    return const Scaffold(backgroundColor: Colors.black);
+    // Priority 2: Hadith reminder if enabled
+    if (mosqueManager.mosqueConfig!.jumuaDhikrReminderEnabled == true) {
+      return JumuaHadithSubScreen(onDone: widget.onDone);
+    }
+
+    // Priority 3: Black screen if enabled
+    if (mosqueManager.mosqueConfig!.jumuaBlackScreenEnabled == true) {
+      return const Scaffold(backgroundColor: Colors.black);
+    }
+
+    // Priority 4: Nothing - exit to prayer times screen
+    widget.onDone?.call();
+    return const SizedBox.shrink();
   }
 }
