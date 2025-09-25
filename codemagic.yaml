@@ -132,7 +132,7 @@ workflows:
            exit 0
           fi
 
-          gh release upload "${CM_TAG}" build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER-release.apk
+          gh release upload "${CM_TAG}" build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk
 
     artifacts:
       - build/artifacts/*
