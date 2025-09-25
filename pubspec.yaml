@@ -170,7 +170,6 @@ dependencies:
 
   android_alarm_manager_plus: ^4.0.7
   flutter_kurdish_localization: ^1.0.8
-  disable_battery_optimization: ^1.1.2
 
 
 dev_dependencies:
