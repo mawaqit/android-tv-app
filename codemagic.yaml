@@ -122,8 +122,7 @@ workflows:
 
       - name: Upload to AWS S3 bucket
         script: |
-          BUILD_TYPE=$([ -n "${CM_TAG}" ] && echo "release" || echo "manual")
-          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER-$BUILD_TYPE.apk s3://cdn.mawaqit.net/android/tv/apk/
+          aws s3 cp build/artifacts/MAWAQIT-For-TV-v$VERSION-$BUILD_NUMBER.apk s3://cdn.mawaqit.net/android/tv/apk/
 
       - name: Upload apk to the Github release
         script: |
