@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mawaqit/src/const/constants.dart';
 import 'package:mawaqit/src/models/mosqueConfig.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../const/resource.dart';
 import '../../main.dart';
@@ -172,53 +174,39 @@ class AudioManager extends ChangeNotifier {
 
   Future<ByteData> getFile(String url, {bool enableCache = true}) async {
     if (!enableCache) {
-      // If cache is disabled, try direct network request
-      final file = await dio.get<List<int>>(
+      // Direct download without cache
+      final response = await dio.get<List<int>>(
         url,
         options: Options(responseType: ResponseType.bytes),
       );
-      return Uint8List.fromList(file.data!).buffer.asByteData();
+      return Uint8List.fromList(response.data!).buffer.asByteData();
     }
 
     try {
-      // First attempt: Try with cache enabled
-      log('audio: AudioManager: getFile: Attempting to load audio from cache/network for URL: $url');
-      final file = await dio.get<List<int>>(
+      // Use file-based caching instead of Hive
+      final tempDir = await getTemporaryDirectory();
+      final fileName = url.split('/').last;
+      final cacheFile = File('${tempDir.path}/audio_$fileName');
+
+      // Check if file exists in cache
+      if (await cacheFile.exists()) {
+        final bytes = await cacheFile.readAsBytes();
+        return Uint8List.fromList(bytes).buffer.asByteData();
+      }
+
+      // Download and cache to file
+      final response = await Dio().get<List<int>>(
         url,
         options: Options(responseType: ResponseType.bytes),
       );
 
-      if (file.data != null) {
-        log('audio: AudioManager: getFile: Successfully loaded audio file');
-        return Uint8List.fromList(file.data!).buffer.asByteData();
-      }
+      // Save to cache file
+      await cacheFile.writeAsBytes(response.data!);
+
+      return Uint8List.fromList(response.data!).buffer.asByteData();
     } catch (e) {
-      log('audio: AudioManager: getFile: Failed to load from cache/network: $e');
-
-      // Second attempt: Try with forceCache policy for offline mode
-      try {
-        log('audio: AudioManager: getFile: Attempting forceCache fallback');
-        final cacheOptions = option.copyWith(policy: CachePolicy.forceCache);
-        final tempDio = Dio()..interceptors.add(DioCacheInterceptor(options: cacheOptions));
-
-        final file = await tempDio.get<List<int>>(
-          url,
-          options: Options(responseType: ResponseType.bytes),
-        );
-
-        if (file.data != null) {
-          log('audio: AudioManager: getFile: Successfully loaded from forceCache fallback');
-          return Uint8List.fromList(file.data!).buffer.asByteData();
-        }
-      } catch (cacheError) {
-        log('audio: AudioManager: getFile: ForceCache fallback also failed: $cacheError');
-      }
-
-      // If all attempts fail, rethrow the original error
-      throw Exception('Failed to load audio file from both network and cache: $e');
+      rethrow;
     }
-
-    throw Exception('Failed to retrieve audio data');
   }
 
   @override

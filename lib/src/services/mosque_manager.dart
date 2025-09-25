@@ -87,6 +87,7 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
   int minuteBefore = 0;
   int minuteAfter = 0;
   bool isIshaFajrOnly = false;
+  static DateTime? _lastPrayerScheduleTime;
 
   /// get current home url
   String buildUrl(String languageCode) {
@@ -194,8 +195,18 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     Future<void> completeFuture() async {
       try {
         await Future.wait([
-          AudioManager().precacheVoices(mosqueConfig!),
-          preCacheImages(),
+          AudioManager().precacheVoices(mosqueConfig!).timeout(
+            Duration(seconds: 60),
+            onTimeout: () {
+              return;
+            },
+          ),
+          preCacheImages().timeout(
+            Duration(seconds: 60),
+            onTimeout: () {
+              return;
+            },
+          ),
         ]);
       } catch (e, stack) {
         debugPrintStack(label: e.toString(), stackTrace: stack);
@@ -219,13 +230,23 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
     _timesSubscription = timesStream.listen(
       (e) async {
         times = e;
-        // Obtain an instance of the background service.
+
+        // Only reschedule prayers once every 6 hours
+        final now = DateTime.now();
+        if (_lastPrayerScheduleTime != null && now.difference(_lastPrayerScheduleTime!).inHours < 6) {
+          logger.i(
+              'Prayer scheduling & on-off skipped - scheduled ${now.difference(_lastPrayerScheduleTime!).inHours} hours ago');
+          notifyListeners();
+          return;
+        }
+
+        logger.i('Prayer times received - scheduling prayers');
+        _lastPrayerScheduleTime = now;
+
         final service = FlutterBackgroundService();
         final permissionsGranted = await PermissionsManager.arePermissionsGranted();
-        bool isBoxOrAndroidTV = await DeviceInfoDataSource().isBoxOrAndroidTV();
 
-        // Delegate prayer scheduling to PrayerScheduleService.
-        if (permissionsGranted && isBoxOrAndroidTV) {
+        if (permissionsGranted) {
           await PrayerScheduleService.schedulePrayerTasks(
             e,
             mosqueConfig,
@@ -234,6 +255,8 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
             service,
           );
         }
+        await ToggleScreenFeature.checkAndRescheduleIfNeeded();
+
         notifyListeners();
       },
       onError: onItemError,
@@ -247,15 +270,40 @@ class MosqueManager extends ChangeNotifier with WeatherMixin, AudioMixin, Mosque
       onError: onItemError,
     );
 
-    /// wait for all streams to complete
-    await Future.wait([
-      mosqueStream.first.logPerformance('mosque'),
-      timesStream.first.logPerformance('times'),
-      configStream.first.logPerformance('config'),
-    ]).logPerformance('Mosque data loader');
+    /// wait for all streams to complete with timeout
+    try {
+      await Future.wait([
+        mosqueStream.first.logPerformance('mosque').timeout(
+          Duration(seconds: 20),
+          onTimeout: () {
+            throw TimeoutException('Mosque stream timeout', Duration(seconds: 10));
+          },
+        ),
+        timesStream.first.logPerformance('times').timeout(
+          Duration(seconds: 20),
+          onTimeout: () {
+            throw TimeoutException('Times stream timeout', Duration(seconds: 10));
+          },
+        ),
+        configStream.first.logPerformance('config').timeout(
+          Duration(seconds: 20),
+          onTimeout: () {
+            throw TimeoutException('Config stream timeout', Duration(seconds: 10));
+          },
+        ),
+      ]).logPerformance('Mosque data loader');
+    } catch (e) {
+      // Don't rethrow if it's just a timeout - let the app continue with cached data
+      if (e is! TimeoutException) {
+        rethrow;
+      }
+    }
+
     await completeFuture();
 
-    loadWeather(mosque!);
+    if (mosque != null) {
+      loadWeather(mosque!);
+    }
 
     mosqueUUID = uuid;
   }

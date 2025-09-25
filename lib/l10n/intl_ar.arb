@@ -439,12 +439,7 @@
   "replaceWorkflowWithStream": "عرض بث الكاميرا تلقائيًا",
   "replaceAppWorkflowWithCameraStream": "سيعرض الشاشة بث الكاميرا تلقائيًا بمجرد أن تبدأ الكاميرا في التسجيل، وإذا توقفت يعود العرض إلى مواقيت الصلاة",
   "streamError": "حدث خطأ أثناء البث",
-  "batteryOptimization": "تحسين البطارية",
-  "batteryOptimizationDesc": "لكي تعمل تنبيهات مواقيت الصلاة بشكل موثوق، يرجى تعطيل تحسين البطارية لهذا التطبيق.",
-  "openSettings": "فتح الإعدادات",
-  "batteryOptimizationWarning": "قد يمنع تحسين البطارية التنبيهات من العمل بشكل موثوق",
-  "schedulingAlarms": "جارٍ جدولة التنبيهات...",
-  "permissionRequired": "الأذونات مطلوبة لجدولة التنبيهات",
-  "alarmsSucessSchedule": "تمت جدولة تنبيهات الصلاة بنجاح",
-  "alarmsScheduleFailure": "فشل في جدولة التنبيهات"
+  "schedulingAlarms": "جدولة أوقات التشغيل/الإيقاف...",
+  "alarmsSucessSchedule":"تمت جدولة مشغلات التشغيل/الإيقاف بنجاح",
+  "alarmsScheduleFailure":"فشل في جدولة مشغلات التشغيل/الإيقاف"
 }

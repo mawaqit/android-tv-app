@@ -130,21 +130,21 @@ class _SalahWorkflowScreenState extends ConsumerState<SalahWorkflowScreen> {
               mosqueConfig.blackScreenWhenPraying == true ? Container(color: Colors.black) : NormalHomeSubScreen(),
           skip: now.isAfter(salahEndTime),
           duration: mosqueManger.currentSalahDuration,
+          disabled: mosqueConfig.iqamaEnabled == false,
         ),
         WorkFlowItem(
           builder: (context, next) => AfterSalahAzkar(onDone: next),
-          disabled: mosqueConfig.duaAfterPrayerEnabled == false,
+          disabled: mosqueConfig.iqamaEnabled == false,
         ),
         WorkFlowItem(
-          duration: kAzkarDuration,
-          builder: (context, next) => AfterSalahAzkar(
+            duration: kAzkarDuration,
+            builder: (context, next) => AfterSalahAzkar(
 
-              /// this is a redundant parameter as it is always should be (isFajrPray | isAsrPray)
-              isAfterAsrOrFajr: true,
-              isAfterAsr: isAsrPray,
-              azkarTitle: isFajrPray ? AzkarConstant.kAzkarSabahAfterPrayer : AzkarConstant.kAzkarAsrAfterPrayer),
-          disabled: mosqueConfig.duaAfterPrayerEnabled == false || (!isFajrPray && !isAsrPray),
-        ),
+                /// this is a redundant parameter as it is always should be (isFajrPray | isAsrPray)
+                isAfterAsrOrFajr: true,
+                isAfterAsr: isAsrPray,
+                azkarTitle: isFajrPray ? AzkarConstant.kAzkarSabahAfterPrayer : AzkarConstant.kAzkarAsrAfterPrayer),
+            disabled: mosqueConfig.iqamaEnabled == false || (!isFajrPray && !isAsrPray)),
       ],
     );
   }
