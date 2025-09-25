@@ -169,10 +169,7 @@ dependencies:
   audio_session: ^0.1.21
 
   android_alarm_manager_plus: ^4.0.7
-  flutter_kurdish_localization:
-    git:
-      url: https://github.com/os01ri/flutter_kurdish_localization.git
-      ref: patch-2
+  flutter_kurdish_localization: ^1.0.8
 
 
 dev_dependencies:
