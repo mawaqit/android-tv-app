@@ -122,8 +122,8 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
                 fit: BoxFit.contain,
                 child: SizedBox(
                   width: 60.vw, // Give explicit width to child
-                  height: 28.vh, // Adjusted to prevent overflow
-                  child: HomeTimeWidget(showSalahIn: false, showOuterBackground: false),
+                  height: 35.vh, // Increased height to prevent internal overflow
+                  child: HomeTimeWidget(showSalahIn: false, showOuterBackground: true),
                 ),
               ),
             ),
