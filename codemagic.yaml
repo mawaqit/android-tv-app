@@ -41,7 +41,17 @@ workflows:
       - name: Retrieve version
         script: |
           VERSION=$(cat "pubspec.yaml" | sed -nE 's/version:.*([0-9]+\.[0-9]+\.[0-9])(-tv)?\+.*/\1/p')
-          BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          
+          # For tag builds: use Google Play build number + 1
+          # For manual builds: use date-based build number
+          if [ -n "${CM_TAG}" ]; then
+            echo "Tag build detected: ${CM_TAG}"
+            BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          else
+            echo "Manual build detected"
+            BUILD_NUMBER=$(date +%y%j%H)
+          fi
+          
           echo "VERSION=$VERSION" >> $CM_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
 
@@ -49,6 +59,7 @@ workflows:
         script: |
           echo "App version: $VERSION"
           echo "BUILD NUMBER: $BUILD_NUMBER"
+          echo "Build type: $([ -n "${CM_TAG}" ] && echo "Tag build" || echo "Manual build")"
 
           if [ -z ${VERSION} ]; then
            echo "Version is empty, will not build"
@@ -116,7 +127,7 @@ workflows:
       - name: Upload apk to the Github release
         script: |
           if [ -z ${CM_TAG} ]; then
-           echo "Not a tag build, will not upload apk"
+           echo "Not a tag build, will not upload apk to GitHub release"
            exit 0
           fi
 
@@ -132,3 +143,4 @@ workflows:
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: $GOOGLE_PLAY_TRACK
+        when: tag
