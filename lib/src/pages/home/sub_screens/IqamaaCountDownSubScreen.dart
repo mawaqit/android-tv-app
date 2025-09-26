@@ -115,7 +115,7 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
 
           // Clock Widget from Main Screen (compact version)
           Container(
-            height: 25.vh, // Slightly increased to prevent overflow
+            height: 20.vh, // Balanced reduction to prevent overflow
             alignment: Alignment.center,
             child: ClipRect(
               child: FittedBox(
@@ -188,8 +188,10 @@ class _IqamaaCountDownSubScreenState extends State<IqamaaCountDownSubScreen> {
             ),
           ),
 
-          // Bottom prayer times bar
-          mosqueManager.times!.isTurki ? ResponsiveMiniSalahBarTurkishWidget() : ResponsiveMiniSalahBarWidget(),
+          // Bottom prayer times bar with compact spacing for iqama countdown
+          mosqueManager.times!.isTurki
+              ? ResponsiveMiniSalahBarTurkishWidget(useCompactLayout: true)
+              : ResponsiveMiniSalahBarWidget(useCompactLayout: true),
         ],
       ),
     );

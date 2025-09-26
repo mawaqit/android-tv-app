@@ -27,6 +27,7 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
+        languageVersion = "1.8"
     }
 
     val appVersionCode = (System.getenv()["NEW_BUILD_NUMBER"] ?: flutter.versionCode).toString().toInt()
@@ -34,7 +35,7 @@ android {
     defaultConfig {
         applicationId = "com.mawaqit.androidtv"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 35
         versionCode = appVersionCode
         versionName = flutter.versionName
         manifestPlaceholders["crashlyticsCollectionEnabled"] = false
